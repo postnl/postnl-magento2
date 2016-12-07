@@ -12,6 +12,7 @@ language: php
 php:
   - 7.0
   - 7.1
+  - nightly
 
 env:
   - MAGENTO_VERSION=2.0.8
@@ -22,11 +23,12 @@ env:
   - MAGENTO_VERSION=2.1.2
 
 before_script:
-  - phpenv config-rm xdebug.ini
+  - export PATH=$PATH:$HOME/.composer/vendor/bin
+  - if [ "${TRAVIS_PHP_VERSION}" != "hhvm" ] && [ "${TRAVIS_PHP_VERSION}" != "nightly" ]; then phpenv config-rm xdebug.ini; fi
   - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USERNAME}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > auth.json
+  - if find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l | grep -v "No syntax errors detected"; then exit 1; fi
 
-script:
-  - bash Test/setup.sh
+script: bash Test/setup.sh
 
 cache:
   directories:
