@@ -49,4 +49,4 @@ chmod 777 "${BUILD_DIR}/pub/"
 
 cd ${BUILD_DIR}
 
-phpunit -c "${BUILD_DIR}/vendor/tig/postnl/phpunit.xml.dist" --testsuite unit
+phpunit -c "${BUILD_DIR}/vendor/tig/postnl/phpunit.xml.dist"
