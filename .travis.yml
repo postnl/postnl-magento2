@@ -26,14 +26,13 @@ before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
   - phpenv config-rm xdebug.ini
   - composer install
+  - npm install && npm install grunt-cli -g
   - bash Test/Setup.sh
-  - npm install grunt-cli -g
-  - npm install
 
 script:
-  - if find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l | grep -v "No syntax errors detected"; then exit 1; fi
   - grunt test
 
 cache:
   directories:
   - $HOME/.composer
+  - node_modules
