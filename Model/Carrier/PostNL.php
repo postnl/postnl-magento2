@@ -39,12 +39,13 @@
 namespace TIG\PostNL\Model\Carrier;
 
 use Magento\Quote\Model\Quote\Address\RateRequest;
-use Magento\Shipping\Model\Rate\Result;
 
 class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     \Magento\Shipping\Model\Carrier\CarrierInterface
 {
+    // @codingStandardsIgnoreStart
     protected $_code = 'tig_postnl';
+    // @codingStandardsIgnoreEnd
 
     /**
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -95,6 +96,14 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         /** @var \Magento\Shipping\Model\Rate\Result $result */
         $result = $this->_rateResultFactory->create();
 
+        $method = $this->getMethod();
+        $result->append($method);
+
+        return $result;
+    }
+
+    protected function getMethod()
+    {
         /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
         $method = $this->_rateMethodFactory->create();
 
@@ -104,14 +113,11 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         $method->setMethod('PostNL');
         $method->setMethodTitle($this->getConfigData('name'));
 
-        /*you can fetch shipping price from different sources over some APIs, we used price from config.xml - xml node price*/
         $amount = $this->getConfigData('price');
 
         $method->setPrice($amount);
         $method->setCost($amount);
 
-        $result->append($method);
-
-        return $result;
+        return $method;
     }
 }

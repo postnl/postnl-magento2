@@ -27,5 +27,8 @@
         "psr-4": {
             "TIG\\PostNL\\": ""
         }
+    },
+    "require-dev": {
+        "object-calisthenics/phpcs-calisthenics-rules": "^2.0"
     }
 }

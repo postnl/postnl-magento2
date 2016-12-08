@@ -22,6 +22,8 @@ if [ ! -z $MAGENTO_DB_PASS ]; then MYSQLPASS="-p${MAGENTO_DB_PASS}"; fi
 
 mkdir -p ${BUILD_DIR}
 
+echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USERNAME}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > auth.json
+
 composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition=${MAGENTO_VERSION} ${BUILD_DIR}
 
 cp -v Test/Fixtures/env.php "${BUILD_DIR}/app/etc/env.php"
@@ -45,7 +47,6 @@ chmod 777 "${BUILD_DIR}/var/"
 chmod 777 "${BUILD_DIR}/pub/"
 
 ( cd ${BUILD_DIR} && php -d memory_limit=2048M bin/magento setup:upgrade )
-( cd ${BUILD_DIR} && php -d memory_limit=2048M bin/magento setup:static-content:deploy )
 
 cd ${BUILD_DIR}
 
