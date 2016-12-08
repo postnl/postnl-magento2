@@ -130,9 +130,13 @@
                             </tr>
                             <!-- /ko -->
 
-                            <!-- ko if: $parent.isPostNL(method.carrier_code) -->
+                            <!-- ko if: $parent.canUsePostnlDeliveryOptions(method.carrier_code) -->
                             <tr>
-                                <td colspan="10" data-bind="text: 'is postnl'"></td>
+                                <td colspan="10" class="postnl-deliveryoptions">
+                                    <!-- ko foreach: $parent.getRegion('postnl-deliveryoptions') -->
+                                    <!-- ko template: getTemplate() --><!-- /ko -->
+                                    <!-- /ko -->
+                                </td>
                             </tr>
                             <!-- /ko -->
 

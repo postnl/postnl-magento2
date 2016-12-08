@@ -35,14 +35,27 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['Magento_Checkout/js/view/shipping'], function (Shipping) {
-    return Shipping.extend({
-        canUsePostnlDeliveryOptions: function (carrier_code) {
-            if (carrier_code == 'tig_postnl') {
-                return true;
-            }
+define(['uiComponent'], function (Component) {
+    return Component.extend({
+        defaults: {
+            template: 'TIG_PostNL/deliveryoptions',
+            shipmentType: 'delivery'
+        },
 
-            return false;
+        initObservable: function () {
+            this._super().observe([
+                'shipmentType'
+            ]);
+
+            return this;
+        },
+
+        setDelivery: function () {
+            this.shipmentType('delivery');
+        },
+
+        setPickup: function () {
+            this.shipmentType('pickup');
         }
     });
 });
