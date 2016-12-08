@@ -14,6 +14,7 @@
   "homepage": "https://github.com/tig-nl/tig-extension-tig-postnl-magento2",
   "devDependencies": {
     "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
     "grunt-exec": "^1.0.1"
   }
 }
