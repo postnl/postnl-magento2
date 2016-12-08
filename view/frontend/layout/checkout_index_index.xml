@@ -6,6 +6,10 @@
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="checkout" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="TIG_PostNL::css/deliveryoptions.css"/>
+    </head>
+
     <body>
         <referenceContainer name="content">
             <referenceBlock name="checkout.root">
@@ -20,6 +24,22 @@
                                                 <item name="children" xsi:type="array">
                                                     <item name="shippingAddress" xsi:type="array">
                                                         <item name="component" xsi:type="string">TIG_PostNL/js/view/shipping</item>
+                                                        <item name="children" xsi:type="array">
+                                                            <item name="postnl-deliveryoptions" xsi:type="array">
+                                                                <item name="component" xsi:type="string">TIG_PostNL/js/view/deliveryoptions</item>
+                                                                <item name="displayArea" xsi:type="string">postnl-deliveryoptions</item>
+                                                                <item name="children" xsi:type="array">
+                                                                    <item name="postnl-deliveryoptions-delivery" xsi:type="array">
+                                                                        <item name="component" xsi:type="string">TIG_PostNL/js/view/delivery</item>
+                                                                        <item name="displayArea" xsi:type="string">postnl-deliveryoptions-delivery</item>
+                                                                    </item>
+                                                                    <item name="postnl-deliveryoptions-pickup" xsi:type="array">
+                                                                        <item name="component" xsi:type="string">TIG_PostNL/js/view/pickup</item>
+                                                                        <item name="displayArea" xsi:type="string">postnl-deliveryoptions-pickup</item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
                                                     </item>
                                                 </item>
                                             </item>

@@ -107,10 +107,10 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
         $method = $this->_rateMethodFactory->create();
 
-        $method->setCarrier('PostNL');
+        $method->setCarrier('tig_postnl');
         $method->setCarrierTitle($this->getConfigData('title'));
 
-        $method->setMethod('PostNL');
+        $method->setMethod('regular');
         $method->setMethodTitle($this->getConfigData('name'));
 
         $amount = $this->getConfigData('price');
