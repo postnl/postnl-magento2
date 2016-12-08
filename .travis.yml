@@ -24,14 +24,15 @@ env:
 
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
-  - if [ "${TRAVIS_PHP_VERSION}" != "hhvm" ] && [ "${TRAVIS_PHP_VERSION}" != "nightly" ]; then phpenv config-rm xdebug.ini; fi
-  - if find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l | grep -v "No syntax errors detected"; then exit 1; fi
+  - phpenv config-rm xdebug.ini
   - composer install
   - bash Test/Setup.sh
+  - npm install grunt-cli -g
+  - npm install
 
 script:
-  - phpcs --extensions=php --standard=phpcs.xml
-  - phpunit -c "/tmp/magento2/vendor/tig/postnl/phpunit.xml.dist"
+  - if find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l | grep -v "No syntax errors detected"; then exit 1; fi
+  - grunt test
 
 cache:
   directories:
