@@ -28,7 +28,7 @@ before_script:
   - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USERNAME}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > auth.json
   - if find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l | grep -v "No syntax errors detected"; then exit 1; fi
 
-script: bash Test/setup.sh
+script: bash Test/Setup.sh
 
 cache:
   directories:
