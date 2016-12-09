@@ -82,11 +82,11 @@ class Index extends Action
     {
         try {
             return $this->jsonResponse('your response');
-        } catch (LocalizedException $e) {
-            return $this->jsonResponse($e->getMessage());
-        } catch (\Exception $e) {
-            $this->logger->critical($e);
-            return $this->jsonResponse($e->getMessage());
+        } catch (LocalizedException $exception) {
+            return $this->jsonResponse($exception->getMessage());
+        } catch (\Exception $exception) {
+            $this->logger->critical($exception);
+            return $this->jsonResponse($exception->getMessage());
         }
     }
 

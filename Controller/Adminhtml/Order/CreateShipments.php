@@ -40,9 +40,13 @@ namespace TIG\PostNL\Controller\Adminhtml\Order;
 
 use Magento\Backend\App\Action;
 use Magento\Framework\App\ResponseInterface;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Item as OrderItem;
+use Magento\Sales\Model\Order\Shipment;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
+use Magento\Sales\Model\Convert\Order as ConvertOrder;
 
 class CreateShipments extends Action
 {
@@ -52,15 +56,36 @@ class CreateShipments extends Action
     protected $filter;
 
     /**
+     * @var ConvertOrder
+     */
+    protected $convertOrder;
+
+    /**
+     * @var Shipment
+     */
+    protected $shipment;
+
+    /**
+     * @var Order
+     */
+    protected $currentOrder;
+
+    /**
      * @param Context           $context
      * @param Filter            $filter
      * @param CollectionFactory $collectionFactory
+     * @param ConvertOrder      $convertOrder
      */
-    public function __construct(Context $context, Filter $filter, CollectionFactory $collectionFactory)
-    {
+    public function __construct(
+        Context $context,
+        Filter $filter,
+        CollectionFactory $collectionFactory,
+        ConvertOrder $convertOrder
+    ) {
         parent::__construct($context);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
+        $this->convertOrder = $convertOrder;
     }
 
     /**
@@ -74,21 +99,77 @@ class CreateShipments extends Action
         $collection = $this->collectionFactory->create();
         $collection = $this->filter->getCollection($collection);
 
-        /** @var \Magento\Sales\Model\Order $order */
+        /** @var Order $order */
         foreach ($collection as $order) {
-            echo $order->getId() . '<br>';
+            $this->currentOrder = $order;
+            $this->createShipment();
         }
     }
 
     /**
-     * @param \Magento\Sales\Model\Order $order
-     *
      * @return bool
      */
-    protected function orderHasShipment(\Magento\Sales\Model\Order $order)
+    protected function orderHasShipment()
     {
-        $size = $order->getShipmentsCollection()->getSize();
+        $collection = $this->currentOrder->getShipmentsCollection();
+        $size = $collection->getSize();
 
         return $size !== 0;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function createShipment()
+    {
+        if ($this->isValidOrder()) {
+            return $this;
+        }
+
+        $this->shipment = $this->convertOrder->toShipment($this->currentOrder);
+
+        /** @var OrderItem $item */
+        foreach ($this->currentOrder->getAllItems() as $item) {
+            $this->handleItem($item);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function orderIsValid()
+    {
+        if ($this->orderHasShipment()) {
+            return false;
+        }
+
+        if (!$this->currentOrder->canShip()) {
+            //            throw new \Magento\Framework\Exception\LocalizedException(
+            //                __('You can\'t create an shipment.')
+            //            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function handleItem(OrderItem $item)
+    {
+        // Check if order item has qty to ship or is virtual
+        if (!$item->getQtyToShip() || $item->getIsVirtual()) {
+            return;
+        }
+
+        $qtyShipped = $item->getQtyToShip();
+
+        // Create shipment item with qty
+        $shipmentItem = $this->convertOrder->itemToShipmentItem($item);
+        $shipmentItem->setQty($qtyShipped);
+
+        // Add shipment item to shipment
+        $this->shipment->addItem($shipmentItem);
     }
 }

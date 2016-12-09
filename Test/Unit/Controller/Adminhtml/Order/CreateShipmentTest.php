@@ -72,6 +72,7 @@ class CreateShipmentTest extends TestCase
 
         $collectionMock = $this->getFakeMock(Collection::class);
         $shipmentsCollection = $collectionMock->getMock();
+
         $getSize = $shipmentsCollection->expects($this->once());
         $getSize->method('getSize');
         $getSize->willReturn($hasShipment ? 1 : 0);
@@ -80,8 +81,35 @@ class CreateShipmentTest extends TestCase
         $getShipmentsCollection->method('getShipmentsCollection');
         $getShipmentsCollection->willReturn($shipmentsCollection);
 
-        $result = $this->invokeArgs('orderHasShipment', [$order], $instance);
+        $this->setProperty('currentOrder', $order, $instance);
+        $result = $this->invoke('orderHasShipment', $instance);
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function orderIsValidProvider()
+    {
+        return [
+            [false, false, false],
+            [true, false, false],
+            [false, true, false],
+            [true, true, true],
+        ];
+    }
+
+    /**
+     * @dataProvider orderIsValidProvider
+     *
+     * @param $hasShipment
+     * @param $canShip
+     * @param $expected
+     */
+    public function testOrderIsValid($hasShipment, $canShip, $expected)
+    {
+        $this->markTestIncomplete('Not done yet');
+
+        $instance = $this->getInstance();
+        $orderMock = $this->getFakeMock(Order::class);
+        $order = $orderMock->getMock();
     }
 }
