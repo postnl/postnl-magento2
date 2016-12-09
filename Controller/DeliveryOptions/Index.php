@@ -36,29 +36,71 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Model\Carrier;
+namespace TIG\PostNL\Controller\DeliveryOptions;
 
-use TIG\PostNL\Model\Carrier\PostNL;
-use TIG\PostNL\Test\TestCase;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Json\Helper\Data;
+use Magento\Framework\View\Result\PageFactory;
 
-class PostNLTest extends TestCase
+class Index extends Action
 {
     /**
-     * @param array $args
-     *
-     * @return object
+     * @var PageFactory
      */
-    function getInstance($args = [])
-    {
-        return $this->objectManager->getObject(PostNL::class, $args);
+    protected $resultPageFactory;
+
+    /**
+     * @var Data
+     */
+    protected $jsonHelper;
+
+    /**
+     * Constructor
+     *
+     * @param Context     $context
+     * @param PageFactory $resultPageFactory
+     * @param Data        $jsonHelper
+     */
+    public function __construct(
+        Context $context,
+        PageFactory $resultPageFactory,
+        Data $jsonHelper
+    ) {
+        $this->resultPageFactory = $resultPageFactory;
+        $this->jsonHelper = $jsonHelper;
+        parent::__construct($context);
     }
 
-    public function testAllowedMethods()
+    /**
+     * Execute view action
+     *
+     * @return \Magento\Framework\Controller\ResultInterface
+     */
+    public function execute()
     {
-        $instance = $this->getInstance();
-        $result = $instance->getAllowedMethods();
+        try {
+            return $this->jsonResponse('your response');
+        } catch (LocalizedException $e) {
+            return $this->jsonResponse($e->getMessage());
+        } catch (\Exception $e) {
+            $this->logger->critical($e);
+            return $this->jsonResponse($e->getMessage());
+        }
+    }
 
-        $this->assertArrayHasKey('tig_postnl', $result);
-        $this->assertEquals(['tig_postnl' => ''], $result);
+    /**
+     * Create json response
+     *
+     * @param string $response
+     *
+     * @return \Magento\Framework\Controller\ResultInterface
+     */
+    public function jsonResponse($response = '')
+    {
+        return $this->getResponse()->representJson(
+            $this->jsonHelper->jsonEncode($response)
+        );
     }
 }

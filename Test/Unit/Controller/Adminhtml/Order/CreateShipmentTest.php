@@ -36,29 +36,52 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Model\Carrier;
+namespace TIG\PostNL\Unit\Controller\Adminhtml\Order;
 
-use TIG\PostNL\Model\Carrier\PostNL;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\ResourceModel\Order\Shipment\Collection;
+use TIG\PostNL\Controller\Adminhtml\Order\CreateShipments;
 use TIG\PostNL\Test\TestCase;
 
-class PostNLTest extends TestCase
+class CreateShipmentTest extends TestCase
 {
-    /**
-     * @param array $args
-     *
-     * @return object
-     */
-    function getInstance($args = [])
+    public function getInstance($di = [])
     {
-        return $this->objectManager->getObject(PostNL::class, $args);
+        return $this->objectManager->getObject(CreateShipments::class, $di);
     }
 
-    public function testAllowedMethods()
+    public function orderHasShipmentProvider()
+    {
+        return [
+            [true, true],
+            [false, false],
+        ];
+    }
+
+    /**
+     * @param $hasShipment
+     * @param $expected
+     *
+     * @dataProvider orderHasShipmentProvider
+     */
+    public function testOrderHasShipment($hasShipment, $expected)
     {
         $instance = $this->getInstance();
-        $result = $instance->getAllowedMethods();
+        $orderMock = $this->getFakeMock(Order::class);
+        $order = $orderMock->getMock();
 
-        $this->assertArrayHasKey('tig_postnl', $result);
-        $this->assertEquals(['tig_postnl' => ''], $result);
+        $collectionMock = $this->getFakeMock(Collection::class);
+        $shipmentsCollection = $collectionMock->getMock();
+        $getSize = $shipmentsCollection->expects($this->once());
+        $getSize->method('getSize');
+        $getSize->willReturn($hasShipment ? 1 : 0);
+
+        $getShipmentsCollection = $order->expects($this->once());
+        $getShipmentsCollection->method('getShipmentsCollection');
+        $getShipmentsCollection->willReturn($shipmentsCollection);
+
+        $result = $this->invokeArgs('orderHasShipment', [$order], $instance);
+
+        $this->assertEquals($expected, $result);
     }
 }

@@ -41,12 +41,19 @@ namespace TIG\PostNL\Test;
 use Magento\TestFramework\ObjectManager;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 
-class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Magento\Framework\TestFramework\Unit\Helper\ObjectManager
      */
     protected $objectManager;
+
+    /**
+     * @param array $args
+     *
+     * @return object
+     */
+    abstract function getInstance($args = []);
 
     /**
      * Basic setup
@@ -65,5 +72,67 @@ class TestCase extends \PHPUnit_Framework_TestCase
         ini_set('display_startup_errors', '1');
 
         $this->objectManager = new ObjectManagerHelper($this);
+    }
+
+    /**
+     * @param $method
+     * @param $instance
+     *
+     * @return \ReflectionMethod
+     */
+    protected function getMethod($method, $instance)
+    {
+        $method = new \ReflectionMethod($instance, $method);
+        $method->setAccessible(true);
+
+        return $method;
+    }
+
+    /**
+     * @param      $method
+     * @param null $instance
+     *
+     * @return mixed
+     */
+    protected function invoke($method, $instance = null)
+    {
+        if ($instance === null) {
+            $instance = $this->getInstance();
+        }
+
+        $method = $this->getMethod($method, $instance);
+
+        return $method->invoke($instance);
+    }
+
+    /**
+     * @param       $method
+     * @param array $args
+     * @param null  $instance
+     *
+     * @return mixed
+     */
+    protected function invokeArgs($method, $args = [], $instance = null)
+    {
+        if ($instance === null) {
+            $instance = $this->getInstance();
+        }
+
+        $method = $this->getMethod($method, $instance);
+
+        return $method->invokeArgs($instance, $args);
+    }
+
+    /**
+     * @param $class
+     *
+     * @return \PHPUnit_Framework_MockObject_MockBuilder
+     */
+    protected function getFakeMock($class)
+    {
+        $mock = $this->getMockBuilder($class);
+        $mock->disableOriginalConstructor();
+
+        return $mock;
     }
 }

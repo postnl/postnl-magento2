@@ -1,5 +1,6 @@
-<?php
-/**
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -36,29 +37,11 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Model\Carrier;
-
-use TIG\PostNL\Model\Carrier\PostNL;
-use TIG\PostNL\Test\TestCase;
-
-class PostNLTest extends TestCase
-{
-    /**
-     * @param array $args
-     *
-     * @return object
-     */
-    function getInstance($args = [])
-    {
-        return $this->objectManager->getObject(PostNL::class, $args);
-    }
-
-    public function testAllowedMethods()
-    {
-        $instance = $this->getInstance();
-        $result = $instance->getAllowedMethods();
-
-        $this->assertArrayHasKey('tig_postnl', $result);
-        $this->assertEquals(['tig_postnl' => ''], $result);
-    }
-}
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+	<router id="admin">
+		<route frontName="postnl" id="postnl">
+			<module before="Magento_Backend" name="TIG_PostNL"/>
+		</route>
+	</router>
+</config>

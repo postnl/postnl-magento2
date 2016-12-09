@@ -36,29 +36,59 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Model\Carrier;
+namespace TIG\PostNL\Controller\Adminhtml\Order;
 
-use TIG\PostNL\Model\Carrier\PostNL;
-use TIG\PostNL\Test\TestCase;
+use Magento\Backend\App\Action;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Ui\Component\MassAction\Filter;
+use Magento\Backend\App\Action\Context;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 
-class PostNLTest extends TestCase
+class CreateShipments extends Action
 {
     /**
-     * @param array $args
-     *
-     * @return object
+     * @var \Magento\Ui\Component\MassAction\Filter
      */
-    function getInstance($args = [])
+    protected $filter;
+
+    /**
+     * @param Context           $context
+     * @param Filter            $filter
+     * @param CollectionFactory $collectionFactory
+     */
+    public function __construct(Context $context, Filter $filter, CollectionFactory $collectionFactory)
     {
-        return $this->objectManager->getObject(PostNL::class, $args);
+        parent::__construct($context);
+        $this->filter = $filter;
+        $this->collectionFactory = $collectionFactory;
     }
 
-    public function testAllowedMethods()
+    /**
+     * Dispatch request
+     *
+     * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
+     * @throws \Magento\Framework\Exception\NotFoundException
+     */
+    public function execute()
     {
-        $instance = $this->getInstance();
-        $result = $instance->getAllowedMethods();
+        $collection = $this->collectionFactory->create();
+        $collection = $this->filter->getCollection($collection);
 
-        $this->assertArrayHasKey('tig_postnl', $result);
-        $this->assertEquals(['tig_postnl' => ''], $result);
+        /** @var \Magento\Sales\Model\Order $order */
+        foreach ($collection as $order) {
+            echo $order->getId() . '<br>';
+        }
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order $order
+     *
+     * @return bool
+     */
+    protected function orderHasShipment(\Magento\Sales\Model\Order $order)
+    {
+        $size = $order->getShipmentsCollection()->getSize();
+
+        return $size !== 0;
     }
 }
