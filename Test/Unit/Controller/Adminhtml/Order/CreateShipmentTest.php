@@ -118,7 +118,7 @@ class CreateShipmentTest extends TestCase
      *
      * @dataProvider orderIsValidProvider
      */
-    public function testOrderIsValid($hasShipment, $canShip, $expected)
+    public function testIsValidOrder($hasShipment, $canShip, $expected)
     {
         $instance = $this->getInstance();
         $orderMock = $this->getFakeMock(Order::class);
@@ -131,7 +131,7 @@ class CreateShipmentTest extends TestCase
         $canShipExpects->method('canShip');
         $canShipExpects->willReturn($canShip);
 
-        $result = $this->invoke('orderIsValid', $instance);
+        $result = $this->invoke('isValidOrder', $instance);
 
         $this->assertEquals($expected, $result);
     }
