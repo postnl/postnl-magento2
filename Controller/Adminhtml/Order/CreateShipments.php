@@ -71,6 +71,11 @@ class CreateShipments extends Action
     protected $currentOrder;
 
     /**
+     * @var array
+     */
+    protected $errors = [];
+
+    /**
      * @param Context           $context
      * @param Filter            $filter
      * @param CollectionFactory $collectionFactory
@@ -104,6 +109,10 @@ class CreateShipments extends Action
             $this->currentOrder = $order;
             $this->createShipment();
         }
+
+        $this->handleErrors();
+
+        return $this->redirectBack();
     }
 
     /**
@@ -122,7 +131,7 @@ class CreateShipments extends Action
      */
     protected function createShipment()
     {
-        if ($this->isValidOrder()) {
+        if (!$this->isValidOrder()) {
             return $this;
         }
 
@@ -133,43 +142,97 @@ class CreateShipments extends Action
             $this->handleItem($item);
         }
 
+        $this->saveShipment();
+
         return $this;
     }
 
     /**
      * @return bool
      */
-    protected function orderIsValid()
+    protected function isValidOrder()
     {
         if ($this->orderHasShipment()) {
             return false;
         }
 
         if (!$this->currentOrder->canShip()) {
-//            throw new \Magento\Framework\Exception\LocalizedException(
-//                __('You can\'t create an shipment.')
-//            );
-
             return false;
         }
 
         return true;
     }
 
+    /**
+     * @param OrderItem $item
+     *
+     * @return $this
+     */
     protected function handleItem(OrderItem $item)
     {
-        // Check if order item has qty to ship or is virtual
         if (!$item->getQtyToShip() || $item->getIsVirtual()) {
-            return;
+            return $this;
         }
 
         $qtyShipped = $item->getQtyToShip();
 
-        // Create shipment item with qty
         $shipmentItem = $this->convertOrder->itemToShipmentItem($item);
         $shipmentItem->setQty($qtyShipped);
 
-        // Add shipment item to shipment
         $this->shipment->addItem($shipmentItem);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    protected function saveShipment()
+    {
+        $this->shipment->register();
+        $order = $this->shipment->getOrder();
+        $order->setState(Order::STATE_PROCESSING);
+        $order->setStatus('processing');
+
+        try {
+            $this->shipment->save();
+            $order->save();
+        } catch (\Exception $exception) {
+            $message = $exception->getMessage();
+            $localizedErrorMessage = __($message)->render();
+            $this->errors[] = $localizedErrorMessage;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function handleErrors()
+    {
+        foreach ($this->errors as $error) {
+            $this->messageManager->addErrorMessage($error);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return \Magento\Framework\Controller\Result\Redirect
+     */
+    protected function redirectBack()
+    {
+        $redirectPath = 'sales/shipment/index';
+        if (count($this->errors)) {
+            $redirectPath = 'sales/order/index';
+        }
+
+        $resultRedirect = $this->resultRedirectFactory->create();
+
+        $resultRedirect->setPath($redirectPath);
+
+        return $resultRedirect;
     }
 }
