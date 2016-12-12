@@ -146,9 +146,9 @@ class CreateShipments extends Action
         }
 
         if (!$this->currentOrder->canShip()) {
-            //            throw new \Magento\Framework\Exception\LocalizedException(
-            //                __('You can\'t create an shipment.')
-            //            );
+//            throw new \Magento\Framework\Exception\LocalizedException(
+//                __('You can\'t create an shipment.')
+//            );
 
             return false;
         }

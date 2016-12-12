@@ -27,8 +27,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
     // Default task(s).
-    grunt.registerTask('test', ['jshint:all', 'exec:phplint', 'exec:phpcs', 'exec:phpunit']);
     grunt.registerTask('translations', ['exec:translations_nl', 'exec:translations_en']);
+    grunt.registerTask('test', [
+        'exec:phpunit',
+        'exec:phpcs',
+        'exec:phplint',
+        'jshint:all'
+    ]);
     grunt.registerTask('default', []);
 
 };
