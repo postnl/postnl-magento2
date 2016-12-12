@@ -45,7 +45,7 @@ use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action\Context;
-use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Sales\Model\Convert\Order as ConvertOrder;
 
 class CreateShipments extends Action
@@ -76,15 +76,15 @@ class CreateShipments extends Action
     protected $errors = [];
 
     /**
-     * @param Context           $context
-     * @param Filter            $filter
-     * @param CollectionFactory $collectionFactory
-     * @param ConvertOrder      $convertOrder
+     * @param Context                $context
+     * @param Filter                 $filter
+     * @param OrderCollectionFactory $collectionFactory
+     * @param ConvertOrder           $convertOrder
      */
     public function __construct(
         Context $context,
         Filter $filter,
-        CollectionFactory $collectionFactory,
+        OrderCollectionFactory $collectionFactory,
         ConvertOrder $convertOrder
     ) {
         parent::__construct($context);
