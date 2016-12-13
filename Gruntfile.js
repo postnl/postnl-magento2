@@ -29,6 +29,12 @@ module.exports = function(grunt) {
     // Default task(s).
     grunt.registerTask('test', ['jshint:all', 'exec:phplint', 'exec:phpunit', 'exec:phpcs']);
     grunt.registerTask('translations', ['exec:translations_nl', 'exec:translations_en']);
+    grunt.registerTask('test', [
+        'exec:phpunit',
+        'exec:phpcs',
+        'exec:phplint',
+        'jshint:all'
+    ]);
     grunt.registerTask('default', []);
 
 };
