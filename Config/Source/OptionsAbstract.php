@@ -46,9 +46,6 @@ namespace TIG\PostNL\Config\Source;
  */
 abstract class OptionsAbstract
 {
-    const XPATH_SUPPORTED_PRODUCT_OPTIONS = 'tig_postnl/productoptions/supported_options';
-
-
     /**
      * Array for the possible product options matched by account type and flags.
      * @var array
@@ -70,15 +67,15 @@ abstract class OptionsAbstract
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
-    protected $scopeConfig;
+    protected $productOptionsConfig;
 
     /**
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \TIG\PostNL\Config\Provider\ProductOptions $config
      */
     public function __construct(
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        \TIG\PostNL\Config\Provider\ProductOptions $config
     ) {
-        $this->scopeConfig = $scopeConfig;
+        $this->productOptionsConfig = $config;
     }
 
     /**
@@ -98,7 +95,7 @@ abstract class OptionsAbstract
         }
 
         if (false !== $checkAvailable) {
-            $this->filterdOptions = $this->setOptionsBySupportedType(self::XPATH_SUPPORTED_PRODUCT_OPTIONS);
+            $this->filterdOptions = $this->setOptionsBySupportedType();
         }
 
         return $this->getOptionArrayUsableForConfiguration();
@@ -126,12 +123,11 @@ abstract class OptionsAbstract
 
     /**
      * Check by supported configuration options.
-     * @param string $xpath
      * @return array
      */
-    public function setOptionsBySupportedType($xpath)
+    public function setOptionsBySupportedType()
     {
-        $supportedTypes      = $this->getConfigFromXpath($xpath);
+        $supportedTypes      = $this->productOptionsConfig->getSupportedProductOptions();
         $supportedTypesArray = explode(',', $supportedTypes);
 
         if (empty($supportedTypesArray)) {
@@ -205,20 +201,4 @@ abstract class OptionsAbstract
         return $this->groupedOptions;
     }
 
-    /**
-     * Get Config value with xpath
-     *
-     * @param      $xpath
-     * @param null $store
-     *
-     * @return mixed
-     */
-    protected function getConfigFromXpath($xpath, $store = null)
-    {
-        return $this->scopeConfig->getValue(
-            $xpath,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-            $store
-        );
-    }
 }
