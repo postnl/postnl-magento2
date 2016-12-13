@@ -40,6 +40,7 @@ namespace TIG\PostNL\Setup;
 
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\InstallSchemaInterface;
+use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 
 abstract class AbstractTableInstaller implements InstallSchemaInterface
@@ -57,6 +58,27 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     protected $setup;
 
     /**
+     * Installs DB schema for a module
+     *
+     * @param SchemaSetupInterface   $setup
+     * @param ModuleContextInterface $context
+     *
+     * @return void
+     */
+    public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
+    {
+        $installer = $setup;
+
+        $this->setup = $setup;
+
+        if (!$installer->tableExists(static::TABLE_NAME)) {
+            $this->createTable();
+            $this->defineTable();
+            $this->saveTable();
+        }
+    }
+
+    /**
      * @return Table
      */
     protected function createTable()
@@ -66,6 +88,11 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
 
         return $this->table;
     }
+
+    /**
+     * @return void
+     */
+    abstract protected function defineTable();
 
     /**
      * @throws \Zend_Db_Exception
@@ -150,8 +177,7 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
         $ref_table_field,
         $table,
         $table_field
-    )
-    {
+    ) {
         $this->table->addForeignKey(
             $this->setup->getFkName($table, $table_field, $ref_table, $ref_table_field),
             $table_field,

@@ -38,8 +38,6 @@
  */
 namespace TIG\PostNL\Setup\V110;
 
-use Magento\Framework\Setup\ModuleContextInterface;
-use Magento\Framework\Setup\SchemaSetupInterface;
 use TIG\PostNL\Setup\AbstractTableInstaller;
 
 class InstallShipmentTable extends AbstractTableInstaller
@@ -47,43 +45,27 @@ class InstallShipmentTable extends AbstractTableInstaller
     const TABLE_NAME = 'tig_postnl_shipment';
 
     /**
-     * Installs DB schema for a module
-     *
-     * @param SchemaSetupInterface   $setup
-     * @param ModuleContextInterface $context
-     *
      * @return void
      */
-    public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
+    protected function defineTable()
     {
-        $installer = $setup;
+        $this->addEntityId();
 
-        $this->setup = $setup;
+        $this->addInt('shipment_id', 'Shipment ID', true, true);
+        $this->addForeignKey('sales_shipment', 'entity_id', static::TABLE_NAME, 'shipment_id');
 
-        if (!$installer->tableExists(static::TABLE_NAME)) {
-            $connection = $installer;
+        $this->addInt('order_id', 'Order ID', true, true);
+        $this->addForeignKey('sales_order', 'entity_id', static::TABLE_NAME, 'order_id');
 
-            $this->createTable($connection);
-            $this->addEntityId();
+        $this->addText('main_barcode', 'Main Barcode', 32);
+        $this->addText('product_code', 'Product Code', 32);
+        $this->addText('shipment_type', 'Shipment Type', 32);
 
-            $this->addInt('shipment_id', 'Shipment ID', true, true);
-            $this->addForeignKey('sales_shipment', 'entity_id', static::TABLE_NAME, 'shipment_id');
+        // @todo: Should be int
+        $this->addText('is_pakjegemak', 'Is Pakjegemak', 1);
 
-            $this->addInt('order_id', 'Order ID', true, true);
-            $this->addForeignKey('sales_order', 'entity_id', static::TABLE_NAME, 'order_id');
-
-            $this->addText('main_barcode', 'Main Barcode', 32);
-            $this->addText('product_code', 'Product Code', 32);
-            $this->addText('shipment_type', 'Shipment Type', 32);
-
-            // @todo: Should be int
-            $this->addText('is_pakjegemak', 'Is Pakjegemak', 1);
-
-            $this->addTimestamp('confirmed_at', 'Confirmed at');
-            $this->addTimestamp('created_at', 'Created at');
-            $this->addTimestamp('updated_at', 'Updated at');
-
-            $this->saveTable();
-        }
+        $this->addTimestamp('confirmed_at', 'Confirmed at');
+        $this->addTimestamp('created_at', 'Created at');
+        $this->addTimestamp('updated_at', 'Updated at');
     }
 }

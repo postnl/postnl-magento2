@@ -9,7 +9,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         exec: {
-            phpcs: 'php -ddisplay_errors=1 ~/.composer/vendor/bin/phpcs --standard=phpcs.xml --extensions=php .',
+            phpcs: 'php -ddisplay_errors=1 ~/.composer/vendor/bin/phpcs -v --standard=phpcs.xml --extensions=php .',
             phpunit: 'phpunit -c "' + phpunitPath + '"',
             phplint: 'find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l',
             translations_nl: '../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/nl_NL.csv',

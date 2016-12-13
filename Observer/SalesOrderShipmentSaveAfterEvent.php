@@ -36,32 +36,20 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Setup\V110;
+namespace TIG\PostNL\Observer;
 
-use TIG\PostNL\Setup\AbstractTableInstaller;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
 
-class InstallOrderTable extends AbstractTableInstaller
+class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
 {
-    const TABLE_NAME = 'tig_postnl_order';
-
     /**
+     * @param Observer $observer
+     *
      * @return void
      */
-    protected function defineTable()
+    public function execute(Observer $observer)
     {
-        $this->addEntityId();
-
-        $this->addInt('order_id', 'Order ID', true, true);
-        $this->addForeignKey('sales_order', 'entity_id', static::TABLE_NAME, 'order_id');
-
-        $this->addInt('quote_id', 'Quote ID', true, true);
-        $this->addForeignKey('quote', 'entity_id', static::TABLE_NAME, 'quote_id');
-
-        $this->addText('type', 'Type', 32);
-        $this->addText('is_pakjegemak', 'Is Pakjegemak', 1);
-
-        $this->addTimestamp('confirmed_at', 'Confirmed at');
-        $this->addTimestamp('created_at', 'Created at');
-        $this->addTimestamp('updated_at', 'Updated at');
+        // TODO: Implement execute() method.
     }
 }

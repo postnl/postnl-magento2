@@ -1,5 +1,6 @@
-<?php
-/**
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -36,32 +37,9 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Setup\V110;
-
-use TIG\PostNL\Setup\AbstractTableInstaller;
-
-class InstallOrderTable extends AbstractTableInstaller
-{
-    const TABLE_NAME = 'tig_postnl_order';
-
-    /**
-     * @return void
-     */
-    protected function defineTable()
-    {
-        $this->addEntityId();
-
-        $this->addInt('order_id', 'Order ID', true, true);
-        $this->addForeignKey('sales_order', 'entity_id', static::TABLE_NAME, 'order_id');
-
-        $this->addInt('quote_id', 'Quote ID', true, true);
-        $this->addForeignKey('quote', 'entity_id', static::TABLE_NAME, 'quote_id');
-
-        $this->addText('type', 'Type', 32);
-        $this->addText('is_pakjegemak', 'Is Pakjegemak', 1);
-
-        $this->addTimestamp('confirmed_at', 'Confirmed at');
-        $this->addTimestamp('created_at', 'Created at');
-        $this->addTimestamp('updated_at', 'Updated at');
-    }
-}
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_order_shipment_save_after">
+        <observer name="myObserverName" instance="TIG\PostNL\Observer\SalesOrderShipmentSaveAfterEvent" />
+    </event>
+</config>
