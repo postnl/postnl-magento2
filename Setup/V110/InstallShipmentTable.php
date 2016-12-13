@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,25 +36,36 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
-    <default>
-        <carriers>
-            <tig_postnl>
-                <active>1</active>
-                <sallowspecific>0</sallowspecific>
-                <model>TIG\PostNL\Model\Carrier\PostNL</model>
-                <name>PostNL</name>
-                <price>5.00</price>
-                <title>PostNL</title>
-                <type>I</type>
-                <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
-            </tig_postnl>
-        </carriers>
-        <tig_postnl>
-            <productoptions>
-                <supported_options>3085</supported_options>
-            </productoptions>
-        </tig_postnl>
-    </default>
-</config>
+namespace TIG\PostNL\Setup\V110;
+
+use TIG\PostNL\Setup\AbstractTableInstaller;
+
+class InstallShipmentTable extends AbstractTableInstaller
+{
+    const TABLE_NAME = 'tig_postnl_shipment';
+
+    /**
+     * @return void
+     */
+    protected function defineTable()
+    {
+        $this->addEntityId();
+
+        $this->addInt('shipment_id', 'Shipment ID', true, true);
+        $this->addForeignKey('sales_shipment', 'entity_id', static::TABLE_NAME, 'shipment_id');
+
+        $this->addInt('order_id', 'Order ID', true, true);
+        $this->addForeignKey('sales_order', 'entity_id', static::TABLE_NAME, 'order_id');
+
+        $this->addText('main_barcode', 'Main Barcode', 32);
+        $this->addText('product_code', 'Product Code', 32);
+        $this->addText('shipment_type', 'Shipment Type', 32);
+
+        // @todo: Should be int
+        $this->addText('is_pakjegemak', 'Is Pakjegemak', 1);
+
+        $this->addTimestamp('confirmed_at', 'Confirmed at');
+        $this->addTimestamp('created_at', 'Created at');
+        $this->addTimestamp('updated_at', 'Updated at');
+    }
+}

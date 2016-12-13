@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,25 +36,47 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
-    <default>
-        <carriers>
-            <tig_postnl>
-                <active>1</active>
-                <sallowspecific>0</sallowspecific>
-                <model>TIG\PostNL\Model\Carrier\PostNL</model>
-                <name>PostNL</name>
-                <price>5.00</price>
-                <title>PostNL</title>
-                <type>I</type>
-                <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
-            </tig_postnl>
-        </carriers>
-        <tig_postnl>
-            <productoptions>
-                <supported_options>3085</supported_options>
-            </productoptions>
-        </tig_postnl>
-    </default>
-</config>
+namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
+
+use Magento\Ui\Component\Listing\Columns\Column;
+
+abstract class AbstractGrid extends Column
+{
+    /**
+     * @param array $dataSource
+     *
+     * @return array
+     */
+    public function prepareDataSource(array $dataSource)
+    {
+        if (isset($dataSource['data']['items'])) {
+            $items = $dataSource['data']['items'];
+            $items = $this->handleItems($items);
+
+            $dataSource['data']['items'] = $items;
+        }
+
+        return $dataSource;
+    }
+
+    /**
+     * @param array $items
+     *
+     * @return array
+     */
+    protected function handleItems(array $items)
+    {
+        foreach ($items as $index => $item) {
+            $items[$index][$this->getData('name')] = $this->getCellContents($item);
+        }
+
+        return $items;
+    }
+
+    /**
+     * @param object $item
+     *
+     * @return string
+     */
+    abstract protected function getCellContents($item);
+}
