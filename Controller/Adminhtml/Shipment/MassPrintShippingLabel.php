@@ -109,7 +109,6 @@ class MassPrintShippingLabel extends Action
 
     protected function getLabel()
     {
-
     }
 
     protected function outputPdf()
@@ -122,4 +121,3 @@ class MassPrintShippingLabel extends Action
         );
     }
 }
-
