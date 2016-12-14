@@ -48,3 +48,5 @@ chmod 777 "${BUILD_DIR}/var/"
 chmod 777 "${BUILD_DIR}/pub/"
 
 ( cd ${BUILD_DIR} && php -d memory_limit=2048M bin/magento setup:upgrade )
+
+composer install
