@@ -16,16 +16,18 @@ php:
 
 env:
   - MAGENTO_VERSION=2.0.8
-  - MAGENTO_VERSION=2.0.9
-  - MAGENTO_VERSION=2.0.10
-  - MAGENTO_VERSION=2.1.0
-  - MAGENTO_VERSION=2.1.1
-  - MAGENTO_VERSION=2.1.2
+#  - MAGENTO_VERSION=2.0.9
+#  - MAGENTO_VERSION=2.0.10
+#  - MAGENTO_VERSION=2.1.0
+#  - MAGENTO_VERSION=2.1.1
+#  - MAGENTO_VERSION=2.1.2
 
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
   - phpenv config-rm xdebug.ini
-#  - composer install
+  - COMPOSER_HOME=$HOME/.composer
+  - COMPOSER_CACHE_DIR=$HOME/.composer/cache
+  - composer install
   - npm install && npm install grunt-cli -g
   - bash Test/Setup.sh
 
