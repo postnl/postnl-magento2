@@ -53,7 +53,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return object
      */
-    abstract function getInstance($args = []);
+    abstract public function getInstance($args = []);
 
     /**
      * Basic setup

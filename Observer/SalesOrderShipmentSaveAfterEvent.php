@@ -40,9 +40,21 @@ namespace TIG\PostNL\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use TIG\PostNL\Model\ShipmentFactory;
 
 class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
 {
+    /**
+     * @var ShipmentFactory
+     */
+    private $shipmentFactory;
+
+    public function __construct(
+        ShipmentFactory $shipmentFactory
+    ) {
+        $this->shipmentFactory = $shipmentFactory;
+    }
+
     /**
      * @param Observer $observer
      *
@@ -50,6 +62,12 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        // TODO: Implement execute() method.
+        /** @var \Magento\Sales\Model\Order\Shipment $shipment */
+        $shipment = $observer->getData('data_object');
+
+        /** @var \TIG\PostNL\Model\Shipment $model */
+        $model = $this->shipmentFactory->create();
+        $model->setData('shipment_id', $shipment->getId());
+        $model->save();
     }
 }
