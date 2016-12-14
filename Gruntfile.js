@@ -1,8 +1,10 @@
 module.exports = function(grunt) {
-    var phpunitPath = 'phpunit.xml';
+    var phpunitPath = '../../../../';
+    var phpunitXmlPath = 'phpunit.xml';
 
     if (grunt.file.isDir('/tmp/magento2/')) {
-        phpunitPath = '/tmp/magento2/vendor/tig/postnl/phpunit.xml.dist'
+        phpunitPath = '/tmp/magento2/';
+        phpunitXmlPath = '/tmp/magento2/vendor/tig/postnl/phpunit.xml.dist'
     }
 
     // Project configuration.
@@ -10,7 +12,7 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         exec: {
             phpcs: 'php -ddisplay_errors=1 ~/.composer/vendor/bin/phpcs -v --standard=phpcs.xml --extensions=php .',
-            phpunit: 'phpunit -c "' + phpunitPath + '"',
+            phpunit: phpunitPath + 'vendor/bin/phpunit -c "' + phpunitXmlPath + '"',
             phplint: 'find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l',
             translations_nl: '../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/nl_NL.csv',
             translations_en: '../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/en_US.csv'
