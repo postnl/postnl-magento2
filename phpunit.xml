@@ -10,8 +10,11 @@
          colors="true"
          bootstrap="../../../../dev/tests/unit/framework/bootstrap.php"
         >
-    <testsuite name="Magento Unit Tests">
+    <testsuite name="unit">
         <directory suffix="Test.php">./Test/Unit</directory>
+    </testsuite>
+    <testsuite name="integration">
+        <directory suffix="Test.php">./Test/Integration</directory>
     </testsuite>
     <php>
         <ini name="date.timezone" value="America/Los_Angeles"/>
