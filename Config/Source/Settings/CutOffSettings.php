@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,30 +36,49 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
-    <default>
-        <carriers>
-            <tig_postnl>
-                <active>1</active>
-                <sallowspecific>0</sallowspecific>
-                <model>TIG\PostNL\Model\Carrier\PostNL</model>
-                <name>PostNL</name>
-                <price>5.00</price>
-                <title>PostNL</title>
-                <type>I</type>
-                <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
-            </tig_postnl>
-        </carriers>
-        <tig_postnl>
-            <productoptions>
-                <supported_options>3085</supported_options>
-            </productoptions>
-            <shippingoptions>
-                <max_deliverydays>5</max_deliverydays>
-                <eveningdelivery_fee>2</eveningdelivery_fee>
-                <sundaydelivery_fee>2</sundaydelivery_fee>
-            </shippingoptions>
-        </tig_postnl>
-    </default>
-</config>
+namespace TIG\PostNL\Config\Source\Settings;
+
+use \Magento\Framework\Option\ArrayInterface;
+
+/**
+ * Class CutOffSettings
+ *
+ * @package TIG\PostNL\Config\Source\Settings
+ */
+class CutOffSettings implements ArrayInterface
+{
+    /**
+     * @return array
+     */
+    public function toOptionArray()
+    {
+        $option = [
+            ['value' => '', 'label' => __('No cut-off time')],
+            ['value' => '01:00:00', 'label' => '01:00'],
+            ['value' => '02:00:00', 'label' => '02:00'],
+            ['value' => '03:00:00', 'label' => '03:00'],
+            ['value' => '04:00:00', 'label' => '04:00'],
+            ['value' => '05:00:00', 'label' => '05:00'],
+            ['value' => '06:00:00', 'label' => '06:00'],
+            ['value' => '07:00:00', 'label' => '07:00'],
+            ['value' => '08:00:00', 'label' => '08:00'],
+            ['value' => '09:00:00', 'label' => '09:00'],
+            ['value' => '10:00:00', 'label' => '10:00'],
+            ['value' => '11:00:00', 'label' => '11:00'],
+            ['value' => '12:00:00', 'label' => '12:00'],
+            ['value' => '13:00:00', 'label' => '13:00'],
+            ['value' => '14:00:00', 'label' => '14:00'],
+            ['value' => '15:00:00', 'label' => '15:00'],
+            ['value' => '16:00:00', 'label' => '16:00'],
+            ['value' => '17:00:00', 'label' => '17:00'],
+            ['value' => '18:00:00', 'label' => '18:00'],
+            ['value' => '19:00:00', 'label' => '19:00'],
+            ['value' => '20:00:00', 'label' => '20:00'],
+            ['value' => '21:00:00', 'label' => '21:00'],
+            ['value' => '22:00:00', 'label' => '22:00'],
+            ['value' => '23:00:00', 'label' => '23:00'],
+        ];
+
+        return $option;
+    }
+}
