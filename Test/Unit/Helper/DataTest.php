@@ -36,55 +36,39 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Integration\Observer;
+namespace TIG\PostNL\Test\Unit\Helper;
 
-use Magento\Framework\Event\Observer;
-use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\ResourceModel\Order\Collection;
-use TIG\PostNL\Model\OrderFactory;
-use TIG\PostNL\Observer\SalesOrderSaveAfterEvent;
-use TIG\PostNL\Test\Integration\TestCase;
+use TIG\PostNL\Helper\Data as Helper;
+use TIG\PostNL\Test\TestCase;
 
-/**
- * Class TestSalesOrderSaveAfterEvent
- *
- * @package TIG\PostNL\Integration\Observer
- * @magentoDbIsolation enabled
- */
-class TestSalesOrderSaveAfterEvent extends TestCase
+class DataTest extends TestCase
 {
-    protected $instanceClass = SalesOrderSaveAfterEvent::class;
+    protected $instanceClass = Helper::class;
+
+    public function isPostNLOrderProvider()
+    {
+        return [
+            ['tig_postnl_regular', true],
+            ['dhl_regular', false],
+        ];
+    }
 
     /**
-     * @magentoDataFixture Magento/Sales/_files/order.php
+     * @param $shippingMethod
+     * @param $expected
+     *
+     * @dataProvider isPostNLOrderProvider
      */
-    public function testExecute()
+    public function testIsPostNLOrder($shippingMethod, $expected)
     {
-        /** @var Collection $orderCollection */
-        $orderCollection = $this->getObject(Collection::class);
-        $orderCollection->addFieldToFilter('customer_email', 'customer@null.com');
-
         /** @var Order $order */
-        $order = $orderCollection->getFirstItem();
-        $order->setData('shipping_method', 'tig_postnl_regular');
+        $order = $this->objectManager->getObject(Order::class);
+        $order->setData('shipping_method', $shippingMethod);
 
-        /** @var Observer $observer */
-        $observer = $this->getObject(Observer::class);
-        $observer->setData('data_object', $order);
+        /** @var bool $result */
+        $result = $this->getInstance()->isPostNLOrder($order);
 
-        $this->getInstance()->execute($observer);
-
-        /** @var OrderFactory $orderFactory */
-        $factory = $this->objectManager->create(OrderFactory::class);
-
-        /** @var Order $postnlOrder */
-        $postnlOrder = $factory->create();
-        $orderCollection = $postnlOrder->getCollection();
-        $orderCollection->addFieldToFilter('order_id', $order->getId());
-        $model = $orderCollection->getFirstItem();
-
-        $this->assertEquals($order->getId(), $model->getData('order_id'));
+        $this->assertEquals($expected, $result);
     }
 }

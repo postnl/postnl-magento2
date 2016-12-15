@@ -39,52 +39,51 @@
 namespace TIG\PostNL\Integration\Observer;
 
 use Magento\Framework\Event\Observer;
-use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\ResourceModel\Order\Collection;
-use TIG\PostNL\Model\OrderFactory;
-use TIG\PostNL\Observer\SalesOrderSaveAfterEvent;
-use TIG\PostNL\Test\Integration\TestCase;
+use TIG\PostNL\Observer\SalesOrderShipmentSaveAfterEvent;
+use TIG\PostNL\Test\TestCase;
 
-/**
- * Class TestSalesOrderSaveAfterEvent
- *
- * @package TIG\PostNL\Integration\Observer
- * @magentoDbIsolation enabled
- */
-class TestSalesOrderSaveAfterEvent extends TestCase
+class TestSalesOrderShipmentSaveAfterEvent extends TestCase
 {
-    protected $instanceClass = SalesOrderSaveAfterEvent::class;
-
     /**
-     * @magentoDataFixture Magento/Sales/_files/order.php
+     * @param array $args
+     *
+     * @return SalesOrderShipmentSaveAfterEvent
      */
+    public function getInstance($args = [])
+    {
+        return $this->objectManager->getObject(SalesOrderShipmentSaveAfterEvent::class, $args);
+    }
+
     public function testExecute()
     {
-        /** @var Collection $orderCollection */
-        $orderCollection = $this->getObject(Collection::class);
-        $orderCollection->addFieldToFilter('customer_email', 'customer@null.com');
+        $id = rand(1000, 2000);
 
-        /** @var Order $order */
-        $order = $orderCollection->getFirstItem();
-        $order->setData('shipping_method', 'tig_postnl_regular');
+        $shipmentFactoryMock = $this->getMock('\TIG\PostNL\Model\ShipmentFactory', ['create', 'setData', 'save']);
+
+        $createExpects = $shipmentFactoryMock->expects($this->once());
+        $createExpects->method('create');
+        $createExpects->willReturnSelf();
+
+        $setDataExpects = $shipmentFactoryMock->expects($this->once());
+        $setDataExpects->method('setData');
+        $setDataExpects->with('shipment_id', $id);
+
+        $saveExpects = $shipmentFactoryMock->expects($this->once());
+        $saveExpects->method('save');
+
+        $shipmentMockBuilder = $this->getMockBuilder(Shipment::class, ['getId']);
+        $shipmentMockBuilder->disableOriginalConstructor();
+        $shipmentMock = $shipmentMockBuilder->getMock();
+
+        $getIdMock = $shipmentMock->expects($this->once());
+        $getIdMock->method('getId');
+        $getIdMock->willReturn($id);
 
         /** @var Observer $observer */
-        $observer = $this->getObject(Observer::class);
-        $observer->setData('data_object', $order);
+        $observer = $this->objectManager->getObject(Observer::class);
+        $observer->setData('data_object', $shipmentMock);
 
-        $this->getInstance()->execute($observer);
-
-        /** @var OrderFactory $orderFactory */
-        $factory = $this->objectManager->create(OrderFactory::class);
-
-        /** @var Order $postnlOrder */
-        $postnlOrder = $factory->create();
-        $orderCollection = $postnlOrder->getCollection();
-        $orderCollection->addFieldToFilter('order_id', $order->getId());
-        $model = $orderCollection->getFirstItem();
-
-        $this->assertEquals($order->getId(), $model->getData('order_id'));
+        $this->getInstance(['shipmentFactory' => $shipmentFactoryMock])->execute($observer);
     }
 }
