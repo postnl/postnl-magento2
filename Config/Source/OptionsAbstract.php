@@ -89,7 +89,7 @@ abstract class OptionsAbstract
         if (false !== $flags && is_array($flags)) {
             $this->filterdOptions = [];
             // Filter availableOptions on flags
-            foreach($this->availableOptions as $key => $option) {
+            foreach ($this->availableOptions as $key => $option) {
                 $this->setOptionsByFlagFilters($flags, $option, $key);
             }
         }
@@ -200,5 +200,4 @@ abstract class OptionsAbstract
     {
         return $this->groupedOptions;
     }
-
 }

@@ -51,15 +51,15 @@ class Fieldset extends \Magento\Config\Block\System\Config\Form\Fieldset
         '0' => 'modus_off'
     ];
 
-    const MODUS = 'tig_postnl/generalconfiguration_extension_status/modus';
-
-
     /**
      * {@inheritdoc}
      */
     protected function _getFrontendClass($element)
     {
-        $modus     = $this->_scopeConfig->getValue(self::MODUS);
+        $modus     = $this->_scopeConfig->getValue(
+            \TIG\PostNL\Config\Provider\AccountConfiguration::XPATH_GENERAL_EXTENSION_STATUS_MODUS
+        );
+
         $className = 'off';
         if (array_key_exists($modus, $this->classNames)) {
             $className = $this->classNames[$modus];

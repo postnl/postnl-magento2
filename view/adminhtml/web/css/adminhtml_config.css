@@ -216,6 +216,11 @@
     float:left;
 }
 
+.support-postnl-tig li.first img,
+.support-postnl-tig li.last img {
+    padding-right: 5px;
+}
+
 /* ==================================== SupportTab - Documentation ==================================== */
 
 .external_link {
