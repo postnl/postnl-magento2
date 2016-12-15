@@ -1,9 +1,9 @@
 module.exports = function(grunt) {
-    var phpunitPath = '../../../../';
+    var magento2path = '../../../../';
     var phpunitXmlPath = 'phpunit.xml';
 
     if (grunt.file.isDir('/tmp/magento2/')) {
-        phpunitPath = '/tmp/magento2/';
+        magento2path = '/tmp/magento2/';
         phpunitXmlPath = '/tmp/magento2/vendor/tig/postnl/phpunit.xml.dist'
     }
 
@@ -12,7 +12,10 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         exec: {
             phpcs: 'php -ddisplay_errors=1 ~/.composer/vendor/bin/phpcs -v --standard=phpcs.xml --extensions=php .',
-            phpunit: phpunitPath + 'vendor/bin/phpunit -c "' + phpunitXmlPath + '"',
+            unitTests: magento2path + 'vendor/bin/phpunit -c "' + phpunitXmlPath + '"',
+            integrationTests:
+                'cd ' + magento2path + 'dev/tests/integration &&' +
+                '../../../vendor/bin/phpunit --testsuite "TIG PostNL Integration Tests"',
             phplint: 'find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l',
             translations_nl: '../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/nl_NL.csv',
             translations_en: '../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/en_US.csv'
@@ -31,7 +34,8 @@ module.exports = function(grunt) {
     // Default task(s).
     grunt.registerTask('translations', ['exec:translations_nl', 'exec:translations_en']);
     grunt.registerTask('test', [
-        'exec:phpunit',
+        'exec:unitTests',
+        'exec:integrationTests',
         'exec:phpcs',
         'exec:phplint',
         'jshint:all'

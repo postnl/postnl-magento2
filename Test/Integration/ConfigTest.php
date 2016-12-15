@@ -36,55 +36,43 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Integration\Observer;
+namespace TIG\PostNL\Test\Integration;
 
-use Magento\Framework\Event\Observer;
-use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\ResourceModel\Order\Collection;
-use TIG\PostNL\Model\OrderFactory;
-use TIG\PostNL\Observer\SalesOrderSaveAfterEvent;
-use TIG\PostNL\Test\Integration\TestCase;
+use Magento\Framework\App\DeploymentConfig;
+use Magento\Framework\App\DeploymentConfig\Reader as DeploymentConfigReader;
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Component\ComponentRegistrar;
+use Magento\Framework\Module\ModuleList;
 
-/**
- * Class TestSalesOrderSaveAfterEvent
- *
- * @package TIG\PostNL\Integration\Observer
- * @magentoDbIsolation enabled
- */
-class TestSalesOrderSaveAfterEvent extends TestCase
+class ConfigTest extends TestCase
 {
-    protected $instanceClass = SalesOrderSaveAfterEvent::class;
+    protected $moduleName = 'TIG_PostNL';
 
-    /**
-     * @magentoDataFixture Magento/Sales/_files/order.php
-     */
-    public function testExecute()
+    public function testModuleIsRegistered()
     {
-        /** @var Collection $orderCollection */
-        $orderCollection = $this->getObject(Collection::class);
-        $orderCollection->addFieldToFilter('customer_email', 'customer@null.com');
+        $registrar = new ComponentRegistrar();
+        $modulesList = $registrar->getPaths(ComponentRegistrar::MODULE);
 
-        /** @var Order $order */
-        $order = $orderCollection->getFirstItem();
-        $order->setData('shipping_method', 'tig_postnl_regular');
+        $this->assertArrayHasKey($this->moduleName, $modulesList);
+    }
 
-        /** @var Observer $observer */
-        $observer = $this->getObject(Observer::class);
-        $observer->setData('data_object', $order);
+    public function testTheModuleIsConfiguredAndEnabledInTheTestEnvironment()
+    {
+        /** @var ModuleList $moduleList */
+        $moduleList = $this->objectManager->create(ModuleList::class);
 
-        $this->getInstance()->execute($observer);
+        $this->assertTrue($moduleList->has($this->moduleName));
+    }
 
-        /** @var OrderFactory $orderFactory */
-        $factory = $this->objectManager->create(OrderFactory::class);
+    public function testTheModuleIsConfiguredAndEnabledInTheRealEnvironment()
+    {
+        $dirList = $this->objectManager->create(DirectoryList::class, ['root' => BP]);
+        $configReader = $this->objectManager->create(DeploymentConfigReader::class, ['dirList' => $dirList]);
+        $deploymentConfig = $this->objectManager->create(DeploymentConfig::class, ['reader' => $configReader]);
 
-        /** @var Order $postnlOrder */
-        $postnlOrder = $factory->create();
-        $orderCollection = $postnlOrder->getCollection();
-        $orderCollection->addFieldToFilter('order_id', $order->getId());
-        $model = $orderCollection->getFirstItem();
+        /** @var ModuleList $moduleList */
+        $moduleList = $this->objectManager->create(ModuleList::class, ['config' => $deploymentConfig]);
 
-        $this->assertEquals($order->getId(), $model->getData('order_id'));
+        $this->assertTrue($moduleList->has($this->moduleName));
     }
 }

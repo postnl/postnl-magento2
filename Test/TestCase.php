@@ -44,6 +44,11 @@ use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHe
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var null|string
+     */
+    protected $instanceClass;
+
+    /**
      * @var \Magento\Framework\TestFramework\Unit\Helper\ObjectManager
      */
     protected $objectManager;
@@ -53,7 +58,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return object
      */
-    abstract public function getInstance($args = []);
+    public function getInstance($args = [])
+    {
+        return $this->getObject($this->instanceClass, $args);
+    }
 
     /**
      * Basic setup
@@ -155,5 +163,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $mock->disableOriginalConstructor();
 
         return $mock;
+    }
+
+    protected function getObject($class, $args = [])
+    {
+        return $this->objectManager->getObject($class, $args);
     }
 }
