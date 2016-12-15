@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+**
+ *                  ___________       __            __
+ *                  \__    ___/____ _/  |_ _____   |  |
+ *                    |    |  /  _ \\   __\\__  \  |  |
+ *                    |    | |  |_| ||  |   / __ \_|  |__
+ *                    |____|  \____/ |__|  (____  /|____/
+ *                                              \/
+ *          ___          __                                   __
+ *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
+ *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
+ *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
+ *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
+ *                  \/                           \/
+ *                  ________
+ *                 /  _____/_______   ____   __ __ ______
+ *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
+ *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
+ *                 \______  /|__|    \____/ |____/ |   __/
+ *                        \/                       |__|
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ *
+ * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <!--General configuration section-->
+    <group id="generalconfiguration" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>General configuration and account information</label>
+        <frontend_model>TIG\PostNL\Block\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-section</fieldset_css>
+
+
+        <group id="extension_status" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Extension status</label>
+            <fieldset_css>tig_postnl-sub-section</fieldset_css>
+            <field id="modus" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Modus</label>
+                <source_model>TIG\PostNL\Config\Source\General\Modus</source_model>
+                <config_path>tig_postnl/generalconfiguration_extension_status/modus</config_path>
+            </field>
+            <!--Live Fields-->
+            <field id="customer_number" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Customernumber</label>
+                <config_path>tig_postnl/generalconfiguration_extension_status/customer_number</config_path>
+                <depends>
+                    <field id="modus">1</field>
+                </depends>
+            </field>
+            <field id="customer_code" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Customercode</label>
+                <config_path>tig_postnl/generalconfiguration_extension_status/customer_code</config_path>
+                <depends>
+                    <field id="modus">1</field>
+                </depends>
+            </field>
+            <field id="api_key" translate="label" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Api Key</label>
+                <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                <config_path>tig_postnl/generalconfiguration_extension_status/api_key</config_path>
+                <depends>
+                    <field id="modus">1</field>
+                </depends>
+            </field>
+            <field id="bls_code" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>BLS location code</label>
+                <config_path>tig_postnl/generalconfiguration_extension_status/bls_code</config_path>
+                <depends>
+                    <field id="modus">1</field>
+                </depends>
+            </field>
+            <!--Test Fields-->
+            <field id="customer_number_test" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Customernumber (test)</label>
+                <config_path>tig_postnl/generalconfiguration_extension_status/customer_number_test</config_path>
+                <depends>
+                    <field id="modus">2</field>
+                </depends>
+            </field>
+            <field id="customer_code_test" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Customercode (test)</label>
+                <config_path>tig_postnl/generalconfiguration_extension_status/customer_code_test</config_path>
+                <depends>
+                    <field id="modus">2</field>
+                </depends>
+            </field>
+            <field id="api_key_test" translate="label" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Api Key</label>
+                <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                <config_path>tig_postnl/generalconfiguration_extension_status/api_key_test</config_path>
+                <depends>
+                    <field id="modus">2</field>
+                </depends>
+            </field>
+            <field id="bls_code_test" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>BLS location code (test)</label>
+                <config_path>tig_postnl/generalconfiguration_extension_status/bls_code_test</config_path>
+                <depends>
+                    <field id="modus">2</field>
+                </depends>
+            </field>
+        </group>
+
+        <group id="shipping_address" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Shippingaddress</label>
+            <fieldset_css>tig_postnl-sub-section</fieldset_css>
+            <field id="firstname" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Firstname</label>
+                <config_path>tig_postnl/generalconfiguration_shipping_address/firstname</config_path>
+            </field>
+            <field id="lastname" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Lastname</label>
+                <config_path>tig_postnl/generalconfiguration_shipping_address/lastname</config_path>
+            </field>
+            <field id="company" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Company</label>
+                <config_path>tig_postnl/generalconfiguration_shipping_address/company</config_path>
+            </field>
+            <field id="streetname" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Streetname</label>
+                <config_path>tig_postnl/generalconfiguration_shipping_address/streetname</config_path>
+            </field>
+            <field id="department" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Department</label>
+                <config_path>tig_postnl/generalconfiguration_shipping_address/department</config_path>
+            </field>
+            <field id="housenumber" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Housenumber</label>
+                <config_path>tig_postnl/generalconfiguration_shipping_address/housenumber</config_path>
+            </field>
+            <field id="housenumber_addition" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Housenumber addition</label>
+                <config_path>tig_postnl/generalconfiguration_shipping_address/housenumber_addition</config_path>
+            </field>
+            <field id="postcode" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Postcode</label>
+                <config_path>tig_postnl/generalconfiguration_shipping_address/postcode</config_path>
+            </field>
+            <field id="city" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>City</label>
+                <config_path>tig_postnl/generalconfiguration_shipping_address/city</config_path>
+            </field>
+        </group>
+
+    </group>
+</include>

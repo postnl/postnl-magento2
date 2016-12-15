@@ -39,8 +39,9 @@
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <!--Productoptions section-->
-    <group id="tig_postnl_productoptions" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="productoptions" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Productoptions</label>
+        <frontend_model>TIG\PostNL\Block\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-section</fieldset_css>
 
         <field id="supported_options" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -59,18 +60,27 @@
             <label>Default evening option</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsEveningOptions</source_model>
             <config_path>tig_postnl/productoptions/default_evening_option</config_path>
+            <depends>
+                <field id="tig_postnl/shippingoptions/eveningdelivery_active">1</field>
+            </depends>
         </field>
 
         <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Default postoffice delivery option</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakOptions</source_model>
             <config_path>tig_postnl/productoptions/default_pakjegemak_option</config_path>
+            <depends>
+                <field id="tig_postnl/shippingoptions/pakjegemak_active">1</field>
+            </depends>
         </field>
 
         <field id="default_sunday_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Default sundaydelivery option</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsSundayOptions</source_model>
             <config_path>tig_postnl/productoptions/default_sunday_option</config_path>
+            <depends>
+                <field id="tig_postnl/shippingoptions/sundaydelivery_active">1</field>
+            </depends>
         </field>
 
     </group>

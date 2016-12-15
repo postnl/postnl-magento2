@@ -1,0 +1,150 @@
+<?php
+/**
+ *                  ___________       __            __
+ *                  \__    ___/____ _/  |_ _____   |  |
+ *                    |    |  /  _ \\   __\\__  \  |  |
+ *                    |    | |  |_| ||  |   / __ \_|  |__
+ *                    |____|  \____/ |__|  (____  /|____/
+ *                                              \/
+ *          ___          __                                   __
+ *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
+ *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
+ *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
+ *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
+ *                  \/                           \/
+ *                  ________
+ *                 /  _____/_______   ____   __ __ ______
+ *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
+ *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
+ *                 \______  /|__|    \____/ |____/ |   __/
+ *                        \/                       |__|
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ *
+ * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
+?>
+
+<?php
+/** @var \TIG\PostNL\Block\Adminhtml\Config\Support\SupportTab $this */
+?>
+<div id="supporttab" class="tig-postnl-supporttab" data-mage-init='{"postnlConfig": true}'>
+
+    <div id="block">
+        <div class="block-legend">
+            <h3 ><?php echo $block->escapeHtml(__('Legend'));?></h3>
+            <div>
+                <ul id="legend">
+                    <li class="disabled">
+                        <span class="img"></span>
+                        <span class="text"><?php echo $block->escapeHtml(__('Shipping method'));?>: </span>
+                        <span class="status"><?php echo $block->escapeHtml(__('Disabled'));?></span>
+                    </li>
+                    <li class="test">
+                        <span class="img"></span>
+                        <span class="text"><?php echo $block->escapeHtml(__('Shipping method'));?>: </span>
+                        <span class="status"><?php echo $block->escapeHtml(__('Test Mode'));?></span>
+                    </li>
+                    <li class="live">
+                        <span class="img"></span>
+                        <span class="text"><?php echo $block->escapeHtml(__('Shipping method'));?>: </span>
+                        <span class="status"><?php echo $block->escapeHtml(__('Live Mode'));?></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="block-version">
+            <h3 ><?php echo $block->escapeHtml(__('Magento &amp; 3rd party version compatibility'));?></h3>
+            <div>
+                <ul class="version-compatibility">
+                    <li>
+                        <span class="text"><?php echo $block->escapeHtml(__('Magento Community Edition version'));?>:</span>
+                        <span class="version"> 2.1.2 </span>
+                    </li>
+                    <li>
+                        <span class="text"><?php echo $block->escapeHtml(__('Magento Enterprise Edition version'));?>:</span>
+                        <span class="version"> 2.1.2 </span>
+                    </li>
+                    <li>
+                        <span class="text"><?php echo $block->escapeHtml(__('PostNL version'));?>:</span>
+                        <span class="version"><?php echo $this->getVersionNumber(); ?></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <?php // section 1 ?>
+    <div id="section">
+        <div class="collapse-title" data-role="title">
+            <h3 data-role="trigger"><?php echo $block->escapeHtml(__('Support'));?></h3>
+        </div>
+        <div class="collapse-content support-postnl-tig" data-role="content" style="display:none;">
+            <ul>
+                <p><?php echo $block->escapeHtml(__('This extension is developed by TIG, commissioned by PostNL.'));?></p>
+                <h4><?php echo $block->escapeHtml(__('Extension basic configuration and account information'));?></h4>
+                <p><?php echo $block->escapeHtml(__('For questions related to your PostNL account and PostNL delivery options, please contact PostNL.'));?></p>
+            </ul>
+            <div class="block_contact">
+                <ul>
+                    <li class="first"><?php echo $block->escapeHtml(__('Phone:'));?></li>
+                    <li class="last">+31 (0)58-2333343</li>
+                </ul>
+                <ul>
+                    <li class="first"><?php echo $block->escapeHtml(__('Website:'));?></li>
+                    <li class="last"><a href="<?php echo $block->escapeHtml(__('https://www.postnl.nl/zakelijke-oplossingen/webwinkels/bezorgopties-voor-mijn-klanten/'));?>"  target="_blank"><?php echo $block->escapeHtml(__('www.postnl-payments.com'));?></a></li>
+                </ul>
+            </div>
+
+            <ul>
+                <h4><?php echo $block->escapeHtml(__('Extension support and advanced configuration'));?></h4>
+                <p><?php echo $block->escapeHtml(__('For questions about installing and configuring the extension please consult the relevant documentation:'));?></p>
+            </ul>
+            <div class="block_support">
+                <ul>
+                    <li class="first"><?php echo $block->escapeHtml(__('Frequently asked questions :'));?></li>
+                    <li class="last"><a target="_blank" href="http://servicedesk.tig.nl/"><?php echo $block->escapeHtml(__('FAQ'));?></a></li>
+                </ul>
+                <ul>
+                    <li class="first"><?php echo $block->escapeHtml(__('Support by email:'));?></li>
+                    <li class="last"><a href="mailto:citservicedesk@postnl.nl">servicedesk@postnl.nl</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <?php // section 2 ?>
+    <div id="section">
+        <div class="collapse-title" data-role="title">
+            <h3 data-role="trigger"><?php echo $block->escapeHtml(__('Documentation'));?></h3>
+        </div>
+        <div class="collapse-content" data-role="content" style="display:none;">
+            <ul>
+                <p><?php echo $block->escapeHtml(__('A list of documents regarding the extension.'));?></p>
+                <li><a class="pdf" target="_blank" href="#" title="<?php echo $block->escapeHtml(__('Download a PDF format of the manual. Currently the manual is only available in Dutch.'));?>"><?php echo $block->escapeHtml(__('Installation and Configuration Manual PostNL.pdf'));?>
+                        <img class="external_link" src="<?php echo $this->getViewFileUrl('TIG_PostNL::images/external_link_32.png')?>" alt="<?php echo $block->escapeHtml(__('Installation and Configuration Manual PostNL.pdf'));?>" width="16" height="16"/>
+                    </a>
+                </li>
+                <li><a target="_blank" href="#" title="<?php echo $block->escapeHtml(__('View the complete release notes of the extension. Currently the release notes is only available in Dutch.'));?>"><?php echo $block->escapeHtml(__('Full Release Notes'));?>
+                        <img class="external_link" src="<?php echo $this->getViewFileUrl('TIG_PostNL::images/external_link_32.png')?>" alt="<?php echo $block->escapeHtml(__('Full Release Notes'));?>" width="16" height="16"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
