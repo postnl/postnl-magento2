@@ -15,11 +15,11 @@ php:
 #  - nightly
 
 env:
-#  - MAGENTO_VERSION=2.0.8
-#  - MAGENTO_VERSION=2.0.9
-#  - MAGENTO_VERSION=2.0.10
-#  - MAGENTO_VERSION=2.1.0
-#  - MAGENTO_VERSION=2.1.1
+  - MAGENTO_VERSION=2.0.8
+  - MAGENTO_VERSION=2.0.9
+  - MAGENTO_VERSION=2.0.10
+  - MAGENTO_VERSION=2.1.0
+  - MAGENTO_VERSION=2.1.1
   - MAGENTO_VERSION=2.1.2
 
 before_script:
@@ -34,5 +34,6 @@ script:
 
 cache:
   directories:
+  - node_modules
   - $HOME/.composer
   - $HOME/.cache/composer
