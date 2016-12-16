@@ -24,6 +24,7 @@
         </testsuite>
         <testsuite name="TIG PostNL Integration Tests">
             <directory>../../../app/code/TIG/PostNL/Test/Integration</directory>
+            <directory>../../../vendor/tig/postnl/Test/Integration</directory>
             <exclude>../../../app/code/Magento</exclude>
         </testsuite>
     </testsuites>

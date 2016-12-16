@@ -41,10 +41,10 @@ if (strpos(__DIR__, 'app/code')) {
     /**
      * From app/code/TIG/PostNL
      */
-    require_once('../../../../dev/tests/unit/framework/bootstrap.php');
+    require_once(__DIR__ . '/../../../../../dev/tests/unit/framework/bootstrap.php');
 } else {
     /**
      * From vendor/tig/postnl
      */
-    require_once('../../../dev/tests/unit/framework/bootstrap.php');
+    require_once(__DIR__ . '/../../../../dev/tests/unit/framework/bootstrap.php');
 }

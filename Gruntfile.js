@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
     var magento2path = '../../../../';
-    var phpunitXmlPath = 'phpunit.xml';
+    var phpunitXmlPath = __dirname + 'phpunit.xml';
 
     if (grunt.file.isDir('/tmp/magento2/')) {
         magento2path = '/tmp/magento2/';
@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         exec: {
             phpcs: 'php -ddisplay_errors=1 ~/.composer/vendor/bin/phpcs -v --standard=phpcs.xml --extensions=php .',
-            unitTests: magento2path + 'vendor/bin/phpunit -c "' + phpunitXmlPath + '"',
+            unitTests: 'cd ' + magento2path + ' && vendor/bin/phpunit -c "' + baseDir + '/' + phpunitXmlPath + '"',
             integrationTests:
                 'cd ' + magento2path + 'dev/tests/integration &&' +
                 '../../../vendor/bin/phpunit --testsuite "TIG PostNL Integration Tests"',
