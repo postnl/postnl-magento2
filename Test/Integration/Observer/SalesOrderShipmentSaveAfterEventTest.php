@@ -36,55 +36,73 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Integration\Observer;
+namespace TIG\PostNL\Test\Unit\Integration\Observer;
 
-use Magento\Framework\Event\Observer;
-use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\ResourceModel\Order\Collection;
-use TIG\PostNL\Model\OrderFactory;
-use TIG\PostNL\Observer\SalesOrderSaveAfterEvent;
+use Magento\Framework\Event\Observer;
+use Magento\Sales\Model\ResourceModel\Order\Collection as OrderCollection;
+use TIG\PostNL;
+use TIG\PostNL\Observer\SalesOrderShipmentSaveAfterEvent;
 use TIG\PostNL\Test\Integration\TestCase;
 
-/**
- * Class TestSalesOrderSaveAfterEvent
- *
- * @package TIG\PostNL\Integration\Observer
- * @magentoDbIsolation enabled
- */
-class TestSalesOrderSaveAfterEvent extends TestCase
+class SalesOrderShipmentSaveAfterEventTest extends TestCase
 {
-    protected $instanceClass = SalesOrderSaveAfterEvent::class;
+    protected $instanceClass = SalesOrderShipmentSaveAfterEvent::class;
 
     /**
-     * @magentoDataFixture Magento/Sales/_files/order.php
+     * @magentoDataFixture Magento/Sales/_files/shipment.php
      */
-    public function testExecute()
+    public function testPostNLShipmentIsCreated()
     {
-        /** @var Collection $orderCollection */
-        $orderCollection = $this->getObject(Collection::class);
+        $shipment = $this->getShipment();
+
+        /** @var Observer $observer */
+        $observer = $this->getObject(Observer::class);
+        $observer->setData('data_object', $shipment);
+
+        /** @var SalesOrderShipmentSaveAfterEvent $instance */
+        $instance = $this->getInstance();
+        $instance->execute($observer);
+
+        $postnlShipment = $this->getPostNLShipment($shipment);
+
+        $this->assertEquals($shipment->getId(), $postnlShipment->getData('shipment_id'));
+    }
+
+    /**
+     * @return Order\Shipment
+     */
+    protected function getShipment()
+    {
+        /** @var OrderCollection $orderCollection */
+        $orderCollection = $this->getObject(OrderCollection::class);
         $orderCollection->addFieldToFilter('customer_email', 'customer@null.com');
 
         /** @var Order $order */
         $order = $orderCollection->getFirstItem();
-        $order->setData('shipping_method', 'tig_postnl_regular');
 
-        /** @var Observer $observer */
-        $observer = $this->getObject(Observer::class);
-        $observer->setData('data_object', $order);
+        /** @var Order\Shipment $shipment */
+        $shipment = $order->getShipmentsCollection()->getFirstItem();
 
-        $this->getInstance()->execute($observer);
+        return $shipment;
+    }
 
-        /** @var OrderFactory $orderFactory */
-        $factory = $this->objectManager->create(OrderFactory::class);
+    /**
+     * @param $shipment
+     *
+     * @return \Magento\Framework\DataObject
+     */
+    protected function getPostNLShipment($shipment)
+    {
+        /** @var PostNL\Model\ShipmentFactory $shipmentFactory */
+        $shipmentFactory = $this->objectManager->create(PostNL\Model\ShipmentFactory::class);
 
-        /** @var Order $postnlOrder */
-        $postnlOrder = $factory->create();
-        $orderCollection = $postnlOrder->getCollection();
-        $orderCollection->addFieldToFilter('order_id', $order->getId());
-        $model = $orderCollection->getFirstItem();
+        /** @var PostNL\Model\ResourceModel\Shipment\Collection $collection */
+        $collection = $shipmentFactory->create()->getCollection();
+        $collection->addFieldToFilter('shipment_id', $shipment->getId());
 
-        $this->assertEquals($order->getId(), $model->getData('order_id'));
+        $postnlShipment = $collection->getFirstItem();
+
+        return $postnlShipment;
     }
 }

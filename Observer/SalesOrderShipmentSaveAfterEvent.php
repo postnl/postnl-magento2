@@ -47,7 +47,7 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     /**
      * @var ShipmentFactory
      */
-    private $shipmentFactory;
+    protected $shipmentFactory;
 
     public function __construct(
         ShipmentFactory $shipmentFactory
