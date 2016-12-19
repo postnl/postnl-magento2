@@ -25,6 +25,7 @@ env:
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
   - phpenv config-rm xdebug.ini
+  - composer config -a -g http-basic.repo.magento.com $MAGENTO_USERNAME $MAGENTO_PASSWORD
   - composer install
   - npm install && npm install grunt-cli -g
   - bash Test/Setup.sh
