@@ -47,22 +47,19 @@ namespace TIG\PostNL\Config\Source;
 abstract class OptionsAbstract
 {
     /**
-     * Array for the possible product options matched by account type and flags.
-     * @var array
+     * Property for the possible product options.
      */
-    protected $availableOptions = [];
+    protected $availableOptions;
 
     /**
-     * Array of filterd product options.
-     * @var array
+     * Property for filterd product options matched by account type and flags.
      */
-    public $filterdOptions   = [];
+    protected $filterdOptions;
 
     /**
      * Group options by group types
-     * @var array
      */
-    public $groupedOptions = [];
+    protected $groupedOptions;
 
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
@@ -86,19 +83,27 @@ abstract class OptionsAbstract
      */
     public function getProductoptions($flags = false, $checkAvailable = false)
     {
-        if (false !== $flags && is_array($flags)) {
-            $this->filterdOptions = [];
-            // Filter availableOptions on flags
-            foreach ($this->availableOptions as $key => $option) {
-                $this->setOptionsByFlagFilters($flags, $option, $key);
-            }
+        if (false !== $checkAvailable) {
+            $this->setOptionsBySupportedType();
         }
 
-        if (false !== $checkAvailable) {
-            $this->filterdOptions = $this->setOptionsBySupportedType();
+        if (false !== $flags && is_array($flags)) {
+            $this->setFilterdOptions($flags);
         }
 
         return $this->getOptionArrayUsableForConfiguration();
+    }
+
+    /**
+     * @param $flags
+     */
+    public function setFilterdOptions($flags)
+    {
+        $this->filterdOptions = [];
+        // Filter availableOptions on flags
+        foreach ($this->availableOptions as $key => $option) {
+            $this->setOptionsByFlagFilters($flags, $option, $key);
+        }
     }
 
     /**
@@ -111,12 +116,11 @@ abstract class OptionsAbstract
      */
     public function setOptionsByFlagFilters($flags, $option, $productCode)
     {
-        foreach ($flags as $key => $value) {
+        $filterFlags = array_filter($flags, function ($value, $key) use ($option) {
+            return isset($option[$key]) && $option[$key] == $value;
+        }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
-            if (!isset($option[$key]) || $option[$key] !== $value) {
-                continue;
-            }
-
+        if (count($filterFlags) !== 0) {
             $this->filterdOptions[$productCode] = $this->availableOptions[$productCode];
         }
     }
@@ -127,22 +131,20 @@ abstract class OptionsAbstract
      */
     public function setOptionsBySupportedType()
     {
-        $supportedTypes      = $this->productOptionsConfig->getSupportedProductOptions();
-        $supportedTypesArray = explode(',', $supportedTypes);
+        $supportedTypes = explode(',', $this->productOptionsConfig->getSupportedProductOptions());
 
-        if (empty($supportedTypesArray)) {
+        if (empty($supportedTypes)) {
             return $this->availableOptions;
         }
 
-        $supportedOptions = [];
-        foreach ($supportedTypesArray as $type) {
-            if (!isset($this->availableOptions[$type])) {
-                continue;
-            }
-            $supportedOptions[] = $this->availableOptions[$type];
-        }
+        $supportedOptions = array_filter($supportedTypes, function ($type) {
+            return isset($this->availableOptions[$type]);
+        });
 
-        return $supportedOptions;
+        $this->availableOptions = array_filter($this->availableOptions, function ($code) use ($supportedOptions) {
+            return in_array($code, $supportedOptions);
+        }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_KEY);
+
     }
 
     /**
@@ -151,12 +153,14 @@ abstract class OptionsAbstract
     public function getOptionArrayUsableForConfiguration()
     {
         $options = [];
-        foreach ($this->filterdOptions as $key => $option) {
-            $options[] = [
-                'value' => $option['value'],
-                'label' => __($option['label'])
-            ];
+        if (count($this->filterdOptions) == 0) {
+            return [['value' => 0, 'label' => __('There are no available options')]];
         }
+
+        foreach ($this->filterdOptions as $key => $option) {
+            $options[] = ['value' => $option['value'], 'label' => __($option['label'])];
+        }
+
         return $options;
     }
 
@@ -168,29 +172,17 @@ abstract class OptionsAbstract
      */
     public function setGroupedOptions($options, $groups)
     {
-        $optionsSorted = [];
-        foreach ($options as $key => $option) {
-            if (!array_key_exists('group', $option)) {
-                continue;
-            }
-            $optionsSorted[$option['group']][] = [
-                'value' => $option['value'],
-                'label' => __($option['label'])
-            ];
-        }
+        $optionsSorted = $this->getOptionsArrayForGrouped($options);
+        $optionsGroupChecked = array_filter($groups, function ($key) use ($optionsSorted) {
+            return array_key_exists($key, $optionsSorted);
+        }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_KEY);
 
-        $optionsGrouped = [];
-        foreach ($groups as $group => $label) {
-            if (!array_key_exists($group, $optionsSorted)) {
-                continue;
-            }
-            $optionsGrouped[] = [
+        foreach ($optionsGroupChecked as $group => $label) {
+            $this->groupedOptions[] = [
                 'label' => __($label),
                 'value' => $optionsSorted[$group]
             ];
         }
-
-        $this->groupedOptions = $optionsGrouped;
     }
 
     /**
@@ -199,5 +191,27 @@ abstract class OptionsAbstract
     public function getGroupedOptions()
     {
         return $this->groupedOptions;
+    }
+
+    /**
+     * This sets the array of options, so it can be used for the grouped configurations list.
+     * @param $options
+     * @return array
+     */
+    protected function getOptionsArrayForGrouped($options)
+    {
+        $optionsChecked = array_filter($options, function ($value) {
+            return array_key_exists('group', $value);
+        });
+
+        $optionsSorted = [];
+        foreach ($optionsChecked as $key => $option) {
+            $optionsSorted[$option['group']][] = [
+                'value' => $option['value'],
+                'label' => __($option['label'])
+            ];
+        }
+
+        return $optionsSorted;
     }
 }

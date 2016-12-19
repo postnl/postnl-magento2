@@ -75,18 +75,6 @@ class ShippingOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return bool
-     */
-    public function isStockoptionAllProducts()
-    {
-        $stockoption = $this->getShippingStockoptions();
-        if ($stockoption !== 'all_products') {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * @return mixed
      */
     public function isDeliverydaysActive()

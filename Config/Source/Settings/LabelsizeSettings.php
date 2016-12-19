@@ -53,10 +53,12 @@ class LabelsizeSettings implements ArrayInterface
      */
     public function toOptionArray()
     {
+        // @codingStandardsIgnoreStart
         $options = [
             ['value' => 'A4', 'label' => __('A4 Format')],
             ['value' => 'A6', 'label' => __('A6 Format')],
         ];
+        // @codingStandardsIgnoreEnd
         return $options;
     }
 }

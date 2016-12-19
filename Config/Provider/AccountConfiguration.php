@@ -45,13 +45,13 @@ namespace TIG\PostNL\Config\Provider;
  */
 class AccountConfiguration extends AbstractConfigProvider
 {
-    const XPATH_GENERAL_EXTENSION_STATUS_MODUS = 'tig_postnl/generalconfiguration_extension_status/modus';
+    const XPATH_GENERAL_STATUS_MODUS = 'tig_postnl/generalconfiguration_extension_status/modus';
 
     /** Paths to the live settings */
-    const XPATH_GENERAL_EXTENSION_STATUS_CUSTOMERNUMBER = 'tig_postnl/generalconfiguration_extension_status/customer_number';
-    const XPATH_GENERAL_EXTENSION_STATUS_CUSTOMERCODE   = 'tig_postnl/generalconfiguration_extension_status/customer_code';
-    const XPATH_GENERAL_EXTENSION_STATUS_APIKEY         = 'tig_postnl/generalconfiguration_extension_status/api_key';
-    const XPATH_GENERAL_EXTENSION_STATUS_BLSCODE        = 'tig_postnl/generalconfiguration_extension_status/bls_code';
+    const XPATH_GENERAL_STATUS_CUSTOMERNUMBER = 'tig_postnl/generalconfiguration_extension_status/customer_number';
+    const XPATH_GENERAL_STATUS_CUSTOMERCODE   = 'tig_postnl/generalconfiguration_extension_status/customer_code';
+    const XPATH_GENERAL_STATUS_APIKEY         = 'tig_postnl/generalconfiguration_extension_status/api_key';
+    const XPATH_GENERAL_STATUS_BLSCODE        = 'tig_postnl/generalconfiguration_extension_status/bls_code';
     /**
      * For the test account we will use the same xpaths, but "_test" will be attached to the end of the string.
      */
@@ -82,7 +82,7 @@ class AccountConfiguration extends AbstractConfigProvider
      */
     public function getCustomerNumber()
     {
-        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_EXTENSION_STATUS_CUSTOMERNUMBER));
+        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERNUMBER));
     }
 
     /**
@@ -91,7 +91,7 @@ class AccountConfiguration extends AbstractConfigProvider
      */
     public function getCustomerCode()
     {
-        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_EXTENSION_STATUS_CUSTOMERCODE));
+        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERCODE));
     }
 
     /**
@@ -101,7 +101,7 @@ class AccountConfiguration extends AbstractConfigProvider
      */
     public function getApiKey()
     {
-        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_EXTENSION_STATUS_APIKEY));
+        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY));
     }
 
     /**
@@ -109,7 +109,7 @@ class AccountConfiguration extends AbstractConfigProvider
      */
     public function getBslCode()
     {
-        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_EXTENSION_STATUS_BLSCODE));
+        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_BLSCODE));
     }
 
     /**
@@ -122,7 +122,7 @@ class AccountConfiguration extends AbstractConfigProvider
      */
     public function getModus()
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_EXTENSION_STATUS_MODUS);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_STATUS_MODUS);
     }
 
     /**

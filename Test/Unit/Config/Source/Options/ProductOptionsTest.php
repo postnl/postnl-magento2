@@ -71,6 +71,13 @@ class ProductOptionsTest extends TestCase
             'isExtraEarly'      => true,
             'group'             => 'pakjegemak_options',
         ],
+        '3089' => [
+            'value'             => '3089',
+            'label'             => 'label',
+            'isEvening'         => true,
+            'isSunday'          => true,
+            'group'             => 'standard_options',
+        ],
     ];
 
     protected $groups = [
@@ -105,26 +112,27 @@ class ProductOptionsTest extends TestCase
     public function getProductoptionsProvider()
     {
         return [
-            [$this->options, ['isEvening' => true], ['3385']],
-            [$this->options, ['isSunday' => false], ['3534']],
-            [$this->options, ['isSunday' => true], ['3385']]
+            [$this->options, ['isEvening' => true], false, ['3385', '3089']],
+            [$this->options, ['isSunday'  => false], false, ['3534']],
+            [$this->options, ['isEvening' => true], false, ['3089']]
         ];
     }
 
     /**
      * @param $options
      * @param $filter
+     * @param $checkOnAvailable
      * @param $expected
      *
      * @dataProvider getProductoptionsProvider
      */
-    public function testGetProductoptions($options, $filter, $expected)
+    public function testGetProductoptions($options, $filter, $checkOnAvailable, $expected)
     {
         $instance = $this->getInstance();
 
         $this->setProperty('availableOptions', $options, $instance);
 
-        $result = $instance->getProductoptions($filter);
+        $result = $instance->getProductoptions($filter, $checkOnAvailable);
 
         $result = array_map( function ($value) {
             return $value['value'];

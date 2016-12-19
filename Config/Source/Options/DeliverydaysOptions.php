@@ -54,6 +54,7 @@ class DeliverydaysOptions extends OptionsAbstract implements ArrayInterface
      */
     public function toOptionArray()
     {
+        // @codingStandardsIgnoreStart
         $options = [
             ['value' => '1', 'label' => __('One')],
             ['value' => '2', 'label' => __('Two')],
@@ -63,6 +64,7 @@ class DeliverydaysOptions extends OptionsAbstract implements ArrayInterface
             ['value' => '6', 'label' => __('Six')],
             ['value' => '7', 'label' => __('Seven')],
         ];
+        // @codingStandardsIgnoreEnd
         return $options;
     }
 }

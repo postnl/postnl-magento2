@@ -46,15 +46,15 @@ namespace TIG\PostNL\Config\Provider;
 class AddressConfiguration extends AbstractConfigProvider
 {
 
-    const XPATH_GENERAL_SHIPPINGADDRESS_FIRSTNAME            = 'tig_postnl/generalconfiguration_shipping_address/firstname';
-    const XPATH_GENERAL_SHIPPINGADDRESS_LASTNAME             = 'tig_postnl/generalconfiguration_shipping_address/lastname';
-    const XPATH_GENERAL_SHIPPINGADDRESS_COMPANY              = 'tig_postnl/generalconfiguration_shipping_address/company';
-    const XPATH_GENERAL_SHIPPINGADDRESS_STREETNAME           = 'tig_postnl/generalconfiguration_shipping_address/streetname';
-    const XPATH_GENERAL_SHIPPINGADDRESS_DEPARTMENT           = 'tig_postnl/generalconfiguration_shipping_address/department';
-    const XPATH_GENERAL_SHIPPINGADDRESS_HOUSENUMBER          = 'tig_postnl/generalconfiguration_shipping_address/housenumber';
-    const XPATH_GENERAL_SHIPPINGADDRESS_HOUSENUMBER_ADDITION = 'tig_postnl/generalconfiguration_shipping_address/housenumber_addition';
-    const XPATH_GENERAL_SHIPPINGADDRESS_POSTCODE             = 'tig_postnl/generalconfiguration_shipping_address/postcode';
-    const XPATH_GENERAL_SHIPPINGADDRESS_CITY                 = 'tig_postnl/generalconfiguration_shipping_address/city';
+    const XPATH_GENERAL_FIRSTNAME            = 'tig_postnl/generalconfiguration_shipping_address/firstname';
+    const XPATH_GENERAL_LASTNAME             = 'tig_postnl/generalconfiguration_shipping_address/lastname';
+    const XPATH_GENERALS_COMPANY             = 'tig_postnl/generalconfiguration_shipping_address/company';
+    const XPATH_GENERAL_STREETNAME           = 'tig_postnl/generalconfiguration_shipping_address/streetname';
+    const XPATH_GENERAL_DEPARTMENT           = 'tig_postnl/generalconfiguration_shipping_address/department';
+    const XPATH_GENERAL_HOUSENUMBER          = 'tig_postnl/generalconfiguration_shipping_address/housenumber';
+    const XPATH_GENERAL_HOUSENUMBER_ADDITION = 'tig_postnl/generalconfiguration_shipping_address/housenumber_addition';
+    const XPATH_GENERAL_POSTCODE             = 'tig_postnl/generalconfiguration_shipping_address/postcode';
+    const XPATH_GENERAL_CITY                 = 'tig_postnl/generalconfiguration_shipping_address/city';
 
     /**
      * Returns an array with all the address information of the shipper/merchant.
@@ -83,7 +83,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getFirstname()
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_SHIPPINGADDRESS_FIRSTNAME);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_FIRSTNAME);
     }
 
     /**
@@ -92,7 +92,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getLastname()
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_SHIPPINGADDRESS_LASTNAME);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_LASTNAME);
     }
 
     /**
@@ -101,7 +101,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getCompany()
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_SHIPPINGADDRESS_COMPANY);
+        return $this->getConfigFromXpath(self::XPATH_GENERALS_COMPANY);
     }
 
     /**
@@ -110,7 +110,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getStreetname()
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_SHIPPINGADDRESS_STREETNAME);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_STREETNAME);
     }
 
     /**
@@ -119,7 +119,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getDepartment()
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_SHIPPINGADDRESS_DEPARTMENT);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_DEPARTMENT);
     }
 
     /**
@@ -128,7 +128,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getHousenumber()
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_SHIPPINGADDRESS_HOUSENUMBER);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_HOUSENUMBER);
     }
 
     /**
@@ -137,7 +137,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getHousenumberAddition()
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_SHIPPINGADDRESS_HOUSENUMBER_ADDITION);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_HOUSENUMBER_ADDITION);
     }
 
     /**
@@ -146,7 +146,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getPostcode()
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_SHIPPINGADDRESS_POSTCODE);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_POSTCODE);
     }
 
     /**
@@ -155,6 +155,6 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getCity()
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_SHIPPINGADDRESS_CITY);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_CITY);
     }
 }

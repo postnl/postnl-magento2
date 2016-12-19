@@ -51,20 +51,22 @@ class Fieldset extends \Magento\Config\Block\System\Config\Form\Fieldset
         '0' => 'modus_off'
     ];
 
+    // @codingStandardsIgnoreStart
     /**
      * {@inheritdoc}
      */
     protected function _getFrontendClass($element)
     {
-        $modus     = $this->_scopeConfig->getValue(
-            \TIG\PostNL\Config\Provider\AccountConfiguration::XPATH_GENERAL_EXTENSION_STATUS_MODUS
+        $modus = $this->_scopeConfig->getValue(
+            \TIG\PostNL\Config\Provider\AccountConfiguration::XPATH_GENERAL_STATUS_MODUS
         );
 
-        $className = 'off';
+        $className = 'modus_off';
         if (array_key_exists($modus, $this->classNames)) {
             $className = $this->classNames[$modus];
         }
 
         return parent::_getFrontendClass($element) . ' ' . $className;
     }
+    // @codingStandardsIgnoreEnd
 }
