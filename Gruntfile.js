@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     var magento2path = '../../../../';
     var phpunitXmlPath = __dirname + '/phpunit.xml';
 
@@ -11,7 +11,14 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         exec: {
-            phpcs: 'php -ddisplay_errors=1 ~/.composer/vendor/bin/phpcs -v --standard=phpcs.xml --extensions=php .',
+            phpcs:
+                'php -ddisplay_errors=1 ~/.composer/vendor/bin/phpcs -v --standard=phpcs.xml ' +
+                '--runtime-set installed_paths ' +
+                'vendor/magento/marketplace-eqp,' + '' +
+                'vendor/object-calisthenics/phpcs-calisthenics-rules/src/ ' +
+                //'--error-severity=1 ' +
+                //'--warning-severity=8 ' +
+                '.',
             unitTests: 'cd ' + magento2path + ' && vendor/bin/phpunit -c "' + phpunitXmlPath + '"',
             integrationTests:
                 'cd ' + magento2path + 'dev/tests/integration &&' +

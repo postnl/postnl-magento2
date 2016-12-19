@@ -40,5 +40,6 @@ namespace TIG\PostNL\Model;
 
 interface OrderInterface
 {
-
+    // @codingStandardsIgnoreLine
+    public function getIdentities();
 }
