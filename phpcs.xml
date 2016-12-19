@@ -2,7 +2,7 @@
 <ruleset name="TIG_PostNL">
     <description>TIG PostNL Coding Standard</description>
 
-    <config name="installed_paths" value="vendor/magento/marketplace-eqp"/>
+    <config name="installed_paths" value="vendor/magento/marketplace-eqp,vendor/object-calisthenics/phpcs-calisthenics-rules/src/"/>
 
     <rule ref="PSR2"/>
     <rule ref="ObjectCalisthenics"/>

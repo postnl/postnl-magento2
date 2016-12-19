@@ -17,8 +17,9 @@ module.exports = function (grunt) {
                 'vendor/magento/marketplace-eqp,' + '' +
                 'vendor/object-calisthenics/phpcs-calisthenics-rules/src/ ' +
                 //'--error-severity=1 ' +
-                //'--warning-severity=8 ' +
-                '.',
+                //'--warning-severity=10 ' +
+                '--severity=10' +
+                ' .',
             unitTests: 'cd ' + magento2path + ' && vendor/bin/phpunit -c "' + phpunitXmlPath + '"',
             integrationTests:
                 'cd ' + magento2path + 'dev/tests/integration &&' +
