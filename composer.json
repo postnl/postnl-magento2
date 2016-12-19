@@ -29,6 +29,13 @@
         }
     },
     "require-dev": {
-        "object-calisthenics/phpcs-calisthenics-rules": "^2.0"
+        "object-calisthenics/phpcs-calisthenics-rules": "^2.0",
+        "magento/marketplace-eqp": "^1.0"
+    },
+    "repositories": {
+        "magento": {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        }
     }
 }

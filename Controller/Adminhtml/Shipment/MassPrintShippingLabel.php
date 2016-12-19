@@ -109,6 +109,8 @@ class MassPrintShippingLabel extends Action
 
     protected function getLabel()
     {
+        // @todo
+        return;
     }
 
     protected function outputPdf()

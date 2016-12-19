@@ -43,9 +43,8 @@ use Magento\Quote\Model\Quote\Address\RateRequest;
 class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     \Magento\Shipping\Model\Carrier\CarrierInterface
 {
-    // @codingStandardsIgnoreStart
+    // @codingStandardsIgnoreLine
     protected $_code = 'tig_postnl';
-    // @codingStandardsIgnoreEnd
 
     /**
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig

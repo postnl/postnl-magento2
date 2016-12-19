@@ -40,5 +40,6 @@ namespace TIG\PostNL\Model;
 
 interface ShipmentInterface
 {
-
+    // @codingStandardsIgnoreLine
+    public function getIdentities();
 }

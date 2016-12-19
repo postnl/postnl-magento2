@@ -202,7 +202,7 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
         $this->table->addColumn(
             $name,
             Table::TYPE_TEXT,
-            null,
+            $length,
             [
                 'identity' => false,
                 'unsigned' => false,
