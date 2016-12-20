@@ -1,0 +1,28 @@
+<style>
+    .option-active {
+        background: red;
+    }
+
+    .postnl-deliveryoptions {
+        overflow: hidden;
+    }
+</style>
+
+<div class="btn-group" role="group">
+    <button type="button" class="btn btn-default" data-bind="click: setDelivery">Delivery</button>
+    <button type="button" class="btn btn-default" data-bind="click: setPickup">Pickup</button>
+</div>
+
+<div class="delivery" data-bind="css: { 'option-active': shipmentType() == 'delivery' }">
+    Delivery
+    <!-- ko foreach: getRegion('postnl-deliveryoptions-delivery') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <!-- /ko -->
+</div>
+
+<div class="pickup" data-bind="css: { 'option-active': shipmentType() != 'delivery' }">
+    Pickup
+    <!-- ko foreach: getRegion('postnl-deliveryoptions-pickup') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <!-- /ko -->
+</div>

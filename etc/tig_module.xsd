@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ *                  ___________       __            __
+ *                  \__    ___/____ _/  |_ _____   |  |
+ *                    |    |  /  _ \\   __\\__  \  |  |
+ *                    |    | |  |_| ||  |   / __ \_|  |__
+ *                    |____|  \____/ |__|  (____  /|____/
+ *                                              \/
+ *          ___          __                                   __
+ *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
+ *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
+ *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
+ *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
+ *                  \/                           \/
+ *                  ________
+ *                 /  _____/_______   ____   __ __ ______
+ *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
+ *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
+ *                 \______  /|__|    \____/ |____/ |   __/
+ *                        \/                       |__|
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) 2015 Total Internet Group B.V. (http://www.tig.nl)
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
+ -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:redefine schemaLocation="urn:magento:framework:Module/etc/module.xsd">
+        <xs:complexType name="moduleDeclaration">
+            <xs:annotation>
+                <xs:documentation>
+                    Module declaration.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:all>
+                <xs:element minOccurs="0" maxOccurs="1" name="sequence" type="moduleSequence">
+                    <xs:unique name="uniqueSequenceName">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Dependency name must be unique.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:selector xpath=".//*" />
+                        <xs:field xpath="@name" />
+                    </xs:unique>
+                </xs:element>
+            </xs:all>
+            <xs:attribute name="name" type="moduleName" use="required" />
+            <xs:attribute name="setup_version" type="setupVersion" use="required" />
+            <xs:attribute name="stability" type="stability" use="optional" />
+        </xs:complexType>
+    </xs:redefine>
+
+    <xs:simpleType name="buildNumber">
+        <xs:annotation>
+            <xs:documentation>
+                Build number attribute can contain only [0-9].
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]+" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="stability">
+        <xs:annotation>
+            <xs:documentation>
+                Stability must be one of "dev", "alpha", "beta", "rc" or "stable".
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="dev"/>
+            <xs:enumeration value="alpha"/>
+            <xs:enumeration value="beta"/>
+            <xs:enumeration value="rc"/>
+            <xs:enumeration value="stable"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

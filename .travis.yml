@@ -1,0 +1,40 @@
+sudo: required
+dist: trusty
+addons:
+  apt:
+    packages:
+    - mysql-server-5.6
+    - mysql-client-core-5.6
+    - mysql-client-5.6
+
+language: php
+
+php:
+  - 7.0
+#  - 7.1
+#  - nightly
+
+env:
+  - MAGENTO_VERSION=2.0.8
+  - MAGENTO_VERSION=2.0.9
+  - MAGENTO_VERSION=2.0.10
+  - MAGENTO_VERSION=2.1.0
+  - MAGENTO_VERSION=2.1.1
+  - MAGENTO_VERSION=2.1.2
+
+before_script:
+  - export PATH=$PATH:$HOME/.composer/vendor/bin
+  - phpenv config-rm xdebug.ini
+  - composer config -a -g http-basic.repo.magento.com $MAGENTO_USERNAME $MAGENTO_PASSWORD
+  - composer install
+  - npm install && npm install grunt-cli -g
+  - bash Test/Setup.sh
+
+script:
+  - grunt test
+
+cache:
+  directories:
+  - node_modules
+  - $HOME/.composer
+  - $HOME/.cache/composer

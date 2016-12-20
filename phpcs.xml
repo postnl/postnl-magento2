@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="TIG_PostNL">
+    <description>TIG PostNL Coding Standard</description>
+
+    <config name="installed_paths" value="vendor/magento/marketplace-eqp,vendor/object-calisthenics/phpcs-calisthenics-rules/src/"/>
+
+    <rule ref="PSR2"/>
+    <rule ref="ObjectCalisthenics"/>
+    <rule ref="MEQP2"/>
+
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/Test/*</exclude-pattern>
+
+    <extension>php</extension>
+</ruleset>
