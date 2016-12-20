@@ -2,7 +2,7 @@ module.exports = function(grunt) {
     var phpunitPath = 'phpunit.xml';
 
     if (grunt.file.isDir('/tmp/magento2/')) {
-        phpunitPath = '/tmp/magento2/vendor/tig/postnl/phpunit.xml.dist'
+        phpunitPath = '/tmp/magento2/vendor/tig/postnl/phpunit.xml.dist';
     }
 
     // Project configuration.

@@ -81,7 +81,7 @@ abstract class OptionsAbstract
      *
      * @return array $availableOptions
      */
-    public function getProductoptions($flags = false, $checkAvailable = false)
+    public function getProductoptions($flags = false, $checkAvailable = true)
     {
         if (false !== $checkAvailable) {
             $this->setOptionsBySupportedType();
@@ -131,10 +131,13 @@ abstract class OptionsAbstract
      */
     public function setOptionsBySupportedType()
     {
-        $supportedTypes = explode(',', $this->productOptionsConfig->getSupportedProductOptions());
+        $supportedTypes = false;
+        if ($this->productOptionsConfig->getSupportedProductOptions()) {
+            $supportedTypes = explode(',', $this->productOptionsConfig->getSupportedProductOptions());
+        }
 
-        if (empty($supportedTypes)) {
-            return $this->availableOptions;
+        if (!$supportedTypes) {
+            return [];
         }
 
         $supportedOptions = array_filter($supportedTypes, function ($type) {

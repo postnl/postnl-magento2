@@ -114,7 +114,7 @@ class ProductOptionsTest extends TestCase
         return [
             [$this->options, ['isEvening' => true], false, ['3385', '3089']],
             [$this->options, ['isSunday'  => false], false, ['3534']],
-            [$this->options, ['isEvening' => true], false, ['3089']]
+            [$this->options, ['isEvening' => true], true, ['3089']]
         ];
     }
 
