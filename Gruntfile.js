@@ -4,7 +4,7 @@ module.exports = function (grunt) {
 
     if (grunt.file.isDir('/tmp/magento2/')) {
         magento2path = '/tmp/magento2/';
-        phpunitXmlPath = '/tmp/magento2/vendor/tig/postnl/phpunit.xml.dist'
+        phpunitXmlPath = '/tmp/magento2/vendor/tig/postnl/phpunit.xml.dist';
     }
 
     // Project configuration.
@@ -40,6 +40,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
     // Default task(s).
+    grunt.registerTask('test', ['jshint:all', 'exec:phplint', 'exec:phpunit', 'exec:phpcs']);
     grunt.registerTask('translations', ['exec:translations_nl', 'exec:translations_en']);
     grunt.registerTask('test', [
         'exec:unitTests',

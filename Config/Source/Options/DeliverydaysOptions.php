@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,30 +36,35 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
-    <default>
-        <carriers>
-            <tig_postnl>
-                <active>1</active>
-                <sallowspecific>0</sallowspecific>
-                <model>TIG\PostNL\Model\Carrier\PostNL</model>
-                <name>PostNL</name>
-                <price>5.00</price>
-                <title>PostNL</title>
-                <type>I</type>
-                <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
-            </tig_postnl>
-        </carriers>
-        <tig_postnl>
-            <productoptions>
-                <supported_options>3085</supported_options>
-            </productoptions>
-            <shippingoptions>
-                <max_deliverydays>5</max_deliverydays>
-                <eveningdelivery_fee>2</eveningdelivery_fee>
-                <sundaydelivery_fee>2</sundaydelivery_fee>
-            </shippingoptions>
-        </tig_postnl>
-    </default>
-</config>
+
+namespace TIG\PostNL\Config\Source\Options;
+
+use \Magento\Framework\Option\ArrayInterface;
+use TIG\PostNL\Config\Source\OptionsAbstract;
+
+/**
+ * Class DeliverydaysOptions
+ *
+ * @package TIG\PostNL\Config\Source\Options
+ */
+class DeliverydaysOptions extends OptionsAbstract implements ArrayInterface
+{
+    /**
+     * @return array
+     */
+    public function toOptionArray()
+    {
+        // @codingStandardsIgnoreStart
+        $options = [
+            ['value' => '1', 'label' => __('One')],
+            ['value' => '2', 'label' => __('Two')],
+            ['value' => '3', 'label' => __('Three')],
+            ['value' => '4', 'label' => __('Four')],
+            ['value' => '5', 'label' => __('Five')],
+            ['value' => '6', 'label' => __('Six')],
+            ['value' => '7', 'label' => __('Seven')],
+        ];
+        // @codingStandardsIgnoreEnd
+        return $options;
+    }
+}

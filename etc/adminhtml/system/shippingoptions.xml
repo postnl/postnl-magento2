@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+**
+ *                  ___________       __            __
+ *                  \__    ___/____ _/  |_ _____   |  |
+ *                    |    |  /  _ \\   __\\__  \  |  |
+ *                    |    | |  |_| ||  |   / __ \_|  |__
+ *                    |____|  \____/ |__|  (____  /|____/
+ *                                              \/
+ *          ___          __                                   __
+ *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
+ *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
+ *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
+ *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
+ *                  \/                           \/
+ *                  ________
+ *                 /  _____/_______   ____   __ __ ______
+ *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
+ *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
+ *                 \______  /|__|    \____/ |____/ |   __/
+ *                        \/                       |__|
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ *
+ * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <!--Shippingoptions section-->
+    <group id="shippingoptions" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Shippingoptions</label>
+        <frontend_model>TIG\PostNL\Block\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-section</fieldset_css>
+
+        <field id="shippingoptions_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Activate shippingoptions</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/shippingoptions/shippingoptions_active</config_path>
+        </field>
+
+        <field id="stockoptions" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Stockoptions</label>
+            <source_model>TIG\PostNL\Config\Source\Options\StockOptions</source_model>
+            <config_path>tig_postnl/shippingoptions/stockoptions</config_path>
+        </field>
+
+        <field id="deliverydays_active" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Activate deliverydays</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/shippingoptions/deliverydays_active</config_path>
+        </field>
+
+        <field id="max_deliverydays" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Maximum number of deliverydays</label>
+            <source_model>TIG\PostNL\Config\Source\Options\DeliverydaysOptions</source_model>
+            <config_path>tig_postnl/shippingoptions/max_deliverydays</config_path>
+            <depends>
+                <field id="deliverydays_active">1</field>
+            </depends>
+        </field>
+
+        <field id="pakjegemak_active" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Activate postofficelocations</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/shippingoptions/pakjegemak_active</config_path>
+        </field>
+
+        <field id="eveningdelivery_active" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Activate Eveningdelivery</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/shippingoptions/eveningdelivery_active</config_path>
+        </field>
+
+        <field id="eveningdelivery_fee" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Eveningdelivery Fee</label>
+            <config_path>tig_postnl/shippingoptions/eveningdelivery_fee</config_path>
+            <depends>
+                <field id="eveningdelivery_active">1</field>
+            </depends>
+        </field>
+
+        <field id="sundaydelivery_active" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Activate Sundaydelivery</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/shippingoptions/sundaydelivery_active</config_path>
+        </field>
+
+        <field id="sundaydelivery_fee" translate="label" type="text" sortOrder="75" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Sundaydelivery Fee</label>
+            <config_path>tig_postnl/shippingoptions/sundaydelivery_fee</config_path>
+            <depends>
+                <field id="sundaydelivery_active">1</field>
+            </depends>
+        </field>
+
+        <field id="send_track_and_trace_email" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Send track and trace info</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/shippingoptions/send_track_and_trace_email</config_path>
+        </field>
+
+    </group>
+</include>

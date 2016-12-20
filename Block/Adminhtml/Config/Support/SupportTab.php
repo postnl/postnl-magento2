@@ -37,7 +37,7 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\Postnl\Block\Adminhtml\Config\Support;
+namespace TIG\PostNL\Block\Adminhtml\Config\Support;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
@@ -45,7 +45,7 @@ use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
 class SupportTab extends \Magento\Framework\View\Element\Template implements RendererInterface
 {
     // @codingStandardsIgnoreStart
-    protected $_template = 'supportTab.phtml';
+    protected $_template = 'TIG_PostNL::config/support/supportTab.phtml';
     // @codingStandardsIgnoreEnd
 
     /**

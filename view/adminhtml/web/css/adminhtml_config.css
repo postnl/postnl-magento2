@@ -1,0 +1,229 @@
+/* ==================================== SupportTab - Default styling ==================================== */
+
+#section { float: left; width: 100%; clear: both; }
+#supporttab { margin-left: 4rem;  }
+#supporttab #section { border-bottom: 1px solid #cccccc; }
+#supporttab #section:last-child { border-bottom: none; }
+
+/* Default styling collapsible tabs */
+.collapse-title[aria-expanded=true] h3:before {
+    font-family:'Admin Icons';
+    content: '\e615';
+
+}
+.collapse-title h3:before {
+    font-family:'Admin Icons';
+    font-weight: lighter;
+    content: '\e616';
+    padding-right: 10px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.collapse-content {
+    box-sizing: border-box;
+    padding:0 15px 15px 15px;
+    height:auto !important;
+    float:left; width: 100%;
+}
+
+#supporttab h3 {
+    font-size: 1.7rem;
+    margin:0 !important;
+    padding:1.9rem 2.7rem 1.9rem 1rem;
+    color: black;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#supporttab h4 {
+    font-size: 1.1em;
+    margin:20px 0 5px 0;
+    padding:0;
+    color: rgba(0,136,204,1);
+}
+
+#supporttab p {
+    line-height: 2em;
+}
+
+#supporttab ol, ul {
+    margin-left: 20px;
+    position :relative;
+}
+
+#supporttab ul li {
+    line-height: 2em;
+    list-style-type: none;
+    margin-bottom: 10px;
+}
+
+.section-config.tig_postnl-section.modus_live {
+    border-right:5px solid #49AB43;
+}
+.section-config.tig_postnl-section.modus_test {
+    border-right:5px solid #FFC107;
+}
+.section-config.tig_postnl-section.modus_off {
+    border-right:5px solid #CCCCCC;
+}
+
+/* ==================================== SupportTab - Legend ==================================== */
+#block {
+    margin-bottom: 30px;
+    float: left;
+    width: 100%;
+    clear: both;
+}
+
+.block-legend h3 {
+    cursor: auto !important;
+}
+
+.block-legend {
+    padding: 10px;
+    float:left;
+    width:100%;
+}
+
+@media screen and (min-width: 1200px){
+    .block-legend {
+        float:left;
+        width: 50%;
+    }
+}
+
+.disabled span.text,
+.live span.text,
+.test span.text {
+    margin-right: 15px;
+    font-weight: 600;
+}
+
+.disabled{
+    border-left: 5px solid #CCCCCC;
+    padding-left: 10px;
+}
+
+.live {
+    border-left: 5px solid #49AB43;
+    padding-left: 10px;
+}
+
+.test {
+    border-left: 5px solid #FFC107;
+    padding-left: 10px;
+}
+
+.advanced span.img {
+    display:block;
+    float:left;
+    margin-top: 2px; margin-right:10px;
+    border: 6px solid;
+    border-color: transparent transparent transparent #ff2e31;
+    width:0;
+    height:0;
+}
+
+/* ==================================== SupportTab - 3rd Party | Version compatibility ==================================== */
+
+.block-version h3 {
+    cursor: auto !important;
+}
+
+.block-version,
+.block_support,
+.block_contact {
+    padding:10px;
+    background: #F8F8F8;
+    float:left;
+    width: 100%;
+}
+
+
+@media screen and (min-width: 1200px){
+    .block-version {
+        float:left;
+        width: 45%;
+    }
+}
+#supporttab .version-compatibility {
+    float:left;
+    width: calc(100% - 30px);
+    clear:both;
+}
+#supporttab .version-compatibility li {
+    clear: both;
+    margin-bottom: 15px;
+    float:left;
+    width: 100%;
+}
+#supporttab .version-compatibility  span.text {
+    font-weight: 600;
+    float:left;
+    width: calc(50% - 20px);
+}
+#supporttab .version-compatibility  span.version {
+    float:left;
+    width: calc(50% - 30px);
+    text-align:right;
+    margin-left: 10px;
+}
+
+/* ==================================== SupportTab - Quick guide ==================================== */
+
+#supporttab ol {
+    margin-left: 40px;
+}
+
+#supporttab ol li {
+    list-style-type: upper-roman;
+    line-height: 2em;
+}
+
+#supporttab ol li ol {
+    margin-bottom: 10px;
+}
+
+#supporttab ol li ol li {
+    list-style-type: lower-alpha;
+}
+
+/* ==================================== SupportTab - Support ==================================== */
+
+.postnl_logo, .tig_logo {
+    padding:10px 10px 10px 0;
+}
+.postnl_logo img { width: 180px; }
+.tig_logo img { width: 50px; }
+
+.support-postnl-tig ul {
+    float:left;
+    width:100%;
+    clear:both;
+}
+
+.support-postnl-tig li.first {
+    font-weight :600;
+    width: 300px;
+}
+.support-postnl-tig li.last {
+    width: 200px;
+}
+
+.support-postnl-tig li.first,
+.support-postnl-tig li.last {
+    line-height: normal;
+    float:left;
+}
+
+.support-postnl-tig li.first img,
+.support-postnl-tig li.last img {
+    padding-right: 5px;
+}
+
+/* ==================================== SupportTab - Documentation ==================================== */
+
+.external_link {
+    margin-left: 5px;
+    vertical-align: middle;
+}

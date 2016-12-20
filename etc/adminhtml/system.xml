@@ -49,6 +49,10 @@
             <class>postnl-section</class>
 
             <include path="TIG_PostNL::system/support.xml"/>
+            <include path="TIG_PostNL::system/general.xml"/>
+            <include path="TIG_PostNL::system/webshopsettings.xml"/>
+            <include path="TIG_PostNL::system/shippingoptions.xml"/>
+            <include path="TIG_PostNL::system/productoptions.xml" />
         </section>
     </system>
 </config>

@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,30 +36,37 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
-    <default>
-        <carriers>
-            <tig_postnl>
-                <active>1</active>
-                <sallowspecific>0</sallowspecific>
-                <model>TIG\PostNL\Model\Carrier\PostNL</model>
-                <name>PostNL</name>
-                <price>5.00</price>
-                <title>PostNL</title>
-                <type>I</type>
-                <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
-            </tig_postnl>
-        </carriers>
-        <tig_postnl>
-            <productoptions>
-                <supported_options>3085</supported_options>
-            </productoptions>
-            <shippingoptions>
-                <max_deliverydays>5</max_deliverydays>
-                <eveningdelivery_fee>2</eveningdelivery_fee>
-                <sundaydelivery_fee>2</sundaydelivery_fee>
-            </shippingoptions>
-        </tig_postnl>
-    </default>
-</config>
+namespace TIG\PostNL\Block\Config\Form\Field;
+
+/**
+ * Class Fieldset
+ *
+ * @package TIG\PostNL\Block\Config\Form\Field
+ */
+class Fieldset extends \Magento\Config\Block\System\Config\Form\Fieldset
+{
+    protected $classNames = [
+        '1' => 'modus_live',
+        '2' => 'modus_test',
+        '0' => 'modus_off'
+    ];
+
+    // @codingStandardsIgnoreStart
+    /**
+     * {@inheritdoc}
+     */
+    protected function _getFrontendClass($element)
+    {
+        $modus = $this->_scopeConfig->getValue(
+            \TIG\PostNL\Config\Provider\AccountConfiguration::XPATH_GENERAL_STATUS_MODUS
+        );
+
+        $className = 'modus_off';
+        if (array_key_exists($modus, $this->classNames)) {
+            $className = $this->classNames[$modus];
+        }
+
+        return parent::_getFrontendClass($element) . ' ' . $className;
+    }
+    // @codingStandardsIgnoreEnd
+}
