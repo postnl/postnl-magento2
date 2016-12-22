@@ -43,7 +43,14 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Json\Helper\Data;
 use Magento\Framework\View\Result\PageFactory;
+use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
+use TIG\PostNL\Webservices\Endpoints\TimeFrame;
 
+/**
+ * Class Index
+ *
+ * @package TIG\PostNL\Controller\DeliveryOptions
+ */
 class Index extends Action
 {
     /**
@@ -56,20 +63,30 @@ class Index extends Action
      */
     protected $jsonHelper;
 
+    /** @var DeliveryDate */
+    protected $deliveryEndpoint;
+
+    /** @var  TimeFrame */
+    protected $timeFrameEndpoint;
+
     /**
-     * Constructor
-     *
-     * @param Context     $context
-     * @param PageFactory $resultPageFactory
-     * @param Data        $jsonHelper
+     * @param Context      $context
+     * @param PageFactory  $resultPageFactory
+     * @param Data         $jsonHelper
+     * @param DeliveryDate $deliveryDate
+     * @param TimeFrame    $timeFrame
      */
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,
-        Data $jsonHelper
+        Data $jsonHelper,
+        DeliveryDate $deliveryDate,
+        TimeFrame $timeFrame
     ) {
         $this->resultPageFactory = $resultPageFactory;
-        $this->jsonHelper = $jsonHelper;
+        $this->jsonHelper        = $jsonHelper;
+        $this->deliveryEndpoint  = $deliveryDate;
+        $this->timeFrameEndpoint = $timeFrame;
         parent::__construct($context);
     }
 
@@ -80,15 +97,29 @@ class Index extends Action
      */
     public function execute()
     {
+        $params = $this->getRequest()->getParams();
+
+        $type = 'none';
+        if (isset($params['type'])) {
+            $type = $params['type'];
+        }
+
+        switch ($type) {
+            case 'deliverydays' :
+                $data = $this->getPosibleDeliveryDays();
+                break;
+        }
+
         try {
-            return $this->jsonResponse('your response');
+            return $this->jsonResponse($data);
         } catch (LocalizedException $exception) {
             return $this->jsonResponse($exception->getMessage());
         } catch (\Exception $exception) {
-            $this->logger->critical($exception);
             return $this->jsonResponse($exception->getMessage());
         }
+
     }
+
 
     /**
      * Create json response
@@ -103,4 +134,32 @@ class Index extends Action
             $this->jsonHelper->jsonEncode($response)
         );
     }
+
+    protected function getPosibleDeliveryDays()
+    {
+        // Format example
+        $days = [
+            ['day' => 'Monday', 'date' => '19-12-2016'],
+            ['day' => 'Sunday', 'date' => '25-12-2016'],
+        ];
+        return $days;
+    }
+
+    /**
+     * CIF call to get the delivery day needed for the StartDate param in TimeFrames Call.
+     * @return array
+     */
+    protected function getDeliveryDay()
+    {
+        $this->deliveryEndpoint->setRequestData([]);
+        $response = $this->deliveryEndpoint->getDeliveryDate();
+
+        if (!is_object($response) || !isset($response->DeliveryDate)) {
+            return $this->jsonResponse(__('Invalid GetDeliveryDate response: %1', var_export($response, true)));
+        }
+
+        return $response->DeliveryDate;
+    }
+
+
 }

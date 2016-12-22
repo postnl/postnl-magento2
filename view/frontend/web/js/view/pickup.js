@@ -36,8 +36,6 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 define(['uiComponent'], function (Component) {
-    console.log('pickup loaded');
-
     return Component.extend({
         defaults: {
             template: 'TIG_PostNL/pickup'

@@ -1,3 +1,4 @@
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -35,39 +36,22 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['uiComponent'], function (Component) {
-    'use strict';
-    var self;
-    return Component.extend({
-        defaults: {
-            template: 'TIG_PostNL/delivery',
-            deliverydays: []
-        },
 
-        initialize : function () {
-            self = this;
-            this._super().observe([
-                'deliverydays'
-            ]);
-            this.getDeliverydays();
-            return this;
-        },
+namespace TIG\PostNL\Webservices\Endpoints;
 
-        setDeliverydays : function (data) {
-          this.deliverydays(data);
-        },
+/**
+ * Class TimeFrame
+ *
+ * @package TIG\PostNL\Webservices\Calculate
+ */
+class TimeFrame
+{
+    /** @var string  */
+    protected $version = 'v2_0';
 
-        getDeliverydays : function () {
-            jQuery.ajax({
-                method: "POST",
-                url : '/postnl/deliveryoptions',
-                data : 'type=deliverydays'
-            }).done( function (data) {
-                self.setDeliverydays(data);
-            }).fail( function (data) {
-                console.log(data);
-            });
-        }
+    /** @var string  */
+    protected $endpoint = 'calculate/timeframes';
 
-    });
-});
+    /** @var   */
+    protected $soap;
+}
