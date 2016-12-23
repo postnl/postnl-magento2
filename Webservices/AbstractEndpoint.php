@@ -36,65 +36,23 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Setup;
+namespace TIG\PostNL\Webservices;
 
-use Magento\Framework\Setup\InstallSchemaInterface;
-use Magento\Framework\Setup\ModuleContextInterface;
-use Magento\Framework\Setup\SchemaSetupInterface;
-use TIG\PostNL\Setup\V110\InstallOrderTable;
-use TIG\PostNL\Setup\V110\InstallShipmentBarcodeTable;
-use TIG\PostNL\Setup\V110\InstallShipmentTable;
-
-class InstallSchema implements InstallSchemaInterface
+abstract class AbstractEndpoint
 {
     /**
-     * @var InstallOrderTable
+     * @throws \Magento\Framework\Webapi\Exception
+     * @return mixed
      */
-    protected $installOrderTable;
+    abstract public function call();
 
     /**
-     * @var InstallShipmentTable
+     * @return string
      */
-    protected $installShipmentTable;
+    abstract public function getWsdlUrl();
 
     /**
-     * @var InstallShipmentBarcodeTable
+     * @return string
      */
-    private $installShipmentBarcodeTable;
-
-    /**
-     * @param InstallShipmentTable        $installShipmentTable
-     * @param InstallOrderTable           $installOrderTable
-     * @param InstallShipmentBarcodeTable $installShipmentBarcodeTable
-     */
-    public function __construct(
-        InstallShipmentTable $installShipmentTable,
-        InstallOrderTable $installOrderTable,
-        InstallShipmentBarcodeTable $installShipmentBarcodeTable
-    ) {
-        $this->installShipmentTable = $installShipmentTable;
-        $this->installOrderTable = $installOrderTable;
-        $this->installShipmentBarcodeTable = $installShipmentBarcodeTable;
-    }
-
-    /**
-     * Installs DB schema for a module
-     *
-     * @param SchemaSetupInterface   $setup
-     * @param ModuleContextInterface $context
-     *
-     * @return void
-     */
-    public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
-    {
-        $setup->startSetup();
-
-        if (version_compare($context->getVersion(), '1.1.0', '<')) {
-            $this->installOrderTable->install($setup, $context);
-            $this->installShipmentTable->install($setup, $context);
-            $this->installShipmentBarcodeTable->install($setup, $context);
-        }
-
-        $setup->endSetup();
-    }
+    abstract public function getLocation();
 }

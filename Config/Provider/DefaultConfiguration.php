@@ -36,55 +36,95 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-
 namespace TIG\PostNL\Config\Provider;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Encryption\Encryptor;
 
 /**
- * Class AbstractConfigProvider
+ * Class AccountConfiguration
  *
  * @package TIG\PostNL\Config\Provider
  */
-abstract class AbstractConfigProvider
+class DefaultConfiguration extends AbstractConfigProvider
 {
-    /**
-     * @var ScopeConfigInterface
-     */
-    protected $scopeConfig;
+    const XPATH_ENDPOINTS_CIF_BASE_URL = 'tig_postnl/endpoints/cif_base_url';
+    const XPATH_ENDPOINTS_TEST_CIF_BASE_URL = 'tig_postnl/endpoints/test_cif_base_url';
+
+    const XPATH_ENDPOINTS_API_BASE_URL = 'tig_postnl/endpoints/api_base_url';
+    const XPATH_ENDPOINTS_TEST_API_BASE_URL = 'tig_postnl/endpoints/test_api_base_url';
 
     /**
-     * @var Encryptor
+     * @var AccountConfiguration
      */
-    protected $crypt;
+    protected $accountConfiguration;
 
     /**
      * @param ScopeConfigInterface $scopeConfig
-     * @param Encryptor            $crypt
+     * @param AccountConfiguration $accountConfiguration
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        Encryptor $crypt
+        Encryptor $crypt,
+        AccountConfiguration $accountConfiguration
     ) {
-        $this->scopeConfig = $scopeConfig;
-        $this->crypt = $crypt;
+        parent::__construct($scopeConfig, $crypt);
+        $this->accountConfiguration = $accountConfiguration;
     }
 
     /**
-     * Get Config value with xpath
-     *
-     * @param      $xpath
-     * @param null $store
-     *
-     * @return mixed
+     * @return string
      */
-    protected function getConfigFromXpath($xpath, $store = null)
+    public function getCifBaseUrl()
     {
-        return $this->scopeConfig->getValue(
-            $xpath,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-            $store
-        );
+        return $this->getConfigFromXpath(static::XPATH_ENDPOINTS_CIF_BASE_URL);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTestCifBaseUrl()
+    {
+        return $this->getConfigFromXpath(static::XPATH_ENDPOINTS_TEST_CIF_BASE_URL);
+    }
+
+    /**
+     * @return string
+     */
+    public function getModusCifBaseUrl()
+    {
+        if ($this->accountConfiguration->isModusLive()) {
+            return $this->getCifBaseUrl();
+        }
+
+        return $this->getTestCifBaseUrl();
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiBaseUrl()
+    {
+        return $this->getConfigFromXpath(static::XPATH_ENDPOINTS_API_BASE_URL);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTestApiBaseUrl()
+    {
+        return $this->getConfigFromXpath(static::XPATH_ENDPOINTS_TEST_API_BASE_URL);
+    }
+
+    /**
+     * @return string
+     */
+    public function getModusApiBaseUrl()
+    {
+        if ($this->accountConfiguration->isModusLive()) {
+            return $this->getApiBaseUrl();
+        }
+
+        return $this->getTestApiBaseUrl();
     }
 }

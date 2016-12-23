@@ -36,65 +36,80 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Setup;
+namespace TIG\PostNL\Test\Unit\Config\Provider;
 
-use Magento\Framework\Setup\InstallSchemaInterface;
-use Magento\Framework\Setup\ModuleContextInterface;
-use Magento\Framework\Setup\SchemaSetupInterface;
-use TIG\PostNL\Setup\V110\InstallOrderTable;
-use TIG\PostNL\Setup\V110\InstallShipmentBarcodeTable;
-use TIG\PostNL\Setup\V110\InstallShipmentTable;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+use TIG\PostNL\Config\Provider\DefaultConfiguration;
+use TIG\PostNL\Test\TestCase;
 
-class InstallSchema implements InstallSchemaInterface
+abstract class AbstractConfigurationTest extends TestCase
 {
     /**
-     * @var InstallOrderTable
+     * @var ScopeConfigInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $installOrderTable;
+    protected $scopeConfigMock;
 
-    /**
-     * @var InstallShipmentTable
-     */
-    protected $installShipmentTable;
-
-    /**
-     * @var InstallShipmentBarcodeTable
-     */
-    private $installShipmentBarcodeTable;
-
-    /**
-     * @param InstallShipmentTable        $installShipmentTable
-     * @param InstallOrderTable           $installOrderTable
-     * @param InstallShipmentBarcodeTable $installShipmentBarcodeTable
-     */
-    public function __construct(
-        InstallShipmentTable $installShipmentTable,
-        InstallOrderTable $installOrderTable,
-        InstallShipmentBarcodeTable $installShipmentBarcodeTable
-    ) {
-        $this->installShipmentTable = $installShipmentTable;
-        $this->installOrderTable = $installOrderTable;
-        $this->installShipmentBarcodeTable = $installShipmentBarcodeTable;
+    protected function initScopeConfigMock()
+    {
+        $this->scopeConfigMock = $this->getMock(ScopeConfigInterface::class);
     }
 
     /**
-     * Installs DB schema for a module
+     * @param array $args
      *
-     * @param SchemaSetupInterface   $setup
-     * @param ModuleContextInterface $context
-     *
-     * @return void
+     * @return DefaultConfiguration
      */
-    public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
+    public function getInstance($args = [])
     {
-        $setup->startSetup();
+        $this->initScopeConfigMock();
 
-        if (version_compare($context->getVersion(), '1.1.0', '<')) {
-            $this->installOrderTable->install($setup, $context);
-            $this->installShipmentTable->install($setup, $context);
-            $this->installShipmentBarcodeTable->install($setup, $context);
+        $args['scopeConfig'] = $this->scopeConfigMock;
+
+        return parent::getInstance($args);
+    }
+
+    /**
+     * @param      $xpath
+     * @param      $value
+     * @param null $storeId
+     * @param null $matcher
+     */
+    protected function setXpath($xpath, $value, $storeId = null, $matcher = null)
+    {
+        if ($matcher === null) {
+            $matcher = $this->once();
         }
 
-        $setup->endSetup();
+        $getValueExpects = $this->scopeConfigMock->expects($matcher);
+        $getValueExpects->method('getValue');
+        $getValueExpects->with(
+            $xpath,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+        $getValueExpects->willReturn($value);
+    }
+
+    /**
+     * @return \Generator
+     */
+    public function randomWordsProvider()
+    {
+        for ($i = 0; $i <= 3; $i++) {
+            yield [uniqid()];
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function liveStagingProvider()
+    {
+        return [
+            ['0', 'off'],
+            ['1', 'live'],
+            ['2', 'staging'],
+        ];
     }
 }

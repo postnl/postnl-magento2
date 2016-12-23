@@ -36,65 +36,26 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Setup;
+namespace TIG\PostNL\Setup\V110;
 
-use Magento\Framework\Setup\InstallSchemaInterface;
-use Magento\Framework\Setup\ModuleContextInterface;
-use Magento\Framework\Setup\SchemaSetupInterface;
-use TIG\PostNL\Setup\V110\InstallOrderTable;
-use TIG\PostNL\Setup\V110\InstallShipmentBarcodeTable;
-use TIG\PostNL\Setup\V110\InstallShipmentTable;
+use TIG\PostNL\Setup\AbstractTableInstaller;
 
-class InstallSchema implements InstallSchemaInterface
+class InstallShipmentBarcodeTable extends AbstractTableInstaller
 {
-    /**
-     * @var InstallOrderTable
-     */
-    protected $installOrderTable;
+    const TABLE_NAME = 'tig_postnl_shipment_barcode';
 
     /**
-     * @var InstallShipmentTable
-     */
-    protected $installShipmentTable;
-
-    /**
-     * @var InstallShipmentBarcodeTable
-     */
-    private $installShipmentBarcodeTable;
-
-    /**
-     * @param InstallShipmentTable        $installShipmentTable
-     * @param InstallOrderTable           $installOrderTable
-     * @param InstallShipmentBarcodeTable $installShipmentBarcodeTable
-     */
-    public function __construct(
-        InstallShipmentTable $installShipmentTable,
-        InstallOrderTable $installOrderTable,
-        InstallShipmentBarcodeTable $installShipmentBarcodeTable
-    ) {
-        $this->installShipmentTable = $installShipmentTable;
-        $this->installOrderTable = $installOrderTable;
-        $this->installShipmentBarcodeTable = $installShipmentBarcodeTable;
-    }
-
-    /**
-     * Installs DB schema for a module
-     *
-     * @param SchemaSetupInterface   $setup
-     * @param ModuleContextInterface $context
-     *
      * @return void
      */
-    public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
+    protected function defineTable()
     {
-        $setup->startSetup();
+        $this->addEntityId();
 
-        if (version_compare($context->getVersion(), '1.1.0', '<')) {
-            $this->installOrderTable->install($setup, $context);
-            $this->installShipmentTable->install($setup, $context);
-            $this->installShipmentBarcodeTable->install($setup, $context);
-        }
+        $this->addInt('shipment_id', 'Shipment ID', true, true);
+        $this->addForeignKey('tig_postnl_shipment', 'entity_id', static::TABLE_NAME, 'entity_id');
 
-        $setup->endSetup();
+        $this->addText('type', 'Barcode Type', 16);
+        $this->addInt('number', 'Barcode Number');
+        $this->addText('value', 'Barcode', 32);
     }
 }

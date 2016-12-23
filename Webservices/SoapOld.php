@@ -39,130 +39,140 @@
 
 namespace TIG\PostNL\Webservices;
 
-use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\Webapi\Exception;
+use \Magento\Framework\ObjectManagerInterface;
+use \Magento\Framework\Webapi\Exception;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
-use TIG\PostNL\Config\Provider\DefaultConfiguration;
 
 /**
  * Class Soap
  *
  * @package TIG\PostNL\Webservices
  */
-class Soap
+class SoapOld
 {
     /**
-     * @var AccountConfiguration
+     * Header security namespace. Used for constructing the SOAP headers array.
      */
+    const HEADER_NAMESPACE = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd';
+
+    /** TEMP TEST DATA
+     *  @todo : Remove when PostNL API is fixed.
+     */
+    const TEST_SERVICE_WSDL_URL = 'https://testservice.postnl.com/CIF_SB/';
+    const TEST_USERNAME         = 'Dem0#Magnt01';
+    const TEST_PASSWORD         = '91609cb721bda4c7c9dd855798535c18b6e56629';
+
+    /** @var AccountConfiguration */
     protected $accountConfig;
 
-    /**
-     * @var ObjectManagerInterface
-     */
+    /** @var ObjectManagerInterface */
     protected $objectManager;
-
-    /**
-     * @var AbstractEndpoint
-     */
-    protected $endpoint;
-
-    /**
-     * @var DefaultConfiguration
-     */
-    protected $defaultConfiguration;
 
     /**
      * @param ObjectManagerInterface $objectManagerInterface
      * @param AccountConfiguration   $accountConfiguration
      *
-     * @param DefaultConfiguration   $defaultConfiguration
-     *
      * @throws Exception
      */
     public function __construct(
         ObjectManagerInterface $objectManagerInterface,
-        AccountConfiguration $accountConfiguration,
-        DefaultConfiguration $defaultConfiguration
+        AccountConfiguration $accountConfiguration
     ) {
         $this->checkSoapExtensionIsLoaded();
 
         $this->objectManager = $objectManagerInterface;
         $this->accountConfig = $accountConfiguration;
-        $this->defaultConfiguration = $defaultConfiguration;
     }
 
     /**
-     * @param AbstractEndpoint $endpoint
-     * @param                  $method
-     * @param                  $requestParams
+     * @param $type
+     * @param $service
+     * @param $requestParams
      *
      * @return mixed
      * @throws Exception
      */
-    public function call(AbstractEndpoint $endpoint, $method, $requestParams)
+    public function call($type, $service, $requestParams)
     {
-        $this->endpoint = $endpoint;
-        $soapClient = $this->getClient();
+        $soapClient = $this->create(
+            $this->createWsdlUrl($service),
+            $this->getOptionsArray()
+        );
 
+        $soapClient->__setSoapHeaders($this->getSoapHeader());
         try {
-            $result = $soapClient->__call($method, [
-                $requestParams
-            ]);
-
-            return $result;
-        } catch (\Exception $exception) {
-            /**
-             * $exception->detail->CifException
-             */
+            $result = $soapClient->__call($type, [$requestParams]);
+        } catch (Exception $e) {
 
             throw new Exception(
-                __('Faild on soap call : %1', $exception->getMessage()),
+                __('Faild on soap call : %1', $e->getMessage()),
                 0,
                 Exception::HTTP_INTERNAL_ERROR
             );
         }
+
+        return $result;
     }
 
     /**
+     * @param $wsdlUrl
+     * @param $options
+     *
      * @return \SoapClient
      */
-    public function getClient()
+    public function create($wsdlUrl, $options)
     {
-        $wsdlUrl    = $this->getWsdlUrl();
-        $soapClient = new \SoapClient($wsdlUrl, $this->getOptionsArray());
-
+        $soapClient = new \SoapClient($wsdlUrl,  $options);
         return $soapClient;
     }
 
     /**
-     * @return array
-     * @throws \Exception
+     * @param $service
+     *
+     * @return string $url
      */
-    protected function getOptionsArray()
+    public function createWsdlUrl($service)
     {
-        $apiKey  = $this->accountConfig->getApiKey();
+        return self::TEST_SERVICE_WSDL_URL .  $service . '/?wsdl';
+    }
 
-        if (empty($apiKey)) {
-            throw new \Exception('Please enter your API key');
-        }
-
+    /**
+     * @param string $uri
+     * @param bool $isCif
+     *
+     * @return array
+     */
+    protected function getOptionsArray($uri = '', $isCif = true)
+    {
         $options = [
-            'location'       => $this->getLocation(),
-            'soap_version'   => SOAP_1_2,
+            'uri'            => $uri,
+            'soap_version'   => SOAP_1_1,
             'features'       => SOAP_SINGLE_ELEMENT_ARRAYS,
             'trace'          => true,
-            /** @todo: Cache the WSDL. */
-            'cache_wsdl'     => WSDL_CACHE_NONE,
-            'stream_context' => stream_context_create(
-                [
-                    'http' => [
-                        'header' => 'apikey:' . $apiKey
-                    ]
-                ]
-            )
         ];
 
+        if (!$isCif) {
+            $options['stream_context'] = stream_context_create(
+                ['http' => ['header' => 'apikey:'.$this->accountConfig->getApiKey()]]
+            );
+        }
         return $options;
+    }
+
+    /**
+     * @todo is only needed for old CIF calls so can be removed once API is fixed.
+     * @return mixed
+     */
+    protected function getSoapHeader()
+    {
+        $firstNode  = new \SoapVar(self::TEST_USERNAME, XSD_STRING, null, null, 'Username', self::HEADER_NAMESPACE);
+        $secondNode = new \SoapVar(self::TEST_PASSWORD, XSD_STRING, null, null, 'Password', self::HEADER_NAMESPACE);
+        $token      = new \SoapVar(
+            [$firstNode, $secondNode], SOAP_ENC_OBJECT, null, null, 'usernameToken', self::HEADER_NAMESPACE
+        );
+        $security   = new \SoapVar([$token], SOAP_ENC_OBJECT, null, null, 'Security', self::HEADER_NAMESPACE);
+
+        return new \SOAPHeader(self::HEADER_NAMESPACE, 'Security', $security, false);
     }
 
     /**
@@ -178,27 +188,5 @@ class Soap
                 Exception::HTTP_INTERNAL_ERROR
             );
         }
-    }
-
-    /**
-     * @return string
-     */
-    protected function getWsdlUrl()
-    {
-        $prefix = $this->defaultConfiguration->getModusCifBaseUrl();
-        $wsdlUrl = $prefix . $this->endpoint->getWsdlUrl() . '?wsdl';
-
-        return $wsdlUrl;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getLocation()
-    {
-        $base = $this->defaultConfiguration->getModusApiBaseUrl();
-        $locationUrl = $base . $this->endpoint->getLocation();
-
-        return $locationUrl;
     }
 }

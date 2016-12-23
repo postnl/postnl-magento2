@@ -36,100 +36,72 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Soap;
 
-/**
- * Class DeliveryDate
- * @note : The DeliverDate endpoint is use to get the first posable delivery date, which is needed to collect
- *       the timeframes.
- *
- * @package TIG\PostNL\Webservices\Calculate
- */
-class DeliveryDate
+class Barcode extends AbstractEndpoint
 {
-    /** @var string */
-    protected $version = '2_1';
-
-    /** @var string */
-    protected $service = 'DeliveryDateWebService';
-
-    /** @var string */
-    protected $type = 'GetDeliveryDate';
-
-    /** @var  Soap */
+    /**
+     * @var Soap
+     */
     protected $soap;
 
-    /** @var  Array */
-    protected $requestParams;
+    /**
+     * @var string
+     */
+    protected $version = 'v1_1';
+
+    /**
+     * @var string
+     */
+    protected $endpoint = 'barcode';
 
     /**
      * @param Soap $soap
      */
-    public function __construct(Soap $soap)
-    {
+    public function __construct(
+        Soap $soap
+    ) {
         $this->soap = $soap;
     }
 
     /**
-     * @return mixed
-     * @throws \Magento\Framework\Webapi\Exception
+     * {@inheritDoc}
      */
-    public function getDeliveryDate()
+    public function call()
     {
-        return $this->soap->call($this->type, $this->getWsdlUrl(), $this->requestParams);
-    }
-
-    /**
-     * @param $address
-     *
-     * @return array
-     */
-    public function setRequestData($address)
-    {
-        $this->requestParams = [
-            'GetDeliveryDate' => [
-                'City' => 'Amsterdam',
-                'CountryCode' => 'NL',
-                'Street' => 'Kabelweg',
-                'HouseNr' => '37',
-                'HouseNrExt' => 'a',
-                'PostalCode' => '1014BA',
-                'ShippingDate' => '21-12-2016 11:33:13',
-                'ShippingDuration' => '1',
-                'AllowSundaySorting' => 'true',
-                'CutOffTimes' => [
-                    [
-                        'Day' => '00',
-                        'Time' => '14:00:00',
-                        'Available' => '1',
-                    ],
-                    [
-                        'Day' => '07',
-                        'Time' => '17:00:00',
-                        'Available' => '1',
-                    ]
-                ],
-                'Options' => [
-                    'Sunday',
-                    'Daytime',
-                    'Evening',
-                ]
+        $this->soap->call($this, 'GenerateBarcode', [
+            'Message'  => [
+                'MessageID' => 'bc546cd1b0cb67ba52bce49aefb3f9c1',
+                'MessageTimeStamp' => '19-12-2016 08:43:31',
             ],
-            'Message' => [
-                'MessageID' => 'd66d4224eae112b6fa98e59c06043cd8',
-                'MessageTimeStamp' => '19-12-2016 07:27:03'
-            ]
-        ];
+            'Customer' => [
+                'CustomerCode' => 'TOTA',
+                'CustomerNumber' => '11223344',
+            ],
+            'Barcode'  => array(
+                'Type'  => '3S',
+                'Range' => 'TOTA',
+                'Serie' => '000000000-999999999',
+            ),
+        ]);
     }
 
     /**
      * @return string
      */
-    protected function getWsdlUrl()
+    public function getWsdlUrl()
     {
-        return $this->service .'/'. $this->version;
+        return 'BarcodeWebService/1_1/';
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation()
+    {
+        return $this->version . '/' . $this->endpoint;
     }
 }
