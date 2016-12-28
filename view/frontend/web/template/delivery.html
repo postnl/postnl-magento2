@@ -1,8 +1,12 @@
 <div class="days">
     <ul data-bind="foreach: deliverydays">
         <li>
+            <!--@todo : check how the input value needs to be set.-->
             <input type="radio" data-bind="value: $data.date" name="deliveryday"/>
-            <b data-bind="text: $data.day"></b> : <span data-bind="text: $data.date"></span>
+            <b data-bind="text: $data.day"></b><br/>
+            <span data-bind="text: $data.from"></span> -
+            <span data-bind="text: $data.to"></span>
+            <span data-bind="text: $data.option"></span>
         </li>
     </ul>
 </div>

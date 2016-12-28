@@ -1,1 +1,14 @@
-Pickup 2
+<div class="locations">
+    <ul data-bind="foreach: pickupAddresses">
+        <li>
+            <input type="radio" data-bind="value: $data.LocationCode" name="pickuplocation"/>
+            <span data-bind="text: $data.Name"></span>
+            <span data-bind="text: $data.Address.Street"></span>
+            <span data-bind="text: $data.Address.HouseNr"></span>
+            <ul data-bind="foreach: $data.OpeningHours">
+                Opening day
+                <li data-bind="text: $data.Wednesday.string[0]"></li>
+            </ul>
+        </li>
+    </ul>
+</div>

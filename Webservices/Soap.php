@@ -100,16 +100,17 @@ class Soap
         );
 
         $soapClient->__setSoapHeaders($this->getSoapHeader());
+
         try {
             $result = $soapClient->__call($type, [$requestParams]);
         } catch (Exception $e) {
-
             throw new Exception(
                 __('Faild on soap call : %1', $e->getMessage()),
                 0,
                 Exception::HTTP_INTERNAL_ERROR
             );
         }
+
 
         return $result;
     }

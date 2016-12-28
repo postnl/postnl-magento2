@@ -149,4 +149,13 @@ class ShippingOptions extends AbstractConfigProvider
     {
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE);
     }
+
+    /**
+     * @todo : Add configuration for Same day delivery
+     * @return bool
+     */
+    public function isSameDayDeliveryActive()
+    {
+        return false;
+    }
 }

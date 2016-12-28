@@ -41,6 +41,11 @@ namespace TIG\PostNL\Helper;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Sales\Model\Order;
 
+/**
+ * Class Data
+ *
+ * @package TIG\PostNL\Helper
+ */
 class Data extends AbstractHelper
 {
     /**
@@ -53,5 +58,37 @@ class Data extends AbstractHelper
         $shippingMethod = $order->getShippingMethod();
 
         return $shippingMethod == 'tig_postnl_regular';
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentTimeStamp()
+    {
+        $stamp = new \DateTime('now', new \DateTimeZone('UTC'));
+        return $stamp->format('d-m-Y H:i:s');
+    }
+
+    /**
+     * @param $date
+     * @return \DateTime
+     */
+    public function getDateYmd($date = false)
+    {
+        $stamp = new \DateTime('now', new \DateTimeZone('UTC'));
+        if ($date) {
+            $stamp = new \DateTime($date, new \DateTimeZone('UTC'));
+        }
+
+        return $stamp->format('Y-m-d');
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function getTommorowsDate()
+    {
+        $dateTime = new \DateTime('now', new \DateTimeZone('UTC'));
+        return date('Y-m-d ' . $dateTime->format('H:i:s'), strtotime('tommorow'));
     }
 }
