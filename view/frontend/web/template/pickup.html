@@ -1,1 +1,12 @@
-Pickup 2
+<div class="locations">
+    <ul data-bind="foreach: pickupAddresses">
+        <li>
+            <input type="radio" data-bind="value: LocationCode" name="pickuplocation"/>
+            <span data-bind="text: Name"></span>
+            <span data-bind="text: Address.Street"></span>
+            <span data-bind="text: Address.HouseNr"></span>
+            <a data-bind="click: $parent.showOpeningHours(OpeningHours, LocationCode)">OpeningHours</a>
+            <ul data-bind="css: LocationCode" style="display: none;"></ul>
+        </li>
+    </ul>
+</div>

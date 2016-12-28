@@ -41,25 +41,24 @@ namespace TIG\PostNL\Webservices\Endpoints;
 
 use TIG\PostNL\Webservices\Soap;
 use TIG\PostNL\Webservices\Helpers\Deliveryoptions;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Helper\Data;
 
 /**
- * Class DeliveryDate
- * @note : The DeliverDate endpoint is use to get the first posable delivery date, which is needed to collect
- *       the timeframes.
+ * Class Locations
  *
- * @package TIG\PostNL\Webservices\Calculate
+ * @package TIG\PostNL\Webservices\Endpoints
  */
-class DeliveryDate
+class Locations
 {
-    /** @var string */
+    /** @var string  */
     protected $version = '2_1';
 
-    /** @var string */
-    protected $service = 'DeliveryDateWebService';
+    /** @var string  */
+    protected $service = 'LocationWebService';
 
     /** @var string */
-    protected $type = 'GetDeliveryDate';
+    protected $type = 'GetNearestLocations';
 
     /** @var  Soap */
     protected $soap;
@@ -70,54 +69,73 @@ class DeliveryDate
     /** @var Deliveryoptions */
     protected $deliveryOptionsHelper;
 
+    /** @var ShippingOptions */
+    protected $shippingOptions;
+
     /** @var Data  */
     protected $postNLhelper;
 
     /**
      * @param Soap            $soap
      * @param Deliveryoptions $deliveryoptions
+     * @param Data            $postNLhelper
+     * @param ShippingOptions $shippingOptions
      */
     public function __construct(
         Soap $soap,
+        Deliveryoptions $deliveryoptions,
         Data $postNLhelper,
-        Deliveryoptions $deliveryoptions
+        ShippingOptions $shippingOptions
     ) {
         $this->soap = $soap;
         $this->deliveryOptionsHelper = $deliveryoptions;
-        $this->postNLhelper = $postNLhelper;
+        $this->shippingOptions = $shippingOptions;
+        $this->postNLhelper  = $postNLhelper;
     }
 
     /**
      * @return mixed
      * @throws \Magento\Framework\Webapi\Exception
      */
-    public function getDeliveryDate()
+    public function getNearestLocations()
     {
         return $this->soap->call($this->type, $this->getWsdlUrl(), $this->requestParams);
     }
 
     /**
-     * @todo :  1. Calculation for shippingDuration
-     * @todo:   2. Add configuration for sundaysorting (if not enabled Monday should not return)
-     * @param $address
+     * @todo : Add configuration for sundaysorting (if not enabled Monday should not return)
      *
-     * @return array
+     * @param $address
+     * @param $startDate
      */
-    public function setRequestData($address)
+    public function setRequestData($address, $startDate = false)
     {
         $this->requestParams = [
-            'GetDeliveryDate' => [
-                'CountryCode'        => $address['country'],
-                'PostalCode'         => str_replace(' ', '', $address['postcode']),
-                'ShippingDate'       => $this->postNLhelper->getCurrentTimeStamp(),
-                'ShippingDuration'   => '1',
-                'AllowSundaySorting' => 'true',
-                'CutOffTimes'        => $this->deliveryOptionsHelper->getCuttOffTimes(),
-                'Options'            => $this->deliveryOptionsHelper->getDeliveryDatesOptions()
-            ],
-            'Message' => $this->deliveryOptionsHelper->getMessage()
-        ];
+            'Location'    => [
+                'DeliveryOptions'    => $this->deliveryOptionsHelper->getAllowedDeliveryOptions(),
+                'DeliveryDate'       => $this->getDeliveryDate($startDate),
+                'Postalcode'         => str_replace(' ', '', $address['postcode']),
+                'Options'            => ['Daytime', 'Morning'],
+                'AllowSundaySorting' => 'true'
 
+            ],
+            'Countrycode' => $address['country'],
+            'Message'     => $this->deliveryOptionsHelper->getMessage()
+        ];
+    }
+
+    /**
+     * @param $startDate
+     *
+     * @return bool|string
+     */
+    protected function getDeliveryDate($startDate)
+    {
+        if ($startDate !== false) {
+            return $startDate;
+        }
+
+        return $this->postNLhelper->getTommorowsDate();
     }
 
     /**

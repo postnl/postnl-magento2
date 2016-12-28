@@ -39,6 +39,11 @@
 
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use TIG\PostNL\Webservices\Soap;
+use TIG\PostNL\Webservices\Helpers\Deliveryoptions;
+use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Helper\Data;
+
 /**
  * Class TimeFrame
  *
@@ -46,12 +51,192 @@ namespace TIG\PostNL\Webservices\Endpoints;
  */
 class TimeFrame
 {
-    /** @var string  */
-    protected $version = 'v2_0';
+    const TIMEFRAME_OPTION_EVENING = 'Evening';
+    const TIMEFRAME_OPTION_DAYTIME = 'Daytime';
 
     /** @var string  */
-    protected $endpoint = 'calculate/timeframes';
+    protected $version = '2_0';
 
-    /** @var   */
+    /** @var string  */
+    protected $service = 'TimeframeWebService';
+
+    /** @var string */
+    protected $type = 'GetTimeframes';
+
+    /** @var  Soap */
     protected $soap;
+
+    /** @var  Array */
+    protected $requestParams;
+
+    /** @var Deliveryoptions */
+    protected $deliveryOptionsHelper;
+
+    /** @var ShippingOptions */
+    protected $shippingOptions;
+
+    /** @var Data  */
+    protected $postNLhelper;
+
+    /**
+     * @param Soap            $soap
+     * @param Deliveryoptions $deliveryoptions
+     * @param Data            $postNLhelper
+     * @param ShippingOptions $shippingOptions
+     */
+    public function __construct(
+        Soap $soap,
+        Deliveryoptions $deliveryoptions,
+        Data $postNLhelper,
+        ShippingOptions $shippingOptions
+    ) {
+        $this->soap = $soap;
+        $this->deliveryOptionsHelper = $deliveryoptions;
+        $this->shippingOptions = $shippingOptions;
+        $this->postNLhelper  = $postNLhelper;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Magento\Framework\Webapi\Exception
+     */
+    public function getDeliveryTimeFrames()
+    {
+        return $this->soap->call($this->type, $this->getWsdlUrl(), $this->requestParams);
+    }
+
+    /**
+     * @todo : Add Housenumber validation, can be extracted from $address['street'][1] or regexed out of [0]
+     * @todo:  Add configuration for sundaysorting (if not enabled Monday should not return)
+     * @param $address
+     * @param $startDate
+     *
+     * @return array
+     */
+    public function setRequestData($address, $startDate)
+    {
+        $this->requestParams = [
+            'Timeframe' => [
+                'CountryCode'        => $address['country'],
+                'PostalCode'         => str_replace(' ', '', $address['postcode']),
+                'HouseNr'            => '37',
+                'StartDate'          => $startDate,
+                'SundaySorting'      => 'true',
+                'EndDate'            => $this->deliveryOptionsHelper->getEndDate($startDate),
+                'Options'            => $this->deliveryOptionsHelper->getDeliveryDatesOptions()
+            ],
+            'Message' => $this->deliveryOptionsHelper->getMessage()
+        ];
+    }
+
+    /**
+     * @todo : Filter on Monday and Sunday delivery also on evening and CutoffTimes.
+     * @todo : Optimize code in calisthenics way.
+     *
+     * @param $timeFrames
+     * @param $country
+     *
+     * @return array
+     */
+    public function filterTimeFrames($timeFrames, $country)
+    {
+        $filterdTimeFrames = [];
+        foreach ($timeFrames as $timeFrame) {
+            if ($this->isSameDay($timeFrame->Date) && !$this->canUseSameDay()) {
+                continue;
+            }
+            $filterdTimeFrames = $this->getTimeFrameOptions(
+                $filterdTimeFrames,
+                $timeFrame->Timeframes->TimeframeTimeFrame,
+                $timeFrame->Date
+            );
+        }
+
+        return $filterdTimeFrames;
+    }
+
+    /**
+     * @todo : Optimize code in calisthenics way.
+     * @param $filterdTimeFrames
+     * @param $timeFrames
+     * @param $date
+     *
+     * @return array
+     */
+    protected function getTimeFrameOptions(&$filterdTimeFrames, $timeFrames, $date)
+    {
+        foreach ($timeFrames as $timeFrame) {
+
+            if (!$this->validateOnEvening($timeFrame->Options->string[0])) {
+                continue;
+            }
+
+            $filterdTimeFrames[] = [
+                'day'    => date('D', strtotime($date)) . ' (' . $date . ')',
+                'from'   => $timeFrame->From,
+                'to'     => $timeFrame->To,
+                'option' => $timeFrame->Options->string[0],
+                'date'   => $date
+            ];
+        }
+
+        return $filterdTimeFrames;
+    }
+
+    /**
+     * @todo : Move to validation Classes.
+     *
+     * @param $option
+     *
+     * @return bool
+     */
+    protected function validateOnEvening($option)
+    {
+        if ($option !== self::TIMEFRAME_OPTION_EVENING) {
+            return true;
+        }
+
+        if ($option === self::TIMEFRAME_OPTION_EVENING && $this->shippingOptions->isEveningDeliveryActive()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @todo : Add logic to check if the request is passed to CuttOff times.
+     * @todo : Move to validation Classes.
+     *
+     * @return bool
+     */
+    protected function canUseSameDay()
+    {
+        if (!$this->shippingOptions->isSameDayDeliveryActive()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @todo : Move to validation Classes.
+     * @param $timeFrameDate
+     *
+     * @return bool
+     */
+    protected function isSameDay($timeFrameDate)
+    {
+        if ($this->postNLhelper->getDateYmd() == $this->postNLhelper->getDateYmd($timeFrameDate)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getWsdlUrl()
+    {
+        return $this->service .'/'. $this->version;
+    }
 }

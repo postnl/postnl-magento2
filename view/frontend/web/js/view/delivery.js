@@ -35,21 +35,75 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['uiComponent'], function (Component) {
+define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (Component, ko, quote, $) {
     'use strict';
     var self;
+    var address = false;
     return Component.extend({
         defaults: {
             template: 'TIG_PostNL/delivery',
+            postalCode : null,
+            countryCode : null,
+            street : null,
+            hasAddress :false,
             deliverydays: []
         },
 
-        initialize : function () {
+        initObservable : function () {
             self = this;
+
             this._super().observe([
-                'deliverydays'
+                'deliverydays',
+                'postalCode',
+                'countryCode',
+                'street',
+                'hasAddress'
             ]);
-            this.getDeliverydays();
+
+            this.hasAddress = ko.computed (function () {
+                if (!quote.shippingAddress()) {
+                    address = false;
+                    return this;
+                }
+
+                self.postalCode  = quote.shippingAddress().postcode;
+                self.countryCode = quote.shippingAddress().countryId;
+                self.street      = quote.shippingAddress().street;
+
+                if (!self.street) {
+                    //  Create own data object.
+                    self.street = {
+                        street : {
+                            0: $("input[name*='street[0]']").val(),
+                            1: $("input[name*='street[1]']").val()
+                        }
+                    };
+                }
+
+                if (!self.postalCode || !self.countryCode || !self.street) {
+                    address = false;
+                    return this;
+                }
+
+                if (
+                    self.postalCode.length > 0 ||
+                    self.countryCode.length > 0 ||
+                    (self.street.length > 0 && self.street.street[0] !== '')
+                ) {
+                    address = true;
+                }
+
+                if (address) {
+                    self.getDeliverydays(
+                        {
+                            postcode: self.postalCode,
+                            country : self.countryCode,
+                            street  : self.street
+                        }
+                    );
+                }
+            });
+
             return this;
         },
 
@@ -57,11 +111,11 @@ define(['uiComponent'], function (Component) {
           this.deliverydays(data);
         },
 
-        getDeliverydays : function () {
+        getDeliverydays : function (address) {
             jQuery.ajax({
                 method: "POST",
                 url : '/postnl/deliveryoptions',
-                data : 'type=deliverydays'
+                data : {type: 'deliverydays', address: address}
             }).done( function (data) {
                 self.setDeliverydays(data);
             }).fail( function (data) {

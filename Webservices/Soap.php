@@ -130,10 +130,6 @@ class Soap
 
             return $this->response;
         } catch (\Exception $exception) {
-            /**
-             * $exception->detail->CifException
-             */
-
             $this->exceptionHandler->handle($exception, $soapClient);
 
             throw new Exception(

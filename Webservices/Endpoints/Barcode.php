@@ -111,7 +111,7 @@ class Barcode extends AbstractEndpoint
                 'Serie' => $barcode['serie'],
             ],
         ];
-        
+
         $this->soap->call($this, 'GenerateBarcode', $parameters);
     }
 
