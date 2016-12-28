@@ -36,65 +36,98 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Setup;
+namespace TIG\PostNL\Webservices\Endpoints;
 
-use Magento\Framework\Setup\InstallSchemaInterface;
-use Magento\Framework\Setup\ModuleContextInterface;
-use Magento\Framework\Setup\SchemaSetupInterface;
-use TIG\PostNL\Setup\V110\InstallOrderTable;
-use TIG\PostNL\Setup\V110\InstallShipmentBarcodeTable;
-use TIG\PostNL\Setup\V110\InstallShipmentTable;
+use TIG\PostNL\Config\Provider\AccountConfiguration;
+use TIG\PostNL\Helper\BarcodeData;
+use TIG\PostNL\Webservices\AbstractEndpoint;
+use TIG\PostNL\Webservices\Api\Customer;
+use TIG\PostNL\Webservices\Api\Message;
+use TIG\PostNL\Webservices\Soap;
 
-class InstallSchema implements InstallSchemaInterface
+class Barcode extends AbstractEndpoint
 {
     /**
-     * @var InstallOrderTable
+     * @var Soap
      */
-    protected $installOrderTable;
+    protected $soap;
 
     /**
-     * @var InstallShipmentTable
+     * @var string
      */
-    protected $installShipmentTable;
+    protected $version = 'v1_1';
 
     /**
-     * @var InstallShipmentBarcodeTable
+     * @var string
      */
-    private $installShipmentBarcodeTable;
+    protected $endpoint = 'barcode';
 
     /**
-     * @param InstallShipmentTable        $installShipmentTable
-     * @param InstallOrderTable           $installOrderTable
-     * @param InstallShipmentBarcodeTable $installShipmentBarcodeTable
+     * @var BarcodeData
+     */
+    protected $barcodeData;
+
+    /**
+     * @var Customer
+     */
+    protected $customer;
+
+    /**
+     * @var Message
+     */
+    protected $message;
+
+    /**
+     * @param Soap        $soap
+     * @param BarcodeData $barcodeData
+     * @param Customer    $customer
+     * @param Message     $message
      */
     public function __construct(
-        InstallShipmentTable $installShipmentTable,
-        InstallOrderTable $installOrderTable,
-        InstallShipmentBarcodeTable $installShipmentBarcodeTable
+        Soap $soap,
+        BarcodeData $barcodeData,
+        Customer $customer,
+        Message $message
     ) {
-        $this->installShipmentTable = $installShipmentTable;
-        $this->installOrderTable = $installOrderTable;
-        $this->installShipmentBarcodeTable = $installShipmentBarcodeTable;
+        $this->soap = $soap;
+        $this->barcodeData = $barcodeData;
+        $this->customer = $customer;
+        $this->message = $message;
     }
 
     /**
-     * Installs DB schema for a module
-     *
-     * @param SchemaSetupInterface   $setup
-     * @param ModuleContextInterface $context
-     *
-     * @return void
+     * {@inheritDoc}
      */
-    public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
+    public function call()
     {
-        $setup->startSetup();
+        $barcode = $this->barcodeData->get('NL');
 
-        if (version_compare($context->getVersion(), '1.1.0', '<')) {
-            $this->installOrderTable->install($setup, $context);
-            $this->installShipmentTable->install($setup, $context);
-            $this->installShipmentBarcodeTable->install($setup, $context);
-        }
+        $parameters = [
+            'Message'  => $this->message->get(''),
+            'Customer' => $this->customer->get(),
+            'Barcode'  => [
+                'Type'  => $barcode['type'],
+                'Range' => $barcode['range'],
+                'Serie' => $barcode['serie'],
+            ],
+        ];
+        
+        $this->soap->call($this, 'GenerateBarcode', $parameters);
+    }
 
-        $setup->endSetup();
+    /**
+     * @return string
+     */
+    public function getWsdlUrl()
+    {
+        return 'BarcodeWebService/1_1/';
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation()
+    {
+        return $this->version . '/' . $this->endpoint;
     }
 }

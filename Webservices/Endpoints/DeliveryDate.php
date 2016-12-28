@@ -40,6 +40,7 @@
 namespace TIG\PostNL\Webservices\Endpoints;
 
 use TIG\PostNL\Webservices\Soap;
+
 /**
  * Class DeliveryDate
  * @note : The DeliverDate endpoint is use to get the first posable delivery date, which is needed to collect

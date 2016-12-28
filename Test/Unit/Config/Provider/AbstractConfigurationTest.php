@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,40 +36,58 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
-    <default>
-        <carriers>
-            <tig_postnl>
-                <active>1</active>
-                <sallowspecific>0</sallowspecific>
-                <model>TIG\PostNL\Model\Carrier\PostNL</model>
-                <name>PostNL</name>
-                <price>5.00</price>
-                <title>PostNL</title>
-                <type>I</type>
-                <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
-            </tig_postnl>
-        </carriers>
-        <tig_postnl>
-            <productoptions>
-                <supported_options>3085</supported_options>
-            </productoptions>
-            <shippingoptions>
-                <max_deliverydays>5</max_deliverydays>
-                <eveningdelivery_fee>2</eveningdelivery_fee>
-                <sundaydelivery_fee>2</sundaydelivery_fee>
-            </shippingoptions>
-            <endpoints>
-                <cif_base_url>https://service.postnl.com/CIF/</cif_base_url>
-                <test_cif_base_url>https://testservice.postnl.com/CIF_SB/</test_cif_base_url>
-                <api_base_url>https://api.postnl.nl/shipment/</api_base_url>
-                <test_api_base_url>https://api-acc.postnl.nl/shipment/</test_api_base_url>
-            </endpoints>
-            <barcode>
-                <global_type>CD</global_type>
-                <global_range>1660</global_range>
-            </barcode>
-        </tig_postnl>
-    </default>
-</config>
+namespace TIG\PostNL\Test\Unit\Config\Provider;
+
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+use TIG\PostNL\Config\Provider\DefaultConfiguration;
+use TIG\PostNL\Test\TestCase;
+
+abstract class AbstractConfigurationTest extends TestCase
+{
+    /**
+     * @var ScopeConfigInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $scopeConfigMock;
+
+    protected function initScopeConfigMock()
+    {
+        $this->scopeConfigMock = $this->getMock(ScopeConfigInterface::class);
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return DefaultConfiguration
+     */
+    public function getInstance($args = [])
+    {
+        $this->initScopeConfigMock();
+
+        $args['scopeConfig'] = $this->scopeConfigMock;
+
+        return parent::getInstance($args);
+    }
+
+    /**
+     * @param      $xpath
+     * @param      $value
+     * @param null $storeId
+     * @param null $matcher
+     */
+    protected function setXpath($xpath, $value, $storeId = null, $matcher = null)
+    {
+        if ($matcher === null) {
+            $matcher = $this->once();
+        }
+
+        $getValueExpects = $this->scopeConfigMock->expects($matcher);
+        $getValueExpects->method('getValue');
+        $getValueExpects->with(
+            $xpath,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+        $getValueExpects->willReturn($value);
+    }
+}

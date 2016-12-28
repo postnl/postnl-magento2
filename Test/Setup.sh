@@ -36,10 +36,18 @@ cp -v Test/Fixtures/config.php "${BUILD_DIR}/app/etc/config.php"
 cp -v Test/Fixtures/install-config-mysql.php "${BUILD_DIR}/dev/tests/integration/etc/install-config-mysql.php"
 cp -v Test/Fixtures/phpunit.xml "${BUILD_DIR}/dev/tests/integration/phpunit.xml"
 
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+    git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+    git fetch
+    git checkout ${TRAVIS_BRANCH};
+fi
+
 ( cd "${BUILD_DIR}/" && composer config minimum-stability dev )
 ( cd "${BUILD_DIR}/" && composer config repositories.postnl vcs ${TRAVIS_BUILD_DIR} )
 ( cd "${BUILD_DIR}/" && composer require tig/postnl:dev-${TRAVIS_BRANCH} )
 ( cd "${BUILD_DIR}/vendor/tig/postnl" && git checkout ${TRAVIS_COMMIT} )
+
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then git checkout -qf FETCH_HEAD; fi
 
 mysql -u${MAGENTO_DB_USER} ${MYSQLPASS} -h${MAGENTO_DB_HOST} -P${MAGENTO_DB_PORT} -e "DROP DATABASE IF EXISTS \`${MAGENTO_DB_NAME}\`; CREATE DATABASE \`${MAGENTO_DB_NAME}\`;"
 mysql -u${MAGENTO_DB_USER} ${MYSQLPASS} -h${MAGENTO_DB_HOST} -P${MAGENTO_DB_PORT} ${MAGENTO_DB_NAME} < Test/Fixtures/tig-postnl-fixture.sql

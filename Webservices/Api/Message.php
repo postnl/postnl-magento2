@@ -36,65 +36,94 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Setup;
+namespace TIG\PostNL\Webservices\Api;
 
-use Magento\Framework\Setup\InstallSchemaInterface;
-use Magento\Framework\Setup\ModuleContextInterface;
-use Magento\Framework\Setup\SchemaSetupInterface;
-use TIG\PostNL\Setup\V110\InstallOrderTable;
-use TIG\PostNL\Setup\V110\InstallShipmentBarcodeTable;
-use TIG\PostNL\Setup\V110\InstallShipmentTable;
+use Magento\Framework\HTTP\PhpEnvironment\ServerAddress;
+use Magento\Framework\Stdlib\DateTime\DateTime;
+use TIG\PostNL\Config\Provider\AccountConfiguration;
 
-class InstallSchema implements InstallSchemaInterface
+class Message
 {
     /**
-     * @var InstallOrderTable
+     * @var ServerAddress
      */
-    protected $installOrderTable;
+    protected $serverAddress;
 
     /**
-     * @var InstallShipmentTable
+     * @var AccountConfiguration
      */
-    protected $installShipmentTable;
+    protected $accountConfiguration;
 
     /**
-     * @var InstallShipmentBarcodeTable
+     * @var DateTime
      */
-    private $installShipmentBarcodeTable;
+    protected $dateTime;
 
     /**
-     * @param InstallShipmentTable        $installShipmentTable
-     * @param InstallOrderTable           $installOrderTable
-     * @param InstallShipmentBarcodeTable $installShipmentBarcodeTable
+     * @var array
+     */
+    protected $messageIdStrings = [];
+
+    /**
+     * @param ServerAddress                               $serverAddress
+     * @param DateTime $dateTime
+     * @param AccountConfiguration                        $accountConfiguration
      */
     public function __construct(
-        InstallShipmentTable $installShipmentTable,
-        InstallOrderTable $installOrderTable,
-        InstallShipmentBarcodeTable $installShipmentBarcodeTable
+        ServerAddress $serverAddress,
+        DateTime $dateTime,
+        AccountConfiguration $accountConfiguration
     ) {
-        $this->installShipmentTable = $installShipmentTable;
-        $this->installOrderTable = $installOrderTable;
-        $this->installShipmentBarcodeTable = $installShipmentBarcodeTable;
+        $this->serverAddress = $serverAddress;
+        $this->accountConfiguration = $accountConfiguration;
+        $this->dateTime = $dateTime;
     }
 
     /**
-     * Installs DB schema for a module
+     * @param       $barcode
+     * @param array $extra
      *
-     * @param SchemaSetupInterface   $setup
-     * @param ModuleContextInterface $context
-     *
-     * @return void
+     * @return array
      */
-    public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
+    public function get($barcode, $extra = array())
     {
-        $setup->startSetup();
+        $messageIdString = $this->getMessageIdString($barcode);
 
-        if (version_compare($context->getVersion(), '1.1.0', '<')) {
-            $this->installOrderTable->install($setup, $context);
-            $this->installShipmentTable->install($setup, $context);
-            $this->installShipmentBarcodeTable->install($setup, $context);
+        $message = array(
+            'MessageID'        => md5($messageIdString),
+            'MessageTimeStamp' => date('d-m-Y H:i:s', $this->dateTime->gmtTimestamp()),
+        );
+
+        if ($extra) {
+            $message = array_merge($message, $extra);
         }
 
-        $setup->endSetup();
+        return $message;
+    }
+
+    /**
+     * @param $barcode
+     *
+     * @return string
+     */
+    protected function getMessageIdString($barcode)
+    {
+        if (array_key_exists($barcode, $this->messageIdStrings)) {
+            return $this->messageIdStrings[$barcode];
+        }
+
+        $id = uniqid(
+            'postnl_'
+            . ip2long($this->serverAddress->getServerAddress())
+        );
+
+        $messageIdString = $id
+            . $this->accountConfiguration->getCustomerNumber()
+            . $barcode
+            . microtime();
+
+        $this->messageIdStrings[$barcode] = $messageIdString;
+
+        return $messageIdString;
     }
 }

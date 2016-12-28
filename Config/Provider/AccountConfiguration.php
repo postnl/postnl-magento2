@@ -101,7 +101,9 @@ class AccountConfiguration extends AbstractConfigProvider
      */
     public function getApiKey()
     {
-        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY));
+        $value = $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY));
+
+        return $this->crypt->decrypt($value);
     }
 
     /**
