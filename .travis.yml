@@ -27,6 +27,7 @@ before_script:
   - phpenv config-rm xdebug.ini
   - composer config -a -g http-basic.repo.magento.com $MAGENTO_USERNAME $MAGENTO_PASSWORD
   - composer install
+  - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then git fetch; fi
   - npm install && npm install grunt-cli -g
   - bash Test/Setup.sh
 
