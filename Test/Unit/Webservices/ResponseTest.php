@@ -36,68 +36,26 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL;
+namespace TIG\PostNL\Test\Unit\Webservices;
 
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Phrase;
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Webservices\Response;
 
-class Exception extends LocalizedException
+class ResponseTest extends TestCase
 {
-    /**
-     * @param $message
-     * @param int                       $code
-     * @param null                      $previous
-     */
-    public function __construct($message, $code = 0, $previous = null)
-    {
-        if (is_string($message)) {
-            $message = __($message);
-        }
-
-        parent::__construct($message, $previous);
-
-        /**
-         * Replace the code with the actual, non-integer code.
-         */
-        if ($code !== 0) {
-            $code = (string) $code;
-            $this->code = $code;
-        }
-    }
+    protected $instanceClass = Response::class;
 
     /**
-     * Custom __toString method that includes the error code, if present.
-     *
-     * @return string
-     *
-     * @see Exception::__toString()
-     *
-     * @link http://www.php.net/manual/en/exception.tostring.php
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
-    public function __toString()
+    public function testSet($word)
     {
-        $string = "exception '"
-            . __CLASS__
-            . "' with message '"
-            . $this->getMessage()
-            . "'";
+        $stdClass = new \stdClass;
+        $stdClass->word = $word;
 
-        $code = $this->getCode();
-        if ($code !== 0 && !empty($code)) {
-            $string .= " and code '"
-                . $this->getCode()
-                . "'";
-        }
+        $instance = $this->getInstance();
+        $instance->set($stdClass);
 
-        $string .= " in "
-            . $this->getFile()
-            . ':'
-            . $this->getLine()
-            . PHP_EOL
-            . 'Stack trace:'
-            . PHP_EOL
-            . $this->getTraceAsString();
-
-        return $string;
+        $this->assertEquals($stdClass, $instance->get());
     }
 }

@@ -36,98 +36,29 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Webservices\Endpoints;
+namespace TIG\PostNL\Test\Fixtures;
 
-use TIG\PostNL\Config\Provider\AccountConfiguration;
-use TIG\PostNL\Helper\BarcodeData;
-use TIG\PostNL\Webservices\AbstractEndpoint;
-use TIG\PostNL\Webservices\Api\Customer;
-use TIG\PostNL\Webservices\Api\Message;
-use TIG\PostNL\Webservices\Soap;
-
-class Barcode extends AbstractEndpoint
+class DataProvider
 {
     /**
-     * @var Soap
+     * @return \Generator
      */
-    protected $soap;
-
-    /**
-     * @var string
-     */
-    protected $version = 'v1_1';
-
-    /**
-     * @var string
-     */
-    protected $endpoint = 'barcode';
-
-    /**
-     * @var BarcodeData
-     */
-    protected $barcodeData;
-
-    /**
-     * @var Customer
-     */
-    protected $customer;
-
-    /**
-     * @var Message
-     */
-    protected $message;
-
-    /**
-     * @param Soap        $soap
-     * @param BarcodeData $barcodeData
-     * @param Customer    $customer
-     * @param Message     $message
-     */
-    public function __construct(
-        Soap $soap,
-        BarcodeData $barcodeData,
-        Customer $customer,
-        Message $message
-    ) {
-        $this->soap = $soap;
-        $this->barcodeData = $barcodeData;
-        $this->customer = $customer;
-        $this->message = $message;
+    public function randomWordsProvider()
+    {
+        for ($i = 0; $i <= 3; $i++) {
+            yield [uniqid()];
+        }
     }
 
     /**
-     * {@inheritDoc}
+     * @return string
      */
-    public function call()
+    public function liveStagingProvider()
     {
-        $barcode = $this->barcodeData->get('NL');
-
-        $parameters = [
-            'Message'  => $this->message->get(''),
-            'Customer' => $this->customer->get(),
-            'Barcode'  => [
-                'Type'  => $barcode['type'],
-                'Range' => $barcode['range'],
-                'Serie' => $barcode['serie'],
-            ],
+        return [
+            ['0', 'off'],
+            ['1', 'live'],
+            ['2', 'staging'],
         ];
-        
-        $this->soap->call($this, 'GenerateBarcode', $parameters);
-    }
-
-    /**
-     * @return string
-     */
-    public function getWsdlUrl()
-    {
-        return 'BarcodeWebService/1_1/';
-    }
-
-    /**
-     * @return string
-     */
-    public function getLocation()
-    {
-        return $this->version . '/' . $this->endpoint;
     }
 }

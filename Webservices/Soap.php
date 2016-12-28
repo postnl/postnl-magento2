@@ -72,23 +72,40 @@ class Soap
     protected $defaultConfiguration;
 
     /**
+     * @var Response
+     */
+    protected $response;
+
+    /**
+     * @var ExceptionHandler
+     */
+    protected $exceptionHandler;
+
+    /**
      * @param ObjectManagerInterface $objectManagerInterface
      * @param AccountConfiguration   $accountConfiguration
      *
      * @param DefaultConfiguration   $defaultConfiguration
+     *
+     * @param ExceptionHandler       $exceptionHandler
+     * @param Response               $response
      *
      * @throws Exception
      */
     public function __construct(
         ObjectManagerInterface $objectManagerInterface,
         AccountConfiguration $accountConfiguration,
-        DefaultConfiguration $defaultConfiguration
+        DefaultConfiguration $defaultConfiguration,
+        ExceptionHandler $exceptionHandler,
+        Response $response
     ) {
         $this->checkSoapExtensionIsLoaded();
 
         $this->objectManager = $objectManagerInterface;
         $this->accountConfig = $accountConfiguration;
         $this->defaultConfiguration = $defaultConfiguration;
+        $this->response = $response;
+        $this->exceptionHandler = $exceptionHandler;
     }
 
     /**
@@ -96,7 +113,7 @@ class Soap
      * @param                  $method
      * @param                  $requestParams
      *
-     * @return mixed
+     * @return Response
      * @throws Exception
      */
     public function call(AbstractEndpoint $endpoint, $method, $requestParams)
@@ -109,16 +126,18 @@ class Soap
                 $requestParams
             ]);
 
-            return $result;
+            $this->response->set($result);
+
+            return $this->response;
         } catch (\Exception $exception) {
             /**
              * $exception->detail->CifException
              */
 
-            var_dump($exception->detail->CifException->Errors);
+            $this->exceptionHandler->handle($exception, $soapClient);
 
             throw new Exception(
-                __('Faild on soap call : %1', $exception->getMessage()),
+                __('Failed on soap call : %1', $exception->getMessage()),
                 0,
                 Exception::HTTP_INTERNAL_ERROR
             );

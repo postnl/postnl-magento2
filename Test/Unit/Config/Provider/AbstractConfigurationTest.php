@@ -90,26 +90,4 @@ abstract class AbstractConfigurationTest extends TestCase
         );
         $getValueExpects->willReturn($value);
     }
-
-    /**
-     * @return \Generator
-     */
-    public function randomWordsProvider()
-    {
-        for ($i = 0; $i <= 3; $i++) {
-            yield [uniqid()];
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function liveStagingProvider()
-    {
-        return [
-            ['0', 'off'],
-            ['1', 'live'],
-            ['2', 'staging'],
-        ];
-    }
 }

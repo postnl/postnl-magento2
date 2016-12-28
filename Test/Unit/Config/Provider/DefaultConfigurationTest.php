@@ -40,13 +40,14 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
+use TIG\PostNL\Test\Fixtures\DataProvider;
 
 class DefaultConfigurationTest extends AbstractConfigurationTest
 {
     protected $instanceClass = DefaultConfiguration::class;
 
     /**
-     * @dataProvider randomWordsProvider
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
     public function testGetWsdlBaseUrl($value)
     {
@@ -56,7 +57,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
     }
 
     /**
-     * @dataProvider randomWordsProvider
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
     public function testGetTestWsdlBaseUrl($value)
     {
@@ -66,7 +67,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
     }
 
     /**
-     * @dataProvider liveStagingProvider
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::liveStagingProvider
      */
     public function testGetModusWsdlBaseUrl($value, $modus)
     {
@@ -92,7 +93,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
     }
 
     /**
-     * @dataProvider randomWordsProvider
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
     public function testGetApiBaseUrl($value)
     {
@@ -102,7 +103,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
     }
 
     /**
-     * @dataProvider randomWordsProvider
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
     public function testGetTestApiBaseUrl($value)
     {
@@ -112,7 +113,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
     }
 
     /**
-     * @dataProvider randomWordsProvider
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
     public function testGetBarcodeGlobalType($value)
     {
@@ -122,7 +123,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
     }
 
     /**
-     * @dataProvider randomWordsProvider
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
     public function testGetBarcodeGlobalRange($value)
     {
@@ -132,7 +133,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
     }
 
     /**
-     * @dataProvider liveStagingProvider
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::liveStagingProvider
      */
     public function testGetModusApiBaseUrl($value, $modus)
     {

@@ -40,7 +40,7 @@ namespace TIG\PostNL\Helper;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
-use TIG\PostNL\Exception;
+use TIG\PostNL\Exception as PostnlException;
 
 class BarcodeData
 {
@@ -83,7 +83,7 @@ class BarcodeData
      *
      * @return array
      *
-     * @throws Exception
+     * @throws PostnlException
      */
     public function get($barcodeType)
     {
@@ -100,14 +100,14 @@ class BarcodeData
                 $barcodeData = $this->getGlobalBarcode();
                 break;
             default:
-                throw new Exception(
+                throw new PostnlException(
                     __('Invalid barcodetype requested: %s', $barcodeType),
                     'POSTNL-0061'
                 );
         }
 
         if (!$barcodeData['type'] || !$barcodeData['range']) {
-            throw new Exception(
+            throw new PostnlException(
                 __('Unable to retrieve barcode data.'),
                 'POSTNL-0111'
             );
