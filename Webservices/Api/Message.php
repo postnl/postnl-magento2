@@ -36,96 +36,94 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Webservices\Endpoints;
+namespace TIG\PostNL\Webservices\Api;
 
+use Magento\Framework\HTTP\PhpEnvironment\ServerAddress;
+use Magento\Framework\Stdlib\DateTime\DateTime;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
-use TIG\PostNL\Helper\BarcodeData;
-use TIG\PostNL\Webservices\AbstractEndpoint;
-use TIG\PostNL\Webservices\Api\Customer;
-use TIG\PostNL\Webservices\Api\Message;
-use TIG\PostNL\Webservices\Soap;
 
-class Barcode extends AbstractEndpoint
+class Message
 {
     /**
-     * @var Soap
+     * @var ServerAddress
      */
-    protected $soap;
+    protected $serverAddress;
 
     /**
-     * @var string
+     * @var AccountConfiguration
      */
-    protected $version = 'v1_1';
+    protected $accountConfiguration;
 
     /**
-     * @var string
+     * @var DateTime
      */
-    protected $endpoint = 'barcode';
+    protected $dateTime;
 
     /**
-     * @var BarcodeData
+     * @var array
      */
-    protected $barcodeData;
+    protected $messageIdStrings = [];
 
     /**
-     * @var Customer
-     */
-    protected $customer;
-
-    /**
-     * @var Message
-     */
-    protected $message;
-
-    /**
-     * @param Soap        $soap
-     * @param BarcodeData $barcodeData
-     * @param Customer    $customer
-     * @param Message     $message
+     * @param ServerAddress                               $serverAddress
+     * @param DateTime $dateTime
+     * @param AccountConfiguration                        $accountConfiguration
      */
     public function __construct(
-        Soap $soap,
-        BarcodeData $barcodeData,
-        Customer $customer,
-        Message $message
+        ServerAddress $serverAddress,
+        DateTime $dateTime,
+        AccountConfiguration $accountConfiguration
     ) {
-        $this->soap = $soap;
-        $this->barcodeData = $barcodeData;
-        $this->customer = $customer;
-        $this->message = $message;
+        $this->serverAddress = $serverAddress;
+        $this->accountConfiguration = $accountConfiguration;
+        $this->dateTime = $dateTime;
     }
 
     /**
-     * {@inheritDoc}
+     * @param       $barcode
+     * @param array $extra
+     *
+     * @return array
      */
-    public function call()
+    public function get($barcode, $extra = array())
     {
-        $barcode = $this->barcodeData->get('NL');
+        $messageIdString = $this->getMessageIdString($barcode);
 
-        $this->soap->call($this, 'GenerateBarcode', [
-            'Message'  => $this->message->get(''),
-            'Customer' => $this->customer->get(),
-            'Barcode'  => [
-                'Type'  => $barcode['type'],
-                'Range' => $barcode['range'],
-                'Serie' => $barcode['serie'],
-            ],
-        ]);
+        $message = array(
+            'MessageID'        => md5($messageIdString),
+            'MessageTimeStamp' => date('d-m-Y H:i:s', $this->dateTime->gmtTimestamp()),
+        );
+
+        if ($extra) {
+            $message = array_merge($message, $extra);
+        }
+
+        return $message;
     }
 
     /**
+     * @param $barcode
+     *
      * @return string
      */
-    public function getWsdlUrl()
+    protected function getMessageIdString($barcode)
     {
-        return 'BarcodeWebService/1_1/';
-    }
+        if (array_key_exists($barcode, $this->messageIdStrings)) {
+            return $this->messageIdStrings[$barcode];
+        }
 
-    /**
-     * @return string
-     */
-    public function getLocation()
-    {
-        return $this->version . '/' . $this->endpoint;
+        $id = uniqid(
+            'postnl_'
+            . ip2long($this->serverAddress->getServerAddress())
+        );
+
+        $messageIdString = $id
+            . $this->accountConfiguration->getCustomerNumber()
+            . $barcode
+            . microtime();
+
+        $this->messageIdStrings[$barcode] = $messageIdString;
+
+        return $messageIdString;
     }
 }

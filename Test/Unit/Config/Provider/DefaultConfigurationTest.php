@@ -112,6 +112,26 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
     }
 
     /**
+     * @dataProvider randomWordsProvider
+     */
+    public function testGetBarcodeGlobalType($value)
+    {
+        $instance = $this->getInstance();
+        $this->setXpath(DefaultConfiguration::XPATH_BARCODE_GLOBAL_TYPE, $value);
+        $this->assertEquals($value, $instance->getBarcodeGlobalType());
+    }
+
+    /**
+     * @dataProvider randomWordsProvider
+     */
+    public function testGetBarcodeGlobalRange($value)
+    {
+        $instance = $this->getInstance();
+        $this->setXpath(DefaultConfiguration::XPATH_BARCODE_GLOBAL_RANGE, $value);
+        $this->assertEquals($value, $instance->getBarcodeGlobalRange());
+    }
+
+    /**
      * @dataProvider liveStagingProvider
      */
     public function testGetModusApiBaseUrl($value, $modus)

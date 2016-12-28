@@ -54,6 +54,9 @@ class DefaultConfiguration extends AbstractConfigProvider
     const XPATH_ENDPOINTS_API_BASE_URL = 'tig_postnl/endpoints/api_base_url';
     const XPATH_ENDPOINTS_TEST_API_BASE_URL = 'tig_postnl/endpoints/test_api_base_url';
 
+    const XPATH_BARCODE_GLOBAL_TYPE  = 'postnl/barcode/global_type';
+    const XPATH_BARCODE_GLOBAL_RANGE = 'postnl/barcode/global_range';
+
     /**
      * @var AccountConfiguration
      */
@@ -126,5 +129,21 @@ class DefaultConfiguration extends AbstractConfigProvider
         }
 
         return $this->getTestApiBaseUrl();
+    }
+
+    /**
+     * @return string
+     */
+    public function getBarcodeGlobalType()
+    {
+        return $this->getConfigFromXpath(static::XPATH_BARCODE_GLOBAL_TYPE);
+    }
+
+    /**
+     * @return string
+     */
+    public function getBarcodeGlobalRange()
+    {
+        return $this->getConfigFromXpath(static::XPATH_BARCODE_GLOBAL_RANGE);
     }
 }

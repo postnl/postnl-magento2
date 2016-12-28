@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,40 +36,56 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
-    <default>
-        <carriers>
-            <tig_postnl>
-                <active>1</active>
-                <sallowspecific>0</sallowspecific>
-                <model>TIG\PostNL\Model\Carrier\PostNL</model>
-                <name>PostNL</name>
-                <price>5.00</price>
-                <title>PostNL</title>
-                <type>I</type>
-                <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
-            </tig_postnl>
-        </carriers>
-        <tig_postnl>
-            <productoptions>
-                <supported_options>3085</supported_options>
-            </productoptions>
-            <shippingoptions>
-                <max_deliverydays>5</max_deliverydays>
-                <eveningdelivery_fee>2</eveningdelivery_fee>
-                <sundaydelivery_fee>2</sundaydelivery_fee>
-            </shippingoptions>
-            <endpoints>
-                <cif_base_url>https://service.postnl.com/CIF/</cif_base_url>
-                <test_cif_base_url>https://testservice.postnl.com/CIF_SB/</test_cif_base_url>
-                <api_base_url>https://api.postnl.nl/shipment/</api_base_url>
-                <test_api_base_url>https://api-acc.postnl.nl/shipment/</test_api_base_url>
-            </endpoints>
-            <barcode>
-                <global_type>CD</global_type>
-                <global_range>1660</global_range>
-            </barcode>
-        </tig_postnl>
-    </default>
-</config>
+namespace TIG\PostNL;
+
+class Exception extends \Exception
+{
+    public function __construct($message, $code = 0, $previous = null)
+    {
+        parent::__construct($message, 0, $previous);
+
+        /**
+         * Replace the code with the actual, non-integer code.
+         */
+        if ($code !== 0) {
+            $code = (string) $code;
+            $this->code = $code;
+        }
+    }
+
+    /**
+     * Custom __toString method that includes the error code, if present.
+     *
+     * @return string
+     *
+     * @see Exception::__toString()
+     *
+     * @link http://www.php.net/manual/en/exception.tostring.php
+     */
+    public function __toString()
+    {
+        $string = "exception '"
+            . __CLASS__
+            . "' with message '"
+            . $this->getMessage()
+            . "'";
+
+        $code = $this->getCode();
+        if ($code !== 0 && !empty($code)) {
+            $string .= " and code '"
+                . $this->getCode()
+                . "'";
+        }
+
+        $string .= " in "
+            . $this->getFile()
+            . ':'
+            . $this->getLine()
+            . PHP_EOL
+            . 'Stack trace:'
+            . PHP_EOL
+            . $this->getTraceAsString();
+
+        return $string;
+    }
+}

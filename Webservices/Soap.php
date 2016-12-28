@@ -115,6 +115,9 @@ class Soap
              * $exception->detail->CifException
              */
 
+            var_dump($exception->detail->CifException->Errors);
+            exit;
+
             throw new Exception(
                 __('Faild on soap call : %1', $exception->getMessage()),
                 0,
