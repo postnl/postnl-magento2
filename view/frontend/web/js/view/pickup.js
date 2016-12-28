@@ -107,6 +107,16 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
             return this;
         },
 
+        showOpeningHours : function (data, LocationCode) {
+            var ul = $('.'+LocationCode);
+            ul.empty(); // Because Magento loops more than once trough the template.
+            $.each(data, function ( key, value ) {
+                ul.append("<li>" + key + " : " + value.string[0] + "</li>");
+            });
+
+            ul.toggle();
+        },
+
         setPickupAddresses : function (data) {
             this.pickupAddresses(data);
         },
