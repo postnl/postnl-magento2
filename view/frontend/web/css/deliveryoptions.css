@@ -1,0 +1,25 @@
+/* =================================================================================================================== *
+*
+* TIG PostNL Magento 2 Extension
+*
+* =================================================================================================================== */
+.postnl-deliveryoptions .delivery_options button.btn.btn-default {
+  float: left;
+  width: 50%;
+  box-sizing: border-box;
+  border-bottom: 0;
+}
+.postnl-deliveryoptions .delivery_options button.btn.btn-default:not(.primary) {
+  box-shadow: none;
+}
+.postnl-deliveryoptions .delivery_options button.btn.btn-default:nth-child(1) {
+  border-radius: 3px 0 0 0;
+  border-right: 0;
+}
+.postnl-deliveryoptions .delivery_options button.btn.btn-default:nth-child(2) {
+  border-radius: 0 3px 0 0;
+}
+.postnl-deliveryoptions .delivery_options button.btn.btn-default:hover {
+  background: #ED8C00;
+  color: white;
+}

@@ -1,0 +1,57 @@
+/* =================================================================================================================== *
+*
+* TIG PostNL Magento 2 Extension
+*
+* =================================================================================================================== */
+
+@postnl-orange: #ED8C00;
+@postnl-blue: #001A73 ;
+@postnl-grey: #868681;
+@postnl-white: #fff;
+
+@magento-lightgrey: #f5f5f5;
+
+.postnl-deliveryoptions {
+
+  .delivery_options {
+
+    button {
+      &.btn {
+        &.btn-default {
+          float      :left;
+          width      :50%;
+          box-sizing :border-box;
+
+          border-bottom: 0;
+
+          &:not(.primary) {
+            box-shadow: none;
+          }
+
+          &:nth-child(1){
+            border-radius: 3px 0 0 0;
+            border-right: 0;
+          }
+
+          &:nth-child(2){
+            border-radius: 0 3px 0 0;
+          }
+
+          &:hover {
+            background :@postnl-orange;
+            color: white;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}
+
+
+
+
