@@ -41,6 +41,26 @@ namespace TIG\PostNL\Model;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
 
+/**
+ * @method $this setShipmentId(string)
+ * @method null|string getShipmentId
+ * @method $this setOrderId(string)
+ * @method null|string getOrderId
+ * @method $this setMainBarcode(string)
+ * @method null|string getMainBarcode
+ * @method $this setProductCode(string)
+ * @method null|string getProductCode
+ * @method $this setShipmentType(string)
+ * @method null|string getShipmentType
+ * @method $this setIsPakjegemak(string)
+ * @method null|string getIsPakjegemak
+ * @method $this setConfirmedAt(string)
+ * @method null|string getConfirmedAt
+ * @method $this setCreatedAt(string)
+ * @method null|string getCreatedAt
+ * @method $this setUpdatedAt(string)
+ * @method null|string getUpdatedAt
+ */
 class Shipment extends AbstractModel implements ShipmentInterface, IdentityInterface
 {
     const CACHE_TAG = 'tig_postnl_shipment';

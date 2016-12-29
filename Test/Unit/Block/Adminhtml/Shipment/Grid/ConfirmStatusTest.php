@@ -36,76 +36,50 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
+namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Shipment\Grid;
 
-use Magento\Ui\Component\Listing\Columns\Column;
+use TIG\PostNL\Block\Adminhtml\Shipment\Grid\ConfirmStatus;
+use TIG\PostNL\Model\Shipment as PostNLShipment;
+use TIG\PostNL\Test\TestCase;
 
-abstract class AbstractGrid extends Column
+class ConfirmStatusTest extends TestCase
 {
-    /**
-     * @var array
-     */
-    protected $items = [];
+    protected $instanceClass = ConfirmStatus::class;
 
-    /**
-     * @var array
-     */
-    protected $ids = [];
-
-    /**
-     * @param array $dataSource
-     *
-     * @return array
-     */
-    public function prepareDataSource(array $dataSource)
+    public function getIsConfirmedProvider()
     {
-        if (isset($dataSource['data']['items'])) {
-            $this->items = $dataSource['data']['items'];
-
-            $this->prepareData();
-            $this->handleItems();
-
-            $dataSource['data']['items'] = $this->items;
-        }
-
-        return $dataSource;
+        return [
+            'id_does_not_exists' => [99, null, false],
+            'exists_but_not_confirmed' => [1, null, false],
+            'exists_and_confirmed' => [1, '2016-11-19 21:13:12', true],
+        ];
     }
 
     /**
+     * @param $entity_id
+     * @param $confirmedAt
+     * @param $expected
      *
+     * @dataProvider getIsConfirmedProvider
      */
-    protected function prepareData()
+    public function testGetCellContents($entity_id, $confirmedAt, $expected)
     {
-    }
+        $item = ['entity_id' => $entity_id];
 
-    /**
-     * @return array
-     */
-    protected function handleItems()
-    {
-        foreach ($this->items as $index => $item) {
-            $this->items[$index][$this->getData('name')] = $this->getCellContents($item);
-        }
-    }
+        $instance = $this->getFakeMock($this->instanceClass)->getMock();
 
-    /**
-     * @param object $item
-     *
-     * @return string
-     */
-    abstract protected function getCellContents($item);
+        $modelMock = $this->getFakeMock(PostNLShipment::class)->setMethods(['getConfirmedAt'])->getMock();
+        $getConfirmedAtExpects = $modelMock->expects($this->any());
+        $getConfirmedAtExpects->method('getConfirmedAt');
+        $getConfirmedAtExpects->willReturn($confirmedAt);
 
-    /**
-     * @param string $idColumn
-     *
-     * @return array
-     */
-    protected function collectIds($idColumn = 'entity_id')
-    {
-        foreach ($this->items as $item) {
-            $this->ids[] = $item[$idColumn];
-        }
+        $this->setProperty('models', [1 => $modelMock], $instance);
 
-        return $this->ids;
+        /** @var \Magento\Framework\Phrase $result */
+        $result = $this->invokeArgs('getCellContents', [$item], $instance);
+
+        $this->assertInstanceOf(\Magento\Framework\Phrase::class, $result);
+        $text = ucfirst(($expected ? '' : 'not ') . 'confirmed');
+        $this->assertEquals($text, $result->getText());
     }
 }

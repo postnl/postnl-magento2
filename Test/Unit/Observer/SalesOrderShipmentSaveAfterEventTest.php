@@ -36,7 +36,7 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Integration\Observer;
+namespace TIG\PostNL\Unit\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Sales\Model\Order\Shipment;
@@ -45,21 +45,15 @@ use TIG\PostNL\Test\TestCase;
 
 class SalesOrderShipmentSaveAfterEventTest extends TestCase
 {
-    /**
-     * @param array $args
-     *
-     * @return SalesOrderShipmentSaveAfterEvent
-     */
-    public function getInstance($args = [])
-    {
-        return $this->objectManager->getObject(SalesOrderShipmentSaveAfterEvent::class, $args);
-    }
+    protected $instanceClass = SalesOrderShipmentSaveAfterEvent::class;
 
     public function testExecute()
     {
         $id = rand(1000, 2000);
 
-        $shipmentFactoryMock = $this->getMock('\TIG\PostNL\Model\ShipmentFactory', ['create', 'setData', 'save']);
+        $shipmentFactoryMock = $this->getFakeMock('\TIG\PostNL\Model\ShipmentFactory');
+        $shipmentFactoryMock->setMethods(['create', 'setData', 'save']);
+        $shipmentFactoryMock = $shipmentFactoryMock->getMock();
 
         $createExpects = $shipmentFactoryMock->expects($this->once());
         $createExpects->method('create');
