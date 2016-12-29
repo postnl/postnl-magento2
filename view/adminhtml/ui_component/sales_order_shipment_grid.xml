@@ -29,12 +29,12 @@
                 </item>
             </argument>
         </column>
-        <column name="tig_postnl_confirm_date" class="TIG\PostNL\Block\Adminhtml\Shipment\Grid\ConfirmDate">
+        <column name="tig_postnl_shipping_date" class="TIG\PostNL\Block\Adminhtml\Shipment\Grid\ShippingDate">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>
                     <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
-                    <item name="label" xsi:type="string" translate="true">Confirm Date</item>
+                    <item name="label" xsi:type="string" translate="true">Shipping Date</item>
                 </item>
             </argument>
         </column>

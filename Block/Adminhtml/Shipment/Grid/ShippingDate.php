@@ -38,15 +38,19 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
 
-class ConfirmDate extends AbstractGrid
+class ShippingDate extends AbstractGrid
 {
+    protected function prepareData()
+    {
+        $ids = $this->collectIds();
+    }
+
     /**
      * @param $item
      *
      * @return string
-     *
-     * @todo: Finish implementation
      */
+    // @codingStandardsIgnoreLine
     protected function getCellContents($item)
     {
         return '<strong>Confirm date</strong>';

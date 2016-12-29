@@ -114,7 +114,8 @@ class SalesOrderSaveAfterEvent implements ObserverInterface
         $collection = $postnlOrder->getCollection();
         $collection->addFieldToFilter('order_id', $magentoOrder->getid());
 
-        $postnlOrder = $collection->getFirstItem();
+        // @codingStandardsIgnoreLine
+        $postnlOrder = $collection->setPageSize(1)->getFirstItem();
 
         return $postnlOrder;
     }

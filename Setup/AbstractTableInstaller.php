@@ -121,6 +121,33 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
      *
      * @throws \Zend_Db_Exception
      */
+    // @codingStandardsIgnoreLine
+    protected function addDate($name, $comment, $nullable = true, $default = null)
+    {
+        $this->table->addColumn(
+            $name,
+            Table::TYPE_DATE,
+            null,
+            [
+                'identity' => false,
+                'unsigned' => false,
+                'nullable' => $nullable,
+                'primary' => false,
+                'default' => $default,
+            ],
+            $comment
+        );
+    }
+
+    /**
+     * @param      $name
+     * @param      $comment
+     * @param bool $nullable
+     * @param null $default
+     *
+     * @throws \Zend_Db_Exception
+     */
+    // @codingStandardsIgnoreLine
     protected function addTimestamp($name, $comment, $nullable = true, $default = null)
     {
         $this->table->addColumn(
