@@ -49,22 +49,23 @@ abstract class OptionsAbstract
     /**
      * Property for the possible product options.
      */
+    // @codingStandardsIgnoreLine
     protected $availableOptions;
 
     /**
      * Property for filterd product options matched by account type and flags.
      */
-    protected $filterdOptions;
+    private $filterdOptions;
 
     /**
      * Group options by group types
      */
-    protected $groupedOptions;
+    private $groupedOptions;
 
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
-    protected $productOptionsConfig;
+    private $productOptionsConfig;
 
     /**
      * @param \TIG\PostNL\Config\Provider\ProductOptions $config
@@ -120,7 +121,7 @@ abstract class OptionsAbstract
             return isset($option[$key]) && $option[$key] == $value;
         }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
-        if (count($filterFlags) !== 0) {
+        if (!empty($filterFlags)) {
             $this->filterdOptions[$productCode] = $this->availableOptions[$productCode];
         }
     }
@@ -197,10 +198,11 @@ abstract class OptionsAbstract
 
     /**
      * This sets the array of options, so it can be used for the grouped configurations list.
+     *
      * @param $options
      * @return array
      */
-    protected function getOptionsArrayForGrouped($options)
+    private function getOptionsArrayForGrouped($options)
     {
         $optionsChecked = array_filter($options, function ($value) {
             return array_key_exists('group', $value);
