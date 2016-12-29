@@ -119,19 +119,19 @@ class Index extends Action
             return $this->jsonResponse(__('No Address data found'));
         }
 
-        $type = 'none';
-        if (isset($params['type'])) {
-            $type = $params['type'];
+        if (!isset($params['type'])) {
+            return $this->jsonResponse(__('No Type specified'));
         }
 
-        $data = '';
-        switch ($type) {
+        switch ($params['type']) {
             case 'deliverydays' :
                 $data = $this->getPosibleDeliveryDays($params['address']);
                 break;
             case 'locations' :
                 $data = $this->getNearestLocations($params['address']);
                 break;
+            default :
+                return $this->jsonResponse(__('Incorrect Type specified'));
         }
 
         try {
@@ -183,7 +183,6 @@ class Index extends Action
     protected function getPosibleDeliveryDays($address)
     {
         $startDate  = $this->getDeliveryDay($address);
-
         $timeFrames = $this->getTimeFrames($address, $startDate);
 
         // Filter the time frames so we can use them in knockoutJS.
@@ -198,8 +197,8 @@ class Index extends Action
      */
     protected function getDeliveryDay($address)
     {
-        $this->deliveryEndpoint->setRequestData($address);
-        $response = $this->deliveryEndpoint->getDeliveryDate();
+        $this->deliveryEndpoint->setParameters($address);
+        $response = $this->deliveryEndpoint->call();
 
         if (!is_object($response) || !isset($response->DeliveryDate)) {
             return __('Invalid GetDeliveryDate response: %1', var_export($response, true));
@@ -215,8 +214,8 @@ class Index extends Action
      */
     protected function getLocations($address)
     {
-        $this->locationsEndpoint->setRequestData($address, $this->getDeliveryDate());
-        $response = $this->locationsEndpoint->getNearestLocations();
+        $this->locationsEndpoint->setParameters($address, $this->getDeliveryDate());
+        $response = $this->locationsEndpoint->call();
 
         if (!is_object($response) || !isset($response->GetLocationsResult->ResponseLocation)) {
             return __('Invalid GetLocationsResult response: %1', var_export($response, true));
@@ -234,8 +233,8 @@ class Index extends Action
      */
     protected function getTimeFrames($address, $startDate)
     {
-        $this->timeFrameEndpoint->setRequestData($address, $startDate);
-        $response = $this->timeFrameEndpoint->getDeliveryTimeFrames();
+        $this->timeFrameEndpoint->setParameters($address, $startDate);
+        $response = $this->timeFrameEndpoint->call();
 
         if (!is_object($response) || !isset($response->Timeframes->Timeframe)) {
             return __('Invalid GetTimeframes response: %1', var_export($response, true));
@@ -244,11 +243,17 @@ class Index extends Action
         return $response->Timeframes->Timeframe;
     }
 
+    /**
+     * @param $startDate
+     */
     protected function setDeliveryDate($startDate)
     {
         $this->checkoutSession->setPostNLDeliveryDate($startDate);
     }
 
+    /**
+     * @return mixed
+     */
     protected function getDeliveryDate()
     {
         return $this->checkoutSession->getPostNLDeliveryDate();

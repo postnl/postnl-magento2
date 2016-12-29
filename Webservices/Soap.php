@@ -128,7 +128,7 @@ class Soap
 
             $this->response->set($result);
 
-            return $this->response;
+            return $this->response->get();
         } catch (\Exception $exception) {
             $this->exceptionHandler->handle($exception, $soapClient);
 
