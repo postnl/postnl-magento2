@@ -101,7 +101,7 @@ class SoapOld
 
         $soapClient->__setSoapHeaders($this->getSoapHeader());
         try {
-            $result = $soapClient->__call($type, [$requestParams]);
+            return $soapClient->__call($type, [$requestParams]);
         } catch (Exception $e) {
 
             throw new Exception(
@@ -110,8 +110,6 @@ class SoapOld
                 Exception::HTTP_INTERNAL_ERROR
             );
         }
-
-        return $result;
     }
 
     /**

@@ -39,9 +39,11 @@
 
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Soap;
 use TIG\PostNL\Webservices\Helpers\Deliveryoptions;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Helper\Data;
 
 /**
@@ -49,19 +51,16 @@ use TIG\PostNL\Helper\Data;
  *
  * @package TIG\PostNL\Webservices\Calculate
  */
-class TimeFrame
+class TimeFrame extends AbstractEndpoint
 {
     const TIMEFRAME_OPTION_EVENING = 'Evening';
     const TIMEFRAME_OPTION_DAYTIME = 'Daytime';
 
     /** @var string  */
-    protected $version = '2_0';
+    protected $version = 'v2_0';
 
     /** @var string  */
-    protected $service = 'TimeframeWebService';
-
-    /** @var string */
-    protected $type = 'GetTimeframes';
+    protected $endpoint = 'calculate/timeframes';
 
     /** @var  Soap */
     protected $soap;
@@ -78,31 +77,53 @@ class TimeFrame
     /** @var Data  */
     protected $postNLhelper;
 
+    /** @var Message */
+    protected $message;
+
     /**
      * @param Soap            $soap
      * @param Deliveryoptions $deliveryoptions
      * @param Data            $postNLhelper
      * @param ShippingOptions $shippingOptions
+     * @param Message         $message
      */
     public function __construct(
         Soap $soap,
         Deliveryoptions $deliveryoptions,
         Data $postNLhelper,
-        ShippingOptions $shippingOptions
+        ShippingOptions $shippingOptions,
+        Message $message
     ) {
         $this->soap = $soap;
         $this->deliveryOptionsHelper = $deliveryoptions;
         $this->shippingOptions = $shippingOptions;
         $this->postNLhelper  = $postNLhelper;
+        $this->message = $message;
     }
 
     /**
      * @return mixed
      * @throws \Magento\Framework\Webapi\Exception
      */
-    public function getDeliveryTimeFrames()
+    public function call()
     {
-        return $this->soap->call($this->type, $this->getWsdlUrl(), $this->requestParams);
+        return $this->soap->call($this, 'GetTimeframes', $this->requestParams);
+    }
+
+    /**
+     * @return string
+     */
+    public function getWsdlUrl()
+    {
+        return 'TimeframeWebService/2_0/';
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation()
+    {
+        return $this->version . '/' . $this->endpoint;
     }
 
     /**
@@ -113,7 +134,7 @@ class TimeFrame
      *
      * @return array
      */
-    public function setRequestData($address, $startDate)
+    public function setParameters($address, $startDate)
     {
         $this->requestParams = [
             'Timeframe' => [
@@ -125,7 +146,7 @@ class TimeFrame
                 'EndDate'            => $this->deliveryOptionsHelper->getEndDate($startDate),
                 'Options'            => $this->deliveryOptionsHelper->getDeliveryDatesOptions()
             ],
-            'Message' => $this->deliveryOptionsHelper->getMessage()
+            'Message' => $this->message->get('')
         ];
     }
 
@@ -230,13 +251,5 @@ class TimeFrame
             return true;
         }
         return false;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getWsdlUrl()
-    {
-        return $this->service .'/'. $this->version;
     }
 }

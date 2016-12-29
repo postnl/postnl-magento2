@@ -55,4 +55,5 @@ abstract class AbstractEndpoint
      * @return string
      */
     abstract public function getLocation();
+
 }
