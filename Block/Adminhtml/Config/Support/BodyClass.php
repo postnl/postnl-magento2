@@ -38,9 +38,11 @@
  */
 
 namespace TIG\PostNL\Block\Adminhtml\Config\Support;
+
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\View\Element\BlockInterface;
+
 class BodyClass extends Template implements BlockInterface
 {
     /**

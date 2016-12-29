@@ -237,11 +237,6 @@
 
 
 
-
-
-
-
-
 /* =================================================================================================================== *
 *
 * TIG PostNL Magento 2 Extension
@@ -249,26 +244,25 @@
 * =================================================================================================================== */
 
 
-/* PostNL / TIG -  Navigation Logo - Left Menu ====================================================================== */
+/* Identity - Left Menu ====================================================================== */
 
 .postnl-section .admin__page-nav-link:before {
     float:left;
-    width: calc(100% - 30px) ;
+    width: 50px;
     height: 37px;
+
     content: ' ';
     background-image: url(../images/postnl_logo.png) !important;
     background-position: 0 2px;
     background-repeat: no-repeat;
     background-size: auto 33px;
-    background-size: auto 33px;
     margin-top: -10px;
 }
 
 .postnl-section .admin__page-nav-link {
-    text-indent: -999px;
+    /*text-indent: -999px;*/
     padding: 2rem 1rem 2rem 1rem;
 }
-
 
 .postnl-section .admin__page-nav-link:after {
     float:right;
@@ -282,38 +276,54 @@
     content: ' ';
 }
 
+/* Identity - Toolbar =============================================================================================== */
+
+.postnl-config-page .page-main-actions .page-actions .page-actions-inner:before {
+    background-image: url(../images/postnl_logo.png) !important;
+    background-repeat: no-repeat;
+    content: ' ';
+    width: 50px;
+    float: left;
+    height: 30px;
+    margin-top: 8px;
+    background-size: auto 29px;
+}
 
 
-/*
-*
-* Do NOT activate the code below yet. It affects every admin page with PostNL / TIG logo's.
-* To Do: Create a body class specific for the PostNL pages.
-*
-*/
+.postnl-config-page .page-main-actions .page-actions .page-actions-inner:after {
+    background-image: url(../images/logo_tig.png) !important;
+    background-repeat: no-repeat;
+    content: ' ';
+    width: 50px;
+    float: left;
+    height: 30px;
+    margin-top: 8px;
+    background-size: auto 29px;
+}
 
-/* Identity ========================================================================================================= */
+/* Identity - Content =============================================================================================== */
 
-/*.admin__scope-old:before {*/
-    /*background-image: url(../images/logo_tig.png) !important;*/
-    /*background-repeat: no-repeat;*/
-    /*content: ' ';*/
+.postnl-config-page .admin__scope-old:before {
+    background-image: url(../images/logo_tig.png) !important;
+    background-repeat: no-repeat;
+    content: ' ';
 
-    /*width: 50px;*/
-    /*float:right;*/
-    /*height: 50px;*/
-    /*background-size: auto 50px;*/
-    /*margin-right: 15px;*/
+    width: 50px;
+    float:right;
+    height: 50px;
+    background-size: auto 50px;
+    margin-right: 15px;
 
-/*}*/
+}
 
-/*#container:before  {*/
-    /*background-image: url(../images/postnl_logo.png) !important;*/
-    /*background-repeat: no-repeat;*/
-    /*content: ' ';*/
+.postnl-config-page #container:before  {
+    background-image: url(../images/postnl_logo.png) !important;
+    background-repeat: no-repeat;
+    content: ' ';
 
-    /*float:left;*/
-    /*height: 50px;*/
-    /*background-size: auto 50px;*/
-    /*width: 295px;*/
-/*}*/
+    float:left;
+    height: 50px;
+    background-size: auto 50px;
+    width: 295px;
+}
 
