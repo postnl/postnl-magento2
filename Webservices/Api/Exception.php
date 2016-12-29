@@ -38,7 +38,9 @@
  */
 namespace TIG\PostNL\Webservices\Api;
 
-class Exception extends \TIG\PostNL\Exception
+use TIG\PostNL\Exception as PostNLException;
+
+class Exception extends PostNLException
 {
     /**
      * XML sent to CIF by the extension

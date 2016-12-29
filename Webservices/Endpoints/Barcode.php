@@ -38,7 +38,6 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
-use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Helper\BarcodeData;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Customer;
