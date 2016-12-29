@@ -60,6 +60,7 @@ class CutoffTimes
     }
 
     /**
+     * @todo : If no shipmentDays log exteption and return false.
      * @return array
      */
     public function get()
