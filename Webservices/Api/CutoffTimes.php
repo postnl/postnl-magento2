@@ -36,47 +36,42 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
+namespace TIG\PostNL\Webservices\Api;
+
+use TIG\PostNL\Config\Provider\WebshopSettings;
 
 /**
- * Class WebshopSettings
+ * Class CutoffTimes
  *
- * @package TIG\PostNL\Config\Provider
+ * @package TIG\PostNL\Webservices\Api
  */
-class WebshopSettings extends AbstractConfigProvider
+class CutoffTimes
 {
-    const XPATH_WEBSHOP_SETTINGS_LABEL_SIZE   = 'tig_postnl/webshopsettings_printer/label_size';
-    const XPATH_WEBSHOP_SETTINGS_CUTOFFTIME   = 'tig_postnl/webshopsettings_shipping/cutoff_time';
-    const XPATH_WEBSHOP_SETTINGS_SHIPMENTDAYS = 'tig_postnl/webshopsettings_shipping/shipment_days';
-
-    /** @var string  */
-    protected $defaultCutoffTime = '23:59:59';
+    /** @var  WebshopSettings */
+    protected $webshopSettings;
 
     /**
-     * @return mixed
+     * @param WebshopSettings $webshopSettings
      */
-    public function getLabelSize()
-    {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_LABEL_SIZE);
+    public function __construct(
+        WebshopSettings $webshopSettings
+    ) {
+        $this->webshopSettings = $webshopSettings;
     }
 
     /**
-     * @return mixed
+     * @todo : If no shipmentDays log exteption and return false.
+     * @return array
      */
-    public function getCutOffTime()
+    public function get()
     {
-        if (!$this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_CUTOFFTIME)) {
-            return $this->defaultCutoffTime;
-        }
-
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_CUTOFFTIME);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getShipmentDays()
-    {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_SHIPMENTDAYS);
+        $shipmentDays = explode(',' , $this->webshopSettings->getShipmentDays());
+        return array_map( function ($value) {
+            return [
+                'Day'  => $value == '0' ? '07' : '0'.$value,
+                'Time' => $this->webshopSettings->getCutOffTime(),
+                'Available' => '1' // Not sure what this means.
+            ];
+        }, $shipmentDays);
     }
 }

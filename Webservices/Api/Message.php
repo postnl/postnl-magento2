@@ -41,6 +41,7 @@ namespace TIG\PostNL\Webservices\Api;
 use Magento\Framework\HTTP\PhpEnvironment\ServerAddress;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
+use \TIG\PostNL\Helper\Data;
 
 class Message
 {
@@ -54,10 +55,8 @@ class Message
      */
     protected $accountConfiguration;
 
-    /**
-     * @var DateTime
-     */
-    protected $dateTime;
+    /** @var Data  */
+    protected $postNLhelper;
 
     /**
      * @var array
@@ -65,38 +64,32 @@ class Message
     protected $messageIdStrings = [];
 
     /**
-     * @param ServerAddress                               $serverAddress
-     * @param DateTime $dateTime
-     * @param AccountConfiguration                        $accountConfiguration
+     * @param ServerAddress        $serverAddress
+     * @param Data                 $postNLhelper
+     * @param AccountConfiguration $accountConfiguration
      */
     public function __construct(
         ServerAddress $serverAddress,
-        DateTime $dateTime,
+        Data $postNLhelper,
         AccountConfiguration $accountConfiguration
     ) {
         $this->serverAddress = $serverAddress;
         $this->accountConfiguration = $accountConfiguration;
-        $this->dateTime = $dateTime;
+        $this->postNLhelper = $postNLhelper;
     }
 
     /**
      * @param       $barcode
-     * @param array $extra
+     * @param array $message
      *
      * @return array
      */
-    public function get($barcode, $extra = array())
+    public function get($barcode, $message = [])
     {
         $messageIdString = $this->getMessageIdString($barcode);
 
-        $message = array(
-            'MessageID'        => md5($messageIdString),
-            'MessageTimeStamp' => date('d-m-Y H:i:s', $this->dateTime->gmtTimestamp()),
-        );
-
-        if ($extra) {
-            $message = array_merge($message, $extra);
-        }
+        $message['MessageID']        = md5($messageIdString);
+        $message['MessageTimeStamp'] = $this->postNLhelper->getCurrentTimeStamp();
 
         return $message;
     }

@@ -40,8 +40,10 @@
 namespace TIG\PostNL\Webservices\Endpoints;
 
 use TIG\PostNL\Webservices\Soap;
+use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Helpers\Deliveryoptions;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Helper\Data;
 
 /**
@@ -49,16 +51,13 @@ use TIG\PostNL\Helper\Data;
  *
  * @package TIG\PostNL\Webservices\Endpoints
  */
-class Locations
+class Locations extends AbstractEndpoint
 {
     /** @var string  */
-    protected $version = '2_1';
+    protected $version = 'v2_1';
 
     /** @var string  */
-    protected $service = 'LocationWebService';
-
-    /** @var string */
-    protected $type = 'GetNearestLocations';
+    protected $endpoint = 'locations';
 
     /** @var  Soap */
     protected $soap;
@@ -75,31 +74,38 @@ class Locations
     /** @var Data  */
     protected $postNLhelper;
 
+    /** @var  Message */
+    protected $message;
+
+
     /**
      * @param Soap            $soap
      * @param Deliveryoptions $deliveryoptions
      * @param Data            $postNLhelper
      * @param ShippingOptions $shippingOptions
+     * @param Message         $message
      */
     public function __construct(
         Soap $soap,
         Deliveryoptions $deliveryoptions,
         Data $postNLhelper,
-        ShippingOptions $shippingOptions
+        ShippingOptions $shippingOptions,
+        Message $message
     ) {
         $this->soap = $soap;
         $this->deliveryOptionsHelper = $deliveryoptions;
         $this->shippingOptions = $shippingOptions;
         $this->postNLhelper  = $postNLhelper;
+        $this->message = $message;
     }
 
     /**
      * @return mixed
      * @throws \Magento\Framework\Webapi\Exception
      */
-    public function getNearestLocations()
+    public function call()
     {
-        return $this->soap->call($this->type, $this->getWsdlUrl(), $this->requestParams);
+        return $this->soap->call($this, 'GetNearestLocations', $this->requestParams);
     }
 
     /**
@@ -108,7 +114,7 @@ class Locations
      * @param $address
      * @param $startDate
      */
-    public function setRequestData($address, $startDate = false)
+    public function setParameters($address, $startDate = false)
     {
         $this->requestParams = [
             'Location'    => [
@@ -120,8 +126,24 @@ class Locations
 
             ],
             'Countrycode' => $address['country'],
-            'Message'     => $this->deliveryOptionsHelper->getMessage()
+            'Message'     => $this->message->get('')
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getWsdlUrl()
+    {
+        return 'LocationWebService/2_1/';
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation()
+    {
+        return $this->version .'/'. $this->endpoint;
     }
 
     /**
@@ -138,11 +160,5 @@ class Locations
         return $this->postNLhelper->getTommorowsDate();
     }
 
-    /**
-     * @return string
-     */
-    protected function getWsdlUrl()
-    {
-        return $this->service .'/'. $this->version;
-    }
+
 }
