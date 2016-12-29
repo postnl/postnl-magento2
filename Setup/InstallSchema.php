@@ -50,12 +50,12 @@ class InstallSchema implements InstallSchemaInterface
     /**
      * @var InstallOrderTable
      */
-    protected $installOrderTable;
+    private $installOrderTable;
 
     /**
      * @var InstallShipmentTable
      */
-    protected $installShipmentTable;
+    private $installShipmentTable;
 
     /**
      * @var InstallShipmentBarcodeTable

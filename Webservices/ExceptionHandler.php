@@ -74,7 +74,6 @@ class ExceptionHandler
      * @throws Api\Exception
      *
      * @todo Refactor this code, it comes from the M1 version with some required M2 changes.
-     * @todo Log the exception
      */
     public function handle(\SoapFault $soapFault, \SoapClient $client = null)
     {

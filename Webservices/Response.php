@@ -43,7 +43,7 @@ class Response
     /**
      * @var \stdClass
      */
-    protected $response;
+    private $response;
 
     /**
      * @param \stdClass $response

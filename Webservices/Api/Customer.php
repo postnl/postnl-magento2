@@ -45,7 +45,7 @@ class Customer
     /**
      * @var AccountConfiguration
      */
-    protected $accountConfiguration;
+    private $accountConfiguration;
 
     /**
      * @param AccountConfiguration $accountConfiguration
@@ -61,10 +61,10 @@ class Customer
      */
     public function get()
     {
-        $customer = array(
+        $customer = [
             'CustomerCode'   => $this->accountConfiguration->getCustomerCode(),
             'CustomerNumber' => $this->accountConfiguration->getCustomerNumber(),
-        );
+        ];
 
         return $customer;
     }
