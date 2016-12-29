@@ -39,8 +39,8 @@
 
 namespace TIG\PostNL\Webservices;
 
-use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\Webapi\Exception;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Webapi\Exception as WebapiException;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
 
@@ -54,46 +54,37 @@ class Soap
     /**
      * @var AccountConfiguration
      */
-    protected $accountConfig;
-
-    /**
-     * @var ObjectManagerInterface
-     */
-    protected $objectManager;
+    private $accountConfig;
 
     /**
      * @var AbstractEndpoint
      */
-    protected $endpoint;
+    private $endpoint;
 
     /**
      * @var DefaultConfiguration
      */
-    protected $defaultConfiguration;
+    private $defaultConfiguration;
 
     /**
      * @var Response
      */
-    protected $response;
+    private $response;
 
     /**
      * @var ExceptionHandler
      */
-    protected $exceptionHandler;
+    private $exceptionHandler;
 
     /**
-     * @param ObjectManagerInterface $objectManagerInterface
      * @param AccountConfiguration   $accountConfiguration
-     *
      * @param DefaultConfiguration   $defaultConfiguration
-     *
      * @param ExceptionHandler       $exceptionHandler
      * @param Response               $response
      *
-     * @throws Exception
+     * @throws WebapiException
      */
     public function __construct(
-        ObjectManagerInterface $objectManagerInterface,
         AccountConfiguration $accountConfiguration,
         DefaultConfiguration $defaultConfiguration,
         ExceptionHandler $exceptionHandler,
@@ -101,11 +92,10 @@ class Soap
     ) {
         $this->checkSoapExtensionIsLoaded();
 
-        $this->objectManager = $objectManagerInterface;
         $this->accountConfig = $accountConfiguration;
         $this->defaultConfiguration = $defaultConfiguration;
-        $this->response = $response;
         $this->exceptionHandler = $exceptionHandler;
+        $this->response = $response;
     }
 
     /**
@@ -114,7 +104,7 @@ class Soap
      * @param                  $requestParams
      *
      * @return Response
-     * @throws Exception
+     * @throws WebapiException
      */
     public function call(AbstractEndpoint $endpoint, $method, $requestParams)
     {
@@ -122,20 +112,17 @@ class Soap
         $soapClient = $this->getClient();
 
         try {
-            $result = $soapClient->__call($method, [
-                $requestParams
-            ]);
-
+            $result = $soapClient->__call($method, [$requestParams]);
             $this->response->set($result);
 
             return $this->response->get();
         } catch (\Exception $exception) {
             $this->exceptionHandler->handle($exception, $soapClient);
 
-            throw new Exception(
+            throw new WebapiException(
                 __('Failed on soap call : %1', $exception->getMessage()),
                 0,
-                Exception::HTTP_INTERNAL_ERROR
+                WebapiException::HTTP_INTERNAL_ERROR
             );
         }
     }
@@ -155,21 +142,16 @@ class Soap
      * @return array
      * @throws \Exception
      */
-    protected function getOptionsArray()
+    private function getOptionsArray()
     {
-        $apiKey  = $this->accountConfig->getApiKey();
+        $apiKey = $this->getApiKey();
 
-        if (empty($apiKey)) {
-            throw new \Exception('Please enter your API key');
-        }
-
-        $options = [
+        return [
             'location'       => $this->getLocation(),
             'soap_version'   => SOAP_1_2,
             'features'       => SOAP_SINGLE_ELEMENT_ARRAYS,
             'trace'          => true,
-            /** @todo: Cache the WSDL. */
-            'cache_wsdl'     => WSDL_CACHE_NONE,
+            'cache_wsdl'     => WSDL_CACHE_BOTH,
             'stream_context' => stream_context_create(
                 [
                     'http' => [
@@ -178,21 +160,19 @@ class Soap
                 ]
             )
         ];
-
-        return $options;
     }
 
     /**
-     * @throws Exception
+     * @throws WebapiException
      */
-    protected function checkSoapExtensionIsLoaded()
+    private function checkSoapExtensionIsLoaded()
     {
         if (!extension_loaded('soap')) {
-            throw new Exception(
+            throw new WebapiException(
                 // @codingStandardsIgnoreLine
                 __('SOAP extension is not loaded.'),
                 0,
-                Exception::HTTP_INTERNAL_ERROR
+                WebapiException::HTTP_INTERNAL_ERROR
             );
         }
     }
@@ -200,7 +180,7 @@ class Soap
     /**
      * @return string
      */
-    protected function getWsdlUrl()
+    private function getWsdlUrl()
     {
         $prefix = $this->defaultConfiguration->getModusCifBaseUrl();
         $wsdlUrl = $prefix . $this->endpoint->getWsdlUrl() . '?wsdl';
@@ -211,11 +191,26 @@ class Soap
     /**
      * @return string
      */
-    protected function getLocation()
+    private function getLocation()
     {
         $base = $this->defaultConfiguration->getModusApiBaseUrl();
         $locationUrl = $base . $this->endpoint->getLocation();
 
         return $locationUrl;
+    }
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    private function getApiKey()
+    {
+        $apiKey = $this->accountConfig->getApiKey();
+
+        if (empty($apiKey)) {
+            throw new LocalizedException('Please enter your API key');
+        }
+
+        return $apiKey;
     }
 }

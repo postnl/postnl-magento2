@@ -46,6 +46,7 @@ class InstallOrderTable extends AbstractTableInstaller
 
     /**
      * @return void
+     * @codingStandardsIgnoreLine
      */
     protected function defineTable()
     {

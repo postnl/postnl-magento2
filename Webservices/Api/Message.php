@@ -48,20 +48,22 @@ class Message
     /**
      * @var ServerAddress
      */
-    protected $serverAddress;
+    private $serverAddress;
 
     /**
      * @var AccountConfiguration
      */
-    protected $accountConfiguration;
+    private $accountConfiguration;
 
-    /** @var Data  */
-    protected $postNLhelper;
+    /**
+     * @var Data
+     */
+    private $postNLhelper;
 
     /**
      * @var array
      */
-    protected $messageIdStrings = [];
+    private $messageIdStrings = [];
 
     /**
      * @param ServerAddress        $serverAddress
@@ -99,18 +101,18 @@ class Message
      *
      * @return string
      */
-    protected function getMessageIdString($barcode)
+    private function getMessageIdString($barcode)
     {
         if (array_key_exists($barcode, $this->messageIdStrings)) {
             return $this->messageIdStrings[$barcode];
         }
 
-        $id = uniqid(
+        $identifier = uniqid(
             'postnl_'
             . ip2long($this->serverAddress->getServerAddress())
         );
 
-        $messageIdString = $id
+        $messageIdString = $identifier
             . $this->accountConfiguration->getCustomerNumber()
             . $barcode
             . microtime();
