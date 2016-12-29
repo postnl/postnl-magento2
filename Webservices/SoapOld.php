@@ -153,6 +153,7 @@ class SoapOld
                 ['http' => ['header' => 'apikey:'.$this->accountConfig->getApiKey()]]
             );
         }
+
         return $options;
     }
 

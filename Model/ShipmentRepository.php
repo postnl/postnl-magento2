@@ -127,6 +127,7 @@ class ShipmentRepository implements ShipmentRepositoryInterface
             // @codingStandardsIgnoreLine
             throw new CouldNotDeleteException(__($exception->getMessage()));
         }
+
         return true;
     }
 

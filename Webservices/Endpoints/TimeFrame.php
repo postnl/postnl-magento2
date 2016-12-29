@@ -166,6 +166,7 @@ class TimeFrame extends AbstractEndpoint
             if ($this->isSameDay($timeFrame->Date) && !$this->canUseSameDay()) {
                 continue;
             }
+
             $filterdTimeFrames = $this->getTimeFrameOptions(
                 $filterdTimeFrames,
                 $timeFrame->Timeframes->TimeframeTimeFrame,
@@ -249,6 +250,7 @@ class TimeFrame extends AbstractEndpoint
         if ($this->postNLhelper->getDateYmd() == $this->postNLhelper->getDateYmd($timeFrameDate)) {
             return true;
         }
+
         return false;
     }
 }

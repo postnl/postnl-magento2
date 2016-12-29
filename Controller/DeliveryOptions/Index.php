@@ -202,6 +202,7 @@ class Index extends Action
         if (!is_object($response) || !isset($response->DeliveryDate)) {
             return __('Invalid GetDeliveryDate response: %1', var_export($response, true));
         }
+
         $this->setDeliveryDate($response->DeliveryDate);
         return $response->DeliveryDate;
     }

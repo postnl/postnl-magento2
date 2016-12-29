@@ -182,8 +182,10 @@ class Exception extends PostNLException
             foreach ($this->messages as $messageType => $messages) {
                 $arrRes = array_merge($arrRes, $messages);
             }
+
             return $arrRes;
         }
+
         return isset($this->messages[$type]) ? $this->messages[$type] : [];
     }
 
