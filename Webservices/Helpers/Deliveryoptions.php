@@ -88,24 +88,6 @@ class Deliveryoptions extends AbstractHelper
     }
 
     /**
-     * @param string $barcode
-     * @param array  $message
-     *
-     * @return array
-     */
-    public function getMessage($barcode = '', $message = [])
-    {
-        $string = uniqid('postnl_'.ip2long($this->serverAddress->getServerAddress()))
-            . $this->accountConfig->getCustomerCode()
-            . $barcode . microtime();
-
-        $message['MessageID']        = md5($string);
-        $message['MessageTimeStamp'] = $this->postNLhelper->getCurrentTimeStamp();
-
-        return $message;
-    }
-
-    /**
      * @todo : Add more types.
      *
      *  - const PAKJEGEMAK_EXPRESS_DELIVERY_OPTION = 'PGE';
@@ -150,25 +132,4 @@ class Deliveryoptions extends AbstractHelper
 
         return $endDate->format('d-m-Y');
     }
-
-    /**
-     * @todo make correct and dynamic array (including configuration)
-     * @return array
-     */
-    public function getCuttOffTimes()
-    {
-        return [
-            [
-                'Day' => '00',
-                'Time' => '14:00:00',
-                'Available' => '1',
-            ],
-            [
-                'Day' => '07',
-                'Time' => '17:00:00',
-                'Available' => '1',
-            ]
-        ];
-    }
-
 }

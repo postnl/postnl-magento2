@@ -36,47 +36,14 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
+namespace TIG\PostNL\Logging;
 
-/**
- * Class WebshopSettings
- *
- * @package TIG\PostNL\Config\Provider
- */
-class WebshopSettings extends AbstractConfigProvider
+use Monolog\Logger;
+use Magento\Framework\Logger\Handler\Base;
+
+class CriticalHandler extends Base
 {
-    const XPATH_WEBSHOP_SETTINGS_LABEL_SIZE   = 'tig_postnl/webshopsettings_printer/label_size';
-    const XPATH_WEBSHOP_SETTINGS_CUTOFFTIME   = 'tig_postnl/webshopsettings_shipping/cutoff_time';
-    const XPATH_WEBSHOP_SETTINGS_SHIPMENTDAYS = 'tig_postnl/webshopsettings_shipping/shipment_days';
+    protected $loggerType = Logger::CRITICAL;
 
-    /** @var string  */
-    protected $defaultCutoffTime = '23:59:59';
-
-    /**
-     * @return mixed
-     */
-    public function getLabelSize()
-    {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_LABEL_SIZE);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCutOffTime()
-    {
-        if (!$this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_CUTOFFTIME)) {
-            return $this->defaultCutoffTime;
-        }
-
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_CUTOFFTIME);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getShipmentDays()
-    {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_SHIPMENTDAYS);
-    }
+    protected $fileName = '/var/log/PostNL/critial.log';
 }

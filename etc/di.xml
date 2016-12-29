@@ -1,5 +1,6 @@
-<?php
-/**
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -36,47 +37,15 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
-
-/**
- * Class WebshopSettings
- *
- * @package TIG\PostNL\Config\Provider
- */
-class WebshopSettings extends AbstractConfigProvider
-{
-    const XPATH_WEBSHOP_SETTINGS_LABEL_SIZE   = 'tig_postnl/webshopsettings_printer/label_size';
-    const XPATH_WEBSHOP_SETTINGS_CUTOFFTIME   = 'tig_postnl/webshopsettings_shipping/cutoff_time';
-    const XPATH_WEBSHOP_SETTINGS_SHIPMENTDAYS = 'tig_postnl/webshopsettings_shipping/shipment_days';
-
-    /** @var string  */
-    protected $defaultCutoffTime = '23:59:59';
-
-    /**
-     * @return mixed
-     */
-    public function getLabelSize()
-    {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_LABEL_SIZE);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCutOffTime()
-    {
-        if (!$this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_CUTOFFTIME)) {
-            return $this->defaultCutoffTime;
-        }
-
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_CUTOFFTIME);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getShipmentDays()
-    {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_SHIPMENTDAYS);
-    }
-}
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="TIG\PostNL\Logging\Log">
+        <arguments>
+            <argument name="name" xsi:type="string">postnl_logging</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="exception" xsi:type="object">TIG\PostNL\Logging\CriticalHandler</item>
+                <item name="debug" xsi:type="object">TIG\PostNL\Logging\DebugHandler</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
