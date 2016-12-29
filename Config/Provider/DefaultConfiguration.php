@@ -60,7 +60,7 @@ class DefaultConfiguration extends AbstractConfigProvider
     /**
      * @var AccountConfiguration
      */
-    protected $accountConfiguration;
+    private $accountConfiguration;
 
     /**
      * @param ScopeConfigInterface $scopeConfig

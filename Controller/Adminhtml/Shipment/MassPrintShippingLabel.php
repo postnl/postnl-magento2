@@ -52,22 +52,22 @@ class MassPrintShippingLabel extends Action
     /**
      * @var Shipment
      */
-    protected $currentShipment;
+    private $currentShipment;
 
     /**
      * @var Filter
      */
-    protected $filter;
+    private $filter;
 
     /**
      * @var ShipmentCollectionFactory
      */
-    protected $collectionFactory;
+    private $collectionFactory;
 
     /**
      * @var FileFactory
      */
-    protected $fileFactory;
+    private $fileFactory;
 
     /**
      * @param Context                   $context
@@ -107,13 +107,13 @@ class MassPrintShippingLabel extends Action
         return $this->outputPdf();
     }
 
-    protected function getLabel()
+    private function getLabel()
     {
         // @todo
         return;
     }
 
-    protected function outputPdf()
+    private function outputPdf()
     {
         return $this->fileFactory->create(
             'ShippingLabels.pdf',

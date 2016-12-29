@@ -65,8 +65,8 @@ class CutoffTimes
      */
     public function get()
     {
-        $shipmentDays = explode(',' , $this->webshopSettings->getShipmentDays());
-        return array_map( function ($value) {
+        $shipmentDays = explode(',', $this->webshopSettings->getShipmentDays());
+        return array_map(function ($value) {
             return [
                 'Day'  => $value == '0' ? '07' : '0'.$value,
                 'Time' => $this->webshopSettings->getCutOffTime(),

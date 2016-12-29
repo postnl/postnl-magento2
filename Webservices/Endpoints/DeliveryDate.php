@@ -135,7 +135,6 @@ class DeliveryDate
             ],
             'Message' => $this->message->get('')
         ];
-
     }
 
     /**

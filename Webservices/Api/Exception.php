@@ -47,26 +47,26 @@ class Exception extends PostNLException
      *
      * @var string The XML string sent to CIF
      */
-    protected $requestXml;
+    private $requestXml;
 
     /**
      * XML received in response
      *
      * @var string The XML string CIF returned
      */
-    protected $responseXml;
+    private $responseXml;
 
     /**
      * Array of error numbers
      *
      * @var array
      */
-    protected $errorNumbers = [];
+    private $errorNumbers = [];
 
     /**
      * @var array
      */
-    protected $messages = [];
+    private $messages = [];
 
     /**
      * Set $_requestXml to specified value
@@ -178,13 +178,13 @@ class Exception extends PostNLException
     public function getMessages($type = '')
     {
         if ('' == $type) {
-            $arrRes = array();
+            $arrRes = [];
             foreach ($this->messages as $messageType => $messages) {
                 $arrRes = array_merge($arrRes, $messages);
             }
             return $arrRes;
         }
-        return isset($this->messages[$type]) ? $this->messages[$type] : array();
+        return isset($this->messages[$type]) ? $this->messages[$type] : [];
     }
 
     /**

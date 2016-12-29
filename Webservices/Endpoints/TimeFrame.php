@@ -187,7 +187,6 @@ class TimeFrame extends AbstractEndpoint
     protected function getTimeFrameOptions(&$filterdTimeFrames, $timeFrames, $date)
     {
         foreach ($timeFrames as $timeFrame) {
-
             if (!$this->validateOnEvening($timeFrame->Options->string[0])) {
                 continue;
             }

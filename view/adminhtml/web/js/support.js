@@ -45,7 +45,7 @@ define(
     function (
         $
     ) {
-        $(".collapse-title").collapsible( { active: false } );
+        $(".collapse-title").collapsible({ active: false });
 
     }
 );

@@ -50,7 +50,7 @@ class WebshopSettings extends AbstractConfigProvider
     const XPATH_WEBSHOP_SETTINGS_SHIPMENTDAYS = 'tig_postnl/webshopsettings_shipping/shipment_days';
 
     /** @var string  */
-    protected $defaultCutoffTime = '23:59:59';
+    private $defaultCutoffTime = '23:59:59';
 
     /**
      * @return mixed
