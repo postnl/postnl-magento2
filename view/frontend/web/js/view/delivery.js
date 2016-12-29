@@ -57,7 +57,8 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
                 'postalCode',
                 'countryCode',
                 'street',
-                'hasAddress'
+                'hasAddress',
+                'selectedRow'
             ]);
 
             this.hasAddress = ko.computed (function () {
@@ -122,6 +123,5 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
                 console.log(data);
             });
         }
-
     });
 });

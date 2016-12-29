@@ -57,7 +57,8 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
                 'postalCode',
                 'countryCode',
                 'street',
-                'hasAddress'
+                'hasAddress',
+                'selectedRow'
             ]);
 
             this.hasAddress = ko.computed (function () {
@@ -109,7 +110,7 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
 
         showOpeningHours : function (data, LocationCode) {
             var ul = $('.'+LocationCode);
-            ul.empty(); // Because Magento loops more than once trough the template.
+            ul.empty(); // Because Magento loops more than once through the template.
             $.each(data, function ( key, value ) {
                 ul.append("<li>" + key + " : " + value.string[0] + "</li>");
             });
