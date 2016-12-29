@@ -103,7 +103,6 @@ class SoapOld
         try {
             return $soapClient->__call($type, [$requestParams]);
         } catch (Exception $e) {
-
             throw new Exception(
                 __('Faild on soap call : %1', $e->getMessage()),
                 0,
@@ -120,7 +119,7 @@ class SoapOld
      */
     public function create($wsdlUrl, $options)
     {
-        $soapClient = new \SoapClient($wsdlUrl,  $options);
+        $soapClient = new \SoapClient($wsdlUrl, $options);
         return $soapClient;
     }
 
@@ -166,7 +165,12 @@ class SoapOld
         $firstNode  = new \SoapVar(self::TEST_USERNAME, XSD_STRING, null, null, 'Username', self::HEADER_NAMESPACE);
         $secondNode = new \SoapVar(self::TEST_PASSWORD, XSD_STRING, null, null, 'Password', self::HEADER_NAMESPACE);
         $token      = new \SoapVar(
-            [$firstNode, $secondNode], SOAP_ENC_OBJECT, null, null, 'usernameToken', self::HEADER_NAMESPACE
+            [$firstNode, $secondNode],
+            SOAP_ENC_OBJECT,
+            null,
+            null,
+            'usernameToken',
+            self::HEADER_NAMESPACE
         );
         $security   = new \SoapVar([$token], SOAP_ENC_OBJECT, null, null, 'Security', self::HEADER_NAMESPACE);
 

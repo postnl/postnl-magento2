@@ -159,6 +159,4 @@ class Locations extends AbstractEndpoint
 
         return $this->postNLhelper->getTommorowsDate();
     }
-
-
 }

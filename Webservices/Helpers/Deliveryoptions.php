@@ -84,7 +84,6 @@ class Deliveryoptions extends AbstractHelper
         $this->accountConfig   = $accountConfiguration;
         $this->serverAddress   = $serverAddress;
         $this->shippingOptions = $shippingOptions;
-
     }
 
     /**

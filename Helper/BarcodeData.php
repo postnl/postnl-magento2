@@ -129,11 +129,11 @@ class BarcodeData
             $serie = static::NL_BARCODE_SERIE_SHORT;
         }
 
-        return array(
+        return [
             'type' => $type,
             'range' => $range,
             'serie' => $serie,
-        );
+        ];
     }
 
     /**
@@ -149,11 +149,11 @@ class BarcodeData
             $serie = static::EU_BARCODE_SERIE_SHORT;
         }
 
-        return array(
+        return [
             'type' => $type,
             'range' => $range,
             'serie' => $serie,
-        );
+        ];
     }
 
     /**
@@ -165,11 +165,11 @@ class BarcodeData
         $range = $this->getGlobalBarcodeRange();
         $serie = static::GLOBAL_BARCODE_SERIE;
 
-        return array(
+        return [
             'type' => $type,
             'range' => $range,
             'serie' => $serie,
-        );
+        ];
     }
 
     /**

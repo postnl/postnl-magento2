@@ -124,13 +124,13 @@ class Index extends Action
         }
 
         switch ($params['type']) {
-            case 'deliverydays' :
+            case 'deliverydays':
                 $data = $this->getPosibleDeliveryDays($params['address']);
                 break;
-            case 'locations' :
+            case 'locations':
                 $data = $this->getNearestLocations($params['address']);
                 break;
-            default :
+            default:
                 return $this->jsonResponse(__('Incorrect Type specified'));
         }
 
@@ -141,7 +141,6 @@ class Index extends Action
         } catch (\Exception $exception) {
             return $this->jsonResponse($exception->getMessage());
         }
-
     }
 
 

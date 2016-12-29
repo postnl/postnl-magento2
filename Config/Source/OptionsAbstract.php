@@ -147,7 +147,6 @@ abstract class OptionsAbstract
         $this->availableOptions = array_filter($this->availableOptions, function ($code) use ($supportedOptions) {
             return in_array($code, $supportedOptions);
         }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_KEY);
-
     }
 
     /**

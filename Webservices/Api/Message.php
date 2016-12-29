@@ -90,6 +90,7 @@ class Message
     {
         $messageIdString = $this->getMessageIdString($barcode);
 
+        // @codingStandardsIgnore
         $message['MessageID']        = md5($messageIdString);
         $message['MessageTimeStamp'] = $this->postNLhelper->getCurrentTimeStamp();
 
