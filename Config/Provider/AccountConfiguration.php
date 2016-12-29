@@ -168,7 +168,7 @@ class AccountConfiguration extends AbstractConfigProvider
      *
      * @return string
      */
-    protected function getModusXpath($xpath)
+    private function getModusXpath($xpath)
     {
         if ($this->isModusTest()) {
             $xpath .= '_test';

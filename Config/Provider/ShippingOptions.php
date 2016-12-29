@@ -56,7 +56,7 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_SUNDAY_FEE          = 'tig_postnl/shippingoptions/sundaydelivery_fee';
     const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE  = 'tig_postnl/shippingoptions/send_track_and_trace_email';
 
-    protected $defaultMaxDeliverydays = '5';
+    private $defaultMaxDeliverydays = '5';
 
     /**
      * @return mixed
@@ -148,14 +148,5 @@ class ShippingOptions extends AbstractConfigProvider
     public function sendTrackAndTraceEmail()
     {
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE);
-    }
-
-    /**
-     * @todo : Add configuration for Same day delivery
-     * @return bool
-     */
-    public function isSameDayDeliveryActive()
-    {
-        return false;
     }
 }
