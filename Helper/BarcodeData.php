@@ -56,12 +56,12 @@ class BarcodeData
     /**
      * @var AccountConfiguration
      */
-    protected $accountConfiguration;
+    private $accountConfiguration;
 
     /**
      * @var DefaultConfiguration
      */
-    protected $defaultConfiguration;
+    private $defaultConfiguration;
 
     /**
      * @param AccountConfiguration $accountConfiguration
@@ -89,29 +89,9 @@ class BarcodeData
     {
         $barcodeType = strtoupper($barcodeType);
 
-        switch ($barcodeType) {
-            case 'NL':
-                $barcodeData = $this->getNlBarcode();
-                break;
-            case 'EU':
-                $barcodeData = $this->getEuBarcode();
-                break;
-            case 'GLOBAL':
-                $barcodeData = $this->getGlobalBarcode();
-                break;
-            default:
-                throw new PostnlException(
-                    __('Invalid barcodetype requested: %s', $barcodeType),
-                    'POSTNL-0061'
-                );
-        }
+        $barcodeData = $this->getBarcodeData($barcodeType);
 
-        if (!$barcodeData['type'] || !$barcodeData['range']) {
-            throw new PostnlException(
-                __('Unable to retrieve barcode data.'),
-                'POSTNL-0111'
-            );
-        }
+        $this->validateBarcodeData($barcodeData);
 
         return $barcodeData;
     }
@@ -119,7 +99,7 @@ class BarcodeData
     /**
      * @return array
      */
-    protected function getNlBarcode()
+    private function getNlBarcode()
     {
         $type  = '3S';
         $range = $this->accountConfiguration->getCustomerCode();
@@ -139,7 +119,7 @@ class BarcodeData
     /**
      * @return array
      */
-    protected function getEuBarcode()
+    private function getEuBarcode()
     {
         $type  = '3S';
         $range = $this->accountConfiguration->getCustomerCode();
@@ -159,7 +139,7 @@ class BarcodeData
     /**
      * @return array
      */
-    protected function getGlobalBarcode()
+    private function getGlobalBarcode()
     {
         $type  = $this->getGlobalBarcodeType();
         $range = $this->getGlobalBarcodeRange();
@@ -177,7 +157,7 @@ class BarcodeData
      *
      * @return string
      */
-    protected function getGlobalBarcodeType()
+    private function getGlobalBarcodeType()
     {
         return $this->defaultConfiguration->getBarcodeGlobalType();
     }
@@ -187,8 +167,68 @@ class BarcodeData
      *
      * @return string
      */
-    protected function getGlobalBarcodeRange()
+    private function getGlobalBarcodeRange()
     {
         return $this->defaultConfiguration->getBarcodeGlobalRange();
+    }
+
+    /**
+     * @param $barcodeData
+     *
+     * @throws PostnlException
+     */
+    private function validateBarcodeData($barcodeData)
+    {
+        if (!$barcodeData['type'] || !$barcodeData['range']) {
+            // @codingStandardsIgnoreLine
+            $error = __('Unable to retrieve barcode data.');
+            throw new PostnlException(
+                $error,
+                'POSTNL-0111'
+            );
+        }
+    }
+
+    /**
+     * @param $barcodeType
+     *
+     * @return array
+     * @throws PostnlException
+     */
+    private function getBarcodeData($barcodeType)
+    {
+        $barcodeData = null;
+        switch ($barcodeType) {
+            case 'NL':
+                $barcodeData = $this->getNlBarcode();
+                break;
+            case 'EU':
+                $barcodeData = $this->getEuBarcode();
+                break;
+            case 'GLOBAL':
+                $barcodeData = $this->getGlobalBarcode();
+                break;
+        }
+
+        if ($barcodeData === null) {
+            $this->noBarcodeDataError($barcodeType);
+        }
+
+        return $barcodeData;
+    }
+
+    /**
+     * @param $barcodeType
+     *
+     * @throws PostnlException
+     */
+    private function noBarcodeDataError($barcodeType)
+    {
+        // @codingStandardsIgnoreLine
+        $error = __('Invalid barcodetype requested: %s', $barcodeType);
+        throw new PostnlException(
+            $error,
+            'POSTNL-0061'
+        );
     }
 }

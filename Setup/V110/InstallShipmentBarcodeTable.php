@@ -47,6 +47,7 @@ class InstallShipmentBarcodeTable extends AbstractTableInstaller
     /**
      * @return void
      */
+    // @codingStandardsIgnoreLine
     protected function defineTable()
     {
         $this->addEntityId();

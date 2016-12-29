@@ -40,6 +40,7 @@ namespace TIG\PostNL\Logging;
 
 use Monolog\Logger;
 
+// @codingStandardsIgnoreLine
 class Log extends Logger
 {
 }

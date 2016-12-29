@@ -43,7 +43,9 @@ use Magento\Framework\Logger\Handler\Base;
 
 class CriticalHandler extends Base
 {
+    // @codingStandardsIgnoreLine
     protected $loggerType = Logger::CRITICAL;
 
+    // @codingStandardsIgnoreLine
     protected $fileName = '/var/log/PostNL/critial.log';
 }

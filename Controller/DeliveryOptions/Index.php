@@ -55,23 +55,35 @@ use \Magento\Checkout\Model\Session;
  */
 class Index extends Action
 {
-    /** @var PageFactory */
-    protected $resultPageFactory;
+    /**
+     * @var PageFactory
+     */
+    private $resultPageFactory;
 
-    /** @var Data */
-    protected $jsonHelper;
+    /**
+     * @var Data
+     */
+    private $jsonHelper;
 
-    /** @var DeliveryDate */
-    protected $deliveryEndpoint;
+    /**
+     * @var DeliveryDate
+     */
+    private $deliveryEndpoint;
 
-    /** @var  TimeFrame */
-    protected $timeFrameEndpoint;
+    /**
+     * @var  TimeFrame
+     */
+    private $timeFrameEndpoint;
 
-    /** @var  Locations */
-    protected $locationsEndpoint;
+    /**
+     * @var  Locations
+     */
+    private $locationsEndpoint;
 
-    /** @var */
-    protected $checkoutSession;
+    /**
+     * @var
+     */
+    private $checkoutSession;
 
     /**
      * @param Context      $context
@@ -163,7 +175,7 @@ class Index extends Action
      *
      * @return \Magento\Framework\Phrase
      */
-    protected function getNearestLocations($address)
+    private function getNearestLocations($address)
     {
         if (!$this->getDeliveryDate()) {
             $this->getDeliveryDay($address);
@@ -179,7 +191,7 @@ class Index extends Action
      *
      * @return array
      */
-    protected function getPosibleDeliveryDays($address)
+    private function getPosibleDeliveryDays($address)
     {
         $startDate  = $this->getDeliveryDay($address);
         $timeFrames = $this->getTimeFrames($address, $startDate);
@@ -194,7 +206,7 @@ class Index extends Action
      *
      * @return array
      */
-    protected function getDeliveryDay($address)
+    private function getDeliveryDay($address)
     {
         $this->deliveryEndpoint->setParameters($address);
         $response = $this->deliveryEndpoint->call();
@@ -212,7 +224,7 @@ class Index extends Action
      *
      * @return \Magento\Framework\Phrase
      */
-    protected function getLocations($address)
+    private function getLocations($address)
     {
         $this->locationsEndpoint->setParameters($address, $this->getDeliveryDate());
         $response = $this->locationsEndpoint->call();
@@ -231,7 +243,7 @@ class Index extends Action
      *
      * @return \Magento\Framework\Phrase
      */
-    protected function getTimeFrames($address, $startDate)
+    private function getTimeFrames($address, $startDate)
     {
         $this->timeFrameEndpoint->setParameters($address, $startDate);
         $response = $this->timeFrameEndpoint->call();
@@ -246,7 +258,7 @@ class Index extends Action
     /**
      * @param $startDate
      */
-    protected function setDeliveryDate($startDate)
+    private function setDeliveryDate($startDate)
     {
         $this->checkoutSession->setPostNLDeliveryDate($startDate);
     }
@@ -254,7 +266,7 @@ class Index extends Action
     /**
      * @return mixed
      */
-    protected function getDeliveryDate()
+    private function getDeliveryDate()
     {
         return $this->checkoutSession->getPostNLDeliveryDate();
     }

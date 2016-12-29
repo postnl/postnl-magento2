@@ -54,12 +54,12 @@ class ShipmentRepository implements ShipmentRepositoryInterface
     /**
      * @var ShipmentFactory
      */
-    protected $shipmentFactory;
+    private $shipmentFactory;
 
     /**
      * @var CollectionFactory
      */
-    protected $collectionFactory;
+    private $collectionFactory;
 
     /**
      * @param ShipmentFactory               $objectFactory

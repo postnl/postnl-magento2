@@ -52,10 +52,12 @@ class SalesOrderSaveAfterEvent implements ObserverInterface
      * @var OrderFactory
      */
     private $orderFactory;
+
     /**
      * @var Data
      */
     private $helper;
+
     /**
      * @var OrderRepository
      */
@@ -105,7 +107,7 @@ class SalesOrderSaveAfterEvent implements ObserverInterface
      *
      * @return PostNLOrder
      */
-    public function getPostNLOrder(MagentoOrder $magentoOrder)
+    private function getPostNLOrder(MagentoOrder $magentoOrder)
     {
         /** @var PostNLOrder $postnlOrder */
         $postnlOrder = $this->orderFactory->create();
