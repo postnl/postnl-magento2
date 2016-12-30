@@ -36,41 +36,42 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Webservices\Api;
 
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use TIG\PostNL\Model\ShipmentFactory;
+use TIG\PostNL\Config\Provider\WebshopSettings;
 
-class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
+/**
+ * Class CutoffTimes
+ *
+ * @package TIG\PostNL\Webservices\Api
+ */
+class CutoffTimes
 {
-    /**
-     * @var ShipmentFactory
-     */
-    private $shipmentFactory;
+    /** @var  WebshopSettings */
+    protected $webshopSettings;
 
     /**
-     * @param ShipmentFactory $shipmentFactory
+     * @param WebshopSettings $webshopSettings
      */
     public function __construct(
-        ShipmentFactory $shipmentFactory
+        WebshopSettings $webshopSettings
     ) {
-        $this->shipmentFactory = $shipmentFactory;
+        $this->webshopSettings = $webshopSettings;
     }
 
     /**
-     * @param Observer $observer
-     *
-     * @return void
+     * @todo : If no shipmentDays log exteption and return false.
+     * @return array
      */
-    public function execute(Observer $observer)
+    public function get()
     {
-        /** @var \Magento\Sales\Model\Order\Shipment $shipment */
-        $shipment = $observer->getData('data_object');
-
-        /** @var \TIG\PostNL\Model\Shipment $model */
-        $model = $this->shipmentFactory->create();
-        $model->setData('shipment_id', $shipment->getId());
-        $model->save();
+        $shipmentDays = explode(',', $this->webshopSettings->getShipmentDays());
+        return array_map(function ($value) {
+            return [
+                'Day'  => $value == '0' ? '07' : '0'.$value,
+                'Time' => $this->webshopSettings->getCutOffTime(),
+                'Available' => '1' // Not sure what this means.
+            ];
+        }, $shipmentDays);
     }
 }

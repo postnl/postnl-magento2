@@ -40,16 +40,24 @@ namespace TIG\PostNL\Test\Unit\Webservices\Api;
 
 use TIG\PostNL\Test\TestCase;
 use TIG\PostNL\Webservices\Api\Message;
+use \TIG\PostNL\Helper\Data as postNLhelper;
 
 class MessageTest extends TestCase
 {
-    protected $instanceClass = Message::class;
+    protected $instanceClass  = Message::class;
 
     public function testGet()
     {
         $messageIdString = 'string';
 
-        $instance = $this->getInstance();
+        $helperMock = $this->getFakeMock(postNLhelper::class)->getMock();
+        $getCurrentTimeStampExpects = $helperMock->expects($this->once());
+        $getCurrentTimeStampExpects->method('getCurrentTimeStamp');
+        $getCurrentTimeStampExpects->willReturn('31-12-1969 16:00:00');
+
+        $instance = $this->getInstance(
+            ['postNLhelper' => $helperMock]
+        );
         $this->setProperty('messageIdStrings', ['' => $messageIdString], $instance);
 
         $result = $instance->get('');

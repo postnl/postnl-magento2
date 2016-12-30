@@ -36,41 +36,11 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Logging;
 
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use TIG\PostNL\Model\ShipmentFactory;
+use Monolog\Logger;
 
-class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
+// @codingStandardsIgnoreLine
+class Log extends Logger
 {
-    /**
-     * @var ShipmentFactory
-     */
-    private $shipmentFactory;
-
-    /**
-     * @param ShipmentFactory $shipmentFactory
-     */
-    public function __construct(
-        ShipmentFactory $shipmentFactory
-    ) {
-        $this->shipmentFactory = $shipmentFactory;
-    }
-
-    /**
-     * @param Observer $observer
-     *
-     * @return void
-     */
-    public function execute(Observer $observer)
-    {
-        /** @var \Magento\Sales\Model\Order\Shipment $shipment */
-        $shipment = $observer->getData('data_object');
-
-        /** @var \TIG\PostNL\Model\Shipment $model */
-        $model = $this->shipmentFactory->create();
-        $model->setData('shipment_id', $shipment->getId());
-        $model->save();
-    }
 }

@@ -52,11 +52,13 @@ abstract class AbstractConfigProvider
     /**
      * @var ScopeConfigInterface
      */
+    // @codingStandardsIgnoreLine
     protected $scopeConfig;
 
     /**
      * @var Encryptor
      */
+    // @codingStandardsIgnoreLine
     protected $crypt;
 
     /**
@@ -79,6 +81,7 @@ abstract class AbstractConfigProvider
      *
      * @return mixed
      */
+    // @codingStandardsIgnoreLine
     protected function getConfigFromXpath($xpath, $store = null)
     {
         return $this->scopeConfig->getValue(

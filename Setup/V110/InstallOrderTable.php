@@ -46,7 +46,9 @@ class InstallOrderTable extends AbstractTableInstaller
 
     /**
      * @return void
+     * @codingStandardsIgnoreLine
      */
+    // @codingStandardsIgnoreLine
     protected function defineTable()
     {
         $this->addEntityId();

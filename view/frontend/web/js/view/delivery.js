@@ -60,7 +60,7 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
                 'hasAddress'
             ]);
 
-            this.hasAddress = ko.computed (function () {
+            this.hasAddress = ko.computed(function () {
                 if (!quote.shippingAddress()) {
                     address = false;
                     return this;
@@ -85,8 +85,7 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
                     return this;
                 }
 
-                if (
-                    self.postalCode.length > 0 ||
+                if (self.postalCode.length > 0 ||
                     self.countryCode.length > 0 ||
                     (self.street.length > 0 && self.street.street[0] !== '')
                 ) {
@@ -116,9 +115,9 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
                 method: "POST",
                 url : '/postnl/deliveryoptions',
                 data : {type: 'deliverydays', address: address}
-            }).done( function (data) {
+            }).done(function (data) {
                 self.setDeliverydays(data);
-            }).fail( function (data) {
+            }).fail(function (data) {
                 console.log(data);
             });
         }

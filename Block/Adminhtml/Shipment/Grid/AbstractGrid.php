@@ -81,6 +81,7 @@ abstract class AbstractGrid extends Column
     /**
      * @return array
      */
+    // @codingStandardsIgnoreLine
     protected function handleItems()
     {
         foreach ($this->items as $index => $item) {
@@ -93,6 +94,7 @@ abstract class AbstractGrid extends Column
      *
      * @return string
      */
+    // @codingStandardsIgnoreLine
     abstract protected function getCellContents($item);
 
     /**

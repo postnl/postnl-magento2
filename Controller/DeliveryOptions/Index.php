@@ -55,23 +55,35 @@ use \Magento\Checkout\Model\Session;
  */
 class Index extends Action
 {
-    /** @var PageFactory */
-    protected $resultPageFactory;
+    /**
+     * @var PageFactory
+     */
+    private $resultPageFactory;
 
-    /** @var Data */
-    protected $jsonHelper;
+    /**
+     * @var Data
+     */
+    private $jsonHelper;
 
-    /** @var DeliveryDate */
-    protected $deliveryEndpoint;
+    /**
+     * @var DeliveryDate
+     */
+    private $deliveryEndpoint;
 
-    /** @var  TimeFrame */
-    protected $timeFrameEndpoint;
+    /**
+     * @var  TimeFrame
+     */
+    private $timeFrameEndpoint;
 
-    /** @var  Locations */
-    protected $locationsEndpoint;
+    /**
+     * @var  Locations
+     */
+    private $locationsEndpoint;
 
-    /** @var */
-    protected $checkoutSession;
+    /**
+     * @var
+     */
+    private $checkoutSession;
 
     /**
      * @param Context      $context
@@ -119,19 +131,19 @@ class Index extends Action
             return $this->jsonResponse(__('No Address data found'));
         }
 
-        $type = 'none';
-        if (isset($params['type'])) {
-            $type = $params['type'];
+        if (!isset($params['type'])) {
+            return $this->jsonResponse(__('No Type specified'));
         }
 
-        $data = '';
-        switch ($type) {
-            case 'deliverydays' :
+        switch ($params['type']) {
+            case 'deliverydays':
                 $data = $this->getPosibleDeliveryDays($params['address']);
                 break;
-            case 'locations' :
+            case 'locations':
                 $data = $this->getNearestLocations($params['address']);
                 break;
+            default:
+                return $this->jsonResponse(__('Incorrect Type specified'));
         }
 
         try {
@@ -141,7 +153,6 @@ class Index extends Action
         } catch (\Exception $exception) {
             return $this->jsonResponse($exception->getMessage());
         }
-
     }
 
 
@@ -164,7 +175,7 @@ class Index extends Action
      *
      * @return \Magento\Framework\Phrase
      */
-    protected function getNearestLocations($address)
+    private function getNearestLocations($address)
     {
         if (!$this->getDeliveryDate()) {
             $this->getDeliveryDay($address);
@@ -180,10 +191,9 @@ class Index extends Action
      *
      * @return array
      */
-    protected function getPosibleDeliveryDays($address)
+    private function getPosibleDeliveryDays($address)
     {
         $startDate  = $this->getDeliveryDay($address);
-
         $timeFrames = $this->getTimeFrames($address, $startDate);
 
         // Filter the time frames so we can use them in knockoutJS.
@@ -196,10 +206,10 @@ class Index extends Action
      *
      * @return array
      */
-    protected function getDeliveryDay($address)
+    private function getDeliveryDay($address)
     {
-        $this->deliveryEndpoint->setRequestData($address);
-        $response = $this->deliveryEndpoint->getDeliveryDate();
+        $this->deliveryEndpoint->setParameters($address);
+        $response = $this->deliveryEndpoint->call();
 
         if (!is_object($response) || !isset($response->DeliveryDate)) {
             return __('Invalid GetDeliveryDate response: %1', var_export($response, true));
@@ -213,10 +223,10 @@ class Index extends Action
      *
      * @return \Magento\Framework\Phrase
      */
-    protected function getLocations($address)
+    private function getLocations($address)
     {
-        $this->locationsEndpoint->setRequestData($address, $this->getDeliveryDate());
-        $response = $this->locationsEndpoint->getNearestLocations();
+        $this->locationsEndpoint->setParameters($address, $this->getDeliveryDate());
+        $response = $this->locationsEndpoint->call();
 
         if (!is_object($response) || !isset($response->GetLocationsResult->ResponseLocation)) {
             return __('Invalid GetLocationsResult response: %1', var_export($response, true));
@@ -232,10 +242,10 @@ class Index extends Action
      *
      * @return \Magento\Framework\Phrase
      */
-    protected function getTimeFrames($address, $startDate)
+    private function getTimeFrames($address, $startDate)
     {
-        $this->timeFrameEndpoint->setRequestData($address, $startDate);
-        $response = $this->timeFrameEndpoint->getDeliveryTimeFrames();
+        $this->timeFrameEndpoint->setParameters($address, $startDate);
+        $response = $this->timeFrameEndpoint->call();
 
         if (!is_object($response) || !isset($response->Timeframes->Timeframe)) {
             return __('Invalid GetTimeframes response: %1', var_export($response, true));
@@ -244,12 +254,18 @@ class Index extends Action
         return $response->Timeframes->Timeframe;
     }
 
-    protected function setDeliveryDate($startDate)
+    /**
+     * @param $startDate
+     */
+    private function setDeliveryDate($startDate)
     {
         $this->checkoutSession->setPostNLDeliveryDate($startDate);
     }
 
-    protected function getDeliveryDate()
+    /**
+     * @return mixed
+     */
+    private function getDeliveryDate()
     {
         return $this->checkoutSession->getPostNLDeliveryDate();
     }

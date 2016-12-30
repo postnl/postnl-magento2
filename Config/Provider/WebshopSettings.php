@@ -49,6 +49,9 @@ class WebshopSettings extends AbstractConfigProvider
     const XPATH_WEBSHOP_SETTINGS_CUTOFFTIME   = 'tig_postnl/webshopsettings_shipping/cutoff_time';
     const XPATH_WEBSHOP_SETTINGS_SHIPMENTDAYS = 'tig_postnl/webshopsettings_shipping/shipment_days';
 
+    /** @var string  */
+    private $defaultCutoffTime = '23:59:59';
+
     /**
      * @return mixed
      */
@@ -62,6 +65,10 @@ class WebshopSettings extends AbstractConfigProvider
      */
     public function getCutOffTime()
     {
+        if (!$this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_CUTOFFTIME)) {
+            return $this->defaultCutoffTime;
+        }
+
         return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_CUTOFFTIME);
     }
 

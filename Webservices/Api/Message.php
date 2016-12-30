@@ -41,62 +41,58 @@ namespace TIG\PostNL\Webservices\Api;
 use Magento\Framework\HTTP\PhpEnvironment\ServerAddress;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
+use \TIG\PostNL\Helper\Data;
 
 class Message
 {
     /**
      * @var ServerAddress
      */
-    protected $serverAddress;
+    private $serverAddress;
 
     /**
      * @var AccountConfiguration
      */
-    protected $accountConfiguration;
+    private $accountConfiguration;
 
     /**
-     * @var DateTime
+     * @var Data
      */
-    protected $dateTime;
+    private $postNLhelper;
 
     /**
      * @var array
      */
-    protected $messageIdStrings = [];
+    private $messageIdStrings = [];
 
     /**
-     * @param ServerAddress                               $serverAddress
-     * @param DateTime $dateTime
-     * @param AccountConfiguration                        $accountConfiguration
+     * @param ServerAddress        $serverAddress
+     * @param Data                 $postNLhelper
+     * @param AccountConfiguration $accountConfiguration
      */
     public function __construct(
         ServerAddress $serverAddress,
-        DateTime $dateTime,
+        Data $postNLhelper,
         AccountConfiguration $accountConfiguration
     ) {
         $this->serverAddress = $serverAddress;
         $this->accountConfiguration = $accountConfiguration;
-        $this->dateTime = $dateTime;
+        $this->postNLhelper = $postNLhelper;
     }
 
     /**
      * @param       $barcode
-     * @param array $extra
+     * @param array $message
      *
      * @return array
      */
-    public function get($barcode, $extra = array())
+    public function get($barcode, $message = [])
     {
         $messageIdString = $this->getMessageIdString($barcode);
 
-        $message = array(
-            'MessageID'        => md5($messageIdString),
-            'MessageTimeStamp' => date('d-m-Y H:i:s', $this->dateTime->gmtTimestamp()),
-        );
-
-        if ($extra) {
-            $message = array_merge($message, $extra);
-        }
+        // @codingStandardsIgnoreLine
+        $message['MessageID']        = md5($messageIdString);
+        $message['MessageTimeStamp'] = $this->postNLhelper->getCurrentTimeStamp();
 
         return $message;
     }
@@ -106,18 +102,18 @@ class Message
      *
      * @return string
      */
-    protected function getMessageIdString($barcode)
+    private function getMessageIdString($barcode)
     {
         if (array_key_exists($barcode, $this->messageIdStrings)) {
             return $this->messageIdStrings[$barcode];
         }
 
-        $id = uniqid(
+        $identifier = uniqid(
             'postnl_'
             . ip2long($this->serverAddress->getServerAddress())
         );
 
-        $messageIdString = $id
+        $messageIdString = $identifier
             . $this->accountConfiguration->getCustomerNumber()
             . $barcode
             . microtime();

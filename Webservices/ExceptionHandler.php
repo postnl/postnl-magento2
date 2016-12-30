@@ -38,6 +38,8 @@
  */
 namespace TIG\PostNL\Webservices;
 
+use TIG\PostNL\Logging\Log;
+
 class ExceptionHandler
 {
     /**
@@ -51,6 +53,20 @@ class ExceptionHandler
     const SHIPMENT_NOT_FOUND_ERROR_NUMBER = 13;
 
     /**
+     * @var
+     */
+    protected $log;
+
+    /**
+     * @param Log $log
+     */
+    public function __construct(
+        Log $log
+    ) {
+        $this->log = $log;
+    }
+
+    /**
      * @param \SoapFault  $soapFault
      * @param \SoapClient $client
      *
@@ -58,7 +74,6 @@ class ExceptionHandler
      * @throws Api\Exception
      *
      * @todo Refactor this code, it comes from the M1 version with some required M2 changes.
-     * @todo Log the exception
      */
     public function handle(\SoapFault $soapFault, \SoapClient $client = null)
     {
@@ -128,15 +143,15 @@ class ExceptionHandler
          * Add the response and request data to the exception (to be logged later)
          */
         if (!empty($requestXML) || !empty($responseXML)) {
-            $exception->setRequestXml($requestXML)
-                ->setResponseXml($responseXML);
+            $exception->setRequestXml($requestXML);
+            $exception->setResponseXml($responseXML);
         }
 
         if ($logException) {
             /**
              * Log the exception and throw it.
              */
-//            $cifHelper->logCifException($exception);
+            $this->log->critical($exception);
         }
 
         throw $exception;
@@ -154,60 +169,5 @@ class ExceptionHandler
         $domDocument->formatOutput = true;
 
         return $domDocument->saveXML();
-    }
-
-    /**
-     * @param $responseXML
-     * @param $exception
-     *
-     * @return bool
-     */
-    protected function handleResponseXml($responseXML, $exception)
-    {
-        /**
-         * If we received a response, parse it for errors and create an appropriate exception
-         */
-        $errorResponse = new \DOMDocument();
-        $errorResponse->loadXML($responseXML);
-
-        /**
-         * Get all error messages.
-         */
-        $errors = $errorResponse->getElementsByTagNameNS(static::CIF_ERROR_NAMESPACE, 'ErrorMsg');
-        if ($errors) {
-            $message = '';
-            foreach ($errors as $error) {
-                $message .= $error->nodeValue . PHP_EOL;
-            }
-
-            /**
-             * Update the exception.
-             */
-            $exception->setMessage($message);
-        }
-
-        /**
-         * Parse any CIF error numbers we may have received.
-         */
-        $errorNumbers = $errorResponse->getElementsByTagNameNS(static::CIF_ERROR_NAMESPACE, 'ErrorNumber');
-        if ($errorNumbers) {
-            foreach ($errorNumbers as $errorNumber) {
-                /**
-                 * Error number 13 means that the shipment was not found by PostNL. This error is very common and
-                 * can be completely valid. To prevent the log files from filling up extremely quickly, we do not
-                 * log this error.
-                 */
-                $value = $errorNumber->nodeValue;
-                if ($value == self::SHIPMENT_NOT_FOUND_ERROR_NUMBER) {
-                    $logException = false;
-                }
-
-                $exception->addErrorNumber($value);
-            }
-
-            return $logException;
-        }
-
-        return $logException;
     }
 }

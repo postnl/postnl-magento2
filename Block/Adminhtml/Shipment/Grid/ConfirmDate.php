@@ -47,6 +47,7 @@ class ConfirmDate extends AbstractGrid
      *
      * @todo: Finish implementation
      */
+    // @codingStandardsIgnoreLine
     protected function getCellContents($item)
     {
         return '<strong>Confirm date</strong>';

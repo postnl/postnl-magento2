@@ -39,9 +39,14 @@
 
 namespace TIG\PostNL\Webservices\Endpoints;
 
-use TIG\PostNL\Webservices\Soap;
+/**
+ * @todo : Waiting on PostNL to finish the API for DeliveryDate, so needs to be refactored when API is ready.
+ */
+use TIG\PostNL\Webservices\SoapOld;
 use TIG\PostNL\Webservices\Helpers\Deliveryoptions;
 use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Webservices\Api\Message;
+use TIG\PostNL\Webservices\Api\CutoffTimes;
 
 /**
  * Class DeliveryDate
@@ -61,7 +66,7 @@ class DeliveryDate
     /** @var string */
     protected $type = 'GetDeliveryDate';
 
-    /** @var  Soap */
+    /** @var  SoapOld */
     protected $soap;
 
     /** @var  Array */
@@ -70,28 +75,41 @@ class DeliveryDate
     /** @var Deliveryoptions */
     protected $deliveryOptionsHelper;
 
+    /** @var Message */
+    protected $message;
+
+    /** @var  CutoffTimes */
+    protected $cutoffTimes;
+
     /** @var Data  */
     protected $postNLhelper;
 
     /**
-     * @param Soap            $soap
+     * @param SoapOld         $soap
+     * @param Data            $postNLhelper
      * @param Deliveryoptions $deliveryoptions
+     * @param Message         $message
+     * @param CutoffTimes     $cutoffTimes
      */
     public function __construct(
-        Soap $soap,
+        SoapOld $soap,
         Data $postNLhelper,
-        Deliveryoptions $deliveryoptions
+        Deliveryoptions $deliveryoptions,
+        Message $message,
+        CutoffTimes $cutoffTimes
     ) {
         $this->soap = $soap;
         $this->deliveryOptionsHelper = $deliveryoptions;
         $this->postNLhelper = $postNLhelper;
+        $this->message = $message;
+        $this->cutoffTimes = $cutoffTimes;
     }
 
     /**
      * @return mixed
      * @throws \Magento\Framework\Webapi\Exception
      */
-    public function getDeliveryDate()
+    public function call()
     {
         return $this->soap->call($this->type, $this->getWsdlUrl(), $this->requestParams);
     }
@@ -103,7 +121,7 @@ class DeliveryDate
      *
      * @return array
      */
-    public function setRequestData($address)
+    public function setParameters($address)
     {
         $this->requestParams = [
             'GetDeliveryDate' => [
@@ -112,12 +130,11 @@ class DeliveryDate
                 'ShippingDate'       => $this->postNLhelper->getCurrentTimeStamp(),
                 'ShippingDuration'   => '1',
                 'AllowSundaySorting' => 'true',
-                'CutOffTimes'        => $this->deliveryOptionsHelper->getCuttOffTimes(),
+                'CutOffTimes'        => $this->cutoffTimes->get(),
                 'Options'            => $this->deliveryOptionsHelper->getDeliveryDatesOptions()
             ],
-            'Message' => $this->deliveryOptionsHelper->getMessage()
+            'Message' => $this->message->get('')
         ];
-
     }
 
     /**
