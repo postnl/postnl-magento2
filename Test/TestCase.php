@@ -133,6 +133,24 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @param      $property
+     * @param null $instance
+     *
+     * @return \ReflectionProperty
+     */
+    protected function getProperty($property, $instance = null)
+    {
+        if ($instance === null) {
+            $instance = $this->getInstance();
+        }
+
+        $reflection = new \ReflectionObject($instance);
+        $property = $reflection->getProperty($property);
+        $property->setAccessible(true);
+        return $property->getValue($instance);
+    }
+
+    /**
+     * @param      $property
      * @param      $value
      * @param null $instance
      *

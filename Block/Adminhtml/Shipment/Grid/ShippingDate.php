@@ -38,11 +38,43 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
 
+use TIG\PostNL\Model\Shipment as PostNLShipment;
+use TIG\PostNL\Model\ShipmentFactory;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use Magento\Framework\View\Element\UiComponentFactory;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Framework\Stdlib\DateTime\DateTimeFormatterInterface;
+
 class ShippingDate extends AbstractGrid
 {
-    protected function prepareData()
-    {
-        $ids = $this->collectIds();
+    /**
+     * @var TimezoneInterface
+     */
+    private $timezoneInterface;
+
+    /**
+     * @var PostNLShipment
+     */
+    private $model = null;
+
+    /**
+     * @var DateTimeFormatterInterface
+     */
+    private $dateTimeFormatterInterface;
+
+    public function __construct(
+        ContextInterface $context,
+        UiComponentFactory $uiComponentFactory,
+        ShipmentFactory $shipmentFactory,
+        TimezoneInterface $timezoneInterface,
+        DateTimeFormatterInterface $dateTimeFormatterInterface,
+        array $components = [],
+        array $data = []
+    ) {
+        parent::__construct($context, $uiComponentFactory, $shipmentFactory, $components, $data);
+
+        $this->timezoneInterface = $timezoneInterface;
+        $this->dateTimeFormatterInterface = $dateTimeFormatterInterface;
     }
 
     /**
@@ -53,6 +85,72 @@ class ShippingDate extends AbstractGrid
     // @codingStandardsIgnoreLine
     protected function getCellContents($item)
     {
-        return '<strong>Confirm date</strong>';
+        $entity_id = $item['entity_id'];
+
+        if (!$this->loadModel($entity_id)) {
+            return null;
+        }
+
+        $shipAt = $this->getShipAt();
+        if ($shipAt === null) {
+            return null;
+        }
+
+        return $this->formatShippingDate($shipAt);
+    }
+
+    /**
+     * @param $entity_id
+     *
+     * @return bool|PostNLShipment
+     */
+    private function loadModel($entity_id)
+    {
+        if (!array_key_exists($entity_id, $this->models)) {
+            return false;
+        }
+
+        $this->model = $this->models[$entity_id];
+        return true;
+    }
+
+    /**
+     * @return null|string
+     */
+    private function getShipAt()
+    {
+        $shipAt = $this->model->getShipAt();
+        if ($shipAt === null) {
+            return null;
+        }
+
+        return $shipAt;
+    }
+
+    /**
+     * @param $shipAt
+     *
+     * @return null|int
+     */
+    private function formatShippingDate($shipAt)
+    {
+        $now = $this->timezoneInterface->date();
+        $whenToShip = $this->timezoneInterface->date($shipAt);
+        $difference = $now->diff($whenToShip);
+        $days = $difference->days;
+
+        if ($days == 0) {
+            return __('Today');
+        }
+
+        if (!$difference->invert && $days === 1) {
+            return __('In 1 day');
+        }
+
+        if (!$difference->invert) {
+            return __('In %1 days', [$days]);
+        }
+
+        return $whenToShip->format('d M. Y');
     }
 }

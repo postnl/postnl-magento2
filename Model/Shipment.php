@@ -54,6 +54,8 @@ use Magento\Framework\Model\AbstractModel;
  * @method null|string getShipmentType
  * @method $this setIsPakjegemak(string)
  * @method null|string getIsPakjegemak
+ * @method $this setShipAt(string)
+ * @method null|string getShipAt
  * @method $this setConfirmedAt(string)
  * @method null|string getConfirmedAt
  * @method $this setCreatedAt(string)
