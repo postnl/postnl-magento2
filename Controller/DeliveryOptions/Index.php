@@ -120,7 +120,7 @@ class Index extends Action
     public function execute()
     {
         $params = $this->getRequest()->getParams();
-        
+
         if (!isset($params['type']) || !isset($params['address'])) {
             return $this->jsonResponse(__('No Address data found or no Type specified'));
         }

@@ -177,16 +177,16 @@ class Exception extends PostNLException
      */
     public function getMessages($type = '')
     {
-        if ('' == $type) {
-            $arrRes = [];
-            foreach ($this->messages as $messageType => $messages) {
-                $arrRes = array_merge($arrRes, $messages);
-            }
-
-            return $arrRes;
+        if ('' !== $type) {
+            return isset($this->messages[$type]) ? $this->messages[$type] : [];
         }
 
-        return isset($this->messages[$type]) ? $this->messages[$type] : [];
+        $arrRes = [];
+        foreach ($this->messages as $messageType => $messages) {
+            $arrRes = array_merge($arrRes, $messages);
+        }
+
+        return $arrRes;
     }
 
     /**
