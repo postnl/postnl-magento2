@@ -42,12 +42,13 @@ use TIG\PostNL\Exception as PostnlException;
 
 /**
  * Class Address
- *
+ * @todo : Class needs to be refactored/optimized.
  * @package TIG\PostNL\Helper
  */
 class Address
 {
     const STREET_SPLIT_NAME_FROM_NUMBER = '/([^\d]+)\s?(.+)/i';
+    const SPLIT_HOUSENUMBER_REGEX       = '#^([\d]+)(.*)#s';
 
     /** @var array */
     private $address = [];
@@ -77,10 +78,9 @@ class Address
     private function appendHouseNumber($address)
     {
         if (!isset($address['street'][0])) {
-            // @codingStandardsIgnoreLine
-            $error = __('Unable to extract the housenumber, because the street data could not be found');
             throw new PostnlException(
-                $error,
+            // @codingStandardsIgnoreLine
+                __('Unable to extract the housenumber, because the street data could not be found'),
                 'POSTNL-0124'
             );
         }
@@ -93,10 +93,10 @@ class Address
     }
 
     /**
-     * @todo : Needs refactoring and good validators.
      * @param $address
      *
      * @return mixed
+     * @throws PostnlException
      */
     private function extractHousenumber($address)
     {
@@ -104,11 +104,63 @@ class Address
             return $address['housenumber'] = $address['street'][1];
         }
 
-        if (preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER, $address['street'][0], $result)) {
-            $address['street'][0]   = $result[1];
-            $address['housenumber'] = $result[2];
+        $matched = preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER, $address['street'][0], $result);
+        if (!$matched) {
+            throw new PostnlException(
+            // @codingStandardsIgnoreLine
+                __('Unable to extract the housenumber, could not find an number inside the street value'),
+                'POSTNL-0124'
+            );
+        }
+
+        if (isset($result[1])) {
+            $address['street'][0] = $result[1];
+        }
+
+        if (isset($result[2])) {
+            $address = $this->addHousenumberValues($address, $result[2]);
         }
 
         return $address;
+    }
+
+    /**
+     * @param $address
+     * @param $houseNumber
+     *
+     * @return mixed
+     * @throws PostnlException
+     */
+    private function addHousenumberValues($address, $houseNumber)
+    {
+        $houseNumberData = $this->splitHousenumber($houseNumber);
+
+        $address['housenumber']          = $houseNumberData['number'];
+        $address['housenumberExtension'] = $houseNumberData['extension'];
+
+        return $address;
+    }
+
+    /**
+     * @param $houseNumber
+     *
+     * @return array
+     * @throws PostnlException
+     */
+    private function splitHousenumber($houseNumber)
+    {
+        $matched = preg_match(self::SPLIT_HOUSENUMBER_REGEX, trim($houseNumber), $results);
+        if (!$matched && !is_array($results)) {
+            throw new PostnlException(
+            // @codingStandardsIgnoreLine
+                __('Invalid housnumber supplied: %1', $houseNumber),
+                'POSTNL-0059'
+            );
+        }
+
+        return [
+            'number'    => (isset($results[1]) ? $results[1] : ''),
+            'extension' => (isset($results[2]) ? $results[2] : '')
+        ];
     }
 }

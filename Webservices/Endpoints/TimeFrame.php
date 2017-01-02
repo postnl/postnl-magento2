@@ -179,7 +179,6 @@ class TimeFrame extends AbstractEndpoint
     }
 
     /**
-     * @todo : Optimize code in calisthenics way.
      * @param $filterdTimeFrames
      * @param $timeFrames
      * @param $date
