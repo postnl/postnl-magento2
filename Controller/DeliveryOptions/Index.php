@@ -47,6 +47,7 @@ use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
 use TIG\PostNL\Webservices\Endpoints\Locations;
 use \Magento\Checkout\Model\Session;
+use TIG\PostNL\Helper\Address;
 
 /**
  * Class Index
@@ -80,6 +81,8 @@ class Index extends Action
      */
     private $locationsEndpoint;
 
+    private $addresHelper;
+
     /**
      * @var
      */
@@ -93,6 +96,7 @@ class Index extends Action
      * @param TimeFrame    $timeFrame
      * @param Locations    $locations
      * @param Session      $checkouSession
+     * @param Address      $address
      */
     public function __construct(
         Context $context,
@@ -101,7 +105,8 @@ class Index extends Action
         DeliveryDate $deliveryDate,
         TimeFrame $timeFrame,
         Locations $locations,
-        Session $checkouSession
+        Session $checkouSession,
+        Address $address
     ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->jsonHelper        = $jsonHelper;
@@ -109,6 +114,7 @@ class Index extends Action
         $this->timeFrameEndpoint = $timeFrame;
         $this->locationsEndpoint = $locations;
         $this->checkoutSession   = $checkouSession;
+        $this->addresHelper      = $address;
         parent::__construct($context);
     }
 
@@ -126,7 +132,7 @@ class Index extends Action
         }
 
         try {
-            return $this->jsonResponse($this->getDataBasedOnType($params['type']));
+            return $this->jsonResponse($this->getDataBasedOnType($params['type'], $params['address']));
         } catch (LocalizedException $exception) {
             return $this->jsonResponse($exception->getMessage());
         } catch (\Exception $exception) {
@@ -235,17 +241,19 @@ class Index extends Action
 
     /**
      * @param $type
-     *
+     * @param $address
      * @return array|\Magento\Framework\Controller\ResultInterface|\Magento\Framework\Phrase
      */
-    private function getDataBasedOnType($type)
+    private function getDataBasedOnType($type, $address)
     {
+        $this->addresHelper->setAddressParams($address);
+
         if ($type == 'deliverydays') {
-            return $this->getPosibleDeliveryDays($type);
+            return $this->getPosibleDeliveryDays($type, $this->addresHelper->getAddressParams());
         }
 
         if ($type == 'locations') {
-            return $this->getNearestLocations($type);
+            return $this->getNearestLocations($type, $this->addresHelper->getAddressParams());
         }
 
         //@codingStandardsIgnoreLine
