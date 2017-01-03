@@ -47,6 +47,7 @@ class ConfirmStatus extends AbstractGrid
      *
      * @return string
      */
+    //@codingStandardsIgnoreLine
     protected function getCellContents($item)
     {
         $entity_id = $item['entity_id'];
