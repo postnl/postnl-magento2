@@ -41,6 +41,8 @@ namespace TIG\PostNL\Observer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use TIG\PostNL\Model\ShipmentFactory;
+use TIG\PostNL\Model\ShipmentBarcodeFactory;
+use TIG\PostNL\Webservices\Endpoints\Barcode;
 
 class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
 {
@@ -50,12 +52,28 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     private $shipmentFactory;
 
     /**
-     * @param ShipmentFactory $shipmentFactory
+     * @var ShipmentBarcodeFactory
+     */
+    private $shipmentBarcodeFactory;
+
+    /**
+     * @var Barcode
+     */
+    private $barcode;
+
+    /**
+     * @param ShipmentFactory        $shipmentFactory
+     * @param ShipmentBarcodeFactory $shipmentBarcodeFactory
+     * @param Barcode                $barcode
      */
     public function __construct(
-        ShipmentFactory $shipmentFactory
+        ShipmentFactory $shipmentFactory,
+        ShipmentBarcodeFactory $shipmentBarcodeFactory,
+        Barcode $barcode
     ) {
         $this->shipmentFactory = $shipmentFactory;
+        $this->shipmentBarcodeFactory = $shipmentBarcodeFactory;
+        $this->barcode = $barcode;
     }
 
     /**
@@ -72,5 +90,31 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
         $model = $this->shipmentFactory->create();
         $model->setData('shipment_id', $shipment->getId());
         $model->save();
+
+        $barcode = $this->generateBarcode();
+
+        /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
+        $barcodeModel = $this->shipmentBarcodeFactory->create();
+        $barcodeModel->setData('shipment_id', $shipment->getId());
+        $barcodeModel->setData('type', $barcodeModel::BARCODE_TYPE_SHIPMENT);
+        $barcodeModel->setData('number', 0); //TODO: save the correct number
+        $barcodeModel->setData('value', $barcode);
+        $barcodeModel->save();
+    }
+
+    /**
+     * CIF call to generate a new barcode
+     *
+     * @return \Magento\Framework\Phrase
+     */
+    private function generateBarcode()
+    {
+        $response = $this->barcode->call();
+
+        if (!is_object($response) || !isset($response->Barcode)) {
+            return __('Invalid GenerateBarcode response: %1', var_export($response, true));
+        }
+
+        return $response->Barcode;
     }
 }
