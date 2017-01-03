@@ -107,7 +107,7 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
         },
 
         setDeliverydays : function (data) {
-          this.deliverydays(data);
+          self.deliverydays(data);
         },
 
         getDeliverydays : function (address) {
@@ -116,6 +116,7 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
                 url : '/postnl/deliveryoptions',
                 data : {type: 'deliverydays', address: address}
             }).done(function (data) {
+                console.info(data);
                 self.setDeliverydays(data);
             }).fail(function (data) {
                 console.log(data);

@@ -249,11 +249,11 @@ class Index extends Action
         $this->addresHelper->setAddressParams($address);
 
         if ($type == 'deliverydays') {
-            return $this->getPosibleDeliveryDays($type, $this->addresHelper->getAddressParams());
+            return $this->getPosibleDeliveryDays($this->addresHelper->getAddressParams());
         }
 
         if ($type == 'locations') {
-            return $this->getNearestLocations($type, $this->addresHelper->getAddressParams());
+            return $this->getNearestLocations($this->addresHelper->getAddressParams());
         }
 
         //@codingStandardsIgnoreLine
