@@ -73,11 +73,9 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
                 if (!self.street) {
                     //  Create own data object.
                     self.street = {
-                        street : {
                             0: $("input[name*='street[0]']").val(),
                             1: $("input[name*='street[1]']").val()
-                        }
-                    };
+                        };
                 }
 
                 if (!self.postalCode || !self.countryCode || !self.street) {
