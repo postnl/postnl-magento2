@@ -22,3 +22,10 @@ This command will run the following tests:
 - JS lint all JS files.
 
 The build status can be viewed on [Travis-ci.com](http://travis-ci.com)
+
+## Frontend: Changing Colors of the PostNL extension
+
+Open: app/code/TIG/PostNL/view/frontend/web/css/source/deliveryoptions.less
+
+Copy the variables to your own theme.less or extend them in your extend.less. More information:
+http://devdocs.magento.com/guides/v2.0/frontend-dev-guide/css-guide/css_quick_guide_approach.html#simple_override
