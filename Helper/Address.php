@@ -77,6 +77,7 @@ class Address
      */
     private function appendHouseNumber($address)
     {
+        $address = $this->checkStreetArray($address);
         if (!isset($address['street'][0])) {
             throw new PostnlException(
             // @codingStandardsIgnoreLine
@@ -87,6 +88,20 @@ class Address
 
         if (!isset($address['housenumber'])) {
             $address = $this->extractHousenumber($address);
+        }
+
+        return $address;
+    }
+
+    /**
+     * @param $address
+     * @todo: Somehow magento parses street inside street, needs to check.
+     * @return mixed
+     */
+    private function checkStreetArray($address)
+    {
+        if (isset($address['street']['street'])) {
+            $address['street'] = $address['street']['street'];
         }
 
         return $address;
