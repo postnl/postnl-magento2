@@ -45,15 +45,7 @@ use TIG\PostNL\Test\TestCase;
 
 class CreateShipmentTest extends TestCase
 {
-    /**
-     * @param array $di
-     *
-     * @return CreateShipments
-     */
-    public function getInstance($di = [])
-    {
-        return $this->objectManager->getObject(CreateShipments::class, $di);
-    }
+    protected $instanceClass = CreateShipments::class;
 
     public function orderHasShipmentProvider()
     {

@@ -43,6 +43,16 @@ use Magento\Ui\Component\Listing\Columns\Column;
 abstract class AbstractGrid extends Column
 {
     /**
+     * @var array
+     */
+    protected $items = [];
+
+    /**
+     * @var array
+     */
+    protected $ids = [];
+
+    /**
      * @param array $dataSource
      *
      * @return array
@@ -50,28 +60,33 @@ abstract class AbstractGrid extends Column
     public function prepareDataSource(array $dataSource)
     {
         if (isset($dataSource['data']['items'])) {
-            $items = $dataSource['data']['items'];
-            $items = $this->handleItems($items);
+            $this->items = $dataSource['data']['items'];
 
-            $dataSource['data']['items'] = $items;
+            $this->prepareData();
+            $this->handleItems();
+
+            $dataSource['data']['items'] = $this->items;
         }
 
         return $dataSource;
     }
 
     /**
-     * @param array $items
      *
+     */
+    protected function prepareData()
+    {
+    }
+
+    /**
      * @return array
      */
     // @codingStandardsIgnoreLine
-    protected function handleItems(array $items)
+    protected function handleItems()
     {
-        foreach ($items as $index => $item) {
-            $items[$index][$this->getData('name')] = $this->getCellContents($item);
+        foreach ($this->items as $index => $item) {
+            $this->items[$index][$this->getData('name')] = $this->getCellContents($item);
         }
-
-        return $items;
     }
 
     /**
@@ -81,4 +96,18 @@ abstract class AbstractGrid extends Column
      */
     // @codingStandardsIgnoreLine
     abstract protected function getCellContents($item);
+
+    /**
+     * @param string $idColumn
+     *
+     * @return array
+     */
+    protected function collectIds($idColumn = 'entity_id')
+    {
+        foreach ($this->items as $item) {
+            $this->ids[] = $item[$idColumn];
+        }
+
+        return $this->ids;
+    }
 }
