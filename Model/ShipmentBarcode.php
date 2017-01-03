@@ -45,6 +45,9 @@ class ShipmentBarcode extends AbstractModel implements ShipmentBarcodeInterface,
 {
     const CACHE_TAG = 'tig_postnl_shipment_barcode';
 
+    const BARCODE_TYPE_SHIPMENT = 'shipment';
+    const BARCODE_TYPE_RETURN   = 'return';
+
     /**
      * Constructor
      */
