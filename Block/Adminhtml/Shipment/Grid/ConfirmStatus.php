@@ -38,9 +38,6 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
 
-use Magento\Framework\View\Element\UiComponent\ContextInterface;
-use Magento\Framework\View\Element\UiComponentFactory;
-use TIG\PostNL\Model\ShipmentFactory;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
 
 class ConfirmStatus extends AbstractGrid
