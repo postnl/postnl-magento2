@@ -86,6 +86,7 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
      * @return \Magento\Framework\DataObject|bool|null
      * @api
      */
+    // @codingStandardsIgnoreLine
     public function collectRates(RateRequest $request)
     {
         if (!$this->getConfigFlag('active')) {
@@ -101,7 +102,10 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         return $result;
     }
 
-    protected function getMethod()
+    /**
+     * @return \Magento\Quote\Model\Quote\Address\RateResult\Method
+     */
+    private function getMethod()
     {
         /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
         $method = $this->_rateMethodFactory->create();

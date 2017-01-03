@@ -44,14 +44,13 @@ use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
 
 class SupportTab extends \Magento\Framework\View\Element\Template implements RendererInterface
 {
-    // @codingStandardsIgnoreStart
+    // @codingStandardsIgnoreLine
     protected $_template = 'TIG_PostNL::config/support/supportTab.phtml';
-    // @codingStandardsIgnoreEnd
 
     /**
      * @var \Magento\Framework\Setup\ModuleContextInterface
      */
-    protected $moduleContext;
+    private $moduleContext;
 
     /**
      * Override the parent constructor to require our own dependencies.

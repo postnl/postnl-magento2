@@ -41,7 +41,6 @@ namespace TIG\PostNL\Webservices\Endpoints;
 
 use TIG\PostNL\Webservices\Soap;
 use TIG\PostNL\Webservices\AbstractEndpoint;
-use TIG\PostNL\Webservices\Helpers\Deliveryoptions;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Helper\Data;
@@ -53,47 +52,54 @@ use TIG\PostNL\Helper\Data;
  */
 class Locations extends AbstractEndpoint
 {
-    /** @var string  */
-    protected $version = 'v2_1';
+    /**
+     * @var string
+     */
+    private $version = 'v2_1';
 
-    /** @var string  */
-    protected $endpoint = 'locations';
+    /**
+     * @var string
+     */
+    private $endpoint = 'locations';
 
-    /** @var  Soap */
-    protected $soap;
+    /**
+     * @var Soap
+     */
+    private $soap;
 
-    /** @var  Array */
-    protected $requestParams;
+    /**
+     * @var Array
+     */
+    private $requestParams;
 
-    /** @var Deliveryoptions */
-    protected $deliveryOptionsHelper;
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
 
-    /** @var ShippingOptions */
-    protected $shippingOptions;
+    /**
+     * @var Data
+     */
+    private $postNLhelper;
 
-    /** @var Data  */
-    protected $postNLhelper;
-
-    /** @var  Message */
-    protected $message;
-
+    /**
+     * @var  Message
+     */
+    private $message;
 
     /**
      * @param Soap            $soap
-     * @param Deliveryoptions $deliveryoptions
      * @param Data            $postNLhelper
      * @param ShippingOptions $shippingOptions
      * @param Message         $message
      */
     public function __construct(
         Soap $soap,
-        Deliveryoptions $deliveryoptions,
         Data $postNLhelper,
         ShippingOptions $shippingOptions,
         Message $message
     ) {
         $this->soap = $soap;
-        $this->deliveryOptionsHelper = $deliveryoptions;
         $this->shippingOptions = $shippingOptions;
         $this->postNLhelper  = $postNLhelper;
         $this->message = $message;
@@ -118,7 +124,7 @@ class Locations extends AbstractEndpoint
     {
         $this->requestParams = [
             'Location'    => [
-                'DeliveryOptions'    => $this->deliveryOptionsHelper->getAllowedDeliveryOptions(),
+                'DeliveryOptions'    => $this->postNLhelper->getAllowedDeliveryOptions(),
                 'DeliveryDate'       => $this->getDeliveryDate($startDate),
                 'Postalcode'         => str_replace(' ', '', $address['postcode']),
                 'Options'            => ['Daytime', 'Morning'],
@@ -151,7 +157,7 @@ class Locations extends AbstractEndpoint
      *
      * @return bool|string
      */
-    protected function getDeliveryDate($startDate)
+    public function getDeliveryDate($startDate)
     {
         if ($startDate !== false) {
             return $startDate;
@@ -159,6 +165,4 @@ class Locations extends AbstractEndpoint
 
         return $this->postNLhelper->getTommorowsDate();
     }
-
-
 }

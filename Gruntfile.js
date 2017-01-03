@@ -7,19 +7,18 @@ module.exports = function (grunt) {
         phpunitXmlPath = '/tmp/magento2/vendor/tig/postnl/phpunit.xml.dist';
     }
 
+    var phpcsCommand = 'php -ddisplay_errors=1 ~/.composer/vendor/bin/phpcs -v --standard=phpcs.xml ' +
+        '--runtime-set installed_paths ' +
+        'vendor/squizlabs/php_codesniffer/CodeSniffer/Standards,' + '' +
+        'vendor/magento/marketplace-eqp,' + '' +
+        'vendor/object-calisthenics/phpcs-calisthenics-rules/src/ ';
+
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         exec: {
-            phpcs:
-                'php -ddisplay_errors=1 ~/.composer/vendor/bin/phpcs -v --standard=phpcs.xml ' +
-                '--runtime-set installed_paths ' +
-                'vendor/magento/marketplace-eqp,' + '' +
-                'vendor/object-calisthenics/phpcs-calisthenics-rules/src/ ' +
-                //'--error-severity=1 ' +
-                //'--warning-severity=10 ' +
-                '--severity=10' +
-                ' .',
+            phpcsEasy: phpcsCommand + '--severity=10 .',
+            phpcsFull: phpcsCommand + ' .',
             unitTests: 'cd ' + magento2path + ' && vendor/bin/phpunit -c "' + phpunitXmlPath + '"',
             integrationTests:
                 'cd ' + magento2path + 'dev/tests/integration &&' +
@@ -61,10 +60,11 @@ module.exports = function (grunt) {
     grunt.registerTask('test', ['jshint:all', 'exec:phplint', 'exec:phpunit', 'exec:phpcs']);
     grunt.registerTask('translations', ['exec:translations_nl', 'exec:translations_en']);
     grunt.registerTask('lint', ['exec:phplint', 'jshint:all']);
+    grunt.registerTask('phpcs', ['exec:phpcsFull']);
     grunt.registerTask('test', [
         'exec:unitTests',
         'exec:integrationTests',
-        'exec:phpcs',
+        'exec:phpcsEasy',
         'exec:phplint',
         'jshint:all'
     ]);

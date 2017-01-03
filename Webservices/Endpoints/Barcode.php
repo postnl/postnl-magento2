@@ -38,7 +38,6 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
-use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Helper\BarcodeData;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Customer;
@@ -50,32 +49,32 @@ class Barcode extends AbstractEndpoint
     /**
      * @var Soap
      */
-    protected $soap;
+    private $soap;
 
     /**
      * @var string
      */
-    protected $version = 'v1_1';
+    private $version = 'v1_1';
 
     /**
      * @var string
      */
-    protected $endpoint = 'barcode';
+    private $endpoint = 'barcode';
 
     /**
      * @var BarcodeData
      */
-    protected $barcodeData;
+    private $barcodeData;
 
     /**
      * @var Customer
      */
-    protected $customer;
+    private $customer;
 
     /**
      * @var Message
      */
-    protected $message;
+    private $message;
 
     /**
      * @param Soap        $soap

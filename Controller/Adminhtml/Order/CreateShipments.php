@@ -53,27 +53,27 @@ class CreateShipments extends Action
     /**
      * @var \Magento\Ui\Component\MassAction\Filter
      */
-    protected $filter;
+    private $filter;
 
     /**
      * @var ConvertOrder
      */
-    protected $convertOrder;
+    private $convertOrder;
 
     /**
      * @var Shipment
      */
-    protected $shipment;
+    private $shipment;
 
     /**
      * @var Order
      */
-    protected $currentOrder;
+    private $currentOrder;
 
     /**
      * @var array
      */
-    protected $errors = [];
+    private $errors = [];
 
     /**
      * @param Context                $context
@@ -118,7 +118,7 @@ class CreateShipments extends Action
     /**
      * @return bool
      */
-    protected function orderHasShipment()
+    private function orderHasShipment()
     {
         $collection = $this->currentOrder->getShipmentsCollection();
         $size = $collection->getSize();
@@ -129,7 +129,7 @@ class CreateShipments extends Action
     /**
      * @return $this
      */
-    protected function createShipment()
+    private function createShipment()
     {
         if (!$this->isValidOrder()) {
             return $this;
@@ -150,7 +150,7 @@ class CreateShipments extends Action
     /**
      * @return bool
      */
-    protected function isValidOrder()
+    private function isValidOrder()
     {
         if ($this->orderHasShipment()) {
             return false;
@@ -168,7 +168,7 @@ class CreateShipments extends Action
      *
      * @return $this
      */
-    protected function handleItem(OrderItem $item)
+    private function handleItem(OrderItem $item)
     {
         if (!$item->getQtyToShip() || $item->getIsVirtual()) {
             return $this;
@@ -188,7 +188,7 @@ class CreateShipments extends Action
      * @return $this
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function saveShipment()
+    private function saveShipment()
     {
         $this->shipment->register();
         $order = $this->shipment->getOrder();
@@ -210,7 +210,7 @@ class CreateShipments extends Action
     /**
      * @return $this
      */
-    protected function handleErrors()
+    private function handleErrors()
     {
         foreach ($this->errors as $error) {
             $this->messageManager->addErrorMessage($error);
@@ -222,10 +222,10 @@ class CreateShipments extends Action
     /**
      * @return \Magento\Framework\Controller\Result\Redirect
      */
-    protected function redirectBack()
+    private function redirectBack()
     {
         $redirectPath = 'sales/shipment/index';
-        if (count($this->errors)) {
+        if (!empty($this->errors)) {
             $redirectPath = 'sales/order/index';
         }
 

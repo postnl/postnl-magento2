@@ -56,12 +56,12 @@ class BarcodeData
     /**
      * @var AccountConfiguration
      */
-    protected $accountConfiguration;
+    private $accountConfiguration;
 
     /**
      * @var DefaultConfiguration
      */
-    protected $defaultConfiguration;
+    private $defaultConfiguration;
 
     /**
      * @param AccountConfiguration $accountConfiguration
@@ -89,6 +89,115 @@ class BarcodeData
     {
         $barcodeType = strtoupper($barcodeType);
 
+        $barcodeData = $this->getBarcodeData($barcodeType);
+
+        $this->validateBarcodeData($barcodeData);
+
+        return $barcodeData;
+    }
+
+    /**
+     * @return array
+     */
+    private function getNlBarcode()
+    {
+        $type  = '3S';
+        $range = $this->accountConfiguration->getCustomerCode();
+        $serie = static::NL_BARCODE_SERIE_LONG;
+
+        if (strlen($range) > 3) {
+            $serie = static::NL_BARCODE_SERIE_SHORT;
+        }
+
+        return [
+            'type' => $type,
+            'range' => $range,
+            'serie' => $serie,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getEuBarcode()
+    {
+        $type  = '3S';
+        $range = $this->accountConfiguration->getCustomerCode();
+        $serie = static::EU_BARCODE_SERIE_LONG;
+
+        if (strlen($range) > 3) {
+            $serie = static::EU_BARCODE_SERIE_SHORT;
+        }
+
+        return [
+            'type' => $type,
+            'range' => $range,
+            'serie' => $serie,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getGlobalBarcode()
+    {
+        $type  = $this->getGlobalBarcodeType();
+        $range = $this->getGlobalBarcodeRange();
+        $serie = static::GLOBAL_BARCODE_SERIE;
+
+        return [
+            'type' => $type,
+            'range' => $range,
+            'serie' => $serie,
+        ];
+    }
+
+    /**
+     * Gets the global barcode type from system/config
+     *
+     * @return string
+     */
+    private function getGlobalBarcodeType()
+    {
+        return $this->defaultConfiguration->getBarcodeGlobalType();
+    }
+
+    /**
+     * Gets the global barcode range from system/config
+     *
+     * @return string
+     */
+    private function getGlobalBarcodeRange()
+    {
+        return $this->defaultConfiguration->getBarcodeGlobalRange();
+    }
+
+    /**
+     * @param $barcodeData
+     *
+     * @throws PostnlException
+     */
+    private function validateBarcodeData($barcodeData)
+    {
+        if (!$barcodeData['type'] || !$barcodeData['range']) {
+            // @codingStandardsIgnoreLine
+            $error = __('Unable to retrieve barcode data.');
+            throw new PostnlException(
+                $error,
+                'POSTNL-0111'
+            );
+        }
+    }
+
+    /**
+     * @param $barcodeType
+     *
+     * @return array
+     * @throws PostnlException
+     */
+    private function getBarcodeData($barcodeType)
+    {
+        $barcodeData = null;
         switch ($barcodeType) {
             case 'NL':
                 $barcodeData = $this->getNlBarcode();
@@ -99,96 +208,27 @@ class BarcodeData
             case 'GLOBAL':
                 $barcodeData = $this->getGlobalBarcode();
                 break;
-            default:
-                throw new PostnlException(
-                    __('Invalid barcodetype requested: %s', $barcodeType),
-                    'POSTNL-0061'
-                );
         }
 
-        if (!$barcodeData['type'] || !$barcodeData['range']) {
-            throw new PostnlException(
-                __('Unable to retrieve barcode data.'),
-                'POSTNL-0111'
-            );
+        if ($barcodeData === null) {
+            $this->noBarcodeDataError($barcodeType);
         }
 
         return $barcodeData;
     }
 
     /**
-     * @return array
-     */
-    protected function getNlBarcode()
-    {
-        $type  = '3S';
-        $range = $this->accountConfiguration->getCustomerCode();
-        $serie = static::NL_BARCODE_SERIE_LONG;
-
-        if (strlen($range) > 3) {
-            $serie = static::NL_BARCODE_SERIE_SHORT;
-        }
-
-        return array(
-            'type' => $type,
-            'range' => $range,
-            'serie' => $serie,
-        );
-    }
-
-    /**
-     * @return array
-     */
-    protected function getEuBarcode()
-    {
-        $type  = '3S';
-        $range = $this->accountConfiguration->getCustomerCode();
-        $serie = static::EU_BARCODE_SERIE_LONG;
-
-        if (strlen($range) > 3) {
-            $serie = static::EU_BARCODE_SERIE_SHORT;
-        }
-
-        return array(
-            'type' => $type,
-            'range' => $range,
-            'serie' => $serie,
-        );
-    }
-
-    /**
-     * @return array
-     */
-    protected function getGlobalBarcode()
-    {
-        $type  = $this->getGlobalBarcodeType();
-        $range = $this->getGlobalBarcodeRange();
-        $serie = static::GLOBAL_BARCODE_SERIE;
-
-        return array(
-            'type' => $type,
-            'range' => $range,
-            'serie' => $serie,
-        );
-    }
-
-    /**
-     * Gets the global barcode type from system/config
+     * @param $barcodeType
      *
-     * @return string
+     * @throws PostnlException
      */
-    protected function getGlobalBarcodeType()
+    private function noBarcodeDataError($barcodeType)
     {
-        return $this->defaultConfiguration->getBarcodeGlobalType();
-    }
-
-    /**
-     * Gets the global barcode range from system/config
-     *
-     * @return string
-     */
-    protected function getGlobalBarcodeRange()
-    {
-        return $this->defaultConfiguration->getBarcodeGlobalRange();
+        // @codingStandardsIgnoreLine
+        $error = __('Invalid barcodetype requested: %s', $barcodeType);
+        throw new PostnlException(
+            $error,
+            'POSTNL-0061'
+        );
     }
 }

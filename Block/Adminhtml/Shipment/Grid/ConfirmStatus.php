@@ -47,6 +47,7 @@ class ConfirmStatus extends AbstractGrid
      *
      * @todo: Finish implementation
      */
+    //@codingStandardsIgnoreLine
     protected function getCellContents($item)
     {
         return '<strong>Confirm status</strong>';

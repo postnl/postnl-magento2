@@ -54,12 +54,12 @@ class ShipmentRepository implements ShipmentRepositoryInterface
     /**
      * @var ShipmentFactory
      */
-    protected $shipmentFactory;
+    private $shipmentFactory;
 
     /**
      * @var CollectionFactory
      */
-    protected $collectionFactory;
+    private $collectionFactory;
 
     /**
      * @param ShipmentFactory               $objectFactory
@@ -127,6 +127,7 @@ class ShipmentRepository implements ShipmentRepositoryInterface
             // @codingStandardsIgnoreLine
             throw new CouldNotDeleteException(__($exception->getMessage()));
         }
+
         return true;
     }
 

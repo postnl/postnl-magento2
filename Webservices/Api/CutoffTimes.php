@@ -48,7 +48,7 @@ use TIG\PostNL\Config\Provider\WebshopSettings;
 class CutoffTimes
 {
     /** @var  WebshopSettings */
-    protected $webshopSettings;
+    private $webshopSettings;
 
     /**
      * @param WebshopSettings $webshopSettings
@@ -64,8 +64,8 @@ class CutoffTimes
      */
     public function get()
     {
-        $shipmentDays = explode(',' , $this->webshopSettings->getShipmentDays());
-        return array_map( function ($value) {
+        $shipmentDays = explode(',', $this->webshopSettings->getShipmentDays());
+        return array_map(function ($value) {
             return [
                 'Day'  => $value == '0' ? '07' : '0'.$value,
                 'Time' => $this->webshopSettings->getCutOffTime(),

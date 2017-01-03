@@ -41,7 +41,6 @@ namespace TIG\PostNL\Webservices\Endpoints;
 
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Soap;
-use TIG\PostNL\Webservices\Helpers\Deliveryoptions;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Helper\Data;
@@ -56,46 +55,54 @@ class TimeFrame extends AbstractEndpoint
     const TIMEFRAME_OPTION_EVENING = 'Evening';
     const TIMEFRAME_OPTION_DAYTIME = 'Daytime';
 
-    /** @var string  */
-    protected $version = 'v2_0';
+    /**
+     * @var string
+     */
+    private $version = 'v2_0';
 
-    /** @var string  */
-    protected $endpoint = 'calculate/timeframes';
+    /**
+     * @var string
+     */
+    private $endpoint = 'calculate/timeframes';
 
-    /** @var  Soap */
-    protected $soap;
+    /**
+     * @var Soap
+     */
+    private $soap;
 
-    /** @var  Array */
-    protected $requestParams;
+    /**
+     * @var Array
+     */
+    private $requestParams;
 
-    /** @var Deliveryoptions */
-    protected $deliveryOptionsHelper;
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
 
-    /** @var ShippingOptions */
-    protected $shippingOptions;
+    /**
+     * @var Data
+     */
+    private $postNLhelper;
 
-    /** @var Data  */
-    protected $postNLhelper;
-
-    /** @var Message */
-    protected $message;
+    /**
+     * @var Message
+     */
+    private $message;
 
     /**
      * @param Soap            $soap
-     * @param Deliveryoptions $deliveryoptions
      * @param Data            $postNLhelper
      * @param ShippingOptions $shippingOptions
      * @param Message         $message
      */
     public function __construct(
         Soap $soap,
-        Deliveryoptions $deliveryoptions,
         Data $postNLhelper,
         ShippingOptions $shippingOptions,
         Message $message
     ) {
         $this->soap = $soap;
-        $this->deliveryOptionsHelper = $deliveryoptions;
         $this->shippingOptions = $shippingOptions;
         $this->postNLhelper  = $postNLhelper;
         $this->message = $message;
@@ -143,8 +150,8 @@ class TimeFrame extends AbstractEndpoint
                 'HouseNr'            => '37',
                 'StartDate'          => $startDate,
                 'SundaySorting'      => 'true',
-                'EndDate'            => $this->deliveryOptionsHelper->getEndDate($startDate),
-                'Options'            => $this->deliveryOptionsHelper->getDeliveryDatesOptions()
+                'EndDate'            => $this->postNLhelper->getEndDate($startDate),
+                'Options'            => ['Sunday', 'Daytime', 'Evening']
             ],
             'Message' => $this->message->get('')
         ];
@@ -152,28 +159,24 @@ class TimeFrame extends AbstractEndpoint
 
     /**
      * @todo : Filter on Monday and Sunday delivery also on evening and CutoffTimes.
-     * @todo : Optimize code in calisthenics way.
-     *
      * @param $timeFrames
-     * @param $country
      *
      * @return array
      */
-    public function filterTimeFrames($timeFrames, $country)
+    public function filterTimeFrames($timeFrames)
     {
-        $filterdTimeFrames = [];
-        foreach ($timeFrames as $timeFrame) {
-            if ($this->isSameDay($timeFrame->Date) && !$this->canUseSameDay()) {
-                continue;
-            }
-            $filterdTimeFrames = $this->getTimeFrameOptions(
+        $filterdTimeFrames = array_filter($timeFrames, function ($value) {
+            return !$this->isSameDay($value->Date);
+        });
+
+        return array_map(function ($timeFrame) {
+            $frames = $timeFrame->Timeframes;
+            return $this->getTimeFrameOptions(
                 $filterdTimeFrames,
-                $timeFrame->Timeframes->TimeframeTimeFrame,
+                $frames->TimeframeTimeFrame,
                 $timeFrame->Date
             );
-        }
-
-        return $filterdTimeFrames;
+        }, $filterdTimeFrames);
     }
 
     /**
@@ -184,19 +187,20 @@ class TimeFrame extends AbstractEndpoint
      *
      * @return array
      */
-    protected function getTimeFrameOptions(&$filterdTimeFrames, $timeFrames, $date)
+    private function getTimeFrameOptions(&$filterdTimeFrames, $timeFrames, $date)
     {
+        $timeFrames = array_filter($timeFrames, function ($value) {
+            $options = $value->Options;
+            return $this->validateOnEvening($options->string[0]);
+        });
+
         foreach ($timeFrames as $timeFrame) {
-
-            if (!$this->validateOnEvening($timeFrame->Options->string[0])) {
-                continue;
-            }
-
+            $options = $timeFrame->Options;
             $filterdTimeFrames[] = [
                 'day'    => date('D', strtotime($date)) . ' (' . $date . ')',
                 'from'   => $timeFrame->From,
                 'to'     => $timeFrame->To,
-                'option' => $timeFrame->Options->string[0],
+                'option' => $options->string[0],
                 'date'   => $date
             ];
         }
@@ -211,7 +215,7 @@ class TimeFrame extends AbstractEndpoint
      *
      * @return bool
      */
-    protected function validateOnEvening($option)
+    private function validateOnEvening($option)
     {
         if ($option !== self::TIMEFRAME_OPTION_EVENING) {
             return true;
@@ -225,31 +229,17 @@ class TimeFrame extends AbstractEndpoint
     }
 
     /**
-     * @todo : Add logic to check if the request is passed to CuttOff times.
-     * @todo : Move to validation Classes.
-     *
-     * @return bool
-     */
-    protected function canUseSameDay()
-    {
-        if (!$this->shippingOptions->isSameDayDeliveryActive()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * @todo : Move to validation Classes.
      * @param $timeFrameDate
      *
      * @return bool
      */
-    protected function isSameDay($timeFrameDate)
+    private function isSameDay($timeFrameDate)
     {
         if ($this->postNLhelper->getDateYmd() == $this->postNLhelper->getDateYmd($timeFrameDate)) {
             return true;
         }
+
         return false;
     }
 }

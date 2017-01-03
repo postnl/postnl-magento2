@@ -40,7 +40,7 @@
 namespace TIG\PostNL\Webservices;
 
 use \Magento\Framework\ObjectManagerInterface;
-use \Magento\Framework\Webapi\Exception;
+use \Magento\Framework\Webapi\Exception as WebapiException;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 
 /**
@@ -63,16 +63,16 @@ class SoapOld
     const TEST_PASSWORD         = '91609cb721bda4c7c9dd855798535c18b6e56629';
 
     /** @var AccountConfiguration */
-    protected $accountConfig;
+    private $accountConfig;
 
     /** @var ObjectManagerInterface */
-    protected $objectManager;
+    private $objectManager;
 
     /**
      * @param ObjectManagerInterface $objectManagerInterface
      * @param AccountConfiguration   $accountConfiguration
      *
-     * @throws Exception
+     * @throws WebapiException
      */
     public function __construct(
         ObjectManagerInterface $objectManagerInterface,
@@ -90,37 +90,34 @@ class SoapOld
      * @param $requestParams
      *
      * @return mixed
-     * @throws Exception
+     * @throws WebapiException
      */
     public function call($type, $service, $requestParams)
     {
-        $soapClient = $this->create(
-            $this->createWsdlUrl($service),
-            $this->getOptionsArray()
-        );
-
+        $soapClient = $this->create($this->createWsdlUrl($service));
         $soapClient->__setSoapHeaders($this->getSoapHeader());
+
         try {
             return $soapClient->__call($type, [$requestParams]);
-        } catch (Exception $e) {
-
-            throw new Exception(
-                __('Faild on soap call : %1', $e->getMessage()),
+        } catch (WebapiException $exception) {
+            throw new WebapiException(
+            // @codingStandardsIgnoreLine
+                __('Faild on soap call : %1', $exception->getMessage()),
                 0,
-                Exception::HTTP_INTERNAL_ERROR
+                WebapiException::HTTP_INTERNAL_ERROR
             );
         }
     }
 
     /**
      * @param $wsdlUrl
-     * @param $options
      *
      * @return \SoapClient
      */
-    public function create($wsdlUrl, $options)
+    public function create($wsdlUrl)
     {
-        $soapClient = new \SoapClient($wsdlUrl,  $options);
+        // @codingStandardsIgnoreLine
+        $soapClient = new \SoapClient($wsdlUrl, $this->getOptionsArray());
         return $soapClient;
     }
 
@@ -135,55 +132,52 @@ class SoapOld
     }
 
     /**
-     * @param string $uri
-     * @param bool $isCif
-     *
      * @return array
      */
-    protected function getOptionsArray($uri = '', $isCif = true)
+    private function getOptionsArray()
     {
         $options = [
-            'uri'            => $uri,
             'soap_version'   => SOAP_1_1,
             'features'       => SOAP_SINGLE_ELEMENT_ARRAYS,
             'trace'          => true,
         ];
 
-        if (!$isCif) {
-            $options['stream_context'] = stream_context_create(
-                ['http' => ['header' => 'apikey:'.$this->accountConfig->getApiKey()]]
-            );
-        }
         return $options;
     }
 
     /**
-     * @todo is only needed for old CIF calls so can be removed once API is fixed.
      * @return mixed
      */
-    protected function getSoapHeader()
+    private function getSoapHeader()
     {
+        // @codingStandardsIgnoreStart
         $firstNode  = new \SoapVar(self::TEST_USERNAME, XSD_STRING, null, null, 'Username', self::HEADER_NAMESPACE);
         $secondNode = new \SoapVar(self::TEST_PASSWORD, XSD_STRING, null, null, 'Password', self::HEADER_NAMESPACE);
         $token      = new \SoapVar(
-            [$firstNode, $secondNode], SOAP_ENC_OBJECT, null, null, 'usernameToken', self::HEADER_NAMESPACE
+            [$firstNode, $secondNode],
+            SOAP_ENC_OBJECT,
+            null,
+            null,
+            'usernameToken',
+            self::HEADER_NAMESPACE
         );
         $security   = new \SoapVar([$token], SOAP_ENC_OBJECT, null, null, 'Security', self::HEADER_NAMESPACE);
 
         return new \SOAPHeader(self::HEADER_NAMESPACE, 'Security', $security, false);
+        // @codingStandardsIgnoreEnd
     }
 
     /**
-     * @throws Exception
+     * @throws WebapiException
      */
-    protected function checkSoapExtensionIsLoaded()
+    private function checkSoapExtensionIsLoaded()
     {
         if (!extension_loaded('soap')) {
-            throw new Exception(
+            throw new WebapiException(
                 // @codingStandardsIgnoreLine
                 __('SOAP extension is not loaded.'),
                 0,
-                Exception::HTTP_INTERNAL_ERROR
+                WebapiException::HTTP_INTERNAL_ERROR
             );
         }
     }

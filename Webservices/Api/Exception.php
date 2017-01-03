@@ -38,33 +38,35 @@
  */
 namespace TIG\PostNL\Webservices\Api;
 
-class Exception extends \TIG\PostNL\Exception
+use TIG\PostNL\Exception as PostNLException;
+
+class Exception extends PostNLException
 {
     /**
      * XML sent to CIF by the extension
      *
      * @var string The XML string sent to CIF
      */
-    protected $requestXml;
+    private $requestXml;
 
     /**
      * XML received in response
      *
      * @var string The XML string CIF returned
      */
-    protected $responseXml;
+    private $responseXml;
 
     /**
      * Array of error numbers
      *
      * @var array
      */
-    protected $errorNumbers = [];
+    private $errorNumbers = [];
 
     /**
      * @var array
      */
-    protected $messages = [];
+    private $messages = [];
 
     /**
      * Set $_requestXml to specified value
@@ -175,14 +177,16 @@ class Exception extends \TIG\PostNL\Exception
      */
     public function getMessages($type = '')
     {
-        if ('' == $type) {
-            $arrRes = array();
-            foreach ($this->messages as $messageType => $messages) {
-                $arrRes = array_merge($arrRes, $messages);
-            }
-            return $arrRes;
+        if ('' !== $type) {
+            return isset($this->messages[$type]) ? $this->messages[$type] : [];
         }
-        return isset($this->messages[$type]) ? $this->messages[$type] : array();
+
+        $arrRes = [];
+        foreach ($this->messages as $messageType => $messages) {
+            $arrRes = array_merge($arrRes, $messages);
+        }
+
+        return $arrRes;
     }
 
     /**

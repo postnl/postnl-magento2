@@ -43,7 +43,6 @@ namespace TIG\PostNL\Webservices\Endpoints;
  * @todo : Waiting on PostNL to finish the API for DeliveryDate, so needs to be refactored when API is ready.
  */
 use TIG\PostNL\Webservices\SoapOld;
-use TIG\PostNL\Webservices\Helpers\Deliveryoptions;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Webservices\Api\CutoffTimes;
@@ -57,49 +56,59 @@ use TIG\PostNL\Webservices\Api\CutoffTimes;
  */
 class DeliveryDate
 {
-    /** @var string */
-    protected $version = '2_1';
+    /**
+     * @var string
+     */
+    private $version = '2_1';
 
-    /** @var string */
-    protected $service = 'DeliveryDateWebService';
+    /**
+     * @var string
+     */
+    private $service = 'DeliveryDateWebService';
 
-    /** @var string */
-    protected $type = 'GetDeliveryDate';
+    /**
+     * @var string
+     */
+    private $type = 'GetDeliveryDate';
 
-    /** @var  SoapOld */
-    protected $soap;
+    /**
+     * @var SoapOld
+     */
+    private $soap;
 
-    /** @var  Array */
-    protected $requestParams;
+    /**
+     * @var Array
+     */
+    private $requestParams;
 
-    /** @var Deliveryoptions */
-    protected $deliveryOptionsHelper;
+    /**
+     * @var Message
+     */
+    private $message;
 
-    /** @var Message */
-    protected $message;
+    /**
+     * @var  CutoffTimes
+     */
+    private $cutoffTimes;
 
-    /** @var  CutoffTimes */
-    protected $cutoffTimes;
-
-    /** @var Data  */
-    protected $postNLhelper;
+    /**
+     * @var Data
+     */
+    private $postNLhelper;
 
     /**
      * @param SoapOld         $soap
      * @param Data            $postNLhelper
-     * @param Deliveryoptions $deliveryoptions
      * @param Message         $message
      * @param CutoffTimes     $cutoffTimes
      */
     public function __construct(
         SoapOld $soap,
         Data $postNLhelper,
-        Deliveryoptions $deliveryoptions,
         Message $message,
         CutoffTimes $cutoffTimes
     ) {
         $this->soap = $soap;
-        $this->deliveryOptionsHelper = $deliveryoptions;
         $this->postNLhelper = $postNLhelper;
         $this->message = $message;
         $this->cutoffTimes = $cutoffTimes;
@@ -131,17 +140,16 @@ class DeliveryDate
                 'ShippingDuration'   => '1',
                 'AllowSundaySorting' => 'true',
                 'CutOffTimes'        => $this->cutoffTimes->get(),
-                'Options'            => $this->deliveryOptionsHelper->getDeliveryDatesOptions()
+                'Options'            => ['Sunday', 'Daytime', 'Evening']
             ],
             'Message' => $this->message->get('')
         ];
-
     }
 
     /**
      * @return string
      */
-    protected function getWsdlUrl()
+    public function getWsdlUrl()
     {
         return $this->service .'/'. $this->version;
     }
