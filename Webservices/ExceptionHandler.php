@@ -55,7 +55,7 @@ class ExceptionHandler
     /**
      * @var
      */
-    protected $log;
+    private $log;
 
     /**
      * @param Log $log
@@ -162,7 +162,7 @@ class ExceptionHandler
      *
      * @return string
      */
-    protected function formatXml($xml)
+    private function formatXml($xml)
     {
         $domDocument = new \DOMDocument();
         $domDocument->loadXML($xml);

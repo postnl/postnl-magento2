@@ -48,7 +48,7 @@ use TIG\PostNL\Config\Provider\WebshopSettings;
 class CutoffTimes
 {
     /** @var  WebshopSettings */
-    protected $webshopSettings;
+    private $webshopSettings;
 
     /**
      * @param WebshopSettings $webshopSettings
@@ -60,7 +60,6 @@ class CutoffTimes
     }
 
     /**
-     * @todo : If no shipmentDays log exteption and return false.
      * @return array
      */
     public function get()
