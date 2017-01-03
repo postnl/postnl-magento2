@@ -46,7 +46,8 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
             countryCode : null,
             street : null,
             hasAddress :false,
-            deliverydays: []
+            deliverydays: [],
+            selectedRow : null
         },
 
         initObservable : function () {
@@ -74,11 +75,9 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
                 if (!self.street) {
                     //  Create own data object.
                     self.street = {
-                        street : {
                             0: $("input[name*='street[0]']").val(),
                             1: $("input[name*='street[1]']").val()
-                        }
-                    };
+                        };
                 }
 
                 if (!self.postalCode || !self.countryCode || !self.street) {
@@ -108,7 +107,7 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
         },
 
         setDeliverydays : function (data) {
-          this.deliverydays(data);
+          self.deliverydays(data);
         },
 
         getDeliverydays : function (address) {
@@ -117,6 +116,7 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
                 url : '/postnl/deliveryoptions',
                 data : {type: 'deliverydays', address: address}
             }).done(function (data) {
+                console.info(data);
                 self.setDeliverydays(data);
             }).fail(function (data) {
                 console.log(data);
