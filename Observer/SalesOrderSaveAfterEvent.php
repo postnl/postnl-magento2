@@ -95,7 +95,7 @@ class SalesOrderSaveAfterEvent implements ObserverInterface
         $postnlOrder = $this->getPostNLOrder($magentoOrder);
 
         if ($postnlOrder->getId() === null) {
-            $postnlOrder->setData('order_id', $magentoOrder->getId());
+            $postnlOrder->setDœata('order_id', $magentoOrder->getId());
             $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
 
             $this->orderRepository->save($postnlOrder);

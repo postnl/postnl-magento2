@@ -49,6 +49,16 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
             pickupAddresses: []
         },
 
+        daysSorting: {
+            'monday': 1,
+            'tuesday': 2,
+            'wednesday': 3,
+            'thursday': 4,
+            'friday': 5,
+            'saturday': 6,
+            'sunday': 7
+        },
+
         initObservable : function () {
             self = this;
 
@@ -105,16 +115,6 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
             return this;
         },
 
-        showOpeningHours : function (data, LocationCode) {
-            var ul = $('.'+LocationCode);
-            ul.empty(); // Because Magento loops more than once through the template.
-            $.each(data, function ( key, value ) {
-                ul.append("<li>" + key + " : " + value.string[0] + "</li>");
-            });
-
-            ul.toggle();
-        },
-
         setPickupAddresses : function (data) {
             this.pickupAddresses(data);
         },
@@ -125,11 +125,67 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
                 url : '/postnl/deliveryoptions',
                 data : {type: 'locations', address: address}
             }).done(function (data) {
+                data = ko.utils.arrayMap(data, function (data) {
+                    return new Location(data);
+                });
+
                 self.setPickupAddresses(data);
             }).fail(function (data) {
                 console.log(data);
             });
-        }
+        },
 
+        isRowSelected: function ($data) {
+            return JSON.stringify(this.selectedRow()) == JSON.stringify($data);
+        },
+
+        getOpeningHours: function (OpeningHours) {
+            var output = [], record, hours;
+
+            $.each(OpeningHours, function (index, record) {
+                output.push({
+                    day   : index,
+                    hours : this.getHours(record)
+                });
+            }.bind(this));
+
+            return this.sortDays(output);
+        },
+
+        getHours: function (hours) {
+            var output = [];
+            $.each(hours, function (index, hour) {
+                output.push(hour[0]);
+            });
+
+            return output;
+        },
+
+        sortDays: function (data) {
+            return data.sort(function (a, b) {
+                var day1 = a.day.toLowerCase();
+                var day2 = b.day.toLowerCase();
+                return this.daysSorting[day1] > this.daysSorting[day2];
+            }.bind(this));
+        },
+
+        toggle: function ($data) {
+            $data.expanded(!$data.expanded());
+        }
     });
+
+    function Location(data) {
+        $.each(data, function (key, value) {
+            this[key] = value;
+        }.bind(this));
+
+        this.expanded = ko.observable(false);
+        this.day = data.day;
+        this.hours = data.hours;
+
+        this.toggle = function() {
+            this.expanded(!this.expanded());
+        };
+    }
 });
+

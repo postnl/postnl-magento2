@@ -42,15 +42,16 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
     return Component.extend({
         defaults: {
             template: 'TIG_PostNL/delivery',
-            postalCode : null,
-            countryCode : null,
-            street : null,
-            hasAddress :false,
+            postalCode: null,
+            countryCode: null,
+            street: null,
+            hasAddress:false,
             deliverydays: [],
-            selectedRow : null
+            selectedRow: null,
+            odd: false
         },
 
-        initObservable : function () {
+        initObservable: function () {
             self = this;
 
             this._super().observe([
@@ -106,13 +107,13 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
             return this;
         },
 
-        setDeliverydays : function (data) {
-          self.deliverydays(data);
+        setDeliverydays: function (data) {
+            self.deliverydays(data);
         },
 
-        getDeliverydays : function (address) {
+        getDeliverydays: function (address) {
             jQuery.ajax({
-                method: "POST",
+                method: 'POST',
                 url : '/postnl/deliveryoptions',
                 data : {type: 'deliverydays', address: address}
             }).done(function (data) {
@@ -121,6 +122,16 @@ define(['uiComponent', 'ko', 'Magento_Checkout/js/model/quote', 'jquery'], funct
             }).fail(function (data) {
                 console.log(data);
             });
+        },
+
+        isRowSelected: function ($data) {
+            return JSON.stringify(this.selectedRow()) == JSON.stringify($data);
+        },
+
+        isOdd: function () {
+            this.odd = !this.odd;
+
+            return this.odd;
         }
     });
 });
