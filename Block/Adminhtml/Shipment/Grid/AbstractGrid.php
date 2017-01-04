@@ -42,7 +42,6 @@ use TIG\PostNL\Model\ShipmentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
-use TIG\PostNL\Model\Shipment as PostNLShipment;
 
 abstract class AbstractGrid extends Column
 {
@@ -50,18 +49,6 @@ abstract class AbstractGrid extends Column
      * @var array
      */
     protected $items = [];
-
-    /**
-     * @var array
-     */
-    protected $ids = [];
-
-    /**
-     * Holds the loaded items.
-     *
-     * @var array
-     */
-    protected $models = [];
 
     /**
      * @var ShipmentFactory
@@ -111,19 +98,7 @@ abstract class AbstractGrid extends Column
      */
     public function prepareData()
     {
-        $ids = $this->collectIds();
-
-        /** @var PostNLShipment $postnlShipment */
-        $postnlShipment = $this->shipmentFactory->create();
-
-        /** @var \TIG\PostNL\Model\ResourceModel\Shipment\Collection $collection */
-        $collection = $postnlShipment->getCollection();
-        $collection->addFieldToFilter('shipment_id', ['in' => $ids]);
-
-        /** @var PostNLShipment $item */
-        foreach ($collection as $item) {
-            $this->models[$item->getShipmentId()] = $item;
-        }
+        return null;
     }
 
     /**
@@ -144,18 +119,4 @@ abstract class AbstractGrid extends Column
      */
     // @codingStandardsIgnoreLine
     abstract protected function getCellContents($item);
-
-    /**
-     * @param string $idColumn
-     *
-     * @return array
-     */
-    protected function collectIds($idColumn = 'entity_id')
-    {
-        foreach ($this->items as $item) {
-            $this->ids[] = $item[$idColumn];
-        }
-
-        return $this->ids;
-    }
 }

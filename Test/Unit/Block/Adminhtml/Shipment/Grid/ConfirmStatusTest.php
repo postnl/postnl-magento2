@@ -49,31 +49,22 @@ class ConfirmStatusTest extends TestCase
     public function getIsConfirmedProvider()
     {
         return [
-            'id_does_not_exists' => [99, null, false],
-            'exists_but_not_confirmed' => [1, null, false],
-            'exists_and_confirmed' => [1, '2016-11-19 21:13:12', true],
+            'exists_but_not_confirmed' => [null, false],
+            'exists_and_confirmed' => ['2016-11-19 21:13:12', true],
         ];
     }
 
     /**
-     * @param $entity_id
      * @param $confirmedAt
      * @param $expected
      *
      * @dataProvider getIsConfirmedProvider
      */
-    public function testGetCellContents($entity_id, $confirmedAt, $expected)
+    public function testGetCellContents($confirmedAt, $expected)
     {
-        $item = ['entity_id' => $entity_id];
+        $item = ['tig_postnl_confirmed_at' => $confirmedAt];
 
         $instance = $this->getFakeMock($this->instanceClass)->getMock();
-
-        $modelMock = $this->getFakeMock(PostNLShipment::class)->setMethods(['getConfirmedAt'])->getMock();
-        $getConfirmedAtExpects = $modelMock->expects($this->any());
-        $getConfirmedAtExpects->method('getConfirmedAt');
-        $getConfirmedAtExpects->willReturn($confirmedAt);
-
-        $this->setProperty('models', [1 => $modelMock], $instance);
 
         /** @var \Magento\Framework\Phrase $result */
         $result = $this->invokeArgs('getCellContents', [$item], $instance);
