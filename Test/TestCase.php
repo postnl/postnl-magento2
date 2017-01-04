@@ -58,7 +58,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return object
      */
-    public function getInstance($args = [])
+    public function getInstance(array $args = [])
     {
         return $this->getObject($this->instanceClass, $args);
     }
@@ -129,6 +129,24 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $method = $this->getMethod($method, $instance);
 
         return $method->invokeArgs($instance, $args);
+    }
+
+    /**
+     * @param      $property
+     * @param null $instance
+     *
+     * @return \ReflectionProperty
+     */
+    protected function getProperty($property, $instance = null)
+    {
+        if ($instance === null) {
+            $instance = $this->getInstance();
+        }
+
+        $reflection = new \ReflectionObject($instance);
+        $property = $reflection->getProperty($property);
+        $property->setAccessible(true);
+        return $property->getValue($instance);
     }
 
     /**

@@ -39,39 +39,93 @@
 namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
 
 use TIG\PostNL\Model\Shipment as PostNLShipment;
+use TIG\PostNL\Model\ShipmentFactory;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use Magento\Framework\View\Element\UiComponentFactory;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Framework\Stdlib\DateTime\DateTimeFormatterInterface;
 
-class ConfirmStatus extends AbstractGrid
+class ShippingDate extends AbstractGrid
 {
     /**
-     * @param $item
-     *
-     * @return string
+     * @var TimezoneInterface
      */
-    //@codingStandardsIgnoreLine
-    protected function getCellContents($item)
-    {
-        $confirmedAt = $this->getIsConfirmed($item);
+    private $timezoneInterface;
 
-        if (!$confirmedAt) {
-            return __('Not confirmed');
-        }
 
-        return __('Confirmed');
+    /**
+     * @var DateTimeFormatterInterface
+     */
+    private $dateTimeFormatterInterface;
+
+    public function __construct(
+        ContextInterface $context,
+        UiComponentFactory $uiComponentFactory,
+        ShipmentFactory $shipmentFactory,
+        TimezoneInterface $timezoneInterface,
+        DateTimeFormatterInterface $dateTimeFormatterInterface,
+        array $components = [],
+        array $data = []
+    ) {
+        parent::__construct($context, $uiComponentFactory, $shipmentFactory, $components, $data);
+
+        $this->timezoneInterface = $timezoneInterface;
+        $this->dateTimeFormatterInterface = $dateTimeFormatterInterface;
     }
 
     /**
      * @param $item
      *
-     * @return bool
+     * @return string
      */
-    protected function getIsConfirmed($item)
+    // @codingStandardsIgnoreLine
+    protected function getCellContents($item)
     {
-        $confirmedAt = $item['tig_postnl_confirmed_at'];
-
-        if ($confirmedAt === null) {
-            return false;
+        $shipAt = $this->getShipAt($item);
+        if ($shipAt === null) {
+            return null;
         }
 
-        return true;
+        return $this->formatShippingDate($shipAt);
+    }
+
+    /**
+     * @return null|string
+     */
+    private function getShipAt($item)
+    {
+        $shipAt = $item['tig_postnl_ship_at'];
+        if ($shipAt === null) {
+            return null;
+        }
+
+        return $shipAt;
+    }
+
+    /**
+     * @param $shipAt
+     *
+     * @return null|int
+     */
+    private function formatShippingDate($shipAt)
+    {
+        $now = $this->timezoneInterface->date();
+        $whenToShip = $this->timezoneInterface->date($shipAt);
+        $difference = $now->diff($whenToShip);
+        $days = $difference->days;
+
+        if ($days == 0) {
+            return __('Today');
+        }
+
+        if (!$difference->invert && $days === 1) {
+            return __('In 1 day');
+        }
+
+        if (!$difference->invert) {
+            return __('In %1 days', [$days]);
+        }
+
+        return $whenToShip->format('d M. Y');
     }
 }

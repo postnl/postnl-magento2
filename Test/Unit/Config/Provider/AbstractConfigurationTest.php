@@ -60,7 +60,7 @@ abstract class AbstractConfigurationTest extends TestCase
      *
      * @return DefaultConfiguration
      */
-    public function getInstance($args = [])
+    public function getInstance(array $args = [])
     {
         $this->initScopeConfigMock();
 

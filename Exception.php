@@ -51,6 +51,7 @@ class Exception extends LocalizedException
     public function __construct($message, $code = 0, $previous = null)
     {
         if (is_string($message)) {
+            // @codingStandardsIgnoreLine
             $message = __($message);
         }
 
@@ -76,17 +77,11 @@ class Exception extends LocalizedException
      */
     public function __toString()
     {
-        $string = "exception '"
-            . __CLASS__
-            . "' with message '"
-            . $this->getMessage()
-            . "'";
+        $string = "exception '" . __CLASS__ . "' with message '" . $this->getMessage() . "'";
 
         $code = $this->getCode();
         if ($code !== 0 && !empty($code)) {
-            $string .= " and code '"
-                . $this->getCode()
-                . "'";
+            $string .= " and code '" . $this->getCode() . "'";
         }
 
         $string .= " in "

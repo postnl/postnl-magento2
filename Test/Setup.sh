@@ -45,6 +45,7 @@ fi
 ( cd "${BUILD_DIR}/" && composer config minimum-stability dev )
 ( cd "${BUILD_DIR}/" && composer config repositories.postnl vcs ${TRAVIS_BUILD_DIR} )
 ( cd "${BUILD_DIR}/" && composer require tig/postnl:dev-${TRAVIS_BRANCH} )
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then rm -rf "${BUILD_DIR}/.git" && cp -rf .git "${BUILD_DIR}/vendor/tig/postnl/.git"; fi
 ( cd "${BUILD_DIR}/vendor/tig/postnl" && git checkout ${TRAVIS_COMMIT} )
 
 if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then git checkout -qf FETCH_HEAD; fi

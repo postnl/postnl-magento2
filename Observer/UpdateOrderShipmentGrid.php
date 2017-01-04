@@ -33,23 +33,52 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
+namespace TIG\PostNL\Observer;
 
-class ConfirmDate extends AbstractGrid
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Sales\Model\ResourceModel\GridInterface;
+use TIG\PostNL\Model\Shipment;
+
+class UpdateOrderShipmentGrid implements ObserverInterface
 {
     /**
-     * @param $item
-     *
-     * @return string
-     *
-     * @todo: Finish implementation
+     * @var ResourceConnection
      */
-    // @codingStandardsIgnoreLine
-    protected function getCellContents($item)
+    private $resource;
+
+    /**
+     * @var GridInterface
+     */
+    private $entityGrid;
+
+    /**
+     * @param ResourceConnection $resource
+     * @param GridInterface      $entityGrid
+     */
+    public function __construct(
+        ResourceConnection $resource,
+        GridInterface $entityGrid
+    ) {
+        $this->resource = $resource;
+        $this->entityGrid = $entityGrid;
+    }
+
+    /**
+     * @param Observer $observer
+     *
+     * @return void
+     */
+    public function execute(Observer $observer)
     {
-        return '<strong>Confirm date</strong>';
+        /** @var Shipment $shipment */
+        $shipment = $observer->getData('data_object');
+        $shipmentId = $shipment->getShipmentId();
+
+        $this->entityGrid->refresh($shipmentId);
     }
 }

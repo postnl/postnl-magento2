@@ -43,15 +43,7 @@ use TIG\PostNL\Test\TestCase;
 
 class PostNLTest extends TestCase
 {
-    /**
-     * @param array $args
-     *
-     * @return object
-     */
-    function getInstance($args = [])
-    {
-        return $this->objectManager->getObject(PostNL::class, $args);
-    }
+    protected $instanceClass = PostNL::class;
 
     public function testAllowedMethods()
     {

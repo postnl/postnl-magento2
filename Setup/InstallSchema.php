@@ -44,6 +44,7 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 use TIG\PostNL\Setup\V110\InstallOrderTable;
 use TIG\PostNL\Setup\V110\InstallShipmentBarcodeTable;
 use TIG\PostNL\Setup\V110\InstallShipmentTable;
+use TIG\PostNL\Setup\V110\SalesShipmentGridColumns;
 
 class InstallSchema implements InstallSchemaInterface
 {
@@ -63,18 +64,26 @@ class InstallSchema implements InstallSchemaInterface
     private $installShipmentBarcodeTable;
 
     /**
+     * @var SalesShipmentGridColumns
+     */
+    private $salesShipmentGridColumns;
+
+    /**
      * @param InstallShipmentTable        $installShipmentTable
      * @param InstallOrderTable           $installOrderTable
      * @param InstallShipmentBarcodeTable $installShipmentBarcodeTable
+     * @param SalesShipmentGridColumns    $salesShipmentGridColumns
      */
     public function __construct(
         InstallShipmentTable $installShipmentTable,
         InstallOrderTable $installOrderTable,
-        InstallShipmentBarcodeTable $installShipmentBarcodeTable
+        InstallShipmentBarcodeTable $installShipmentBarcodeTable,
+        SalesShipmentGridColumns $salesShipmentGridColumns
     ) {
         $this->installShipmentTable = $installShipmentTable;
         $this->installOrderTable = $installOrderTable;
         $this->installShipmentBarcodeTable = $installShipmentBarcodeTable;
+        $this->salesShipmentGridColumns = $salesShipmentGridColumns;
     }
 
     /**
@@ -93,6 +102,7 @@ class InstallSchema implements InstallSchemaInterface
             $this->installOrderTable->install($setup, $context);
             $this->installShipmentTable->install($setup, $context);
             $this->installShipmentBarcodeTable->install($setup, $context);
+            $this->salesShipmentGridColumns->install($setup, $context);
         }
 
         $setup->endSetup();

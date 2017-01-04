@@ -36,58 +36,41 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Model;
+namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Shipment\Grid;
 
-use Magento\Framework\DataObject\IdentityInterface;
-use Magento\Framework\Model\AbstractModel;
+use TIG\PostNL\Block\Adminhtml\Shipment\Grid\ConfirmStatus;
+use TIG\PostNL\Model\Shipment as PostNLShipment;
+use TIG\PostNL\Test\TestCase;
 
-/**
- * @method $this setShipmentId(string)
- * @method null|string getShipmentId
- * @method $this setOrderId(string)
- * @method null|string getOrderId
- * @method $this setMainBarcode(string)
- * @method null|string getMainBarcode
- * @method $this setProductCode(string)
- * @method null|string getProductCode
- * @method $this setShipmentType(string)
- * @method null|string getShipmentType
- * @method $this setIsPakjegemak(string)
- * @method null|string getIsPakjegemak
- * @method $this setShipAt(string)
- * @method null|string getShipAt
- * @method $this setConfirmedAt(string)
- * @method null|string getConfirmedAt
- * @method $this setCreatedAt(string)
- * @method null|string getCreatedAt
- * @method $this setUpdatedAt(string)
- * @method null|string getUpdatedAt
- */
-class Shipment extends AbstractModel implements ShipmentInterface, IdentityInterface
+class ConfirmStatusTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    // @codingStandardsIgnoreLine
-    protected $_eventPrefix = 'tig_postnl_shipment';
+    protected $instanceClass = ConfirmStatus::class;
 
-    const CACHE_TAG = 'tig_postnl_shipment';
-
-    /**
-     * Constructor
-     */
-    // @codingStandardsIgnoreLine
-    protected function _construct()
+    public function getIsConfirmedProvider()
     {
-        // @codingStandardsIgnoreLine
-        $this->_init('TIG\PostNL\Model\ResourceModel\Shipment');
+        return [
+            'exists_but_not_confirmed' => [null, false],
+            'exists_and_confirmed' => ['2016-11-19 21:13:12', true],
+        ];
     }
 
     /**
-     * @return array
+     * @param $confirmedAt
+     * @param $expected
+     *
+     * @dataProvider getIsConfirmedProvider
      */
-    public function getIdentities()
+    public function testGetCellContents($confirmedAt, $expected)
     {
-        return [self::CACHE_TAG . '_' . $this->getId()];
+        $item = ['tig_postnl_confirmed_at' => $confirmedAt];
+
+        $instance = $this->getFakeMock($this->instanceClass)->getMock();
+
+        /** @var \Magento\Framework\Phrase $result */
+        $result = $this->invokeArgs('getCellContents', [$item], $instance);
+
+        $this->assertInstanceOf(\Magento\Framework\Phrase::class, $result);
+        $text = ucfirst(($expected ? '' : 'not ') . 'confirmed');
+        $this->assertEquals($text, $result->getText());
     }
 }

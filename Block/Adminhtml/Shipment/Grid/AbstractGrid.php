@@ -38,10 +38,42 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
 
+use TIG\PostNL\Model\ShipmentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use Magento\Framework\View\Element\UiComponentFactory;
 
 abstract class AbstractGrid extends Column
 {
+    /**
+     * @var array
+     */
+    protected $items = [];
+
+    /**
+     * @var ShipmentFactory
+     */
+    protected $shipmentFactory;
+
+    /**
+     * @param ContextInterface     $context
+     * @param UiComponentFactory   $uiComponentFactory
+     * @param ShipmentFactory      $shipmentFactory
+     * @param array                $components
+     * @param array                $data
+     */
+    public function __construct(
+        ContextInterface $context,
+        UiComponentFactory $uiComponentFactory,
+        ShipmentFactory $shipmentFactory,
+        array $components = [],
+        array $data = []
+    ) {
+        parent::__construct($context, $uiComponentFactory, $components, $data);
+
+        $this->shipmentFactory = $shipmentFactory;
+    }
+
     /**
      * @param array $dataSource
      *
@@ -50,28 +82,34 @@ abstract class AbstractGrid extends Column
     public function prepareDataSource(array $dataSource)
     {
         if (isset($dataSource['data']['items'])) {
-            $items = $dataSource['data']['items'];
-            $items = $this->handleItems($items);
+            $this->items = $dataSource['data']['items'];
 
-            $dataSource['data']['items'] = $items;
+            $this->prepareData();
+            $this->handleItems();
+
+            $dataSource['data']['items'] = $this->items;
         }
 
         return $dataSource;
     }
 
     /**
-     * @param array $items
-     *
+     * Load all the needed data in only 1 query.
+     */
+    public function prepareData()
+    {
+        return null;
+    }
+
+    /**
      * @return array
      */
     // @codingStandardsIgnoreLine
-    protected function handleItems(array $items)
+    protected function handleItems()
     {
-        foreach ($items as $index => $item) {
-            $items[$index][$this->getData('name')] = $this->getCellContents($item);
+        foreach ($this->items as $index => $item) {
+            $this->items[$index][$this->getData('name')] = $this->getCellContents($item);
         }
-
-        return $items;
     }
 
     /**
