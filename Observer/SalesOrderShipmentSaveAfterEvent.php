@@ -40,6 +40,7 @@ namespace TIG\PostNL\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Model\ShipmentFactory;
 use TIG\PostNL\Model\ShipmentBarcodeFactory;
 use TIG\PostNL\Webservices\Endpoints\Barcode;
@@ -85,20 +86,31 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     {
         /** @var \Magento\Sales\Model\Order\Shipment $shipment */
         $shipment = $observer->getData('data_object');
+        $shipmentId = $shipment->getId();
 
         /** @var \TIG\PostNL\Model\Shipment $model */
         $model = $this->shipmentFactory->create();
-        $model->setData('shipment_id', $shipment->getId());
+        $model->setData('shipment_id', $shipmentId);
         $model->save();
 
+        $this->saveShipmentBarcode($shipmentId);
+    }
+
+    /**
+     * Generate and save a new barcode for the just saved shipment
+     *
+     * @param $shipmentId
+     */
+    private function saveShipmentBarcode($shipmentId)
+    {
         $barcode = $this->generateBarcode();
 
         /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
         $barcodeModel = $this->shipmentBarcodeFactory->create();
-        $barcodeModel->setData('shipment_id', $shipment->getId());
-        $barcodeModel->setData('type', $barcodeModel::BARCODE_TYPE_SHIPMENT);
-        $barcodeModel->setData('number', 0); //TODO: save the correct number
-        $barcodeModel->setData('value', $barcode);
+        $barcodeModel->setShipmentId($shipmentId);
+        $barcodeModel->setType(ShipmentBarcode::BARCODE_TYPE_SHIPMENT);
+        $barcodeModel->setNumber(0); //TODO: save the correct number
+        $barcodeModel->setValue($barcode);
         $barcodeModel->save();
     }
 

@@ -39,8 +39,10 @@
 namespace TIG\PostNL\Unit\Observer;
 
 use Magento\Framework\Event\Observer;
+use Magento\Framework\Phrase;
 use Magento\Sales\Model\Order\Shipment;
 use TIG\PostNL\Observer\SalesOrderShipmentSaveAfterEvent;
+use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Test\TestCase;
 
 class SalesOrderShipmentSaveAfterEventTest extends TestCase
@@ -50,6 +52,7 @@ class SalesOrderShipmentSaveAfterEventTest extends TestCase
     public function testExecute()
     {
         $id = rand(1000, 2000);
+        $barcode = '3STOTA123457890';
 
         $shipmentFactoryMock = $this->getFakeMock('\TIG\PostNL\Model\ShipmentFactory');
         $shipmentFactoryMock->setMethods(['create', 'setData', 'save']);
@@ -74,10 +77,65 @@ class SalesOrderShipmentSaveAfterEventTest extends TestCase
         $getIdMock->method('getId');
         $getIdMock->willReturn($id);
 
+        $shipmentBarcodeFactoryMock = $this->getShipmentBarcodeFactoryMock($id, $barcode);
+
+        $barcodeMock = $this->getFakeMock('TIG\PostNL\Webservices\Endpoints\Barcode');
+        $barcodeMock->setMethods(['call']);
+        $barcodeMock = $barcodeMock->getMock();
+
+        $callExpects = $barcodeMock->expects($this->once());
+        $callExpects->method('call');
+        $callExpects->willReturn((Object)['Barcode' => $barcode]);
+
         /** @var Observer $observer */
         $observer = $this->objectManager->getObject(Observer::class);
         $observer->setData('data_object', $shipmentMock);
 
-        $this->getInstance(['shipmentFactory' => $shipmentFactoryMock])->execute($observer);
+        $instance = $this->getInstance([
+            'shipmentFactory' => $shipmentFactoryMock,
+            'shipmentBarcodeFactory' => $shipmentBarcodeFactoryMock,
+            'barcode' => $barcodeMock
+        ]);
+        $instance->execute($observer);
+    }
+
+    /**
+     * @param $id
+     * @param $barcode
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getShipmentBarcodeFactoryMock($id, $barcode)
+    {
+        $shipmentBarcodeFactoryMock = $this->getMockBuilder('\TIG\PostNL\Model\ShipmentBarcodeFactory');
+        $shipmentBarcodeFactoryMock->setMethods(
+            ['create', 'setShipmentId', 'setType', 'setNumber', 'setValue', 'save']
+        );
+        $shipmentBarcodeFactoryMock = $shipmentBarcodeFactoryMock->getMock();
+
+        $createExpects = $shipmentBarcodeFactoryMock->expects($this->once());
+        $createExpects->method('create');
+        $createExpects->willReturnSelf();
+
+        $setShipmentIdExpects = $shipmentBarcodeFactoryMock->expects($this->once());
+        $setShipmentIdExpects->method('setShipmentId');
+        $setShipmentIdExpects->with($id);
+
+        $setShipmentIdExpects = $shipmentBarcodeFactoryMock->expects($this->once());
+        $setShipmentIdExpects->method('setType');
+        $setShipmentIdExpects->with(ShipmentBarcode::BARCODE_TYPE_SHIPMENT);
+
+        $setShipmentIdExpects = $shipmentBarcodeFactoryMock->expects($this->once());
+        $setShipmentIdExpects->method('setNumber');
+        $setShipmentIdExpects->with(0);
+
+        $setShipmentIdExpects = $shipmentBarcodeFactoryMock->expects($this->once());
+        $setShipmentIdExpects->method('setValue');
+        $setShipmentIdExpects->with($barcode);
+
+        $saveExpects = $shipmentBarcodeFactoryMock->expects($this->once());
+        $saveExpects->method('save');
+
+        return $shipmentBarcodeFactoryMock;
     }
 }
