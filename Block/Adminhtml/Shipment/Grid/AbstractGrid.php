@@ -69,20 +69,20 @@ abstract class AbstractGrid extends Column
     protected $shipmentFactory;
 
     /**
-     * @param ContextInterface     $contextInterface
+     * @param ContextInterface     $context
      * @param UiComponentFactory   $uiComponentFactory
      * @param ShipmentFactory      $shipmentFactory
      * @param array                $components
      * @param array                $data
      */
     public function __construct(
-        ContextInterface $contextInterface,
+        ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
         ShipmentFactory $shipmentFactory,
         array $components = [],
         array $data = []
     ) {
-        parent::__construct($contextInterface, $uiComponentFactory, $components, $data);
+        parent::__construct($context, $uiComponentFactory, $components, $data);
 
         $this->shipmentFactory = $shipmentFactory;
     }
