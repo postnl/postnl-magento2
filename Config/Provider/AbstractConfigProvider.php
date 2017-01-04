@@ -39,6 +39,9 @@
 
 namespace TIG\PostNL\Config\Provider;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Encryption\Encryptor;
+
 /**
  * Class AbstractConfigProvider
  *
@@ -47,17 +50,27 @@ namespace TIG\PostNL\Config\Provider;
 abstract class AbstractConfigProvider
 {
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var ScopeConfigInterface
      */
+    // @codingStandardsIgnoreLine
     protected $scopeConfig;
 
     /**
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @var Encryptor
+     */
+    // @codingStandardsIgnoreLine
+    protected $crypt;
+
+    /**
+     * @param ScopeConfigInterface $scopeConfig
+     * @param Encryptor            $crypt
      */
     public function __construct(
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        Encryptor $crypt
     ) {
         $this->scopeConfig = $scopeConfig;
+        $this->crypt = $crypt;
     }
 
     /**
@@ -68,6 +81,7 @@ abstract class AbstractConfigProvider
      *
      * @return mixed
      */
+    // @codingStandardsIgnoreLine
     protected function getConfigFromXpath($xpath, $store = null)
     {
         return $this->scopeConfig->getValue(

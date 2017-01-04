@@ -45,16 +45,16 @@ namespace TIG\PostNL\Block\Config\Form\Field;
  */
 class Fieldset extends \Magento\Config\Block\System\Config\Form\Fieldset
 {
-    protected $classNames = [
+    private $classNames = [
         '1' => 'modus_live',
         '2' => 'modus_test',
         '0' => 'modus_off'
     ];
 
-    // @codingStandardsIgnoreStart
     /**
      * {@inheritdoc}
      */
+    // @codingStandardsIgnoreLine
     protected function _getFrontendClass($element)
     {
         $modus = $this->_scopeConfig->getValue(
@@ -68,5 +68,4 @@ class Fieldset extends \Magento\Config\Block\System\Config\Form\Fieldset
 
         return parent::_getFrontendClass($element) . ' ' . $className;
     }
-    // @codingStandardsIgnoreEnd
 }

@@ -46,6 +46,6 @@ class Shipment extends AbstractDb
     protected function _construct()
     {
         // @codingStandardsIgnoreLine
-        $this->_init('tig_postnl_shipment', 'tig_postnl_shipment_id');
+        $this->_init('tig_postnl_shipment', 'entity_id');
     }
 }

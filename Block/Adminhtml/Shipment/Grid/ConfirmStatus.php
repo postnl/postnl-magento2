@@ -38,17 +38,47 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
 
+use TIG\PostNL\Model\Shipment as PostNLShipment;
+
 class ConfirmStatus extends AbstractGrid
 {
     /**
      * @param $item
      *
      * @return string
-     *
-     * @todo: Finish implementation
      */
+    //@codingStandardsIgnoreLine
     protected function getCellContents($item)
     {
-        return '<strong>Confirm status</strong>';
+        $entity_id = $item['entity_id'];
+        $confirmedAt = $this->getIsConfirmed($entity_id);
+
+        if (!$confirmedAt) {
+            return __('Not confirmed');
+        }
+
+        return __('Confirmed');
+    }
+
+    /**
+     * @param $entity_id
+     *
+     * @return bool
+     */
+    protected function getIsConfirmed($entity_id)
+    {
+        if (!array_key_exists($entity_id, $this->models)) {
+            return false;
+        }
+
+        /** @var PostNLShipment $model */
+        $model = $this->models[$entity_id];
+        $confirmedAt = $model->getConfirmedAt();
+
+        if ($confirmedAt === null) {
+            return false;
+        }
+
+        return true;
     }
 }

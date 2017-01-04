@@ -53,6 +53,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      * All product options.
      * @var array
      */
+    // @codingStandardsIgnoreLine
     protected $availableOptions = [
         // Standard Options
         '3085' => [
@@ -191,6 +192,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         ],
     ];
 
+    // @codingStandardsIgnoreLine
     protected $groups = [
         'standard_options'   => 'Domestic options',
         'pakjegemak_options' => 'Post Office options',

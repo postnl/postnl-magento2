@@ -48,15 +48,7 @@ use TIG\PostNL\Test\TestCase;
  */
 class OptionsAbstractTest extends TestCase
 {
-    /**
-     * @param array $args
-     *
-     * @return object
-     */
-    public function getInstance($args = [])
-    {
-        return $this->objectManager->getObject(OptionsAbstract::class, $args);
-    }
+    protected $instanceClass = OptionsAbstract::class;
 
     public function testSetOptionsBySupportedType()
     {
