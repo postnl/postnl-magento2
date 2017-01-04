@@ -1,19 +1,24 @@
 <div class="days">
     <div data-bind="foreach: deliverydays">
         <ul data-bind="foreach: $data">
-            <li data-bind="css: { 'selected-row': $root.selectedRow() == $index() }">
+            <li data-bind="css: { 'selected-row': $parents[1].selectedRow() == $index() }">
                 <!--@todo : check how the input value needs to be set.-->
-                <input type="radio"
-                       data-bind="
-                               value: date, checked: $root.selectedRow, checkedValue: $index"
-                       name="  deliveryday"
-                       id="    delivery-choice"
-                       class= " tig-postnl-delivery-radio" />
-                <b     class="tig-postnl-delivery-data" data-bind="text: day"></b><br/>
-                <span  class="tig-postnl-delivery-from" data-bind="text: from"></span>
-                <span class="tig-postnl-delivery-dash"> - </span>
-                <span  class="tig-postnl-delivery-to" data-bind="text: to"></span>
-                <span  class="tig-postnl-delivery-option" data-bind="text: option"></span>
+
+                <label>
+
+                    <input type="radio"
+                           data-bind=" value: date, checked: $parents[1].selectedRow, checkedValue: $index"
+                           name="      deliveryday"
+                           id="        delivery-choice"
+                           class="tig-postnl-delivery-radio" />
+                    <b     class="tig-postnl-delivery-data" data-bind="text: day"></b><br/>
+                    <span  class="tig-postnl-delivery-from" data-bind="text: from"></span>
+                    <span  class="tig-postnl-delivery-dash"> - </span>
+                    <span  class="tig-postnl-delivery-to" data-bind="text: to"></span>
+                    <span  class="tig-postnl-delivery-option" data-bind="text: option"></span>
+
+                </label>
+
             </li>
         </ul>
     </div>
