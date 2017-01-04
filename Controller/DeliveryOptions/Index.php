@@ -98,7 +98,7 @@ class Index extends Action
      * @param DeliveryDate      $deliveryDate
      * @param TimeFrame         $timeFrame
      * @param Locations         $locations
-     * @param Session           $checkouSession
+     * @param Session           $checkoutSession
      * @param AddressEnhancer   $addressEnhancer
      */
     public function __construct(
@@ -108,7 +108,7 @@ class Index extends Action
         DeliveryDate $deliveryDate,
         TimeFrame $timeFrame,
         Locations $locations,
-        Session $checkouSession,
+        Session $checkoutSession,
         AddressEnhancer $addressEnhancer
     ) {
         $this->resultPageFactory = $resultPageFactory;
@@ -116,7 +116,7 @@ class Index extends Action
         $this->deliveryEndpoint  = $deliveryDate;
         $this->timeFrameEndpoint = $timeFrame;
         $this->locationsEndpoint = $locations;
-        $this->checkoutSession   = $checkouSession;
+        $this->checkoutSession   = $checkoutSession;
         $this->addressEnhancer   = $addressEnhancer;
         parent::__construct($context);
     }
