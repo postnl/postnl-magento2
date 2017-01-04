@@ -33,64 +33,57 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Test\Unit\Helper;
 
-use Magento\Sales\Model\Order;
-use TIG\PostNL\Helper\Data as Helper;
 use TIG\PostNL\Test\TestCase;
-use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Helper\AddressEnhancer;
 
-class DataTest extends TestCase
+class AddressEnhancerTest extends TestCase
 {
-    protected $instanceClass = Helper::class;
+    protected $instanceClass = AddressEnhancer::class;
 
-    public function isPostNLOrderProvider()
+    public function addressProvider()
     {
+        $addressGiven = [
+            'postcode' => '1014AB',
+            'country'  => 'NL',
+            'street'   => [
+                'Kabelweg 37', ''
+            ]
+        ];
+
+        $expected = [
+            'postcode' => '1014AB',
+            'country'  => 'NL',
+            'street'   => [
+                'Kabelweg', ''
+            ],
+            'housenumber' => '37',
+            'housenumberExtension' => ''
+        ];
+
         return [
-            ['tig_postnl_regular', true],
-            ['dhl_regular', false],
+            [$addressGiven, $expected]
         ];
     }
 
     /**
-     * @param $shippingMethod
+     * @param $address
      * @param $expected
      *
-     * @dataProvider isPostNLOrderProvider
+     * @dataProvider addressProvider
      */
-    public function testIsPostNLOrder($shippingMethod, $expected)
+    public function testGet($address, $expected)
     {
-        /** @var Order $order */
-        $order = $this->objectManager->getObject(Order::class);
-        $order->setData('shipping_method', $shippingMethod);
+        $instance = $this->getInstance();
+        $instance->set($address);
 
-        /** @var bool $result */
-        $result = $this->getInstance()->isPostNLOrder($order);
+        $result = $instance->get();
 
         $this->assertEquals($expected, $result);
-    }
 
-    public function testGetAllowedDeliveryOptions()
-    {
-        $result = $this->getInstance()->getAllowedDeliveryOptions();
-        $this->assertTrue(is_array($result));
-    }
-
-    public function testGetAllowedDeliveryOptionsHasPakjeGemak()
-    {
-        $shippingOptionsConfigurationMock = $this->getFakeMock(ShippingOptions::class)->getMock();
-        $isPakjeGemakActiveExpects = $shippingOptionsConfigurationMock->expects($this->once());
-        $isPakjeGemakActiveExpects->method('isPakjegemakActive');
-        $isPakjeGemakActiveExpects->willReturn(true);
-
-        $instance = $this->getInstance([
-            'shippingOptions' => $shippingOptionsConfigurationMock
-        ]);
-
-        $result = $instance->getAllowedDeliveryOptions();
-        $this->assertContains('PG', $result);
     }
 }

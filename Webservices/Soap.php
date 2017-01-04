@@ -151,7 +151,7 @@ class Soap
             'soap_version'   => SOAP_1_2,
             'features'       => SOAP_SINGLE_ELEMENT_ARRAYS,
             'trace'          => true,
-            'cache_wsdl'     => WSDL_CACHE_BOTH,
+            'cache_wsdl'     => WSDL_CACHE_NONE,/** @todo: when in production set chache mode back WSDL_CACHE_BOTH */
             'stream_context' => stream_context_create(
                 [
                     'http' => [

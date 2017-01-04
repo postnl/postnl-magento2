@@ -47,6 +47,7 @@ use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
 use TIG\PostNL\Webservices\Endpoints\Locations;
 use \Magento\Checkout\Model\Session;
+use TIG\PostNL\Helper\AddressEnhancer;
 
 /**
  * Class Index
@@ -81,18 +82,24 @@ class Index extends Action
     private $locationsEndpoint;
 
     /**
+     * @var AddressEnhancer
+     */
+    private $addressEnhancer;
+
+    /**
      * @var
      */
     private $checkoutSession;
 
     /**
-     * @param Context      $context
-     * @param PageFactory  $resultPageFactory
-     * @param Data         $jsonHelper
-     * @param DeliveryDate $deliveryDate
-     * @param TimeFrame    $timeFrame
-     * @param Locations    $locations
-     * @param Session      $checkouSession
+     * @param Context           $context
+     * @param PageFactory       $resultPageFactory
+     * @param Data              $jsonHelper
+     * @param DeliveryDate      $deliveryDate
+     * @param TimeFrame         $timeFrame
+     * @param Locations         $locations
+     * @param Session           $checkoutSession
+     * @param AddressEnhancer   $addressEnhancer
      */
     public function __construct(
         Context $context,
@@ -101,14 +108,16 @@ class Index extends Action
         DeliveryDate $deliveryDate,
         TimeFrame $timeFrame,
         Locations $locations,
-        Session $checkouSession
+        Session $checkoutSession,
+        AddressEnhancer $addressEnhancer
     ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->jsonHelper        = $jsonHelper;
         $this->deliveryEndpoint  = $deliveryDate;
         $this->timeFrameEndpoint = $timeFrame;
         $this->locationsEndpoint = $locations;
-        $this->checkoutSession   = $checkouSession;
+        $this->checkoutSession   = $checkoutSession;
+        $this->addressEnhancer   = $addressEnhancer;
         parent::__construct($context);
     }
 
@@ -126,7 +135,7 @@ class Index extends Action
         }
 
         try {
-            return $this->jsonResponse($this->getDataBasedOnType($params['type']));
+            return $this->jsonResponse($this->getDataBasedOnType($params['type'], $params['address']));
         } catch (LocalizedException $exception) {
             return $this->jsonResponse($exception->getMessage());
         } catch (\Exception $exception) {
@@ -235,17 +244,19 @@ class Index extends Action
 
     /**
      * @param $type
-     *
+     * @param $address
      * @return array|\Magento\Framework\Controller\ResultInterface|\Magento\Framework\Phrase
      */
-    private function getDataBasedOnType($type)
+    private function getDataBasedOnType($type, $address)
     {
+        $this->addressEnhancer->set($address);
+
         if ($type == 'deliverydays') {
-            return $this->getPosibleDeliveryDays($type);
+            return $this->getPosibleDeliveryDays($this->addressEnhancer->get());
         }
 
         if ($type == 'locations') {
-            return $this->getNearestLocations($type);
+            return $this->getNearestLocations($this->addressEnhancer->get());
         }
 
         //@codingStandardsIgnoreLine
