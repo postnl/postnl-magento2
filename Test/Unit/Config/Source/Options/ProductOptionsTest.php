@@ -48,6 +48,8 @@ use TIG\PostNL\Test\TestCase;
  */
 class ProductOptionsTest extends TestCase
 {
+    protected $instanceClass = ProductOptions::class;
+
     protected $options = [
         '3385' => [
             'value'             => '3385',
@@ -84,16 +86,6 @@ class ProductOptionsTest extends TestCase
         'standard_options'   => 'Domestic options',
         'pakjegemak_options' => 'Post Office options',
     ];
-
-    /**
-     * @param array $args
-     *
-     * @return object
-     */
-    public function getInstance($args = [])
-    {
-        return $this->objectManager->getObject(ProductOptions::class, $args);
-    }
 
     /**
      * Test option Array to not be empty

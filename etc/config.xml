@@ -61,6 +61,16 @@
                 <eveningdelivery_fee>2</eveningdelivery_fee>
                 <sundaydelivery_fee>2</sundaydelivery_fee>
             </shippingoptions>
+            <endpoints>
+                <cif_base_url>https://service.postnl.com/CIF/</cif_base_url>
+                <test_cif_base_url>https://testservice.postnl.com/CIF_SB/</test_cif_base_url>
+                <api_base_url>https://api.postnl.nl/shipment/</api_base_url>
+                <test_api_base_url>https://api-acc.postnl.nl/shipment/</test_api_base_url>
+            </endpoints>
+            <barcode>
+                <global_type>CD</global_type>
+                <global_range>1660</global_range>
+            </barcode>
         </tig_postnl>
     </default>
 </config>

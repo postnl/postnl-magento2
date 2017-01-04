@@ -39,7 +39,12 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <!-- Creates the tig_postnl_order record -->
     <event name="sales_order_save_after">
         <observer name="tig_postnl_sales_order_place_after" instance="TIG\PostNL\Observer\SalesOrderSaveAfterEvent" />
+    </event>
+    <!--Updates the sales_shipment_grid table-->
+    <event name="tig_postnl_shipment_save_after">
+        <observer name="tig_postnl_update_sales_shipment_grid" instance="TIG\PostNL\Observer\UpdateOrderShipmentGrid" />
     </event>
 </config>

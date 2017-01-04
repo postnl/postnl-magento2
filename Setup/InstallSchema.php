@@ -42,21 +42,48 @@ use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use TIG\PostNL\Setup\V110\InstallOrderTable;
+use TIG\PostNL\Setup\V110\InstallShipmentBarcodeTable;
 use TIG\PostNL\Setup\V110\InstallShipmentTable;
+use TIG\PostNL\Setup\V110\SalesShipmentGridColumns;
 
 class InstallSchema implements InstallSchemaInterface
 {
     /**
+     * @var InstallOrderTable
+     */
+    private $installOrderTable;
+
+    /**
      * @var InstallShipmentTable
      */
-    protected $installShipmentTable;
+    private $installShipmentTable;
 
+    /**
+     * @var InstallShipmentBarcodeTable
+     */
+    private $installShipmentBarcodeTable;
+
+    /**
+     * @var SalesShipmentGridColumns
+     */
+    private $salesShipmentGridColumns;
+
+    /**
+     * @param InstallShipmentTable        $installShipmentTable
+     * @param InstallOrderTable           $installOrderTable
+     * @param InstallShipmentBarcodeTable $installShipmentBarcodeTable
+     * @param SalesShipmentGridColumns    $salesShipmentGridColumns
+     */
     public function __construct(
         InstallShipmentTable $installShipmentTable,
-        InstallOrderTable $installOrderTable
+        InstallOrderTable $installOrderTable,
+        InstallShipmentBarcodeTable $installShipmentBarcodeTable,
+        SalesShipmentGridColumns $salesShipmentGridColumns
     ) {
         $this->installShipmentTable = $installShipmentTable;
         $this->installOrderTable = $installOrderTable;
+        $this->installShipmentBarcodeTable = $installShipmentBarcodeTable;
+        $this->salesShipmentGridColumns = $salesShipmentGridColumns;
     }
 
     /**
@@ -74,6 +101,8 @@ class InstallSchema implements InstallSchemaInterface
         if (version_compare($context->getVersion(), '1.1.0', '<')) {
             $this->installOrderTable->install($setup, $context);
             $this->installShipmentTable->install($setup, $context);
+            $this->installShipmentBarcodeTable->install($setup, $context);
+            $this->salesShipmentGridColumns->install($setup, $context);
         }
 
         $setup->endSetup();

@@ -38,10 +38,55 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
 
+use TIG\PostNL\Model\ShipmentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use Magento\Framework\View\Element\UiComponentFactory;
+use TIG\PostNL\Model\Shipment as PostNLShipment;
 
 abstract class AbstractGrid extends Column
 {
+    /**
+     * @var array
+     */
+    protected $items = [];
+
+    /**
+     * @var array
+     */
+    protected $ids = [];
+
+    /**
+     * Holds the loaded items.
+     *
+     * @var array
+     */
+    protected $models = [];
+
+    /**
+     * @var ShipmentFactory
+     */
+    protected $shipmentFactory;
+
+    /**
+     * @param ContextInterface     $context
+     * @param UiComponentFactory   $uiComponentFactory
+     * @param ShipmentFactory      $shipmentFactory
+     * @param array                $components
+     * @param array                $data
+     */
+    public function __construct(
+        ContextInterface $context,
+        UiComponentFactory $uiComponentFactory,
+        ShipmentFactory $shipmentFactory,
+        array $components = [],
+        array $data = []
+    ) {
+        parent::__construct($context, $uiComponentFactory, $components, $data);
+
+        $this->shipmentFactory = $shipmentFactory;
+    }
+
     /**
      * @param array $dataSource
      *
@@ -50,27 +95,46 @@ abstract class AbstractGrid extends Column
     public function prepareDataSource(array $dataSource)
     {
         if (isset($dataSource['data']['items'])) {
-            $items = $dataSource['data']['items'];
-            $items = $this->handleItems($items);
+            $this->items = $dataSource['data']['items'];
 
-            $dataSource['data']['items'] = $items;
+            $this->prepareData();
+            $this->handleItems();
+
+            $dataSource['data']['items'] = $this->items;
         }
 
         return $dataSource;
     }
 
     /**
-     * @param array $items
-     *
+     * Load all the needed data in only 1 query.
+     */
+    public function prepareData()
+    {
+        $ids = $this->collectIds();
+
+        /** @var PostNLShipment $postnlShipment */
+        $postnlShipment = $this->shipmentFactory->create();
+
+        /** @var \TIG\PostNL\Model\ResourceModel\Shipment\Collection $collection */
+        $collection = $postnlShipment->getCollection();
+        $collection->addFieldToFilter('shipment_id', ['in' => $ids]);
+
+        /** @var PostNLShipment $item */
+        foreach ($collection as $item) {
+            $this->models[$item->getShipmentId()] = $item;
+        }
+    }
+
+    /**
      * @return array
      */
-    protected function handleItems(array $items)
+    // @codingStandardsIgnoreLine
+    protected function handleItems()
     {
-        foreach ($items as $index => $item) {
-            $items[$index][$this->getData('name')] = $this->getCellContents($item);
+        foreach ($this->items as $index => $item) {
+            $this->items[$index][$this->getData('name')] = $this->getCellContents($item);
         }
-
-        return $items;
     }
 
     /**
@@ -78,5 +142,20 @@ abstract class AbstractGrid extends Column
      *
      * @return string
      */
+    // @codingStandardsIgnoreLine
     abstract protected function getCellContents($item);
+
+    /**
+     * @param string $idColumn
+     *
+     * @return array
+     */
+    protected function collectIds($idColumn = 'entity_id')
+    {
+        foreach ($this->items as $item) {
+            $this->ids[] = $item[$idColumn];
+        }
+
+        return $this->ids;
+    }
 }

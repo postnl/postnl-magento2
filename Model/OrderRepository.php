@@ -54,12 +54,12 @@ class OrderRepository implements OrderRepositoryInterface
     /**
      * @var OrderFactory
      */
-    protected $orderFactory;
+    private $orderFactory;
 
     /**
      * @var CollectionFactory
      */
-    protected $collectionFactory;
+    private $collectionFactory;
 
     /**
      * @param OrderFactory                  $objectFactory

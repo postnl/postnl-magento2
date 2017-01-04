@@ -101,7 +101,9 @@ class AccountConfiguration extends AbstractConfigProvider
      */
     public function getApiKey()
     {
-        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY));
+        $value = $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY));
+
+        return $this->crypt->decrypt($value);
     }
 
     /**
@@ -134,6 +136,7 @@ class AccountConfiguration extends AbstractConfigProvider
         if ($this->getModus() == '1') {
             return true;
         }
+
         return false;
     }
 
@@ -146,6 +149,7 @@ class AccountConfiguration extends AbstractConfigProvider
         if ($this->getModus() == '2') {
             return true;
         }
+
         return false;
     }
 
@@ -158,6 +162,7 @@ class AccountConfiguration extends AbstractConfigProvider
         if ($this->getModus() == '0' || false == $this->getModus()) {
             return true;
         }
+
         return false;
     }
 
@@ -166,11 +171,12 @@ class AccountConfiguration extends AbstractConfigProvider
      *
      * @return string
      */
-    protected function getModusXpath($xpath)
+    private function getModusXpath($xpath)
     {
         if ($this->isModusTest()) {
             $xpath .= '_test';
         }
+
         return $xpath;
     }
 }

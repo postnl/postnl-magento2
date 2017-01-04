@@ -40,9 +40,39 @@ namespace TIG\PostNL\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Sales\Model\Order;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
+/**
+ * Class Data
+ *
+ * @package TIG\PostNL\Helper
+ */
 class Data extends AbstractHelper
 {
+    const PAKJEGEMAK_DELIVERY_OPTION = 'PG';
+
+    /**
+     * @var TimezoneInterface
+     */
+    private $dateTime;
+
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
+
+    /**
+     * @param TimezoneInterface $timezoneInterface
+     */
+    public function __construct(
+        TimezoneInterface $timezoneInterface,
+        ShippingOptions $shippingOptions
+    ) {
+        $this->dateTime  = $timezoneInterface;
+        $this->shippingOptions = $shippingOptions;
+    }
+
     /**
      * @param Order $order
      *
@@ -53,5 +83,66 @@ class Data extends AbstractHelper
         $shippingMethod = $order->getShippingMethod();
 
         return $shippingMethod == 'tig_postnl_regular';
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentTimeStamp()
+    {
+        $stamp = $this->dateTime->date();
+        return $stamp->format('d-m-Y H:i:s');
+    }
+
+    /**
+     * @param $date
+     * @return \DateTime
+     */
+    public function getDateYmd($date = false)
+    {
+        $stamp = $this->dateTime->date();
+        if ($date) {
+            $stamp = $this->dateTime->date($date);
+        }
+
+        return $stamp->format('Y-m-d');
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function getTommorowsDate()
+    {
+        $dateTime = $this->dateTime->date();
+        return date('Y-m-d ' . $dateTime->format('H:i:s'), strtotime('tommorow'));
+    }
+
+    /**
+     * @param $startDate
+     *
+     * @return string
+     */
+    public function getEndDate($startDate)
+    {
+        $maximumNumberOfDeliveryDays = 6;
+
+        $endDate = $this->dateTime->date($startDate);
+        // @codingStandardsIgnoreLine
+        $endDate->add(new \DateInterval("P{$maximumNumberOfDeliveryDays}D"));
+
+        return $endDate->format('d-m-Y');
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllowedDeliveryOptions()
+    {
+        $deliveryOptions = [];
+        if ($this->shippingOptions->isPakjegemakActive()) {
+            $deliveryOptions [] = self::PAKJEGEMAK_DELIVERY_OPTION;
+        }
+
+        return $deliveryOptions;
     }
 }

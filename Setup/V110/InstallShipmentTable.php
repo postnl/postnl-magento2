@@ -47,6 +47,7 @@ class InstallShipmentTable extends AbstractTableInstaller
     /**
      * @return void
      */
+    // @codingStandardsIgnoreLine
     protected function defineTable()
     {
         $this->addEntityId();
@@ -61,9 +62,9 @@ class InstallShipmentTable extends AbstractTableInstaller
         $this->addText('product_code', 'Product Code', 32);
         $this->addText('shipment_type', 'Shipment Type', 32);
 
-        // @todo: Should be int
-        $this->addText('is_pakjegemak', 'Is Pakjegemak', 1);
+        $this->addInt('is_pakjegemak', 'Is Pakjegemak', 1);
 
+        $this->addDate('ship_at', 'Ship the parcel at');
         $this->addTimestamp('confirmed_at', 'Confirmed at');
         $this->addTimestamp('created_at', 'Created at');
         $this->addTimestamp('updated_at', 'Updated at');
