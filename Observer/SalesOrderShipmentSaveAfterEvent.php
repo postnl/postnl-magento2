@@ -87,31 +87,41 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
         /** @var \Magento\Sales\Model\Order\Shipment $shipment */
         $shipment = $observer->getData('data_object');
         $shipmentId = $shipment->getId();
+        $mainBarcode = $this->generateBarcode();
+
+        //TODO: actually get & save the parcel count
 
         /** @var \TIG\PostNL\Model\Shipment $model */
         $model = $this->shipmentFactory->create();
         $model->setData('shipment_id', $shipmentId);
+        $model->setData('main_barcode', $mainBarcode);
         $model->save();
 
-        $this->saveShipmentBarcode($shipmentId);
+        $parcelCount = $model->getParcelCount();
+        if ($parcelCount > 1) {
+            $this->saveShipmentBarcode($shipmentId, $parcelCount);
+        }
     }
 
     /**
      * Generate and save a new barcode for the just saved shipment
      *
      * @param $shipmentId
+     * @param $parcelCount
      */
-    private function saveShipmentBarcode($shipmentId)
+    private function saveShipmentBarcode($shipmentId, $parcelCount)
     {
-        $barcode = $this->generateBarcode();
+        for ($i = 1; $i < $parcelCount; $i++) {
+            $barcode = $this->generateBarcode();
 
-        /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
-        $barcodeModel = $this->shipmentBarcodeFactory->create();
-        $barcodeModel->setShipmentId($shipmentId);
-        $barcodeModel->setType(ShipmentBarcode::BARCODE_TYPE_SHIPMENT);
-        $barcodeModel->setNumber(0); //TODO: save the correct number
-        $barcodeModel->setValue($barcode);
-        $barcodeModel->save();
+            /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
+            $barcodeModel = $this->shipmentBarcodeFactory->create();
+            $barcodeModel->setShipmentId($shipmentId);
+            $barcodeModel->setType(ShipmentBarcode::BARCODE_TYPE_SHIPMENT);
+            $barcodeModel->setNumber($i);
+            $barcodeModel->setValue($barcode);
+            $barcodeModel->save();
+        }
     }
 
     /**

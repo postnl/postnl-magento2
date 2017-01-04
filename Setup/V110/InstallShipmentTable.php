@@ -63,6 +63,7 @@ class InstallShipmentTable extends AbstractTableInstaller
         $this->addText('shipment_type', 'Shipment Type', 32);
 
         $this->addInt('is_pakjegemak', 'Is Pakjegemak', 1);
+        $this->addInt('parcel_count', 'Parcel Count', true, true, 1);
 
         $this->addDate('ship_at', 'Ship the parcel at');
         $this->addTimestamp('confirmed_at', 'Confirmed at');
