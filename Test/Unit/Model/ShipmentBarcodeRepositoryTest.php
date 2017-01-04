@@ -48,7 +48,7 @@ class ShipmentBarcodeRepositoryTest extends TestCase
      *
      * @return object
      */
-    public function getInstance($args = [])
+    public function getInstance(array $args = [])
     {
         return $this->objectManager->getObject(ShipmentBarcodeRepository::class, $args);
     }

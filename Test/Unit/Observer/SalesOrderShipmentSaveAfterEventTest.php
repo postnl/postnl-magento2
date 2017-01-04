@@ -100,6 +100,45 @@ class SalesOrderShipmentSaveAfterEventTest extends TestCase
     }
 
     /**
+     * @return array
+     */
+    public function generateBarcodeProvider()
+    {
+        return [
+            [
+                (Object)['Barcode' => '3STOTA123457890'],
+                '3STOTA123457890'
+            ],
+            [
+                'Response by unittest',
+                __('Invalid GenerateBarcode response: %1', var_export('Response by unittest', true))
+            ],
+        ];
+    }
+
+    /**
+     * @param $callReturnValue
+     * @param $expected
+     *
+     * @dataProvider generateBarcodeProvider
+     */
+    public function testGenerateBarcode($callReturnValue, $expected)
+    {
+        $barcodeMock = $this->getFakeMock('TIG\PostNL\Webservices\Endpoints\Barcode');
+        $barcodeMock->setMethods(['call']);
+        $barcodeMock = $barcodeMock->getMock();
+
+        $callExpects = $barcodeMock->expects($this->once());
+        $callExpects->method('call');
+        $callExpects->willReturn($callReturnValue);
+
+        $instance = $this->getInstance(['barcode' => $barcodeMock]);
+        $result = $this->invoke('generateBarcode', $instance);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
      * @param $id
      * @param $barcode
      *
