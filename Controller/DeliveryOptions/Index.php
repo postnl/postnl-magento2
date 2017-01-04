@@ -47,7 +47,7 @@ use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
 use TIG\PostNL\Webservices\Endpoints\Locations;
 use \Magento\Checkout\Model\Session;
-use TIG\PostNL\Helper\Address;
+use TIG\PostNL\Helper\AddressEnhancer;
 
 /**
  * Class Index
@@ -81,7 +81,10 @@ class Index extends Action
      */
     private $locationsEndpoint;
 
-    private $addresHelper;
+    /**
+     * @var AddressEnhancer
+     */
+    private $addressEnhancer;
 
     /**
      * @var
@@ -89,14 +92,14 @@ class Index extends Action
     private $checkoutSession;
 
     /**
-     * @param Context      $context
-     * @param PageFactory  $resultPageFactory
-     * @param Data         $jsonHelper
-     * @param DeliveryDate $deliveryDate
-     * @param TimeFrame    $timeFrame
-     * @param Locations    $locations
-     * @param Session      $checkouSession
-     * @param Address      $address
+     * @param Context           $context
+     * @param PageFactory       $resultPageFactory
+     * @param Data              $jsonHelper
+     * @param DeliveryDate      $deliveryDate
+     * @param TimeFrame         $timeFrame
+     * @param Locations         $locations
+     * @param Session           $checkouSession
+     * @param AddressEnhancer   $addressEnhancer
      */
     public function __construct(
         Context $context,
@@ -106,7 +109,7 @@ class Index extends Action
         TimeFrame $timeFrame,
         Locations $locations,
         Session $checkouSession,
-        Address $address
+        AddressEnhancer $addressEnhancer
     ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->jsonHelper        = $jsonHelper;
@@ -114,7 +117,7 @@ class Index extends Action
         $this->timeFrameEndpoint = $timeFrame;
         $this->locationsEndpoint = $locations;
         $this->checkoutSession   = $checkouSession;
-        $this->addresHelper      = $address;
+        $this->addressEnhancer   = $addressEnhancer;
         parent::__construct($context);
     }
 
@@ -246,14 +249,14 @@ class Index extends Action
      */
     private function getDataBasedOnType($type, $address)
     {
-        $this->addresHelper->setAddressParams($address);
+        $this->addressEnhancer->set($address);
 
         if ($type == 'deliverydays') {
-            return $this->getPosibleDeliveryDays($this->addresHelper->getAddressParams());
+            return $this->getPosibleDeliveryDays($this->addressEnhancer->get());
         }
 
         if ($type == 'locations') {
-            return $this->getNearestLocations($this->addresHelper->getAddressParams());
+            return $this->getNearestLocations($this->addressEnhancer->get());
         }
 
         //@codingStandardsIgnoreLine

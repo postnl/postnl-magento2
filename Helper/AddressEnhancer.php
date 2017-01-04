@@ -42,29 +42,30 @@ use TIG\PostNL\Exception as PostnlException;
 
 /**
  * Class Address
- * @todo : Class needs to be refactored/optimized.
+ *
  * @package TIG\PostNL\Helper
  */
-class Address
+class AddressEnhancer
 {
     const STREET_SPLIT_NAME_FROM_NUMBER = '/([^\d]+)\s?(.+)/i';
     const SPLIT_HOUSENUMBER_REGEX       = '#^([\d]+)(.*)#s';
 
     /** @var array */
-    private $address = [];
+    // @codingStandardsIgnoreLine
+    protected $address = [];
 
     /**
      * @param $address
      */
-    public function setAddressParams($address)
+    public function set($address)
     {
         $this->address = $this->appendHouseNumber($address);
     }
 
     /**
-     * @return array|bool
+     * @return array
      */
-    public function getAddressParams()
+    public function get()
     {
         return $this->address;
     }
@@ -75,7 +76,8 @@ class Address
      * @return mixed
      * @throws PostnlException
      */
-    private function appendHouseNumber($address)
+    // @codingStandardsIgnoreLine
+    protected function appendHouseNumber($address)
     {
         if (!isset($address['street'][0])) {
             throw new PostnlException(
@@ -98,7 +100,8 @@ class Address
      * @return mixed
      * @throws PostnlException
      */
-    private function extractHousenumber($address)
+    // @codingStandardsIgnoreLine
+    protected function extractHousenumber($address)
     {
         if (isset($address['street'][1]) && is_numeric($address['street'][1])) {
             return $address['housenumber'] = $address['street'][1];
@@ -114,7 +117,7 @@ class Address
         }
 
         if (isset($result[1])) {
-            $address['street'][0] = $result[1];
+            $address['street'][0] = trim($result[1]);
         }
 
         if (isset($result[2])) {
@@ -131,7 +134,8 @@ class Address
      * @return mixed
      * @throws PostnlException
      */
-    private function addHousenumberValues($address, $houseNumber)
+    // @codingStandardsIgnoreLine
+    protected function addHousenumberValues($address, $houseNumber)
     {
         $houseNumberData = $this->splitHousenumber($houseNumber);
 
@@ -147,7 +151,8 @@ class Address
      * @return array
      * @throws PostnlException
      */
-    private function splitHousenumber($houseNumber)
+    // @codingStandardsIgnoreLine
+    protected function splitHousenumber($houseNumber)
     {
         $matched = preg_match(self::SPLIT_HOUSENUMBER_REGEX, trim($houseNumber), $results);
         if (!$matched && !is_array($results)) {
