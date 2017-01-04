@@ -42,20 +42,11 @@ use \Magento\Framework\Phrase;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use TIG\PostNL\Block\Adminhtml\Shipment\Grid\ShippingDate;
-use TIG\PostNL\Model\Shipment as PostNLShipment;
 use TIG\PostNL\Test\TestCase;
 
 class ShippingDateTest extends TestCase
 {
     protected $instanceClass = ShippingDate::class;
-
-    public function loadModelProvider()
-    {
-        return [
-            'id_does_not_exists' => [99, false],
-            'exists_with_shipping_date' => [1, true],
-        ];
-    }
 
     public function getInstance(array $args = [])
     {
@@ -70,28 +61,6 @@ class ShippingDateTest extends TestCase
         }
 
         return parent::getInstance($args);
-    }
-
-    /**
-     * @param $entity_id
-     * @param $expected
-     *
-     * @dataProvider loadModelProvider
-     */
-    public function testLoadModel($entity_id, $expected)
-    {
-        $instance = $this->getInstance();
-        $modelMock = $this->getFakeMock(PostNLShipment::class)->setMethods(['getConfirmedAt'])->getMock();
-
-        $this->setProperty('models', [1 => $modelMock], $instance);
-        $result = $this->invokeArgs('loadModel', [$entity_id], $instance);
-
-        $this->assertEquals($expected, $result);
-
-        if ($expected) {
-            $model = $this->getProperty('model', $instance);
-            $this->assertInstanceOf(PostNLShipment::class, $model);
-        }
     }
 
     public function formatShippingDateProvider()
@@ -162,16 +131,7 @@ class ShippingDateTest extends TestCase
      */
     public function testGetShipAt($shipAt)
     {
-        $instance = $this->getInstance();
-        $modelMock = $this->getFakeMock(PostNLShipment::class)->setMethods(['getShipAt'])->getMock();
-
-        $shipAtExpects = $modelMock->expects($this->once());
-        $shipAtExpects->method('getShipAt');
-        $shipAtExpects->willReturn($shipAt);
-
-        $this->setProperty('model', $modelMock, $instance);
-
-        $result = $this->invokeArgs('getShipAt', [$shipAt], $instance);
+        $result = $this->invokeArgs('getShipAt', [['tig_postnl_ship_at' => $shipAt]]);
 
         $this->assertEquals($shipAt, $result);
     }

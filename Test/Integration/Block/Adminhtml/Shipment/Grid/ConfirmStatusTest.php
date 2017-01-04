@@ -47,10 +47,26 @@ use TIG\PostNL\Model\ShipmentFactory;
 use TIG\PostNL\Observer\SalesOrderShipmentSaveAfterEvent;
 use TIG\PostNL\Test\Integration\TestCase;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
 
 class ConfirmStatusTest extends TestCase
 {
     protected $instanceClass = ConfirmStatus::class;
+
+    public function getInstance(array $args = [])
+    {
+        if (!isset($args['context'])) {
+            $contextMock = $this->getMockForAbstractClass(ContextInterface::class, [], '', false, true, true, []);
+            $processor   = $this->getMockBuilder('Magento\Framework\View\Element\UiComponent\Processor')
+                ->disableOriginalConstructor()
+                ->getMock();
+            $contextMock->expects($this->any())->method('getProcessor')->willReturn($processor);
+
+            $args['context'] = $contextMock;
+        }
+
+        return parent::getInstance($args);
+    }
 
     public function getIsConfirmedProvider()
     {
@@ -67,28 +83,19 @@ class ConfirmStatusTest extends TestCase
     public function testGetCellContents($confirmed_at, $expected)
     {
         $shipment = $this->getShipment();
+        $shipmentId = $shipment->getId();
+
         $postNLShipment = $this->getPostNLShipment($shipment);
         $postNLShipment->setConfirmedAt($confirmed_at);
         $postNLShipment->save();
 
         /** @var ConfirmStatus $instance */
-        $instance = $this->getFakeMock($this->instanceClass)->setMethods(null)->getMock();
-        $this->setProperty('shipmentFactory', $this->getObject(ShipmentFactory::class), $instance);
+        $instance = $this->getInstance();
 
-        $shipmentId = $shipment->getId();
-        $instance->prepareDataSource([
-            'data' => [
-                'items' => [
-                    ['entity_id' => $shipmentId],
-                ]
-            ]
-        ]);
-
-        $instance->prepareData();
-        $result = $this->invokeArgs('getIsConfirmed', [$shipmentId], $instance);
+        $result = $this->invokeArgs('getIsConfirmed', [['tig_postnl_confirmed_at' => $confirmed_at]], $instance);
         $this->assertEquals($expected, $result);
 
-        $result = $this->invokeArgs('getCellContents', [['entity_id' => $shipmentId]], $instance);
+        $result = $this->invokeArgs('getCellContents', [['tig_postnl_confirmed_at' => $confirmed_at]], $instance);
         $this->assertInstanceOf(Phrase::class, $result);
         $text = ucfirst(($expected ? '' : 'not ') . 'confirmed');
         $this->assertEquals($text, $result->getText());

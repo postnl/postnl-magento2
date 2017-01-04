@@ -52,10 +52,6 @@ class ShippingDate extends AbstractGrid
      */
     private $timezoneInterface;
 
-    /**
-     * @var PostNLShipment
-     */
-    private $model = null;
 
     /**
      * @var DateTimeFormatterInterface
@@ -85,13 +81,7 @@ class ShippingDate extends AbstractGrid
     // @codingStandardsIgnoreLine
     protected function getCellContents($item)
     {
-        $entity_id = $item['entity_id'];
-
-        if (!$this->loadModel($entity_id)) {
-            return null;
-        }
-
-        $shipAt = $this->getShipAt();
+        $shipAt = $this->getShipAt($item);
         if ($shipAt === null) {
             return null;
         }
@@ -100,26 +90,11 @@ class ShippingDate extends AbstractGrid
     }
 
     /**
-     * @param $entity_id
-     *
-     * @return bool|PostNLShipment
-     */
-    private function loadModel($entity_id)
-    {
-        if (!array_key_exists($entity_id, $this->models)) {
-            return false;
-        }
-
-        $this->model = $this->models[$entity_id];
-        return true;
-    }
-
-    /**
      * @return null|string
      */
-    private function getShipAt()
+    private function getShipAt($item)
     {
-        $shipAt = $this->model->getShipAt();
+        $shipAt = $item['tig_postnl_ship_at'];
         if ($shipAt === null) {
             return null;
         }
