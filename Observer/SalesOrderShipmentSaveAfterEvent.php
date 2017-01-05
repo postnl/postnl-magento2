@@ -93,8 +93,8 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
 
         /** @var \TIG\PostNL\Model\Shipment $model */
         $model = $this->shipmentFactory->create();
-        $model->setData('shipment_id', $shipmentId);
-        $model->setData('main_barcode', $mainBarcode);
+        $model->setShipmentId($shipmentId);
+        $model->setMainBarcode($mainBarcode);
         $model->save();
 
         $parcelCount = $model->getParcelCount();
@@ -111,7 +111,7 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
      */
     private function saveShipmentBarcode($shipmentId, $parcelCount)
     {
-        for ($i = 1; $i < $parcelCount; $i++) {
+        for ($i = 1; $i <= $parcelCount; $i++) {
             $barcode = $this->generateBarcode();
 
             /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
