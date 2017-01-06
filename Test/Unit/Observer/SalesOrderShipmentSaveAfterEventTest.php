@@ -102,6 +102,26 @@ class SalesOrderShipmentSaveAfterEventTest extends TestCase
 
         $shipmentBarcodeFactoryMock = $this->getShipmentBarcodeFactoryMock($id, $barcode, $parcelCount);
 
+        $shipmentBarcodeCollectionFactoryMock = $this->getFakeMock(
+            '\TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory'
+        );
+        $shipmentBarcodeCollectionFactoryMock->setMethods(
+            ['create', 'addItem', 'save']
+        );
+        $shipmentBarcodeCollectionFactoryMock = $shipmentBarcodeCollectionFactoryMock->getMock();
+
+        $createExpects = $shipmentBarcodeCollectionFactoryMock->expects($this->exactly($parcelCount < 2 ? 0 : 1));
+        $createExpects->method('create');
+        $createExpects->willReturnSelf();
+
+        $createExpects = $shipmentBarcodeCollectionFactoryMock->expects(
+            $this->exactly($parcelCount < 2 ? 0 : $parcelCount)
+        );
+        $createExpects->method('addItem');
+
+        $saveExpects = $shipmentBarcodeCollectionFactoryMock->expects($this->exactly($parcelCount < 2 ? 0 : 1));
+        $saveExpects->method('save');
+
         $barcodeMock = $this->getFakeMock('TIG\PostNL\Webservices\Endpoints\Barcode');
         $barcodeMock->setMethods(['call']);
         $barcodeMock = $barcodeMock->getMock();
@@ -117,6 +137,7 @@ class SalesOrderShipmentSaveAfterEventTest extends TestCase
         $instance = $this->getInstance([
             'shipmentFactory' => $shipmentFactoryMock,
             'shipmentBarcodeFactory' => $shipmentBarcodeFactoryMock,
+            'shipmentBarcodeCollectionFactory' => $shipmentBarcodeCollectionFactoryMock,
             'barcode' => $barcodeMock
         ]);
         $instance->execute($observer);
@@ -198,9 +219,6 @@ class SalesOrderShipmentSaveAfterEventTest extends TestCase
         $setShipmentIdExpects = $shipmentBarcodeFactoryMock->expects($this->exactly($parcelCount));
         $setShipmentIdExpects->method('setValue');
         $setShipmentIdExpects->with($barcode);
-
-        $saveExpects = $shipmentBarcodeFactoryMock->expects($this->exactly($parcelCount));
-        $saveExpects->method('save');
 
         return $shipmentBarcodeFactoryMock;
     }

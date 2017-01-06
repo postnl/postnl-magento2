@@ -73,10 +73,9 @@ class ShipmentBarcodeRepositoryTest extends TestCase
     {
         $id = rand(1000, 2000);
 
-        $shipmentBarcodeFactoryMock = $this->getMock(
-            '\TIG\PostNL\Model\ShipmentBarcodeFactory',
-            ['create', 'load', 'getId']
-        );
+        $shipmentBarcodeFactoryMock = $this->getFakeMock('\TIG\PostNL\Model\ShipmentBarcodeFactory');
+        $shipmentBarcodeFactoryMock->setMethods(['create', 'load', 'getId']);
+        $shipmentBarcodeFactoryMock = $shipmentBarcodeFactoryMock->getMock();
 
         $createExpects = $shipmentBarcodeFactoryMock->expects($this->once());
         $createExpects->method('create');

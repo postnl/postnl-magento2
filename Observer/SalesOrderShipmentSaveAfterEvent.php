@@ -40,6 +40,7 @@ namespace TIG\PostNL\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory;
 use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Model\ShipmentFactory;
 use TIG\PostNL\Model\ShipmentBarcodeFactory;
@@ -63,18 +64,26 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     private $barcode;
 
     /**
+     * @var CollectionFactory
+     */
+    private $shipmentBarcodeCollectionFactory;
+
+    /**
      * @param ShipmentFactory        $shipmentFactory
      * @param ShipmentBarcodeFactory $shipmentBarcodeFactory
+     * @param CollectionFactory      $shipmentBarcodeCollectionFactory
      * @param Barcode                $barcode
      */
     public function __construct(
         ShipmentFactory $shipmentFactory,
         ShipmentBarcodeFactory $shipmentBarcodeFactory,
+        CollectionFactory $shipmentBarcodeCollectionFactory,
         Barcode $barcode
     ) {
         $this->shipmentFactory = $shipmentFactory;
         $this->shipmentBarcodeFactory = $shipmentBarcodeFactory;
         $this->barcode = $barcode;
+        $this->shipmentBarcodeCollectionFactory = $shipmentBarcodeCollectionFactory;
     }
 
     /**
@@ -111,17 +120,23 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
      */
     private function saveShipmentBarcode($shipmentId, $parcelCount)
     {
-        for ($i = 1; $i <= $parcelCount; $i++) {
+        /** @var \TIG\PostNL\Model\ResourceModel\ShipmentBarcode\Collection $barcodeModelCollection */
+        $barcodeModelCollection = $this->shipmentBarcodeCollectionFactory->create();
+
+        for ($count = 1; $count <= $parcelCount; $count++) {
             $barcode = $this->generateBarcode();
 
             /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
             $barcodeModel = $this->shipmentBarcodeFactory->create();
             $barcodeModel->setShipmentId($shipmentId);
             $barcodeModel->setType(ShipmentBarcode::BARCODE_TYPE_SHIPMENT);
-            $barcodeModel->setNumber($i);
+            $barcodeModel->setNumber($count);
             $barcodeModel->setValue($barcode);
-            $barcodeModel->save();
+
+            $barcodeModelCollection->addItem($barcodeModel);
         }
+
+        $barcodeModelCollection->save();
     }
 
     /**
