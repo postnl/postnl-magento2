@@ -115,6 +115,7 @@ class Locations extends AbstractEndpoint
     }
 
     /**
+     * @codingStandardsIgnoreLine
      * @todo : Add configuration for sundaysorting (if not enabled Monday should not return)
      *
      * @param $address

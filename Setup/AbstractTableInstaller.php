@@ -43,6 +43,9 @@ use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 
+/**
+ * @codingStandardsIgnoreStart
+ */
 abstract class AbstractTableInstaller implements InstallSchemaInterface
 {
     const TABLE_NAME = null;
@@ -260,3 +263,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
         return $connection->createTable($this->table);
     }
 }
+/**
+ * @codingStandardsIgnoreEnd
+ */

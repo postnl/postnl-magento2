@@ -43,6 +43,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Webapi\Exception as WebapiException;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
+use Zend\Soap\Client as ZendSoapClient;
 
 /**
  * Class Soap
@@ -52,9 +53,9 @@ use TIG\PostNL\Config\Provider\DefaultConfiguration;
 class Soap
 {
     /**
-     * @var AccountConfiguration
+     * @var string
      */
-    private $accountConfig;
+    private $apikey;
 
     /**
      * @var AbstractEndpoint
@@ -77,10 +78,16 @@ class Soap
     private $exceptionHandler;
 
     /**
-     * @param AccountConfiguration   $accountConfiguration
-     * @param DefaultConfiguration   $defaultConfiguration
-     * @param ExceptionHandler       $exceptionHandler
-     * @param Response               $response
+     * @var ZendSoapClient
+     */
+    private $soapClient;
+
+    /**
+     * @param AccountConfiguration $accountConfiguration
+     * @param DefaultConfiguration $defaultConfiguration
+     * @param ExceptionHandler     $exceptionHandler
+     * @param Response             $response
+     * @param ZendSoapClient       $soapClient
      *
      * @throws WebapiException
      */
@@ -88,14 +95,17 @@ class Soap
         AccountConfiguration $accountConfiguration,
         DefaultConfiguration $defaultConfiguration,
         ExceptionHandler $exceptionHandler,
-        Response $response
+        Response $response,
+        ZendSoapClient $soapClient
     ) {
         $this->checkSoapExtensionIsLoaded();
 
-        $this->accountConfig = $accountConfiguration;
         $this->defaultConfiguration = $defaultConfiguration;
         $this->exceptionHandler = $exceptionHandler;
         $this->response = $response;
+        $this->soapClient = $soapClient;
+
+        $this->apikey = $accountConfiguration->getApiKey();
     }
 
     /**
@@ -133,9 +143,11 @@ class Soap
     public function getClient()
     {
         $wsdlUrl    = $this->getWsdlUrl();
-        $soapClient = new \SoapClient($wsdlUrl, $this->getOptionsArray());
 
-        return $soapClient;
+        $this->soapClient->setWSDL($wsdlUrl);
+        $this->soapClient->setOptions($this->getOptionsArray());
+
+        return $this->soapClient;
     }
 
     /**
@@ -144,21 +156,24 @@ class Soap
      */
     private function getOptionsArray()
     {
-        $apiKey = $this->getApiKey();
+        /**
+         * Unable to find an alternative, so ignore the coding standards.
+         */
+        // @codingStandardsIgnoreLine
+        $stream_context = stream_context_create(
+            [
+                'http' => [
+                    'header' => 'apikey:' . $this->getApiKey()
+                ]
+            ]
+        );
 
         return [
             'location'       => $this->getLocation(),
             'soap_version'   => SOAP_1_2,
             'features'       => SOAP_SINGLE_ELEMENT_ARRAYS,
-            'trace'          => true,
-            'cache_wsdl'     => WSDL_CACHE_NONE,/** @todo: when in production set chache mode back WSDL_CACHE_BOTH */
-            'stream_context' => stream_context_create(
-                [
-                    'http' => [
-                        'header' => 'apikey:' . $apiKey
-                    ]
-                ]
-            )
+            'cache_wsdl'     => WSDL_CACHE_BOTH,
+            'stream_context' => $stream_context
         ];
     }
 
@@ -205,12 +220,10 @@ class Soap
      */
     private function getApiKey()
     {
-        $apiKey = $this->accountConfig->getApiKey();
-
-        if (empty($apiKey)) {
+        if (empty($this->apikey)) {
             throw new LocalizedException('Please enter your API key');
         }
 
-        return $apiKey;
+        return $this->apikey;
     }
 }

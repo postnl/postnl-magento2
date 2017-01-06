@@ -48,11 +48,13 @@ abstract class AbstractGrid extends Column
     /**
      * @var array
      */
+    // @codingStandardsIgnoreLine
     protected $items = [];
 
     /**
      * @var ShipmentFactory
      */
+    // @codingStandardsIgnoreLine
     protected $shipmentFactory;
 
     /**

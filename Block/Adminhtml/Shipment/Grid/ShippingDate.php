@@ -38,7 +38,6 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
 
-use TIG\PostNL\Model\Shipment as PostNLShipment;
 use TIG\PostNL\Model\ShipmentFactory;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
@@ -51,7 +50,6 @@ class ShippingDate extends AbstractGrid
      * @var TimezoneInterface
      */
     private $timezoneInterface;
-
 
     /**
      * @var DateTimeFormatterInterface

@@ -134,7 +134,11 @@ class TimeFrame extends AbstractEndpoint
     }
 
     /**
-     * @todo:  Add configuration for sundaysorting (if not enabled Monday should not return)
+     * @codingStandardsIgnoreStart
+     * @todo: Add Housenumber validation, can be extracted from $address['street'][1] or regexed out of [0]
+     * @todo: Add configuration for sundaysorting (if not enabled Monday should not return)
+     * @todo: Remove the @codingStandardsIgnore tags
+     * @codingStandardsIgnoreEnd
      * @param $address
      * @param $startDate
      *
@@ -157,6 +161,7 @@ class TimeFrame extends AbstractEndpoint
     }
 
     /**
+     * @codingStandardsIgnoreLine
      * @todo : Filter on Monday and Sunday delivery also on evening and CutoffTimes.
      * @param $timeFrames
      *
@@ -207,6 +212,7 @@ class TimeFrame extends AbstractEndpoint
     }
 
     /**
+     * @codingStandardsIgnoreLine
      * @todo : Move to validation Classes.
      *
      * @param $option
@@ -227,6 +233,7 @@ class TimeFrame extends AbstractEndpoint
     }
 
     /**
+     * @codingStandardsIgnoreLine
      * @todo : Move to validation Classes.
      * @param $timeFrameDate
      *
