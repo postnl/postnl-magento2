@@ -2,7 +2,7 @@
     <ul data-bind="foreach: pickupAddresses">
         <li data-bind="css: { 'selected-row': $parent.isRowSelected($data) }">
             <label>
-                <input class="tig-postnl-pickup-radio" type="radio" data-bind="value: LocationCode, checked: $parent.selectedRow, checkedValue: $data" name="pickuplocation"/>
+                <input class="tig-postnl-pickup-radio" type="radio" data-bind="value: LocationCode, checked: $parent.selectedOption, checkedValue: $data" name="pickuplocation"/>
 
                 <span class="location-container">
                     <span class="tig-postnl-pickup-name" data-bind="text: Name"></span>
