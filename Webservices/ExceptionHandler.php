@@ -72,80 +72,14 @@ class ExceptionHandler
      *
      * @return $this
      * @throws Api\Exception
-     *
-     * @todo Refactor this code, it comes from the M1 version with some required M2 changes.
      */
     public function handle(\SoapFault $soapFault, \SoapClient $client = null)
     {
-        $logException = true;
-
+        // @codingStandardsIgnoreLine
         $exception = new Api\Exception($soapFault->getMessage(), null, $soapFault);
 
-        $requestXML = '';
-        $responseXML = '';
-
-        /**
-         * Get the request and response XML data
-         */
-        if ($client) {
-            $requestXML  = $this->formatXml($client->__getLastRequest());
-            $responseXML = $this->formatXml($client->__getLastResponse());
-        }
-
-        /**
-         * If we got a response, parse it for specific error messages and add these to the exception.
-         */
-        if (!empty($responseXML)) {
-            /**
-             * If we received a response, parse it for errors and create an appropriate exception
-             */
-            $errorResponse = new \DOMDocument();
-            $errorResponse->loadXML($responseXML);
-
-            /**
-             * Get all error messages.
-             */
-            $errors = $errorResponse->getElementsByTagNameNS(static::CIF_ERROR_NAMESPACE, 'ErrorMsg');
-            if ($errors) {
-                $message = '';
-                foreach ($errors as $error) {
-                    $message .= $error->nodeValue . PHP_EOL;
-                }
-
-                /**
-                 * Update the exception.
-                 */
-                $exception->setMessage($message);
-            }
-
-            /**
-             * Parse any CIF error numbers we may have received.
-             */
-            $errorNumbers = $errorResponse->getElementsByTagNameNS(self::CIF_ERROR_NAMESPACE, 'ErrorNumber');
-            if ($errorNumbers) {
-                foreach ($errorNumbers as $errorNumber) {
-                    /**
-                     * Error number 13 means that the shipment was not found by PostNL. This error is very common and
-                     * can be completely valid. To prevent the log files from filling up extremely quickly, we do not
-                     * log this error.
-                     */
-                    $value = $errorNumber->nodeValue;
-                    if ($value == self::SHIPMENT_NOT_FOUND_ERROR_NUMBER) {
-                        $logException = false;
-                    }
-
-                    $exception->addErrorNumber($value);
-                }
-            }
-        }
-
-        /**
-         * Add the response and request data to the exception (to be logged later)
-         */
-        if (!empty($requestXML) || !empty($responseXML)) {
-            $exception->setRequestXml($requestXML);
-            $exception->setResponseXml($responseXML);
-        }
+        $responseXML = $this->handleSoapData($client, $exception);
+        $logException = $this->handleResponseXml($responseXML, $exception);
 
         if ($logException) {
             /**
@@ -164,10 +98,139 @@ class ExceptionHandler
      */
     private function formatXml($xml)
     {
+        // @codingStandardsIgnoreLine
         $domDocument = new \DOMDocument();
         $domDocument->loadXML($xml);
         $domDocument->formatOutput = true;
 
         return $domDocument->saveXML();
+    }
+
+    /**
+     * @param Api\Exception $exception
+     * @param \DOMDocument  $errorResponse
+     *
+     * @return bool
+     */
+    private function addErrorNumbersToException(Api\Exception $exception, \DOMDocument $errorResponse)
+    {
+        $errorNumbers = $errorResponse->getElementsByTagNameNS(self::CIF_ERROR_NAMESPACE, 'ErrorNumber');
+
+        if ($errorNumbers) {
+            return false;
+        }
+
+        $logException = true;
+        foreach ($errorNumbers as $errorNumber) {
+            $logException = $this->checkErrorNumber($exception, $errorNumber);
+        }
+
+        return $logException;
+    }
+
+    /**
+     * @param Api\Exception $exception
+     * @param               $errorNumber
+     *
+     * @return bool
+     */
+    private function checkErrorNumber(Api\Exception $exception, $errorNumber)
+    {
+        $logException = true;
+
+        /**
+         * Error number 13 means that the shipment was not found by PostNL. This error is very common and
+         * can be completely valid. To prevent the log files from filling up extremely quickly, we do not
+         * log this error.
+         */
+        $value = $errorNumber->nodeValue;
+        if ($value == self::SHIPMENT_NOT_FOUND_ERROR_NUMBER) {
+            $logException = false;
+        }
+
+        $exception->addErrorNumber($value);
+
+        return $logException;
+    }
+
+    /**
+     * @param $errorResponse
+     * @param $exception
+     */
+    private function parseErrors(\DOMDocument $errorResponse, Api\Exception $exception)
+    {
+        /**
+         * Get all error messages.
+         */
+        $errors = $errorResponse->getElementsByTagNameNS(static::CIF_ERROR_NAMESPACE, 'ErrorMsg');
+        if (!$errors) {
+            return;
+        }
+
+        $message = '';
+        foreach ($errors as $error) {
+            $message .= $error->nodeValue . PHP_EOL;
+        }
+
+        /**
+         * Update the exception.
+         */
+        $exception->setMessage($message);
+    }
+
+    /**
+     * @param $responseXML
+     * @param $exception
+     *
+     * @return bool
+     */
+    private function handleResponseXml($responseXML, $exception)
+    {
+        /**
+         * If we got a response, parse it for specific error messages and add these to the exception.
+         */
+        if (empty($responseXML)) {
+            return true;
+        }
+
+        /**
+         * If we received a response, parse it for errors and create an appropriate exception
+         */
+        // @codingStandardsIgnoreLine
+        $errorResponse = new \DOMDocument();
+        $errorResponse->loadXML($responseXML);
+        $this->parseErrors($errorResponse, $exception);
+
+        /**
+         * Parse any CIF error numbers we may have received.
+         */
+        return $this->addErrorNumbersToException($exception, $errorResponse);
+    }
+
+    /**
+     * @param \SoapClient $client
+     * @param             $exception
+     *
+     * @return string
+     */
+    private function handleSoapData(\SoapClient $client, Api\Exception $exception)
+    {
+        /**
+         * Get the request and response XML data
+         */
+        if (!$client) {
+            return '';
+        }
+
+        $requestXML  = $this->formatXml($client->__getLastRequest());
+        $responseXML = $this->formatXml($client->__getLastResponse());
+
+        /**
+         * Add the response and request data to the exception (to be logged later)
+         */
+        $exception->setRequestXml($requestXML);
+        $exception->setResponseXml($responseXML);
+
+        return $responseXML;
     }
 }

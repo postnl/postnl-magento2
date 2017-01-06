@@ -38,8 +38,6 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
 
-use TIG\PostNL\Model\Shipment as PostNLShipment;
-
 class ConfirmStatus extends AbstractGrid
 {
     /**
@@ -64,7 +62,7 @@ class ConfirmStatus extends AbstractGrid
      *
      * @return bool
      */
-    protected function getIsConfirmed($item)
+    private function getIsConfirmed($item)
     {
         $confirmedAt = $item['tig_postnl_confirmed_at'];
 

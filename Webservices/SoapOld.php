@@ -56,6 +56,7 @@ class SoapOld
     const HEADER_NAMESPACE = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd';
 
     /** TEMP TEST DATA
+     * @codingStandardsIgnoreLine
      *  @todo : Remove when PostNL API is fixed.
      */
     const TEST_SERVICE_WSDL_URL = 'https://testservice.postnl.com/CIF_SB/';

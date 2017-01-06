@@ -40,6 +40,7 @@
 namespace TIG\PostNL\Webservices\Endpoints;
 
 /**
+ * @codingStandardsIgnoreLine
  * @todo : Waiting on PostNL to finish the API for DeliveryDate, so needs to be refactored when API is ready.
  */
 use TIG\PostNL\Webservices\SoapOld;
@@ -124,8 +125,11 @@ class DeliveryDate
     }
 
     /**
-     * @todo :  1. Calculation for shippingDuration
-     * @todo:   2. Add configuration for sundaysorting (if not enabled Monday should not return)
+     * @codingStandardsIgnoreStart
+     * @todo: 1. Calculation for shippingDuration
+     * @todo: 2. Add configuration for sundaysorting (if not enabled Monday should not return)
+     * @todo: 3. Move surounding @codingStandardsIgnore tags
+     * @codingStandardsIgnoreEnd
      * @param $address
      *
      * @return array
