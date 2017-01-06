@@ -76,8 +76,7 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
             return false;
         }
 
-        if (
-            !address.postalCode.length || !address.countryCode.length || !address.street.length ||
+        if (!address.postalCode.length || !address.countryCode.length || !address.street.length ||
             address.street[0] === ''
         ) {
             return false;

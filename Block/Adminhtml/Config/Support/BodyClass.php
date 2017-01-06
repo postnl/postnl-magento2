@@ -46,18 +46,15 @@ use Magento\Framework\View\Element\BlockInterface;
 class BodyClass extends Template implements BlockInterface
 {
     /**
-     * @var \Magento\Framework\App\RequestInterface
-     */
-    protected $request;
-    /**
      * @param Context $context
      * @param array $data
      */
     public function __construct(Context $context, array $data = [])
     {
         parent::__construct($context, $data);
-        $this->request = $context->getRequest();
-        if ($this->request->getParam('section') == 'tig_postnl') {
+
+        $request = $context->getRequest();
+        if ($request->getParam('section') == 'tig_postnl') {
             $this->pageConfig->addBodyClass('postnl-config-page');
         }
     }
