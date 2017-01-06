@@ -95,20 +95,19 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     {
         /** @var \Magento\Sales\Model\Order\Shipment $shipment */
         $shipment = $observer->getData('data_object');
-        $shipmentId = $shipment->getId();
         $mainBarcode = $this->generateBarcode();
 
         //TODO: actually get & save the parcel count
 
         /** @var \TIG\PostNL\Model\Shipment $model */
         $model = $this->shipmentFactory->create();
-        $model->setShipmentId($shipmentId);
+        $model->setShipmentId($shipment->getId());
         $model->setMainBarcode($mainBarcode);
         $model->save();
 
         $parcelCount = $model->getParcelCount();
         if ($parcelCount > 1) {
-            $this->saveShipmentBarcode($shipmentId, $parcelCount);
+            $this->saveShipmentBarcode($model->getEntityId(), $parcelCount);
         }
     }
 
@@ -122,6 +121,7 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     {
         /** @var \TIG\PostNL\Model\ResourceModel\ShipmentBarcode\Collection $barcodeModelCollection */
         $barcodeModelCollection = $this->shipmentBarcodeCollectionFactory->create();
+        $barcodeModelCollection->load();
 
         for ($count = 1; $count <= $parcelCount; $count++) {
             $barcode = $this->generateBarcode();
