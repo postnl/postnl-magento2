@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
-**
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -33,17 +32,21 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <css src="TIG_PostNL::css/adminhtml_config.css" />
-    </head>
-    <body>
-        <referenceContainer name="content">
-            <block class="TIG\PostNL\Block\Adminhtml\Config\Support\BodyClass" name="postnl.support" template="TIG_PostNL::support.phtml" before="system.config.edit" />
-        </referenceContainer>
-    </body>
-</page>
+define([], function () {
+    return {
+        log: function () {
+            console.log.apply(console, arguments);
+        },
+
+        info: function () {
+            console.info.apply(console, arguments);
+        },
+
+        error: function () {
+            console.error.apply(console, arguments);
+        }
+    };
+});

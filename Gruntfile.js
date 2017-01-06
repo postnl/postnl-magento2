@@ -39,10 +39,28 @@ module.exports = function (grunt) {
                 'view/frontend/web/js/**/*.js',
                 'view/admihtml/web/js/**/*.js'
             ]
+        },
+        less: {
+            deliveryoptions: {
+                files: {
+                    'view/frontend/web/css/deliveryoptions.css': 'view/frontend/web/css/source/deliveryoptions.less'
+                }
+            }
+        },
+        watch: {
+            scripts: {
+                files: ['view/frontend/web/css/source/**/*.less'],
+                tasks: ['less:deliveryoptions'],
+                options: {
+                    livereload : true
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
     // Default task(s).
