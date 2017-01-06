@@ -37,7 +37,7 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\PostNL\Validators;
+namespace TIG\PostNL\Helper;
 
 use TIG\PostNL\Exception as PostnlException;
 
@@ -56,7 +56,7 @@ class DeliveryOptions
             'pickup' => true, 'delivery' => true
         ],
         'expected_delivery_time_start' => [
-            'pickup' => true, 'delivery' => true
+            'pickup' => false, 'delivery' => true
         ],
         'expected_delivery_time_end'   => [
             'pickup' => false, 'delivery' => true
@@ -69,16 +69,21 @@ class DeliveryOptions
         ],
         'pg_retail_network_id'         => [
             'pickup' => true, 'delivery' => false
+        ],
+        'pg_address'                   => [
+            'pickup' => true, 'delivery' => false
         ]
     ];
 
     /**
      * @param $params
      *
+     * @return array
      * @throws PostnlException
      */
-    public function hasAllRequiredOrderParams($params)
+    public function getRequiredOrderParams($params)
     {
+        $params              = $this->formatParamData($params);
         $requiredOrderParams = $this->requiredOrderParamsMissing($params);
 
         if (!empty($requiredOrderParams)) {
@@ -87,6 +92,8 @@ class DeliveryOptions
                 __('Missing required parameters : %1', implode(', ',$requiredOrderParams))
             );
         }
+
+        return $params;
     }
 
     /**
@@ -119,5 +126,36 @@ class DeliveryOptions
         }
 
         return $list;
+    }
+
+    /**
+     * @param $params
+     *
+     * @return array
+     */
+    private function formatParamData($params)
+    {
+        $quoteId        = isset($params['quote_id']) ? $params['quote_id'] : '';
+        $delivery_date  = isset($params['date']) ? $params['date'] : '';
+        $expected_start = isset($params['from']) ? $params['from'] : '';
+        $expected_end   = isset($params['to']) ? $params['to'] : '';
+        $locationCode   = isset($params['LocationCode']) ? $params['LocationCode'] : '';
+        $networkId      = isset($params['RetailNetworkID']) ? $params['RetailNetworkID'] : '';
+        $pgAddress      = isset($params['address']) ? $params['address'] : '';
+        $isPakjeGemak   = $params['type'] == 'pickup' ? 1 : 0;
+
+        // Keys need to be named after the column names of the tig_postnl_order table.
+        // Except pg_address, we will unset this, before adding params to database.
+        return [
+            'type'                         => $params['type'],
+            'quote_id'                     => $quoteId,
+            'delivery_date'                => $delivery_date,
+            'expected_delivery_time_start' => $expected_start,
+            'expected_delivery_time_end'   => $expected_end,
+            'is_pakjegemak'                => $isPakjeGemak,
+            'pg_location_code'             => $locationCode,
+            'pg_retail_network_id'         => $networkId,
+            'pg_address'                   => $pgAddress
+        ];
     }
 }

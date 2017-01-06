@@ -247,7 +247,7 @@ class Index extends Action
             return $this->getPosibleDeliveryDays($this->addressEnhancer->get());
         }
 
-        if ($type == 'locations') {
+        if ($type == 'pickup') {
             return $this->getNearestLocations($this->addressEnhancer->get());
         }
 

@@ -44,7 +44,8 @@ use Magento\Framework\Json\Helper\Data;
 use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Model\OrderRepository;
-use TIG\PostNL\Validators\DeliveryOptions as OptionsValidator;
+use TIG\PostNL\Helper\DeliveryOptions as OptionsHelper;
+use \Magento\Checkout\Model\Session;
 
 /**
  * Class Save
@@ -69,21 +70,36 @@ class Save extends Action
     private $jsonHelper;
 
     /**
-     * @var OptionsValidator
+     * @var OptionsHelper
      */
-    private $validator;
+    private $optionsHelper;
 
+    /**
+     * @var Session
+     */
+    private $checkoutSession;
+
+    /**
+     * @param Context          $context
+     * @param OrderFactory     $orderFactory
+     * @param OrderRepository  $orderRepository
+     * @param Data             $jsonHelper
+     * @param OptionsHelper    $optionsHelper
+     * @param Session          $checkoutSession
+     */
     public function __construct(
         Context $context,
         OrderFactory $orderFactory,
         OrderRepository $orderRepository,
         Data $jsonHelper,
-        OptionsValidator $validator
+        OptionsHelper $optionsHelper,
+        Session $checkoutSession
     ) {
         $this->orderFactory    = $orderFactory;
         $this->orderRepository = $orderRepository;
         $this->jsonHelper      = $jsonHelper;
-        $this->validator       = $validator;
+        $this->optionsHelper   = $optionsHelper;
+        $this->checkoutSession = $checkoutSession;
         parent::__construct($context);
     }
 
@@ -99,7 +115,6 @@ class Save extends Action
             return $this->jsonResponse(__('No Type specified'));
         }
 
-        $this->validator->hasAllRequiredOrderParams($params);
         $saved  = $this->saveDeliveryOption($params);
 
         try {
@@ -119,19 +134,13 @@ class Save extends Action
      */
     private function saveDeliveryOption($params)
     {
-        // Get PostNL order
+        $params      = $this->addSessionData($params);
+        $params      = $this->optionsHelper->getRequiredOrderParams($params);
         $postnlOrder = $this->getPostNLOrder($params['quote_id']);
 
-        if (null === $postnlOrder->getId()) {
-            $postnlOrder->setData('quote_id', $params['quote_id']);
+        foreach ($params as $key => $value) {
+            $postnlOrder->setData($key, $value);
         }
-
-        $postnlOrder->setData('delivery_date', $params['delivery_date']);
-        $postnlOrder->setData('expected_delivery_time_start', $params['expected_delivery_time_start']);
-        $postnlOrder->setData('expected_delivery_time_end', $params['expected_delivery_time_end']);
-        $postnlOrder->setData('is_pakjegemak', $params['is_pakjegemak']);
-        $postnlOrder->setData('pg_location_code', $params['pg_location_code']);
-        $postnlOrder->setData('pg_retail_network_id', $params['pg_retail_network_id']);
 
         $this->orderRepository->save($postnlOrder);
 
@@ -171,5 +180,20 @@ class Save extends Action
         return $this->getResponse()->representJson(
             $this->jsonHelper->jsonEncode($response)
         );
+    }
+
+    /**
+     * @param $params
+     * @todo : When type is pickup the delivery Date needs to be recalculated based on the opening days/hours of the location
+     * @return mixed
+     */
+    private function addSessionData($params)
+    {
+        if (!isset($params['date'])) {
+            $params['date'] = $this->checkoutSession->getPostNLDeliveryDate();
+        }
+        $params['quote_id'] = $this->checkoutSession->getQuoteId();
+
+        return $params;
     }
 }

@@ -106,6 +106,7 @@ define([
                     data: {
                         type: 'pickup',
                         RetailNetworkID: value.RetailNetworkID,
+                        LocationCode : value.LocationCode,
                         address: value.Address
                     }
                 });
@@ -127,7 +128,7 @@ define([
             jQuery.ajax({
                 method: 'POST',
                 url : '/postnl/deliveryoptions',
-                data : {type: 'locations', address: address}
+                data : {type: 'pickup', address: address}
             }).done(function (data) {
                 data = ko.utils.arrayMap(data, function (data) {
                     return new Location(data);

@@ -93,6 +93,7 @@ define([
                     url: '/postnl/deliveryoptions/save',
                     data: {
                         type: 'delivery',
+                        date : value.date,
                         option: value.option,
                         from: value.from,
                         to: value.to
