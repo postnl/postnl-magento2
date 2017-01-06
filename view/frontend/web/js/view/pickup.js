@@ -84,7 +84,7 @@ define([
             /**
              * Subscribe to address changes.
              */
-            AddressFinder.subscribe( function (address) {
+            AddressFinder.subscribe(function (address) {
                 if (!address) {
                     return;
                 }
@@ -99,7 +99,7 @@ define([
             /**
              * Save the selected pickup option
              */
-            this.selectedOption.subscribe( function (value) {
+            this.selectedOption.subscribe(function (value) {
                 $.ajax({
                     method: 'POST',
                     url: '/postnl/deliveryoptions/save',
@@ -201,14 +201,15 @@ define([
         }
     });
 
-    function Location(data) {
+    function Location(data)
+    {
         $.each(data, function (key, value) {
             this[key] = value;
         }.bind(this));
 
         this.expanded = ko.observable(false);
 
-        this.toggle = function() {
+        this.toggle = function () {
             this.expanded(!this.expanded());
         };
     }

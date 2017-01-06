@@ -72,7 +72,7 @@ define([
                 'selectedOption'
             ]);
 
-            AddressFinder.subscribe( function (address) {
+            AddressFinder.subscribe(function (address) {
                 if (!address) {
                     return;
                 }
@@ -87,7 +87,7 @@ define([
             /**
              * Save the selected delivery option
              */
-            this.selectedOption.subscribe( function (value) {
+            this.selectedOption.subscribe(function (value) {
                 $.ajax({
                     method: 'POST',
                     url: '/postnl/deliveryoptions/save',
