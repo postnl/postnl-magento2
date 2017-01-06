@@ -1,4 +1,8 @@
-/* ==================================== SupportTab - Default styling ==================================== */
+/* =================================================================================================================== *
+*
+* SupportTab - Default styling
+*
+* =================================================================================================================== */
 
 #section { float: left; width: 100%; clear: both; }
 #supporttab { margin-left: 4rem;  }
@@ -67,7 +71,8 @@
     border-right:5px solid #CCCCCC;
 }
 
-/* ==================================== SupportTab - Legend ==================================== */
+/* SupportTab - Legend ============================================================================================== */
+
 #block {
     margin-bottom: 30px;
     float: left;
@@ -124,7 +129,7 @@
     height:0;
 }
 
-/* ==================================== SupportTab - 3rd Party | Version compatibility ==================================== */
+/* SupportTab - 3rd Party | Version compatibility =================================================================== */
 
 .block-version h3 {
     cursor: auto !important;
@@ -136,7 +141,8 @@
     padding:10px;
     background: #F8F8F8;
     float:left;
-    width: 100%;
+    width: calc(100% - 20px);
+    box-sizing: border-box;
 }
 
 
@@ -169,7 +175,7 @@
     margin-left: 10px;
 }
 
-/* ==================================== SupportTab - Quick guide ==================================== */
+/* SupportTab - Quick guide ========================================================================================= */
 
 #supporttab ol {
     margin-left: 40px;
@@ -188,13 +194,13 @@
     list-style-type: lower-alpha;
 }
 
-/* ==================================== SupportTab - Support ==================================== */
+/* SupportTab - Support ============================================================================================= */
 
-.postnl_logo, .tig_logo {
-    padding:10px 10px 10px 0;
-}
-.postnl_logo img { width: 180px; }
-.tig_logo img { width: 50px; }
+/*.postnl_logo, .tig_logo {*/
+    /*padding:10px 10px 10px 0;*/
+/*}*/
+/*.postnl_logo img { width: 180px; }*/
+/*.tig_logo img { width: 50px; }*/
 
 .support-postnl-tig ul {
     float:left;
@@ -221,9 +227,103 @@
     padding-right: 5px;
 }
 
-/* ==================================== SupportTab - Documentation ==================================== */
+/* SupportTab - Documentation ======================================================================================= */
 
 .external_link {
     margin-left: 5px;
     vertical-align: middle;
 }
+
+
+
+
+/* =================================================================================================================== *
+*
+* TIG PostNL Magento 2 Extension
+*
+* =================================================================================================================== */
+
+
+/* Identity - Left Menu ====================================================================== */
+
+.postnl-section .admin__page-nav-link:before {
+    float:left;
+    width: 50px;
+    height: 37px;
+
+    content: ' ';
+    background-image: url(../images/postnl_logo.png) !important;
+    background-position: 0 2px;
+    background-repeat: no-repeat;
+    background-size: auto 33px;
+    margin-top: -10px;
+}
+
+.postnl-section .admin__page-nav-link {
+    /*text-indent: -999px;*/
+    padding: 2rem 1rem 2rem 1rem;
+}
+
+.postnl-section .admin__page-nav-link:after {
+    float:right;
+    width: 30px;
+    height: 30px;
+    margin-top:-7px;
+
+    background-image: url(../images/logo_tig.png) !important;
+    background-size: 30px !important;
+    background-repeat:no-repeat;
+    content: ' ';
+}
+
+/* Identity - Toolbar =============================================================================================== */
+
+.postnl-config-page .page-main-actions .page-actions .page-actions-inner:before {
+    background-image: url(../images/postnl_logo.png) !important;
+    background-repeat: no-repeat;
+    content: ' ';
+    width: 50px;
+    float: left;
+    height: 30px;
+    margin-top: 8px;
+    background-size: auto 29px;
+}
+
+
+.postnl-config-page .page-main-actions .page-actions .page-actions-inner:after {
+    background-image: url(../images/logo_tig.png) !important;
+    background-repeat: no-repeat;
+    content: ' ';
+    width: 50px;
+    float: left;
+    height: 30px;
+    margin-top: 8px;
+    background-size: auto 29px;
+}
+
+/* Identity - Content =============================================================================================== */
+
+.postnl-config-page .admin__scope-old:before {
+    background-image: url(../images/logo_tig.png) !important;
+    background-repeat: no-repeat;
+    content: ' ';
+
+    width: 50px;
+    float:right;
+    height: 50px;
+    background-size: auto 50px;
+    margin-right: 15px;
+
+}
+
+.postnl-config-page #container:before  {
+    background-image: url(../images/postnl_logo.png) !important;
+    background-repeat: no-repeat;
+    content: ' ';
+
+    float:left;
+    height: 50px;
+    background-size: auto 50px;
+    width: 295px;
+}
+

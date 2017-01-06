@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -36,14 +36,29 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <css src="TIG_PostNL::css/adminhtml_config.css" />
-    </head>
-    <body>
-        <referenceContainer name="content">
-            <block class="TIG\PostNL\Block\Adminhtml\Config\Support\BodyClass" name="postnl.support" template="TIG_PostNL::support.phtml" before="system.config.edit" />
-        </referenceContainer>
-    </body>
-</page>
+
+namespace TIG\PostNL\Block\Adminhtml\Config\Support;
+
+use Magento\Backend\Block\Template;
+use Magento\Backend\Block\Template\Context;
+use Magento\Framework\View\Element\BlockInterface;
+
+class BodyClass extends Template implements BlockInterface
+{
+    /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    protected $request;
+    /**
+     * @param Context $context
+     * @param array $data
+     */
+    public function __construct(Context $context, array $data = [])
+    {
+        parent::__construct($context, $data);
+        $this->request = $context->getRequest();
+        if ($this->request->getParam('section') == 'tig_postnl') {
+            $this->pageConfig->addBodyClass('postnl-config-page');
+        }
+    }
+}
