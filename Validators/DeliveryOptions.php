@@ -96,18 +96,12 @@ class DeliveryOptions
      */
     private function requiredOrderParamsMissing($params)
     {
-        $type = 'delivery';
-        if (isset($params['is_pakjegemak']) && false != $params['is_pakjegemak']) {
-            $type = 'pickup';
-        }
-
-        $requiredList = $this->setRequiredListing($type);
+        $requiredList = $this->setRequiredList($params['type']);
 
         $missing = array_filter($requiredList, function ($value, $key) use ($params) {
             $paramValue = isset($params[$key]) && !empty($params[$key]) ? $params[$key] : false;
             return !$paramValue && true == $value;
         }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
-
 
         return array_keys($missing);
     }
@@ -117,7 +111,7 @@ class DeliveryOptions
      *
      * @return array
      */
-    private function setRequiredListing($type)
+    private function setRequiredList($type)
     {
         $list = [];
         foreach ($this->optionParams as $key => $value) {
@@ -126,5 +120,4 @@ class DeliveryOptions
 
         return $list;
     }
-
 }

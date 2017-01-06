@@ -87,9 +87,17 @@ class Save extends Action
         parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\Controller\ResultInterface
+     * @throws \TIG\PostNL\Exception
+     */
     public function execute()
     {
         $params = $this->getRequest()->getParams();
+
+        if (!isset($params['type'])) {
+            return $this->jsonResponse(__('No Type specified'));
+        }
 
         $this->validator->hasAllRequiredOrderParams($params);
         $saved  = $this->saveDeliveryOption($params);

@@ -57,11 +57,6 @@ use TIG\PostNL\Helper\AddressEnhancer;
 class Index extends Action
 {
     /**
-     * @var PageFactory
-     */
-    private $resultPageFactory;
-
-    /**
      * @var Data
      */
     private $jsonHelper;
@@ -87,13 +82,12 @@ class Index extends Action
     private $addressEnhancer;
 
     /**
-     * @var
+     * @var Session
      */
     private $checkoutSession;
 
     /**
      * @param Context           $context
-     * @param PageFactory       $resultPageFactory
      * @param Data              $jsonHelper
      * @param DeliveryDate      $deliveryDate
      * @param TimeFrame         $timeFrame
@@ -103,7 +97,6 @@ class Index extends Action
      */
     public function __construct(
         Context $context,
-        PageFactory $resultPageFactory,
         Data $jsonHelper,
         DeliveryDate $deliveryDate,
         TimeFrame $timeFrame,
@@ -111,7 +104,6 @@ class Index extends Action
         Session $checkoutSession,
         AddressEnhancer $addressEnhancer
     ) {
-        $this->resultPageFactory = $resultPageFactory;
         $this->jsonHelper        = $jsonHelper;
         $this->deliveryEndpoint  = $deliveryDate;
         $this->timeFrameEndpoint = $timeFrame;
