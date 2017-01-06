@@ -39,9 +39,7 @@
 
 namespace TIG\PostNL\Validators;
 
-use Symfony\Component\Config\Definition\Exception\Exception;
 use TIG\PostNL\Exception as PostnlException;
-use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
 /**
  * Class DeliveryOptions
@@ -64,7 +62,7 @@ class DeliveryOptions
             'pickup' => false, 'delivery' => true
         ],
         'is_pakjegemak'                => [
-            'pickup' => true, 'delivery' => true
+            'pickup' => true, 'delivery' => false
         ],
         'pg_location_code'             => [
             'pickup' => true, 'delivery' => false
@@ -75,36 +73,25 @@ class DeliveryOptions
     ];
 
     /**
-     * @var TimezoneInterface
-     */
-    private $timeZoneInterface;
-
-    /**
-     * @param TimezoneInterface $timezoneInterface
-     */
-    public function __construct(
-        TimezoneInterface $timezoneInterface
-    ) {
-        $this->timeZoneInterface = $timezoneInterface;
-    }
-
-    /**
      * @param $params
+     *
+     * @throws PostnlException
      */
     public function hasAllRequiredOrderParams($params)
     {
         $requiredOrderParams = $this->requiredOrderParamsMissing($params);
+
         if (!empty($requiredOrderParams)) {
-            throw new Exception(
+            throw new PostnlException(
             // @codingStandardsIgnoreLine
-                __('Missing required parameters : %1', var_export($requiredOrderParams))
+                __('Missing required parameters : %1', implode(', ',$requiredOrderParams))
             );
         }
     }
 
     /**
      * @param $params
-     * @todo needs refactoring
+     *
      * @return array
      */
     private function requiredOrderParamsMissing($params)
@@ -116,15 +103,13 @@ class DeliveryOptions
 
         $requiredList = $this->setRequiredListing($type);
 
-        $missing = [];
-        foreach ($requiredList as $key => $value) {
+        $missing = array_filter($requiredList, function ($value, $key) use ($params) {
             $paramValue = isset($params[$key]) && !empty($params[$key]) ? $params[$key] : false;
-            if (!$paramValue && true == $value) {
-                $missing[] = $key;
-            }
-        }
+            return !$paramValue && true == $value;
+        }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
-        return $missing;
+
+        return array_keys($missing);
     }
 
     /**
@@ -134,13 +119,12 @@ class DeliveryOptions
      */
     private function setRequiredListing($type)
     {
-        $array = [];
-
+        $list = [];
         foreach ($this->optionParams as $key => $value) {
-            $array[$key] = $value[$type];
+            $list[$key] = $value[$type];
         }
 
-        return $array;
+        return $list;
     }
 
 }
