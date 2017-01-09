@@ -47,5 +47,5 @@ define(['ko'], function (ko) {
         deliveryOptionsAreLoading: deliveryOptionsAreLoading,
         pickupOptionsAreLoading: pickupOptionsAreLoading,
         isLoading: isLoading
-    }
+    };
 });
