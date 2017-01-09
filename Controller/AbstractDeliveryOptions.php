@@ -44,8 +44,12 @@ use Magento\Framework\Json\Helper\Data;
 use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Model\OrderRepository;
 use \Magento\Checkout\Model\Session;
-use TIG\PostNL\Helper\AddressEnhancer;
 
+/**
+ * Class AbstractDeliveryOptions
+ *
+ * @package TIG\PostNL\Controller
+ */
 abstract class AbstractDeliveryOptions extends Action
 {
     /**
