@@ -41,14 +41,16 @@ define([
     'Magento_Checkout/js/model/quote',
     'jquery',
     'TIG_PostNL/js/Helper/AddressFinder',
-    'TIG_PostNL/js/Helper/Logger'
+    'TIG_PostNL/js/Helper/Logger',
+    'TIG_PostNL/js/Helper/State'
 ], function (
     Component,
     ko,
     quote,
     $,
     AddressFinder,
-    Logger
+    Logger,
+    State
 ) {
     'use strict';
     return Component.extend({
@@ -126,11 +128,15 @@ define([
          * @param address
          */
         getPickupAddresses : function (address) {
+            State.pickupOptionsAreLoading(true);
+
             jQuery.ajax({
                 method: 'POST',
                 url : '/postnl/deliveryoptions/pickup',
                 data : {address: address}
             }).done(function (data) {
+                State.pickupOptionsAreLoading(false);
+
                 data = ko.utils.arrayMap(data, function (data) {
                     return new Location(data);
                 });

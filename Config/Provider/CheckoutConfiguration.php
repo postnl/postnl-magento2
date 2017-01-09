@@ -1,3 +1,4 @@
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -32,34 +33,42 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['uiComponent', 'ko', 'TIG_PostNL/js/Helper/State'], function (Component, ko, State) {
-    return Component.extend({
-        defaults: {
-            template: 'TIG_PostNL/deliveryoptions',
-            shipmentType: 'delivery'
-        },
+namespace TIG\PostNL\Config\Provider;
 
-        initObservable: function () {
-            this._super().observe([
-                'shipmentType'
-            ]);
+use Magento\Checkout\Model\ConfigProviderInterface;
 
-            this.isLoading = ko.computed( function () {
-                return State.isLoading();
-            });
+class CheckoutConfiguration implements ConfigProviderInterface
+{
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
 
-            return this;
-        },
+    /**
+     * @param ShippingOptions $shippingOptions
+     */
+    public function __construct(
+        ShippingOptions $shippingOptions
+    ) {
+        $this->shippingOptions = $shippingOptions;
+    }
 
-        setDelivery: function () {
-            this.shipmentType('delivery');
-        },
-
-        setPickup: function () {
-            this.shipmentType('pickup');
-        }
-    });
-});
+    /**
+     * Retrieve assoc array of checkout configuration
+     *
+     * @return array
+     */
+    public function getConfig()
+    {
+        return [
+            'shipping' => [
+                'postnl' => [
+                    'shippingoptions_active' => $this->shippingOptions->isShippingoptionsActive(),
+                ]
+            ]
+        ];
+    }
+}
