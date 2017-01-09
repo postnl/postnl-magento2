@@ -1,4 +1,6 @@
-/**
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -35,31 +37,13 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['uiComponent', 'ko', 'TIG_PostNL/js/Helper/State'], function (Component, ko, State) {
-    return Component.extend({
-        defaults: {
-            template: 'TIG_PostNL/deliveryoptions',
-            shipmentType: 'delivery'
-        },
-
-        initObservable: function () {
-            this._super().observe([
-                'shipmentType'
-            ]);
-
-            this.isLoading = ko.computed( function () {
-                return State.isLoading();
-            });
-
-            return this;
-        },
-
-        setDelivery: function () {
-            this.shipmentType('delivery');
-        },
-
-        setPickup: function () {
-            this.shipmentType('pickup');
-        }
-    });
-});
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="tig_postnl_checkout_config_provider" xsi:type="object">TIG\PostNL\Config\Provider\CheckoutConfiguration</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

@@ -39,6 +39,7 @@
 namespace TIG\PostNL\Webservices;
 
 use TIG\PostNL\Logging\Log;
+use Zend\Soap\Client;
 
 class ExceptionHandler
 {
@@ -68,12 +69,12 @@ class ExceptionHandler
 
     /**
      * @param \SoapFault  $soapFault
-     * @param \SoapClient $client
+     * @param Client      $client
      *
      * @return $this
      * @throws Api\Exception
      */
-    public function handle(\SoapFault $soapFault, \SoapClient $client = null)
+    public function handle(\SoapFault $soapFault, Client $client = null)
     {
         // @codingStandardsIgnoreLine
         $exception = new Api\Exception($soapFault->getMessage(), null, $soapFault);
@@ -98,6 +99,10 @@ class ExceptionHandler
      */
     private function formatXml($xml)
     {
+        if (empty($xml)) {
+            return '';
+        }
+
         // @codingStandardsIgnoreLine
         $domDocument = new \DOMDocument();
         $domDocument->loadXML($xml);
@@ -208,12 +213,12 @@ class ExceptionHandler
     }
 
     /**
-     * @param \SoapClient $client
-     * @param             $exception
+     * @param Client $client
+     * @param        $exception
      *
      * @return string
      */
-    private function handleSoapData(\SoapClient $client, Api\Exception $exception)
+    private function handleSoapData(Client $client, Api\Exception $exception)
     {
         /**
          * Get the request and response XML data
@@ -222,8 +227,8 @@ class ExceptionHandler
             return '';
         }
 
-        $requestXML  = $this->formatXml($client->__getLastRequest());
-        $responseXML = $this->formatXml($client->__getLastResponse());
+        $requestXML  = $this->formatXml($client->getLastRequest());
+        $responseXML = $this->formatXml($client->getLastResponse());
 
         /**
          * Add the response and request data to the exception (to be logged later)
