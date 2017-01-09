@@ -60,8 +60,16 @@ class SalesOrderShipmentSaveAfterEventTest extends TestCase
         $observer = $this->getObject(Observer::class);
         $observer->setData('data_object', $shipment);
 
+        $barcodeMock = $this->getFakeMock('TIG\PostNL\Webservices\Endpoints\Barcode');
+        $barcodeMock->setMethods(['call']);
+        $barcodeMock = $barcodeMock->getMock();
+
+        $callExpects = $barcodeMock->expects($this->once());
+        $callExpects->method('call');
+        $callExpects->willReturn((Object)['Barcode' => '3STOTA1234567890']);
+
         /** @var SalesOrderShipmentSaveAfterEvent $instance */
-        $instance = $this->getInstance();
+        $instance = $this->getInstance(['barcode' => $barcodeMock]);
         $instance->execute($observer);
 
         $postnlShipment = $this->getPostNLShipment($shipment);

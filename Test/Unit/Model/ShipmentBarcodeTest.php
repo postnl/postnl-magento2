@@ -33,63 +33,54 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Model;
+namespace TIG\PostNL\Unit\Model;
 
-use Magento\Framework\DataObject\IdentityInterface;
-use Magento\Framework\Model\AbstractModel;
+use TIG\PostNL\Model\ShipmentBarcode;
+use TIG\PostNL\Test\TestCase;
 
-/**
- * @method $this setShipmentId(string)
- * @method null|string getShipmentId
- * @method $this setOrderId(string)
- * @method null|string getOrderId
- * @method $this setMainBarcode(string)
- * @method null|string getMainBarcode
- * @method $this setProductCode(string)
- * @method null|string getProductCode
- * @method $this setShipmentType(string)
- * @method null|string getShipmentType
- * @method $this setIsPakjegemak(string)
- * @method null|string getIsPakjegemak
- * @method $this setParcelCount(string $value)
- * @method null|string getParcelCount
- * @method $this setShipAt(string)
- * @method null|string getShipAt
- * @method $this setConfirmedAt(string)
- * @method null|string getConfirmedAt
- * @method $this setCreatedAt(string)
- * @method null|string getCreatedAt
- * @method $this setUpdatedAt(string)
- * @method null|string getUpdatedAt
- */
-class Shipment extends AbstractModel implements ShipmentInterface, IdentityInterface
+class ShipmentBarcodeTest extends TestCase
 {
     /**
-     * @var string
+     * @param array $args
+     *
+     * @return object
      */
-    // @codingStandardsIgnoreLine
-    protected $_eventPrefix = 'tig_postnl_shipment';
-
-    const CACHE_TAG = 'tig_postnl_shipment';
-
-    /**
-     * Constructor
-     */
-    // @codingStandardsIgnoreLine
-    protected function _construct()
+    public function getInstance(array $args = [])
     {
-        // @codingStandardsIgnoreLine
-        $this->_init('TIG\PostNL\Model\ResourceModel\Shipment');
+        return $this->objectManager->getObject(ShipmentBarcode::class, $args);
     }
 
     /**
      * @return array
      */
-    public function getIdentities()
+    public function getIdentitiesProvider()
     {
-        return [self::CACHE_TAG . '_' . $this->getId()];
+        return [
+            [1],
+            [2],
+            [3],
+            [4],
+            [5],
+        ];
+    }
+
+    /**
+     * @param $id
+     *
+     * @dataProvider getIdentitiesProvider
+     */
+    public function testGetIdentities($id)
+    {
+        $instance = $this->getInstance();
+        $instance->setId($id);
+
+        $result = $instance->getIdentities();
+        $expected = ShipmentBarcode::CACHE_TAG . '_' . $id;
+
+        $this->assertInternalType('array', $result);
+        $this->assertEquals([$expected], $result);
     }
 }

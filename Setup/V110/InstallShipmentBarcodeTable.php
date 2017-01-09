@@ -52,8 +52,8 @@ class InstallShipmentBarcodeTable extends AbstractTableInstaller
     {
         $this->addEntityId();
 
-        $this->addInt('shipment_id', 'Shipment ID', true, true);
-        $this->addForeignKey('tig_postnl_shipment', 'entity_id', static::TABLE_NAME, 'entity_id');
+        $this->addInt('parent_id', 'Parent ID', true, true);
+        $this->addForeignKey('tig_postnl_shipment', 'entity_id', static::TABLE_NAME, 'parent_id');
 
         $this->addText('type', 'Barcode Type', 16);
         $this->addInt('number', 'Barcode Number');

@@ -69,6 +69,8 @@ class InstallShipmentTable extends AbstractTableInstaller
         $this->addText('is_pakjegemak', 'Is Pakjegemak', 1);
         $this->addText('pg_location_code', 'PakjeGemak Location Code', 16);
         $this->addText('pg_retail_network_id', 'PakjeGemak Retail Netwerok ID', 16);
+      
+        $this->addInt('parcel_count', 'Parcel Count', true, true, 1);
 
         $this->addDate('ship_at', 'Ship the parcel at');
         $this->addTimestamp('confirmed_at', 'Confirmed at');

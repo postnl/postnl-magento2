@@ -130,8 +130,16 @@ class ConfirmStatusTest extends TestCase
         $event = $this->getObject(Observer::class);
         $event->setData('data_object', $shipment);
 
+        $barcodeMock = $this->getFakeMock('TIG\PostNL\Webservices\Endpoints\Barcode');
+        $barcodeMock->setMethods(['call']);
+        $barcodeMock = $barcodeMock->getMock();
+
+        $callExpects = $barcodeMock->expects($this->once());
+        $callExpects->method('call');
+        $callExpects->willReturn((Object)['Barcode' => '3STOTA1234567890']);
+
         /** @var SalesOrderShipmentSaveAfterEvent $observer */
-        $observer = $this->getObject(SalesOrderShipmentSaveAfterEvent::class);
+        $observer = $this->getObject(SalesOrderShipmentSaveAfterEvent::class, ['barcode' => $barcodeMock]);
         $observer->execute($event);
 
         $shipmentCollection = $this->getObject(\TIG\PostNL\Model\ResourceModel\Shipment\Collection::class);
