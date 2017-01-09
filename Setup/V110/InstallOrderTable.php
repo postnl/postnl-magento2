@@ -60,7 +60,14 @@ class InstallOrderTable extends AbstractTableInstaller
         $this->addForeignKey('quote', 'entity_id', static::TABLE_NAME, 'quote_id');
 
         $this->addText('type', 'Type', 32);
+
+        $this->addTimestamp('delivery_date', 'Delivery date');
+        $this->addText('expected_delivery_time_start', 'Expected delivery time start', 16);
+        $this->addText('expected_delivery_time_end', 'Expected delivery time end', 16);
+
         $this->addText('is_pakjegemak', 'Is Pakjegemak', 1);
+        $this->addText('pg_location_code', 'PakjeGemak Location Code', 32);
+        $this->addText('pg_retail_network_id', 'PakjeGemak Retail Netwerok ID', 32);
 
         $this->addTimestamp('confirmed_at', 'Confirmed at');
         $this->addTimestamp('created_at', 'Created at');
