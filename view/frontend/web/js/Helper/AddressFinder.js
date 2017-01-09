@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
-**
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -33,17 +32,56 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <css src="TIG_PostNL::css/adminhtml_config.css" />
-    </head>
-    <body>
-        <referenceContainer name="content">
-            <block class="TIG\PostNL\Block\Adminhtml\Config\Support\BodyClass" name="postnl.support" template="TIG_PostNL::support.phtml" before="system.config.edit" />
-        </referenceContainer>
-    </body>
-</page>
+define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote, $) {
+    'use strict';
+
+    var address, shippingAddress;
+
+    /**
+     * Collect the needed information from the quote
+     */
+    return ko.computed(function () {
+        shippingAddress = quote.shippingAddress();
+        if (!shippingAddress) {
+            return false;
+        }
+
+        address = {
+            postalCode  : shippingAddress.postcode,
+            countryCode : shippingAddress.countryId,
+            street      : shippingAddress.street
+        };
+
+        /**
+         * Unfortunately Magento does not always fill in the street, so get them ourselves.
+         */
+        if (!address) {
+            address = {
+                0 : $("input[name*='street[0]']").val(),
+                1 : $("input[name*='street[1]']").val()
+            };
+        }
+
+        /**
+         * Unfortunately Magento does not always fill in the postcode, so get them ourselves.
+         */
+        if (!address) {
+            address = $("input[name*='postcode']").val();
+        }
+
+        if (!address.postalCode || !address.countryCode || !address.street) {
+            return false;
+        }
+
+        if (!address.postalCode.length || !address.countryCode.length || !address.street.length ||
+            address.street[0] === ''
+        ) {
+            return false;
+        }
+
+        return address;
+    }.bind(this));
+});

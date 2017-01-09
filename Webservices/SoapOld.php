@@ -56,6 +56,7 @@ class SoapOld
     const HEADER_NAMESPACE = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd';
 
     /** TEMP TEST DATA
+     * @codingStandardsIgnoreLine
      *  @todo : Remove when PostNL API is fixed.
      */
     const TEST_SERVICE_WSDL_URL = 'https://testservice.postnl.com/CIF_SB/';
@@ -96,10 +97,9 @@ class SoapOld
     {
         $soapClient = $this->create($this->createWsdlUrl($service));
         $soapClient->__setSoapHeaders($this->getSoapHeader());
-
         try {
             return $soapClient->__call($type, [$requestParams]);
-        } catch (WebapiException $exception) {
+        } catch (\Exception $exception) {
             throw new WebapiException(
             // @codingStandardsIgnoreLine
                 __('Faild on soap call : %1', $exception->getMessage()),
@@ -140,6 +140,7 @@ class SoapOld
             'soap_version'   => SOAP_1_1,
             'features'       => SOAP_SINGLE_ELEMENT_ARRAYS,
             'trace'          => true,
+            'cache_wsdl'     => WSDL_CACHE_NONE,
         ];
 
         return $options;

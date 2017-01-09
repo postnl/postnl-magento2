@@ -115,6 +115,7 @@ class Locations extends AbstractEndpoint
     }
 
     /**
+     * @codingStandardsIgnoreLine
      * @todo : Add configuration for sundaysorting (if not enabled Monday should not return)
      *
      * @param $address
@@ -123,7 +124,7 @@ class Locations extends AbstractEndpoint
     public function setParameters($address, $startDate = false)
     {
         $this->requestParams = [
-            'Location'    => [
+            'Location' => [
                 'DeliveryOptions'    => $this->postNLhelper->getAllowedDeliveryOptions(),
                 'DeliveryDate'       => $this->getDeliveryDate($startDate),
                 'Postalcode'         => str_replace(' ', '', $address['postcode']),

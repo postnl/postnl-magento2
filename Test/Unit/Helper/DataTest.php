@@ -41,6 +41,7 @@ namespace TIG\PostNL\Test\Unit\Helper;
 use Magento\Sales\Model\Order;
 use TIG\PostNL\Helper\Data as Helper;
 use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
 class DataTest extends TestCase
 {
@@ -70,5 +71,26 @@ class DataTest extends TestCase
         $result = $this->getInstance()->isPostNLOrder($order);
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testGetAllowedDeliveryOptions()
+    {
+        $result = $this->getInstance()->getAllowedDeliveryOptions();
+        $this->assertTrue(is_array($result));
+    }
+
+    public function testGetAllowedDeliveryOptionsHasPakjeGemak()
+    {
+        $shippingOptionsConfigurationMock = $this->getFakeMock(ShippingOptions::class)->getMock();
+        $isPakjeGemakActiveExpects = $shippingOptionsConfigurationMock->expects($this->once());
+        $isPakjeGemakActiveExpects->method('isPakjegemakActive');
+        $isPakjeGemakActiveExpects->willReturn(true);
+
+        $instance = $this->getInstance([
+            'shippingOptions' => $shippingOptionsConfigurationMock
+        ]);
+
+        $result = $instance->getAllowedDeliveryOptions();
+        $this->assertContains('PG', $result);
     }
 }

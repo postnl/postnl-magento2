@@ -8,7 +8,15 @@ Place this code in an working Magento 2 installation in the folder app/code/TIG/
 - npm install
 - npm install -g grunt-cli
 - Setup the integration tests as [advised by Magento](http://devdocs.magento.com/guides/v2.0/test/integration/integration_test_setup.html).
- 
+- Paste the following xml within the <testsuites> tag of dev/tests/integration/phpunit.xml:
+```
+<testsuite name="TIG PostNL Integration Tests">
+    <directory>../../../app/code/TIG/PostNL/Test/Integration</directory>
+    <directory>../../../vendor/tig/postnl/Test/Integration</directory>
+    <exclude>../../../app/code/Magento</exclude>
+</testsuite>
+```
+
 Run:
 
 `grunt test`
