@@ -115,14 +115,6 @@
             background: @custom-list-hover;
           }
 
-          &:nth-child(even){
-            background :@custom-list-background-even;
-
-            &:hover {
-              background: @custom-list-hover;
-            }
-          }
-
           &.selected-row {
             background: @custom-list-hover !important;
           }
@@ -144,38 +136,71 @@
     .delivery {
 
       .days {
-        li {
-          label { padding: 10px 20px 10px 20px; }
 
-          @media screen and (min-width: 400px){
-              li {
-                padding: 10px 100px 10px 20px;
-              }
+
+
+        .wrapper {
+          float:left;
+          width: 100%;
+
+          &:nth-child(even){
+            background: @custom-list-background-even;
           }
 
-          .data-container { display: inline-block; width: calc(~'100% - 40px'); }
+          strong {
+            float: left;
+            width: 20%;
+            box-sizing: border-box;
+            padding: 10px 10px 10px 15px;
 
-          .tig-postnl-delivery-radio   { float:left; margin: 0 15px 0 0; width: 20px; height: 40px; }
-          .tig-postnl-delivery-data    { float:left; }
-          .tig-postnl-delivery-to      { float:left; }
-          .tig-postnl-delivery-dash    { float:left; margin: 0 3px; }
-          .tig-postnl-delivery-from    { float:left; }
-          .tig-postnl-delivery-option  { float:left; margin-left: 37px; width: 100%; position: relative; color: @postnl-orange; }
+            .deliverydays-day { text-transform:uppercase; display :block; }
+            .deliverydays-date { font-size: 12px; display :block;  }
 
-          @media screen and (min-width: 400px){
-            .data-container { width: calc(~'100% - 100px'); }
+          }
 
-            .tig-postnl-delivery-option {
-              position: absolute;
-              top: 20px;
-              right: 20px;
-              color: @postnl-orange;
-              overflow: hidden;
-              float: none;
-              margin: auto;
-              width: auto;
+          ul, ol {
+            float: right;
+            width: 80%;
+
+            li {
+
+              float: left;
+              width: 100%;
+
+              label { padding: 10px 20px 10px 20px; }
+
+              @media screen and (min-width: 400px){
+                li {
+                  padding: 10px 100px 10px 20px;
+                }
+              }
+
+              .data-container { display: inline-block; width: calc(~'100% - 40px'); }
+
+              .tig-postnl-delivery-radio   { float:left; margin: 0 15px 0 0; width: 20px; height: 21px; }
+              .tig-postnl-delivery-data    { float:left; }
+              .tig-postnl-delivery-to      { float:left; }
+              .tig-postnl-delivery-dash    { float:left; margin: 0 3px; }
+              .tig-postnl-delivery-from    { float:left; }
+              .tig-postnl-delivery-option  { float:left; margin-left: 37px; width: 100%; position: relative; color: @postnl-orange; }
+
+              @media screen and (min-width: 400px){
+                .data-container { width: calc(~'100% - 100px'); }
+
+                .tig-postnl-delivery-option {
+                  position: absolute;
+                  top: 10px;
+                  right: 15px;
+                  color: @postnl-orange;
+                  overflow: hidden;
+                  float: none;
+                  margin: auto;
+                  width: auto;
+                }
+              }
             }
           }
+
         }
       }
     }
@@ -223,15 +248,45 @@
             li {
               background: none;
               padding: 5px 25px 5px 36px;
+
+              .pickup-list-day {
+                text-decoration: underline;
+              }
+
+              .pickup-list-time {
+                padding-left: 0;
+              }
+
+            }
+          }
+
+          &:nth-child(even) {
+            background :@custom-list-background-even;
+
+            &:hover {
+              background: @custom-list-hover;
             }
           }
         }
       }
     }
 
-
   }
 }
+
+
+.postnl-deliveryoptions {
+  .delivery_options {
+    position :relative;
+
+    .tig-postnl-loading {
+      position :absolute;
+      left: 0%;
+      background: url(../../images/loading_1.gif);
+    }
+  }
+}
+
 
 /* =================================================================================================================== *
 *

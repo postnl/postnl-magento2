@@ -200,7 +200,7 @@ class TimeFrame extends AbstractEndpoint
         foreach ($timeFrames as $timeFrame) {
             $options = $timeFrame->Options;
             $filterdTimeFrames[] = [
-                'day'    => date('D', strtotime($date)) . ' (' . $date . ')',
+                'day'    => date('D', strtotime($date)),
                 'from'   => $timeFrame->From,
                 'to'     => $timeFrame->To,
                 'option' => $options->string[0],
