@@ -97,11 +97,13 @@ class PickupAddress
         /** @var array|\Magento\Quote\Model\Quote\Address $foundAddress */
         $foundAddress = $this->getPakjeGemakAddressInQuote($quote);
         if (!empty($foundAddress) && $foundAddress->getId()) {
+            $foundAddress->isDeleted(true);
             $quote->removeAddress($foundAddress->getId());
         }
 
         $this->pickupAddress = $this->create($address, $quote->getId());
         $quote->addAddress($this->pickupAddress);
+        $quote->save();
     }
 
     /**
@@ -133,13 +135,12 @@ class PickupAddress
      */
     private function getPakjeGemakAddressInQuote($quote)
     {
-        $shippingAddresses = $quote->getAllAddresses();
+        $quoteAddress = $this->addressFactory->create();
 
-        $pg_address = array_filter($shippingAddresses, function ($address) {
-            /** @var \Magento\Quote\Model\Quote\Address $address */
-            return $address->getAddressType() == self::PG_ADDRESS_TYPE;
-        });
+        $collection = $quoteAddress->getCollection();
+        $collection->addFieldToFilter('quote_id', $quote->getId());
+        $collection->addFieldToFilter('address_type', self::PG_ADDRESS_TYPE);
 
-        return $pg_address;
+        return $collection->setPageSize(1)->getFirstItem();
     }
 }
