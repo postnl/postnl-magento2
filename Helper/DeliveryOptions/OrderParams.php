@@ -37,16 +37,16 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\PostNL\Helper;
+namespace TIG\PostNL\Helper\DeliveryOptions;
 
 use TIG\PostNL\Exception as PostnlException;
 
 /**
- * Class DeliveryOptions
+ * Class OrderParams
  *
- * @package TIG\PostNL\Validators
+ * @package TIG\PostNL\Helper\DeliveryOptions
  */
-class DeliveryOptions
+class OrderParams
 {
     private $optionParams = [
         'quote_id'                     => [
@@ -72,6 +72,9 @@ class DeliveryOptions
         ],
         'pg_address'                   => [
             'pickup' => true, 'delivery' => false
+        ],
+        'opening_hours'                => [
+            'pickup' => true, 'delivery' => false
         ]
     ];
 
@@ -81,7 +84,7 @@ class DeliveryOptions
      * @return array
      * @throws PostnlException
      */
-    public function getRequiredOrderParams($params)
+    public function get($params)
     {
         $params              = $this->formatParamData($params);
         $requiredOrderParams = $this->requiredOrderParamsMissing($params);
@@ -129,33 +132,26 @@ class DeliveryOptions
     }
 
     /**
+     * If you whant to store the param inside the tig_postnl_order table,
+     * you need to give the keys the same name as the column names.
+     *
      * @param $params
      *
      * @return array
      */
     private function formatParamData($params)
     {
-        $quoteId        = isset($params['quote_id']) ? $params['quote_id'] : '';
-        $delivery_date  = isset($params['date']) ? $params['date'] : '';
-        $expected_start = isset($params['from']) ? $params['from'] : '';
-        $expected_end   = isset($params['to']) ? $params['to'] : '';
-        $locationCode   = isset($params['LocationCode']) ? $params['LocationCode'] : '';
-        $networkId      = isset($params['RetailNetworkID']) ? $params['RetailNetworkID'] : '';
-        $pgAddress      = isset($params['address']) ? $params['address'] : '';
-        $isPakjeGemak   = $params['type'] == 'pickup' ? 1 : 0;
-
-        // Keys need to be named after the column names of the tig_postnl_order table.
-        // Except pg_address, we will unset this, before adding params to database.
         return [
             'type'                         => $params['type'],
-            'quote_id'                     => $quoteId,
-            'delivery_date'                => $delivery_date,
-            'expected_delivery_time_start' => $expected_start,
-            'expected_delivery_time_end'   => $expected_end,
-            'is_pakjegemak'                => $isPakjeGemak,
-            'pg_location_code'             => $locationCode,
-            'pg_retail_network_id'         => $networkId,
-            'pg_address'                   => $pgAddress
+            'quote_id'                     => isset($params['quote_id']) ? $params['quote_id'] : '',
+            'delivery_date'                => isset($params['date']) ? $params['date'] : '',
+            'expected_delivery_time_start' => isset($params['from']) ? $params['from'] : '',
+            'expected_delivery_time_end'   => isset($params['to']) ? $params['to'] : '',
+            'is_pakjegemak'                => $params['type'] == 'pickup' ? 1 : 0,
+            'pg_location_code'             => isset($params['LocationCode']) ? $params['LocationCode'] : '',
+            'pg_retail_network_id'         => isset($params['RetailNetworkID']) ? $params['RetailNetworkID'] : '',
+            'pg_address'                   => isset($params['address']) ? $params['address'] : '',
+            'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : ''
         ];
     }
 }

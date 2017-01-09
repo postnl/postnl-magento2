@@ -33,33 +33,28 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
-use Magento\Framework\App\Action\Action;
+use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Json\Helper\Data;
-use Magento\Framework\View\Result\PageFactory;
-use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
-use TIG\PostNL\Webservices\Endpoints\TimeFrame;
-use TIG\PostNL\Webservices\Endpoints\Locations;
+use Magento\Framework\Exception\LocalizedException;
+use TIG\PostNL\Model\OrderFactory;
+use TIG\PostNL\Model\OrderRepository;
 use \Magento\Checkout\Model\Session;
 use TIG\PostNL\Helper\AddressEnhancer;
+use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
+use TIG\PostNL\Webservices\Endpoints\TimeFrame;
 
-/**
- * Class Index
- *
- * @package TIG\PostNL\Controller\DeliveryOptions
- */
-class Index extends Action
+class Days extends AbstractDeliveryOptions
 {
     /**
-     * @var Data
+     * @var AddressEnhancer
      */
-    private $jsonHelper;
+    private $addressEnhancer;
 
     /**
      * @var DeliveryDate
@@ -71,97 +66,49 @@ class Index extends Action
      */
     private $timeFrameEndpoint;
 
-    /**
-     * @var  Locations
-     */
-    private $locationsEndpoint;
-
-    /**
-     * @var AddressEnhancer
-     */
-    private $addressEnhancer;
-
-    /**
-     * @var Session
-     */
-    private $checkoutSession;
-
-    /**
-     * @param Context           $context
-     * @param Data              $jsonHelper
-     * @param DeliveryDate      $deliveryDate
-     * @param TimeFrame         $timeFrame
-     * @param Locations         $locations
-     * @param Session           $checkoutSession
-     * @param AddressEnhancer   $addressEnhancer
-     */
     public function __construct(
         Context $context,
+        OrderFactory $orderFactory,
+        OrderRepository $orderRepository,
         Data $jsonHelper,
-        DeliveryDate $deliveryDate,
-        TimeFrame $timeFrame,
-        Locations $locations,
         Session $checkoutSession,
-        AddressEnhancer $addressEnhancer
+        AddressEnhancer $addressEnhancer,
+        DeliveryDate $deliveryDate,
+        TimeFrame $timeFrame
     ) {
-        $this->jsonHelper        = $jsonHelper;
+        $this->addressEnhancer   = $addressEnhancer;
         $this->deliveryEndpoint  = $deliveryDate;
         $this->timeFrameEndpoint = $timeFrame;
-        $this->locationsEndpoint = $locations;
-        $this->checkoutSession   = $checkoutSession;
-        $this->addressEnhancer   = $addressEnhancer;
-        parent::__construct($context);
+
+        parent::__construct(
+            $context,
+            $jsonHelper,
+            $orderFactory,
+            $orderRepository,
+            $checkoutSession
+        );
     }
 
     /**
-     * Execute view action
-     *
      * @return \Magento\Framework\Controller\ResultInterface
      */
     public function execute()
     {
         $params = $this->getRequest()->getParams();
 
-        if (!isset($params['type']) || !isset($params['address'])) {
-            return $this->jsonResponse(__('No Address data found or no Type specified'));
+        if (!isset($params['address'])) {
+            return $this->jsonResponse(__('No Address data found.'));
         }
 
+        $this->addressEnhancer->set($params['address']);
+
         try {
-            return $this->jsonResponse($this->getDataBasedOnType($params['type'], $params['address']));
+            return $this->jsonResponse($this->getPosibleDeliveryDays($this->addressEnhancer->get()));
         } catch (LocalizedException $exception) {
             return $this->jsonResponse($exception->getMessage());
         } catch (\Exception $exception) {
             return $this->jsonResponse($exception->getMessage());
         }
-    }
-
-    /**
-     * Create json response
-     *
-     * @param string $response
-     *
-     * @return \Magento\Framework\Controller\ResultInterface
-     */
-    //@codingStandardsIgnoreLine
-    public function jsonResponse($response = '')
-    {
-        return $this->getResponse()->representJson(
-            $this->jsonHelper->jsonEncode($response)
-        );
-    }
-
-    /**
-     * @param $address
-     *
-     * @return \Magento\Framework\Phrase
-     */
-    private function getNearestLocations($address)
-    {
-        if (!$this->checkoutSession->getPostNLDeliveryDate()) {
-            $this->getDeliveryDay($address);
-        }
-
-        return $this->getLocations($address);
     }
 
     /**
@@ -197,24 +144,6 @@ class Index extends Action
     }
 
     /**
-     * @param $address
-     *
-     * @return \Magento\Framework\Phrase
-     */
-    private function getLocations($address)
-    {
-        $this->locationsEndpoint->setParameters($address, $this->checkoutSession->getPostNLDeliveryDate());
-        $response = $this->locationsEndpoint->call();
-        //@codingStandardsIgnoreLine
-        if (!is_object($response) || !isset($response->GetLocationsResult->ResponseLocation)) {
-            return __('Invalid GetLocationsResult response: %1', var_export($response, true));
-        }
-
-        //@codingStandardsIgnoreLine
-        return $response->GetLocationsResult->ResponseLocation;
-    }
-
-    /**
      * CIF call to get the timeframes.
      * @param $address
      * @param $startDate
@@ -232,26 +161,5 @@ class Index extends Action
 
         //@codingStandardsIgnoreLine
         return $response->Timeframes->Timeframe;
-    }
-
-    /**
-     * @param $type
-     * @param $address
-     * @return array|\Magento\Framework\Controller\ResultInterface|\Magento\Framework\Phrase
-     */
-    private function getDataBasedOnType($type, $address)
-    {
-        $this->addressEnhancer->set($address);
-
-        if ($type == 'deliverydays') {
-            return $this->getPosibleDeliveryDays($this->addressEnhancer->get());
-        }
-
-        if ($type == 'pickup') {
-            return $this->getNearestLocations($this->addressEnhancer->get());
-        }
-
-        //@codingStandardsIgnoreLine
-        return $this->jsonResponse(__('Incorrect Type specified'));
     }
 }

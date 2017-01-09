@@ -44,38 +44,47 @@ use Magento\Framework\Json\Helper\Data;
 use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Model\OrderRepository;
-use TIG\PostNL\Helper\DeliveryOptions\OrderParams;
 use \Magento\Checkout\Model\Session;
+use TIG\PostNL\Helper\AddressEnhancer;
+use TIG\PostNL\Webservices\Endpoints\Locations as LocationsEndpoint;
 
 /**
- * Class Save
+ * Class Pickup
  *
  * @package TIG\PostNL\Controller\DeliveryOptions
  */
-class Save extends AbstractDeliveryOptions
+class Pickup extends AbstractDeliveryOptions
 {
     /**
-     * @var OrderParams
+     * @var AddressEnhancer
      */
-    private $orderParams;
+    private $addressEnhancer;
 
     /**
-     * @param Context          $context
-     * @param OrderFactory     $orderFactory
-     * @param OrderRepository  $orderRepository
-     * @param Data             $jsonHelper
-     * @param OrderParams      $orderParams
-     * @param Session          $checkoutSession
+     * @var  LocationsEndpoint
+     */
+    private $locationsEndpoint;
+
+    /**
+     * @param Context           $context
+     * @param OrderFactory      $orderFactory
+     * @param OrderRepository   $orderRepository
+     * @param Data              $jsonHelper
+     * @param Session           $checkoutSession
+     * @param AddressEnhancer   $addressEnhancer
+     * @param LocationsEndpoint $locations
      */
     public function __construct(
         Context $context,
         OrderFactory $orderFactory,
         OrderRepository $orderRepository,
         Data $jsonHelper,
-        OrderParams $orderParams,
-        Session $checkoutSession
+        Session $checkoutSession,
+        AddressEnhancer $addressEnhancer,
+        LocationsEndpoint $locations
     ) {
-        $this->orderParams = $orderParams;
+        $this->addressEnhancer   = $addressEnhancer;
+        $this->locationsEndpoint = $locations;
 
         parent::__construct(
             $context,
@@ -88,20 +97,19 @@ class Save extends AbstractDeliveryOptions
 
     /**
      * @return \Magento\Framework\Controller\ResultInterface
-     * @throws \TIG\PostNL\Exception
      */
     public function execute()
     {
         $params = $this->getRequest()->getParams();
 
-        if (!isset($params['type'])) {
-            return $this->jsonResponse(__('No Type specified'));
+        if (!isset($params['address'])) {
+            return $this->jsonResponse(__('No Address data found.'));
         }
 
-        $saved = $this->saveDeliveryOption($params);
+        $this->addressEnhancer->set($params['address']);
 
         try {
-            return $this->jsonResponse($saved);
+            return $this->jsonResponse($this->getLocations($this->addressEnhancer->get()));
         } catch (LocalizedException $exception) {
             return $this->jsonResponse($exception->getMessage());
         } catch (\Exception $exception) {
@@ -110,45 +118,20 @@ class Save extends AbstractDeliveryOptions
     }
 
     /**
-     * @param $params
+     * @param $address
      *
      * @return \Magento\Framework\Phrase
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    private function saveDeliveryOption($params)
+    private function getLocations($address)
     {
-        $params      = $this->addSessionDataToParams($params);
-        $params      = $this->orderParams->get($params);
-        $postnlOrder = $this->getPostNLOrderByQuoteId($params['quote_id']);
-
-        foreach ($params as $key => $value) {
-            $postnlOrder->setData($key, $value);
+        $this->locationsEndpoint->setParameters($address, $this->checkoutSession->getPostNLDeliveryDate());
+        $response = $this->locationsEndpoint->call();
+        //@codingStandardsIgnoreLine
+        if (!is_object($response) || !isset($response->GetLocationsResult->ResponseLocation)) {
+            return __('Invalid GetLocationsResult response: %1', var_export($response, true));
         }
 
-        $this->orderRepository->save($postnlOrder);
-
-        /**
-         * @todo : If type == pickup, we need to store/save the address data to the quote.
-         */
-
-        return __('ok');
-    }
-
-    /**
-     * @param $params
-     *
-     * @todo : When type is pickup the delivery Date needs to be recalculated,
-     *       based on the opening days/hours of the location
-     * @return mixed
-     */
-    private function addSessionDataToParams($params)
-    {
-        if (!isset($params['date']) && $params['type'] == 'pickup') {
-            $params['date'] = $this->checkoutSession->getPostNLDeliveryDate();
-        }
-        
-        $params['quote_id'] = $this->checkoutSession->getQuoteId();
-
-        return $params;
+        //@codingStandardsIgnoreLine
+        return $response->GetLocationsResult->ResponseLocation;
     }
 }

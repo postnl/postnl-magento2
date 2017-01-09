@@ -111,11 +111,8 @@ define([
         getDeliverydays: function (address) {
             $.ajax({
                 method: 'POST',
-                url : '/postnl/deliveryoptions',
-                data : {
-                    type: 'deliverydays',
-                    address: address
-                }
+                url : '/postnl/deliveryoptions/days',
+                data : {address: address}
             }).done(function (data) {
                 Logger.info(data);
                 this.setDeliverydays(data);

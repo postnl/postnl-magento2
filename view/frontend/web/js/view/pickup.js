@@ -105,6 +105,7 @@ define([
                     url: '/postnl/deliveryoptions/save',
                     data: {
                         type: 'pickup',
+                        OpeningHours : value.OpeningHours,
                         RetailNetworkID: value.RetailNetworkID,
                         LocationCode : value.LocationCode,
                         address: value.Address
@@ -127,8 +128,8 @@ define([
         getPickupAddresses : function (address) {
             jQuery.ajax({
                 method: 'POST',
-                url : '/postnl/deliveryoptions',
-                data : {type: 'pickup', address: address}
+                url : '/postnl/deliveryoptions/pickup',
+                data : {address: address}
             }).done(function (data) {
                 data = ko.utils.arrayMap(data, function (data) {
                     return new Location(data);
