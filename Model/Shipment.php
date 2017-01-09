@@ -54,7 +54,7 @@ use Magento\Framework\Model\AbstractModel;
  * @method null|string getShipmentType
  * @method $this setIsPakjegemak(string)
  * @method null|string getIsPakjegemak
- * @method $this setParcelCountk(string $value)
+ * @method $this setParcelCount(string $value)
  * @method null|string getParcelCount
  * @method $this setShipAt(string)
  * @method null|string getShipAt
