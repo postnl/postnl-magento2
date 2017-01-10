@@ -40,6 +40,24 @@
 *
 * =================================================================================================================== */
 
+/* PostNL Branding Frontend */
+
+#label_method_regular_tig_postnl {
+
+  &:before {
+    float:left;
+    width: 50px;
+    height: 37px;
+
+    content: ' ';
+    background-image: url(../images/postnl_logo.png) !important;
+    background-position: 0 2px;
+    background-repeat: no-repeat;
+    background-size: auto 33px;
+    margin-top: -10px;
+  }
+}
+
 /* Delivery Options */
 
 .postnl-deliveryoptions {
@@ -137,8 +155,6 @@
 
       .days {
 
-
-
         .wrapper {
           float:left;
           width: 100%;
@@ -166,6 +182,11 @@
 
               float: left;
               width: 100%;
+
+              &:hover,
+              &.selected-row {
+                border-radius: 5px 0 0 5px;
+              }
 
               label { padding: 18px 20px 18px 20px; }
 
@@ -203,7 +224,31 @@
 
         }
       }
-    }
+
+      @media screen and (max-width: 480px){
+        .days {
+          .wrapper {
+            strong {
+              float: left;
+              width: 100%;
+            }
+
+            ul, ol {
+              float: right;
+              width: 100%;
+
+              li {
+                &:hover,
+                &.selected-row {
+                  border-radius :0;
+                }
+              }
+            }
+          }
+        }
+      }
+
+    } /* End Delivery */
 
 
 
@@ -236,8 +281,20 @@
               cursor: pointer;
               fill: @custom-clock-color;
 
+              -moz-transition: all .1s ease-in-out;
+              -ms-transition: all .1s ease-in-out;
+              -webkit-transition: all .1s ease-in-out;
+              -o-transition: all .1s ease-in-out;
+              transition: all .1s ease-in-out;
+
               &:hover {
                 fill: @custom-clock-color-hover;
+
+                -moz-transform: scale(1.25);
+                -ms-transform: scale(1.25); /* IE 9 */
+                -webkit-transform: scale(1.25);
+                -o-transform: scale(1.25);
+                transform: scale(1.25);
               }
             }
           }
@@ -269,20 +326,28 @@
           }
         }
       }
-    }
+    } /* End PickUp */
 
   }
 }
 
+/* Loading Image */
 
 .postnl-deliveryoptions {
   .delivery_options {
     position :relative;
 
     .tig-postnl-loading {
-      position :absolute;
-      left: 0%;
-      background: url(../../images/loading_1.gif);
+      position: absolute;
+
+      background:rgba(255, 255, 255, 0.65) url(../images/loading_1.gif) no-repeat center center;
+      background-size: 60px;
+
+      height: 100px;
+      width: 100%;
+      box-sizing: border-box;
+
+      z-index: 10;
     }
   }
 }
