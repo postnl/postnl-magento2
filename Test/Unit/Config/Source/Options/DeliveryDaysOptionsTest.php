@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,22 +36,30 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
-    <system>
-        <include path="TIG_PostNL::system/carrier.xml"/>
+namespace TIG\PostNL\Unit\Config\Source\Options;
 
-        <section id="tig_postnl" translate="label" type="text" sortOrder="340" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>PostNL</label>
-            <tab>sales</tab>
-            <resource>Sales_PostNL::configuration</resource>
-            <class>postnl-section</class>
+use TIG\PostNL\Config\Source\Options\DeliverydaysOptions;
+use TIG\PostNL\Test\TestCase;
 
-            <include path="TIG_PostNL::system/support.xml"/>
-            <include path="TIG_PostNL::system/general.xml"/>
-            <include path="TIG_PostNL::system/webshop.xml"/>
-            <include path="TIG_PostNL::system/shippingoptions.xml"/>
-            <include path="TIG_PostNL::system/productoptions.xml" />
-        </section>
-    </system>
-</config>
+/**
+ * Class ProductOptionsTest
+ *
+ * @package TIG\PostNL\Unit\Config\Source
+ */
+class DeliveryDaysOptionsTest extends TestCase
+{
+    protected $instanceClass = DeliverydaysOptions::class;
+
+    public function testToOptionArray()
+    {
+        $instance = $this->getInstance();
+        $options  = $instance->toOptionArray();
+
+        $this->assertCount(14, $options);
+
+        foreach ($options as $option) {
+            $this->assertArrayHasKey('label', $option);
+            $this->assertArrayHasKey('value', $option);
+        }
+    }
+}

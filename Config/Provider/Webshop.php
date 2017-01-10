@@ -38,26 +38,18 @@
  */
 namespace TIG\PostNL\Config\Provider;
 
-/**
- * Class WebshopSettings
- *
- * @package TIG\PostNL\Config\Provider
- */
-class WebshopSettings extends AbstractConfigProvider
+class Webshop extends AbstractConfigProvider
 {
-    const XPATH_WEBSHOP_SETTINGS_LABEL_SIZE   = 'tig_postnl/webshopsettings_printer/label_size';
-    const XPATH_WEBSHOP_SETTINGS_CUTOFFTIME   = 'tig_postnl/webshopsettings_shipping/cutoff_time';
-    const XPATH_WEBSHOP_SETTINGS_SHIPMENTDAYS = 'tig_postnl/webshopsettings_shipping/shipment_days';
-
-    /** @var string  */
-    private $defaultCutoffTime = '23:59:59';
+    const XPATH_WEBSHOP_LABEL_SIZE   = 'tig_postnl/webshop_printer/label_size';
+    const XPATH_WEBSHOP_CUTOFFTIME   = 'tig_postnl/webshop_shipping/cutoff_time';
+    const XPATH_WEBSHOP_SHIPMENTDAYS = 'tig_postnl/webshop_shipping/shipment_days';
 
     /**
      * @return mixed
      */
     public function getLabelSize()
     {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_LABEL_SIZE);
+        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_LABEL_SIZE);
     }
 
     /**
@@ -65,11 +57,7 @@ class WebshopSettings extends AbstractConfigProvider
      */
     public function getCutOffTime()
     {
-        if (!$this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_CUTOFFTIME)) {
-            return $this->defaultCutoffTime;
-        }
-
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_CUTOFFTIME);
+        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_CUTOFFTIME);
     }
 
     /**
@@ -77,6 +65,6 @@ class WebshopSettings extends AbstractConfigProvider
      */
     public function getShipmentDays()
     {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_SHIPMENTDAYS);
+        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SHIPMENTDAYS);
     }
 }

@@ -38,7 +38,7 @@
  */
 namespace TIG\PostNL\Webservices\Api;
 
-use TIG\PostNL\Config\Provider\WebshopSettings;
+use TIG\PostNL\Config\Provider\Webshop;
 
 /**
  * Class CutoffTimes
@@ -47,14 +47,14 @@ use TIG\PostNL\Config\Provider\WebshopSettings;
  */
 class CutoffTimes
 {
-    /** @var  WebshopSettings */
+    /** @var  Webshop */
     private $webshopSettings;
 
     /**
-     * @param WebshopSettings $webshopSettings
+     * @param Webshop $webshopSettings
      */
     public function __construct(
-        WebshopSettings $webshopSettings
+        Webshop $webshopSettings
     ) {
         $this->webshopSettings = $webshopSettings;
     }

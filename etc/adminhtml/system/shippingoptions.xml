@@ -54,12 +54,18 @@
             <label>Stockoptions</label>
             <source_model>TIG\PostNL\Config\Source\Options\StockOptions</source_model>
             <config_path>tig_postnl/shippingoptions/stockoptions</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
         </field>
 
         <field id="deliverydays_active" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Activate deliverydays</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/deliverydays_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
         </field>
 
         <field id="max_deliverydays" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -67,6 +73,7 @@
             <source_model>TIG\PostNL\Config\Source\Options\DeliverydaysOptions</source_model>
             <config_path>tig_postnl/shippingoptions/max_deliverydays</config_path>
             <depends>
+                <field id="shippingoptions_active">1</field>
                 <field id="deliverydays_active">1</field>
             </depends>
         </field>
@@ -75,32 +82,43 @@
             <label>Activate postofficelocations</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/pakjegemak_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
         </field>
 
         <field id="eveningdelivery_active" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Activate Eveningdelivery</label>
+            <label>Activate eveningdelivery</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/eveningdelivery_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
         </field>
 
         <field id="eveningdelivery_fee" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Eveningdelivery Fee</label>
+            <label>Eveningdelivery fee</label>
             <config_path>tig_postnl/shippingoptions/eveningdelivery_fee</config_path>
             <depends>
+                <field id="shippingoptions_active">1</field>
                 <field id="eveningdelivery_active">1</field>
             </depends>
         </field>
 
         <field id="sundaydelivery_active" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Activate Sundaydelivery</label>
+            <label>Activate sundaydelivery</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/sundaydelivery_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
         </field>
 
         <field id="sundaydelivery_fee" translate="label" type="text" sortOrder="75" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Sundaydelivery Fee</label>
+            <label>Sundaydelivery fee</label>
             <config_path>tig_postnl/shippingoptions/sundaydelivery_fee</config_path>
             <depends>
+                <field id="shippingoptions_active">1</field>
                 <field id="sundaydelivery_active">1</field>
             </depends>
         </field>
