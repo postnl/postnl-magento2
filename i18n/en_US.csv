@@ -1,12 +1,64 @@
+"Not confirmed","Not confirmed"
+Confirmed,Confirmed
+Today,Today
+Tomorrow,Tomorrow
+"In %1 days","In %1 days"
+Live,Live
+Test,Test
+Off,Off
+"All products","All products"
+"Only for products that are in stock","Only for products that are in stock"
+"There are no available options","There are no available options"
+label,label
+"No cut-off time","No cut-off time"
+"A4 Format","A4 Format"
+"A6 Format","A6 Format"
+"No Address data found.","No Address data found."
+"Invalid GetDeliveryDate response: %1","Invalid GetDeliveryDate response: %1"
+"Invalid GetTimeframes response: %1","Invalid GetTimeframes response: %1"
+"Invalid GetLocationsResult response: %1","Invalid GetLocationsResult response: %1"
+"No Type specified","No Type specified"
+ok,ok
+"Unable to extract the housenumber, because the street data could not be found","Unable to extract the housenumber, because the street data could not be found"
+"Unable to extract the housenumber, could not find an number inside the street value","Unable to extract the housenumber, could not find an number inside the street value"
+"Invalid housenumber supplied: %1","Invalid housenumber supplied: %1"
+"Unable to retrieve barcode data.","Unable to retrieve barcode data."
+"Invalid barcodetype requested: %s","Invalid barcodetype requested: %s"
+"Missing required parameters: %1","Missing required parameters: %1"
+"Object with id ""%1"" does not exist.","Object with id ""%1"" does not exist."
+"Invalid GenerateBarcode response: %1","Invalid GenerateBarcode response: %1"
+"Table %1 does not exists","Table %1 does not exists"
+"Failed on soap call : %1","Failed on soap call : %1"
+"SOAP extension is not loaded.","SOAP extension is not loaded."
+Legend,Legend
+"Shipping method","Shipping method"
+Disabled,Disabled
+"Test Mode","Test Mode"
+"Live Mode","Live Mode"
+"Magento &amp; 3rd party version compatibility","Magento &amp; 3rd party version compatibility"
+"Magento Community Edition version","Magento Community Edition version"
+"Magento Enterprise Edition version","Magento Enterprise Edition version"
+"PostNL version","PostNL version"
+Support,Support
+"This extension is developed by TIG, commissioned by PostNL.","This extension is developed by TIG, commissioned by PostNL."
+"Extension basic configuration and account information","Extension basic configuration and account information"
+"For questions related to your PostNL account and PostNL delivery options, please contact PostNL.","For questions related to your PostNL account and PostNL delivery options, please contact PostNL."
+Phone:,Phone:
+Website:,Website:
+https://www.postnl.nl/zakelijke-oplossingen/webwinkels/bezorgopties-voor-mijn-klanten/,https://www.postnl.nl/zakelijke-oplossingen/webwinkels/bezorgopties-voor-mijn-klanten/
+www.postnl.com,www.postnl.com
+"Extension support and advanced configuration","Extension support and advanced configuration"
+"For questions about installing and configuring the extension please consult the relevant documentation:","For questions about installing and configuring the extension please consult the relevant documentation:"
+"Frequently asked questions :","Frequently asked questions :"
+FAQ,FAQ
+"Support by email:","Support by email:"
+Documentation,Documentation
+"A list of documents regarding the extension.","A list of documents regarding the extension."
+"Download a PDF format of the manual. Currently the manual is only available in Dutch.","Download a PDF format of the manual. Currently the manual is only available in Dutch."
+"Installation and Configuration Manual PostNL.pdf","Installation and Configuration Manual PostNL.pdf"
+"View the complete release notes of the extension. Currently the release notes is only available in Dutch.","View the complete release notes of the extension. Currently the release notes is only available in Dutch."
+"Full Release Notes","Full Release Notes"
 "Shipping Address","Shipping Address"
-"New Address","New Address"
-"Shipping Methods","Shipping Methods"
-"Select Method","Select Method"
-Price,Price
-"Method Title","Method Title"
-"Carrier Title","Carrier Title"
-Next,Next
-"Sorry, no quotes are available for this order at this time","Sorry, no quotes are available for this order at this time"
 PostNL,PostNL
 Enabled,Enabled
 "Method Name","Method Name"
@@ -18,5 +70,51 @@ Title,Title
 "Ship to Specific Countries","Ship to Specific Countries"
 "Show Method if Not Applicable","Show Method if Not Applicable"
 "Displayed Error Message","Displayed Error Message"
+"General configuration and account information","General configuration and account information"
+"Extension status","Extension status"
+Modus,Modus
+Customernumber,Customernumber
+Customercode,Customercode
+"Api Key","Api Key"
+"BLS location code","BLS location code"
+"Customernumber (test)","Customernumber (test)"
+"Customercode (test)","Customercode (test)"
+"BLS location code (test)","BLS location code (test)"
+Shippingaddress,Shippingaddress
+Firstname,Firstname
+Lastname,Lastname
+Company,Company
+Streetname,Streetname
+Department,Department
+Housenumber,Housenumber
+"Housenumber addition","Housenumber addition"
+Postcode,Postcode
+City,City
+Productoptions,Productoptions
+"Select the available options","Select the available options"
+"Default shipping option","Default shipping option"
+"Default evening option","Default evening option"
+"Default postoffice delivery option","Default postoffice delivery option"
+"Default sundaydelivery option","Default sundaydelivery option"
+Shippingoptions,Shippingoptions
+"Activate shippingoptions","Activate shippingoptions"
+Stockoptions,Stockoptions
+"Activate deliverydays","Activate deliverydays"
+"Maximum number of deliverydays","Maximum number of deliverydays"
+"Activate postofficelocations","Activate postofficelocations"
+"Activate eveningdelivery","Activate eveningdelivery"
+"Eveningdelivery fee","Eveningdelivery fee"
+"Activate sundaydelivery","Activate sundaydelivery"
+"Sundaydelivery fee","Sundaydelivery fee"
+"Send track and trace info","Send track and trace info"
 "Version & Support","Version & Support"
+Webshop,Webshop
+"Printer Settings","Printer Settings"
+"Label size","Label size"
+"Shipping Settings","Shipping Settings"
+"Cutoff time","Cutoff time"
+"Shipment days","Shipment days"
 "PostNL - Create shipments","PostNL - Create shipments"
+"PostNL - Print shipping labels & confirm shipment","PostNL - Print shipping labels & confirm shipment"
+"Confirm Status","Confirm Status"
+"Shipping Date","Shipping Date"

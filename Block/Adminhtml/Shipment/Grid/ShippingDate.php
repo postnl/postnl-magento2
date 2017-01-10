@@ -117,7 +117,7 @@ class ShippingDate extends AbstractGrid
         }
 
         if (!$difference->invert && $days === 1) {
-            return __('In 1 day');
+            return __('Tomorrow');
         }
 
         if (!$difference->invert) {
