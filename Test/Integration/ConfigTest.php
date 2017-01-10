@@ -112,13 +112,4 @@ class ConfigTest extends TestCase
 
         $this->assertContains($productCode, $productOptions);
     }
-
-    public function testDefaultShippingoptionsValue()
-    {
-        /** @var ShippingOptions $configProvider */
-        $configProvider = $this->getObject(ShippingOptions::class);
-        $value = $configProvider->isShippingoptionsActive();
-
-        $this->assertEquals('0', $value);
-    }
 }
