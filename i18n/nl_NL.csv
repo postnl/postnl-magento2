@@ -1,22 +1,132 @@
-"Shipping Address","Shipping Address"
-"New Address","New Address"
-"Shipping Methods","Shipping Methods"
-"Select Method","Select Method"
-Price,Price
-"Method Title","Method Title"
-"Carrier Title","Carrier Title"
-Next,Next
-"Sorry, no quotes are available for this order at this time","Sorry, no quotes are available for this order at this time"
+"Not confirmed","Niet voorgemeld"
+Confirmed,Voorgemeld
+Today,Vandaag
+Tomorrow,Morgen
+"In %1 days","Over %1 dagen"
+Live,Live
+Test,Test
+Off,Off
+"All products","Alle producten"
+"Only for products that are in stock","Alleen voor producten die in voorraad zijn"
+"There are no available options","Er zijn geen beschikbare opties"
+label,label
+"No cut-off time","Geen cut-off tijd"
+"A4 Format","A4 Formaat"
+"A6 Format","A6 Formaat"
+"No Address data found.","Geen adres data gevonden."
+"Invalid GetDeliveryDate response: %1","Ongeldig GetDeliveryDate response: %1"
+"Invalid GetTimeframes response: %1","Ongeldig GetTimeframes response: %1"
+"Invalid GetLocationsResult response: %1","Ongeldig GetLocationsResult response: %1"
+"No Type specified","No Type specified"
+ok,ok
+"Unable to extract the housenumber, because the street data could not be found","Het is niet mogelijk om het huisnummer op te halen. Er is geen adres gevonden"
+"Unable to extract the housenumber, could not find an number inside the street value","Er is geen huisnummer in het adres veld beschikbaar"
+"Invalid housenumber supplied: %1","Ongeldig huisnummer opgegeven: %1"
+"Unable to retrieve barcode data.","Het is niet mogelijk om de barcode data op te halen."
+"Invalid barcodetype requested: %s","Ongeldig barcodetype opgevraagd: %s"
+"Missing required parameters: %1","Er ontbreken vereiste parameters: %1"
+"Object with id ""%1"" does not exist.","Object met id ""%1"" bestaat niet."
+"Invalid GenerateBarcode response: %1","Ongeldig GenerateBarcode response: %1"
+"Failed on soap call : %1","Failed on soap call : %1"
+"SOAP extension is not loaded.","De SOAP extension is niet geladen."
+Legend,Legende
+"Shipping method","Verzend methode"
+Disabled,Uit
+"Test Mode","Test Modus"
+"Live Mode","Live Modus"
+"Magento &amp; 3rd party version compatibility","Magento &amp; 3rd party versie compatibiliteit"
+"Magento Community Edition version","Magento Community Edition versie"
+"Magento Enterprise Edition version","Magento Enterprise Edition versie"
+"PostNL version","PostNL versie"
+Support,Support
+"This extension is developed by TIG, commissioned by PostNL.","De extensie is ontwikkeld door TIG in opdracht van PostNL."
+"Extension basic configuration and account information","Extensie basis configuratie en account informatie"
+"For questions related to your PostNL account and PostNL delivery options, please contact PostNL.","Voor vragen met betrekking tot uw PostNL account en PostNL bezorgopties, neem a.u.b. contact op met PostNL."
+Phone:,Telefoon:
+Website:,Website:
+https://www.postnl.nl/zakelijke-oplossingen/webwinkels/bezorgopties-voor-mijn-klanten/,https://www.postnl.nl/zakelijke-oplossingen/webwinkels/bezorgopties-voor-mijn-klanten/
+www.postnl.com,www.postnl.com
+"Extension support and advanced configuration","Extensie ondersteuning en vragen over de configuratie"
+"For questions about installing and configuring the extension please consult the relevant documentation:","Heeft u vragen over de installatie of configuratie van de extensie? Raadpleeg altijd eerst de relevante documentatie:"
+"Frequently asked questions :","Veelgestelde vragen"
+FAQ,FAQ
+"Support by email:","Support per email:"
+Documentation,Documentatie
+"Documents regarding the PostNL Magento 2 extension:","Documentatie over de PostNL Magento 2 extensie:"
+"Download a PDF format of the manual. Currently the manual is only available in Dutch.","Download de handleiding in PDF formaat. Momenteel is deze handleiding alleen in het Nederlands beschikbaar."
+"Installation and Configuration Manual PostNL.pdf","Installatie en Configuratie Handleiding PostNL Magneto 2.pdf"
+"View the complete release notes of the extension. Currently the release notes is only available in Dutch.","Bekijk de release notes van de extensie. Deze zijn alleen in het Nederlands beschikbaar."
+"Full Release Notes","Volledige Release Notes"
 PostNL,PostNL
-Enabled,Enabled
-"Method Name","Method Name"
-"Calculate Handling Fee","Calculate Handling Fee"
-"Handling Fee","Handling Fee"
-"Sort Order","Sort Order"
-Title,Title
-"Ship to Applicable Countries","Ship to Applicable Countries"
-"Ship to Specific Countries","Ship to Specific Countries"
-"Show Method if Not Applicable","Show Method if Not Applicable"
-"Displayed Error Message","Displayed Error Message"
-"Version & Support","Version & Support"
-"PostNL - Create shipments","PostNL - Create shipments"
+Enabled,Ingeschakeld
+"Method Name","Methode Naam"
+"Calculate Handling Fee","Tarief type"
+"Handling Fee","Toeslag"
+"Sort Order","Sorteer Volgorde"
+Title,Titel
+"Ship to Applicable Countries","Verzend naar beschikbare landen"
+"Ship to Specific Countries","Verzend naar specifieke landen"
+"Show Method if Not Applicable","Toon de verzendmethode wanneer dit niet van toepassing is"
+"Displayed Error Message","Getoonde error melding"
+"General configuration and account information","Algemene configuratie en account informatie"
+"Extension status","Extensie status"
+Modus,Modus
+Customernumber,Klant nummer
+Customercode,Klant code
+"Api Key","Api Key"
+"BLS location code","BLS locatie code"
+"Customernumber (test)","Klant nummer (test)"
+"Customercode (test)","Klant code (test)"
+"BLS location code (test)","BLS locatie code (test)"
+Shippingaddress,Verzendadres
+Firstname,Voornaam
+Lastname,Achternaam
+Company,Bedrijf
+Streetname,Straatnaam
+Department,Afdelding
+Housenumber,Huisnummer
+"Housenumber addition","Huisnummer toevoeging"
+Postcode,Postcode
+City,Plaats
+Productoptions,Productopties
+"Select the available options","Selecteer de beschikbare opties"
+"Default shipping option","Standaard verzend optie"
+"Default evening option","Standaard avondverzending optie"
+"Default postoffice delivery option","Standaard Pakjegemak optie"
+"Default sundaydelivery option","Standaard zondagbezorging optie"
+Shippingoptions,Verzendopties
+"Activate shippingoptions","Activeer verzendopties"
+Stockoptions,Voorraadopties
+"Activate deliverydays","Activeer bezorgdagen"
+"Maximum number of deliverydays","Maximaal aantal bezorgdagen"
+"Activate postofficelocations","Activeer Pakjegemak"
+"Activate eveningdelivery","Activeer avondbezorging"
+"Eveningdelivery fee","Avondbezorging toeslag"
+"Activate sundaydelivery","Activeer zondagbezorging"
+"Sundaydelivery fee","Zondagbezoging toeslag"
+"Send track and trace info","Verstuur track and trace info"
+"Version & Support","Versie & Support"
+Webshop,Webshop
+"Printer Settings","Printer instellingen"
+"Label size","Label formaat"
+"Shipping Settings","Verzend instellingen"
+"Cutoff time","Cut-off tijd"
+"Shipment days","Verzenddagen"
+"PostNL - Create shipments","PostNL - Maak zendingen aan"
+"PostNL - Print shipping labels & confirm shipment","PostNL - Print verzendlabels & zending voormelden"
+"Confirm Status","Voormeld status"
+"Shipping Date","Verzenddatum"
+"Standard shipment","Standaard verzending"
+"Signature on delivery","Handtekening bij ontvangst"
+"Signature on delivery + Delivery to stated address only","Handtekening bij ontvangst + Lever alleen aan opgegeven adres"
+"Signature on delivery + Return when not home","Handtekening bij ontvangst + Retour indien niet thuis"
+"Signature on delivery + Deliver to stated address only + Return when not home","Handtekening bij ontvangst + Lever alleen aan opgegeven adres + Retour indien niet thuis"
+"Delivery to neighbour + Return when not home","Lever bij buren + Retour indien niet thuis"
+"Deliver to stated address only","Lever alleen aan opgegeven adres"
+"Post Office + Extra Cover","Postkantoor + verhoogd aansprakelijk"
+"Post Office + Extra Cover + Notification","Postkantoor + verhoogd aansprakelijk + notificatie"
+"Post Office + Signature on Delivery","Postkantoor + handtekening bij ontvangst"
+"Post Office + Signature on Delivery + Notification","Postkantoor + handtekening bij ontvangst + notificatie"
+"EU Pack Special (B2B)","EU Pack Special (B2B)"
+"EU Pack Special Consumer (incl. signature)","EU Pack Speciaal klant (inclusief handtekening)"
+"Letter Box Parcel Extra","Brievenbuspakje Extra"
