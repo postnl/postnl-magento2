@@ -202,7 +202,9 @@ class TimeFrame extends AbstractEndpoint
             $filterdTimeFrames[] = [
                 'day'    => date('D', strtotime($date)),
                 'from'   => $timeFrame->From,
+                'from_friendly' => substr($timeFrame->From, 0, 5),
                 'to'     => $timeFrame->To,
+                'to_friendly' => substr($timeFrame->To, 0, 5),
                 'option' => $options->string[0],
                 'date'   => $date
             ];
