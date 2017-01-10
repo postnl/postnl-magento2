@@ -272,7 +272,7 @@
   fill: #001A73;
   -moz-transform: scale(1.25);
   -ms-transform: scale(1.25);
-  /* IE 9 */
+  /* Internet Explorer 9 */
   -webkit-transform: scale(1.25);
   -o-transform: scale(1.25);
   transform: scale(1.25);

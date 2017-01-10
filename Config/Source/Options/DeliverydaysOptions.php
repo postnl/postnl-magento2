@@ -57,10 +57,10 @@ class DeliverydaysOptions extends OptionsAbstract implements ArrayInterface
     public function toOptionArray()
     {
         $output = [];
-        for ($i = 1; $i <= static::MAXIMUM_DELIVERY_DAYS; $i++) {
+        for ($number = 1; $number <= static::MAXIMUM_DELIVERY_DAYS; $number++) {
             $output[] = [
-                'value' => $i,
-                'label' => $i
+                'value' => $number,
+                'label' => $number
             ];
         }
 

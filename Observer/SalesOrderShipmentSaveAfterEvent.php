@@ -97,6 +97,7 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
         $shipment = $observer->getData('data_object');
         $mainBarcode = $this->generateBarcode();
 
+        // @codingStandardsIgnoreLine
         //TODO: actually get & save the parcel count
 
         /** @var \TIG\PostNL\Model\Shipment $model */
