@@ -70,7 +70,7 @@ class AccountConfiguration extends AbstractConfigProvider
             'customernumber' => $this->getCustomerNumber(),
             'customercode'   => $this->getCustomerCode(),
             'api_key'        => $this->getApiKey(),
-            'bls_code'       => $this->getBslCode()
+            'bls_code'       => $this->getBlsCode()
         ];
 
         return $accountInfo;
@@ -109,7 +109,7 @@ class AccountConfiguration extends AbstractConfigProvider
     /**
      * @return mixed
      */
-    public function getBslCode()
+    public function getBlsCode()
     {
         return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_BLSCODE));
     }
