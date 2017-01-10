@@ -107,6 +107,22 @@ class PickupAddress
     }
 
     /**
+     * @param \Magento\Quote\Model\Quote $quote
+     *
+     * @return array|\Magento\Quote\Model\Quote\Address
+     */
+    public function getPakjeGemakAddressInQuote($quote)
+    {
+        $quoteAddress = $this->addressFactory->create();
+
+        $collection = $quoteAddress->getCollection();
+        $collection->addFieldToFilter('quote_id', $quote->getId());
+        $collection->addFieldToFilter('address_type', self::PG_ADDRESS_TYPE);
+
+        return $collection->setPageSize(1)->getFirstItem();
+    }
+
+    /**
      * @param $pgData
      * @param $quoteId
      *
@@ -128,19 +144,5 @@ class PickupAddress
         return $address;
     }
 
-    /**
-     * @param \Magento\Quote\Model\Quote $quote
-     *
-     * @return array|\Magento\Quote\Model\Quote\Address
-     */
-    private function getPakjeGemakAddressInQuote($quote)
-    {
-        $quoteAddress = $this->addressFactory->create();
 
-        $collection = $quoteAddress->getCollection();
-        $collection->addFieldToFilter('quote_id', $quote->getId());
-        $collection->addFieldToFilter('address_type', self::PG_ADDRESS_TYPE);
-
-        return $collection->setPageSize(1)->getFirstItem();
-    }
 }

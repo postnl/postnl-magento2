@@ -166,8 +166,7 @@ class OrderParams
             return false;
         }
 
-        $name = isset($params['name']) ? $params['name'] : '';
-        $params['address']['Name'] = $name;
+        $params['address']['Name'] = isset($params['name']) ? $params['name'] : '';;
         return $params['address'];
     }
 }
