@@ -72,7 +72,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', [
         'exec:unitTests',
         'exec:integrationTests',
-        'exec:phpcs_easy',
+        'exec:phpcs_full',
         'exec:phplint',
         'jshint:all'
     ]);

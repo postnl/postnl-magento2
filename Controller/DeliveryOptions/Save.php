@@ -128,6 +128,7 @@ class Save extends AbstractDeliveryOptions
         $this->orderRepository->save($postnlOrder);
 
         /**
+         * @codingStandardsIgnoreLine
          * @todo : If type == pickup, we need to store/save the address data to the quote.
          */
 
@@ -137,6 +138,7 @@ class Save extends AbstractDeliveryOptions
     /**
      * @param $params
      *
+     * @codingStandardsIgnoreLine
      * @todo : When type is pickup the delivery Date needs to be recalculated,
      *       based on the opening days/hours of the location
      * @return mixed
@@ -146,7 +148,7 @@ class Save extends AbstractDeliveryOptions
         if (!isset($params['date']) && $params['type'] == 'pickup') {
             $params['date'] = $this->checkoutSession->getPostNLDeliveryDate();
         }
-        
+
         $params['quote_id'] = $this->checkoutSession->getQuoteId();
 
         return $params;
