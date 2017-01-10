@@ -4,7 +4,7 @@
         <button type="button" class="btn btn-default" data-bind="click: setPickup, css: { 'button-active': shipmentType() == 'pickup' }">Pickup</button>
     </div>
 
-    <div data-bind="if: isLoading()" class="tig-postnl-loading"></div>
+    <div data-bind="visible: isLoading()" class="tig-postnl-loading"></div>
 
     <div class="delivery" data-bind="visible: shipmentType() == 'delivery'">
         <!-- ko foreach: getRegion('postnl-deliveryoptions-delivery') -->
