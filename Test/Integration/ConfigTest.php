@@ -43,6 +43,8 @@ use Magento\Framework\App\DeploymentConfig\Reader as DeploymentConfigReader;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Component\ComponentRegistrar;
 use Magento\Framework\Module\ModuleList;
+use TIG\PostNL\Config\Provider\ProductOptions;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
 class ConfigTest extends TestCase
 {
@@ -59,20 +61,64 @@ class ConfigTest extends TestCase
     public function testTheModuleIsConfiguredAndEnabledInTheTestEnvironment()
     {
         /** @var ModuleList $moduleList */
-        $moduleList = $this->objectManager->create(ModuleList::class);
+        $moduleList = $this->getObject(ModuleList::class);
 
         $this->assertTrue($moduleList->has($this->moduleName));
     }
 
     public function testTheModuleIsConfiguredAndEnabledInTheRealEnvironment()
     {
-        $dirList = $this->objectManager->create(DirectoryList::class, ['root' => BP]);
-        $configReader = $this->objectManager->create(DeploymentConfigReader::class, ['dirList' => $dirList]);
-        $deploymentConfig = $this->objectManager->create(DeploymentConfig::class, ['reader' => $configReader]);
+        $dirList = $this->getObject(DirectoryList::class, ['root' => BP]);
+        $configReader = $this->getObject(DeploymentConfigReader::class, ['dirList' => $dirList]);
+        $deploymentConfig = $this->getObject(DeploymentConfig::class, ['reader' => $configReader]);
 
         /** @var ModuleList $moduleList */
-        $moduleList = $this->objectManager->create(ModuleList::class, ['config' => $deploymentConfig]);
+        $moduleList = $this->getObject(ModuleList::class, ['config' => $deploymentConfig]);
 
         $this->assertTrue($moduleList->has($this->moduleName));
+    }
+
+    public function defaultSupportedOptionsProvider()
+    {
+        return [
+            [3085],
+            [3189],
+            [3089],
+            [3389],
+            [3096],
+            [3090],
+            [3385],
+            [3534],
+            [3544],
+            [3533],
+            [3543],
+            [4950],
+            [4952],
+            [2928],
+        ];
+    }
+
+    /**
+     * @param $productCode
+     *
+     * @dataProvider defaultSupportedOptionsProvider
+     */
+    public function testDefaultSupportedOptions($productCode)
+    {
+        /** @var ProductOptions $configProvider */
+        $configProvider = $this->getObject(ProductOptions::class);
+        $value = $configProvider->getSupportedProductOptions();
+        $productOptions = explode(',', $value);
+
+        $this->assertContains($productCode, $productOptions);
+    }
+
+    public function testDefaultShippingoptionsValue()
+    {
+        /** @var ShippingOptions $configProvider */
+        $configProvider = $this->getObject(ShippingOptions::class);
+        $value = $configProvider->isShippingoptionsActive();
+
+        $this->assertEquals('0', $value);
     }
 }
