@@ -102,7 +102,7 @@ class SoapOld
         } catch (\Exception $exception) {
             throw new WebapiException(
             // @codingStandardsIgnoreLine
-                __('Faild on soap call : %1', $exception->getMessage()),
+                __('Failed on soap call : %1', $exception->getMessage()),
                 0,
                 WebapiException::HTTP_INTERNAL_ERROR
             );
