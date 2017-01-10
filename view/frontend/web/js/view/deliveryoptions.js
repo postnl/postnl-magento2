@@ -35,7 +35,7 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['uiComponent'], function (Component) {
+define(['uiComponent', 'ko', 'TIG_PostNL/js/Helper/State'], function (Component, ko, State) {
     return Component.extend({
         defaults: {
             template: 'TIG_PostNL/deliveryoptions',
@@ -46,6 +46,10 @@ define(['uiComponent'], function (Component) {
             this._super().observe([
                 'shipmentType'
             ]);
+
+            this.isLoading = ko.computed( function () {
+                return State.isLoading();
+            });
 
             return this;
         },

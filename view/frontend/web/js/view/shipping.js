@@ -37,12 +37,16 @@
  */
 define(['Magento_Checkout/js/view/shipping'], function (Shipping) {
     return Shipping.extend({
+        canUseDeliveryOption: function () {
+            return window.checkoutConfig.shipping.postnl.shippingoptions_active == 1;
+        },
+
         canUsePostnlDeliveryOptions: function (carrier_code) {
-            if (carrier_code == 'tig_postnl') {
-                return true;
+            if (!this.canUseDeliveryOption()) {
+                return false;
             }
 
-            return false;
+            return carrier_code == 'tig_postnl';
         }
     });
 });

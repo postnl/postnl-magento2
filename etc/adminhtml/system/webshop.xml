@@ -38,9 +38,9 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <!--Webshopsettings section-->
-    <group id="webshopsettings" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Webshopsettings</label>
+    <!--Webshop section-->
+    <group id="webshop" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Webshop</label>
         <frontend_model>TIG\PostNL\Block\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-section</fieldset_css>
 
@@ -51,7 +51,7 @@
             <field id="label_size" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Label size</label>
                 <source_model>TIG\PostNL\Config\Source\Settings\LabelsizeSettings</source_model>
-                <config_path>tig_postnl/webshopsettings_printer/label_size</config_path>
+                <config_path>tig_postnl/webshop_printer/label_size</config_path>
             </field>
         </group>
 
@@ -61,13 +61,13 @@
             <field id="cutoff_time" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Cutoff time</label>
                 <source_model>TIG\PostNL\Config\Source\Settings\CutOffSettings</source_model>
-                <config_path>tig_postnl/webshopsettings_shipping/cutoff_time</config_path>
+                <config_path>tig_postnl/webshop_shipping/cutoff_time</config_path>
             </field>
 
             <field id="shipment_days" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Shipment days</label>
                 <source_model>Magento\Config\Model\Config\Source\Locale\Weekdays</source_model>
-                <config_path>tig_postnl/webshopsettings_shipping/shipment_days</config_path>
+                <config_path>tig_postnl/webshop_shipping/shipment_days</config_path>
             </field>
         </group>
 

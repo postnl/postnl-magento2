@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 **
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -41,5 +42,13 @@
     <!--Plugin for adding the pakjegemak address from the quote to the order-->
     <type name="\Magento\Quote\Model\Quote\Address\ToOrder">
         <plugin name="postnl_to_order" type="\TIG\PostNL\Plugin\ToOrderPlugin" />
+    </type>
+
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="tig_postnl_checkout_config_provider" xsi:type="object">TIG\PostNL\Config\Provider\CheckoutConfiguration</item>
+            </argument>
+        </arguments>
     </type>
 </config>

@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -34,25 +33,42 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
-    <system>
-        <include path="TIG_PostNL::system/carrier.xml"/>
+namespace TIG\PostNL\Config\Provider;
 
-        <section id="tig_postnl" translate="label" type="text" sortOrder="340" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>PostNL</label>
-            <tab>sales</tab>
-            <resource>Sales_PostNL::configuration</resource>
-            <class>postnl-section</class>
+use Magento\Checkout\Model\ConfigProviderInterface;
 
-            <include path="TIG_PostNL::system/support.xml"/>
-            <include path="TIG_PostNL::system/general.xml"/>
-            <include path="TIG_PostNL::system/webshop.xml"/>
-            <include path="TIG_PostNL::system/shippingoptions.xml"/>
-            <include path="TIG_PostNL::system/productoptions.xml" />
-        </section>
-    </system>
-</config>
+class CheckoutConfiguration implements ConfigProviderInterface
+{
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
+
+    /**
+     * @param ShippingOptions $shippingOptions
+     */
+    public function __construct(
+        ShippingOptions $shippingOptions
+    ) {
+        $this->shippingOptions = $shippingOptions;
+    }
+
+    /**
+     * Retrieve assoc array of checkout configuration
+     *
+     * @return array
+     */
+    public function getConfig()
+    {
+        return [
+            'shipping' => [
+                'postnl' => [
+                    'shippingoptions_active' => $this->shippingOptions->isShippingoptionsActive(),
+                ]
+            ]
+        ];
+    }
+}

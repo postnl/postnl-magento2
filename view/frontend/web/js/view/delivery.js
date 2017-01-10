@@ -41,14 +41,16 @@ define([
     'Magento_Checkout/js/model/quote',
     'jquery',
     'TIG_PostNL/js/Helper/AddressFinder',
-    'TIG_PostNL/js/Helper/Logger'
+    'TIG_PostNL/js/Helper/Logger',
+    'TIG_PostNL/js/Helper/State'
 ], function (
     Component,
     ko,
     quote,
     $,
     AddressFinder,
-    Logger
+    Logger,
+    State
 ) {
     'use strict';
     return Component.extend({
@@ -109,11 +111,14 @@ define([
         },
 
         getDeliverydays: function (address) {
+            State.deliveryOptionsAreLoading(true);
+
             $.ajax({
                 method: 'POST',
                 url : '/postnl/deliveryoptions/days',
                 data : {address: address}
             }).done(function (data) {
+                State.deliveryOptionsAreLoading(false);
                 Logger.info(data);
                 this.setDeliverydays(data);
             }.bind(this)).fail(function (data) {
