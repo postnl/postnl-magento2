@@ -35,7 +35,17 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['uiComponent', 'ko', 'TIG_PostNL/js/Helper/State'], function (Component, ko, State) {
+define([
+    'uiComponent',
+    'ko',
+    'TIG_PostNL/js/Helper/State',
+    'TIG_PostNL/js/Helper/AddressFinder'
+], function (
+    Component,
+    ko,
+    State,
+    AddressFinder
+) {
     return Component.extend({
         defaults: {
             template: 'TIG_PostNL/deliveryoptions',
@@ -49,6 +59,13 @@ define(['uiComponent', 'ko', 'TIG_PostNL/js/Helper/State'], function (Component,
 
             this.isLoading = ko.computed(function () {
                 return State.isLoading();
+            });
+
+            /**
+             * If we have a valid address we can load the deliveryoptions
+             */
+            this.canUseDeliveryOptions = ko.computed( function () {
+                return AddressFinder() != false;
             });
 
             return this;

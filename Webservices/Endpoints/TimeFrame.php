@@ -39,6 +39,7 @@
 
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use Magento\Framework\Locale\ListsInterface;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Soap;
 use TIG\PostNL\Config\Provider\ShippingOptions;
@@ -91,21 +92,29 @@ class TimeFrame extends AbstractEndpoint
     private $message;
 
     /**
+     * @var ListsInterface
+     */
+    private $locale;
+
+    /**
      * @param Soap            $soap
      * @param Data            $postNLhelper
      * @param ShippingOptions $shippingOptions
+     * @param ListsInterface  $locale
      * @param Message         $message
      */
     public function __construct(
         Soap $soap,
         Data $postNLhelper,
         ShippingOptions $shippingOptions,
+        ListsInterface $locale,
         Message $message
     ) {
         $this->soap = $soap;
         $this->shippingOptions = $shippingOptions;
         $this->postNLhelper  = $postNLhelper;
         $this->message = $message;
+        $this->locale = $locale;
     }
 
     /**
@@ -200,7 +209,7 @@ class TimeFrame extends AbstractEndpoint
         foreach ($timeFrames as $timeFrame) {
             $options = $timeFrame->Options;
             $filterdTimeFrames[] = [
-                'day'           => date('D', strtotime($date)) . ' (' . $date . ')',
+                'day'           => $this->getDayOfWeek($date),
                 'from'          => $timeFrame->From,
                 'from_friendly' => substr($timeFrame->From, 0, 5),
                 'to'            => $timeFrame->To,
@@ -248,5 +257,17 @@ class TimeFrame extends AbstractEndpoint
         }
 
         return false;
+    }
+
+    /**
+     * @param $date
+     *
+     * @return bool|string
+     */
+    private function getDayOfWeek($date)
+    {
+        $weekdays = $this->locale->getOptionWeekdays();
+
+        return $weekdays[date('w', strtotime($date))]['label'];
     }
 }

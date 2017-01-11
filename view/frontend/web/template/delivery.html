@@ -3,7 +3,7 @@
         <div class="wrapper">
 
             <strong>
-                <span class="deliverydays-day" data-bind="text: $data[0].day"></span>
+                <span class="deliverydays-day" data-bind="text: $data[0].day.substring(0, 2)"></span>
                 <span class="deliverydays-date" data-bind="text: $data[0].date"></span>
             </strong>
 

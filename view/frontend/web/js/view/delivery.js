@@ -74,8 +74,8 @@ define([
                 'selectedOption'
             ]);
 
-            AddressFinder.subscribe(function (address) {
-                if (!address) {
+            AddressFinder.subscribe(function (address, oldAddress) {
+                if (!address || JSON.stringify(address) == JSON.stringify(oldAddress)) {
                     return;
                 }
 

@@ -36,8 +36,8 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 define(['ko'], function (ko) {
-    var deliveryOptionsAreLoading = ko.observable(true);
-    var pickupOptionsAreLoading = ko.observable(true);
+    var deliveryOptionsAreLoading = ko.observable(false);
+    var pickupOptionsAreLoading = ko.observable(false);
 
     var isLoading = ko.computed(function () {
         return deliveryOptionsAreLoading() || pickupOptionsAreLoading();
