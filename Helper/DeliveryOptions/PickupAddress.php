@@ -139,7 +139,6 @@ class PickupAddress
         $address->setCountryId($pgData['Countrycode']);
         $address->setStreet([$pgData['Street'],$pgData['HouseNr']]);
         $address->setPostcode($pgData['Zipcode']);
-        $address->setEmail($pgData['customer']['email']);
         $address->setFirstname($pgData['customer']['firstname']);
         $address->setLastname($pgData['customer']['lastname']);
         $address->setTelephone($pgData['customer']['telephone']);

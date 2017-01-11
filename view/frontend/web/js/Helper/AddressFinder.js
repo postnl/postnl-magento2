@@ -49,16 +49,13 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
             return oldAddress;
         }
 
-        var useremail = jQuery('#customer-email').val();
-
         address = {
             postalCode  : shippingAddress.postcode,
             countryCode : shippingAddress.countryId,
             street      : shippingAddress.street,
             firstname   : shippingAddress.firstname,
             lastname    : shippingAddress.lastname,
-            telephone   : shippingAddress.telephone,
-            email       : useremail
+            telephone   : shippingAddress.telephone
         };
 
         /**
@@ -88,10 +85,6 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
 
         if (!address.telephone) {
             address.telephone = $("input[name*='telephone']").val();
-        }
-
-        if (!address.email) {
-            address.email = useremail;
         }
 
         if (!address.postalCode || !address.countryCode || !address.street) {
