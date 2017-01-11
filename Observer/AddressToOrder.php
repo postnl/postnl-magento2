@@ -109,16 +109,12 @@ class AddressToOrder implements ObserverInterface
         /** @var Order $order */
         $order = $observer->getData('data_object');
         $quotePgAddres = $this->pickupAddressHelper->getPakjeGemakAddressInQuote($order->getQuoteId());
-
-        $pgAddress = false;
+        $pgAddress     = false;
         if ($quotePgAddres->getId()) {
             /** @var Order\Address $orderPgAddress */
             $orderPgAddress = $this->quoteAddressToOrderAddress->convert($quotePgAddres);
-            /** @var Order\Address $pgAddress */
-            $pgAddress = $this->createOrderAddress($orderPgAddress, $order);
-            // Add the address to the order_address collection
+            $pgAddress      = $this->createOrderAddress($orderPgAddress, $order);
             $order->addAddress($pgAddress);
-            $pgAddress->save();
         }
 
         $postnlOrder = $this->getPostNLOrder($order);
@@ -140,7 +136,6 @@ class AddressToOrder implements ObserverInterface
     private function createOrderAddress($orderPgAddress, $order)
     {
         $pgAddress = $this->addressFactory->create();
-
         $pgAddress->setParentId($order->getEntityId());
         $pgAddress->setCompany($orderPgAddress->getCompany());
         $pgAddress->setStreet($orderPgAddress->getStreet());
@@ -152,6 +147,7 @@ class AddressToOrder implements ObserverInterface
         $pgAddress->setEmail($order->getCustomerEmail());
         $pgAddress->setTelephone($orderPgAddress->getTelephone());
         $pgAddress->setAddressType('shipping');
+        $pgAddress->save();
 
         return $pgAddress;
     }

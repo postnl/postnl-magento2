@@ -118,7 +118,7 @@ class PickupAddress
         $collection = $quoteAddress->getCollection();
         $collection->addFieldToFilter('quote_id', $quoteId);
         $collection->addFieldToFilter('address_type', self::PG_ADDRESS_TYPE);
-
+        // @codingStandardsIgnoreLine
         return $collection->setPageSize(1)->getFirstItem();
     }
 
@@ -146,6 +146,4 @@ class PickupAddress
 
         return $address;
     }
-
-
 }
