@@ -65,7 +65,7 @@ define([
              * If we have a valid address we can load the deliveryoptions
              */
             this.canUseDeliveryOptions = ko.computed(function () {
-                return AddressFinder() != false;
+                return AddressFinder() !== false;
             });
 
             return this;

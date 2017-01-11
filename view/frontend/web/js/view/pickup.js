@@ -86,7 +86,7 @@ define([
             /**
              * Subscribe to address changes.
              */
-            AddressFinder.subscribe(function (address) {
+            AddressFinder.subscribe(function (address, oldAddress) {
                 if (!address || JSON.stringify(address) == JSON.stringify(oldAddress)) {
                     return;
                 }
