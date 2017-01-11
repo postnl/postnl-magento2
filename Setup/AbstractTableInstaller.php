@@ -253,6 +253,33 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     }
 
     /**
+     * @param      $name
+     * @param      $comment
+     * @param int  $length
+     * @param bool $nullable
+     * @param null $default
+     *
+     * @throws \Zend_Db_Exception
+     */
+    // @codingStandardsIgnoreLine
+    protected function addBlob($name, $comment, $nullable = true, $default = null)
+    {
+        $this->table->addColumn(
+            $name,
+            Table::TYPE_BLOB,
+            null,
+            [
+                'identity' => false,
+                'unsigned' => false,
+                'nullable' => $nullable,
+                'primary' => false,
+                'default' => $default,
+            ],
+            $comment
+        );
+    }
+
+    /**
      * @return \Zend_Db_Statement_Interface
      */
     // @codingStandardsIgnoreLine

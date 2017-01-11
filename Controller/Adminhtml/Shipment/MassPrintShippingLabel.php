@@ -131,23 +131,6 @@ class MassPrintShippingLabel extends Action
         $collection = $this->collectionFactory->create();
         $collection = $this->filter->getCollection($collection);
 
-        /**
-         * TODO: Flow according to M1 version:
-         *
-         * 1. check if user is allowed to perform action > N/A
-         * 2. check maximum label printing > Unsure if necessary
-         * 3. set_time_limit(0) > Unsure if necessary
-         * 4. check if checked shipments are PostNL shipments (if not, addWarning()) > Partly done, no warning is shown
-         * 5. Confirm & get labels > Done
-         * 5.a Confirming -> just confirm, no labels > Only either when labels are already stored locally, or when a "only confirm" action is performed. Only the former is applyable for now.
-         * 5.b GenerateLabel -> both confirm and labels > Done
-         * 5.c GenerateLabelWithoutConfirm -> just label, no confirm. Confirming webservice has to be used after this. > N/A
-         * 5.d in short, the api flow is either GenerateLabelWithoutConfirm -> Confirming or just GenerateLabel
-         * 6. Check warnings/errors > Partly done, no warning is shown
-         * 7. Update shipment/order status > Done
-         * 8. Create & print PDFs > done
-         */
-
         /** @var Shipment $shipment */
         foreach ($collection as $shipment) {
             $this->currentShipment = $shipment;
