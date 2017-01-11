@@ -66,6 +66,7 @@ class InstallOrderTable extends AbstractTableInstaller
         $this->addText('expected_delivery_time_end', 'Expected delivery time end', 16);
 
         $this->addText('is_pakjegemak', 'Is Pakjegemak', 1);
+        $this->addInt('pg_order_address_id', 'Pakjegemak Order Address ID', true, true);
         $this->addText('pg_location_code', 'PakjeGemak Location Code', 32);
         $this->addText('pg_retail_network_id', 'PakjeGemak Retail Netwerok ID', 32);
 

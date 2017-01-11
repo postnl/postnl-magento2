@@ -95,28 +95,28 @@ class PickupAddress
         $quote = $this->checkoutSession->getQuote();
 
         /** @var array|\Magento\Quote\Model\Quote\Address $foundAddress */
-        $foundAddress = $this->getPakjeGemakAddressInQuote($quote);
+        $foundAddress = $this->getPakjeGemakAddressInQuote($quote->getId());
         if (!empty($foundAddress) && $foundAddress->getId()) {
             $foundAddress->isDeleted(true);
             $quote->removeAddress($foundAddress->getId());
         }
 
-        $this->pickupAddress = $this->create($address, $quote->getId());
+        $this->pickupAddress = $this->create($address, $quote);
         $quote->addAddress($this->pickupAddress);
         $quote->save();
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote $quote
+     * @param int $quoteId
      *
      * @return array|\Magento\Quote\Model\Quote\Address
      */
-    public function getPakjeGemakAddressInQuote($quote)
+    public function getPakjeGemakAddressInQuote($quoteId)
     {
         $quoteAddress = $this->addressFactory->create();
 
         $collection = $quoteAddress->getCollection();
-        $collection->addFieldToFilter('quote_id', $quote->getId());
+        $collection->addFieldToFilter('quote_id', $quoteId);
         $collection->addFieldToFilter('address_type', self::PG_ADDRESS_TYPE);
 
         return $collection->setPageSize(1)->getFirstItem();
@@ -124,21 +124,25 @@ class PickupAddress
 
     /**
      * @param $pgData
-     * @param $quoteId
+     * @param \Magento\Quote\Model\Quote $quote
      *
      * @return \Magento\Quote\Model\Quote\Address
      */
-    private function create($pgData, $quoteId)
+    private function create($pgData, $quote)
     {
         $address = $this->addressFactory->create();
 
-        $address->setQuoteId($quoteId);
+        $address->setQuoteId($quote->getId());
         $address->setAddressType(self::PG_ADDRESS_TYPE);
         $address->setCompany($pgData['Name']);
         $address->setCity($pgData['City']);
         $address->setCountryId($pgData['Countrycode']);
         $address->setStreet([$pgData['Street'],$pgData['HouseNr']]);
         $address->setPostcode($pgData['Zipcode']);
+        $address->setEmail($pgData['customer']['email']);
+        $address->setFirstname($pgData['customer']['firstname']);
+        $address->setLastname($pgData['customer']['lastname']);
+        $address->setTelephone($pgData['customer']['telephone']);
         $address->save();
 
         return $address;

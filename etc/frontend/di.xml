@@ -39,11 +39,6 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <!--Plugin for adding the pakjegemak address from the quote to the order-->
-    <type name="\Magento\Quote\Model\Quote\Address\ToOrder">
-        <plugin name="postnl_to_order" type="\TIG\PostNL\Plugin\ToOrderPlugin" />
-    </type>
-
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">

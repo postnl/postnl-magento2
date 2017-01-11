@@ -110,7 +110,8 @@ define([
                         name : value.Name,
                         RetailNetworkID: value.RetailNetworkID,
                         LocationCode : value.LocationCode,
-                        address: value.Address
+                        address: value.Address,
+                        customerData : AddressFinder()
                     }
                 });
             });
