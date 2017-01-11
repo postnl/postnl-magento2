@@ -49,6 +49,9 @@ use Magento\Ui\Component\MassAction\Filter;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 
 use TIG\PostNL\Model\ResourceModel\Shipment\CollectionFactory as PostnlShipmentCollectionFactory;
+use TIG\PostNL\Model\ResourceModel\ShipmentLabel\CollectionFactory as ShipmentLabelCollectionFactory;
+use TIG\PostNL\Model\ShipmentLabel;
+use TIG\PostNL\Model\ShipmentLabelFactory;
 use TIG\PostNL\Webservices\Endpoints\Labelling;
 
 class MassPrintShippingLabel extends Action
@@ -94,6 +97,16 @@ class MassPrintShippingLabel extends Action
     private $labelling;
 
     /**
+     * @var ShipmentLabelFactory
+     */
+    private $shipmentLabelFactory;
+
+    /**
+     * @var ShipmentLabelCollectionFactory
+     */
+    private $shipmentLabelCollectionFactory;
+
+    /**
      * @param Context                         $context
      * @param Filter                          $filter
      * @param ShipmentCollectionFactory       $collectionFactory
@@ -101,6 +114,8 @@ class MassPrintShippingLabel extends Action
      * @param FileFactory                     $fileFactory
      * @param LabelGenerator                  $labelGenerator
      * @param Labelling                       $labelling
+     * @param ShipmentLabelFactory            $shipmentLabelFactory
+     * @param ShipmentLabelCollectionFactory  $shipmentLabelCollectionFactory
      */
     public function __construct(
         Context $context,
@@ -109,7 +124,9 @@ class MassPrintShippingLabel extends Action
         PostnlShipmentCollectionFactory $postnlCollectionFactory,
         FileFactory $fileFactory,
         LabelGenerator $labelGenerator,
-        Labelling $labelling
+        Labelling $labelling,
+        ShipmentLabelFactory $shipmentLabelFactory,
+        ShipmentLabelCollectionFactory $shipmentLabelCollectionFactory
     ) {
         parent::__construct($context);
         $this->filter = $filter;
@@ -118,6 +135,8 @@ class MassPrintShippingLabel extends Action
         $this->fileFactory = $fileFactory;
         $this->labelGenerator = $labelGenerator;
         $this->labelling = $labelling;
+        $this->shipmentLabelFactory = $shipmentLabelFactory;
+        $this->shipmentLabelCollectionFactory = $shipmentLabelCollectionFactory;
     }
 
     /**
@@ -156,7 +175,7 @@ class MassPrintShippingLabel extends Action
 
         /** @var \TIG\PostNL\Model\Shipment $postnlShipment */
         foreach ($collection as $postnlShipment) {
-            $this->labels[$postnlShipment->getShipmentId()] = $this->generateLabel($postnlShipment);
+            $this->labels[$postnlShipment->getId()] = $this->generateLabel($postnlShipment);
         }
 
         return;
@@ -200,7 +219,7 @@ class MassPrintShippingLabel extends Action
 
         /** @var \TIG\PostNL\Model\ResourceModel\Shipment\Collection $collection */
         $collection = $this->postnlCollectionFactory->create();
-        $collection->addFieldToFilter('shipment_id', array('in' => $shipmentIds));
+        $collection->addFieldToFilter('entity_id', array('in' => $shipmentIds));
         $collection->setDataToAll('confirmed_at', $deliveryDate);
         $collection->save();
     }
@@ -211,6 +230,22 @@ class MassPrintShippingLabel extends Action
      */
     private function outputPdf()
     {
+        /** @var \TIG\PostNL\Model\ResourceModel\ShipmentLabel\Collection $labelModelCollection */
+        $labelModelCollection = $this->shipmentLabelCollectionFactory->create();
+        $labelModelCollection->load();
+
+        foreach ($this->labels as $shipmentId => $label) {
+            /** @var ShipmentLabel $labelModel */
+            $labelModel = $this->shipmentLabelFactory->create();
+            $labelModel->setParentId($shipmentId);
+            $labelModel->setLabel(base64_encode($label));
+            $labelModel->setType(ShipmentLabel::BARCODE_TYPE_LABEL);
+
+            $labelModelCollection->addItem($labelModel);
+        }
+
+        $labelModelCollection->save();
+
         /** @var \Zend_Pdf $combinedLabels */
         $combinedLabels = $this->labelGenerator->combineLabelsPdf($this->labels)->render();
 
