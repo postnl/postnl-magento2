@@ -139,12 +139,12 @@ class MassPrintShippingLabel extends Action
          * 3. set_time_limit(0) > Unsure if necessary
          * 4. check if checked shipments are PostNL shipments (if not, addWarning()) > Partly done, no warning is shown
          * 5. Confirm & get labels > Done
-         * 5.a Confirming -> just confirm, no labels > Unsure if necessary
+         * 5.a Confirming -> just confirm, no labels > Only either when labels are already stored locally, or when a "only confirm" action is performed. Only the former is applyable for now.
          * 5.b GenerateLabel -> both confirm and labels > Done
-         * 5.c GenerateLabelWithoutConfirm -> just label, no confirm. Confirming webservice has to be used after this. > todo
+         * 5.c GenerateLabelWithoutConfirm -> just label, no confirm. Confirming webservice has to be used after this. > N/A
          * 5.d in short, the api flow is either GenerateLabelWithoutConfirm -> Confirming or just GenerateLabel
-         * 6. Check warnings/errors > todo
-         * 7. Update shipment/order status > todo
+         * 6. Check warnings/errors > Partly done, no warning is shown
+         * 7. Update shipment/order status > Done
          * 8. Create & print PDFs > done
          */
 
@@ -153,6 +153,10 @@ class MassPrintShippingLabel extends Action
             $this->currentShipment = $shipment;
             $this->getLabel();
         }
+
+        $this->checkWarnings();
+
+        $this->updateStatus();
 
         return $this->outputPdf();
     }
@@ -169,8 +173,7 @@ class MassPrintShippingLabel extends Action
 
         /** @var \TIG\PostNL\Model\Shipment $postnlShipment */
         foreach ($collection as $postnlShipment) {
-            //TODO: catch the error and notify the user of it
-            $this->labels[] = $this->generateLabel($postnlShipment);
+            $this->labels[$postnlShipment->getShipmentId()] = $this->generateLabel($postnlShipment);
         }
 
         return;
@@ -191,6 +194,32 @@ class MassPrintShippingLabel extends Action
         }
 
         return $response->ResponseShipments->ResponseShipment[0]->Labels->Label[0]->Content;
+    }
+
+    private function checkWarnings()
+    {
+        //TODO: Notify the user of the warning
+        array_filter(
+            $this->labels,
+            function ($value) {
+                return (is_string($value));
+            }
+        );
+    }
+
+    private function updateStatus()
+    {
+        $deliveryTime = new \DateTime('now', new \DateTimeZone('UTC'));
+        $deliveryTime->setTimezone(new \DateTimeZone('Europe/Berlin'));
+        $deliveryDate = $deliveryTime->format('Y-m-d');
+
+        $shipmentIds = array_keys($this->labels);
+
+        /** @var \TIG\PostNL\Model\ResourceModel\Shipment\Collection $collection */
+        $collection = $this->postnlCollectionFactory->create();
+        $collection->addFieldToFilter('shipment_id', array('in' => $shipmentIds));
+        $collection->setDataToAll('confirmed_at', $deliveryDate);
+        $collection->save();
     }
 
     /**
