@@ -135,5 +135,6 @@ define([
 
             return this.odd;
         }
+
     });
 });

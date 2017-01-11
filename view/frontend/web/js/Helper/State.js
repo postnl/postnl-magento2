@@ -39,7 +39,7 @@ define(['ko'], function (ko) {
     var deliveryOptionsAreLoading = ko.observable(true);
     var pickupOptionsAreLoading = ko.observable(true);
 
-    var isLoading = ko.computed( function () {
+    var isLoading = ko.computed(function () {
         return deliveryOptionsAreLoading() || pickupOptionsAreLoading();
     });
 

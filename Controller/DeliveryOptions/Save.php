@@ -135,7 +135,13 @@ class Save extends AbstractDeliveryOptions
         }
 
         $this->orderRepository->save($postnlOrder);
+
         $this->pickupAddress->set($params['pg_address']);
+
+        /**
+         * @codingStandardsIgnoreLine
+         * @todo : If type == pickup, we need to store/save the address data to the quote.
+         */
 
         return __('ok');
     }
@@ -143,6 +149,7 @@ class Save extends AbstractDeliveryOptions
     /**
      * @param $params
      *
+     * @codingStandardsIgnoreLine
      * @todo : When type is pickup the delivery Date needs to be recalculated,
      *
      * @return mixed

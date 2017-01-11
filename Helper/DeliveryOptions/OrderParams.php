@@ -89,7 +89,7 @@ class OrderParams
         if (!empty($requiredOrderParams)) {
             throw new PostnlException(
             // @codingStandardsIgnoreLine
-                __('Missing required parameters : %1', implode(', ',$requiredOrderParams))
+                __('Missing required parameters: %1', implode(', ',$requiredOrderParams))
             );
         }
 

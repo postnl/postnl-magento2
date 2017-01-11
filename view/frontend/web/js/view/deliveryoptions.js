@@ -47,7 +47,7 @@ define(['uiComponent', 'ko', 'TIG_PostNL/js/Helper/State'], function (Component,
                 'shipmentType'
             ]);
 
-            this.isLoading = ko.computed( function () {
+            this.isLoading = ko.computed(function () {
                 return State.isLoading();
             });
 

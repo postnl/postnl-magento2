@@ -25,8 +25,8 @@ module.exports = function (grunt) {
                 'cd ' + magento2path + 'dev/tests/integration &&' +
                 '../../../vendor/bin/phpunit --testsuite "TIG PostNL Integration Tests"',
             phplint: 'find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l',
-            translations_nl: '../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/nl_NL.csv',
-            translations_en: '../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/en_US.csv',
+            translations_nl: 'mv vendor ../postnl-vendor && ../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/nl_NL.csv && mv ../postnl-vendor vendor',
+            translations_en: 'mv vendor ../postnl-vendor && ../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/en_US.csv && mv ../postnl-vendor vendor',
             code_coverage:
                 'mkdir -p ' + buildPath + '/coverage/{unit,integration} && ' +
                 'cd ' + magento2path + ' && ' +
@@ -72,7 +72,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', [
         'exec:unitTests',
         'exec:integrationTests',
-        'exec:phpcs_easy',
+        'exec:phpcs_full',
         'exec:phplint',
         'jshint:all'
     ]);

@@ -158,7 +158,7 @@ class AddressEnhancer
         if (!$matched && !is_array($results)) {
             throw new PostnlException(
             // @codingStandardsIgnoreLine
-                __('Invalid housnumber supplied: %1', $houseNumber),
+                __('Invalid housenumber supplied: %1', $houseNumber),
                 'POSTNL-0059'
             );
         }
