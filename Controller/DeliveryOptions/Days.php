@@ -119,9 +119,8 @@ class Days extends AbstractDeliveryOptions
     private function getPosibleDeliveryDays($address)
     {
         $startDate  = $this->getDeliveryDay($address);
-        $timeFrames = $this->getTimeFrames($address, $startDate);
-        // Filter the time frames so we can use them in knockoutJS.
-        return $this->timeFrameEndpoint->filterTimeFrames($timeFrames);
+
+        return $this->getTimeFrames($address, $startDate);
     }
 
     /**
@@ -153,13 +152,7 @@ class Days extends AbstractDeliveryOptions
     private function getTimeFrames($address, $startDate)
     {
         $this->timeFrameEndpoint->setParameters($address, $startDate);
-        $response = $this->timeFrameEndpoint->call();
-        //@codingStandardsIgnoreLine
-        if (!is_object($response) || !isset($response->Timeframes->Timeframe)) {
-            return __('Invalid GetTimeframes response: %1', var_export($response, true));
-        }
 
-        //@codingStandardsIgnoreLine
-        return $response->Timeframes->Timeframe;
+        return $this->timeFrameEndpoint->call();
     }
 }
