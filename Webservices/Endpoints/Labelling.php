@@ -47,6 +47,11 @@ use TIG\PostNL\Webservices\Soap;
 
 class Labelling extends AbstractEndpoint
 {
+    // @codingStandardsIgnoreLine
+    const PREG_MATCH_STREET = '#\A(.*?)\s+(\d+[a-zA-Z]{0,1}\s{0,1}[-]{1}\s{0,1}\d*[a-zA-Z]{0,1}|\d+[a-zA-Z-]{0,1}\d*[a-zA-Z]{0,1})#';
+
+    const PREG_MATCH_HOUSENR = '#^([\d]+)(.*)#s';
+
     /**
      * @var Soap
      */
@@ -130,6 +135,33 @@ class Labelling extends AbstractEndpoint
     private function getShipmentData($postnlShipment)
     {
         $shipment = $postnlShipment->getShipment();
+
+        $address = $this->getAddressData($shipment->getShippingAddress());
+        $contact = $this->getContactData($shipment);
+
+        $shipmentData = [
+            'Addresses'                => ['Address' => [$address]],
+            'Barcode'                  => $postnlShipment->getMainBarcode(),
+            'CollectionTimeStampEnd'   => '',
+            'CollectionTimeStampStart' => '',
+            'Contacts'                 => ['Contact' => $contact],
+            'Dimension'                => ['Weight'  => round($postnlShipment->getTotalWeight())],
+            'DeliveryDate'             => $postnlShipment->getDeliveryDateFormatted(),
+            'DownPartnerID'            => $postnlShipment->getPgRetailNetworkId(),
+            'DownPartnerLocation'      => $postnlShipment->getPgLocationCode(),
+            'ProductCodeDelivery'      => $postnlShipment->getProductCode(),
+        ];
+
+        return $shipmentData;
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order\Shipment $shipment
+     *
+     * @return mixed
+     */
+    private function getContactData($shipment)
+    {
         $shippingAddress = $shipment->getShippingAddress();
         $order = $shipment->getOrder();
 
@@ -139,25 +171,7 @@ class Labelling extends AbstractEndpoint
             'TelNr'       => $shippingAddress->getTelephone(),
         ];
 
-        $deliveryDate = $postnlShipment->getDeliveryDate();
-        $deliveryTime = new \DateTime($deliveryDate, new \DateTimeZone('UTC'));
-        $deliveryTime->setTimezone(new \DateTimeZone('Europe/Berlin'));
-        $deliveryDate = $deliveryTime->format('d-m-Y');
-
-        $shipmentData = [
-            'Addresses'                => ['Address' => [$this->getAddressData($shippingAddress)]],
-            'Barcode'                  => $postnlShipment->getMainBarcode(),
-            'CollectionTimeStampEnd'   => '',
-            'CollectionTimeStampStart' => '',
-            'Contacts'                 => ['Contact' => $contact],
-            'Dimension'                => ['Weight'  => round($postnlShipment->getTotalWeight())],
-            'DeliveryDate'             => $deliveryDate,
-            'DownPartnerID'            => $postnlShipment->getPgRetailNetworkId(),
-            'DownPartnerLocation'      => $postnlShipment->getPgLocationCode(),
-            'ProductCodeDelivery'      => $postnlShipment->getProductCode(),
-        ];
-
-        return $shipmentData;
+        return $contact;
     }
 
     /**
@@ -168,14 +182,10 @@ class Labelling extends AbstractEndpoint
     private function getAddressData($shippingAddress)
     {
         $fullStreet = implode(' ', $shippingAddress->getStreet());
-        $result = preg_match(
-            '#\A(.*?)\s+(\d+[a-zA-Z]{0,1}\s{0,1}[-]{1}\s{0,1}\d*[a-zA-Z]{0,1}|\d+[a-zA-Z-]{0,1}\d*[a-zA-Z]{0,1})#',
-            $fullStreet,
-            $streetMatches
-        );
-        $result = preg_match('#^([\d]+)(.*)#s', $streetMatches[2], $houseNrMatches);
+        $result = preg_match(self::PREG_MATCH_STREET, $fullStreet, $streetMatches);
+        $result = preg_match(self::PREG_MATCH_HOUSENR, $streetMatches[2], $houseNrMatches);
 
-        $addressArray = array(
+        $addressArray = [
             'AddressType'      => '01',
             'FirstName'        => $shippingAddress->getFirstname(),
             'Name'             => $shippingAddress->getLastname(),
@@ -187,7 +197,7 @@ class Labelling extends AbstractEndpoint
             'City'             => $shippingAddress->getCity(),
             'Region'           => $shippingAddress->getRegion(),
             'Countrycode'      => $shippingAddress->getCountryId(),
-        );
+        ];
 
         return $addressArray;
     }

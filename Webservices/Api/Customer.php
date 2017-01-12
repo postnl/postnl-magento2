@@ -93,7 +93,7 @@ class Customer
      */
     public function address()
     {
-        $addressArray = array(
+        $addressArray = [
             'AddressType' => self::ADDRESS_TYPE_SENDER,
             'FirstName'   => $this->addressConfiguration->getFirstname(),
             'Name'        => $this->addressConfiguration->getLastname(),
@@ -105,7 +105,7 @@ class Customer
             'City'        => $this->addressConfiguration->getCity(),
             'Countrycode' => 'NL',
             'Department'  => $this->addressConfiguration->getDepartment(),
-        );
+        ];
 
         return $addressArray;
     }

@@ -44,6 +44,7 @@ use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Sales\Model\Order\Shipment as OrderShipment;
 use Magento\Sales\Model\Order\Shipment\Item;
 
@@ -91,17 +92,24 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     const CACHE_TAG = 'tig_postnl_shipment';
 
     /**
-     * @param Context          $context
-     * @param Registry         $registry
-     * @param OrderShipment    $orderShipment
-     * @param AbstractResource $resource
-     * @param AbstractDb       $resourceCollection
-     * @param array            $data
+     * @var TimezoneInterface
+     */
+    private $timezoneInterface;
+
+    /**
+     * @param Context           $context
+     * @param Registry          $registry
+     * @param OrderShipment     $orderShipment
+     * @param TimezoneInterface $timezoneInterface
+     * @param AbstractResource  $resource
+     * @param AbstractDb        $resourceCollection
+     * @param array             $data
      */
     public function __construct(
         Context $context,
         Registry $registry,
         OrderShipment $orderShipment,
+        TimezoneInterface $timezoneInterface,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -109,6 +117,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
 
         $this->orderShipment = $orderShipment;
+        $this->timezoneInterface = $timezoneInterface;
     }
 
     /**
@@ -137,6 +146,9 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         return $this->orderShipment->load($this->getShipmentId());
     }
 
+    /**
+     * @return float|int
+     */
     public function getTotalWeight()
     {
         $items = $this->getShipment()->getAllItems();
@@ -152,5 +164,19 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         }
 
         return $weight;
+    }
+
+    /**
+     * @param string $format
+     *
+     * @return string
+     */
+    public function getDeliveryDateFormatted($format = 'd-m-Y')
+    {
+        $deliveryDate = $this->getData('delivery_date');
+        $deliveryDate = $this->timezoneInterface->date($deliveryDate);
+        $deliveryDateFormatted = $deliveryDate->format($format);
+
+        return $deliveryDateFormatted;
     }
 }
