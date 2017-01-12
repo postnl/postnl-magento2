@@ -69,7 +69,7 @@ class ShippingDateTest extends TestCase
             ['2016-11-19', 0, 'Today'],
             ['2016-11-19', -10, '19 Nov. 2016'],
             ['2016-11-19', 10, 'In 10 days'],
-            ['2016-11-19', 1, 'In 1 day'],
+            ['2016-11-19', 1, 'Tomorrow'],
         ];
     }
 

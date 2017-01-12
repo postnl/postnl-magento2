@@ -42,7 +42,8 @@ define([
     'jquery',
     'TIG_PostNL/js/Helper/AddressFinder',
     'TIG_PostNL/js/Helper/Logger',
-    'TIG_PostNL/js/Helper/State'
+    'TIG_PostNL/js/Helper/State',
+    'TIG_PostNL/js/Models/TimeFrame'
 ], function (
     Component,
     ko,
@@ -50,12 +51,13 @@ define([
     $,
     AddressFinder,
     Logger,
-    State
+    State,
+    TimeFrame
 ) {
     'use strict';
     return Component.extend({
         defaults: {
-            template: 'TIG_PostNL/delivery',
+            template: 'TIG_PostNL/DeliveryOptions/Delivery',
             postalCode: null,
             countryCode: null,
             street: null,
@@ -74,8 +76,8 @@ define([
                 'selectedOption'
             ]);
 
-            AddressFinder.subscribe(function (address) {
-                if (!address) {
+            AddressFinder.subscribe(function (address, oldAddress) {
+                if (!address || JSON.stringify(address) == JSON.stringify(oldAddress)) {
                     return;
                 }
 
@@ -120,6 +122,13 @@ define([
             }).done(function (data) {
                 State.deliveryOptionsAreLoading(false);
                 Logger.info(data);
+
+                data = ko.utils.arrayMap(data, function (day) {
+                    return ko.utils.arrayMap(day, function (timeFrame) {
+                        return new TimeFrame(timeFrame);
+                    });
+                });
+
                 this.setDeliverydays(data);
             }.bind(this)).fail(function (data) {
                 Logger.error(data);
@@ -135,6 +144,5 @@ define([
 
             return this.odd;
         }
-
     });
 });

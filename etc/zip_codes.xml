@@ -34,15 +34,14 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.tig.nl)
+ * @copyright   Copyright (c) 2015 Total Internet Group B.V. (http://www.tig.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
  -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="0.0.1" stability="beta">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Directory"/>
-        </sequence>
-    </module>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Directory:etc/zip_codes.xsd">
+    <zip countryCode="NL">
+        <codes>
+            <code id="pattern_1" active="true" example="1234AB">^[1-9][0-9]{3} ?[a-zA-Z]{2}$</code>
+        </codes>
+    </zip>
 </config>

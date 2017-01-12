@@ -35,7 +35,13 @@
  * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['Magento_Checkout/js/view/shipping'], function (Shipping) {
+define([
+    'Magento_Checkout/js/view/shipping',
+    'Magento_Checkout/js/model/quote'
+], function (
+    Shipping,
+    quote
+) {
     return Shipping.extend({
         canUseDeliveryOption: function () {
             return window.checkoutConfig.shipping.postnl.shippingoptions_active == 1;

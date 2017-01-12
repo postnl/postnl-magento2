@@ -39,9 +39,10 @@
 
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Webservices\AbstractEndpoint;
+use TIG\PostNL\Webservices\Parser\TimeFrames;
 use TIG\PostNL\Webservices\Soap;
-use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Helper\Data;
 
@@ -52,9 +53,6 @@ use TIG\PostNL\Helper\Data;
  */
 class TimeFrame extends AbstractEndpoint
 {
-    const TIMEFRAME_OPTION_EVENING = 'Evening';
-    const TIMEFRAME_OPTION_DAYTIME = 'Daytime';
-
     /**
      * @var string
      */
@@ -76,45 +74,54 @@ class TimeFrame extends AbstractEndpoint
     private $requestParams;
 
     /**
-     * @var ShippingOptions
-     */
-    private $shippingOptions;
-
-    /**
      * @var Data
      */
     private $postNLhelper;
 
     /**
-     * @var Message
+     * @var array
      */
     private $message;
 
     /**
-     * @param Soap            $soap
-     * @param Data            $postNLhelper
-     * @param ShippingOptions $shippingOptions
-     * @param Message         $message
+     * @var TimeFrames
+     */
+    private $timerFramesParser;
+
+    /**
+     * @param Soap       $soap
+     * @param Message    $message
+     * @param TimeFrames $timerFramesParser
+     * @param Data       $postNLhelper
      */
     public function __construct(
         Soap $soap,
-        Data $postNLhelper,
-        ShippingOptions $shippingOptions,
-        Message $message
+        Message $message,
+        TimeFrames $timerFramesParser,
+        Data $postNLhelper
     ) {
         $this->soap = $soap;
-        $this->shippingOptions = $shippingOptions;
-        $this->postNLhelper  = $postNLhelper;
-        $this->message = $message;
+        $this->message = $message->get('');
+        $this->timerFramesParser = $timerFramesParser;
+        $this->postNLhelper = $postNLhelper;
     }
 
     /**
+     * @param bool $parseTimeFrames
+     *
      * @return mixed
      * @throws \Magento\Framework\Webapi\Exception
      */
-    public function call()
+    public function call($parseTimeFrames = true)
     {
-        return $this->soap->call($this, 'GetTimeframes', $this->requestParams);
+        $response = $this->soap->call($this, 'GetTimeframes', $this->requestParams);
+
+        if ($parseTimeFrames) {
+            $timeFrames = $this->getTimeFrames($response);
+            return $this->timerFramesParser->handle($timeFrames);
+        }
+
+        return $response;
     }
 
     /**
@@ -156,97 +163,33 @@ class TimeFrame extends AbstractEndpoint
                 'EndDate'            => $this->postNLhelper->getEndDate($startDate),
                 'Options'            => ['Sunday', 'Daytime', 'Evening']
             ],
-            'Message' => $this->message->get('')
+            'Message' => $this->message
         ];
     }
 
     /**
-     * @codingStandardsIgnoreLine
-     * @todo : Filter on Monday and Sunday delivery also on evening and CutoffTimes.
-     * @param $timeFrames
+     * @param $response
      *
-     * @return array
+     * @return mixed
+     * @throws LocalizedException
      */
-    public function filterTimeFrames($timeFrames)
+    private function getTimeFrames($response)
     {
-        $filterdTimeFrames = array_filter($timeFrames, function ($value) {
-            return !$this->isSameDay($value->Date);
-        });
-
-        return array_map(function ($timeFrame) {
-            $frames = $timeFrame->Timeframes;
-            return $this->getTimeFrameOptions(
-                $filterdTimeFrames,
-                $frames->TimeframeTimeFrame,
-                $timeFrame->Date
-            );
-        }, $filterdTimeFrames);
-    }
-
-    /**
-     * @param $filterdTimeFrames
-     * @param $timeFrames
-     * @param $date
-     *
-     * @return array
-     */
-    private function getTimeFrameOptions(&$filterdTimeFrames, $timeFrames, $date)
-    {
-        $timeFrames = array_filter($timeFrames, function ($value) {
-            $options = $value->Options;
-            return $this->validateOnEvening($options->string[0]);
-        });
-
-        foreach ($timeFrames as $timeFrame) {
-            $options = $timeFrame->Options;
-            $filterdTimeFrames[] = [
-                'day'           => date('D', strtotime($date)) . ' (' . $date . ')',
-                'from'          => $timeFrame->From,
-                'from_friendly' => substr($timeFrame->From, 0, 5),
-                'to'            => $timeFrame->To,
-                'to_friendly'   => substr($timeFrame->To, 0, 5),
-                'option'        => $options->string[0],
-                'date'          => $date,
-            ];
+        // @codingStandardsIgnoreLine
+        $exception = new LocalizedException(__('Invalid GetTimeframes response: %1', var_export($response, true)));
+        if (!is_object($response)) {
+            throw $exception;
         }
 
-        return $filterdTimeFrames;
-    }
-
-    /**
-     * @codingStandardsIgnoreLine
-     * @todo : Move to validation Classes.
-     *
-     * @param $option
-     *
-     * @return bool
-     */
-    private function validateOnEvening($option)
-    {
-        if ($option !== self::TIMEFRAME_OPTION_EVENING) {
-            return true;
+        if (!isset($response->Timeframes)) {
+            throw $exception;
         }
 
-        if ($option === self::TIMEFRAME_OPTION_EVENING && $this->shippingOptions->isEveningDeliveryActive()) {
-            return true;
+        $timeframes = $response->Timeframes;
+        if (!isset($timeframes->Timeframe)) {
+            throw $exception;
         }
 
-        return false;
-    }
-
-    /**
-     * @codingStandardsIgnoreLine
-     * @todo : Move to validation Classes.
-     * @param $timeFrameDate
-     *
-     * @return bool
-     */
-    private function isSameDay($timeFrameDate)
-    {
-        if ($this->postNLhelper->getDateYmd() == $this->postNLhelper->getDateYmd($timeFrameDate)) {
-            return true;
-        }
-
-        return false;
+        return $timeframes->Timeframe;
     }
 }
