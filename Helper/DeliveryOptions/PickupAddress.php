@@ -94,6 +94,18 @@ class PickupAddress
         /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $this->checkoutSession->getQuote();
 
+        $this->remove();
+
+        $this->pickupAddress = $this->create($address, $quote);
+        $quote->addAddress($this->pickupAddress);
+        $quote->save();
+    }
+
+    public function remove()
+    {
+        /** @var \Magento\Quote\Model\Quote $quote */
+        $quote = $this->checkoutSession->getQuote();
+
         /** @var array|\Magento\Quote\Model\Quote\Address $foundAddress */
         $foundAddress = $this->getPakjeGemakAddressInQuote($quote->getId());
         if (!empty($foundAddress) && $foundAddress->getId()) {
@@ -101,11 +113,8 @@ class PickupAddress
             $quote->removeAddress($foundAddress->getId());
         }
 
-        $this->pickupAddress = $this->create($address, $quote);
-        $quote->addAddress($this->pickupAddress);
         $quote->save();
     }
-
     /**
      * @param int $quoteId
      *

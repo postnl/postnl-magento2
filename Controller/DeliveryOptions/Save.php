@@ -136,6 +136,10 @@ class Save extends AbstractDeliveryOptions
 
         $this->orderRepository->save($postnlOrder);
 
+        if ($params['type'] != 'pickup') {
+            $this->pickupAddress->remove();
+        }
+
         if ($params['type'] == 'pickup') {
             $this->pickupAddress->set($params['pg_address']);
         }
