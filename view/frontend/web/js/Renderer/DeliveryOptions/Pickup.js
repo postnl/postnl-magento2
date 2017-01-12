@@ -32,7 +32,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 define([
@@ -55,7 +55,7 @@ define([
     'use strict';
     return Component.extend({
         defaults: {
-            template: 'TIG_PostNL/pickup',
+            template: 'TIG_PostNL/DeliveryOptions/Pickup',
             postalCode : null,
             countryCode : null,
             street : null,
@@ -71,6 +71,16 @@ define([
             'friday': 5,
             'saturday': 6,
             'sunday': 7
+        },
+
+        daysLabels: {
+            monday: $.mage.__('Monday'),
+            tuesday: $.mage.__('Tuesday'),
+            wednesday: $.mage.__('Wednesday'),
+            thursday: $.mage.__('Thursday'),
+            friday: $.mage.__('Friday'),
+            saturday: $.mage.__('Saturday'),
+            sunday: $.mage.__('Sunday')
         },
 
         initObservable : function () {
@@ -158,13 +168,16 @@ define([
          * @returns {*}
          */
         getOpeningHours: function (OpeningHours) {
-            var output = [], record, hours;
+            var output = [];
 
             $.each(OpeningHours, function (index, record) {
-                output.push({
-                    day   : index,
+                var data = {
+                    index : index,
+                    day   : this.daysLabels[index.toLowerCase()],
                     hours : this.getHours(record)
-                });
+                };
+
+                output.push(data);
             }.bind(this));
 
             return this.sortDays(output);
@@ -193,8 +206,8 @@ define([
          */
         sortDays: function (data) {
             return data.sort(function (a, b) {
-                var day1 = a.day.toLowerCase();
-                var day2 = b.day.toLowerCase();
+                var day1 = a.index.toLowerCase();
+                var day2 = b.index.toLowerCase();
                 return this.daysSorting[day1] > this.daysSorting[day2];
             }.bind(this));
         },

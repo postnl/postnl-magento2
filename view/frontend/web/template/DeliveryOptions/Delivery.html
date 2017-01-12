@@ -1,9 +1,8 @@
 <div class="days">
     <div data-bind="foreach: deliverydays">
         <div class="wrapper">
-
             <strong>
-                <span class="deliverydays-day" data-bind="text: $data[0].day"></span>
+                <span class="deliverydays-day" data-bind="text: $data[0].day.substring(0, 2)"></span>
                 <span class="deliverydays-date" data-bind="text: $data[0].date"></span>
             </strong>
 
@@ -19,7 +18,7 @@
                         <span class="tig-postnl-delivery-from" data-bind="text: from_friendly"></span>
                         <span class="tig-postnl-delivery-dash"> - </span>
                         <span class="tig-postnl-delivery-to" data-bind="text: to_friendly"></span>
-                        <span class="tig-postnl-delivery-option" data-bind="text: option"></span>
+                        <span class="tig-postnl-delivery-option" data-bind="text: optionLabel"></span>
                     </label>
 
                 </li>

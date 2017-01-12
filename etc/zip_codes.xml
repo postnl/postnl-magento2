@@ -1,4 +1,5 @@
-<?php
+<?xml version="1.0"?>
+<!--
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -25,52 +26,22 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2015 Total Internet Group B.V. (http://www.tig.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Webservices\Api;
-
-use TIG\PostNL\Config\Provider\Webshop;
-
-/**
- * Class CutoffTimes
- *
- * @package TIG\PostNL\Webservices\Api
- */
-class CutoffTimes
-{
-    /** @var  Webshop */
-    private $webshopSettings;
-
-    /**
-     * @param Webshop $webshopSettings
-     */
-    public function __construct(
-        Webshop $webshopSettings
-    ) {
-        $this->webshopSettings = $webshopSettings;
-    }
-
-    /**
-     * @return array
-     */
-    public function get()
-    {
-        $shipmentDays = explode(',', $this->webshopSettings->getShipmentDays());
-        return array_map(function ($value) {
-            return [
-                'Day'  => $value == '0' ? '07' : '0'.$value,
-                'Time' => $this->webshopSettings->getCutOffTime(),
-                'Available' => '1' // Not sure what this means.
-            ];
-        }, $shipmentDays);
-    }
-}
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Directory:etc/zip_codes.xsd">
+    <zip countryCode="NL">
+        <codes>
+            <code id="pattern_1" active="true" example="1234AB">^[1-9][0-9]{3} ?[a-zA-Z]{2}$</code>
+        </codes>
+    </zip>
+</config>

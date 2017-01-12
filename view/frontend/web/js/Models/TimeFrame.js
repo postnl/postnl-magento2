@@ -1,4 +1,3 @@
-<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -36,41 +35,21 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Webservices\Api;
+define(['jquery'], function ($) {
+    return function (data) {
+        $.each(data, function (key, value) {
+            this[key] = value;
+        }.bind(this));
 
-use TIG\PostNL\Config\Provider\Webshop;
+        this.optionLabel = '';
 
-/**
- * Class CutoffTimes
- *
- * @package TIG\PostNL\Webservices\Api
- */
-class CutoffTimes
-{
-    /** @var  Webshop */
-    private $webshopSettings;
-
-    /**
-     * @param Webshop $webshopSettings
-     */
-    public function __construct(
-        Webshop $webshopSettings
-    ) {
-        $this->webshopSettings = $webshopSettings;
-    }
-
-    /**
-     * @return array
-     */
-    public function get()
-    {
-        $shipmentDays = explode(',', $this->webshopSettings->getShipmentDays());
-        return array_map(function ($value) {
-            return [
-                'Day'  => $value == '0' ? '07' : '0'.$value,
-                'Time' => $this->webshopSettings->getCutOffTime(),
-                'Available' => '1' // Not sure what this means.
-            ];
-        }, $shipmentDays);
-    }
-}
+        var option = this.option.toLowerCase();
+        if (option == 'daytime') {
+            this.optionLabel = $.mage.__('Daytime');
+        } else if (option == 'evening') {
+            this.optionLabel = $.mage.__('Evening');
+        } else if (option == 'sunday') {
+            this.optionLabel = $.mage.__('Sunday');
+        }
+    };
+});
