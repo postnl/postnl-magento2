@@ -42,7 +42,8 @@ define([
     'jquery',
     'TIG_PostNL/js/Helper/AddressFinder',
     'TIG_PostNL/js/Helper/Logger',
-    'TIG_PostNL/js/Helper/State'
+    'TIG_PostNL/js/Helper/State',
+    'TIG_PostNL/js/Models/TimeFrame'
 ], function (
     Component,
     ko,
@@ -50,32 +51,24 @@ define([
     $,
     AddressFinder,
     Logger,
-    State
+    State,
+    TimeFrame
 ) {
     'use strict';
     return Component.extend({
         defaults: {
-            template: 'TIG_PostNL/pickup',
-            postalCode : null,
-            countryCode : null,
-            street : null,
-            hasAddress :false,
-            pickupAddresses: []
+            template: 'TIG_PostNL/DeliveryOptions/Delivery',
+            postalCode: null,
+            countryCode: null,
+            street: null,
+            hasAddress:false,
+            deliverydays: [],
+            odd: false
         },
 
-        daysSorting: {
-            'monday': 1,
-            'tuesday': 2,
-            'wednesday': 3,
-            'thursday': 4,
-            'friday': 5,
-            'saturday': 6,
-            'sunday': 7
-        },
-
-        initObservable : function () {
+        initObservable: function () {
             this._super().observe([
-                'pickupAddresses',
+                'deliverydays',
                 'postalCode',
                 'countryCode',
                 'street',
@@ -83,15 +76,12 @@ define([
                 'selectedOption'
             ]);
 
-            /**
-             * Subscribe to address changes.
-             */
             AddressFinder.subscribe(function (address, oldAddress) {
                 if (!address || JSON.stringify(address) == JSON.stringify(oldAddress)) {
                     return;
                 }
 
-                this.getPickupAddresses({
+                this.getDeliverydays({
                     postcode: address.postalCode,
                     country : address.countryCode,
                     street  : address.street
@@ -99,18 +89,18 @@ define([
             }.bind(this));
 
             /**
-             * Save the selected pickup option
+             * Save the selected delivery option
              */
             this.selectedOption.subscribe(function (value) {
                 $.ajax({
                     method: 'POST',
                     url: '/postnl/deliveryoptions/save',
                     data: {
-                        type: 'pickup',
-                        OpeningHours : value.OpeningHours,
-                        RetailNetworkID: value.RetailNetworkID,
-                        LocationCode : value.LocationCode,
-                        address: value.Address
+                        type: 'delivery',
+                        date : value.date,
+                        option: value.option,
+                        from: value.from,
+                        to: value.to
                     }
                 });
             });
@@ -118,30 +108,28 @@ define([
             return this;
         },
 
-        setPickupAddresses : function (data) {
-            this.pickupAddresses(data);
+        setDeliverydays: function (data) {
+            this.deliverydays(data);
         },
 
-        /**
-         * Retrieve the pickup addresses from the backend.
-         *
-         * @param address
-         */
-        getPickupAddresses : function (address) {
-            State.pickupOptionsAreLoading(true);
+        getDeliverydays: function (address) {
+            State.deliveryOptionsAreLoading(true);
 
-            jQuery.ajax({
+            $.ajax({
                 method: 'POST',
-                url : '/postnl/deliveryoptions/pickup',
+                url : '/postnl/deliveryoptions/days',
                 data : {address: address}
             }).done(function (data) {
-                State.pickupOptionsAreLoading(false);
+                State.deliveryOptionsAreLoading(false);
+                Logger.info(data);
 
-                data = ko.utils.arrayMap(data, function (data) {
-                    return new Location(data);
+                data = ko.utils.arrayMap(data, function (day) {
+                    return ko.utils.arrayMap(day, function (timeFrame) {
+                        return new TimeFrame(timeFrame);
+                    });
                 });
 
-                this.setPickupAddresses(data);
+                this.setDeliverydays(data);
             }.bind(this)).fail(function (data) {
                 Logger.error(data);
             });
@@ -151,75 +139,10 @@ define([
             return JSON.stringify(this.selectedOption()) == JSON.stringify($data);
         },
 
-        /**
-         * Convert the OpeningHours object to a format readable by Knockout
-         *
-         * @param OpeningHours
-         * @returns {*}
-         */
-        getOpeningHours: function (OpeningHours) {
-            var output = [], record, hours;
+        isOdd: function () {
+            this.odd = !this.odd;
 
-            $.each(OpeningHours, function (index, record) {
-                output.push({
-                    day   : index,
-                    hours : this.getHours(record)
-                });
-            }.bind(this));
-
-            return this.sortDays(output);
-        },
-
-        /**
-         * Format the hours to a knockout readable format.
-         *
-         * @param hours
-         * @returns {Array}
-         */
-        getHours: function (hours) {
-            var output = [];
-            $.each(hours, function (index, hour) {
-                output.push(hour[0]);
-            });
-
-            return output;
-        },
-
-        /**
-         * The data does not comes sorted by day from PostNL, so sort it.
-         *
-         * @param data
-         * @returns {*}
-         */
-        sortDays: function (data) {
-            return data.sort(function (a, b) {
-                var day1 = a.day.toLowerCase();
-                var day2 = b.day.toLowerCase();
-                return this.daysSorting[day1] > this.daysSorting[day2];
-            }.bind(this));
-        },
-
-        /**
-         * Toggle the pickup hours visibility.
-         *
-         * @param $data
-         */
-        toggle: function ($data) {
-            $data.expanded(!$data.expanded());
+            return this.odd;
         }
     });
-
-    function Location(data)
-    {
-        $.each(data, function (key, value) {
-            this[key] = value;
-        }.bind(this));
-
-        this.expanded = ko.observable(false);
-
-        this.toggle = function () {
-            this.expanded(!this.expanded());
-        };
-    }
 });
-

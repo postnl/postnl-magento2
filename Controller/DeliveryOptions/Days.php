@@ -154,5 +154,8 @@ class Days extends AbstractDeliveryOptions
         $this->timeFrameEndpoint->setParameters($address, $startDate);
 
         return $this->timeFrameEndpoint->call();
+
+        //@codingStandardsIgnoreLine
+        return $response->Timeframes->Timeframe;
     }
 }

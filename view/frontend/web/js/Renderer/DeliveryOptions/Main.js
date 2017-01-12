@@ -48,7 +48,7 @@ define([
 ) {
     return Component.extend({
         defaults: {
-            template: 'TIG_PostNL/deliveryoptions',
+            template: 'TIG_PostNL/DeliveryOptions/Main',
             shipmentType: 'delivery'
         },
 

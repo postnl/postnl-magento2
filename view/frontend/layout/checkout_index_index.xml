@@ -26,15 +26,15 @@
                                                         <item name="component" xsi:type="string">TIG_PostNL/js/view/shipping</item>
                                                         <item name="children" xsi:type="array">
                                                             <item name="postnl-deliveryoptions" xsi:type="array">
-                                                                <item name="component" xsi:type="string">TIG_PostNL/js/view/deliveryoptions</item>
+                                                                <item name="component" xsi:type="string">TIG_PostNL/js/Renderer/DeliveryOptions/Main</item>
                                                                 <item name="displayArea" xsi:type="string">postnl-deliveryoptions</item>
                                                                 <item name="children" xsi:type="array">
                                                                     <item name="postnl-deliveryoptions-delivery" xsi:type="array">
-                                                                        <item name="component" xsi:type="string">TIG_PostNL/js/view/delivery</item>
+                                                                        <item name="component" xsi:type="string">TIG_PostNL/js/Renderer/DeliveryOptions/Delivery</item>
                                                                         <item name="displayArea" xsi:type="string">postnl-deliveryoptions-delivery</item>
                                                                     </item>
                                                                     <item name="postnl-deliveryoptions-pickup" xsi:type="array">
-                                                                        <item name="component" xsi:type="string">TIG_PostNL/js/view/pickup</item>
+                                                                        <item name="component" xsi:type="string">TIG_PostNL/js/Renderer/DeliveryOptions/Pickup</item>
                                                                         <item name="displayArea" xsi:type="string">postnl-deliveryoptions-pickup</item>
                                                                     </item>
                                                                 </item>
