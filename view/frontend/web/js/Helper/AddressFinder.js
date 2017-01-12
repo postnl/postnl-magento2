@@ -58,9 +58,6 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
             telephone   : shippingAddress.telephone
         };
 
-        /**
-         * Unfortunately Magento does not always fill in the street, so get them ourselves.
-         */
         if (!address.street) {
             address.street = {
                 0 : $("input[name*='street[0]']").val(),
@@ -68,9 +65,6 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
             };
         }
 
-        /**
-         * Unfortunately Magento does not always fill in the postcode, so get them ourselves.
-         */
         if (!address.postalCode) {
             address.postalCode = $("input[name*='postcode']").val();
         }

@@ -136,12 +136,9 @@ class Save extends AbstractDeliveryOptions
 
         $this->orderRepository->save($postnlOrder);
 
-        $this->pickupAddress->set($params['pg_address']);
-
-        /**
-         * @codingStandardsIgnoreLine
-         * @todo : If type == pickup, we need to store/save the address data to the quote.
-         */
+        if ($params['type'] == 'pickup') {
+            $this->pickupAddress->set($params['pg_address']);
+        }
 
         return __('ok');
     }

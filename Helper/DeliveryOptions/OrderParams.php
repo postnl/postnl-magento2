@@ -169,7 +169,7 @@ class OrderParams
         if (!isset($params['customerData'])) {
             throw new PostnlException(
             // @codingStandardsIgnoreLine
-                __('Missing required parameters : %1', 'customerData')
+                __('Missing required parameters : customerData')
             );
         }
 
