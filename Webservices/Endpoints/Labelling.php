@@ -135,12 +135,15 @@ class Labelling extends AbstractEndpoint
     private function getShipmentData($postnlShipment)
     {
         $shipment = $postnlShipment->getShipment();
-
-        $address = $this->getAddressData($shipment->getShippingAddress());
         $contact = $this->getContactData($shipment);
+        $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
+
+        if ($postnlShipment->getPostNLOrder()->getIsPakjegemak()) {
+            $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
+        }
 
         $shipmentData = [
-            'Addresses'                => ['Address' => [$address]],
+            'Addresses'                => ['Address' => $address],
             'Barcode'                  => $postnlShipment->getMainBarcode(),
             'CollectionTimeStampEnd'   => '',
             'CollectionTimeStampStart' => '',
@@ -176,19 +179,18 @@ class Labelling extends AbstractEndpoint
 
     /**
      * @param Address $shippingAddress
+     * @param string   $addressType
      *
      * @return array
      */
-    private function getAddressData($shippingAddress)
+    private function getAddressData($shippingAddress, $addressType = '01')
     {
         $fullStreet = implode(' ', $shippingAddress->getStreet());
         $result = preg_match(self::PREG_MATCH_STREET, $fullStreet, $streetMatches);
         $result = preg_match(self::PREG_MATCH_HOUSENR, $streetMatches[2], $houseNrMatches);
 
         $addressArray = [
-            'AddressType'      => '01',
-            'FirstName'        => $shippingAddress->getFirstname(),
-            'Name'             => $shippingAddress->getLastname(),
+            'AddressType'      => $addressType,
             'CompanyName'      => $shippingAddress->getCompany(),
             'Street'           => $streetMatches[1],
             'HouseNr'          => $houseNrMatches[1],
@@ -198,6 +200,11 @@ class Labelling extends AbstractEndpoint
             'Region'           => $shippingAddress->getRegion(),
             'Countrycode'      => $shippingAddress->getCountryId(),
         ];
+
+        if ($addressType != '09') {
+            $addressArray['FirstName'] = $shippingAddress->getFirstname();
+            $addressArray['Name'] = $shippingAddress->getLastname();
+        }
 
         return $addressArray;
     }
