@@ -78,7 +78,8 @@ class GetLabels
         $collection = $this->collectionFactory->create();
         $collection->addFieldToFilter('shipment_id', ['eq' => $shipmentId]);
 
-        //TODO: add a proper warning notifying of a non-postnl shipment
+         // @codingStandardsIgnoreLine
+         // TODO: add a proper warning notifying of a non-postnl shipment
         if (count($collection) < 0) {
             return $labels;
         }
@@ -108,7 +109,10 @@ class GetLabels
             return __('Invalid generateLabel response: %1', var_export($response, true));
         }
 
-        //TODO: GenerateLabel call usually returns one label, but update so multiple labels are taking in account
+        /**
+         * @codingStandardsIgnoreLine
+         * TODO: GenerateLabel call usually returns one label, but update so multiple labels are taking in account
+         */
         return $responseShipments->ResponseShipment[0]->Labels->Label[0]->Content;
     }
 
@@ -117,7 +121,10 @@ class GetLabels
      */
     private function checkWarnings($labels)
     {
-        //TODO: Notify the user of the warning
+        /**
+         * @codingStandardsIgnoreLine
+         * TODO: Notify the user of the warning
+         */
         array_filter(
             $labels,
             function ($value) {

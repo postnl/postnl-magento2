@@ -135,7 +135,10 @@ class MassPrintShippingLabel extends Action
     {
         $labels = $this->getLabels->get($shipmentId);
 
-        //TODO: add a proper warning notifying of a non-postnl shipment
+        /**
+         * @codingStandardsIgnoreLine
+         * TODO: add a proper warning notifying of a non-postnl shipment
+         */
         if (count($labels) < 0) {
             return;
         }
