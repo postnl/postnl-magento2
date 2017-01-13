@@ -35,7 +35,15 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['ko'], function (ko) {
+define([
+    'ko',
+    'Magento_Checkout/js/action/select-shipping-method',
+    'Magento_Checkout/js/checkout-data'
+], function (
+    ko,
+    selectShippingMethodAction,
+    checkoutData
+) {
     var deliveryOptionsAreLoading = ko.observable(false);
     var pickupOptionsAreLoading = ko.observable(false);
 
@@ -46,6 +54,14 @@ define(['ko'], function (ko) {
     return {
         deliveryOptionsAreLoading: deliveryOptionsAreLoading,
         pickupOptionsAreLoading: pickupOptionsAreLoading,
-        isLoading: isLoading
+        isLoading: isLoading,
+        method: ko.observable(null),
+
+        selectShippingMethod: function () {
+            selectShippingMethodAction(this.method());
+            checkoutData.setSelectedShippingRate(this.method().carrier_code + '_' + this.method().method_code);
+
+            return true;
+        }
     };
 });

@@ -36,41 +36,56 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Webservices\Api;
+namespace TIG\PostNL\Test\Unit\Observer\Handlers;
 
-use TIG\PostNL\Config\Provider\Webshop;
+use Magento\Framework\Phrase;
+use TIG\PostNL\Observer\Handlers\BarcodeHandler;
+use TIG\PostNL\Test\TestCase;
 
-/**
- * Class CutoffTimes
- *
- * @package TIG\PostNL\Webservices\Api
- */
-class CutoffTimes
+class BarcodeHandlerTest extends TestCase
 {
-    /** @var  Webshop */
-    private $webshopSettings;
-
-    /**
-     * @param Webshop $webshopSettings
-     */
-    public function __construct(
-        Webshop $webshopSettings
-    ) {
-        $this->webshopSettings = $webshopSettings;
-    }
+    protected $instanceClass = BarcodeHandler::class;
 
     /**
      * @return array
      */
-    public function get()
+    public function generateBarcodeProvider()
     {
-        $shipmentDays = explode(',', $this->webshopSettings->getShipmentDays());
-        return array_map(function ($value) {
-            return [
-                'Day'  => $value == '0' ? '07' : '0'.$value,
-                'Time' => $this->webshopSettings->getCutOffTime(),
-                'Available' => '1',
-            ];
-        }, $shipmentDays);
+        return [
+            [
+                (Object)['Barcode' => '3STOTA123457890'],
+                '3STOTA123457890'
+            ],
+            [
+                'Response by unittest',
+                'Invalid GenerateBarcode response: \'Response by unittest\''
+            ],
+        ];
+    }
+
+    /**
+     * @param $callReturnValue
+     * @param $expected
+     *
+     * @dataProvider generateBarcodeProvider
+     */
+    public function testGenerate($callReturnValue, $expected)
+    {
+        $barcodeMock = $this->getFakeMock('TIG\PostNL\Webservices\Endpoints\Barcode');
+        $barcodeMock->setMethods(['call']);
+        $barcodeMock = $barcodeMock->getMock();
+
+        $callExpects = $barcodeMock->expects($this->once());
+        $callExpects->method('call');
+        $callExpects->willReturn($callReturnValue);
+
+        $instance = $this->getInstance(['barcodeEndpoint' => $barcodeMock]);
+        $result = $instance->generate();
+
+        if ($result instanceof Phrase) {
+            $result = $result->render();
+        }
+
+        $this->assertEquals($expected, $result);
     }
 }

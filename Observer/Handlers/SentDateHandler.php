@@ -36,41 +36,57 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Webservices\Api;
+namespace TIG\PostNL\Observer\Handlers;
 
-use TIG\PostNL\Config\Provider\Webshop;
+use Magento\Sales\Model\Order\Shipment;
+use TIG\PostNL\Model\OrderRepository;
+use TIG\PostNL\Webservices\Endpoints\SentDate;
 
-/**
- * Class CutoffTimes
- *
- * @package TIG\PostNL\Webservices\Api
- */
-class CutoffTimes
+class SentDateHandler
 {
-    /** @var  Webshop */
-    private $webshopSettings;
+    /**
+     * @var \TIG\PostNL\Model\ShipmentRepository
+     */
+    private $orderRepository;
 
     /**
-     * @param Webshop $webshopSettings
+     * @var SentDate
+     */
+    private $sentDate;
+
+    /**
+     * @param SentDate        $sentDate
+     * @param OrderRepository $orderRepository
      */
     public function __construct(
-        Webshop $webshopSettings
+        SentDate $sentDate,
+        OrderRepository $orderRepository
     ) {
-        $this->webshopSettings = $webshopSettings;
+        $this->sentDate = $sentDate;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
-     * @return array
+     * @param Shipment $shipment
+     *
+     * @return mixed
      */
-    public function get()
+    public function get(Shipment $shipment)
     {
-        $shipmentDays = explode(',', $this->webshopSettings->getShipmentDays());
-        return array_map(function ($value) {
-            return [
-                'Day'  => $value == '0' ? '07' : '0'.$value,
-                'Time' => $this->webshopSettings->getCutOffTime(),
-                'Available' => '1',
-            ];
-        }, $shipmentDays);
+        $postnlOrder = $this->getPostnlOrder($shipment);
+
+        $this->sentDate->setParameters($shipment, $postnlOrder);
+        return $this->sentDate->call();
+    }
+
+    /**
+     * @param Shipment $shipment
+     *
+     * @return \Magento\Framework\DataObject
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function getPostnlOrder(Shipment $shipment)
+    {
+        return $this->orderRepository->getByOrder($shipment->getOrder());
     }
 }

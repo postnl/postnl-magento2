@@ -89,7 +89,7 @@ class Pickup extends AbstractDeliveryOptions
         Session $checkoutSession,
         AddressEnhancer $addressEnhancer,
         LocationsEndpoint $locations,
-        DeliveryDate    $deliveryDate
+        DeliveryDate $deliveryDate
     ) {
         $this->addressEnhancer   = $addressEnhancer;
         $this->locationsEndpoint = $locations;

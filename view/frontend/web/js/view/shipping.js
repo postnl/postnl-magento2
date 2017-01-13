@@ -37,22 +37,28 @@
  */
 define([
     'Magento_Checkout/js/view/shipping',
-    'Magento_Checkout/js/model/quote'
+    'TIG_PostNL/js/Helper/State'
 ], function (
     Shipping,
-    quote
+    State
 ) {
     return Shipping.extend({
         canUseDeliveryOption: function () {
             return window.checkoutConfig.shipping.postnl.shippingoptions_active == 1;
         },
 
-        canUsePostnlDeliveryOptions: function (carrier_code) {
+        canUsePostnlDeliveryOptions: function (method) {
             if (!this.canUseDeliveryOption()) {
                 return false;
             }
 
-            return carrier_code == 'tig_postnl';
+            var result = method.carrier_code == 'tig_postnl';
+
+            if (result) {
+                State.method(method);
+            }
+
+            return result;
         }
     });
 });

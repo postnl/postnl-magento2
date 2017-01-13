@@ -119,15 +119,17 @@ class ExceptionHandler
      */
     private function addErrorNumbersToException(Api\Exception $exception, \DOMDocument $errorResponse)
     {
-        $errorNumbers = $errorResponse->getElementsByTagNameNS(self::CIF_ERROR_NAMESPACE, 'ErrorNumber');
+        $errorNumbers = $errorResponse->getElementsByTagNameNS(self::CIF_ERROR_NAMESPACE, '*');
 
-        if ($errorNumbers) {
+        if (!$errorNumbers) {
             return false;
         }
 
         $logException = true;
         foreach ($errorNumbers as $errorNumber) {
-            $logException = $this->checkErrorNumber($exception, $errorNumber);
+            $result = $this->checkErrorNumber($exception, $errorNumber);
+
+            $logException = !$result ? false : $logException;
         }
 
         return $logException;
