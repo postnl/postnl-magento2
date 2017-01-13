@@ -135,13 +135,29 @@ class Labelling extends AbstractEndpoint
     private function getShipmentData($postnlShipment)
     {
         $shipment = $postnlShipment->getShipment();
+        $postnlOrder = $postnlShipment->getPostNLOrder();
+
         $contact = $this->getContactData($shipment);
         $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
 
-        if ($postnlShipment->getPostNLOrder()->getIsPakjegemak()) {
+        if ($postnlOrder->getIsPakjegemak()) {
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
 
+        $shipmentData = $this->getShipmentDataArray($postnlShipment, $address, $contact);
+
+        return $shipmentData;
+    }
+
+    /**
+     * @param Shipment $postnlShipment
+     * @param          $address
+     * @param          $contact
+     *
+     * @return array
+     */
+    private function getShipmentDataArray($postnlShipment, $address, $contact)
+    {
         $shipmentData = [
             'Addresses'                => ['Address' => $address],
             'Barcode'                  => $postnlShipment->getMainBarcode(),
@@ -191,6 +207,8 @@ class Labelling extends AbstractEndpoint
 
         $addressArray = [
             'AddressType'      => $addressType,
+            'FirstName'        => $shippingAddress->getFirstname(),
+            'Name'             => $shippingAddress->getLastname(),
             'CompanyName'      => $shippingAddress->getCompany(),
             'Street'           => $streetMatches[1],
             'HouseNr'          => $houseNrMatches[1],
@@ -200,11 +218,6 @@ class Labelling extends AbstractEndpoint
             'Region'           => $shippingAddress->getRegion(),
             'Countrycode'      => $shippingAddress->getCountryId(),
         ];
-
-        if ($addressType != '09') {
-            $addressArray['FirstName'] = $shippingAddress->getFirstname();
-            $addressArray['Name'] = $shippingAddress->getLastname();
-        }
 
         return $addressArray;
     }

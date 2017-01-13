@@ -112,18 +112,16 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
 
         $sentDate = $this->sentDateHandler->get($shipment);
         $mainBarcode = $this->barcodeHandler->generate();
-        $productCode = $this->getProductCode($shipment);
 
         $model->setData([
             'ship_at' => $sentDate,
             'shipment_id' => $shipment->getId(),
             'order_id' => $shipment->getOrderId(),
             'main_barcode' => $mainBarcode,
-            'product_code' => $productCode,
+            'product_code' => $this->getProductCode($shipment),
         ]);
 
         $model->save();
-
         $this->handleMultipleParcels($model);
     }
 

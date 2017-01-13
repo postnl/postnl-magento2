@@ -175,18 +175,35 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
 
         if ($postNLOrder->getIsPakjegemak()) {
             $pgOrderAddressId = $postNLOrder->getPgOrderAddressId();
-            $orderbillingid = $shipment->getOrder()->getBillingAddressId();
+            $order = $shipment->getOrder();
+            $orderbillingid = $order->getBillingAddressId();
 
             $pgAddressStreet = implode("\n", $this->getPakjegemakAddress()->getStreet());
 
-            /** @var \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection $addressCollection */
-            $addressCollection = $this->addressFactory->create()->getCollection();
-            $addressCollection->addFieldToFilter('entity_id', ['nin' => [$pgOrderAddressId, $orderbillingid]]);
-            $addressCollection->addFieldToFilter('parent_id', ['eq' => $this->getOrderId()]);
-            $addressCollection->addFieldToFilter('street', ['neq' => $pgAddressStreet]);
-
-            $shippingAddress = $addressCollection->getFirstItem();
+            $shippingAddress = $this->filterShippingAddress([$pgOrderAddressId, $orderbillingid], $pgAddressStreet);
         }
+
+        return $shippingAddress;
+    }
+
+    /**
+     * @param array $ignoreAddressIds
+     * @param       $ignoreStreet
+     *
+     * @return \Magento\Framework\DataObject
+     */
+    private function filterShippingAddress($ignoreAddressIds, $ignoreStreet)
+    {
+        $addressModel = $this->addressFactory->create();
+        /** @var \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection $addressCollection */
+        $addressCollection = $addressModel->getCollection();
+
+        $addressCollection->addFieldToFilter('entity_id', ['nin' => $ignoreAddressIds]);
+        $addressCollection->addFieldToFilter('parent_id', ['eq' => $this->getOrderId()]);
+        $addressCollection->addFieldToFilter('street', ['neq' => $ignoreStreet]);
+
+        // @codingStandardsIgnoreLine
+        $shippingAddress = $addressCollection->getFirstItem();
 
         return $shippingAddress;
     }
@@ -194,7 +211,8 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     /**
      * @return Address
      */
-    public function getPakjegemakAddress() {
+    public function getPakjegemakAddress()
+    {
         $postNLOrder = $this->getPostNLOrder();
         $pgOrderAddressId = $postNLOrder->getPgOrderAddressId();
 

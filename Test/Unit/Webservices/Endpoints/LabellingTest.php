@@ -52,13 +52,20 @@ class LabellingTest extends TestCase
     {
         $shipmentMock = $this->getShipmentMock();
 
+        $postnlOrderMock = $this->getFakeMock(\TIG\PostNL\Model\Order::class);
+        $postnlOrderMock = $postnlOrderMock->getMock();
+
         $postnlShipmentMock = $this->getFakeMock(Shipment::class);
-        $postnlShipmentMock->setMethods(['getShipment', 'getTotalWeight', 'getDeliveryDateFormatted']);
+        $postnlShipmentMock->setMethods(['getShipment', 'getPostNLOrder', 'getTotalWeight', 'getDeliveryDateFormatted']);
         $postnlShipmentMock = $postnlShipmentMock->getMock();
 
-        $getShipmentExpects = $postnlShipmentMock->expects($this->once());
+        $getShipmentExpects = $postnlShipmentMock->expects($this->atLeastOnce());
         $getShipmentExpects->method('getShipment');
         $getShipmentExpects->willReturn($shipmentMock);
+
+        $getPostNLOrderExpects = $postnlShipmentMock->expects($this->atLeastOnce());
+        $getPostNLOrderExpects->method('getPostNLOrder');
+        $getPostNLOrderExpects->willReturn($postnlOrderMock);
 
         $instance = $this->getInstance();
         $instance->setParameters($postnlShipmentMock);
