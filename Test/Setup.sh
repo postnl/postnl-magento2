@@ -35,7 +35,7 @@ cp -v Test/Fixtures/config.php "${BUILD_DIR}/app/etc/config.php"
 cp -v Test/Fixtures/install-config-mysql.php "${BUILD_DIR}/dev/tests/integration/etc/install-config-mysql.php"
 cp -v Test/Fixtures/phpunit.xml "${BUILD_DIR}/dev/tests/integration/phpunit.xml"
 
-zip -r build.zip .
+zip --exclude=node_modules/* --exclude=vendor/* --exclude=.git/* -r build.zip .
 
 REPOSITORY_CONFIG="{\"type\": \"package\", \"package\": { \"name\": \"tig/postnl\", \"version\": \"master\", \"dist\": { \"type\": \"zip\", \"url\": \"${TRAVIS_BUILD_DIR}/build.zip\", \"reference\": \"master\"}}}"
 
