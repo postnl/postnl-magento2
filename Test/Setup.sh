@@ -37,7 +37,7 @@ cp -v Test/Fixtures/phpunit.xml "${BUILD_DIR}/dev/tests/integration/phpunit.xml"
 
 zip --exclude=node_modules/* --exclude=vendor/* --exclude=.git/* -r build.zip .
 
-REPOSITORY_CONFIG="{\"type\": \"package\", \"package\": { \"name\": \"tig/postnl\", \"version\": \"master\", \"dist\": { \"type\": \"zip\", \"url\": \"${TRAVIS_BUILD_DIR}/build.zip\", \"reference\": \"master\"}}}"
+REPOSITORY_CONFIG="{\"type\": \"package\",\"package\": { \"name\": \"tig/postnl\", \"version\": \"master\", \"dist\": {\"type\": \"zip\",\"url\": \"${TRAVIS_BUILD_DIR}/build.zip\",\"reference\": \"master\" }, \"autoload\": {\"files\": [\"registration.php\"],\"psr-4\": {\"TIG\\\\PostNL\\\\\": \"\"}}}}"
 
 ( cd "${BUILD_DIR}/" && composer config minimum-stability dev )
 ( cd "${BUILD_DIR}/" && composer config repositories.postnl "${REPOSITORY_CONFIG}" )
