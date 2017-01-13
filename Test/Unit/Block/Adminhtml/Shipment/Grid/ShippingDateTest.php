@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Shipment\Grid;
@@ -69,7 +69,7 @@ class ShippingDateTest extends TestCase
             ['2016-11-19', 0, 'Today'],
             ['2016-11-19', -10, '19 Nov. 2016'],
             ['2016-11-19', 10, 'In 10 days'],
-            ['2016-11-19', 1, 'In 1 day'],
+            ['2016-11-19', 1, 'Tomorrow'],
         ];
     }
 

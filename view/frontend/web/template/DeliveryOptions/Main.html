@@ -1,7 +1,7 @@
-<div class="delivery_options">
+<div class="delivery_options" data-bind="visible: canUseDeliveryOptions()">
     <div class="btn-group" role="group">
-        <button type="button" class="btn btn-default" data-bind="click: setDelivery, css: { 'button-active': shipmentType() == 'delivery' }">Delivery</button>
-        <button type="button" class="btn btn-default" data-bind="click: setPickup, css: { 'button-active': shipmentType() == 'pickup' }">Pickup</button>
+        <button type="button" class="btn btn-default" data-bind="i18n: 'Delivery', click: setDelivery, css: { 'button-active': shipmentType() == 'delivery' }"></button>
+        <button type="button" class="btn btn-default" data-bind="i18n: 'Pickup', click: setPickup, css: { 'button-active': shipmentType() == 'pickup' }"></button>
     </div>
 
     <div data-bind="visible: isLoading()" class="tig-postnl-loading"></div>

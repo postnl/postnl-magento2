@@ -38,7 +38,7 @@
 define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote, $) {
     'use strict';
 
-    var address, shippingAddress, oldAddress;
+    var address, shippingAddress, oldAddress = false;
 
     /**
      * Collect the needed information from the quote
@@ -58,6 +58,9 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
             telephone   : shippingAddress.telephone
         };
 
+        /**
+         * Unfortunately Magento does not always fill all fields, so get them ourselves.
+         */
         if (!address.street) {
             address.street = {
                 0 : $("input[name*='street[0]']").val(),
@@ -85,13 +88,13 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
             return oldAddress;
         }
 
-        if (!address.postalCode.length || !address.countryCode.length || !address.street.length ||
-            address.street[0] === ''
+        if (!address.postalCode.length || !address.countryCode.length || address.street[0] === ''
         ) {
             return oldAddress;
         }
 
         oldAddress = address;
+
         return address;
     }.bind(this));
 });
