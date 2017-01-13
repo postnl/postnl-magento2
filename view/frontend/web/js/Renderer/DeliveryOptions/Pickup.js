@@ -112,6 +112,8 @@ define([
              * Save the selected pickup option
              */
             this.selectedOption.subscribe(function (value) {
+                State.selectShippingMethod();
+
                 $.ajax({
                     method: 'POST',
                     url: '/postnl/deliveryoptions/save',

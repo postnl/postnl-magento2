@@ -41,6 +41,9 @@ namespace TIG\PostNL\Model;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
 
+/**
+ * @method string getDeliveryDate()
+ */
 class Order extends AbstractModel implements OrderInterface, IdentityInterface
 {
     const CACHE_TAG = 'tig_postnl_order';

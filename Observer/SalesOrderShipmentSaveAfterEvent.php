@@ -40,11 +40,7 @@ namespace TIG\PostNL\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory;
-use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Model\ShipmentFactory;
-use TIG\PostNL\Model\ShipmentBarcodeFactory;
-use TIG\PostNL\Webservices\Endpoints\Barcode;
 
 class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
 {
@@ -54,39 +50,34 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     private $shipmentFactory;
 
     /**
-     * @var ShipmentBarcodeFactory
+     * @var Handlers\BarcodeHandler
      */
-    private $shipmentBarcodeFactory;
+    private $barcodeHandler;
 
     /**
-     * @var Barcode
+     * @var Handlers\SentDateHandler
      */
-    private $barcode;
+    private $sentDateHandler;
 
     /**
-     * @var CollectionFactory
-     */
-    private $shipmentBarcodeCollectionFactory;
-
-    /**
-     * @param ShipmentFactory        $shipmentFactory
-     * @param ShipmentBarcodeFactory $shipmentBarcodeFactory
-     * @param CollectionFactory      $shipmentBarcodeCollectionFactory
-     * @param Barcode                $barcode
+     * @param ShipmentFactory          $shipmentFactory
+     * @param Handlers\BarcodeHandler  $barcodeHandler
+     * @param Handlers\SentDateHandler $sendDateHandler
      */
     public function __construct(
         ShipmentFactory $shipmentFactory,
-        ShipmentBarcodeFactory $shipmentBarcodeFactory,
-        CollectionFactory $shipmentBarcodeCollectionFactory,
-        Barcode $barcode
+        Handlers\BarcodeHandler $barcodeHandler,
+        Handlers\SentDateHandler $sendDateHandler
     ) {
         $this->shipmentFactory = $shipmentFactory;
-        $this->shipmentBarcodeFactory = $shipmentBarcodeFactory;
-        $this->barcode = $barcode;
-        $this->shipmentBarcodeCollectionFactory = $shipmentBarcodeCollectionFactory;
+        $this->barcodeHandler = $barcodeHandler;
+        $this->sentDateHandler = $sendDateHandler;
     }
 
     /**
+     * @codingStandardsIgnoreLine
+     * @TODO: actually get & save the parcel count
+     *
      * @param Observer $observer
      *
      * @return void
@@ -95,64 +86,32 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     {
         /** @var \Magento\Sales\Model\Order\Shipment $shipment */
         $shipment = $observer->getData('data_object');
-        $mainBarcode = $this->generateBarcode();
-
-        // @codingStandardsIgnoreLine
-        //TODO: actually get & save the parcel count
 
         /** @var \TIG\PostNL\Model\Shipment $model */
         $model = $this->shipmentFactory->create();
-        $model->setShipmentId($shipment->getId());
-        $model->setMainBarcode($mainBarcode);
+
+        $sentDate = $this->sentDateHandler->get($shipment);
+        $mainBarcode = $this->barcodeHandler->generate();
+
+        $model->setData([
+            'ship_at' => $sentDate,
+            'shipment_id' => $shipment->getId(),
+            'main_barcode' => $mainBarcode,
+        ]);
+
         $model->save();
 
+        $this->handleMultipleParcels($model);
+    }
+
+    /**
+     * @param $model
+     */
+    private function handleMultipleParcels($model)
+    {
         $parcelCount = $model->getParcelCount();
         if ($parcelCount > 1) {
-            $this->saveShipmentBarcode($model->getEntityId(), $parcelCount);
+            $this->barcodeHandler->saveShipment($model->getEntityId(), $parcelCount);
         }
-    }
-
-    /**
-     * Generate and save a new barcode for the just saved shipment
-     *
-     * @param $shipmentId
-     * @param $parcelCount
-     */
-    private function saveShipmentBarcode($shipmentId, $parcelCount)
-    {
-        /** @var \TIG\PostNL\Model\ResourceModel\ShipmentBarcode\Collection $barcodeModelCollection */
-        $barcodeModelCollection = $this->shipmentBarcodeCollectionFactory->create();
-        $barcodeModelCollection->load();
-
-        for ($count = 1; $count <= $parcelCount; $count++) {
-            $barcode = $this->generateBarcode();
-
-            /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
-            $barcodeModel = $this->shipmentBarcodeFactory->create();
-            $barcodeModel->setShipmentId($shipmentId);
-            $barcodeModel->setType(ShipmentBarcode::BARCODE_TYPE_SHIPMENT);
-            $barcodeModel->setNumber($count);
-            $barcodeModel->setValue($barcode);
-
-            $barcodeModelCollection->addItem($barcodeModel);
-        }
-
-        $barcodeModelCollection->save();
-    }
-
-    /**
-     * CIF call to generate a new barcode
-     *
-     * @return \Magento\Framework\Phrase
-     */
-    private function generateBarcode()
-    {
-        $response = $this->barcode->call();
-
-        if (!is_object($response) || !isset($response->Barcode)) {
-            return __('Invalid GenerateBarcode response: %1', var_export($response, true));
-        }
-
-        return $response->Barcode;
     }
 }

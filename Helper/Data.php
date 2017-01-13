@@ -102,10 +102,26 @@ class Data extends AbstractHelper
     {
         $stamp = $this->dateTime->date();
         if ($date) {
+            list($date) = explode(' ', $date);
             $stamp = $this->dateTime->date($date);
         }
 
         return $stamp->format('Y-m-d');
+    }
+
+    /**
+     * @param $date
+     * @return \DateTime
+     */
+    public function getDateDmy($date = false)
+    {
+        $stamp = $this->dateTime->date();
+        if ($date) {
+            list($date) = explode(' ', $date);
+            $stamp = $this->dateTime->date($date);
+        }
+
+        return $stamp->format('d-m-Y');
     }
 
     /**

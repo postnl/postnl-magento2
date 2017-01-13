@@ -38,9 +38,8 @@
  */
 namespace TIG\PostNL\Model;
 
+use Magento\Sales\Model\Order as SalesOrder;
 use TIG\PostNL\Api\OrderRepositoryInterface;
-use TIG\PostNL\Model\OrderInterface;
-use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Model\ResourceModel\Order\CollectionFactory;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
@@ -108,6 +107,29 @@ class OrderRepository implements OrderRepositoryInterface
         if (!$object->getId()) {
             // @codingStandardsIgnoreLine
             throw new NoSuchEntityException(__('Object with id "%1" does not exist.', $identifier));
+        }
+
+        return $object;
+    }
+
+    /**
+     * @param SalesOrder $order
+     *
+     * @return \Magento\Framework\DataObject
+     * @throws NoSuchEntityException
+     */
+    public function getByOrder(SalesOrder $order)
+    {
+        $collection = $this->collectionFactory->create();
+        $collection->addFieldToFilter('order_id', $order->getId());
+        $collection->setPageSize(1);
+
+        // @codingStandardsIgnoreLine
+        $object = $collection->getFirstItem();
+
+        if (!$object->getId()) {
+            // @codingStandardsIgnoreLine
+            throw new NoSuchEntityException(__('Object with order id "%1" does not exist.', $order->getId()));
         }
 
         return $object;

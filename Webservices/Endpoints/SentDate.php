@@ -36,47 +36,31 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-
 namespace TIG\PostNL\Webservices\Endpoints;
 
-/**
- * @codingStandardsIgnoreLine
- * @todo : Waiting on PostNL to finish the API for DeliveryDate, so needs to be refactored when API is ready.
- */
-use TIG\PostNL\Webservices\AbstractEndpoint;
-use TIG\PostNL\Webservices\SoapOld;
+use Magento\Sales\Model\Order\Shipment;
 use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Model\Order as PostNLOrder;
+use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Message;
-use TIG\PostNL\Webservices\Api\CutoffTimes;
+use TIG\PostNL\Webservices\Soap;
 
-/**
- * Class DeliveryDate
- * @note : The DeliverDate endpoint is use to get the first posable delivery date, which is needed to collect
- *       the timeframes.
- *
- * @package TIG\PostNL\Webservices\Calculate
- */
-class DeliveryDate extends AbstractEndpoint
+class SentDate extends AbstractEndpoint
 {
     /**
      * @var string
      */
-    private $version = '2_1';
+    private $version = 'v2_1';
 
     /**
      * @var string
      */
-    private $service = 'DeliveryDateWebService';
+    private $endpoint = 'calculate/date';
 
     /**
      * @var string
      */
-    private $type = 'GetDeliveryDate';
-
-    /**
-     * @var SoapOld
-     */
-    private $soap;
+    private $type = 'GetSentDate';
 
     /**
      * @var Array
@@ -84,71 +68,43 @@ class DeliveryDate extends AbstractEndpoint
     private $requestParams;
 
     /**
-     * @var Message
+     * @var Soap
      */
-    private $message;
+    private $soap;
 
     /**
-     * @var  CutoffTimes
+     * @var array
      */
-    private $cutoffTimes;
-
+    private $message;
     /**
      * @var Data
      */
     private $postNLhelper;
 
     /**
-     * @param SoapOld         $soap
-     * @param Data            $postNLhelper
-     * @param Message         $message
-     * @param CutoffTimes     $cutoffTimes
+     * @param Soap    $soap
+     * @param Data    $postNLhelper
+     * @param Message $message
      */
     public function __construct(
-        SoapOld $soap,
+        Soap $soap,
         Data $postNLhelper,
-        Message $message,
-        CutoffTimes $cutoffTimes
+        Message $message
     ) {
         $this->soap = $soap;
+        $this->message = $message->get('');
         $this->postNLhelper = $postNLhelper;
-        $this->message = $message;
-        $this->cutoffTimes = $cutoffTimes;
     }
 
     /**
-     * @return mixed
      * @throws \Magento\Framework\Webapi\Exception
+     * @return mixed
      */
     public function call()
     {
-        return $this->soap->call($this->type, $this->getWsdlUrl(), $this->requestParams);
-    }
+        $response = $this->soap->call($this, $this->type, $this->requestParams);
 
-    /**
-     * @codingStandardsIgnoreStart
-     * @todo: 1. Calculation for shippingDuration
-     * @todo: 2. Add configuration for sundaysorting (if not enabled Monday should not return)
-     * @todo: 3. Move surounding @codingStandardsIgnore tags
-     * @codingStandardsIgnoreEnd
-     * @param $address
-     *
-     * @return array
-     */
-    public function setParameters($address)
-    {
-        $this->requestParams = [
-            'GetDeliveryDate' => [
-                'CountryCode'        => $address['country'],
-                'PostalCode'         => str_replace(' ', '', $address['postcode']),
-                'ShippingDate'       => $this->postNLhelper->getCurrentTimeStamp(),
-                'ShippingDuration'   => '1',
-                'AllowSundaySorting' => 'true',
-                'CutOffTimes'        => $this->cutoffTimes->get(),
-                'Options'            => ['Sunday', 'Daytime', 'Evening']
-            ],
-            'Message' => $this->message->get('')
-        ];
+        return $response->SentDate;
     }
 
     /**
@@ -156,7 +112,7 @@ class DeliveryDate extends AbstractEndpoint
      */
     public function getWsdlUrl()
     {
-        return $this->service .'/'. $this->version;
+        return 'DeliveryDateWebService/2_1/';
     }
 
     /**
@@ -164,6 +120,34 @@ class DeliveryDate extends AbstractEndpoint
      */
     public function getLocation()
     {
-        return 'calculate/date';
+        return $this->version .'/'. $this->endpoint;
+    }
+
+    /**
+     * @param Shipment    $shipment
+     *
+     * @param PostNLOrder $postNLOrder
+     *
+     * @return array
+     */
+    public function setParameters(Shipment $shipment, PostNLOrder $postNLOrder)
+    {
+        $address = $shipment->getShippingAddress();
+
+        $this->requestParams = [
+            $this->type => [
+                'CountryCode'        => $address->getCountryId(),
+                'PostalCode'         => str_replace(' ', '', $address->getPostcode()),
+                'HouseNr'            => '',
+                'HouseNrExt'         => '',
+                'Street'             => '',
+                'City'               => $address->getCity(),
+                'DeliveryDate'       => $this->postNLhelper->getDateDmy($postNLOrder->getDeliveryDate()),
+                'ShippingDuration'   => '1',
+                'AllowSundaySorting' => 'true',
+                'Options'            => ['Sunday', 'Daytime', 'Evening']
+            ],
+            'Message' => $this->message
+        ];
     }
 }
