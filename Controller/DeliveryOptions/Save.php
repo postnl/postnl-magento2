@@ -46,6 +46,7 @@ use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\DeliveryOptions\OrderParams;
 use \Magento\Checkout\Model\Session;
+use TIG\PostNL\Helper\DeliveryOptions\PickupAddress;
 
 /**
  * Class Save
@@ -60,12 +61,18 @@ class Save extends AbstractDeliveryOptions
     private $orderParams;
 
     /**
+     * @var PickupAddress
+     */
+    private $pickupAddress;
+
+    /**
      * @param Context          $context
      * @param OrderFactory     $orderFactory
      * @param OrderRepository  $orderRepository
      * @param Data             $jsonHelper
      * @param OrderParams      $orderParams
      * @param Session          $checkoutSession
+     * @param PickupAddress    $pickupAddress
      */
     public function __construct(
         Context $context,
@@ -73,9 +80,11 @@ class Save extends AbstractDeliveryOptions
         OrderRepository $orderRepository,
         Data $jsonHelper,
         OrderParams $orderParams,
-        Session $checkoutSession
+        Session $checkoutSession,
+        PickupAddress $pickupAddress
     ) {
-        $this->orderParams = $orderParams;
+        $this->orderParams   = $orderParams;
+        $this->pickupAddress = $pickupAddress;
 
         parent::__construct(
             $context,
@@ -127,10 +136,13 @@ class Save extends AbstractDeliveryOptions
 
         $this->orderRepository->save($postnlOrder);
 
-        /**
-         * @codingStandardsIgnoreLine
-         * @todo : If type == pickup, we need to store/save the address data to the quote.
-         */
+        if ($params['type'] != 'pickup') {
+            $this->pickupAddress->remove();
+        }
+
+        if ($params['type'] == 'pickup') {
+            $this->pickupAddress->set($params['pg_address']);
+        }
 
         return __('ok');
     }
@@ -140,7 +152,7 @@ class Save extends AbstractDeliveryOptions
      *
      * @codingStandardsIgnoreLine
      * @todo : When type is pickup the delivery Date needs to be recalculated,
-     *       based on the opening days/hours of the location
+     *
      * @return mixed
      */
     private function addSessionDataToParams($params)

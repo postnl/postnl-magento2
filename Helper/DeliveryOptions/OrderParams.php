@@ -72,9 +72,6 @@ class OrderParams
         ],
         'pg_address'                   => [
             'pickup' => true, 'delivery' => false
-        ],
-        'opening_hours'                => [
-            'pickup' => true, 'delivery' => false
         ]
     ];
 
@@ -150,8 +147,34 @@ class OrderParams
             'is_pakjegemak'                => $params['type'] == 'pickup' ? 1 : 0,
             'pg_location_code'             => isset($params['LocationCode']) ? $params['LocationCode'] : '',
             'pg_retail_network_id'         => isset($params['RetailNetworkID']) ? $params['RetailNetworkID'] : '',
-            'pg_address'                   => isset($params['address']) ? $params['address'] : '',
+            'pg_address'                   => $this->addExtraToAddress($params),
             'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : ''
         ];
+    }
+
+    /**
+     * @param $params
+     *
+     * @return bool
+     * @throws PostnlException
+     */
+    private function addExtraToAddress($params)
+    {
+        if (!isset($params['address'])) {
+            return false;
+        }
+
+        $params['address']['Name'] = isset($params['name']) ? $params['name'] : '';
+
+        if (!isset($params['customerData'])) {
+            throw new PostnlException(
+            // @codingStandardsIgnoreLine
+                __('Missing required parameters : customerData')
+            );
+        }
+
+        $params['address']['customer'] = $params['customerData'];
+
+        return $params['address'];
     }
 }

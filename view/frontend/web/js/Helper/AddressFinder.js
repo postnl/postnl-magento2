@@ -38,9 +38,7 @@
 define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote, $) {
     'use strict';
 
-    var address,
-        shippingAddress,
-        oldValue = false;
+    var address, shippingAddress, oldAddress = false;
 
     /**
      * Collect the needed information from the quote
@@ -48,17 +46,20 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
     return ko.computed(function () {
         shippingAddress = quote.shippingAddress();
         if (!shippingAddress) {
-            return oldValue;
+            return oldAddress;
         }
 
         address = {
             postalCode  : shippingAddress.postcode,
             countryCode : shippingAddress.countryId,
-            street      : shippingAddress.street
+            street      : shippingAddress.street,
+            firstname   : shippingAddress.firstname,
+            lastname    : shippingAddress.lastname,
+            telephone   : shippingAddress.telephone
         };
 
         /**
-         * Unfortunately Magento does not always fill in the street, so get them ourselves.
+         * Unfortunately Magento does not always fill all fields, so get them ourselves.
          */
         if (!address.street) {
             address.street = {
@@ -67,23 +68,33 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
             };
         }
 
-        /**
-         * Unfortunately Magento does not always fill in the postcode, so get them ourselves.
-         */
-        if (!address) {
-            address = $("input[name*='postcode']").val();
+        if (!address.postalCode) {
+            address.postalCode = $("input[name*='postcode']").val();
+        }
+
+        if (!address.firstname) {
+            address.firstname = $("input[name*='firstname']").val();
+        }
+
+        if (!address.lastname) {
+            address.lastname = $("input[name*='lastname']").val();
+        }
+
+        if (!address.telephone) {
+            address.telephone = $("input[name*='telephone']").val();
         }
 
         if (!address.postalCode || !address.countryCode || !address.street) {
-            return oldValue;
+            return oldAddress;
         }
 
         if (!address.postalCode.length || !address.countryCode.length || address.street[0] === ''
         ) {
-            return oldValue;
+            return oldAddress;
         }
 
-        oldValue = address;
+        oldAddress = address;
+
         return address;
     }.bind(this));
 });
