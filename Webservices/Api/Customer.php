@@ -39,21 +39,32 @@
 namespace TIG\PostNL\Webservices\Api;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 
 class Customer
 {
+    const ADDRESS_TYPE_SENDER = '02';
+
     /**
      * @var AccountConfiguration
      */
     private $accountConfiguration;
 
     /**
+     * @var AddressConfiguration
+     */
+    private $addressConfiguration;
+
+    /**
      * @param AccountConfiguration $accountConfiguration
+     * @param AddressConfiguration $addressConfiguration
      */
     public function __construct(
-        AccountConfiguration $accountConfiguration
+        AccountConfiguration $accountConfiguration,
+        AddressConfiguration $addressConfiguration
     ) {
         $this->accountConfiguration = $accountConfiguration;
+        $this->addressConfiguration = $addressConfiguration;
     }
 
     /**
@@ -67,5 +78,35 @@ class Customer
         ];
 
         return $customer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function blsCode()
+    {
+        return $this->accountConfiguration->getBlsCode();
+    }
+
+    /**
+     * @return array
+     */
+    public function address()
+    {
+        $addressArray = [
+            'AddressType' => self::ADDRESS_TYPE_SENDER,
+            'FirstName'   => $this->addressConfiguration->getFirstname(),
+            'Name'        => $this->addressConfiguration->getLastname(),
+            'CompanyName' => $this->addressConfiguration->getCompany(),
+            'Street'      => $this->addressConfiguration->getStreetname(),
+            'HouseNr'     => $this->addressConfiguration->getHousenumber(),
+            'HouseNrExt'  => $this->addressConfiguration->getHousenumberAddition(),
+            'Zipcode'     => strtoupper(str_replace(' ', '', $this->addressConfiguration->getPostcode())),
+            'City'        => $this->addressConfiguration->getCity(),
+            'Countrycode' => 'NL',
+            'Department'  => $this->addressConfiguration->getDepartment(),
+        ];
+
+        return $addressArray;
     }
 }

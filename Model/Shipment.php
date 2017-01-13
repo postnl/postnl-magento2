@@ -38,8 +38,15 @@
  */
 namespace TIG\PostNL\Model;
 
+use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Sales\Model\Order\Shipment as OrderShipment;
+use Magento\Sales\Model\Order\Shipment\Item;
 
 /**
  * @method $this setShipmentId(string)
@@ -52,8 +59,14 @@ use Magento\Framework\Model\AbstractModel;
  * @method null|string getProductCode
  * @method $this setShipmentType(string)
  * @method null|string getShipmentType
+ * @method $this setDeliveryDate(string)
+ * @method null|string getDeliveryDate
  * @method $this setIsPakjegemak(string)
  * @method null|string getIsPakjegemak
+ * @method $this setPgLocationCode(string)
+ * @method null|string getPgLocationCode
+ * @method $this setPgRetailNetworkId(string)
+ * @method null|string getPgRetailNetworkId
  * @method $this setParcelCount(string $value)
  * @method null|string getParcelCount
  * @method $this setShipAt(string)
@@ -73,7 +86,39 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     // @codingStandardsIgnoreLine
     protected $_eventPrefix = 'tig_postnl_shipment';
 
+    /** @var OrderShipment $orderShipment */
+    private $orderShipment;
+
     const CACHE_TAG = 'tig_postnl_shipment';
+
+    /**
+     * @var TimezoneInterface
+     */
+    private $timezoneInterface;
+
+    /**
+     * @param Context           $context
+     * @param Registry          $registry
+     * @param OrderShipment     $orderShipment
+     * @param TimezoneInterface $timezoneInterface
+     * @param AbstractResource  $resource
+     * @param AbstractDb        $resourceCollection
+     * @param array             $data
+     */
+    public function __construct(
+        Context $context,
+        Registry $registry,
+        OrderShipment $orderShipment,
+        TimezoneInterface $timezoneInterface,
+        AbstractResource $resource = null,
+        AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
+        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+
+        $this->orderShipment = $orderShipment;
+        $this->timezoneInterface = $timezoneInterface;
+    }
 
     /**
      * Constructor
@@ -91,5 +136,47 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function getIdentities()
     {
         return [self::CACHE_TAG . '_' . $this->getId()];
+    }
+
+    /**
+     * @return OrderShipment
+     */
+    public function getShipment()
+    {
+        return $this->orderShipment->load($this->getShipmentId());
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getTotalWeight()
+    {
+        $items = $this->getShipment()->getAllItems();
+        $weight = 0;
+
+        /** @var Item $item */
+        foreach ($items as $item) {
+            $weight += ($item->getWeight() * $item->getQty());
+        }
+
+        if ($weight < 1) {
+            $weight = 1;
+        }
+
+        return $weight;
+    }
+
+    /**
+     * @param string $format
+     *
+     * @return string
+     */
+    public function getDeliveryDateFormatted($format = 'd-m-Y')
+    {
+        $deliveryDate = $this->getData('delivery_date');
+        $deliveryDate = $this->timezoneInterface->date($deliveryDate);
+        $deliveryDateFormatted = $deliveryDate->format($format);
+
+        return $deliveryDateFormatted;
     }
 }

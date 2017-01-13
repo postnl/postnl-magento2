@@ -39,20 +39,22 @@
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
 use Magento\Backend\App\Action;
-use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 
+use TIG\PostNL\Helper\Labelling\GetLabels;
+use TIG\PostNL\Helper\Labelling\GetPdf;
+use TIG\PostNL\Helper\Labelling\SaveLabels;
+
 class MassPrintShippingLabel extends Action
 {
     /**
-     * @var Shipment
+     * @var array
      */
-    private $currentShipment;
+    private $labels = [];
 
     /**
      * @var Filter
@@ -65,26 +67,42 @@ class MassPrintShippingLabel extends Action
     private $collectionFactory;
 
     /**
-     * @var FileFactory
+     * @var GetLabels
      */
-    private $fileFactory;
+    private $getLabels;
+
+    /**
+     * @var SaveLabels
+     */
+    private $saveLabels;
+
+    /**
+     * @var GetPdf
+     */
+    private $getPdf;
 
     /**
      * @param Context                   $context
      * @param Filter                    $filter
      * @param ShipmentCollectionFactory $collectionFactory
-     * @param FileFactory               $fileFactory
+     * @param GetLabels                 $getLabels
+     * @param SaveLabels                $saveLabels
+     * @param GetPdf                    $getPdf
      */
     public function __construct(
         Context $context,
         Filter $filter,
         ShipmentCollectionFactory $collectionFactory,
-        FileFactory $fileFactory
+        GetLabels $getLabels,
+        SaveLabels $saveLabels,
+        GetPdf $getPdf
     ) {
         parent::__construct($context);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
-        $this->fileFactory = $fileFactory;
+        $this->getLabels = $getLabels;
+        $this->saveLabels = $saveLabels;
+        $this->getPdf = $getPdf;
     }
 
     /**
@@ -100,28 +118,31 @@ class MassPrintShippingLabel extends Action
 
         /** @var Shipment $shipment */
         foreach ($collection as $shipment) {
-            $this->currentShipment = $shipment;
-            $this->getLabel();
+            $this->getLabel($shipment->getId());
         }
 
-        return $this->outputPdf();
+        $this->saveLabels->save($this->labels);
+
+        $pdfFile = $this->getPdf->get($this->labels);
+
+        return $pdfFile;
     }
 
-    private function getLabel()
+    /**
+     * @param $shipmentId
+     */
+    private function getLabel($shipmentId)
     {
-        // @codingStandardsIgnoreStart
-        // @todo
-        return;
-        // @codingStandardsIgnoreEnd
-    }
+        $labels = $this->getLabels->get($shipmentId);
 
-    private function outputPdf()
-    {
-        return $this->fileFactory->create(
-            'ShippingLabels.pdf',
-            'PDF OUTPUT',
-            DirectoryList::VAR_DIR,
-            'application/pdf'
-        );
+        /**
+         * @codingStandardsIgnoreLine
+         * TODO: add a proper warning notifying of a non-postnl shipment
+         */
+        if (count($labels) < 0) {
+            return;
+        }
+
+        $this->labels = $this->labels + $labels;
     }
 }
