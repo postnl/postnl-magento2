@@ -1,0 +1,30 @@
+<div class="days">
+    <div data-bind="foreach: deliverydays">
+        <div class="wrapper">
+            <strong>
+                <span class="deliverydays-day" data-bind="text: $data[0].day.substring(0, 2)"></span>
+                <span class="deliverydays-date" data-bind="text: $data[0].date"></span>
+            </strong>
+
+            <ul data-bind="foreach: $data">
+                <li data-bind="css: { 'selected-row': $parents[1].isRowSelected($data), 'odd': $parents[1].isOdd() }">
+                    <label>
+                        <input type="radio"
+                               data-bind=" value: date, checked: $parents[1].selectedOption, checkedValue: $data"
+                               name="      deliveryday"
+                               id="        delivery-choice"
+                               class="tig-postnl-delivery-radio" />
+
+                        <span class="tig-postnl-delivery-from" data-bind="text: from_friendly"></span>
+                        <span class="tig-postnl-delivery-dash"> - </span>
+                        <span class="tig-postnl-delivery-to" data-bind="text: to_friendly"></span>
+                        <span class="tig-postnl-delivery-option" data-bind="text: optionLabel"></span>
+                    </label>
+
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+</div>

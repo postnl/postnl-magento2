@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
@@ -57,10 +57,10 @@ class DeliverydaysOptions extends OptionsAbstract implements ArrayInterface
     public function toOptionArray()
     {
         $output = [];
-        for ($i = 1; $i <= static::MAXIMUM_DELIVERY_DAYS; $i++) {
+        for ($number = 1; $number <= static::MAXIMUM_DELIVERY_DAYS; $number++) {
             $output[] = [
-                'value' => $i,
-                'label' => $i
+                'value' => $number,
+                'label' => $number
             ];
         }
 

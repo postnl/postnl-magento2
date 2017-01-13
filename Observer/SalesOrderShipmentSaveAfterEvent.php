@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Observer;
@@ -97,10 +97,8 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
         $shipment = $observer->getData('data_object');
         $mainBarcode = $this->generateBarcode();
 
-        /**
-         * @codingStandardsIgnoreLine
-         * TODO: actually get & save the parcel count
-         */
+        // @codingStandardsIgnoreLine
+        //TODO: actually get & save the parcel count
 
         /** @var \TIG\PostNL\Model\Shipment $model */
         $model = $this->shipmentFactory->create();

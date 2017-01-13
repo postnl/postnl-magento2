@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
@@ -117,7 +117,7 @@ class ShippingDate extends AbstractGrid
         }
 
         if (!$difference->invert && $days === 1) {
-            return __('In 1 day');
+            return __('Tomorrow');
         }
 
         if (!$difference->invert) {

@@ -18,10 +18,10 @@
                 <ul class="tig-postnl-pickup-list" data-bind="css: LocationCode, visible: expanded">
                     <!-- ko foreach: $parent.getOpeningHours(OpeningHours) -->
                     <li>
-                        <span data-bind="text: $data.day"></span>
+                        <span class="pickup-list-day" data-bind="text: $data.day"></span>
                         <ul>
                             <!-- ko foreach: $data.hours -->
-                            <li data-bind="text: $data"></li>
+                            <li class="pickup-list-time" data-bind="i18n: $data"></li>
                             <!-- /ko -->
                         </ul>
                     </li>
