@@ -173,15 +173,17 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         $shipment = $this->getShipment();
         $shippingAddress = $shipment->getShippingAddress();
 
-        if ($postNLOrder->getIsPakjegemak()) {
-            $pgOrderAddressId = $postNLOrder->getPgOrderAddressId();
-            $order = $shipment->getOrder();
-            $orderbillingid = $order->getBillingAddressId();
-
-            $pgAddressStreet = implode("\n", $this->getPakjegemakAddress()->getStreet());
-
-            $shippingAddress = $this->filterShippingAddress([$pgOrderAddressId, $orderbillingid], $pgAddressStreet);
+        if (!$postNLOrder->getIsPakjegemak()) {
+            return $shippingAddress;
         }
+
+        $pgOrderAddressId = $postNLOrder->getPgOrderAddressId();
+        $order = $shipment->getOrder();
+        $orderbillingid = $order->getBillingAddressId();
+
+        $pgAddressStreet = implode("\n", $this->getPakjegemakAddress()->getStreet());
+
+        $shippingAddress = $this->filterShippingAddress([$pgOrderAddressId, $orderbillingid], $pgAddressStreet);
 
         return $shippingAddress;
     }
@@ -203,7 +205,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         $addressCollection->addFieldToFilter('street', ['neq' => $ignoreStreet]);
 
         // @codingStandardsIgnoreLine
-        $shippingAddress = $addressCollection->getFirstItem();
+        $shippingAddress = $addressCollection->setPageSize(1)->getFirstItem();
 
         return $shippingAddress;
     }
