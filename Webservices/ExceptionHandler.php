@@ -38,6 +38,7 @@
  */
 namespace TIG\PostNL\Webservices;
 
+use TIG\PostNL\Helper\Data as Helper;
 use TIG\PostNL\Logging\Log;
 use Zend\Soap\Client;
 
@@ -46,7 +47,7 @@ class ExceptionHandler
     /**
      * CIF error namespace.
      */
-    const CIF_ERROR_NAMESPACE = 'http://postnl.nl/cif/services/common/';
+    const ERROR_NAMESPACE = 'http://postnl.nl/cif/services/common/';
 
     /**
      * The error number CIF uses for the 'shipment not found' error.
@@ -54,17 +55,25 @@ class ExceptionHandler
     const SHIPMENT_NOT_FOUND_ERROR_NUMBER = 13;
 
     /**
-     * @var
+     * @var Log
      */
     private $log;
 
     /**
-     * @param Log $log
+     * @var Helper
+     */
+    private $helper;
+
+    /**
+     * @param Log    $log
+     * @param Helper $helper
      */
     public function __construct(
-        Log $log
+        Log $log,
+        Helper $helper
     ) {
         $this->log = $log;
+        $this->helper = $helper;
     }
 
     /**
@@ -93,25 +102,6 @@ class ExceptionHandler
     }
 
     /**
-     * @param $xml
-     *
-     * @return string
-     */
-    private function formatXml($xml)
-    {
-        if (empty($xml)) {
-            return '';
-        }
-
-        // @codingStandardsIgnoreLine
-        $domDocument = new \DOMDocument();
-        $domDocument->loadXML($xml);
-        $domDocument->formatOutput = true;
-
-        return $domDocument->saveXML();
-    }
-
-    /**
      * @param Api\Exception $exception
      * @param \DOMDocument  $errorResponse
      *
@@ -119,7 +109,7 @@ class ExceptionHandler
      */
     private function addErrorNumbersToException(Api\Exception $exception, \DOMDocument $errorResponse)
     {
-        $errorNumbers = $errorResponse->getElementsByTagNameNS(self::CIF_ERROR_NAMESPACE, '*');
+        $errorNumbers = $errorResponse->getElementsByTagNameNS(self::ERROR_NAMESPACE, '*');
 
         if (!$errorNumbers) {
             return false;
@@ -169,7 +159,7 @@ class ExceptionHandler
         /**
          * Get all error messages.
          */
-        $errors = $errorResponse->getElementsByTagNameNS(static::CIF_ERROR_NAMESPACE, 'ErrorMsg');
+        $errors = $errorResponse->getElementsByTagNameNS(static::ERROR_NAMESPACE, 'ErrorMsg');
         if (!$errors) {
             return;
         }
@@ -229,8 +219,8 @@ class ExceptionHandler
             return '';
         }
 
-        $requestXML  = $this->formatXml($client->getLastRequest());
-        $responseXML = $this->formatXml($client->getLastResponse());
+        $requestXML  = $this->helper->formatXml($client->getLastRequest());
+        $responseXML = $this->helper->formatXml($client->getLastResponse());
 
         /**
          * Add the response and request data to the exception (to be logged later)

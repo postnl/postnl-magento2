@@ -36,36 +36,50 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Webservices;
+namespace TIG\PostNL\Webservices\Api;
 
-use TIG\PostNL\Test\TestCase;
-use TIG\PostNL\Webservices\ExceptionHandler;
+use TIG\PostNL\Helper\Data as Helper;
+use TIG\PostNL\Logging\Log as Logger;
+use Zend\Soap\Client;
 
-class ExceptionHandlerTest extends TestCase
+class Log
 {
-    protected $instanceClass = ExceptionHandler::class;
+    /**
+     * @var Logger
+     */
+    private $log;
+    /**
+     * @var Helper
+     */
+    private $helper;
 
-    public function formatXmlProvider()
-    {
-        return [
-            ['<root><node>value</node></root>', '<?xml version="1.0"?>
-<root>
-  <node>value</node>
-</root>
-'],
-        ];
+    /**
+     * @param Logger $log
+     * @param Helper $helper
+     */
+    public function __construct(
+        Logger $log,
+        Helper $helper
+    ) {
+        $this->log = $log;
+        $this->helper = $helper;
     }
 
     /**
-     * @param $xml
-     * @param $expected
-     *
-     * @dataProvider formatXmlProvider
+     * @param Client $client
      */
-    public function testFormatXml($xml, $expected)
+    public function request(Client $client)
     {
-        $result = $this->invokeArgs('formatXml', [$xml]);
+        $message = '<<< REQUEST XML >>>' . PHP_EOL;
+        $lastRequest = $client->getLastRequest();
+        $message .= $this->helper->formatXml($lastRequest);
 
-        $this->assertEquals($expected, $result);
+        $this->log->debug($message);
+
+        $message = '<<< RESPONSE XML >>>' . PHP_EOL;
+        $lastResponse = $client->getLastResponse();
+        $message .= $this->helper->formatXml($lastResponse);
+
+        $this->log->debug($message);
     }
 }

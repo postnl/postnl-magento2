@@ -93,4 +93,28 @@ class DataTest extends TestCase
         $result = $instance->getAllowedDeliveryOptions();
         $this->assertContains('PG', $result);
     }
+
+    public function formatXmlProvider()
+    {
+        return [
+            ['<root><node>value</node></root>', '<?xml version="1.0"?>
+<root>
+  <node>value</node>
+</root>
+'],
+        ];
+    }
+
+    /**
+     * @param $xml
+     * @param $expected
+     *
+     * @dataProvider formatXmlProvider
+     */
+    public function testFormatXml($xml, $expected)
+    {
+        $result = $this->invokeArgs('formatXml', [$xml]);
+
+        $this->assertEquals($expected, $result);
+    }
 }

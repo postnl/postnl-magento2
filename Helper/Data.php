@@ -161,4 +161,23 @@ class Data extends AbstractHelper
 
         return $deliveryOptions;
     }
+
+    /**
+     * @param $xml
+     *
+     * @return string
+     */
+    public function formatXml($xml)
+    {
+        if (empty($xml)) {
+            return '';
+        }
+
+        // @codingStandardsIgnoreLine
+        $domDocument = new \DOMDocument();
+        $domDocument->loadXML($xml);
+        $domDocument->formatOutput = true;
+
+        return $domDocument->saveXML();
+    }
 }
