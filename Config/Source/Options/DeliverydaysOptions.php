@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
@@ -49,22 +49,21 @@ use TIG\PostNL\Config\Source\OptionsAbstract;
  */
 class DeliverydaysOptions extends OptionsAbstract implements ArrayInterface
 {
+    const MAXIMUM_DELIVERY_DAYS = 14;
+
     /**
      * @return array
      */
     public function toOptionArray()
     {
-        // @codingStandardsIgnoreStart
-        $options = [
-            ['value' => '1', 'label' => __('One')],
-            ['value' => '2', 'label' => __('Two')],
-            ['value' => '3', 'label' => __('Three')],
-            ['value' => '4', 'label' => __('Four')],
-            ['value' => '5', 'label' => __('Five')],
-            ['value' => '6', 'label' => __('Six')],
-            ['value' => '7', 'label' => __('Seven')],
-        ];
-        // @codingStandardsIgnoreEnd
-        return $options;
+        $output = [];
+        for ($number = 1; $number <= static::MAXIMUM_DELIVERY_DAYS; $number++) {
+            $output[] = [
+                'value' => $number,
+                'label' => $number
+            ];
+        }
+
+        return $output;
     }
 }

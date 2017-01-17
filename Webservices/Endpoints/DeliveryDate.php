@@ -33,15 +33,17 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
 namespace TIG\PostNL\Webservices\Endpoints;
 
 /**
+ * @codingStandardsIgnoreLine
  * @todo : Waiting on PostNL to finish the API for DeliveryDate, so needs to be refactored when API is ready.
  */
+use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\SoapOld;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Webservices\Api\Message;
@@ -54,7 +56,7 @@ use TIG\PostNL\Webservices\Api\CutoffTimes;
  *
  * @package TIG\PostNL\Webservices\Calculate
  */
-class DeliveryDate
+class DeliveryDate extends AbstractEndpoint
 {
     /**
      * @var string
@@ -124,8 +126,11 @@ class DeliveryDate
     }
 
     /**
-     * @todo :  1. Calculation for shippingDuration
-     * @todo:   2. Add configuration for sundaysorting (if not enabled Monday should not return)
+     * @codingStandardsIgnoreStart
+     * @todo: 1. Calculation for shippingDuration
+     * @todo: 2. Add configuration for sundaysorting (if not enabled Monday should not return)
+     * @todo: 3. Move surounding @codingStandardsIgnore tags
+     * @codingStandardsIgnoreEnd
      * @param $address
      *
      * @return array
@@ -152,5 +157,13 @@ class DeliveryDate
     public function getWsdlUrl()
     {
         return $this->service .'/'. $this->version;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation()
+    {
+        return 'calculate/date';
     }
 }

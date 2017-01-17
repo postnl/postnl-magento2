@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
@@ -42,30 +42,19 @@ use TIG\PostNL\Model\ShipmentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
-use TIG\PostNL\Model\Shipment as PostNLShipment;
 
 abstract class AbstractGrid extends Column
 {
     /**
      * @var array
      */
+    // @codingStandardsIgnoreLine
     protected $items = [];
-
-    /**
-     * @var array
-     */
-    protected $ids = [];
-
-    /**
-     * Holds the loaded items.
-     *
-     * @var array
-     */
-    protected $models = [];
 
     /**
      * @var ShipmentFactory
      */
+    // @codingStandardsIgnoreLine
     protected $shipmentFactory;
 
     /**
@@ -111,19 +100,7 @@ abstract class AbstractGrid extends Column
      */
     public function prepareData()
     {
-        $ids = $this->collectIds();
-
-        /** @var PostNLShipment $postnlShipment */
-        $postnlShipment = $this->shipmentFactory->create();
-
-        /** @var \TIG\PostNL\Model\ResourceModel\Shipment\Collection $collection */
-        $collection = $postnlShipment->getCollection();
-        $collection->addFieldToFilter('shipment_id', ['in' => $ids]);
-
-        /** @var PostNLShipment $item */
-        foreach ($collection as $item) {
-            $this->models[$item->getShipmentId()] = $item;
-        }
+        return null;
     }
 
     /**
@@ -144,18 +121,4 @@ abstract class AbstractGrid extends Column
      */
     // @codingStandardsIgnoreLine
     abstract protected function getCellContents($item);
-
-    /**
-     * @param string $idColumn
-     *
-     * @return array
-     */
-    protected function collectIds($idColumn = 'entity_id')
-    {
-        foreach ($this->items as $item) {
-            $this->ids[] = $item[$idColumn];
-        }
-
-        return $this->ids;
-    }
 }

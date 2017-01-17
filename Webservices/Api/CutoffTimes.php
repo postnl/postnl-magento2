@@ -33,12 +33,12 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Webservices\Api;
 
-use TIG\PostNL\Config\Provider\WebshopSettings;
+use TIG\PostNL\Config\Provider\Webshop;
 
 /**
  * Class CutoffTimes
@@ -47,14 +47,14 @@ use TIG\PostNL\Config\Provider\WebshopSettings;
  */
 class CutoffTimes
 {
-    /** @var  WebshopSettings */
+    /** @var  Webshop */
     private $webshopSettings;
 
     /**
-     * @param WebshopSettings $webshopSettings
+     * @param Webshop $webshopSettings
      */
     public function __construct(
-        WebshopSettings $webshopSettings
+        Webshop $webshopSettings
     ) {
         $this->webshopSettings = $webshopSettings;
     }
@@ -69,7 +69,7 @@ class CutoffTimes
             return [
                 'Day'  => $value == '0' ? '07' : '0'.$value,
                 'Time' => $this->webshopSettings->getCutOffTime(),
-                'Available' => '1' // Not sure what this means.
+                'Available' => '1',
             ];
         }, $shipmentDays);
     }

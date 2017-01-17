@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Helper;
@@ -102,10 +102,26 @@ class Data extends AbstractHelper
     {
         $stamp = $this->dateTime->date();
         if ($date) {
+            list($date) = explode(' ', $date);
             $stamp = $this->dateTime->date($date);
         }
 
         return $stamp->format('Y-m-d');
+    }
+
+    /**
+     * @param $date
+     * @return \DateTime
+     */
+    public function getDateDmy($date = false)
+    {
+        $stamp = $this->dateTime->date();
+        if ($date) {
+            list($date) = explode(' ', $date);
+            $stamp = $this->dateTime->date($date);
+        }
+
+        return $stamp->format('d-m-Y');
     }
 
     /**

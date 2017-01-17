@@ -1,0 +1,320 @@
+/* =================================================================================================================== *
+/*
+/* Do you want to customize the colors of the PostNL extension?
+/* Colors can be overwritten by copying the variables to your own theme
+/*
+* =================================================================================================================== */
+/*** PostNL Color Pallet ***/
+/*** Custom Color Pallet ***/
+/* Container */
+/* Buttons */
+/* List */
+/* =================================================================================================================== *
+*
+* TIG PostNL Magento 2 Extension
+*
+* =================================================================================================================== */
+/* PostNL Branding Frontend */
+#label_method_regular_tig_postnl:before {
+  float: left;
+  width: 50px;
+  height: 37px;
+  content: ' ';
+  background-image: url(../images/postnl_logo.png) !important;
+  background-position: 0 2px;
+  background-repeat: no-repeat;
+  background-size: auto 33px;
+  margin-top: -10px;
+}
+/* Delivery Options */
+.postnl-deliveryoptions .delivery_options {
+  /* End Delivery */
+  /* End PickUp */
+}
+.postnl-deliveryoptions .delivery_options button.btn.btn-default {
+  float: left;
+  width: 50%;
+  box-sizing: border-box;
+  background: white;
+  text-align: left;
+  padding: 15px;
+  border: 1px solid #ccc;
+}
+.postnl-deliveryoptions .delivery_options button.btn.btn-default:not(.primary) {
+  box-shadow: none;
+}
+.postnl-deliveryoptions .delivery_options button.btn.btn-default:nth-child(1) {
+  border-radius: 3px 0 0 0;
+  border-right: 0;
+}
+.postnl-deliveryoptions .delivery_options button.btn.btn-default:nth-child(2) {
+  border-radius: 0 3px 0 0;
+}
+.postnl-deliveryoptions .delivery_options button.btn.btn-default:hover {
+  background: #d6d6d6;
+}
+.postnl-deliveryoptions .delivery_options button.btn.btn-default.button-active {
+  background: #eee;
+  border-bottom: 1px solid #eee;
+}
+.postnl-deliveryoptions .delivery_options button.btn.btn-default.button-active:hover {
+  color: #001A73;
+}
+.postnl-deliveryoptions .delivery_options .delivery,
+.postnl-deliveryoptions .delivery_options .pickup {
+  float: left;
+  width: 100%;
+  background: #eee;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-top: 0;
+}
+.postnl-deliveryoptions .delivery_options .delivery ul,
+.postnl-deliveryoptions .delivery_options .pickup ul,
+.postnl-deliveryoptions .delivery_options .delivery ol,
+.postnl-deliveryoptions .delivery_options .pickup ol {
+  padding: 0;
+  list-style: none;
+}
+.postnl-deliveryoptions .delivery_options .delivery ul li,
+.postnl-deliveryoptions .delivery_options .pickup ul li,
+.postnl-deliveryoptions .delivery_options .delivery ol li,
+.postnl-deliveryoptions .delivery_options .pickup ol li {
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0;
+  position: relative;
+}
+.postnl-deliveryoptions .delivery_options .delivery ul li:hover,
+.postnl-deliveryoptions .delivery_options .pickup ul li:hover,
+.postnl-deliveryoptions .delivery_options .delivery ol li:hover,
+.postnl-deliveryoptions .delivery_options .pickup ol li:hover {
+  background: #FFE0B2;
+}
+.postnl-deliveryoptions .delivery_options .delivery ul li.selected-row,
+.postnl-deliveryoptions .delivery_options .pickup ul li.selected-row,
+.postnl-deliveryoptions .delivery_options .delivery ol li.selected-row,
+.postnl-deliveryoptions .delivery_options .pickup ol li.selected-row {
+  background: #FFE0B2 !important;
+}
+.postnl-deliveryoptions .delivery_options .delivery label,
+.postnl-deliveryoptions .delivery_options .pickup label {
+  cursor: pointer;
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper {
+  float: left;
+  width: 100%;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper:nth-child(even) {
+  background: #f5f5f5;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper strong {
+  float: left;
+  width: 20%;
+  box-sizing: border-box;
+  padding: 10px 10px 10px 15px;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper strong .deliverydays-day {
+  text-transform: uppercase;
+  display: block;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper strong .deliverydays-date {
+  font-size: 12px;
+  display: block;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol {
+  float: right;
+  width: 80%;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li {
+  float: left;
+  width: 100%;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li:hover,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li:hover,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li.selected-row,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li.selected-row {
+  border-radius: 5px 0 0 5px;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li label,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li label {
+  padding: 18px 20px 18px 20px;
+}
+@media screen and (min-width: 400px) {
+  .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li li,
+  .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li li {
+    padding: 10px 100px 10px 20px;
+  }
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li .data-container,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li .data-container {
+  display: inline-block;
+  width: calc(100% - 40px);
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li .tig-postnl-delivery-radio,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li .tig-postnl-delivery-radio {
+  float: left;
+  margin: 0 15px 0 0;
+  width: 20px;
+  height: 21px;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li .tig-postnl-delivery-data,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li .tig-postnl-delivery-data {
+  float: left;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li .tig-postnl-delivery-to,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li .tig-postnl-delivery-to {
+  float: left;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li .tig-postnl-delivery-dash,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li .tig-postnl-delivery-dash {
+  float: left;
+  margin: 0 3px;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li .tig-postnl-delivery-from,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li .tig-postnl-delivery-from {
+  float: left;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li .tig-postnl-delivery-option,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li .tig-postnl-delivery-option {
+  float: left;
+  margin-left: 37px;
+  width: 100%;
+  position: relative;
+  color: #ED8C00;
+}
+@media screen and (min-width: 400px) {
+  .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li .data-container,
+  .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li .data-container {
+    width: calc(100% - 100px);
+  }
+  .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li .tig-postnl-delivery-option,
+  .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li .tig-postnl-delivery-option {
+    position: absolute;
+    top: 18px;
+    right: 15px;
+    color: #ED8C00;
+    overflow: hidden;
+    float: none;
+    margin: auto;
+    width: auto;
+  }
+}
+@media screen and (max-width: 480px) {
+  .postnl-deliveryoptions .delivery_options .delivery .days .wrapper strong {
+    float: left;
+    width: 100%;
+  }
+  .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul,
+  .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol {
+    float: right;
+    width: 100%;
+  }
+  .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li:hover,
+  .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li:hover,
+  .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li.selected-row,
+  .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li.selected-row {
+    border-radius: 0;
+  }
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li label {
+  padding: 10px 40px 10px 20px;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .location-container {
+  display: inline-block;
+  width: calc(100% - 40px);
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-radio {
+  float: left;
+  margin: 0 15px 0 0;
+  width: 20px;
+  height: 40px;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-name {
+  float: left;
+  margin: 0 3px 0 0;
+  width: 100%;
+  font-weight: bold;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-street {
+  float: left;
+  margin: 0 3px 0 0;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-number {
+  float: left;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-hours {
+  position: absolute;
+  top: 24px;
+  right: 20px;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-hours span {
+  display: none;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-hours-clock {
+  height: 15px;
+  width: 15px;
+  cursor: pointer;
+  fill: #1979c3;
+  -moz-transition: all 0.1s ease-in-out;
+  -ms-transition: all 0.1s ease-in-out;
+  -webkit-transition: all 0.1s ease-in-out;
+  -o-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-hours-clock:hover {
+  fill: #001A73;
+  -moz-transform: scale(1.25);
+  -ms-transform: scale(1.25);
+  /* Internet Explorer 9 */
+  -webkit-transform: scale(1.25);
+  -o-transform: scale(1.25);
+  transform: scale(1.25);
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-list {
+  float: left;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-list li {
+  background: none;
+  padding: 5px 25px 5px 36px;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-list li .pickup-list-day {
+  text-decoration: underline;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-list li .pickup-list-time {
+  padding-left: 0;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li:nth-child(even) {
+  background: #f5f5f5;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li:nth-child(even):hover {
+  background: #FFE0B2;
+}
+/* Loading Image */
+.postnl-deliveryoptions .delivery_options {
+  position: relative;
+}
+.postnl-deliveryoptions .delivery_options .tig-postnl-loading {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.65) url(../images/loading_1.gif) no-repeat center center;
+  background-size: 60px;
+  height: 100px;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 10;
+}
+/* =================================================================================================================== *
+*
+* Override Magento Narrow Shipping Table
+*
+* =================================================================================================================== */
+.table-checkout-shipping-method {
+  width: 100% !important;
+  max-width: 500px;
+}

@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
@@ -165,14 +165,6 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             'group'             => 'pakjegemak_options',
         ],
         // EU Options
-        '4950' => [
-            'value'             => '4950',
-            'label'             => 'EU Pack Special (B2B)',
-            'isExtraCover'      => false,
-            'isSunday'          => false,
-            'countryLimitation' => false,
-            'group'             => 'eu_options',
-        ],
         '4952' => [
             'value'             => '4952',
             'label'             => 'EU Pack Special Consumer (incl. signature)',

@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Setup\V110;
@@ -62,7 +62,15 @@ class InstallShipmentTable extends AbstractTableInstaller
         $this->addText('product_code', 'Product Code', 32);
         $this->addText('shipment_type', 'Shipment Type', 32);
 
-        $this->addInt('is_pakjegemak', 'Is Pakjegemak', 1);
+        $this->addTimestamp('delivery_date', 'Delivery date');
+        $this->addText('expected_delivery_time_start', 'Expected delivery time start', 16);
+        $this->addText('expected_delivery_time_end', 'Expected delivery time end', 16);
+
+        $this->addText('is_pakjegemak', 'Is Pakjegemak', 1);
+        $this->addText('pg_location_code', 'PakjeGemak Location Code', 16);
+        $this->addText('pg_retail_network_id', 'PakjeGemak Retail Netwerok ID', 16);
+
+        $this->addInt('parcel_count', 'Parcel Count', true, true, 1);
 
         $this->addDate('ship_at', 'Ship the parcel at');
         $this->addTimestamp('confirmed_at', 'Confirmed at');

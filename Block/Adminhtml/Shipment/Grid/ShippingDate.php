@@ -33,12 +33,11 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
 
-use TIG\PostNL\Model\Shipment as PostNLShipment;
 use TIG\PostNL\Model\ShipmentFactory;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
@@ -51,11 +50,6 @@ class ShippingDate extends AbstractGrid
      * @var TimezoneInterface
      */
     private $timezoneInterface;
-
-    /**
-     * @var PostNLShipment
-     */
-    private $model = null;
 
     /**
      * @var DateTimeFormatterInterface
@@ -85,13 +79,7 @@ class ShippingDate extends AbstractGrid
     // @codingStandardsIgnoreLine
     protected function getCellContents($item)
     {
-        $entity_id = $item['entity_id'];
-
-        if (!$this->loadModel($entity_id)) {
-            return null;
-        }
-
-        $shipAt = $this->getShipAt();
+        $shipAt = $this->getShipAt($item);
         if ($shipAt === null) {
             return null;
         }
@@ -100,26 +88,11 @@ class ShippingDate extends AbstractGrid
     }
 
     /**
-     * @param $entity_id
-     *
-     * @return bool|PostNLShipment
-     */
-    private function loadModel($entity_id)
-    {
-        if (!array_key_exists($entity_id, $this->models)) {
-            return false;
-        }
-
-        $this->model = $this->models[$entity_id];
-        return true;
-    }
-
-    /**
      * @return null|string
      */
-    private function getShipAt()
+    private function getShipAt($item)
     {
-        $shipAt = $this->model->getShipAt();
+        $shipAt = $item['tig_postnl_ship_at'];
         if ($shipAt === null) {
             return null;
         }
@@ -144,7 +117,7 @@ class ShippingDate extends AbstractGrid
         }
 
         if (!$difference->invert && $days === 1) {
-            return __('In 1 day');
+            return __('Tomorrow');
         }
 
         if (!$difference->invert) {

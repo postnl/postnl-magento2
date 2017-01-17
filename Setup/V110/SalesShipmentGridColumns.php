@@ -44,6 +44,7 @@ class SalesShipmentGridColumns extends AbstractColumnsInstaller
 {
     const TABLE_NAME = 'sales_shipment_grid';
 
+    // @codingStandardsIgnoreLine
     protected $columns = [
         'tig_postnl_ship_at',
         'tig_postnl_confirmed_at',
@@ -55,6 +56,7 @@ class SalesShipmentGridColumns extends AbstractColumnsInstaller
     public function installTigPostnlShipAtColumn()
     {
         return [
+            // @codingStandardsIgnoreLine
             'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
             'length' => 255,
             'nullable' => true,
@@ -70,6 +72,7 @@ class SalesShipmentGridColumns extends AbstractColumnsInstaller
     public function installTigPostnlConfirmedAtColumn()
     {
         return [
+            // @codingStandardsIgnoreLine
             'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DATE,
             'nullable' => true,
             'default' => null,

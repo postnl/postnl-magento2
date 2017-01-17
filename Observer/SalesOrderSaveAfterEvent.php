@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Observer;
@@ -45,6 +45,7 @@ use TIG\PostNL\Model\OrderFactory;
 use Magento\Sales\Model\Order as MagentoOrder;
 use TIG\PostNL\Model\Order as PostNLOrder;
 use TIG\PostNL\Model\OrderRepository;
+use TIG\PostNL\Webservices\Endpoints\SentDate;
 
 class SalesOrderSaveAfterEvent implements ObserverInterface
 {
@@ -94,12 +95,10 @@ class SalesOrderSaveAfterEvent implements ObserverInterface
 
         $postnlOrder = $this->getPostNLOrder($magentoOrder);
 
-        if ($postnlOrder->getId() === null) {
-            $postnlOrder->setData('order_id', $magentoOrder->getId());
-            $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
+        $postnlOrder->setData('order_id', $magentoOrder->getId());
+        $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
 
-            $this->orderRepository->save($postnlOrder);
-        }
+        $this->orderRepository->save($postnlOrder);
     }
 
     /**
@@ -114,7 +113,7 @@ class SalesOrderSaveAfterEvent implements ObserverInterface
 
         /** @var \TIG\PostNL\Model\ResourceModel\Order\Collection $collection */
         $collection = $postnlOrder->getCollection();
-        $collection->addFieldToFilter('order_id', $magentoOrder->getid());
+        $collection->addFieldToFilter('quote_id', $magentoOrder->getQuoteId());
 
         // @codingStandardsIgnoreLine
         $postnlOrder = $collection->setPageSize(1)->getFirstItem();

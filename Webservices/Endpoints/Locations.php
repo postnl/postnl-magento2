@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
@@ -115,6 +115,7 @@ class Locations extends AbstractEndpoint
     }
 
     /**
+     * @codingStandardsIgnoreLine
      * @todo : Add configuration for sundaysorting (if not enabled Monday should not return)
      *
      * @param $address
@@ -123,7 +124,7 @@ class Locations extends AbstractEndpoint
     public function setParameters($address, $startDate = false)
     {
         $this->requestParams = [
-            'Location'    => [
+            'Location' => [
                 'DeliveryOptions'    => $this->postNLhelper->getAllowedDeliveryOptions(),
                 'DeliveryDate'       => $this->getDeliveryDate($startDate),
                 'Postalcode'         => str_replace(' ', '', $address['postcode']),

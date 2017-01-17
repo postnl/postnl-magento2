@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Setup;
@@ -43,6 +43,9 @@ use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 
+/**
+ * @codingStandardsIgnoreStart
+ */
 abstract class AbstractTableInstaller implements InstallSchemaInterface
 {
     const TABLE_NAME = null;
@@ -250,6 +253,33 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     }
 
     /**
+     * @param      $name
+     * @param      $comment
+     * @param int  $length
+     * @param bool $nullable
+     * @param null $default
+     *
+     * @throws \Zend_Db_Exception
+     */
+    // @codingStandardsIgnoreLine
+    protected function addBlob($name, $comment, $nullable = true, $default = null)
+    {
+        $this->table->addColumn(
+            $name,
+            Table::TYPE_BLOB,
+            null,
+            [
+                'identity' => false,
+                'unsigned' => false,
+                'nullable' => $nullable,
+                'primary' => false,
+                'default' => $default,
+            ],
+            $comment
+        );
+    }
+
+    /**
      * @return \Zend_Db_Statement_Interface
      */
     // @codingStandardsIgnoreLine
@@ -260,3 +290,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
         return $connection->createTable($this->table);
     }
 }
+/**
+ * @codingStandardsIgnoreEnd
+ */

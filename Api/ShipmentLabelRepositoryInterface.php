@@ -1,3 +1,4 @@
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -32,30 +33,21 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['uiComponent'], function (Component) {
-    return Component.extend({
-        defaults: {
-            template: 'TIG_PostNL/deliveryoptions',
-            shipmentType: 'delivery'
-        },
+namespace TIG\PostNL\Api;
 
-        initObservable: function () {
-            this._super().observe([
-                'shipmentType'
-            ]);
+use TIG\PostNL\Model\ShipmentLabelInterface;
+use Magento\Framework\Api\SearchCriteriaInterface;
 
-            return this;
-        },
+interface ShipmentLabelRepositoryInterface
+{
+    public function save(ShipmentLabelInterface $shipment);
 
-        setDelivery: function () {
-            this.shipmentType('delivery');
-        },
+    public function getById($identifier);
 
-        setPickup: function () {
-            this.shipmentType('pickup');
-        }
-    });
-});
+    public function getList(SearchCriteriaInterface $criteria);
+
+    public function delete(ShipmentLabelInterface $shipment);
+}
