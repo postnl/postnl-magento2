@@ -43,6 +43,8 @@ use Magento\Framework\Model\AbstractModel;
 
 /**
  * @method string getDeliveryDate()
+ * @method string getIsPakjegemak()
+ * @method string getPgOrderAddressId()
  */
 class Order extends AbstractModel implements OrderInterface, IdentityInterface
 {

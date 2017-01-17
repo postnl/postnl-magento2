@@ -45,6 +45,8 @@ use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Sales\Model\Order\Address;
+use Magento\Sales\Model\Order\AddressFactory;
 use Magento\Sales\Model\Order\Shipment as OrderShipment;
 use Magento\Sales\Model\Order\Shipment\Item;
 
@@ -97,9 +99,21 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     private $timezoneInterface;
 
     /**
+     * @var OrderFactory
+     */
+    private $orderFactory;
+
+    /**
+     * @var AddressFactory
+     */
+    private $addressFactory;
+
+    /**
      * @param Context           $context
      * @param Registry          $registry
      * @param OrderShipment     $orderShipment
+     * @param OrderFactory      $orderFactory
+     * @param AddressFactory    $addressFactory
      * @param TimezoneInterface $timezoneInterface
      * @param AbstractResource  $resource
      * @param AbstractDb        $resourceCollection
@@ -109,6 +123,8 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         Context $context,
         Registry $registry,
         OrderShipment $orderShipment,
+        OrderFactory $orderFactory,
+        AddressFactory $addressFactory,
         TimezoneInterface $timezoneInterface,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
@@ -118,6 +134,8 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
 
         $this->orderShipment = $orderShipment;
         $this->timezoneInterface = $timezoneInterface;
+        $this->orderFactory = $orderFactory;
+        $this->addressFactory = $addressFactory;
     }
 
     /**
@@ -144,6 +162,77 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function getShipment()
     {
         return $this->orderShipment->load($this->getShipmentId());
+    }
+
+    /**
+     * @return Address
+     */
+    public function getShippingAddress()
+    {
+        $postNLOrder = $this->getPostNLOrder();
+        $shipment = $this->getShipment();
+        $shippingAddress = $shipment->getShippingAddress();
+
+        if (!$postNLOrder->getIsPakjegemak()) {
+            return $shippingAddress;
+        }
+
+        $pgOrderAddressId = $postNLOrder->getPgOrderAddressId();
+        $order = $shipment->getOrder();
+        $orderbillingid = $order->getBillingAddressId();
+
+        $pgAddressStreet = implode("\n", $this->getPakjegemakAddress()->getStreet());
+
+        $shippingAddress = $this->filterShippingAddress([$pgOrderAddressId, $orderbillingid], $pgAddressStreet);
+
+        return $shippingAddress;
+    }
+
+    /**
+     * @param array $ignoreAddressIds
+     * @param       $ignoreStreet
+     *
+     * @return \Magento\Framework\DataObject
+     */
+    private function filterShippingAddress($ignoreAddressIds, $ignoreStreet)
+    {
+        $addressModel = $this->addressFactory->create();
+        /** @var \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection $addressCollection */
+        $addressCollection = $addressModel->getCollection();
+
+        $addressCollection->addFieldToFilter('entity_id', ['nin' => $ignoreAddressIds]);
+        $addressCollection->addFieldToFilter('parent_id', ['eq' => $this->getOrderId()]);
+        $addressCollection->addFieldToFilter('street', ['neq' => $ignoreStreet]);
+
+        // @codingStandardsIgnoreLine
+        $shippingAddress = $addressCollection->setPageSize(1)->getFirstItem();
+
+        return $shippingAddress;
+    }
+
+    /**
+     * @return Address
+     */
+    public function getPakjegemakAddress()
+    {
+        $postNLOrder = $this->getPostNLOrder();
+        $pgOrderAddressId = $postNLOrder->getPgOrderAddressId();
+
+        $PgOrderAddress = $this->addressFactory->create();
+        $PgOrderAddress->load($pgOrderAddressId);
+
+        return $PgOrderAddress;
+    }
+
+    /**
+     * @return Order
+     */
+    public function getPostNLOrder()
+    {
+        $postNLOrder = $this->orderFactory->create();
+        $postNLOrder->load($this->getOrderId(), 'order_id');
+
+        return $postNLOrder;
     }
 
     /**
