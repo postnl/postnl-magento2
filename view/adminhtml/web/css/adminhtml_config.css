@@ -61,15 +61,38 @@
     margin-bottom: 10px;
 }
 
-.section-config.tig_postnl-section.modus_live {
-    border-right:5px solid #49AB43;
+.postnl-config-page .section-config {
+    box-sizing:border-box;
+    padding-left: 20px;
+    margin-left: 10px;
+    position: relative;
 }
-.section-config.tig_postnl-section.modus_test {
-    border-right:5px solid #FFC107;
+
+.section-config.tig_postnl-section.modus_live:before {
+    border-left: 5px solid #49AB43;
+    content: '';
+    position: absolute;
+    left: -15px;
+    height: calc(100% + 2px);
 }
-.section-config.tig_postnl-section.modus_off {
-    border-right:5px solid #CCCCCC;
+
+.section-config.tig_postnl-section.modus_test:before {
+    border-left: 5px solid #ffc107;
+    content: '';
+    position: absolute;
+    left: -15px;
+    height: calc(100% + 2px);
 }
+
+.section-config.tig_postnl-section.modus_off:before {
+    border-left: 5px solid #CCCCCC;
+    content: '';
+    position: absolute;
+    left: -15px;
+    height: calc(100% + 2px);
+}
+
+
 
 /* SupportTab - Legend ============================================================================================== */
 
@@ -135,9 +158,7 @@
     cursor: auto !important;
 }
 
-.block-version,
-.block_support,
-.block_contact {
+.block-version {
     padding:10px;
     background: #F8F8F8;
     float:left;
@@ -292,6 +313,10 @@
 
 /* Identity - Content =============================================================================================== */
 
+.postnl-config-page .entry-edit.form-inline {
+    padding-top: 80px;
+}
+
 .postnl-config-page .admin__scope-old:before {
     background-image: url(../images/logo_tig.png) !important;
     background-repeat: no-repeat;
@@ -301,18 +326,19 @@
     float:right;
     height: 50px;
     background-size: auto 50px;
-    margin-right: 15px;
-
 }
 
 .postnl-config-page #container:before  {
     background-image: url(../images/postnl_logo.png) !important;
     background-repeat: no-repeat;
-    content: ' ';
-
-    float:left;
+    content: 'PostNL';
+    text-indent: 70px;
+    float: left;
     height: 50px;
     background-size: auto 50px;
     width: 295px;
+    line-height: 49px;
+    font-weight: bold;
+    font-size: 18px;
 }
 
