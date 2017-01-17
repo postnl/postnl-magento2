@@ -34,7 +34,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 -->
@@ -53,13 +53,24 @@
             </tig_postnl>
         </carriers>
         <tig_postnl>
+            <webshop_printer>
+                <label_size>A4</label_size>
+            </webshop_printer>
+            <webshop_shipping>
+                <cutoff_time>18:00:00</cutoff_time>
+                <shipment_days>0,1,2,3,4,5,6</shipment_days>
+            </webshop_shipping>
             <productoptions>
-                <supported_options>3085</supported_options>
+                <supported_options>3085,3189,3089,3389,3096,3090,3385,3534,3544,3533,3543,4950,4952,2928</supported_options>
             </productoptions>
             <shippingoptions>
-                <max_deliverydays>5</max_deliverydays>
+                <deliverydays_active>1</deliverydays_active>
+                <pakjegemak_active>1</pakjegemak_active>
+                <eveningdelivery_active>1</eveningdelivery_active>
+                <max_deliverydays>7</max_deliverydays>
                 <eveningdelivery_fee>2</eveningdelivery_fee>
                 <sundaydelivery_fee>2</sundaydelivery_fee>
+                <send_track_and_trace_email>1</send_track_and_trace_email>
             </shippingoptions>
             <endpoints>
                 <cif_base_url>https://service.postnl.com/CIF/</cif_base_url>

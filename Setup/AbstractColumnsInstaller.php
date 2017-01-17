@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Setup;
@@ -70,11 +70,13 @@ abstract class AbstractColumnsInstaller implements InstallSchemaInterface
     /**
      * @var AdapterInterface
      */
+    // @codingStandardsIgnoreLine
     protected $connection;
 
     /**
      * @var null
      */
+    // @codingStandardsIgnoreLine
     protected $columnsList = null;
 
     /**
@@ -85,6 +87,7 @@ abstract class AbstractColumnsInstaller implements InstallSchemaInterface
      *
      * @throws LocalizedException
      */
+    // @codingStandardsIgnoreLine
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         $this->setup = $setup;
@@ -112,7 +115,8 @@ abstract class AbstractColumnsInstaller implements InstallSchemaInterface
         /** @var array $arguments */
         $arguments = $this->$methodName();
 
-        $this->setup->getConnection()->addColumn(
+        $connection = $this->setup->getConnection();
+        $connection->addColumn(
             $this->table,
             $columnName,
             $arguments
@@ -152,6 +156,7 @@ abstract class AbstractColumnsInstaller implements InstallSchemaInterface
      *
      * @return mixed|string
      */
+    // @codingStandardsIgnoreLine
     protected function getMethodName($columnName)
     {
         $methodName = str_replace('_', ' ', $columnName);

@@ -33,50 +33,54 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
+namespace TIG\PostNL\Unit\Model;
 
-/**
- * Class WebshopSettings
- *
- * @package TIG\PostNL\Config\Provider
- */
-class WebshopSettings extends AbstractConfigProvider
+use TIG\PostNL\Model\ShipmentLabel;
+use TIG\PostNL\Test\TestCase;
+
+class ShipmentLabelTest extends TestCase
 {
-    const XPATH_WEBSHOP_SETTINGS_LABEL_SIZE   = 'tig_postnl/webshopsettings_printer/label_size';
-    const XPATH_WEBSHOP_SETTINGS_CUTOFFTIME   = 'tig_postnl/webshopsettings_shipping/cutoff_time';
-    const XPATH_WEBSHOP_SETTINGS_SHIPMENTDAYS = 'tig_postnl/webshopsettings_shipping/shipment_days';
-
-    /** @var string  */
-    private $defaultCutoffTime = '23:59:59';
-
     /**
-     * @return mixed
+     * @param array $args
+     *
+     * @return object
      */
-    public function getLabelSize()
+    public function getInstance(array $args = [])
     {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_LABEL_SIZE);
+        return $this->objectManager->getObject(ShipmentLabel::class, $args);
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getCutOffTime()
+    public function getIdentitiesProvider()
     {
-        if (!$this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_CUTOFFTIME)) {
-            return $this->defaultCutoffTime;
-        }
-
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_CUTOFFTIME);
+        return [
+            [1],
+            [2],
+            [3],
+            [4],
+            [5],
+        ];
     }
 
     /**
-     * @return mixed
+     * @param $id
+     *
+     * @dataProvider getIdentitiesProvider
      */
-    public function getShipmentDays()
+    public function testGetIdentities($id)
     {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SETTINGS_SHIPMENTDAYS);
+        $instance = $this->getInstance();
+        $instance->setId($id);
+
+        $result = $instance->getIdentities();
+        $expected = ShipmentLabel::CACHE_TAG . '_' . $id;
+
+        $this->assertInternalType('array', $result);
+        $this->assertEquals([$expected], $result);
     }
 }

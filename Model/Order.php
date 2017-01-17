@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Model;
@@ -41,6 +41,11 @@ namespace TIG\PostNL\Model;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
 
+/**
+ * @method string getDeliveryDate()
+ * @method string getIsPakjegemak()
+ * @method string getPgOrderAddressId()
+ */
 class Order extends AbstractModel implements OrderInterface, IdentityInterface
 {
     const CACHE_TAG = 'tig_postnl_order';

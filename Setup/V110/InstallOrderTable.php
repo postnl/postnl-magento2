@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Setup\V110;
@@ -60,7 +60,15 @@ class InstallOrderTable extends AbstractTableInstaller
         $this->addForeignKey('quote', 'entity_id', static::TABLE_NAME, 'quote_id');
 
         $this->addText('type', 'Type', 32);
+
+        $this->addTimestamp('delivery_date', 'Delivery date');
+        $this->addText('expected_delivery_time_start', 'Expected delivery time start', 16);
+        $this->addText('expected_delivery_time_end', 'Expected delivery time end', 16);
+
         $this->addText('is_pakjegemak', 'Is Pakjegemak', 1);
+        $this->addInt('pg_order_address_id', 'Pakjegemak Order Address ID', true, true);
+        $this->addText('pg_location_code', 'PakjeGemak Location Code', 32);
+        $this->addText('pg_retail_network_id', 'PakjeGemak Retail Netwerok ID', 32);
 
         $this->addTimestamp('confirmed_at', 'Confirmed at');
         $this->addTimestamp('created_at', 'Created at');

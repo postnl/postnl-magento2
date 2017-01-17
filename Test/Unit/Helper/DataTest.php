@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Test\Unit\Helper;
@@ -41,6 +41,7 @@ namespace TIG\PostNL\Test\Unit\Helper;
 use Magento\Sales\Model\Order;
 use TIG\PostNL\Helper\Data as Helper;
 use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
 class DataTest extends TestCase
 {
@@ -70,5 +71,26 @@ class DataTest extends TestCase
         $result = $this->getInstance()->isPostNLOrder($order);
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testGetAllowedDeliveryOptions()
+    {
+        $result = $this->getInstance()->getAllowedDeliveryOptions();
+        $this->assertTrue(is_array($result));
+    }
+
+    public function testGetAllowedDeliveryOptionsHasPakjeGemak()
+    {
+        $shippingOptionsConfigurationMock = $this->getFakeMock(ShippingOptions::class)->getMock();
+        $isPakjeGemakActiveExpects = $shippingOptionsConfigurationMock->expects($this->once());
+        $isPakjeGemakActiveExpects->method('isPakjegemakActive');
+        $isPakjeGemakActiveExpects->willReturn(true);
+
+        $instance = $this->getInstance([
+            'shippingOptions' => $shippingOptionsConfigurationMock
+        ]);
+
+        $result = $instance->getAllowedDeliveryOptions();
+        $this->assertContains('PG', $result);
     }
 }

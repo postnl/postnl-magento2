@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Setup\V110;
@@ -52,8 +52,8 @@ class InstallShipmentBarcodeTable extends AbstractTableInstaller
     {
         $this->addEntityId();
 
-        $this->addInt('shipment_id', 'Shipment ID', true, true);
-        $this->addForeignKey('tig_postnl_shipment', 'entity_id', static::TABLE_NAME, 'entity_id');
+        $this->addInt('parent_id', 'Parent ID', true, true);
+        $this->addForeignKey('tig_postnl_shipment', 'entity_id', static::TABLE_NAME, 'parent_id');
 
         $this->addText('type', 'Barcode Type', 16);
         $this->addInt('number', 'Barcode Number');

@@ -32,17 +32,33 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['Magento_Checkout/js/view/shipping'], function(Shipping) {
+define([
+    'Magento_Checkout/js/view/shipping',
+    'TIG_PostNL/js/Helper/State'
+], function (
+    Shipping,
+    State
+) {
     return Shipping.extend({
-        canUsePostnlDeliveryOptions: function (carrier_code) {
-            if (carrier_code == 'tig_postnl') {
-                return true;
+        canUseDeliveryOption: function () {
+            return window.checkoutConfig.shipping.postnl.shippingoptions_active == 1;
+        },
+
+        canUsePostnlDeliveryOptions: function (method) {
+            if (!this.canUseDeliveryOption()) {
+                return false;
             }
 
-            return false;
+            var result = method.carrier_code == 'tig_postnl';
+
+            if (result) {
+                State.method(method);
+            }
+
+            return result;
         }
     });
 });

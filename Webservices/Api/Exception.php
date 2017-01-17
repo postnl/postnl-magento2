@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Webservices\Api;
@@ -61,12 +61,10 @@ class Exception extends PostNLException
      *
      * @var array
      */
-    private $errorNumbers = [];
-
-    /**
-     * @var array
-     */
-    private $messages = [];
+    private $data = [
+        'errorNumbers' => [],
+        'messages' => []
+    ];
 
     /**
      * Set $_requestXml to specified value
@@ -104,7 +102,7 @@ class Exception extends PostNLException
      */
     public function setErrorNumbers($errorNumbers)
     {
-        $this->errorNumbers = $errorNumbers;
+        $this->data['errorNumbers'] = $errorNumbers;
 
         return $this;
     }
@@ -136,7 +134,7 @@ class Exception extends PostNLException
      */
     public function getErrorNumbers()
     {
-        return $this->errorNumbers;
+        return $this->data['errorNumbers'];
     }
 
     /**
@@ -172,17 +170,15 @@ class Exception extends PostNLException
      * @param string $type
      *
      * @return array
-     *
-     * @todo refactor
      */
     public function getMessages($type = '')
     {
         if ('' !== $type) {
-            return isset($this->messages[$type]) ? $this->messages[$type] : [];
+            return isset($this->data['messages'][$type]) ? $this->data['messages'][$type] : [];
         }
 
         $arrRes = [];
-        foreach ($this->messages as $messageType => $messages) {
+        foreach ($this->data['messages'] as $messageType => $messages) {
             $arrRes = array_merge($arrRes, $messages);
         }
 
@@ -198,9 +194,9 @@ class Exception extends PostNLException
     public function setMessage($message, $append = false)
     {
         if ($append) {
-            $message = $this->message . $message;
+            $message = $this->data['message'] . $message;
         }
 
-        $this->message = $message;
+        $this->data['message'] = $message;
     }
 }

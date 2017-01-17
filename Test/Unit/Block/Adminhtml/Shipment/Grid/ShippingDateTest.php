@@ -33,7 +33,7 @@
  * versions in the future. If you wish to customize this module for your
  * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2016 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Shipment\Grid;
@@ -42,20 +42,11 @@ use \Magento\Framework\Phrase;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use TIG\PostNL\Block\Adminhtml\Shipment\Grid\ShippingDate;
-use TIG\PostNL\Model\Shipment as PostNLShipment;
 use TIG\PostNL\Test\TestCase;
 
 class ShippingDateTest extends TestCase
 {
     protected $instanceClass = ShippingDate::class;
-
-    public function loadModelProvider()
-    {
-        return [
-            'id_does_not_exists' => [99, false],
-            'exists_with_shipping_date' => [1, true],
-        ];
-    }
 
     public function getInstance(array $args = [])
     {
@@ -72,35 +63,13 @@ class ShippingDateTest extends TestCase
         return parent::getInstance($args);
     }
 
-    /**
-     * @param $entity_id
-     * @param $expected
-     *
-     * @dataProvider loadModelProvider
-     */
-    public function testLoadModel($entity_id, $expected)
-    {
-        $instance = $this->getInstance();
-        $modelMock = $this->getFakeMock(PostNLShipment::class)->setMethods(['getConfirmedAt'])->getMock();
-
-        $this->setProperty('models', [1 => $modelMock], $instance);
-        $result = $this->invokeArgs('loadModel', [$entity_id], $instance);
-
-        $this->assertEquals($expected, $result);
-
-        if ($expected) {
-            $model = $this->getProperty('model', $instance);
-            $this->assertInstanceOf(PostNLShipment::class, $model);
-        }
-    }
-
     public function formatShippingDateProvider()
     {
         return [
             ['2016-11-19', 0, 'Today'],
             ['2016-11-19', -10, '19 Nov. 2016'],
             ['2016-11-19', 10, 'In 10 days'],
-            ['2016-11-19', 1, 'In 1 day'],
+            ['2016-11-19', 1, 'Tomorrow'],
         ];
     }
 
@@ -162,16 +131,7 @@ class ShippingDateTest extends TestCase
      */
     public function testGetShipAt($shipAt)
     {
-        $instance = $this->getInstance();
-        $modelMock = $this->getFakeMock(PostNLShipment::class)->setMethods(['getShipAt'])->getMock();
-
-        $shipAtExpects = $modelMock->expects($this->once());
-        $shipAtExpects->method('getShipAt');
-        $shipAtExpects->willReturn($shipAt);
-
-        $this->setProperty('model', $modelMock, $instance);
-
-        $result = $this->invokeArgs('getShipAt', [$shipAt], $instance);
+        $result = $this->invokeArgs('getShipAt', [['tig_postnl_ship_at' => $shipAt]]);
 
         $this->assertEquals($shipAt, $result);
     }
