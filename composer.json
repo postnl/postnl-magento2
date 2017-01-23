@@ -1,7 +1,7 @@
 {
     "name": "tig/postnl",
     "description": "TIG Magento 2 PostNL extension",
-    "version": "v1.3.1",
+    "version": "v1.1.0",
     "require": {
         "php": "~7.0.0",
         "magento/framework": "100.*"

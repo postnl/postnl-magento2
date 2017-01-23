@@ -3,6 +3,7 @@
 set -e
 set -x
 
+CACHE_DIR="~/.download_cache/"
 BUILD_DIR="/tmp/magento2"
 
 if [ -z $TRAVIS_BUILD_DIR ]; then TRAVIS_BUILD_DIR=`pwd`; fi
@@ -20,9 +21,12 @@ MYSQLPASS=""
 if [ ! -z $MAGENTO_DB_PASS ]; then MYSQLPASS="-p${MAGENTO_DB_PASS}"; fi
 
 mkdir -p ${BUILD_DIR}
+mkdir -p ${CACHE_DIR}
 
 composer global require "squizlabs/php_codesniffer=*"
-composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition=${MAGENTO_VERSION} ${BUILD_DIR}
+#wget -qO- "http://magento.mirror.hypernode.com/releases/magento-${MAGENTO_VERSION}.tar.gz" | tar xvz -C /tmp/magento2
+wget "http://magento.mirror.hypernode.com/releases/magento-${MAGENTO_VERSION}.tar.gz" -P $CACHE_DIR
+tar xvz "magento-${MAGENTO_VERSION}.tar.gz" -C /tmp/magento2
 
 find Test/Fixtures -type f -print0 | xargs -0 -n 1 sed -i -e "s/MAGENTO_DB_HOST/${MAGENTO_DB_HOST}/g"
 find Test/Fixtures -type f -print0 | xargs -0 -n 1 sed -i -e "s/MAGENTO_DB_PORT/${MAGENTO_DB_PORT}/g"
