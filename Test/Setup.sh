@@ -17,6 +17,8 @@ if [ -z $MAGENTO_DB_NAME ]; then
     MAGENTO_DB_NAME="magento";
 fi
 
+CACHE_FILE="${CACHE_DIR}magento-${MAGENTO_VERSION}.tar.gz"
+
 MYSQLPASS=""
 if [ ! -z $MAGENTO_DB_PASS ]; then MYSQLPASS="-p${MAGENTO_DB_PASS}"; fi
 
@@ -24,9 +26,12 @@ mkdir -p ${BUILD_DIR}
 mkdir -p ${CACHE_DIR}
 
 composer global require "squizlabs/php_codesniffer=*"
-#wget -qO- "http://magento.mirror.hypernode.com/releases/magento-${MAGENTO_VERSION}.tar.gz" | tar xvz -C /tmp/magento2
-wget "http://magento.mirror.hypernode.com/releases/magento-${MAGENTO_VERSION}.tar.gz" -P $CACHE_DIR
-tar xvz "magento-${MAGENTO_VERSION}.tar.gz" -C /tmp/magento2
+
+if [ ! -f "$CACHE_FILE" ]; then
+    wget "http://magento.mirror.hypernode.com/releases/magento-${MAGENTO_VERSION}.tar.gz" -O $CACHE_FILE
+fi
+
+tar xzf $CACHE_FILE -C /tmp/magento2
 
 find Test/Fixtures -type f -print0 | xargs -0 -n 1 sed -i -e "s/MAGENTO_DB_HOST/${MAGENTO_DB_HOST}/g"
 find Test/Fixtures -type f -print0 | xargs -0 -n 1 sed -i -e "s/MAGENTO_DB_PORT/${MAGENTO_DB_PORT}/g"
