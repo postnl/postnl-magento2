@@ -169,7 +169,7 @@ class ExceptionHandler
         /**
          * Get all error messages.
          */
-        $errors = $errorResponse->getElementsByTagNameNS(static::CIF_ERROR_NAMESPACE, 'ErrorMsg');
+        $errors = $errorResponse->getElementsByTagNameNS(static::CIF_ERROR_NAMESPACE, '*');
         if (!$errors) {
             return;
         }
