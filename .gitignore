@@ -3,3 +3,4 @@ node_modules/
 Controller/Test/
 Controller/Adminhtml/Test/
 Build/
+build

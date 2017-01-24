@@ -64,15 +64,10 @@
     <!-- Code coverage filters -->
     <filter>
         <whitelist>
-            <directory suffix=".php">../../../app/code/Magento</directory>
-            <directory suffix=".php">../../../lib/internal/Magento</directory>
-            <directory suffix=".php">../../../update/app/code</directory>
+            <directory suffix=".php">../../../app/code/TIG/PostNL</directory>
             <exclude>
                 <directory>../../../app/code/*/*/Test</directory>
-                <directory>../../../lib/internal/*/*/Test</directory>
-                <directory>../../../lib/internal/*/*/*/Test</directory>
-                <directory>../../../setup/src/*/*/Test</directory>
-                <directory>../../../update/app/code/*/*/Test</directory>
+                <directory>../../../app/code/*/*/vendor</directory>
             </exclude>
         </whitelist>
     </filter>
@@ -117,4 +112,7 @@
         <listener class="Magento\TestFramework\Event\PhpUnit"/>
         <listener class="Magento\TestFramework\ErrorLog\Listener"/>
     </listeners>
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover-integration.xml"/>
+    </logging>
 </phpunit>
