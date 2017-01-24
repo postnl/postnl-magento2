@@ -3,7 +3,7 @@
 set -e
 set -x
 
-CACHE_DIR="~/.download_cache/"
+CACHE_DIR="${HOME}/.download_cache/"
 BUILD_DIR="/tmp/magento2"
 
 if [ -z $TRAVIS_BUILD_DIR ]; then TRAVIS_BUILD_DIR=`pwd`; fi
@@ -24,8 +24,6 @@ if [ ! -z $MAGENTO_DB_PASS ]; then MYSQLPASS="-p${MAGENTO_DB_PASS}"; fi
 
 mkdir -p ${BUILD_DIR}
 mkdir -p ${CACHE_DIR}
-
-composer global require "squizlabs/php_codesniffer=*"
 
 if [ ! -f "$CACHE_FILE" ]; then
     wget "http://magento.mirror.hypernode.com/releases/magento-${MAGENTO_VERSION}.tar.gz" -O $CACHE_FILE
@@ -48,6 +46,10 @@ zip --exclude=node_modules/* --exclude=vendor/* --exclude=.git/* -r build.zip .
 
 REPOSITORY_CONFIG="{\"type\": \"package\",\"package\": { \"name\": \"tig/postnl\", \"version\": \"master\", \"dist\": {\"type\": \"zip\",\"url\": \"${TRAVIS_BUILD_DIR}/build.zip\",\"reference\": \"master\" }, \"autoload\": {\"files\": [\"registration.php\"],\"psr-4\": {\"TIG\\\\PostNL\\\\\": \"\"}}}}"
 
+if [ -d "$HOME/.cache/composer/files/tig/" ]; then
+    rm -rf $HOME/.cache/composer/files/tig/;
+fi
+
 ( cd "${BUILD_DIR}/" && composer config minimum-stability dev )
 ( cd "${BUILD_DIR}/" && composer config repositories.postnl "${REPOSITORY_CONFIG}" )
 ( cd "${BUILD_DIR}/" && composer require tig/postnl )
@@ -57,6 +59,6 @@ mysql -u${MAGENTO_DB_USER} ${MYSQLPASS} -h${MAGENTO_DB_HOST} -P${MAGENTO_DB_PORT
 
 chmod 777 "${BUILD_DIR}/var/"
 chmod 777 "${BUILD_DIR}/pub/"
-chmod 777 "${BUILD_DIR}/vendor/bin/phpunit"
+chmod 777 "${BUILD_DIR}/vendor/phpunit/phpunit/phpunit"
 
 ( cd ${BUILD_DIR} && php -d memory_limit=2048M bin/magento setup:upgrade )
