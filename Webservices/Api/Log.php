@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -26,23 +25,61 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
+ * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
+ * needs please contact servicedesk@totalinternetgroup.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.tig.nl)
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="1.1.0" stability="beta">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Directory"/>
-        </sequence>
-    </module>
-</config>
+namespace TIG\PostNL\Webservices\Api;
+
+use TIG\PostNL\Helper\Data as Helper;
+use TIG\PostNL\Logging\Log as Logger;
+use Zend\Soap\Client;
+
+class Log
+{
+    /**
+     * @var Logger
+     */
+    private $log;
+    /**
+     * @var Helper
+     */
+    private $helper;
+
+    /**
+     * @param Logger $log
+     * @param Helper $helper
+     */
+    public function __construct(
+        Logger $log,
+        Helper $helper
+    ) {
+        $this->log = $log;
+        $this->helper = $helper;
+    }
+
+    /**
+     * @param Client $client
+     */
+    public function request(Client $client)
+    {
+        $message = '<<< REQUEST XML >>>' . PHP_EOL;
+        $lastRequest = $client->getLastRequest();
+        $message .= $this->helper->formatXml($lastRequest);
+
+        $this->log->debug($message);
+
+        $message = '<<< RESPONSE XML >>>' . PHP_EOL;
+        $lastResponse = $client->getLastResponse();
+        $message .= $this->helper->formatXml($lastResponse);
+
+        $this->log->debug($message);
+    }
+}

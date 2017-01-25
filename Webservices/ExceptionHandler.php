@@ -38,6 +38,7 @@
  */
 namespace TIG\PostNL\Webservices;
 
+use TIG\PostNL\Helper\Data as Helper;
 use TIG\PostNL\Logging\Log;
 use Zend\Soap\Client;
 
@@ -46,7 +47,7 @@ class ExceptionHandler
     /**
      * CIF error namespace.
      */
-    const CIF_ERROR_NAMESPACE = 'http://postnl.nl/cif/services/common/';
+    const ERROR_NAMESPACE = 'http://postnl.nl/cif/services/common/';
 
     /**
      * The error number CIF uses for the 'shipment not found' error.
@@ -54,190 +55,160 @@ class ExceptionHandler
     const SHIPMENT_NOT_FOUND_ERROR_NUMBER = 13;
 
     /**
-     * @var
+     * @var Log
      */
     private $log;
 
     /**
-     * @param Log $log
+     * @var Helper
+     */
+    private $helper;
+
+    /**
+     * @var \SoapFault
+     */
+    private $soapFault;
+
+    /**
+     * @var \DomDocument|null
+     */
+    private $responseXml;
+
+    /**
+     * @var Api\Exception
+     */
+    private $exception;
+
+    /**
+     * @var array
+     */
+    private $errors = [];
+
+    /**
+     * @param Log    $log
+     * @param Helper $helper
      */
     public function __construct(
-        Log $log
+        Log $log,
+        Helper $helper
     ) {
         $this->log = $log;
+        $this->helper = $helper;
     }
 
     /**
-     * @param \SoapFault  $soapFault
-     * @param Client      $client
+     * @param \SoapFault $soapFault
+     * @param Client     $client
      *
-     * @return $this
      * @throws Api\Exception
      */
     public function handle(\SoapFault $soapFault, Client $client = null)
     {
-        // @codingStandardsIgnoreLine
-        $exception = new Api\Exception($soapFault->getMessage(), null, $soapFault);
+        $this->soapFault = $soapFault;
+        $this->prepareException($client);
 
-        $responseXML = $this->handleSoapData($client, $exception);
-        $logException = $this->handleResponseXml($responseXML, $exception);
-
-        if ($logException) {
-            /**
-             * Log the exception and throw it.
-             */
-            $this->log->critical($exception);
-        }
-
-        throw $exception;
-    }
-
-    /**
-     * @param $xml
-     *
-     * @return string
-     */
-    private function formatXml($xml)
-    {
-        if (empty($xml)) {
-            return '';
-        }
-
-        // @codingStandardsIgnoreLine
-        $domDocument = new \DOMDocument();
-        $domDocument->loadXML($xml);
-        $domDocument->formatOutput = true;
-
-        return $domDocument->saveXML();
-    }
-
-    /**
-     * @param Api\Exception $exception
-     * @param \DOMDocument  $errorResponse
-     *
-     * @return bool
-     */
-    private function addErrorNumbersToException(Api\Exception $exception, \DOMDocument $errorResponse)
-    {
-        $errorNumbers = $errorResponse->getElementsByTagNameNS(self::CIF_ERROR_NAMESPACE, '*');
-
-        if (!$errorNumbers) {
-            return false;
-        }
-
-        $logException = true;
-        foreach ($errorNumbers as $errorNumber) {
-            $result = $this->checkErrorNumber($exception, $errorNumber);
-
-            $logException = !$result ? false : $logException;
-        }
-
-        return $logException;
-    }
-
-    /**
-     * @param Api\Exception $exception
-     * @param               $errorNumber
-     *
-     * @return bool
-     */
-    private function checkErrorNumber(Api\Exception $exception, $errorNumber)
-    {
-        $logException = true;
-
-        /**
-         * Error number 13 means that the shipment was not found by PostNL. This error is very common and
-         * can be completely valid. To prevent the log files from filling up extremely quickly, we do not
-         * log this error.
-         */
-        $value = $errorNumber->nodeValue;
-        if ($value == self::SHIPMENT_NOT_FOUND_ERROR_NUMBER) {
-            $logException = false;
-        }
-
-        $exception->addErrorNumber($value);
-
-        return $logException;
-    }
-
-    /**
-     * @param $errorResponse
-     * @param $exception
-     */
-    private function parseErrors(\DOMDocument $errorResponse, Api\Exception $exception)
-    {
-        /**
-         * Get all error messages.
-         */
-        $errors = $errorResponse->getElementsByTagNameNS(static::CIF_ERROR_NAMESPACE, '*');
-        if (!$errors) {
+        if ($this->hasValidErrorsOnly()) {
             return;
         }
 
-        $message = '';
-        foreach ($errors as $error) {
-            $message .= $error->nodeValue . PHP_EOL;
+        if ($this->hasCifException()) {
+            $this->addCifErrorsToException();
         }
 
-        /**
-         * Update the exception.
-         */
-        $exception->setMessage($message);
+        $this->log->critical($this->exception->getMessage());
+
+        // @codingStandardsIgnoreLine
+        throw $this->exception;
     }
 
     /**
-     * @param $responseXML
-     * @param $exception
-     *
      * @return bool
      */
-    private function handleResponseXml($responseXML, $exception)
+    private function hasCifException()
     {
-        /**
-         * If we got a response, parse it for specific error messages and add these to the exception.
-         */
-        if (empty($responseXML)) {
-            return true;
-        }
+        $message = $this->soapFault->getMessage();
 
-        /**
-         * If we received a response, parse it for errors and create an appropriate exception
-         */
-        // @codingStandardsIgnoreLine
-        $errorResponse = new \DOMDocument();
-        $errorResponse->loadXML($responseXML);
-        $this->parseErrors($errorResponse, $exception);
-
-        /**
-         * Parse any CIF error numbers we may have received.
-         */
-        return $this->addErrorNumbersToException($exception, $errorResponse);
+        return $message === 'Check CIFException in the detail section';
     }
 
     /**
-     * @param Client $client
-     * @param        $exception
-     *
-     * @return string
+     * Retrieve the errors and add them to the exception
      */
-    private function handleSoapData(Client $client, Api\Exception $exception)
+    private function addCifErrorsToException()
     {
-        /**
-         * Get the request and response XML data
-         */
-        if (!$client) {
-            return '';
+        foreach ($this->getErrorsFromResponse() as $error) {
+            $this->exception->addError($error['number'] . ': ' . $error['message']);
+        }
+    }
+
+    /**
+     * @return Api\Exception
+     */
+    private function prepareException(Client $client)
+    {
+        // @codingStandardsIgnoreLine
+        $this->exception = new Api\Exception($this->soapFault->getMessage(), null, $this->soapFault);
+
+        if ($lastRequestXml = $client->getLastRequest()) {
+            $this->exception->setRequestXml($this->helper->formatXml($lastRequestXml));
         }
 
-        $requestXML  = $this->formatXml($client->getLastRequest());
-        $responseXML = $this->formatXml($client->getLastResponse());
+        if ($lastResponseXml = $client->getLastResponse()) {
+            // @codingStandardsIgnoreLine
+            $this->responseXml = new \DOMDocument;
+            $this->responseXml->loadXML($lastResponseXml);
+            $this->exception->setResponseXml($this->helper->formatXml($lastResponseXml));
+        }
+    }
 
-        /**
-         * Add the response and request data to the exception (to be logged later)
-         */
-        $exception->setRequestXml($requestXML);
-        $exception->setResponseXml($responseXML);
+    /**
+     * @return int
+     */
+    private function hasValidErrorsOnly()
+    {
+        $errors = $this->getErrorsFromResponse();
 
-        return $responseXML;
+        $errors = array_filter($errors, function ($error) {
+            return $error['number'] !== static::SHIPMENT_NOT_FOUND_ERROR_NUMBER;
+        });
+
+        return !count($errors);
+    }
+
+    /**
+     * @return array
+     */
+    private function getErrorsFromResponse()
+    {
+        if (!empty($this->errors)) {
+            return $this->errors;
+        }
+
+        $errors = $this->responseXml->getElementsByTagNameNS(static::ERROR_NAMESPACE, 'ExceptionData');
+
+        /** @var \DOMElement $error */
+        foreach ($errors as $error) {
+            $message = $this->getDomElement($error, 'ErrorMsg');
+            $errorNumber = $this->getDomElement($error, 'ErrorNumber');
+
+            $this->errors[] = [
+                'message' => $message,
+                'number' => $errorNumber,
+            ];
+        }
+
+        return $this->errors;
+    }
+
+    /**
+     * @param \DOMElement $element
+     * @param string $tagName
+     *
+     * @return mixed
+     */
+    private function getDomElement($element, $tagName)
+    {
+        // @codingStandardsIgnoreLine
+        return $element->getElementsByTagName($tagName)->item(0)->nodeValue;
     }
 }

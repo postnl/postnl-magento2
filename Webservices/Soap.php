@@ -58,9 +58,14 @@ class Soap
     private $apikey;
 
     /**
-     * @var AbstractEndpoint
+     * @var string
      */
-    private $endpoint;
+    private $location;
+
+    /**
+     * @var string
+     */
+    private $wsdlUrl;
 
     /**
      * @var DefaultConfiguration
@@ -83,11 +88,17 @@ class Soap
     private $soapClient;
 
     /**
+     * @var Api\Log
+     */
+    private $log;
+
+    /**
      * @param AccountConfiguration $accountConfiguration
      * @param DefaultConfiguration $defaultConfiguration
      * @param ExceptionHandler     $exceptionHandler
      * @param Response             $response
      * @param ZendSoapClient       $soapClient
+     * @param Api\Log              $log
      *
      * @throws WebapiException
      */
@@ -96,7 +107,8 @@ class Soap
         DefaultConfiguration $defaultConfiguration,
         ExceptionHandler $exceptionHandler,
         Response $response,
-        ZendSoapClient $soapClient
+        ZendSoapClient $soapClient,
+        Api\Log $log
     ) {
         $this->checkSoapExtensionIsLoaded();
 
@@ -106,6 +118,7 @@ class Soap
         $this->soapClient = $soapClient;
 
         $this->apikey = $accountConfiguration->getApiKey();
+        $this->log = $log;
     }
 
     /**
@@ -118,15 +131,17 @@ class Soap
      */
     public function call(AbstractEndpoint $endpoint, $method, $requestParams)
     {
-        $this->endpoint = $endpoint;
+        $this->parseEndpoint($endpoint);
         $soapClient = $this->getClient();
 
         try {
             $result = $soapClient->__call($method, [$requestParams]);
+            $this->log->request($soapClient);
             $this->response->set($result);
 
             return $this->response->get();
         } catch (\Exception $exception) {
+            $this->log->request($soapClient);
             $this->exceptionHandler->handle($exception, $soapClient);
 
             throw new WebapiException(
@@ -142,7 +157,7 @@ class Soap
      */
     public function getClient()
     {
-        $wsdlUrl    = $this->getWsdlUrl();
+        $wsdlUrl = $this->getWsdlUrl();
 
         $this->soapClient->setWSDL($wsdlUrl);
         $this->soapClient->setOptions($this->getOptionsArray());
@@ -198,7 +213,7 @@ class Soap
     private function getWsdlUrl()
     {
         $prefix = $this->defaultConfiguration->getModusCifBaseUrl();
-        $wsdlUrl = $prefix . $this->endpoint->getWsdlUrl() . '?wsdl';
+        $wsdlUrl = $prefix . $this->wsdlUrl . '?wsdl';
 
         return $wsdlUrl;
     }
@@ -209,7 +224,7 @@ class Soap
     private function getLocation()
     {
         $base = $this->defaultConfiguration->getModusApiBaseUrl();
-        $locationUrl = $base . $this->endpoint->getLocation();
+        $locationUrl = $base . $this->location;
 
         return $locationUrl;
     }
@@ -225,5 +240,14 @@ class Soap
         }
 
         return $this->apikey;
+    }
+
+    /**
+     * @param AbstractEndpoint $endpoint
+     */
+    private function parseEndpoint(AbstractEndpoint $endpoint)
+    {
+        $this->location = $endpoint->getLocation();
+        $this->wsdlUrl  = $endpoint->getWsdlUrl();
     }
 }
