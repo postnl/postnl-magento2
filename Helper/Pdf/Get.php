@@ -36,34 +36,39 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Helper\Labelling;
+namespace TIG\PostNL\Helper\Pdf;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Shipping\Model\Shipping\LabelGenerator;
 
-class GetPdf
+/**
+ * Class Get
+ *
+ * @package TIG\PostNL\Helper\Pdf
+ */
+class Get
 {
-    /**
-     * @var LabelGenerator
-     */
-    private $labelGenerator;
-
     /**
      * @var FileFactory
      */
     private $fileFactory;
 
     /**
-     * @param LabelGenerator $labelGenerator
+     * @var Generate
+     */
+    private $generatePdf;
+
+    /**
      * @param FileFactory    $fileFactory
+     * @param Generate       $generatePdf
      */
     public function __construct(
-        LabelGenerator $labelGenerator,
-        FileFactory $fileFactory
+        FileFactory $fileFactory,
+        Generate $generatePdf
     ) {
-        $this->labelGenerator = $labelGenerator;
         $this->fileFactory = $fileFactory;
+        $this->generatePdf = $generatePdf;
     }
 
     /**
@@ -75,13 +80,11 @@ class GetPdf
      */
     public function get($labels)
     {
-        /** @var \Zend_Pdf $combinedLabels */
-        $combinedLabels = $this->labelGenerator->combineLabelsPdf($labels);
-        $renderedLabels = $combinedLabels->render();
+        $pdfLabel = $this->generatePdf->get($labels);
 
         return $this->fileFactory->create(
             'ShippingLabels.pdf',
-            $renderedLabels,
+            $pdfLabel,
             DirectoryList::VAR_DIR,
             'application/pdf'
         );
