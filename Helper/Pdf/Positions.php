@@ -38,54 +38,59 @@
  */
 namespace TIG\PostNL\Helper\Pdf;
 
-use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\App\Response\Http\FileFactory;
+use TIG\PostNL\Model\ShipmentLabel;
 
 /**
- * Class Get
+ * Class Positions
  *
  * @package TIG\PostNL\Helper\Pdf
  */
-class Get
+class Positions
 {
-    /**
-     * @var FileFactory
-     */
-    private $fileFactory;
+    const LABEL_BORDER_MARGIN = 3.9;
 
     /**
-     * @var Generate
+     * @param int|float $width
+     * @param int|float $height
+     * @param string    $labelType
+     * @param int|null  $position
+     *
+     * @return array
      */
-    private $generatePdf;
+    public function get($width, $height, $labelType = ShipmentLabel::BARCODE_TYPE_LABEL, $position = null)
+    {
+        $positionsResult = [];
 
-    /**
-     * @param FileFactory    $fileFactory
-     * @param Generate       $generatePdf
-     */
-    public function __construct(
-        FileFactory $fileFactory,
-        Generate $generatePdf
-    ) {
-        $this->fileFactory = $fileFactory;
-        $this->generatePdf = $generatePdf;
+        if ($labelType == ShipmentLabel::BARCODE_TYPE_LABEL || $labelType == ShipmentLabel::BARCODE_TYPE_RETURN) {
+            $positionsResult = $this->getFourLabelsPerPage($width, $height);
+        }
+
+        if ($position != null) {
+            $positionsResult = $positionsResult[$position];
+        }
+
+        return $positionsResult;
     }
 
     /**
-     * @param $labels
+     * @param int|float $width
+     * @param int|float $height
      *
-     * @return \Magento\Framework\App\ResponseInterface
-     * @throws \Exception
-     * @throws \Zend_Pdf_Exception
+     * @return array
      */
-    public function get($labels)
+    public function getFourLabelsPerPage($width, $height)
     {
-        $pdfLabel = $this->generatePdf->get($labels);
+        $posX = ($width / 2) + self::LABEL_BORDER_MARGIN;
+        $posY = ($height / 2) + self::LABEL_BORDER_MARGIN;
+        $labelWidth = ($width / 2) - (self::LABEL_BORDER_MARGIN * 2);
 
-        return $this->fileFactory->create(
-            'ShippingLabels.pdf',
-            $pdfLabel,
-            DirectoryList::VAR_DIR,
-            'application/pdf'
-        );
+        $position = [
+            1 => ['x' => $posX,                     'y' => self::LABEL_BORDER_MARGIN, 'w' => $labelWidth],
+            2 => ['x' => $posX,                     'y' => $posY,                     'w' => $labelWidth],
+            3 => ['x' => self::LABEL_BORDER_MARGIN, 'y' => self::LABEL_BORDER_MARGIN, 'w' => $labelWidth],
+            4 => ['x' => self::LABEL_BORDER_MARGIN, 'y' => $posY,                     'w' => $labelWidth]
+        ];
+
+        return $position;
     }
 }

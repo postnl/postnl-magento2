@@ -121,9 +121,9 @@ class MassPrintShippingLabel extends Action
             $this->getLabel($shipment->getId());
         }
 
-        $this->saveLabels->save($this->labels);
+        $labelModels = $this->saveLabels->save($this->labels);
 
-        $pdfFile = $this->getPdf->get($this->labels);
+        $pdfFile = $this->getPdf->get($labelModels);
 
         return $pdfFile;
     }

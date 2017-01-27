@@ -41,6 +41,7 @@ namespace TIG\PostNL\Helper\Pdf;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Io\File;
 use Magento\Shipping\Model\Shipping\LabelGenerator;
+use TIG\PostNL\Model\ShipmentLabel;
 
 /**
  * Class Generate
@@ -49,11 +50,15 @@ use Magento\Shipping\Model\Shipping\LabelGenerator;
  */
 class Generate
 {
+    const MAX_LABELS_PER_PAGE = 4;
+
     const TEMP_LABEL_FOLDER = 'log' . DIRECTORY_SEPARATOR . 'PostNL' . DIRECTORY_SEPARATOR . 'templabel';
     const TEMP_LABEL_FILENAME = 'TIG_PostNL_temp.pdf';
 
-    /** @var array $tempFilesSaved */
-    protected $tempFilesSaved = [];
+    /**
+     * @var File
+     */
+    private $ioFile;
 
     /**
      * @var DirectoryList
@@ -64,80 +69,61 @@ class Generate
      * @var LabelGenerator
      */
     private $labelGenerator;
+
     /**
-     * @var File
+     * @var Positions
      */
-    private $ioFile;
+    private $positions;
+
+    /**
+     * @var \FPDI
+     */
+    private $FPDI;
 
     /**
      * @param File           $ioFile
      * @param DirectoryList  $directoryList
      * @param LabelGenerator $labelGenerator
+     * @param Positions      $positions
+     * @param \FPDI          $FPDI
      */
     public function __construct(
         File $ioFile,
         DirectoryList $directoryList,
-        LabelGenerator $labelGenerator
+        LabelGenerator $labelGenerator,
+        Positions $positions,
+        \FPDI $FPDI
     ) {
+        $this->ioFile = $ioFile;
         $this->directoryList = $directoryList;
         $this->labelGenerator = $labelGenerator;
-        $this->ioFile = $ioFile;
+        $this->positions = $positions;
+        $this->FPDI = $FPDI;
     }
 
+    /**
+     * @param ShipmentLabel[]|ShipmentLabel $labels
+     *
+     * @return string
+     */
     public function get($labels)
     {
         if (!is_array($labels)) {
-            $labels = array($labels);
+            /** @var ShipmentLabel[] $labels */
+            $labels = [$labels];
         }
 
         if (!class_exists('FPDI')) {
             return $this->getZendPdf($labels);
         }
 
-        $pdf = new \FPDI();
-        $pdf->SetTitle('PostNL Shipping Labels');
-        $pdf->SetAuthor('PostNL');
-        $pdf->SetCreator('PostNL');
+        $this->FPDI->SetTitle('PostNL Shipping Labels');
+        $this->FPDI->SetAuthor('PostNL');
+        $this->FPDI->SetCreator('PostNL');
 
-        /** 1 => array(
-        'x' => 152.4,
-        'y' => 3.9,
-        'w' => 141.6,
-        ),
-        2 => array(
-        'x' => 152.4,
-        'y' => 108.9,
-        'w' => 141.6,
-        ),
-        3 => array(
-        'x' => 3.9,
-        'y' => 3.9,
-        'w' => 141.6,
-        ),
-        4 => array(
-        'x' => 3.9,
-        'y' => 108.9,
-        'w' => 141.6,
-        ), */
+        $this->addLabelsToPdf($labels);
 
-        foreach ($labels as $label) {
-            $tempLabelFile = $this->saveTempLabel($label);
-
-            $pdf->AddPage('L', 'A4');
-            $position = [
-                'x' => 152.4,
-                'y' => 3.9,
-                'w' => 141.6,
-            ];
-
-            $pdf->setSourceFile($tempLabelFile);
-            $templateIndex = $pdf->importPage(1);
-            $pdf->useTemplate($templateIndex, $position['x'], $position['y'], $position['w']);
-        }
-
-        $this->deleteTempLabels();
-
-        $labelPdf = $pdf->Output('S', 'PostNL Shipping Labels.pdf');
+        $labelPdf = $this->FPDI->Output('S', 'PostNL Shipping Labels.pdf');
 
         return $labelPdf;
     }
@@ -146,53 +132,86 @@ class Generate
      * FPDI doesn't use namespaces, and therefore may not be loaded properly.
      * This function can be used as fallback since Zend_Pdf is always included with Magento 2.
      *
-     * @param $labels
+     * @param ShipmentLabel[] $labels
      *
      * @return string
      * @throws \Zend_Pdf_Exception
      */
     private function getZendPdf($labels)
     {
+        $labelData = [];
+
+        foreach ($labels as $label) {
+            // @codingStandardsIgnoreLine
+            $labelData[] = base64_decode($label->getLabel());
+        }
+
         /** @var \Zend_Pdf $combinedLabels */
-        $combinedLabels = $this->labelGenerator->combineLabelsPdf($labels);
+        $combinedLabels = $this->labelGenerator->combineLabelsPdf($labelData);
         $renderedLabels = $combinedLabels->render();
 
         return $renderedLabels;
     }
 
     /**
+     * @param $labels
+     */
+    private function addLabelsToPdf($labels)
+    {
+        $labelCounter = $this->managePdfPage();
+
+        foreach ($labels as $label) {
+            // @codingStandardsIgnoreLine
+            $tempLabelFile = $this->saveTempLabel(base64_decode($label->getLabel()));
+
+            $pdfPageWidth = $this->FPDI->GetPageWidth();
+            $pdfPageHeight = $this->FPDI->GetPageHeight();
+            $position = $this->positions->get($pdfPageWidth, $pdfPageHeight, $label->getType(), $labelCounter);
+
+            $this->FPDI->setSourceFile($tempLabelFile);
+            $templateIndex = $this->FPDI->importPage(1);
+            $this->FPDI->useTemplate($templateIndex, $position['x'], $position['y'], $position['w']);
+
+            // @codingStandardsIgnoreLine
+            $this->ioFile->rm($tempLabelFile);
+
+            $labelCounter = $this->managePdfPage($labelCounter);
+        }
+    }
+
+    /**
+     * @param int $labelCount
+     *
+     * @return int
+     */
+    private function managePdfPage($labelCount = self::MAX_LABELS_PER_PAGE)
+    {
+        $labelCount++;
+
+        if ($labelCount > self::MAX_LABELS_PER_PAGE) {
+            $labelCount = 1;
+            $this->FPDI->AddPage('L', 'A4');
+        }
+
+        return $labelCount;
+    }
+
+    /**
      * FPDI expects the labels to be provided as files, therefore temporarily save each label in the var folder.
      *
-     * @param $label
+     * @param string $label
      *
      * @return string
      */
     private function saveTempLabel($label)
     {
         $tempFilePath = $this->directoryList->getPath('var') . DIRECTORY_SEPARATOR . self::TEMP_LABEL_FOLDER;
-        $tempFileName = md5(microtime()) . '-' . time() . '-' . self::TEMP_LABEL_FILENAME;
+        $tempFileName = sha1(microtime()) . '-' . time() . '-' . self::TEMP_LABEL_FILENAME;
         $tempFile = $tempFilePath . DIRECTORY_SEPARATOR . $tempFileName;
 
         $this->ioFile->checkAndCreateFolder($tempFilePath);
         $this->ioFile->write($tempFile, $label);
 
-        $this->tempFilesSaved[] = $tempFile;
-
         return $tempFile;
-    }
-
-    /**
-     * Delete temporary labels from the var folder
-     */
-    private function deleteTempLabels()
-    {
-        array_walk(
-            $this->tempFilesSaved,
-            function ($tempfile, $key) {
-                if ($this->ioFile->fileExists($tempfile)) {
-                    $this->ioFile->rm($tempfile);
-                }
-            }
-        );
     }
 }
