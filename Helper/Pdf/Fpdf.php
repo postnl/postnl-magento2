@@ -49,7 +49,7 @@ class Fpdf extends \FPDI
 {
     const MAX_LABELS_PER_PAGE = 4;
 
-    const PAGE_SIZE_A6 = array(105, 148);
+    const PAGE_SIZE_A6 = [105, 148];
 
     /** @var int $labelCounter */
     private $labelCounter;
