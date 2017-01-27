@@ -50,8 +50,6 @@ use TIG\PostNL\Model\ShipmentLabel;
  */
 class Generate
 {
-    const MAX_LABELS_PER_PAGE = 4;
-
     const TEMP_LABEL_FOLDER = 'log' . DIRECTORY_SEPARATOR . 'PostNL' . DIRECTORY_SEPARATOR . 'templabel';
     const TEMP_LABEL_FILENAME = 'TIG_PostNL_temp.pdf';
 
@@ -69,36 +67,27 @@ class Generate
      * @var LabelGenerator
      */
     private $labelGenerator;
-
-    /**
-     * @var Positions
-     */
-    private $positions;
-
     /**
      * @var \FPDI
      */
-    private $FPDI;
+    private $Fpdf;
 
     /**
      * @param File           $ioFile
      * @param DirectoryList  $directoryList
      * @param LabelGenerator $labelGenerator
-     * @param Positions      $positions
-     * @param \FPDI          $FPDI
+     * @param Fpdf          $Fpdf
      */
     public function __construct(
         File $ioFile,
         DirectoryList $directoryList,
         LabelGenerator $labelGenerator,
-        Positions $positions,
-        \FPDI $FPDI
+        Fpdf $Fpdf
     ) {
         $this->ioFile = $ioFile;
         $this->directoryList = $directoryList;
         $this->labelGenerator = $labelGenerator;
-        $this->positions = $positions;
-        $this->FPDI = $FPDI;
+        $this->Fpdf = $Fpdf;
     }
 
     /**
@@ -117,13 +106,13 @@ class Generate
             return $this->getZendPdf($labels);
         }
 
-        $this->FPDI->SetTitle('PostNL Shipping Labels');
-        $this->FPDI->SetAuthor('PostNL');
-        $this->FPDI->SetCreator('PostNL');
+        $this->Fpdf->SetTitle('PostNL Shipping Labels');
+        $this->Fpdf->SetAuthor('PostNL');
+        $this->Fpdf->SetCreator('PostNL');
 
         $this->addLabelsToPdf($labels);
 
-        $labelPdf = $this->FPDI->Output('S', 'PostNL Shipping Labels.pdf');
+        $labelPdf = $this->Fpdf->Output('S', 'PostNL Shipping Labels.pdf');
 
         return $labelPdf;
     }
@@ -154,46 +143,19 @@ class Generate
     }
 
     /**
-     * @param $labels
+     * @param ShipmentLabel[] $labels
      */
     private function addLabelsToPdf($labels)
     {
-        $labelCounter = $this->managePdfPage();
-
         foreach ($labels as $label) {
             // @codingStandardsIgnoreLine
             $tempLabelFile = $this->saveTempLabel(base64_decode($label->getLabel()));
 
-            $pdfPageWidth = $this->FPDI->GetPageWidth();
-            $pdfPageHeight = $this->FPDI->GetPageHeight();
-            $position = $this->positions->get($pdfPageWidth, $pdfPageHeight, $label->getType(), $labelCounter);
-
-            $this->FPDI->setSourceFile($tempLabelFile);
-            $templateIndex = $this->FPDI->importPage(1);
-            $this->FPDI->useTemplate($templateIndex, $position['x'], $position['y'], $position['w']);
+            $this->Fpdf->addLabel($tempLabelFile, $label->getType());
 
             // @codingStandardsIgnoreLine
             $this->ioFile->rm($tempLabelFile);
-
-            $labelCounter = $this->managePdfPage($labelCounter);
         }
-    }
-
-    /**
-     * @param int $labelCount
-     *
-     * @return int
-     */
-    private function managePdfPage($labelCount = self::MAX_LABELS_PER_PAGE)
-    {
-        $labelCount++;
-
-        if ($labelCount > self::MAX_LABELS_PER_PAGE) {
-            $labelCount = 1;
-            $this->FPDI->AddPage('L', 'A4');
-        }
-
-        return $labelCount;
     }
 
     /**

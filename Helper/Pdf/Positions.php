@@ -65,7 +65,7 @@ class Positions
             $positionsResult = $this->getFourLabelsPerPage($width, $height);
         }
 
-        if ($position != null) {
+        if ($position != null && array_key_exists($position, $positionsResult)) {
             $positionsResult = $positionsResult[$position];
         }
 
@@ -82,7 +82,7 @@ class Positions
     {
         $posX = ($width / 2) + self::LABEL_BORDER_MARGIN;
         $posY = ($height / 2) + self::LABEL_BORDER_MARGIN;
-        $labelWidth = ($width / 2) - (self::LABEL_BORDER_MARGIN * 2);
+        $labelWidth = 141.6;
 
         $position = [
             1 => ['x' => $posX,                     'y' => self::LABEL_BORDER_MARGIN, 'w' => $labelWidth],
