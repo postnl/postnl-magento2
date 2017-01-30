@@ -36,35 +36,27 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Helper\Labelling;
+namespace TIG\PostNL\Test\Unit\Helper\Pdf;
 
-use Magento\Shipping\Model\Shipping\LabelGenerator;
-use TIG\PostNL\Helper\Labelling\GetPdf;
+use TIG\PostNL\Helper\Pdf\Generate;
+use TIG\PostNL\Helper\Pdf\Get;
 use TIG\PostNL\Test\TestCase;
 
-class GetPdfTest extends TestCase
+class GetTest extends TestCase
 {
-    protected $instanceClass = GetPdf::class;
+    protected $instanceClass = Get::class;
 
     public function testGet()
     {
-        $zendPdfMock = $this->getFakeMock(\Zend_Pdf::class);
-        $zendPdfMock->setMethods(['render']);
-        $zendPdfMock = $zendPdfMock->getMock();
+        $generatePdfMock = $this->getFakeMock(Generate::class);
+        $generatePdfMock->setMethods(['get']);
+        $generatePdfMock = $generatePdfMock->getMock();
 
-        $renderExpects = $zendPdfMock->expects($this->once());
-        $renderExpects->method('render');
-        $renderExpects->willReturn('pdf rendered string');
+        $getExpects = $generatePdfMock->expects($this->once());
+        $getExpects->method('get');
 
-        $labelGeneratorMock = $this->getFakeMock(LabelGenerator::class);
-        $labelGeneratorMock->setMethods(['combineLabelsPdf']);
-        $labelGeneratorMock = $labelGeneratorMock->getMock();
 
-        $combineLabelsPdfExpects = $labelGeneratorMock->expects($this->once());
-        $combineLabelsPdfExpects->method('combineLabelsPdf');
-        $combineLabelsPdfExpects->willReturn($zendPdfMock);
-
-        $instance = $this->getInstance(['labelGenerator' => $labelGeneratorMock]);
+        $instance = $this->getInstance(['generatePdf' => $generatePdfMock]);
         $instance->get(array('label1', 'label2'));
     }
 }

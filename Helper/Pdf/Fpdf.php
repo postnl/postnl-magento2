@@ -103,9 +103,7 @@ class Fpdf extends \FPDI
     }
 
     /**
-     * @param int $labelCount
-     *
-     * @return int
+     * Create a new page when necessary
      */
     public function updatePage()
     {
