@@ -53,11 +53,10 @@ class Positions
      * @param int|float $width
      * @param int|float $height
      * @param string    $labelType
-     * @param int|null  $position
      *
      * @return array
      */
-    public function get($width, $height, $labelType = ShipmentLabel::BARCODE_TYPE_LABEL, $position = null)
+    public function get($width, $height, $labelType = ShipmentLabel::BARCODE_TYPE_LABEL)
     {
         $positionsResult = [];
 
@@ -65,11 +64,26 @@ class Positions
             $positionsResult = $this->getFourLabelsPerPage($width, $height);
         }
 
-        if ($position != null && array_key_exists($position, $positionsResult)) {
-            $positionsResult = $positionsResult[$position];
+        return $positionsResult;
+    }
+
+    /**
+     * @param int|float $width
+     * @param int|float $height
+     * @param int       $position
+     * @param string    $labelType
+     *
+     * @return array
+     */
+    public function getForPosition($width, $height, $position, $labelType = ShipmentLabel::BARCODE_TYPE_LABEL)
+    {
+        $foundPosition = $this->get($width, $height, $labelType);
+
+        if (!empty($foundPosition) && isset($foundPosition[1])) {
+            $foundPosition = $foundPosition[$position];
         }
 
-        return $positionsResult;
+        return $foundPosition;
     }
 
     /**

@@ -95,7 +95,8 @@ class Fpdf extends \FPDI
 
         $pdfPageWidth = $this->GetPageWidth();
         $pdfPageHeight = $this->GetPageHeight();
-        $position = $this->positions->get($pdfPageWidth, $pdfPageHeight, $labelType, $this->getLabelCounter());
+        $position = $this->positions
+            ->getForPosition($pdfPageWidth, $pdfPageHeight, $this->getLabelCounter(), $labelType);
 
         $this->setSourceFile($labelFileName);
         $templateIndex = $this->importPage(1);
