@@ -40,7 +40,10 @@ namespace TIG\PostNL\Test\Unit\Helper\Pdf;
 
 use Magento\Framework\Filesystem\Io\File;
 use Magento\Shipping\Model\Shipping\LabelGenerator;
+use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Helper\Pdf\Fpdf;
 use TIG\PostNL\Helper\Pdf\Generate;
+use TIG\PostNL\Helper\Pdf\Positions;
 use TIG\PostNL\Model\ShipmentLabel;
 use TIG\PostNL\Test\TestCase;
 
@@ -49,16 +52,54 @@ class GenerateTest extends TestCase
     protected $instanceClass = Generate::class;
 
     /**
-     * @param array  $pdfs
-     * @param string $mergedPdf
+     * @param $pdfFiles
      *
-     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::pdfLabelsEncoded
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::pdfLabelFiles
      */
-    public function testGetZendPdf($pdfs, $mergedPdf)
+    public function testGet($pdfFiles)
     {
         $shipmentLabels = [];
 
-        foreach ($pdfs as $pdfLabel) {
+        foreach ($pdfFiles as $pdfLabel) {
+            $shipmentLabels[] = $this->getShipmentLabelMock($pdfLabel);
+        }
+
+        if (count($shipmentLabels) == 1) {
+            $shipmentLabels = $shipmentLabels[0];
+        }
+
+        $positionsMock = $this->getFakeMock(Positions::class);
+        $positionsMock->setMethods(null);
+        $positionsMock = $positionsMock->getMock();
+
+        $webshopMock = $this->getFakeMock(Webshop::class);
+        $webshopMock->setMethods(null);
+        $webshopMock = $webshopMock->getMock();
+
+        $fpdfMock = $this->getMockBuilder(Fpdf::class);
+        $fpdfMock->setMethods(['addLabel']);
+        $fpdfMock->setConstructorArgs(['positions' => $positionsMock, 'webshop' => $webshopMock]);
+        $fpdfMock = $fpdfMock->getMock();
+
+        $addLabelExpects = $fpdfMock->expects($this->exactly(count($pdfFiles)));
+        $addLabelExpects->method('addLabel');
+
+        $instance = $this->getInstance(['Fpdf' => $fpdfMock]);
+        $result = $instance->get($shipmentLabels);
+
+        $this->assertInternalType('string', $result);
+    }
+
+    /**
+     * @param array  $pdfFiles
+     *
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::pdfLabelFiles
+     */
+    public function testGetZendPdf($pdfFiles)
+    {
+        $shipmentLabels = [];
+
+        foreach ($pdfFiles as $pdfLabel) {
             $shipmentLabels[] = $this->getShipmentLabelMock($pdfLabel);
         }
 
