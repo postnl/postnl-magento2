@@ -36,69 +36,75 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Fixtures;
+namespace TIG\PostNL\Helper\Pdf;
 
-class DataProvider
+use TIG\PostNL\Model\ShipmentLabel;
+
+/**
+ * Class Positions
+ *
+ * @package TIG\PostNL\Helper\Pdf
+ */
+class Positions
 {
+    const LABEL_BORDER_MARGIN = 3.9;
+
     /**
-     * @return \Generator
+     * @param int|float $width
+     * @param int|float $height
+     * @param string    $labelType
+     *
+     * @return array
      */
-    public function randomWordsProvider()
+    public function get($width, $height, $labelType = ShipmentLabel::BARCODE_TYPE_LABEL)
     {
-        for ($i = 0; $i <= 3; $i++) {
-            yield [uniqid()];
+        $positionsResult = [];
+
+        if ($labelType == ShipmentLabel::BARCODE_TYPE_LABEL || $labelType == ShipmentLabel::BARCODE_TYPE_RETURN) {
+            $positionsResult = $this->getFourLabelsPerPage($width, $height);
         }
+
+        return $positionsResult;
     }
 
     /**
-     * @return string
-     */
-    public function liveStagingProvider()
-    {
-        return [
-            ['0', 'off'],
-            ['1', 'live'],
-            ['2', 'staging'],
-        ];
-    }
-
-    /**
+     * @param int|float $width
+     * @param int|float $height
+     * @param int       $position
+     * @param string    $labelType
+     *
      * @return array
      */
-    public function pdfLabelPaths()
+    public function getForPosition($width, $height, $position, $labelType = ShipmentLabel::BARCODE_TYPE_LABEL)
     {
-        return [
-            [
-                'separate_pdfs' => [
-                    __DIR__ . DIRECTORY_SEPARATOR . 'shippinglabel-1.pdf',
-                    __DIR__ . DIRECTORY_SEPARATOR . 'shippinglabel-2.pdf'
-                ]
-            ],
-            [
-                'separate_pdfs' => [
-                    __DIR__ . DIRECTORY_SEPARATOR . 'shippinglabel-1.pdf'
-                ]
-            ],
-        ];
+        $foundPosition = $this->get($width, $height, $labelType);
+
+        if (!empty($foundPosition) && isset($foundPosition[1])) {
+            $foundPosition = $foundPosition[$position];
+        }
+
+        return $foundPosition;
     }
 
     /**
+     * @param int|float $width
+     * @param int|float $height
+     *
      * @return array
      */
-    public function pdfLabelFiles()
+    public function getFourLabelsPerPage($width, $height)
     {
-        return [
-            [
-                'separate_pdfs' => [
-                    base64_encode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'shippinglabel-1.pdf')),
-                    base64_encode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'shippinglabel-2.pdf'))
-                ]
-            ],
-            [
-                'separate_pdfs' => [
-                    base64_encode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'shippinglabel-1.pdf'))
-                ]
-            ],
+        $posX = ($width / 2) + self::LABEL_BORDER_MARGIN;
+        $posY = ($height / 2) + self::LABEL_BORDER_MARGIN;
+        $labelWidth = 141.6;
+
+        $position = [
+            1 => ['x' => $posX,                     'y' => self::LABEL_BORDER_MARGIN, 'w' => $labelWidth],
+            2 => ['x' => $posX,                     'y' => $posY,                     'w' => $labelWidth],
+            3 => ['x' => self::LABEL_BORDER_MARGIN, 'y' => self::LABEL_BORDER_MARGIN, 'w' => $labelWidth],
+            4 => ['x' => self::LABEL_BORDER_MARGIN, 'y' => $posY,                     'w' => $labelWidth]
         ];
+
+        return $position;
     }
 }

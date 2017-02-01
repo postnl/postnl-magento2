@@ -22,6 +22,7 @@ env:
     - MAGENTO_VERSION=2.1.0
     - MAGENTO_VERSION=2.1.1
     - MAGENTO_VERSION=2.1.2
+    - MAGENTO_VERSION=2.1.4
 
 matrix:
   include:
