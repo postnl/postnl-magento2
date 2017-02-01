@@ -86,13 +86,17 @@ class SaveLabels
 
     /**
      * @param $labels
+     *
+     * @return ShipmentLabel[]
      */
     public function save($labels)
     {
         $shipmentIds = array_keys($labels);
 
         $this->updateStatus($shipmentIds);
-        $this->saveShipmentLabels($labels);
+        $savedLabels = $this->saveShipmentLabels($labels);
+
+        return $savedLabels;
     }
 
     /**
@@ -112,6 +116,7 @@ class SaveLabels
     /**
      * @param $labels
      *
+     * @return array
      * @throws \Exception
      */
     private function saveShipmentLabels($labels)
@@ -119,6 +124,7 @@ class SaveLabels
         /** @var \TIG\PostNL\Model\ResourceModel\ShipmentLabel\Collection $labelModelCollection */
         $labelModelCollection = $this->shipmentLabelCollectionFactory->create();
         $labelModelCollection->load();
+        $savedLabels = [];
 
         foreach ($labels as $shipmentId => $label) {
             /** @var ShipmentLabel $labelModel */
@@ -128,8 +134,11 @@ class SaveLabels
             $labelModel->setType(ShipmentLabel::BARCODE_TYPE_LABEL);
 
             $labelModelCollection->addItem($labelModel);
+            $savedLabels[] = $labelModel;
         }
 
         $labelModelCollection->save();
+
+        return $savedLabels;
     }
 }

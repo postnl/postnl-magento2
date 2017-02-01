@@ -10,25 +10,27 @@
          colors="true"
          bootstrap="Test/Bootstrap.php"
         >
-    <testsuites>
-        <testsuite name="unit">
-            <directory suffix="Test.php">Test/Unit</directory>
-        </testsuite>
-        <testsuite name="functional">
-            <directory suffix="Test.php">Test/Functional</directory>
-        </testsuite>
-    </testsuites>
+    <testsuite name="unit">
+        <directory suffix="Test.php">./Test/Unit</directory>
+    </testsuite>
+
     <php>
         <ini name="date.timezone" value="America/Los_Angeles"/>
         <ini name="xdebug.max_nesting_level" value="200"/>
     </php>
+
     <filter>
         <whitelist addUncoveredFilesFromWhiteList="true">
             <directory suffix=".php">.</directory>
             <exclude>
                 <directory suffix=".php">Test</directory>
+                <directory suffix=".php">vendor</directory>
                 <file>registration.php</file>
             </exclude>
         </whitelist>
     </filter>
+
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover-unit.xml"/>
+    </logging>
 </phpunit>
