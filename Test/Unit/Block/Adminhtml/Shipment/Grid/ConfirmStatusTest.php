@@ -38,9 +38,8 @@
  */
 namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Shipment\Grid;
 
-use TIG\PostNL\Block\Adminhtml\Shipment\Grid\ConfirmStatus;
-use TIG\PostNL\Model\Shipment as PostNLShipment;
 use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Block\Adminhtml\Grid\ConfirmStatus;
 
 class ConfirmStatusTest extends TestCase
 {

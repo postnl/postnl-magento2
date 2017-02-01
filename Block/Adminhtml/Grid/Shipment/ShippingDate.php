@@ -36,8 +36,9 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
+namespace TIG\PostNL\Block\Adminhtml\Grid\Shipment;
 
+use TIG\PostNL\Block\Adminhtml\Grid\AbstractGrid;
 use TIG\PostNL\Model\ShipmentFactory;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
@@ -59,13 +60,12 @@ class ShippingDate extends AbstractGrid
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
-        ShipmentFactory $shipmentFactory,
         TimezoneInterface $timezoneInterface,
         DateTimeFormatterInterface $dateTimeFormatterInterface,
         array $components = [],
         array $data = []
     ) {
-        parent::__construct($context, $uiComponentFactory, $shipmentFactory, $components, $data);
+        parent::__construct($context, $uiComponentFactory, $components, $data);
 
         $this->timezoneInterface = $timezoneInterface;
         $this->dateTimeFormatterInterface = $dateTimeFormatterInterface;

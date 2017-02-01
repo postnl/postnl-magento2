@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,30 +36,61 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
-    <listingToolbar name="listing_top">
-        <massaction name="listing_massaction">
-            <action name="postnl_create_shipments">
-                <argument name="data" xsi:type="array">
-                    <item name="config" xsi:type="array">
-                        <item name="type" xsi:type="string">postnl_create_shipments</item>
-                        <item name="label" xsi:type="string" translate="true">PostNL - Create shipments</item>
-                        <item name="url" xsi:type="url" path="postnl/order/createShipments"/>
-                    </item>
-                </argument>
-            </action>
-        </massaction>
-    </listingToolbar>
-    <columns name="sales_order_columns">
-        <column name="tig_postnl_ship_at" class="TIG\PostNL\Block\Adminhtml\Grid\Order\ShippingDate">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">text</item>
-                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
-                    <item name="label" xsi:type="string" translate="true">Shipping Date</item>
-                </item>
-            </argument>
-        </column>
-    </columns>
-</listing>
+namespace TIG\PostNL\Block\Adminhtml\Grid;
+
+use Magento\Ui\Component\Listing\Columns\Column;
+
+abstract class AbstractGrid extends Column
+{
+    /**
+     * @var array
+     */
+    // @codingStandardsIgnoreLine
+    protected $items = [];
+
+    /**
+     * @param array $dataSource
+     *
+     * @return array
+     */
+    public function prepareDataSource(array $dataSource)
+    {
+        if (isset($dataSource['data']['items'])) {
+            $this->items = $dataSource['data']['items'];
+
+            $this->prepareData();
+            $this->handleItems();
+
+            $dataSource['data']['items'] = $this->items;
+        }
+
+        return $dataSource;
+    }
+
+    /**
+     * Load all the needed data in only 1 query.
+     */
+    public function prepareData()
+    {
+        return null;
+    }
+
+    /**
+     * @return array
+     */
+    // @codingStandardsIgnoreLine
+    protected function handleItems()
+    {
+        foreach ($this->items as $index => $item) {
+            $this->items[$index][$this->getData('name')] = $this->getCellContents($item);
+        }
+    }
+
+    /**
+     * @param object $item
+     *
+     * @return string
+     */
+    // @codingStandardsIgnoreLine
+    abstract protected function getCellContents($item);
+}

@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,30 +36,62 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
-    <listingToolbar name="listing_top">
-        <massaction name="listing_massaction">
-            <action name="postnl_create_shipments">
-                <argument name="data" xsi:type="array">
-                    <item name="config" xsi:type="array">
-                        <item name="type" xsi:type="string">postnl_create_shipments</item>
-                        <item name="label" xsi:type="string" translate="true">PostNL - Create shipments</item>
-                        <item name="url" xsi:type="url" path="postnl/order/createShipments"/>
-                    </item>
-                </argument>
-            </action>
-        </massaction>
-    </listingToolbar>
-    <columns name="sales_order_columns">
-        <column name="tig_postnl_ship_at" class="TIG\PostNL\Block\Adminhtml\Grid\Order\ShippingDate">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">text</item>
-                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
-                    <item name="label" xsi:type="string" translate="true">Shipping Date</item>
-                </item>
-            </argument>
-        </column>
-    </columns>
-</listing>
+namespace TIG\PostNL\Observer;
+
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Sales\Model\ResourceModel\GridInterface;
+use TIG\PostNL\Api\OrderRepositoryInterface;
+use TIG\PostNL\Model\Shipment;
+
+class UpdateOrderGrid implements ObserverInterface
+{
+    /**
+     * @var GridInterface
+     */
+    private $orderGrid;
+
+    /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepositoryInterface;
+
+    /**
+     * @param OrderRepositoryInterface $orderRepositoryInterface
+     * @param GridInterface            $orderGrid
+     */
+    public function __construct(
+        OrderRepositoryInterface $orderRepositoryInterface,
+        GridInterface $orderGrid
+    ) {
+        $this->orderRepositoryInterface = $orderRepositoryInterface;
+        $this->orderGrid = $orderGrid;
+    }
+
+    /**
+     * @param Observer $observer
+     *
+     * @return void
+     */
+    public function execute(Observer $observer)
+    {
+        /** @var Shipment $shipment */
+        $shipment = $observer->getData('data_object');
+
+        $this->updateOrder($shipment);
+        $this->orderGrid->refresh($shipment->getOrderId());
+    }
+
+    /**
+     * @param Shipment $shipment
+     */
+    private function updateOrder(Shipment $shipment)
+    {
+        /** @var \TIG\PostNL\Model\Order $order */
+        $order = $this->orderRepositoryInterface->getById($shipment->getOrderId());
+        $order->setData('ship_at', $shipment->getShipAt());
+
+        $this->orderRepositoryInterface->save($order);
+    }
+}

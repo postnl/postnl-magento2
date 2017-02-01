@@ -36,7 +36,7 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
+namespace TIG\PostNL\Block\Adminhtml\Grid;
 
 class ConfirmStatus extends AbstractGrid
 {
