@@ -80,16 +80,16 @@ class GetLabels
 
          // @codingStandardsIgnoreLine
          // TODO: add a proper warning notifying of a non-postnl shipment
-        if (count($collection) < 0) {
+        if (count($collection) <= 0) {
             return $labels;
         }
 
         /** @var \TIG\PostNL\Model\Shipment $postnlShipment */
-        foreach ($collection as $postnlShipment) {
+        foreach ($collection->getItems() as $postnlShipment) {
             $labels[$postnlShipment->getEntityId()] = $this->generateLabel($postnlShipment);
         }
 
-        $this->checkWarnings($labels);
+        $labels = $this->checkWarnings($labels);
 
         return $labels;
     }
@@ -103,7 +103,11 @@ class GetLabels
     {
         $this->labelling->setParameters($postnlShipment);
         $response = $this->labelling->call();
-        $responseShipments = $response->ResponseShipments;
+        $responseShipments = null;
+
+        if (isset($response->ResponseShipments)) {
+            $responseShipments = $response->ResponseShipments;
+        }
 
         if (!is_object($response) || !isset($responseShipments->ResponseShipment)) {
             return __('Invalid generateLabel response: %1', var_export($response, true));
@@ -118,6 +122,8 @@ class GetLabels
 
     /**
      * @param $labels
+     *
+     * @return array
      */
     private function checkWarnings($labels)
     {
@@ -125,11 +131,13 @@ class GetLabels
          * @codingStandardsIgnoreLine
          * TODO: Notify the user of the warning
          */
-        array_filter(
+        $labels = array_filter(
             $labels,
             function ($value) {
                 return (is_string($value));
             }
         );
+
+        return $labels;
     }
 }

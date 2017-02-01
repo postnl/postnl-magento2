@@ -43,28 +43,36 @@ use TIG\PostNL\Exception as PostNLException;
 class Exception extends PostNLException
 {
     /**
-     * XML sent to CIF by the extension
-     *
-     * @var string The XML string sent to CIF
+     * @var string
      */
-    private $requestXml;
+    private $originalMessage = '';
 
     /**
-     * XML received in response
-     *
-     * @var string The XML string CIF returned
+     * @var string
      */
-    private $responseXml;
+    private $requestXml = null;
 
     /**
-     * Array of error numbers
-     *
+     * @var string
+     */
+    private $responseXml = null;
+
+    /**
      * @var array
      */
-    private $data = [
-        'errorNumbers' => [],
-        'messages' => []
-    ];
+    private $errors = [];
+
+    /**
+     * @param \Magento\Framework\Phrase $message
+     * @param int                       $code
+     * @param null                      $previous
+     */
+    public function __construct($message, $code = 0, $previous = null)
+    {
+        $this->originalMessage = $message;
+
+        parent::__construct($message, $code, $previous);
+    }
 
     /**
      * Set $_requestXml to specified value
@@ -76,8 +84,7 @@ class Exception extends PostNLException
     public function setRequestXml($xml)
     {
         $this->requestXml = $xml;
-
-        return $this;
+        $this->composeMessage();
     }
 
     /**
@@ -89,22 +96,16 @@ class Exception extends PostNLException
     public function setResponseXml($xml)
     {
         $this->responseXml = $xml;
-
-        return $this;
+        $this->composeMessage();
     }
 
     /**
-     * Set the error numbers array
-     *
-     * @param array $errorNumbers
-     *
-     * @return $this
+     * @param $error
      */
-    public function setErrorNumbers($errorNumbers)
+    public function addError($error)
     {
-        $this->data['errorNumbers'] = $errorNumbers;
-
-        return $this;
+        $this->errors[] = $error;
+        $this->composeMessage();
     }
 
     /**
@@ -118,6 +119,14 @@ class Exception extends PostNLException
     }
 
     /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
      * Get $_responseXml
      *
      * @return string
@@ -128,75 +137,49 @@ class Exception extends PostNLException
     }
 
     /**
-     * get the error numbers array
-     *
-     * @return array
+     * Compose the message returned by the Exception.
      */
-    public function getErrorNumbers()
+    private function composeMessage()
     {
-        return $this->data['errorNumbers'];
+        $this->message = $this->originalMessage;
+
+        $this->addErrorsToMessage();
+        $this->addXml('Request XML', $this->requestXml);
+        $this->addXml('Response XML', $this->responseXml);
     }
 
     /**
-     * @param string|int $code
+     * @param $message
      *
-     * @return $this
+     * @return string
      */
-    public function setCode($code)
+    private function addXml($message, $xml)
     {
-        $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * Add an error number to the error numbers array
-     *
-     * @param int $errorNumber
-     *
-     * @return $this
-     */
-    public function addErrorNumber($errorNumber)
-    {
-        $errorNumbers = $this->getErrorNumbers();
-        $errorNumbers[] = $errorNumber;
-
-        $this->setErrorNumbers($errorNumbers);
-
-        return $this;
-    }
-
-    /**
-     * @param string $type
-     *
-     * @return array
-     */
-    public function getMessages($type = '')
-    {
-        if ('' !== $type) {
-            return isset($this->data['messages'][$type]) ? $this->data['messages'][$type] : [];
+        if ($xml === null || $xml == '') {
+            return;
         }
 
-        $arrRes = [];
-        foreach ($this->data['messages'] as $messageType => $messages) {
-            $arrRes = array_merge($arrRes, $messages);
-        }
-
-        return $arrRes;
+        $this->message .= PHP_EOL . PHP_EOL;
+        $this->message .= '<<<< ' . $message . ' >>>>' . PHP_EOL;
+        $this->message .= $this->requestXml;
     }
 
     /**
-     * Set or append a message to existing one
-     *
-     * @param string $message
-     * @param bool $append
+     * If there are any errors, add the to the message.
      */
-    public function setMessage($message, $append = false)
+    private function addErrorsToMessage()
     {
-        if ($append) {
-            $message = $this->data['message'] . $message;
+        $errors = $this->getErrors();
+        if (empty($errors)) {
+            return;
         }
 
-        $this->data['message'] = $message;
+        $this->message .= PHP_EOL . PHP_EOL;
+
+        foreach ($this->getErrors() as $error) {
+            $this->message .= '- ' . $error . PHP_EOL;
+        }
+
+        $this->message = trim($this->message);
     }
 }

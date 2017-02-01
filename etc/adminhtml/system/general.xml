@@ -130,13 +130,13 @@
                 <label>Company</label>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/company</config_path>
             </field>
-            <field id="streetname" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Streetname</label>
-                <config_path>tig_postnl/generalconfiguration_shipping_address/streetname</config_path>
-            </field>
-            <field id="department" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+            <field id="department" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Department</label>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/department</config_path>
+            </field>
+            <field id="streetname" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Streetname</label>
+                <config_path>tig_postnl/generalconfiguration_shipping_address/streetname</config_path>
             </field>
             <field id="housenumber" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Housenumber</label>

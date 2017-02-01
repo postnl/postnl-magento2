@@ -20,10 +20,10 @@ module.exports = function (grunt) {
         exec: {
             phpcs_easy: phpcsCommand + '--severity=10 .',
             phpcs_full: phpcsCommand + ' .',
-            unitTests: 'cd ' + magento2path + ' && vendor/bin/phpunit -c "' + phpunitXmlPath + '"',
+            unitTests: 'cd ' + magento2path + ' && vendor/phpunit/phpunit/phpunit -c "' + phpunitXmlPath + '"',
             integrationTests:
                 'cd ' + magento2path + 'dev/tests/integration &&' +
-                '../../../vendor/bin/phpunit --testsuite "TIG PostNL Integration Tests"',
+                '../../../vendor/phpunit/phpunit/phpunit --testsuite "TIG PostNL Integration Tests"',
             phplint: 'find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l',
             translations_nl: 'mv vendor ../postnl-vendor && ../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/nl_NL.csv && mv ../postnl-vendor vendor',
             translations_en: 'mv vendor ../postnl-vendor && ../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/en_US.csv && mv ../postnl-vendor vendor',

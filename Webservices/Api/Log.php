@@ -36,54 +36,50 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Helper\Labelling;
+namespace TIG\PostNL\Webservices\Api;
 
-use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\App\Response\Http\FileFactory;
-use Magento\Shipping\Model\Shipping\LabelGenerator;
+use TIG\PostNL\Helper\Data as Helper;
+use TIG\PostNL\Logging\Log as Logger;
+use Zend\Soap\Client;
 
-class GetPdf
+class Log
 {
     /**
-     * @var LabelGenerator
+     * @var Logger
      */
-    private $labelGenerator;
+    private $log;
+    /**
+     * @var Helper
+     */
+    private $helper;
 
     /**
-     * @var FileFactory
-     */
-    private $fileFactory;
-
-    /**
-     * @param LabelGenerator $labelGenerator
-     * @param FileFactory    $fileFactory
+     * @param Logger $log
+     * @param Helper $helper
      */
     public function __construct(
-        LabelGenerator $labelGenerator,
-        FileFactory $fileFactory
+        Logger $log,
+        Helper $helper
     ) {
-        $this->labelGenerator = $labelGenerator;
-        $this->fileFactory = $fileFactory;
+        $this->log = $log;
+        $this->helper = $helper;
     }
 
     /**
-     * @param $labels
-     *
-     * @return \Magento\Framework\App\ResponseInterface
-     * @throws \Exception
-     * @throws \Zend_Pdf_Exception
+     * @param Client $client
      */
-    public function get($labels)
+    public function request(Client $client)
     {
-        /** @var \Zend_Pdf $combinedLabels */
-        $combinedLabels = $this->labelGenerator->combineLabelsPdf($labels);
-        $renderedLabels = $combinedLabels->render();
+        $message = '<<< REQUEST XML >>>' . PHP_EOL;
+        $lastRequest = $client->getLastRequest();
+        $message .= $this->helper->formatXml($lastRequest);
 
-        return $this->fileFactory->create(
-            'ShippingLabels.pdf',
-            $renderedLabels,
-            DirectoryList::VAR_DIR,
-            'application/pdf'
-        );
+        $this->log->debug($message);
+
+        $message = '<<< RESPONSE XML >>>' . PHP_EOL;
+        $lastResponse = $client->getLastResponse();
+        $message .= $this->helper->formatXml($lastResponse);
+
+        $this->log->debug($message);
     }
 }
