@@ -38,6 +38,7 @@
  */
 namespace TIG\PostNL\Setup\V110;
 
+use Magento\Framework\DB\Ddl\Table;
 use TIG\PostNL\Setup\AbstractTableInstaller;
 
 class InstallOrderTable extends AbstractTableInstaller
@@ -57,7 +58,7 @@ class InstallOrderTable extends AbstractTableInstaller
         $this->addForeignKey('sales_order', 'entity_id', static::TABLE_NAME, 'order_id');
 
         $this->addInt('quote_id', 'Quote ID', true, true);
-        $this->addForeignKey('quote', 'entity_id', static::TABLE_NAME, 'quote_id');
+        $this->addForeignKey('quote', 'entity_id', static::TABLE_NAME, 'quote_id', Table::ACTION_SET_NULL);
 
         $this->addText('type', 'Type', 32);
 
