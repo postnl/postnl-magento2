@@ -46,8 +46,8 @@ use Magento\Ui\Component\MassAction\Filter;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 
 use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Helper\Labelling\GetPdf;
 use TIG\PostNL\Helper\Labelling\SaveLabels;
+use TIG\PostNL\Helper\Pdf\Get as GetPdf;
 
 class MassPrintShippingLabel extends Action
 {
@@ -121,9 +121,9 @@ class MassPrintShippingLabel extends Action
             $this->getLabel($shipment->getId());
         }
 
-        $this->saveLabels->save($this->labels);
+        $labelModels = $this->saveLabels->save($this->labels);
 
-        $pdfFile = $this->getPdf->get($this->labels);
+        $pdfFile = $this->getPdf->get($labelModels);
 
         return $pdfFile;
     }

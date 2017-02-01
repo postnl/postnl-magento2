@@ -36,54 +36,27 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Helper\Labelling;
+namespace TIG\PostNL\Test\Unit\Helper\Pdf;
 
-use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\App\Response\Http\FileFactory;
-use Magento\Shipping\Model\Shipping\LabelGenerator;
+use TIG\PostNL\Helper\Pdf\Generate;
+use TIG\PostNL\Helper\Pdf\Get;
+use TIG\PostNL\Test\TestCase;
 
-class GetPdf
+class GetTest extends TestCase
 {
-    /**
-     * @var LabelGenerator
-     */
-    private $labelGenerator;
+    protected $instanceClass = Get::class;
 
-    /**
-     * @var FileFactory
-     */
-    private $fileFactory;
-
-    /**
-     * @param LabelGenerator $labelGenerator
-     * @param FileFactory    $fileFactory
-     */
-    public function __construct(
-        LabelGenerator $labelGenerator,
-        FileFactory $fileFactory
-    ) {
-        $this->labelGenerator = $labelGenerator;
-        $this->fileFactory = $fileFactory;
-    }
-
-    /**
-     * @param $labels
-     *
-     * @return \Magento\Framework\App\ResponseInterface
-     * @throws \Exception
-     * @throws \Zend_Pdf_Exception
-     */
-    public function get($labels)
+    public function testGet()
     {
-        /** @var \Zend_Pdf $combinedLabels */
-        $combinedLabels = $this->labelGenerator->combineLabelsPdf($labels);
-        $renderedLabels = $combinedLabels->render();
+        $generatePdfMock = $this->getFakeMock(Generate::class);
+        $generatePdfMock->setMethods(['get']);
+        $generatePdfMock = $generatePdfMock->getMock();
 
-        return $this->fileFactory->create(
-            'ShippingLabels.pdf',
-            $renderedLabels,
-            DirectoryList::VAR_DIR,
-            'application/pdf'
-        );
+        $getExpects = $generatePdfMock->expects($this->once());
+        $getExpects->method('get');
+
+
+        $instance = $this->getInstance(['generatePdf' => $generatePdfMock]);
+        $instance->get(array('label1', 'label2'));
     }
 }
