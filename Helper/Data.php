@@ -51,6 +51,9 @@ use TIG\PostNL\Config\Provider\ShippingOptions;
 class Data extends AbstractHelper
 {
     const PAKJEGEMAK_DELIVERY_OPTION = 'PG';
+    const DAYTIME_DELIVERY_OPTION    = 'Daytime';
+    const EVENING_DELIVERY_OPTION    = 'Evening';
+    const SUNDAY_DELIVERY_OPTION     = 'Sunday';
 
     /**
      * @var TimezoneInterface
@@ -160,6 +163,24 @@ class Data extends AbstractHelper
         }
 
         return $deliveryOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDeliveryTimeframesOptions()
+    {
+        $deliveryTimeframesOptions = [self::DAYTIME_DELIVERY_OPTION];
+
+        if ($this->shippingOptions->isEveningDeliveryActive()) {
+            $deliveryTimeframesOptions[] = self::EVENING_DELIVERY_OPTION;
+        }
+
+        if ($this->shippingOptions->isSundayDeliveryActive()) {
+            $deliveryTimeframesOptions[] = self::SUNDAY_DELIVERY_OPTION;
+        }
+
+        return $deliveryTimeframesOptions;
     }
 
     /**

@@ -161,7 +161,7 @@ class TimeFrame extends AbstractEndpoint
                 'StartDate'          => $startDate,
                 'SundaySorting'      => 'true',
                 'EndDate'            => $this->postNLhelper->getEndDate($startDate),
-                'Options'            => ['Sunday', 'Daytime', 'Evening']
+                'Options'            => $this->postNLhelper->getDeliveryTimeframesOptions()
             ],
             'Message' => $this->message
         ];
