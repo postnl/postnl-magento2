@@ -53,6 +53,9 @@
             </tig_postnl>
         </carriers>
         <tig_postnl>
+            <generalconfiguration_logging>
+                <types>300,400,500,550,600</types>
+            </generalconfiguration_logging>
             <webshop_printer>
                 <label_size>A4</label_size>
             </webshop_printer>

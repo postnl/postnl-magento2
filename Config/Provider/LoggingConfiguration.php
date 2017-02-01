@@ -36,52 +36,34 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Logging;
-
-use Monolog\Logger;
-
-use \TIG\PostNL\Config\Provider\LoggingConfiguration;
+namespace TIG\PostNL\Config\Provider;
 
 /**
- * Class Log
+ * Class LoggingConfiguration
  *
- * @package TIG\PostNL\Logging
+ * @package TIG\PostNL\Config\Provider
  */
-class Log extends Logger
+class LoggingConfiguration extends AbstractConfigProvider
 {
-    /**
-     * @var LoggingConfiguration
-     */
-    private $logConfig;
+    const XPATH_LOGGING_TYPE = 'tig_postnl/generalconfiguration_logging/types';
 
     /**
-     * @param string               $name
-     * @param array                $handlers
-     * @param array                $processors
-     * @param LoggingConfiguration $loggingConfiguration
+     * @return mixed
      */
-    public function __construct(
-        $name,
-        array $handlers = array(),
-        array $processors = array(),
-        LoggingConfiguration $loggingConfiguration
-    ) {
-        $this->logConfig = $loggingConfiguration;
-        parent::__construct($name, $handlers, $processors);
+    public function getLoggingTypes()
+    {
+        return $this->getConfigFromXpath(self::XPATH_LOGGING_TYPE);
     }
 
     /**
-     * @param int    $level
-     * @param string $message
-     * @param array  $context
+     * @param $level
      *
      * @return bool
      */
-    public function addRecord($level, $message, array $context = array())
+    public function canLog($level)
     {
-        if (!$this->logConfig->canLog($level)) {
-            return false;
-        }
-        return parent::addRecord($level, $message, $context);
+        $logTypes = explode(',', $this->getLoggingTypes());
+        return in_array($level, $logTypes);
     }
+
 }
