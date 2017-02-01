@@ -61,10 +61,10 @@ class Log extends Logger
      * @param LoggingConfiguration $loggingConfiguration
      */
     public function __construct(
+        LoggingConfiguration $loggingConfiguration,
         $name,
-        array $handlers = array(),
-        array $processors = array(),
-        LoggingConfiguration $loggingConfiguration
+        array $handlers = [],
+        array $processors = []
     ) {
         $this->logConfig = $loggingConfiguration;
         parent::__construct($name, $handlers, $processors);
@@ -77,7 +77,7 @@ class Log extends Logger
      *
      * @return bool
      */
-    public function addRecord($level, $message, array $context = array())
+    public function addRecord($level, $message, array $context = [])
     {
         if (!$this->logConfig->canLog($level)) {
             return false;
