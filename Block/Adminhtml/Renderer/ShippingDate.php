@@ -82,10 +82,6 @@ class ShippingDate
             $shipAt = $shipAt->getShipAt();
         }
 
-        if ($shipAt === null) {
-            return null;
-        }
-
         return $shipAt;
     }
 
