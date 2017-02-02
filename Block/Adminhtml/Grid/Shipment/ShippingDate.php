@@ -39,36 +39,34 @@
 namespace TIG\PostNL\Block\Adminhtml\Grid\Shipment;
 
 use TIG\PostNL\Block\Adminhtml\Grid\AbstractGrid;
-use TIG\PostNL\Model\ShipmentFactory;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
-use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use Magento\Framework\Stdlib\DateTime\DateTimeFormatterInterface;
+use TIG\PostNL\Block\Adminhtml\Renderer\ShippingDate as ShippingDateRenderer;
 
 class ShippingDate extends AbstractGrid
 {
     /**
-     * @var TimezoneInterface
+     * @var ShippingDateRenderer
      */
-    private $timezoneInterface;
+    private $shippingDateRenderer;
 
     /**
-     * @var DateTimeFormatterInterface
+     * @param ContextInterface     $context
+     * @param UiComponentFactory   $uiComponentFactory
+     * @param ShippingDateRenderer $shippingDateRenderer
+     * @param array                $components
+     * @param array                $data
      */
-    private $dateTimeFormatterInterface;
-
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
-        TimezoneInterface $timezoneInterface,
-        DateTimeFormatterInterface $dateTimeFormatterInterface,
+        ShippingDateRenderer $shippingDateRenderer,
         array $components = [],
         array $data = []
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
 
-        $this->timezoneInterface = $timezoneInterface;
-        $this->dateTimeFormatterInterface = $dateTimeFormatterInterface;
+        $this->shippingDateRenderer = $shippingDateRenderer;
     }
 
     /**
@@ -79,51 +77,6 @@ class ShippingDate extends AbstractGrid
     // @codingStandardsIgnoreLine
     protected function getCellContents($item)
     {
-        $shipAt = $this->getShipAt($item);
-        if ($shipAt === null) {
-            return null;
-        }
-
-        return $this->formatShippingDate($shipAt);
-    }
-
-    /**
-     * @return null|string
-     */
-    private function getShipAt($item)
-    {
-        $shipAt = $item['tig_postnl_ship_at'];
-        if ($shipAt === null) {
-            return null;
-        }
-
-        return $shipAt;
-    }
-
-    /**
-     * @param $shipAt
-     *
-     * @return null|int
-     */
-    private function formatShippingDate($shipAt)
-    {
-        $now = $this->timezoneInterface->date();
-        $whenToShip = $this->timezoneInterface->date($shipAt);
-        $difference = $now->diff($whenToShip);
-        $days = $difference->days;
-
-        if ($days == 0) {
-            return __('Today');
-        }
-
-        if (!$difference->invert && $days === 1) {
-            return __('Tomorrow');
-        }
-
-        if (!$difference->invert) {
-            return __('In %1 days', [$days]);
-        }
-
-        return $whenToShip->format('d M. Y');
+        return $this->shippingDateRenderer->render($item['tig_postnl_ship_at']);
     }
 }

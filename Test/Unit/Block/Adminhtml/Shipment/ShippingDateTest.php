@@ -36,40 +36,55 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Shipment\Grid;
+namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Grid\Shipment;
 
+use \Magento\Framework\Phrase;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use TIG\PostNL\Block\Adminhtml\Grid\Shipment\ShippingDate;
 use TIG\PostNL\Test\TestCase;
-use TIG\PostNL\Block\Adminhtml\Grid\ConfirmStatus;
 
-class ConfirmStatusTest extends TestCase
+class ShippingDateTest extends TestCase
 {
-    protected $instanceClass = ConfirmStatus::class;
-
-    public function getIsConfirmedProvider()
-    {
-        return [
-            'exists_but_not_confirmed' => [null, false],
-            'exists_and_confirmed' => ['2016-11-19 21:13:12', true],
-        ];
-    }
+    protected $instanceClass = ShippingDate::class;
 
     /**
-     * @param $confirmedAt
-     * @param $expected
+     * @param array $args
      *
-     * @dataProvider getIsConfirmedProvider
+     * @return ShippingDate
      */
-    public function testGetCellContents($confirmedAt, $expected)
+    public function getInstance(array $args = [])
     {
-        $item = ['tig_postnl_confirmed_at' => $confirmedAt];
+        if (!isset($args['context'])) {
+            $contextMock = $this->getMockForAbstractClass(ContextInterface::class, [], '', false, true, true, []);
+            $processor   = $this->getMockBuilder('Magento\Framework\View\Element\UiComponent\Processor')
+                ->disableOriginalConstructor()
+                ->getMock();
+            $contextMock->expects($this->any())->method('getProcessor')->willReturn($processor);
 
-        $instance = $this->getFakeMock($this->instanceClass)->getMock();
+            $args['context'] = $contextMock;
+        }
 
-        /** @var \Magento\Framework\Phrase $result */
-        $result = $this->invokeArgs('getCellContents', [$item], $instance);
+        return parent::getInstance($args);
+    }
 
-        $this->assertInstanceOf(\Magento\Framework\Phrase::class, $result);
-        $text = ucfirst(($expected ? '' : 'not ') . 'confirmed');
-        $this->assertEquals($text, $result->getText());
+    public function testGetCellContents()
+    {
+        $randomString = uniqid();
+        $randomResult = uniqid();
+
+        $rendererMock = $this->getFakeMock(\TIG\PostNL\Block\Adminhtml\Renderer\ShippingDate::class)->getMock();
+
+        $renderExpects = $rendererMock->expects($this->once());
+        $renderExpects->method('render');
+        $renderExpects->with($randomString);
+        $renderExpects->willReturn($randomResult);
+
+        $instance = $this->getInstance([
+            'shippingDateRenderer' => $rendererMock,
+        ]);
+
+        $result = $this->invokeArgs('getCellContents', [['tig_postnl_ship_at' => $randomString]], $instance);
+
+        $this->assertEquals($randomResult, $result);
     }
 }

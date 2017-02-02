@@ -36,62 +36,83 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid;
+namespace TIG\PostNL\Block\Adminhtml\Renderer;
 
-use Magento\Ui\Component\Listing\Columns\Column;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Framework\Stdlib\DateTime\DateTimeFormatterInterface;
+use TIG\PostNL\Model\Shipment;
 
-abstract class AbstractGrid extends Column
+class ShippingDate
 {
     /**
-     * @var array
+     * @param TimezoneInterface          $timezoneInterface
+     * @param DateTimeFormatterInterface $dateTimeFormatterInterface
      */
-    // @codingStandardsIgnoreLine
-    protected $items = [];
+    public function __construct(
+        TimezoneInterface $timezoneInterface,
+        DateTimeFormatterInterface $dateTimeFormatterInterface
+    ) {
+        $this->timezoneInterface = $timezoneInterface;
+        $this->dateTimeFormatterInterface = $dateTimeFormatterInterface;
+    }
 
     /**
-     * @param array $dataSource
+     * @param null|Shipment $item
      *
-     * @return array
+     * @return string|null
      */
-    public function prepareDataSource(array $dataSource)
+    public function render($item)
     {
-        if (isset($dataSource['data']['items'])) {
-            $this->items = $dataSource['data']['items'];
-
-            $this->prepareData();
-            $this->handleItems();
-
-            $dataSource['data']['items'] = $this->items;
+        $shipAt = $this->getShipAt($item);
+        if ($shipAt === null) {
+            return null;
         }
 
-        return $dataSource;
+        return $this->formatShippingDate($shipAt);
     }
 
     /**
-     * Load all the needed data in only 1 query.
-     */
-    // @codingStandardsIgnoreLine
-    protected function prepareData()
-    {
-        return null;
-    }
-
-    /**
-     * @return array
-     */
-    // @codingStandardsIgnoreLine
-    protected function handleItems()
-    {
-        foreach ($this->items as $index => $item) {
-            $this->items[$index][$this->getData('name')] = $this->getCellContents($item);
-        }
-    }
-
-    /**
-     * @param object $item
+     * @param null|Shipment $shipAt
      *
-     * @return string
+     * @return null|string
      */
-    // @codingStandardsIgnoreLine
-    abstract protected function getCellContents($item);
+    private function getShipAt($shipAt)
+    {
+        if ($shipAt instanceof Shipment) {
+            $shipAt = $shipAt->getShipAt();
+        }
+
+        if ($shipAt === null) {
+            return null;
+        }
+
+        return $shipAt;
+    }
+
+    /**
+     * @param $shipAt
+     *
+     * @return null|int
+     */
+    private function formatShippingDate($shipAt)
+    {
+        $now = $this->timezoneInterface->date();
+        $whenToShip = $this->timezoneInterface->date($shipAt);
+        $difference = $now->diff($whenToShip);
+        $days = $difference->days;
+
+        if ($days == 0) {
+            return __('Today');
+        }
+
+        if (!$difference->invert && $days === 1) {
+            return __('Tomorrow');
+        }
+
+        if (!$difference->invert) {
+            return __('In %1 days', [$days]);
+        }
+
+        return $whenToShip->format('d M. Y');
+    }
 }

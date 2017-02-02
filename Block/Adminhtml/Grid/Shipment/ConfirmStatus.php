@@ -36,62 +36,42 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid;
+namespace TIG\PostNL\Block\Adminhtml\Grid\Shipment;
 
-use Magento\Ui\Component\Listing\Columns\Column;
+use TIG\PostNL\Block\Adminhtml\Grid\AbstractGrid;
 
-abstract class AbstractGrid extends Column
+class ConfirmStatus extends AbstractGrid
 {
     /**
-     * @var array
-     */
-    // @codingStandardsIgnoreLine
-    protected $items = [];
-
-    /**
-     * @param array $dataSource
-     *
-     * @return array
-     */
-    public function prepareDataSource(array $dataSource)
-    {
-        if (isset($dataSource['data']['items'])) {
-            $this->items = $dataSource['data']['items'];
-
-            $this->prepareData();
-            $this->handleItems();
-
-            $dataSource['data']['items'] = $this->items;
-        }
-
-        return $dataSource;
-    }
-
-    /**
-     * Load all the needed data in only 1 query.
-     */
-    // @codingStandardsIgnoreLine
-    protected function prepareData()
-    {
-        return null;
-    }
-
-    /**
-     * @return array
-     */
-    // @codingStandardsIgnoreLine
-    protected function handleItems()
-    {
-        foreach ($this->items as $index => $item) {
-            $this->items[$index][$this->getData('name')] = $this->getCellContents($item);
-        }
-    }
-
-    /**
-     * @param object $item
+     * @param $item
      *
      * @return string
      */
-    // @codingStandardsIgnoreLine
-    abstract protected function getCellContents($item);
+    //@codingStandardsIgnoreLine
+    protected function getCellContents($item)
+    {
+        $confirmedAt = $this->getIsConfirmed($item);
+
+        if (!$confirmedAt) {
+            return __('Not confirmed');
+        }
+
+        return __('Confirmed');
+    }
+
+    /**
+     * @param $item
+     *
+     * @return bool
+     */
+    private function getIsConfirmed($item)
+    {
+        $confirmedAt = $item['tig_postnl_confirmed_at'];
+
+        if ($confirmedAt === null) {
+            return false;
+        }
+
+        return true;
+    }
 }
