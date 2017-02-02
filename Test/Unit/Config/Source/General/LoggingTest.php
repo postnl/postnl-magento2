@@ -36,52 +36,37 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Logging;
+namespace TIG\PostNL\Unit\Config\Source\General;
 
-use Monolog\Logger;
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\Source\General\Logging;
+use Monolog\Logger as Monolog;
 
-use \TIG\PostNL\Config\Provider\LoggingConfiguration;
-
-/**
- * Class Log
- *
- * @package TIG\PostNL\Logging
- */
-class Log extends Logger
+class LoggingTest extends TestCase
 {
-    /**
-     * @var LoggingConfiguration
-     */
-    private $logConfig;
+    protected $instanceClass = Logging::class;
 
-    /**
-     * @param string               $name
-     * @param array                $handlers
-     * @param array                $processors
-     * @param LoggingConfiguration $loggingConfiguration
-     */
-    public function __construct(
-        LoggingConfiguration $loggingConfiguration,
-        $name,
-        array $handlers = [],
-        array $processors = []
-    ) {
-        $this->logConfig = $loggingConfiguration;
-        parent::__construct($name, $handlers, $processors);
+    public function testToOptionArray()
+    {
+        $instance = $this->getInstance();
+        $options  = $instance->toOptionArray();
+
+        $this->assertCount(8, $options);
+
+        foreach ($options as $option) {
+            $this->assertArrayHasKey('label', $option);
+            $this->assertArrayHasKey('value', $option);
+        }
     }
 
-    /**
-     * @param int    $level
-     * @param string $message
-     * @param array  $context
-     *
-     * @return bool
-     */
-    public function addRecord($level, $message, array $context = [])
+    public function testEqualToMonolog()
     {
-        if (!$this->logConfig->canLog($level)) {
-            return false;
-        }
-        return parent::addRecord($level, $message, $context);
+        $postnlOptions  = $this->getProperty('levels');
+        $monoLogOptions = $this->getProperty('levels', $this->getObject(Monolog::class));
+
+        $this->assertEquals(
+            $monoLogOptions, $postnlOptions,
+            'PostNL log options are not the same as Monologs'
+        );
     }
 }

@@ -36,52 +36,45 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Logging;
+namespace TIG\PostNL\Config\Source\General;
 
-use Monolog\Logger;
-
-use \TIG\PostNL\Config\Provider\LoggingConfiguration;
+use \Magento\Framework\Option\ArrayInterface;
 
 /**
- * Class Log
+ * Class Logging
  *
- * @package TIG\PostNL\Logging
+ * @package TIG\PostNL\Config\Source\General
  */
-class Log extends Logger
+class Logging implements ArrayInterface
 {
-    /**
-     * @var LoggingConfiguration
-     */
-    private $logConfig;
+
+    private $levels = [
+        100 => 'DEBUG',
+        200 => 'INFO',
+        250 => 'NOTICE',
+        300 => 'WARNING',
+        400 => 'ERROR',
+        500 => 'CRITICAL',
+        550 => 'ALERT',
+        600 => 'EMERGENCY',
+    ];
 
     /**
-     * @param string               $name
-     * @param array                $handlers
-     * @param array                $processors
-     * @param LoggingConfiguration $loggingConfiguration
+     * Return logging option array
+     * @return array
      */
-    public function __construct(
-        LoggingConfiguration $loggingConfiguration,
-        $name,
-        array $handlers = [],
-        array $processors = []
-    ) {
-        $this->logConfig = $loggingConfiguration;
-        parent::__construct($name, $handlers, $processors);
-    }
-
-    /**
-     * @param int    $level
-     * @param string $message
-     * @param array  $context
-     *
-     * @return bool
-     */
-    public function addRecord($level, $message, array $context = [])
+    public function toOptionArray()
     {
-        if (!$this->logConfig->canLog($level)) {
-            return false;
+
+        $options = [];
+
+        foreach ($this->levels as $key => $value) {
+            $options[] = [
+                'value' => $key,
+                'label' => $value
+            ];
         }
-        return parent::addRecord($level, $message, $context);
+
+        return $options;
     }
 }
