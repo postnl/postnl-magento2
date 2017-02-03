@@ -75,6 +75,11 @@
     <type name="TIG\PostNL\Observer\UpdateOrderShipmentGrid">
         <arguments>
             <argument name="shipmentGrid" xsi:type="object">PostNLShipmentGridAggregator</argument>
+        </arguments>
+    </type>
+
+    <type name="TIG\PostNL\Observer\UpdateOrderGrid">
+        <arguments>
             <argument name="orderGrid" xsi:type="object">PostNLOrderGridAggregator</argument>
         </arguments>
     </type>
