@@ -64,18 +64,26 @@
 
   .delivery_options {
 
+    .btn-group {
+      background: @custom-button-active;
+      float: left;
+      width: 100%;
+      border: 1px solid @custom-border-color;
+      box-sizing: border-box;
+      border-bottom: 0;
+      border-radius: @custom-border-radius @custom-border-radius 0 0;
+    }
+
     button {
       &.btn {
         &.btn-default {
           float: left;
           width: 50%;
           box-sizing: border-box;
-
+          border: 0;
           background: white;
           text-align: left;
           padding: 15px;
-
-          border: 1px solid @custom-border-color;
 
           &:not(.primary) {
             box-shadow: none;
