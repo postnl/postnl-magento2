@@ -36,44 +36,45 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
+namespace TIG\PostNL\Config\CheckoutConfiguration;
 
-use Magento\Checkout\Model\ConfigProviderInterface;
-use TIG\PostNL\Config\CheckoutConfiguration\AbstractCheckoutConfiguration;
+use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Helper\QuoteItemsAreInStock;
 
-class CheckoutConfiguration implements ConfigProviderInterface
+class IsShippingOptionsActive extends AbstractCheckoutConfiguration
 {
     /**
-     * @var array
+     * @var ShippingOptions
      */
-    private $shippingConfiguration;
+    private $shippingOptions;
+    /**
+     * @var QuoteItemsAreInStock
+     */
+    private $quoteItemsAreInStock;
 
     /**
-     * @param AbstractCheckoutConfiguration[] $shippingConfiguration
+     * @param ShippingOptions      $shippingOptions
+     * @param QuoteItemsAreInStock $quoteItemsAreInStock
      */
     public function __construct(
-        $shippingConfiguration = []
+        ShippingOptions $shippingOptions,
+        QuoteItemsAreInStock $quoteItemsAreInStock
     ) {
-        $this->shippingConfiguration = $shippingConfiguration;
+        $this->shippingOptions = $shippingOptions;
+        $this->quoteItemsAreInStock = $quoteItemsAreInStock;
     }
 
     /**
-     * Retrieve assoc array of checkout configuration
-     *
-     * @return array
+     * @return bool
      */
-    public function getConfig()
+    public function getValue()
     {
-        $shipping = [];
-
-        foreach ($this->shippingConfiguration as $key => $configuration) {
-            $shipping[$key] = $configuration->getValue();
+        if ($this->shippingOptions->getShippingStockoptions() == 'stock_products' &&
+            !$this->quoteItemsAreInStock->getValue()
+        ) {
+            return false;
         }
 
-        return [
-            'shipping' => [
-                'postnl' => $shipping,
-            ]
-        ];
+        return $this->shippingOptions->isShippingoptionsActive();
     }
 }

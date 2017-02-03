@@ -36,44 +36,53 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
+namespace TIG\PostNL\Helper;
 
-use Magento\Checkout\Model\ConfigProviderInterface;
-use TIG\PostNL\Config\CheckoutConfiguration\AbstractCheckoutConfiguration;
+use \Magento\Checkout\Model\Session\Proxy as CheckoutSession;
 
-class CheckoutConfiguration implements ConfigProviderInterface
+class QuoteItemsAreInStock
 {
     /**
-     * @var array
+     * @var CheckoutSession
      */
-    private $shippingConfiguration;
+    private $checkoutSession;
 
     /**
-     * @param AbstractCheckoutConfiguration[] $shippingConfiguration
+     * @param CheckoutSession $checkoutSession
      */
     public function __construct(
-        $shippingConfiguration = []
+        CheckoutSession $checkoutSession
     ) {
-        $this->shippingConfiguration = $shippingConfiguration;
+        $this->checkoutSession = $checkoutSession;
     }
 
     /**
-     * Retrieve assoc array of checkout configuration
-     *
-     * @return array
+     * @return bool
      */
-    public function getConfig()
+    public function getValue()
     {
-        $shipping = [];
+        $quote = $this->checkoutSession->getQuote();
+        $items = $quote->getAllItems();
 
-        foreach ($this->shippingConfiguration as $key => $configuration) {
-            $shipping[$key] = $configuration->getValue();
-        }
+        return $this->itemsAreInStock($items);
+    }
 
-        return [
-            'shipping' => [
-                'postnl' => $shipping,
-            ]
-        ];
+    /**
+     * Loop over the items and remove all items that have stock. If there are any items left, it means that not all
+     * items are in stock so we return false.
+     *
+     * @param $items
+     *
+     * @return bool
+     */
+    private function itemsAreInStock($items)
+    {
+        $items = array_filter($items, function (\Magento\Quote\Model\Quote\Item $item) {
+            $product = $item->getProduct();
+
+            return !$product->isInStock();
+        });
+
+        return empty($items);
     }
 }
