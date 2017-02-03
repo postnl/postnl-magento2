@@ -85,6 +85,9 @@
                 <global_type>CD</global_type>
                 <global_range>1660</global_range>
             </barcode>
+            <track_and_trace_email>
+                <template>tig_postnl_track_and_trace_template</template>
+            </track_and_trace_email>
         </tig_postnl>
     </default>
 </config>

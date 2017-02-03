@@ -1,0 +1,17 @@
+<!--@subject {{trans "Track and Trace"}} @-->
+<!--@vars {
+"var order_id":"Increment ID",
+"var dateAndTime":"Date and Time of Transaction",
+"var url":"track and trace url to PostNL"
+} @-->
+<h1>{{trans "Track and Trace information"}}</h1>
+
+<ul>
+    <li>
+        <b>{{trans "Order"}} {{var order_id}}</b><br/>
+        {{var DateAndTime}}
+    </li>
+    <li>
+        <a href="{{var url}}">{{trans "Click here to track your order"}}</a>
+    </li>
+</ul>

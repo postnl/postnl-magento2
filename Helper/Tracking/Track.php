@@ -38,11 +38,14 @@
  */
 namespace TIG\PostNL\Helper\Tracking;
 
+use \TIG\PostNL\Helper\AbstractTracking;
 use \Magento\Sales\Model\Order\Shipment\TrackFactory;
 use \Magento\Shipping\Model\Tracking\Result\StatusFactory;
 use \Magento\Sales\Model\Order\Shipment;
+use \Magento\Framework\App\Helper\Context;
 use \Magento\Framework\Api\SearchCriteriaBuilder;
 use \Magento\Sales\Model\Order\ShipmentRepository;
+use \TIG\PostNL\Helper\Tracking\Mail;
 use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 
 /**
@@ -50,29 +53,12 @@ use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
  *
  * @package TIG\PostNL\Helper\Tracking
  */
-class Track
+class Track extends AbstractTracking
 {
-    const TRACK_AND_TRACE_SERVICE_URL = 'http://postnl.nl/tracktrace/?';
-
     /**
      * @var TrackFactory
      */
     private $trackFactory;
-
-    /**
-     * @var ShipmentRepository
-     */
-    private $shimpentRepository;
-
-    /**
-     * @var PostNLShipmentRepository
-     */
-    private $postNLShipmentRepository;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
 
     /**
      * @var StatusFactory
@@ -80,34 +66,55 @@ class Track
     private $trackStatusFactory;
 
     /**
+     * @var Mail
+     */
+    private $trackAndTraceEmail;
+
+    /**
+     * @param Context                  $context
      * @param TrackFactory             $trackFactory
      * @param ShipmentRepository       $shipmentRepository
      * @param PostNLShipmentRepository $postNLShipmentRepository
      * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      * @param StatusFactory            $statusFactory
+     * @param Mail                     $mail
      */
     public function __construct(
+        Context $context,
         TrackFactory $trackFactory,
         ShipmentRepository $shipmentRepository,
         PostNLShipmentRepository $postNLShipmentRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        StatusFactory $statusFactory
+        StatusFactory $statusFactory,
+        Mail $mail
     ) {
         $this->trackFactory             = $trackFactory;
-        $this->shimpentRepository       = $shipmentRepository;
-        $this->postNLShipmentRepository = $postNLShipmentRepository;
-        $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
         $this->trackStatusFactory       = $statusFactory;
+        $this->trackAndTraceEmail       = $mail;
+
+        parent::__construct(
+            $context,
+            $shipmentRepository,
+            $postNLShipmentRepository,
+            $searchCriteriaBuilder
+        );
     }
 
     /**
      * @param Shipment $shipment
+     *
+     * @return $this
      */
     public function set($shipment)
     {
         $trackingNumbers = [];
         foreach ($this->getPostNLshipments($shipment->getId()) as $postnlShipment) {
             $trackingNumbers[] = $postnlShipment->getMainBarcode();
+            $this->trackAndTraceEmail->set(
+                $shipment,
+                $this->getTrackAndTraceUrl($postnlShipment->getMainBarcode())
+            );
+            $this->trackAndTraceEmail->send();
         }
 
         $this->addTrackingNumbersToShipment($shipment, $trackingNumbers);
@@ -147,62 +154,14 @@ class Track
             $shipment->addTrack($track);
         }
 
+        /**
+         * @notice: Magento Bug, can not save track after shipment creation (addTrack is triggert on _afterSave)
+         *        So when the shipment is saved the packages value is automaticly s6:"a:{}" which will return in
+         *        a fatal error in shipment view.
+         * @codingStandardsIgnoreLine
+         * @todo : Recalculate packages and set correct data.
+         */
+        $shipment->setPackages([]);
         $this->shimpentRepository->save($shipment);
-    }
-
-    /**
-     * @param $shipmentId
-     *
-     * @return \TIG\PostNL\Model\Shipment[]
-     */
-    private function getPostNLshipments($shipmentId)
-    {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('shipment_id', $shipmentId);
-        /** @var \Magento\Framework\Api\SearchResults $list */
-        $list = $this->postNLShipmentRepository->getList($searchCriteria->create());
-        return $list->getItems();
-    }
-
-    /**
-     * @param $trackingNumber
-     *
-     * @return \Magento\Framework\Api\AbstractExtensibleObject
-     */
-    private function getPostNLshipmentByTracking($trackingNumber)
-    {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('main_barcode', $trackingNumber);
-        $searchCriteria->setPageSize(1);
-        /** @var \Magento\Framework\Api\SearchResults $list */
-        $list = $this->postNLShipmentRepository->getList($searchCriteria->create());
-        return $list->getItems()[0];
-    }
-
-    /**
-     * @param $trackingNumber
-     * @param string $type
-     *
-     * @return string
-     */
-    private function getTrackAndTraceUrl($trackingNumber, $type = 'C')
-    {
-        /** @var \TIG\PostNL\Model\Shipment $postNLShipment */
-        $postNLShipment = $this->getPostNLshipmentByTracking($trackingNumber);
-        /** @var \Magento\Sales\Model\Order\Shipment $shipment */
-        $shipment = $this->shimpentRepository->get($postNLShipment->getShipmentId());
-        /** @var \Magento\Sales\Api\Data\OrderAddressInterface $address */
-        $address  = $shipment->getShippingAddress();
-
-        $lang = !in_array($address->getCountryId(), [
-            'NL', 'DE', 'EN', 'FR', 'ED', 'IT', 'CN'
-        ]) ? 'EN' : $address->getCountryId();
-
-        $params = [
-            'B='.$trackingNumber,
-            '&D='.$lang,
-            '&P='.$address->getPostcode(),
-            '&T='.$type
-        ];
-
-        return self::TRACK_AND_TRACE_SERVICE_URL.implode('', $params);
     }
 }
