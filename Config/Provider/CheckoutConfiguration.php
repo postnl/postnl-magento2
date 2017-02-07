@@ -67,6 +67,7 @@ class CheckoutConfiguration implements ConfigProviderInterface
             'shipping' => [
                 'postnl' => [
                     'shippingoptions_active' => $this->shippingOptions->isShippingoptionsActive(),
+                    'pakjegemak_active' => $this->shippingOptions->isPakjegemakActive(),
                 ]
             ]
         ];

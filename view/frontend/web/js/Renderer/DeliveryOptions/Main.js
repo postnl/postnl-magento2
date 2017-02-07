@@ -71,6 +71,10 @@ define([
             return this;
         },
 
+        canUsePakjegemak: function() {
+            return window.checkoutConfig.shipping.postnl.pakjegemak_active == 1;
+        },
+
         setDelivery: function () {
             this.shipmentType('delivery');
         },

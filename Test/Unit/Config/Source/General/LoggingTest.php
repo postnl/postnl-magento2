@@ -36,45 +36,37 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Setup\V110;
+namespace TIG\PostNL\Unit\Config\Source\General;
 
-use Magento\Framework\DB\Ddl\Table;
-use TIG\PostNL\Setup\AbstractTableInstaller;
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\Source\General\Logging;
+use Monolog\Logger as Monolog;
 
-class InstallOrderTable extends AbstractTableInstaller
+class LoggingTest extends TestCase
 {
-    const TABLE_NAME = 'tig_postnl_order';
+    protected $instanceClass = Logging::class;
 
-    /**
-     * @return void
-     * @codingStandardsIgnoreLine
-     */
-    // @codingStandardsIgnoreLine
-    protected function defineTable()
+    public function testToOptionArray()
     {
-        $this->addEntityId();
+        $instance = $this->getInstance();
+        $options  = $instance->toOptionArray();
 
-        $this->addInt('order_id', 'Order ID', true, true);
-        $this->addForeignKey('sales_order', 'entity_id', static::TABLE_NAME, 'order_id');
+        $this->assertCount(8, $options);
 
-        $this->addInt('quote_id', 'Quote ID', true, true);
-        $this->addForeignKey('quote', 'entity_id', static::TABLE_NAME, 'quote_id', Table::ACTION_SET_NULL);
+        foreach ($options as $option) {
+            $this->assertArrayHasKey('label', $option);
+            $this->assertArrayHasKey('value', $option);
+        }
+    }
 
-        $this->addText('type', 'Type', 32);
+    public function testEqualToMonolog()
+    {
+        $postnlOptions  = $this->getProperty('levels');
+        $monoLogOptions = $this->getProperty('levels', $this->getObject(Monolog::class));
 
-        $this->addTimestamp('delivery_date', 'Delivery date');
-        $this->addText('expected_delivery_time_start', 'Expected delivery time start', 16);
-        $this->addText('expected_delivery_time_end', 'Expected delivery time end', 16);
-
-        $this->addText('is_pakjegemak', 'Is Pakjegemak', 1);
-        $this->addInt('pg_order_address_id', 'Pakjegemak Order Address ID', true, true);
-        $this->addText('pg_location_code', 'PakjeGemak Location Code', 32);
-        $this->addText('pg_retail_network_id', 'PakjeGemak Retail Netwerok ID', 32);
-
-        $this->addDate('ship_at', 'Ship at');
-
-        $this->addTimestamp('confirmed_at', 'Confirmed at');
-        $this->addTimestamp('created_at', 'Created at');
-        $this->addTimestamp('updated_at', 'Updated at');
+        $this->assertEquals(
+            $monoLogOptions, $postnlOptions,
+            'PostNL log options are not the same as Monologs'
+        );
     }
 }

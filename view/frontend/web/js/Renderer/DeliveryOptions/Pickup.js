@@ -164,6 +164,22 @@ define([
             return JSON.stringify(this.selectedOption()) == JSON.stringify($data);
         },
 
+        getDistanceText: function (distance) {
+            var text = '';
+
+            distance = parseInt(distance);
+
+            if (distance < 1000 && distance > 0) {
+                text = distance + ' m';
+            }
+
+            if (distance > 1000) {
+                text = parseFloat(Math.round(distance / 100) / 10).toFixed(1) + ' km';
+            }
+
+            return text;
+        },
+
         /**
          * Convert the OpeningHours object to a format readable by Knockout
          *
