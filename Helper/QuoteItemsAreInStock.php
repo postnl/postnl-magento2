@@ -38,22 +38,48 @@
  */
 namespace TIG\PostNL\Helper;
 
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\Checkout\Model\Session;
 use \Magento\Checkout\Model\Session\Proxy as CheckoutSession;
+use Magento\Quote\Model\Quote\Item as QuoteItem;
 
 class QuoteItemsAreInStock
 {
     /**
-     * @var CheckoutSession
+     * @var Session
      */
     private $checkoutSession;
 
     /**
-     * @param CheckoutSession $checkoutSession
+     * @var StockRegistryInterface
+     */
+    private $stockRegistry;
+
+    /**
+     * @var null
+     */
+    private $itemsAreInStock = null;
+
+    /**
+     * @var StockConfigurationInterface
+     */
+    private $stockConfiguration;
+
+    /**
+     * @param CheckoutSession             $checkoutSession
+     * @param StockRegistryInterface      $stockRegistryInterface
+     * @param StockConfigurationInterface $stockConfiguration
      */
     public function __construct(
-        CheckoutSession $checkoutSession
+        CheckoutSession $checkoutSession,
+        StockRegistryInterface $stockRegistryInterface,
+        StockConfigurationInterface $stockConfiguration
     ) {
         $this->checkoutSession = $checkoutSession;
+        $this->stockRegistry = $stockRegistryInterface;
+        $this->stockConfiguration = $stockConfiguration;
     }
 
     /**
@@ -64,6 +90,10 @@ class QuoteItemsAreInStock
         $quote = $this->checkoutSession->getQuote();
         $items = $quote->getAllItems();
 
+        if ($this->stockConfiguration->getBackorders() == 0) {
+            return true;
+        }
+
         return $this->itemsAreInStock($items);
     }
 
@@ -71,18 +101,60 @@ class QuoteItemsAreInStock
      * Loop over the items and remove all items that have stock. If there are any items left, it means that not all
      * items are in stock so we return false.
      *
-     * @param $items
+     * @param QuoteItem[] $items
      *
      * @return bool
      */
     private function itemsAreInStock($items)
     {
-        $items = array_filter($items, function (\Magento\Quote\Model\Quote\Item $item) {
+        if ($this->itemsAreInStock !== null) {
+            return $this->itemsAreInStock;
+        }
+
+        $items = array_filter($items, function (QuoteItem $item) {
             $product = $item->getProduct();
 
-            return !$product->isInStock();
+            if ($product->getTypeId() != 'simple') {
+                return false;
+            }
+
+            return !$this->isItemInStock($item);
         });
 
-        return empty($items);
+        $this->itemsAreInStock = empty($items);
+        return $this->itemsAreInStock;
+    }
+
+    private function isItemInStock(QuoteItem $item)
+    {
+        $product = $item->getProduct();
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $stockItem = $this->stockRegistry->getStockItem($product->getId(), $product->getStoreId());
+
+        if ($stockItem->getUseConfigBackorders()
+            || (
+                !$stockItem->getUseConfigBackorders() &&
+                $stockItem->getBackorders() == 0
+            )
+        ) {
+            return true;
+        }
+
+        if (!$stockItem->getUseConfigMinQty()) {
+            $minQty = $stockItem->getMinQty();
+        } else {
+            $minQty = $this->stockConfiguration->getMinQty();
+        }
+
+        /**
+         * Check if the product has the required qty available.
+         */
+        $requiredQty = $item->getParentItem() ? $item->getParentItem()->getQty() : $item->getQty();
+        if (($stockItem->getQty() - $minQty) < $requiredQty) {
+            return false;
+        }
+
+        return false;
     }
 }

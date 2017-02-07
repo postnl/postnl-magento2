@@ -45,44 +45,77 @@ class QuoteItemsAreInStockTest extends TestCase
 {
     public $instanceClass = QuoteItemsAreInStock::class;
 
-    public function itemsProvider()
+    public function getValueProvider()
     {
         return [
-            'has no stock' => [
-                [false, false, false],
-                false
-            ],
-            'only 1 in stock' => [
-                [false, true, false],
-                false
-            ],
-            'all in stock' => [
-                [true, true, true],
-                true
+            'allow backorders' => [
+                'allow_backorder' => 0,
+                'expected' => true,
             ],
         ];
     }
 
     /**
-     * @param $items
-     * @param $expected
-     *
-     * @dataProvider itemsProvider
+     * @dataProvider getValueProvider
      */
-    public function testGetValue($items, $expected)
+    public function testGetValue($allowBackorders, $expected)
     {
+        $stockConfiguration = $this->getMock(\Magento\CatalogInventory\Api\StockConfigurationInterface::class);
+        $stockConfiguration->method('getBackorders')->willReturn($allowBackorders);
+
         $sessionMock = $this->getFakeMock(\Magento\Checkout\Model\Session\Proxy::class);
         $sessionMock->setMethods(['getQuote', 'getAllItems']);
         $sessionMock = $sessionMock->getMock();
 
         $sessionMock->method('getQuote')->willReturnSelf();
-        $sessionMock->method('getAllitems')->willReturn($this->getAllItems($items));
+        $sessionMock->method('getAllitems');
 
         $instance = $this->getInstance([
             'checkoutSession' => $sessionMock,
+            'stockConfiguration' => $stockConfiguration,
         ]);
 
+        $this->setProperty('itemsAreInStock', 'randomvalue', $instance);
+
         $this->assertEquals($expected, $instance->getValue());
+    }
+
+    public function itemsProvider()
+    {
+        return [
+            'has no stock' => [
+                [
+                    ['in_stock' => false, 'type' => 'simple'],
+                    ['in_stock' => false, 'type' => 'simple'],
+                    ['in_stock' => false, 'type' => 'simple'],
+                ],
+                false,
+            ],
+            'only 1 in stock' => [
+                [
+                    ['in_stock' => false, 'type' => 'simple'],
+                    ['in_stock' => true, 'type' => 'simple'],
+                    ['in_stock' => false, 'type' => 'simple'],
+                ],
+                false,
+            ],
+            'all in stock' => [
+                [
+                    ['in_stock' => true, 'type' => 'simple'],
+                    ['in_stock' => true, 'type' => 'simple'],
+                    ['in_stock' => true, 'type' => 'simple'],
+                ],
+                true,
+            ],
+            'configurables only' => [
+                [
+                    ['in_stock' => true, 'type' => 'configurable'],
+                    ['in_stock' => true, 'type' => 'configurable'],
+                    ['in_stock' => true, 'type' => 'configurable'],
+                ],
+                true,
+            ],
+        ];
     }
 
     /**
@@ -110,11 +143,12 @@ class QuoteItemsAreInStockTest extends TestCase
         $input = [];
         foreach ($items as $item) {
             $mock = $this->getFakeMock(\Magento\Quote\Model\Quote\Item::class);
-            $mock->setMethods(['getProduct', 'isInStock']);
+            $mock->setMethods(['getProduct', 'isInStock', 'getTypeId']);
             $mock = $mock->getMock();
 
             $mock->method('getProduct')->willReturnSelf();
-            $mock->method('isInStock')->willReturn($item);
+            $mock->method('isInStock')->willReturn($item['in_stock']);
+            $mock->method('getTypeId')->willReturn($item['type']);
 
             $input[] = $mock;
         }
