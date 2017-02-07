@@ -36,16 +36,16 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Helper;
+namespace TIG\PostNL\Services\Quote;
 
-use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Checkout\Model\Session;
 use \Magento\Checkout\Model\Session\Proxy as CheckoutSession;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 
-class QuoteItemsAreInStock
+class CheckIfQuoteItemsAreInStock
 {
     /**
      * @var Session
@@ -125,36 +125,87 @@ class QuoteItemsAreInStock
         return $this->itemsAreInStock;
     }
 
+    /**
+     * @param QuoteItem $item
+     *
+     * @return bool
+     */
     private function isItemInStock(QuoteItem $item)
+    {
+        $stockItem = $this->getStockItem($item);
+
+        if ($this->useConfigBackOrders($stockItem)) {
+            return true;
+        }
+
+        $minimumQuantity = $this->getMinimumQuantity($stockItem);
+
+        /**
+         * Check if the product has the required quantity available.
+         */
+        $requiredQuantity = $this->getRequiredQuantity($item);
+        if (($stockItem->getQty() - $minimumQuantity) < $requiredQuantity) {
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param StockItemInterface $stockItem
+     *
+     * @return float
+     */
+    private function getMinimumQuantity(StockItemInterface $stockItem)
+    {
+        if (!$stockItem->getUseConfigMinQty()) {
+            return $stockItem->getMinQty();
+        }
+
+        return $this->stockConfiguration->getMinQty();
+    }
+
+    /**
+     * @param QuoteItem $item
+     *
+     * @return int
+     */
+    private function getRequiredQuantity(QuoteItem $item)
+    {
+        $parentItem = $item->getParentItem();
+        if ($parentItem) {
+            return $parentItem->getQty();
+        }
+
+        return $item->getQty();
+    }
+
+    /**
+     * @param StockItemInterface $stockItem
+     *
+     * @return bool
+     */
+    private function useConfigBackOrders(StockItemInterface $stockItem)
+    {
+        if (!$stockItem->getUseConfigBackorders() && $stockItem->getBackorders() == 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param QuoteItem $item
+     *
+     * @return StockItemInterface
+     */
+    private function getStockItem(QuoteItem $item)
     {
         $product = $item->getProduct();
 
         /** @noinspection PhpUndefinedMethodInspection */
         $stockItem = $this->stockRegistry->getStockItem($product->getId(), $product->getStoreId());
 
-        if ($stockItem->getUseConfigBackorders()
-            || (
-                !$stockItem->getUseConfigBackorders() &&
-                $stockItem->getBackorders() == 0
-            )
-        ) {
-            return true;
-        }
-
-        if (!$stockItem->getUseConfigMinQty()) {
-            $minQty = $stockItem->getMinQty();
-        } else {
-            $minQty = $this->stockConfiguration->getMinQty();
-        }
-
-        /**
-         * Check if the product has the required qty available.
-         */
-        $requiredQty = $item->getParentItem() ? $item->getParentItem()->getQty() : $item->getQty();
-        if (($stockItem->getQty() - $minQty) < $requiredQty) {
-            return false;
-        }
-
-        return false;
+        return $stockItem;
     }
 }

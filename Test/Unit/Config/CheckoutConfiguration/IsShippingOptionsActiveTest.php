@@ -112,7 +112,9 @@ class IsShippingOptionsActiveTest extends TestCase
     public function testGetValue($shippingOptionsActive, $stockOptions, $productsInStock, $expected)
     {
         $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
-        $quoteItemsAreInStock = $this->getFakeMock(\TIG\PostNL\Helper\QuoteItemsAreInStock::class)->getMock();
+        $quoteItemsAreInStock = $this
+            ->getFakeMock(\TIG\PostNL\Services\Quote\CheckIfQuoteItemsAreInStock::class)
+            ->getMock();
 
         $getValueExpects = $quoteItemsAreInStock->method('getValue');
         $getValueExpects->willReturn($productsInStock);

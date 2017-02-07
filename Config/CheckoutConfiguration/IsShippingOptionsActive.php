@@ -39,7 +39,7 @@
 namespace TIG\PostNL\Config\CheckoutConfiguration;
 
 use TIG\PostNL\Config\Provider\ShippingOptions;
-use TIG\PostNL\Helper\QuoteItemsAreInStock;
+use TIG\PostNL\Services\Quote\CheckIfQuoteItemsAreInStock;
 
 class IsShippingOptionsActive extends AbstractCheckoutConfiguration
 {
@@ -48,17 +48,17 @@ class IsShippingOptionsActive extends AbstractCheckoutConfiguration
      */
     private $shippingOptions;
     /**
-     * @var QuoteItemsAreInStock
+     * @var CheckIfQuoteItemsAreInStock
      */
     private $quoteItemsAreInStock;
 
     /**
      * @param ShippingOptions      $shippingOptions
-     * @param QuoteItemsAreInStock $quoteItemsAreInStock
+     * @param CheckIfQuoteItemsAreInStock $quoteItemsAreInStock
      */
     public function __construct(
         ShippingOptions $shippingOptions,
-        QuoteItemsAreInStock $quoteItemsAreInStock
+        CheckIfQuoteItemsAreInStock $quoteItemsAreInStock
     ) {
         $this->shippingOptions = $shippingOptions;
         $this->quoteItemsAreInStock = $quoteItemsAreInStock;
