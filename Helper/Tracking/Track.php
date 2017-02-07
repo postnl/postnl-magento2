@@ -48,6 +48,7 @@ use \Magento\Framework\Api\SearchCriteriaBuilder;
 use \Magento\Sales\Model\Order\ShipmentRepository;
 use \TIG\PostNL\Helper\Tracking\Mail;
 use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use \TIG\PostNL\Logging\Log;
 
 /**
  * Class Track
@@ -80,6 +81,7 @@ class Track extends AbstractTracking
      * @param StatusFactory            $statusFactory
      * @param Mail                     $mail
      * @param Webshop                  $webshop
+     * @param Log                      $logging
      */
     public function __construct(
         Context $context,
@@ -89,7 +91,8 @@ class Track extends AbstractTracking
         SearchCriteriaBuilder $searchCriteriaBuilder,
         StatusFactory $statusFactory,
         Mail $mail,
-        Webshop $webshop
+        Webshop $webshop,
+        Log $logging
     ) {
         $this->trackFactory             = $trackFactory;
         $this->trackStatusFactory       = $statusFactory;
@@ -100,7 +103,8 @@ class Track extends AbstractTracking
             $shipmentRepository,
             $postNLShipmentRepository,
             $searchCriteriaBuilder,
-            $webshop
+            $webshop,
+            $logging
         );
     }
 
@@ -155,6 +159,7 @@ class Track extends AbstractTracking
      */
     private function addTrackingNumbersToShipment($shipment, $trackingNumbers)
     {
+        $this->logging->addDebug('Adding trackingnumbers to shipment'. $shipment->getId(), $trackingNumbers);
         foreach ($trackingNumbers as $number) {
             $track = $this->trackFactory->create();
             $track->setNumber($number);

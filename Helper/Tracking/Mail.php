@@ -42,7 +42,6 @@ use \TIG\PostNL\Helper\AbstractTracking;
 use \Magento\Framework\App\Helper\Context;
 use \Magento\Framework\Mail\Template\TransportBuilder;
 use \TIG\PostNL\Helper\Data as PostNLHelper;
-use TIG\PostNL\Config\Provider\AddressConfiguration;
 use \Magento\Framework\Api\SearchCriteriaBuilder;
 use \Magento\Sales\Model\Order\ShipmentRepository;
 use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
@@ -50,6 +49,7 @@ use \Magento\Framework\Mail\TransportInterface;
 use \Magento\Framework\Exception\MailException;
 use \Magento\Sales\Model\Order\Shipment;
 use \TIG\PostNL\Config\Provider\Webshop;
+use \TIG\PostNL\Logging\Log;
 
 /**
  * Class Mail
@@ -69,12 +69,6 @@ class Mail extends AbstractTracking
     private $postNLHelperData;
 
     /**
-     * @var AddressConfiguration
-     */
-
-    private $addressConfiguration;
-
-    /**
      * @var TransportInterface
      */
     private $trackAndTraceEmail;
@@ -86,8 +80,8 @@ class Mail extends AbstractTracking
      * @param PostNLShipmentRepository $postNLShipmentRepository
      * @param TransportBuilder         $transportBuilder
      * @param PostNLHelper             $data
-     * @param AddressConfiguration     $addressConfiguration
      * @param Webshop                  $webshop
+     * @param Log                      $logging
      */
     public function __construct(
         Context $context,
@@ -96,19 +90,19 @@ class Mail extends AbstractTracking
         SearchCriteriaBuilder $searchCriteriaBuilder,
         TransportBuilder $transportBuilder,
         PostNLHelper $data,
-        AddressConfiguration $addressConfiguration,
-        Webshop $webshop
+        Webshop $webshop,
+        Log $logging
     ) {
         $this->transportBuilder     = $transportBuilder;
         $this->postNLHelperData     = $data;
-        $this->addressConfiguration = $addressConfiguration;
 
         parent::__construct(
             $context,
             $shipmentRepository,
             $postNLShipmentRepository,
             $searchCriteriaBuilder,
-            $webshop
+            $webshop,
+            $logging
         );
     }
 
@@ -118,7 +112,11 @@ class Mail extends AbstractTracking
      */
     public function send()
     {
-        $this->trackAndTraceEmail->sendMessage();
+        try {
+            $this->trackAndTraceEmail->sendMessage();
+        } catch (MailException $exception) {
+            $this->logging->addCritical($exception->getLogMessage());
+        }
     }
 
     /**
@@ -146,7 +144,7 @@ class Mail extends AbstractTracking
             $address->getEmail(),
             $address->getFirstname() . ' '. $address->getLastname()
         );
-
+        $this->logging->addInfo('Track And Trace email build for :'. $address->getEmail());
         $this->trackAndTraceEmail = $transport->getTransport();
     }
 }

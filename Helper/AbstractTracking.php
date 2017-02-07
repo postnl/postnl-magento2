@@ -46,6 +46,7 @@ use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use \TIG\PostNL\Model\Shipment as PostNLShipment;
 use \Magento\Framework\Api\AbstractExtensibleObject;
 use \TIG\PostNL\Config\Provider\Webshop;
+use \TIG\PostNL\Logging\Log;
 
 /**
  * Class AbstractTracking
@@ -79,23 +80,32 @@ abstract class AbstractTracking extends AbstractHelper
     protected $webshopConfig;
 
     /**
+     * @var Log
+     */
+    //@codingStandardsIgnoreLine
+    protected $logging;
+
+    /**
      * @param Context                  $context
      * @param ShipmentRepository       $shipmentRepository
      * @param PostNLShipmentRepository $postNLShipmentRepository
      * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      * @param Webshop                  $webshop
+     * @param Log                      $logging
      */
     public function __construct(
         Context $context,
         ShipmentRepository $shipmentRepository,
         PostNLShipmentRepository $postNLShipmentRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        Webshop $webshop
+        Webshop $webshop,
+        Log $logging
     ) {
         $this->shimpentRepository       = $shipmentRepository;
         $this->postNLShipmentRepository = $postNLShipmentRepository;
         $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
         $this->webshopConfig            = $webshop;
+        $this->logging                  = $logging;
         parent::__construct($context);
     }
 
