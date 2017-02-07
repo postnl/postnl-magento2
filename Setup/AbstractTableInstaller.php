@@ -38,6 +38,7 @@
  */
 namespace TIG\PostNL\Setup;
 
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -201,6 +202,33 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     }
 
     /**
+     * @param        $name
+     * @param        $comment
+     * @param string $length
+     * @param bool   $nullable
+     * @param null   $default
+     *
+     * @throws \Zend_Db_Exception
+     */
+    // @codingStandardsIgnoreLine
+    protected function addDecimal($name, $comment, $length = '10,0', $nullable = true, $default = null)
+    {
+        $this->table->addColumn(
+            $name,
+            Table::TYPE_DECIMAL,
+            $length,
+            [
+                'identity' => false,
+                'unsigned' => false,
+                'nullable' => $nullable,
+                'primary' => false,
+                'default' => $default,
+            ],
+            $comment
+        );
+    }
+
+    /**
      * @param        $ref_table
      * @param        $ref_table_field
      * @param        $table
@@ -221,6 +249,21 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
             $this->setup->getTable($ref_table),
             $ref_table_field,
             $onDelete
+        );
+    }
+
+    /**
+     * @param array  $fields
+     * @param string $indexType
+     *
+     * @throws \Zend_Db_Exception
+     */
+    protected function addIndex($fields, $indexType = AdapterInterface::INDEX_TYPE_UNIQUE)
+    {
+        $this->table->addIndex(
+            $this->setup->getIdxName($this->table->getName(), $fields, $indexType),
+            $fields,
+            ['type' => $indexType]
         );
     }
 
