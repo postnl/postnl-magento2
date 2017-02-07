@@ -47,25 +47,17 @@ use TIG\PostNL\Model\Shipment;
 class UpdateOrderShipmentGrid implements ObserverInterface
 {
     /**
-     * @var ResourceConnection
-     */
-    private $resource;
-
-    /**
      * @var GridInterface
      */
-    private $entityGrid;
+    private $shipmentGrid;
 
     /**
-     * @param ResourceConnection $resource
-     * @param GridInterface      $entityGrid
+     * @param GridInterface $shipmentGrid
      */
     public function __construct(
-        ResourceConnection $resource,
-        GridInterface $entityGrid
+        GridInterface $shipmentGrid
     ) {
-        $this->resource = $resource;
-        $this->entityGrid = $entityGrid;
+        $this->shipmentGrid = $shipmentGrid;
     }
 
     /**
@@ -79,6 +71,6 @@ class UpdateOrderShipmentGrid implements ObserverInterface
         $shipment = $observer->getData('data_object');
         $shipmentId = $shipment->getShipmentId();
 
-        $this->entityGrid->refresh($shipmentId);
+        $this->shipmentGrid->refresh($shipmentId);
     }
 }

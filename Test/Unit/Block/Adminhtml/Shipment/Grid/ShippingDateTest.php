@@ -41,7 +41,7 @@ namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Shipment\Grid;
 use \Magento\Framework\Phrase;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
-use TIG\PostNL\Block\Adminhtml\Shipment\Grid\ShippingDate;
+use TIG\PostNL\Block\Adminhtml\Grid\Shipment\ShippingDate;
 use TIG\PostNL\Test\TestCase;
 
 class ShippingDateTest extends TestCase

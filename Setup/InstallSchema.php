@@ -45,8 +45,10 @@ use TIG\PostNL\Setup\V110\InstallOrderTable;
 use TIG\PostNL\Setup\V110\InstallShipmentBarcodeTable;
 use TIG\PostNL\Setup\V110\InstallShipmentLabelTable;
 use TIG\PostNL\Setup\V110\InstallShipmentTable;
+use TIG\PostNL\Setup\V110\SalesOrderGridColumns;
 use TIG\PostNL\Setup\V110\SalesShipmentGridColumns;
 
+// @codingStandardsIgnoreStart
 class InstallSchema implements InstallSchemaInterface
 {
     /**
@@ -75,24 +77,32 @@ class InstallSchema implements InstallSchemaInterface
     private $salesShipmentGridColumns;
 
     /**
+     * @var SalesOrderGridColumns
+     */
+    private $salesOrderGridColumns;
+
+    /**
      * @param InstallShipmentTable        $installShipmentTable
      * @param InstallOrderTable           $installOrderTable
      * @param InstallShipmentLabelTable   $installShipmentLabelTable
      * @param InstallShipmentBarcodeTable $installShipmentBarcodeTable
      * @param SalesShipmentGridColumns    $salesShipmentGridColumns
+     * @param SalesOrderGridColumns       $salesOrderGridColumns
      */
     public function __construct(
         InstallShipmentTable $installShipmentTable,
         InstallOrderTable $installOrderTable,
         InstallShipmentLabelTable $installShipmentLabelTable,
         InstallShipmentBarcodeTable $installShipmentBarcodeTable,
-        SalesShipmentGridColumns $salesShipmentGridColumns
+        SalesShipmentGridColumns $salesShipmentGridColumns,
+        SalesOrderGridColumns $salesOrderGridColumns
     ) {
         $this->installShipmentTable = $installShipmentTable;
         $this->installOrderTable = $installOrderTable;
         $this->installShipmentLabelTable = $installShipmentLabelTable;
         $this->installShipmentBarcodeTable = $installShipmentBarcodeTable;
         $this->salesShipmentGridColumns = $salesShipmentGridColumns;
+        $this->salesOrderGridColumns = $salesOrderGridColumns;
     }
 
     /**
@@ -113,8 +123,10 @@ class InstallSchema implements InstallSchemaInterface
             $this->installShipmentLabelTable->install($setup, $context);
             $this->installShipmentBarcodeTable->install($setup, $context);
             $this->salesShipmentGridColumns->install($setup, $context);
+            $this->salesOrderGridColumns->install($setup, $context);
         }
 
         $setup->endSetup();
     }
 }
+// @codingStandardsIgnoreEnd
