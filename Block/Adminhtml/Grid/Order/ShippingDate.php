@@ -38,92 +38,122 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Grid\Order;
 
+use TIG\PostNL\Api\ShipmentRepositoryInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Block\Adminhtml\Grid\AbstractGrid;
-use TIG\PostNL\Model\ShipmentFactory;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
-use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use Magento\Framework\Stdlib\DateTime\DateTimeFormatterInterface;
+use TIG\PostNL\Block\Adminhtml\Renderer\ShippingDate as ShippingDateRenderer;
 
 class ShippingDate extends AbstractGrid
 {
     /**
-     * @var TimezoneInterface
+     * @var SearchCriteriaBuilder
      */
-    private $timezoneInterface;
+    private $searchCriteriaBuilder;
 
     /**
-     * @var DateTimeFormatterInterface
+     * @var ShipmentRepositoryInterface
      */
-    private $dateTimeFormatterInterface;
+    private $shipmentRepository;
 
+    /**
+     * @var array
+     */
+    private $shipments = [];
+
+    /**
+     * @var ShippingDateRenderer
+     */
+    private $shippingDateRenderer;
+
+    /**
+     * @param ContextInterface            $context
+     * @param UiComponentFactory          $uiComponentFactory
+     * @param ShipmentRepositoryInterface $orderRepository
+     * @param SearchCriteriaBuilder       $searchCriteriaBuilder
+     * @param ShippingDateRenderer        $shippingDateRenderer
+     * @param array                       $components
+     * @param array                       $data
+     */
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
-        TimezoneInterface $timezoneInterface,
-        DateTimeFormatterInterface $dateTimeFormatterInterface,
+        ShipmentRepositoryInterface $orderRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        ShippingDateRenderer $shippingDateRenderer,
         array $components = [],
         array $data = []
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
 
-        $this->timezoneInterface = $timezoneInterface;
-        $this->dateTimeFormatterInterface = $dateTimeFormatterInterface;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->shipmentRepository = $orderRepository;
+        $this->shippingDateRenderer = $shippingDateRenderer;
     }
 
     /**
-     * @param $item
+     * Preload all the needed models in 1 query.
+     */
+    // @codingStandardsIgnoreLine
+    protected function prepareData()
+    {
+        $orderIds = $this->collectIds();
+        $models = $this->loadModels($orderIds);
+
+        foreach ($models as $model) {
+            $this->shipments[$model->getOrderId()][] = $model;
+        }
+    }
+
+    /**
+     * @param object $item
      *
-     * @return string
+     * @return null|string
      */
     // @codingStandardsIgnoreLine
     protected function getCellContents($item)
     {
-        $shipAt = $this->getShipAt($item);
-        if ($shipAt === null) {
+        $entityId = $item['entity_id'];
+        if (!array_key_exists($entityId, $this->shipments)) {
             return null;
         }
 
-        return $this->formatShippingDate($shipAt);
+        $output = '';
+        /** @var \TIG\PostNL\Model\Shipment $model */
+        foreach ($this->shipments[$entityId] as $model) {
+            $output .= $this->shippingDateRenderer->render($model) . '<br>';
+        }
+
+        return $output;
     }
 
     /**
-     * @return null|string
+     * @return array
      */
-    private function getShipAt($item)
+    private function collectIds()
     {
-        $shipAt = $item['tig_postnl_ship_at'];
-        if ($shipAt === null) {
-            return null;
+        $orderIds = [];
+
+        foreach ($this->items as $item) {
+            $orderIds[] = $item['entity_id'];
         }
 
-        return $shipAt;
+        return $orderIds;
     }
 
     /**
-     * @param $shipAt
+     * @param array $orderIds
      *
-     * @return null|int
+     * @return \TIG\PostNL\Model\Shipment[]
      */
-    private function formatShippingDate($shipAt)
+    private function loadModels($orderIds = [])
     {
-        $now = $this->timezoneInterface->date();
-        $whenToShip = $this->timezoneInterface->date($shipAt);
-        $difference = $now->diff($whenToShip);
-        $days = $difference->days;
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('order_id', $orderIds, 'IN');
 
-        if ($days == 0) {
-            return __('Today');
-        }
+        /** @var \Magento\Framework\Api\SearchResults $list */
+        $list = $this->shipmentRepository->getList($searchCriteria->create());
 
-        if (!$difference->invert && $days === 1) {
-            return __('Tomorrow');
-        }
-
-        if (!$difference->invert) {
-            return __('In %1 days', [$days]);
-        }
-
-        return $whenToShip->format('d M. Y');
+        return $list->getItems();
     }
 }

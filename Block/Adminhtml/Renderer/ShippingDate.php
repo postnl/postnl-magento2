@@ -36,40 +36,79 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Shipment\Grid;
+namespace TIG\PostNL\Block\Adminhtml\Renderer;
 
-use TIG\PostNL\Test\TestCase;
-use TIG\PostNL\Block\Adminhtml\Grid\ConfirmStatus;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Framework\Stdlib\DateTime\DateTimeFormatterInterface;
+use TIG\PostNL\Model\Shipment;
 
-class ConfirmStatusTest extends TestCase
+class ShippingDate
 {
-    protected $instanceClass = ConfirmStatus::class;
-
-    public function getIsConfirmedProvider()
-    {
-        return [
-            'exists_but_not_confirmed' => [null, false],
-            'exists_and_confirmed' => ['2016-11-19 21:13:12', true],
-        ];
+    /**
+     * @param TimezoneInterface          $timezoneInterface
+     * @param DateTimeFormatterInterface $dateTimeFormatterInterface
+     */
+    public function __construct(
+        TimezoneInterface $timezoneInterface,
+        DateTimeFormatterInterface $dateTimeFormatterInterface
+    ) {
+        $this->timezoneInterface = $timezoneInterface;
+        $this->dateTimeFormatterInterface = $dateTimeFormatterInterface;
     }
 
     /**
-     * @param $confirmedAt
-     * @param $expected
+     * @param null|Shipment $item
      *
-     * @dataProvider getIsConfirmedProvider
+     * @return string|null
      */
-    public function testGetCellContents($confirmedAt, $expected)
+    public function render($item)
     {
-        $item = ['tig_postnl_confirmed_at' => $confirmedAt];
+        $shipAt = $this->getShipAt($item);
+        if ($shipAt === null) {
+            return null;
+        }
 
-        $instance = $this->getFakeMock($this->instanceClass)->getMock();
+        return $this->formatShippingDate($shipAt);
+    }
 
-        /** @var \Magento\Framework\Phrase $result */
-        $result = $this->invokeArgs('getCellContents', [$item], $instance);
+    /**
+     * @param null|Shipment $shipAt
+     *
+     * @return null|string
+     */
+    private function getShipAt($shipAt)
+    {
+        if ($shipAt instanceof Shipment) {
+            $shipAt = $shipAt->getShipAt();
+        }
 
-        $this->assertInstanceOf(\Magento\Framework\Phrase::class, $result);
-        $text = ucfirst(($expected ? '' : 'not ') . 'confirmed');
-        $this->assertEquals($text, $result->getText());
+        return $shipAt;
+    }
+
+    /**
+     * @param $shipAt
+     *
+     * @return null|int
+     */
+    private function formatShippingDate($shipAt)
+    {
+        $now = $this->timezoneInterface->date();
+        $whenToShip = $this->timezoneInterface->date($shipAt);
+        $difference = $now->diff($whenToShip);
+        $days = $difference->days;
+
+        if ($days == 0) {
+            return __('Today');
+        }
+
+        if (!$difference->invert && $days === 1) {
+            return __('Tomorrow');
+        }
+
+        if (!$difference->invert) {
+            return __('In %1 days', [$days]);
+        }
+
+        return $whenToShip->format('d M. Y');
     }
 }

@@ -36,62 +36,55 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid;
+namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Grid\Shipment;
 
-use Magento\Ui\Component\Listing\Columns\Column;
+use \Magento\Framework\Phrase;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use TIG\PostNL\Block\Adminhtml\Grid\Shipment\ShippingDate;
+use TIG\PostNL\Test\TestCase;
 
-abstract class AbstractGrid extends Column
+class ShippingDateTest extends TestCase
 {
-    /**
-     * @var array
-     */
-    // @codingStandardsIgnoreLine
-    protected $items = [];
+    protected $instanceClass = ShippingDate::class;
 
     /**
-     * @param array $dataSource
+     * @param array $args
      *
-     * @return array
+     * @return ShippingDate
      */
-    public function prepareDataSource(array $dataSource)
+    public function getInstance(array $args = [])
     {
-        if (isset($dataSource['data']['items'])) {
-            $this->items = $dataSource['data']['items'];
+        if (!isset($args['context'])) {
+            $contextMock = $this->getMockForAbstractClass(ContextInterface::class, [], '', false, true, true, []);
+            $processor   = $this->getMockBuilder('Magento\Framework\View\Element\UiComponent\Processor')
+                ->disableOriginalConstructor()
+                ->getMock();
+            $contextMock->expects($this->any())->method('getProcessor')->willReturn($processor);
 
-            $this->prepareData();
-            $this->handleItems();
-
-            $dataSource['data']['items'] = $this->items;
+            $args['context'] = $contextMock;
         }
 
-        return $dataSource;
+        return parent::getInstance($args);
     }
 
-    /**
-     * Load all the needed data in only 1 query.
-     */
-    // @codingStandardsIgnoreLine
-    protected function prepareData()
+    public function testGetCellContents()
     {
-        return null;
-    }
+        $randomString = uniqid();
+        $randomResult = uniqid();
 
-    /**
-     * @return array
-     */
-    // @codingStandardsIgnoreLine
-    protected function handleItems()
-    {
-        foreach ($this->items as $index => $item) {
-            $this->items[$index][$this->getData('name')] = $this->getCellContents($item);
-        }
-    }
+        $rendererMock = $this->getFakeMock(\TIG\PostNL\Block\Adminhtml\Renderer\ShippingDate::class)->getMock();
 
-    /**
-     * @param object $item
-     *
-     * @return string
-     */
-    // @codingStandardsIgnoreLine
-    abstract protected function getCellContents($item);
+        $renderExpects = $rendererMock->expects($this->once());
+        $renderExpects->method('render');
+        $renderExpects->with($randomString);
+        $renderExpects->willReturn($randomResult);
+
+        $instance = $this->getInstance([
+            'shippingDateRenderer' => $rendererMock,
+        ]);
+
+        $result = $this->invokeArgs('getCellContents', [['tig_postnl_ship_at' => $randomString]], $instance);
+
+        $this->assertEquals($randomResult, $result);
+    }
 }
