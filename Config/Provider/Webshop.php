@@ -40,9 +40,13 @@ namespace TIG\PostNL\Config\Provider;
 
 class Webshop extends AbstractConfigProvider
 {
-    const XPATH_WEBSHOP_LABEL_SIZE   = 'tig_postnl/webshop_printer/label_size';
-    const XPATH_WEBSHOP_CUTOFFTIME   = 'tig_postnl/webshop_shipping/cutoff_time';
-    const XPATH_WEBSHOP_SHIPMENTDAYS = 'tig_postnl/webshop_shipping/shipment_days';
+    const XPATH_WEBSHOP_LABEL_SIZE    = 'tig_postnl/webshop_printer/label_size';
+    const XPATH_WEBSHOP_CUTOFFTIME    = 'tig_postnl/webshop_shipping/cutoff_time';
+    const XPATH_WEBSHOP_SHIPMENTDAYS  = 'tig_postnl/webshop_shipping/shipment_days';
+
+    const XPATH_TRACK_AND_TRACE_ENABLED       = 'tig_postnl/webshop_track_and_trace/email_enabled';
+    const XPATH_TRACK_AND_TRACE_SERVICE_URL   = 'tig_postnl/webshop_track_and_trace/service_url';
+    const XPATH_TRACK_AND_TRACE_MAIL_TEMPLATE = 'tig_postnl/webshop_track_and_trace/template';
 
     /**
      * @return mixed
@@ -66,5 +70,30 @@ class Webshop extends AbstractConfigProvider
     public function getShipmentDays()
     {
         return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SHIPMENTDAYS);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isTrackAndTraceEnabled()
+    {
+        return $this->getConfigFromXpath(self::XPATH_TRACK_AND_TRACE_ENABLED);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrackAndTraceServiceUrl()
+    {
+        return $this->getConfigFromXpath(self::XPATH_TRACK_AND_TRACE_SERVICE_URL);
+    }
+
+    /**
+     * @param $storeId
+     * @return mixed
+     */
+    public function getTrackAndTraceEmailTemplate($storeId = null)
+    {
+        return $this->getConfigFromXpath(self::XPATH_TRACK_AND_TRACE_MAIL_TEMPLATE, $storeId);
     }
 }

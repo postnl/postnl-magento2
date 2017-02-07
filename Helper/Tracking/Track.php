@@ -41,6 +41,7 @@ namespace TIG\PostNL\Helper\Tracking;
 use \TIG\PostNL\Helper\AbstractTracking;
 use \Magento\Sales\Model\Order\Shipment\TrackFactory;
 use \Magento\Shipping\Model\Tracking\Result\StatusFactory;
+use \TIG\PostNL\Config\Provider\Webshop;
 use \Magento\Sales\Model\Order\Shipment;
 use \Magento\Framework\App\Helper\Context;
 use \Magento\Framework\Api\SearchCriteriaBuilder;
@@ -78,6 +79,7 @@ class Track extends AbstractTracking
      * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      * @param StatusFactory            $statusFactory
      * @param Mail                     $mail
+     * @param Webshop                  $webshop
      */
     public function __construct(
         Context $context,
@@ -86,7 +88,8 @@ class Track extends AbstractTracking
         PostNLShipmentRepository $postNLShipmentRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         StatusFactory $statusFactory,
-        Mail $mail
+        Mail $mail,
+        Webshop $webshop
     ) {
         $this->trackFactory             = $trackFactory;
         $this->trackStatusFactory       = $statusFactory;
@@ -96,7 +99,8 @@ class Track extends AbstractTracking
             $context,
             $shipmentRepository,
             $postNLShipmentRepository,
-            $searchCriteriaBuilder
+            $searchCriteriaBuilder,
+            $webshop
         );
     }
 
@@ -110,6 +114,11 @@ class Track extends AbstractTracking
         $trackingNumbers = [];
         foreach ($this->getPostNLshipments($shipment->getId()) as $postnlShipment) {
             $trackingNumbers[] = $postnlShipment->getMainBarcode();
+            //@codingStandardsIgnoreStart
+            if (!$this->webshopConfig->isTrackAndTraceEnabled()) {
+                continue;
+            }
+            //@codingStandardsIgnoreEnd
             $this->trackAndTraceEmail->set(
                 $shipment,
                 $this->getTrackAndTraceUrl($postnlShipment->getMainBarcode())

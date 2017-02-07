@@ -43,6 +43,9 @@ use \Magento\Framework\App\Helper\Context;
 use \Magento\Framework\Api\SearchCriteriaBuilder;
 use \Magento\Sales\Model\Order\ShipmentRepository;
 use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use \TIG\PostNL\Model\Shipment as PostNLShipment;
+use \Magento\Framework\Api\AbstractExtensibleObject;
+use \TIG\PostNL\Config\Provider\Webshop;
 
 /**
  * Class AbstractTracking
@@ -51,8 +54,6 @@ use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
  */
 abstract class AbstractTracking extends AbstractHelper
 {
-    const TRACK_AND_TRACE_SERVICE_URL = 'http://postnl.nl/tracktrace/?';
-
     /**
      * @var ShipmentRepository
      */
@@ -72,27 +73,36 @@ abstract class AbstractTracking extends AbstractHelper
     protected $searchCriteriaBuilder;
 
     /**
+     * @var Webshop
+     */
+    //@codingStandardsIgnoreLine
+    protected $webshopConfig;
+
+    /**
      * @param Context                  $context
      * @param ShipmentRepository       $shipmentRepository
      * @param PostNLShipmentRepository $postNLShipmentRepository
      * @param SearchCriteriaBuilder    $searchCriteriaBuilder
+     * @param Webshop                  $webshop
      */
     public function __construct(
         Context $context,
         ShipmentRepository $shipmentRepository,
         PostNLShipmentRepository $postNLShipmentRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        Webshop $webshop
     ) {
         $this->shimpentRepository       = $shipmentRepository;
         $this->postNLShipmentRepository = $postNLShipmentRepository;
         $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
+        $this->webshopConfig            = $webshop;
         parent::__construct($context);
     }
 
     /**
      * @param $shipmentId
      *
-     * @return \TIG\PostNL\Model\Shipment[]
+     * @return PostNLShipment[]
      */
     //@codingStandardsIgnoreLine
     protected function getPostNLshipments($shipmentId)
@@ -106,7 +116,7 @@ abstract class AbstractTracking extends AbstractHelper
     /**
      * @param $trackingNumber
      *
-     * @return \Magento\Framework\Api\AbstractExtensibleObject
+     * @return AbstractExtensibleObject
      */
     //@codingStandardsIgnoreLine
     protected function getPostNLshipmentByTracking($trackingNumber)
@@ -127,7 +137,7 @@ abstract class AbstractTracking extends AbstractHelper
     //@codingStandardsIgnoreLine
     protected function getTrackAndTraceUrl($trackingNumber, $type = 'C')
     {
-        /** @var \TIG\PostNL\Model\Shipment $postNLShipment */
+        /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLshipmentByTracking($trackingNumber);
         /** @var \Magento\Sales\Model\Order\Shipment $shipment */
         $shipment = $this->shimpentRepository->get($postNLShipment->getShipmentId());
@@ -145,6 +155,6 @@ abstract class AbstractTracking extends AbstractHelper
             '&T='.$type
         ];
 
-        return self::TRACK_AND_TRACE_SERVICE_URL.implode('', $params);
+        return $this->webshopConfig->getTrackAndTraceServiceUrl().implode('', $params);
     }
 }

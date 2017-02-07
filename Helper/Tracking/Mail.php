@@ -46,6 +46,10 @@ use TIG\PostNL\Config\Provider\AddressConfiguration;
 use \Magento\Framework\Api\SearchCriteriaBuilder;
 use \Magento\Sales\Model\Order\ShipmentRepository;
 use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use \Magento\Framework\Mail\TransportInterface;
+use \Magento\Framework\Exception\MailException;
+use \Magento\Sales\Model\Order\Shipment;
+use \TIG\PostNL\Config\Provider\Webshop;
 
 /**
  * Class Mail
@@ -71,7 +75,7 @@ class Mail extends AbstractTracking
     private $addressConfiguration;
 
     /**
-     * @var \Magento\Framework\Mail\TransportInterface
+     * @var TransportInterface
      */
     private $trackAndTraceEmail;
 
@@ -83,6 +87,7 @@ class Mail extends AbstractTracking
      * @param TransportBuilder         $transportBuilder
      * @param PostNLHelper             $data
      * @param AddressConfiguration     $addressConfiguration
+     * @param Webshop                  $webshop
      */
     public function __construct(
         Context $context,
@@ -91,7 +96,8 @@ class Mail extends AbstractTracking
         SearchCriteriaBuilder $searchCriteriaBuilder,
         TransportBuilder $transportBuilder,
         PostNLHelper $data,
-        AddressConfiguration $addressConfiguration
+        AddressConfiguration $addressConfiguration,
+        Webshop $webshop
     ) {
         $this->transportBuilder     = $transportBuilder;
         $this->postNLHelperData     = $data;
@@ -101,13 +107,14 @@ class Mail extends AbstractTracking
             $context,
             $shipmentRepository,
             $postNLShipmentRepository,
-            $searchCriteriaBuilder
+            $searchCriteriaBuilder,
+            $webshop
         );
     }
 
     /**
      * @return void
-     * @throws \Magento\Framework\Exception\MailException
+     * @throws MailException
      */
     public function send()
     {
@@ -115,14 +122,14 @@ class Mail extends AbstractTracking
     }
 
     /**
-     * @param \Magento\Sales\Model\Order\Shipment $shipment
+     * @param Shipment $shipment
      * @param string $url
      *
      * @return $this
      */
     public function set($shipment, $url)
     {
-        $template  = $this->getTemplate($shipment->getStoreId());
+        $template  = $this->webshopConfig->getTrackAndTraceEmailTemplate($shipment->getStoreId());
         $transport = $this->transportBuilder->setTemplateIdentifier($template);
         $transport->setTemplateOptions([
             'area'  => \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE,
@@ -141,19 +148,5 @@ class Mail extends AbstractTracking
         );
 
         $this->trackAndTraceEmail = $transport->getTransport();
-    }
-
-    /**
-     * @param $storeId
-     *
-     * @return mixed
-     */
-    private function getTemplate($storeId)
-    {
-        return $this->scopeConfig->getValue(
-            'tig_postnl/track_and_trace_email/template',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
     }
 }
