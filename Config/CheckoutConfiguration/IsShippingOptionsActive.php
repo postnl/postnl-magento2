@@ -69,7 +69,7 @@ class IsShippingOptionsActive extends AbstractCheckoutConfiguration
      */
     public function getValue()
     {
-        if ($this->shippingOptions->getShippingStockoptions() == 'stock_products' &&
+        if ($this->shippingOptions->getShippingStockoptions() == 'backordered' &&
             !$this->quoteItemsAreInStock->getValue()
         ) {
             return false;

@@ -37,30 +37,44 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\PostNL\Config\Source\Options;
+namespace TIG\PostNL\Test\Unit\Config\Source\Options;
 
-use \Magento\Framework\Option\ArrayInterface;
-use TIG\PostNL\Config\Source\OptionsAbstract;
+use TIG\PostNL\Config\Source\Options\StockOptions;
 
 /**
  * Class StockOptions
  *
  * @package TIG\PostNL\Config\Source\Options
  */
-class StockOptions extends OptionsAbstract implements ArrayInterface
+class StockOptionsTest extends \TIG\PostNL\Test\TestCase
 {
-    /**
-     * Return option array
-     * @return array
-     */
-    public function toOptionArray()
+    public $instanceClass = StockOptions::class;
+
+    public function returnsTheCorrectOptionsProvider()
     {
-        // @codingStandardsIgnoreStart
-        $options = [
-            ['value' => 'in_stock', 'label' => __('All products')],
-            ['value' => 'backordered', 'label' => __('Only for products that are in stock')]
+        return [
+            ['value' => 'in_stock'],
+            ['value' => 'backordered'],
         ];
-        // @codingStandardsIgnoreEnd
-        return $options;
+    }
+
+    /**
+     * @dataProvider returnsTheCorrectOptionsProvider
+     */
+    public function testReturnsTheCorrectOptions($value)
+    {
+        /** @var StockOptions $instance */
+        $instance = $this->getInstance();
+
+        $result = $instance->toOptionArray();
+
+        $hasValue = false;
+        foreach ($result as $option) {
+            if ($option['value'] == $value) {
+                $hasValue = true;
+            }
+        }
+
+        $this->assertTrue($hasValue, '$result should contains ["value" => "' . $value . '"]');
     }
 }
