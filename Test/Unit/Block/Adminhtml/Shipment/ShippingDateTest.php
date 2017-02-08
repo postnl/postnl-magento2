@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,30 +36,55 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
-    <listingToolbar name="listing_top">
-        <massaction name="listing_massaction">
-            <action name="postnl_create_shipments">
-                <argument name="data" xsi:type="array">
-                    <item name="config" xsi:type="array">
-                        <item name="type" xsi:type="string">postnl_create_shipments</item>
-                        <item name="label" xsi:type="string" translate="true">PostNL - Create shipments</item>
-                        <item name="url" xsi:type="url" path="postnl/order/createShipments"/>
-                    </item>
-                </argument>
-            </action>
-        </massaction>
-    </listingToolbar>
-    <columns name="sales_order_columns">
-        <column name="tig_postnl_ship_at" class="TIG\PostNL\Block\Adminhtml\Grid\Order\ShippingDate">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">text</item>
-                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
-                    <item name="label" xsi:type="string" translate="true">Shipping Date</item>
-                </item>
-            </argument>
-        </column>
-    </columns>
-</listing>
+namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Grid\Shipment;
+
+use \Magento\Framework\Phrase;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use TIG\PostNL\Block\Adminhtml\Grid\Shipment\ShippingDate;
+use TIG\PostNL\Test\TestCase;
+
+class ShippingDateTest extends TestCase
+{
+    protected $instanceClass = ShippingDate::class;
+
+    /**
+     * @param array $args
+     *
+     * @return ShippingDate
+     */
+    public function getInstance(array $args = [])
+    {
+        if (!isset($args['context'])) {
+            $contextMock = $this->getMockForAbstractClass(ContextInterface::class, [], '', false, true, true, []);
+            $processor   = $this->getMockBuilder('Magento\Framework\View\Element\UiComponent\Processor')
+                ->disableOriginalConstructor()
+                ->getMock();
+            $contextMock->expects($this->any())->method('getProcessor')->willReturn($processor);
+
+            $args['context'] = $contextMock;
+        }
+
+        return parent::getInstance($args);
+    }
+
+    public function testGetCellContents()
+    {
+        $randomString = uniqid();
+        $randomResult = uniqid();
+
+        $rendererMock = $this->getFakeMock(\TIG\PostNL\Block\Adminhtml\Renderer\ShippingDate::class)->getMock();
+
+        $renderExpects = $rendererMock->expects($this->once());
+        $renderExpects->method('render');
+        $renderExpects->with($randomString);
+        $renderExpects->willReturn($randomResult);
+
+        $instance = $this->getInstance([
+            'shippingDateRenderer' => $rendererMock,
+        ]);
+
+        $result = $this->invokeArgs('getCellContents', [['tig_postnl_ship_at' => $randomString]], $instance);
+
+        $this->assertEquals($randomResult, $result);
+    }
+}

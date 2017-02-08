@@ -36,40 +36,32 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
+namespace TIG\PostNL\Setup\V110;
 
-class ConfirmStatus extends AbstractGrid
+use TIG\PostNL\Setup\AbstractColumnsInstaller;
+
+class SalesOrderGridColumns extends AbstractColumnsInstaller
 {
-    /**
-     * @param $item
-     *
-     * @return string
-     */
-    //@codingStandardsIgnoreLine
-    protected function getCellContents($item)
-    {
-        $confirmedAt = $this->getIsConfirmed($item);
+    const TABLE_NAME = 'sales_order_grid';
 
-        if (!$confirmedAt) {
-            return __('Not confirmed');
-        }
-
-        return __('Confirmed');
-    }
+    // @codingStandardsIgnoreLine
+    protected $columns = [
+        'tig_postnl_ship_at',
+    ];
 
     /**
-     * @param $item
-     *
-     * @return bool
+     * @return array
      */
-    private function getIsConfirmed($item)
+    public function installTigPostnlShipAtColumn()
     {
-        $confirmedAt = $item['tig_postnl_confirmed_at'];
-
-        if ($confirmedAt === null) {
-            return false;
-        }
-
-        return true;
+        return [
+            // @codingStandardsIgnoreLine
+            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            'length' => 255,
+            'nullable' => true,
+            'default' => null,
+            'comment' => 'When is this shipment due for sending',
+            'after' => 'shipping_information',
+        ];
     }
 }

@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,30 +36,37 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
-    <listingToolbar name="listing_top">
-        <massaction name="listing_massaction">
-            <action name="postnl_create_shipments">
-                <argument name="data" xsi:type="array">
-                    <item name="config" xsi:type="array">
-                        <item name="type" xsi:type="string">postnl_create_shipments</item>
-                        <item name="label" xsi:type="string" translate="true">PostNL - Create shipments</item>
-                        <item name="url" xsi:type="url" path="postnl/order/createShipments"/>
-                    </item>
-                </argument>
-            </action>
-        </massaction>
-    </listingToolbar>
-    <columns name="sales_order_columns">
-        <column name="tig_postnl_ship_at" class="TIG\PostNL\Block\Adminhtml\Grid\Order\ShippingDate">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">text</item>
-                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
-                    <item name="label" xsi:type="string" translate="true">Shipping Date</item>
-                </item>
-            </argument>
-        </column>
-    </columns>
-</listing>
+namespace TIG\PostNL\Unit\Config\Source\General;
+
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\Source\General\Logging;
+use Monolog\Logger as Monolog;
+
+class LoggingTest extends TestCase
+{
+    protected $instanceClass = Logging::class;
+
+    public function testToOptionArray()
+    {
+        $instance = $this->getInstance();
+        $options  = $instance->toOptionArray();
+
+        $this->assertCount(8, $options);
+
+        foreach ($options as $option) {
+            $this->assertArrayHasKey('label', $option);
+            $this->assertArrayHasKey('value', $option);
+        }
+    }
+
+    public function testEqualToMonolog()
+    {
+        $postnlOptions  = $this->getProperty('levels');
+        $monoLogOptions = $this->getProperty('levels', $this->getObject(Monolog::class));
+
+        $this->assertEquals(
+            $monoLogOptions, $postnlOptions,
+            'PostNL log options are not the same as Monologs'
+        );
+    }
+}

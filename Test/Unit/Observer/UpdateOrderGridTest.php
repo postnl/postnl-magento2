@@ -39,35 +39,91 @@
 namespace TIG\PostNL\Test\Unit\Observer;
 
 use Magento\Framework\Event\Observer;
-use TIG\PostNL\Observer\UpdateOrderShipmentGrid;
+use TIG\PostNL\Observer\UpdateOrderGrid;
 use TIG\PostNL\Test\TestCase;
 
-class UpdateOrderShipmentGridTest extends TestCase
+class UpdateOrderGridTest extends TestCase
 {
-    protected $instanceClass = UpdateOrderShipmentGrid::class;
+    protected $orderId;
+
+    protected $instanceClass = UpdateOrderGrid::class;
 
     public function testExecute()
     {
-        $shipment_id = rand(1000, 9999);
+        $this->orderId = rand(1000, 9999);
 
-        $gridMock = $this->getMock(\Magento\Sales\Model\ResourceModel\GridInterface::class);
+        $gridMock = $this->getGridInterface();
+        $orderRepository = $this->getOrderRepository();
+        $shipment = $this->getShipment();
 
-        $refreshExpects = $gridMock->expects($this->once());
-        $refreshExpects->method('refresh');
-        $refreshExpects->with($shipment_id);
-
-        /** @var UpdateOrderShipmentGrid $instance */
+        /** @var UpdateOrderGrid $instance */
         $instance = $this->getInstance([
-            'shipmentGrid' => $gridMock,
+            'orderGrid' => $gridMock,
+            'orderRepositoryInterface' => $orderRepository,
         ]);
 
-        $shipment = $this->getObject(\TIG\PostNL\Model\Shipment::class);
-        $shipment->setData('shipment_id', $shipment_id);
 
         /** @var Observer $observer */
         $observer = $this->getObject(Observer::class);
         $observer->setData('data_object', $shipment);
 
         $instance->execute($observer);
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getOrderRepository()
+    {
+        $orderRepository = $this->getMock(\TIG\PostNL\Api\OrderRepositoryInterface::class);
+        $order = $this->getOrder();
+
+        $getByIdExpects = $orderRepository->expects($this->once());
+        $getByIdExpects->method('getById');
+        $getByIdExpects->with($this->orderId);
+        $getByIdExpects->willReturn($order);
+
+        $saveExpects = $orderRepository->expects($this->once());
+        $saveExpects->method('save');
+        $saveExpects->with($order);
+
+        return $orderRepository;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getGridInterface()
+    {
+        $gridMock = $this->getMock(\Magento\Sales\Model\ResourceModel\GridInterface::class);
+
+        $refreshExpects = $gridMock->expects($this->once());
+        $refreshExpects->method('refresh');
+        $refreshExpects->with($this->orderId);
+
+        return $gridMock;
+    }
+
+    private function getOrder()
+    {
+        $orderMock = $this->getFakeMock(\TIG\PostNL\Model\Order::class)->getMock();
+
+        $setDataExpects = $orderMock->expects($this->once());
+        $setDataExpects->method('setData');
+        $setDataExpects->with('ship_at', '2016-11-19');
+
+        return $orderMock;
+    }
+
+    /**
+     * @return object
+     */
+    private function getShipment()
+    {
+        $shipment = $this->getObject(\TIG\PostNL\Model\Shipment::class);
+        $shipment->setData('order_id', $this->orderId);
+        $shipment->setData('ship_at', '2016-11-19');
+
+        return $shipment;
     }
 }
