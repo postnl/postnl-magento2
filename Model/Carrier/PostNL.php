@@ -39,20 +39,28 @@
 namespace TIG\PostNL\Model\Carrier;
 
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use TIG\PostNL\Config\Source\Carrier\RateType;
+use TIG\PostNL\Model\ResourceModel\Tablerate;
+use TIG\PostNL\Model\ResourceModel\TablerateFactory;
 
 class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     \Magento\Shipping\Model\Carrier\CarrierInterface
 {
     // @codingStandardsIgnoreLine
     protected $_code = 'tig_postnl';
+    /**
+     * @var TablerateFactory
+     */
+    private $tablerateFactory;
 
     /**
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
-     * @param \Psr\Log\LoggerInterface $logger
-     * @param \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface          $scopeConfig
+     * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory  $rateErrorFactory
+     * @param \Psr\Log\LoggerInterface                                    $logger
+     * @param \Magento\Shipping\Model\Rate\ResultFactory                  $rateResultFactory
      * @param \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory
-     * @param array $data
+     * @param TablerateFactory                                            $tablerateFactory
+     * @param array                                                       $data
      */
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -60,10 +68,13 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         \Psr\Log\LoggerInterface $logger,
         \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory,
         \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory,
+        TablerateFactory $tablerateFactory,
         array $data = []
     ) {
         $this->_rateResultFactory = $rateResultFactory;
         $this->_rateMethodFactory = $rateMethodFactory;
+        $this->tablerateFactory = $tablerateFactory;
+
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
 
@@ -96,16 +107,18 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         /** @var \Magento\Shipping\Model\Rate\Result $result */
         $result = $this->_rateResultFactory->create();
 
-        $method = $this->getMethod();
+        $method = $this->getMethod($request);
         $result->append($method);
 
         return $result;
     }
 
     /**
+     * @param RateRequest $request
+     *
      * @return \Magento\Quote\Model\Quote\Address\RateResult\Method
      */
-    private function getMethod()
+    private function getMethod(RateRequest $request)
     {
         /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
         $method = $this->_rateMethodFactory->create();
@@ -116,11 +129,50 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         $method->setMethod('regular');
         $method->setMethodTitle($this->getConfigData('name'));
 
-        $amount = $this->getConfigData('price');
+        $amount = $this->getAmount($request);
 
-        $method->setPrice($amount);
-        $method->setCost($amount);
+        $method->setPrice($amount['price']);
+        $method->setCost($amount['cost']);
 
         return $method;
+    }
+
+    /**
+     * @param RateRequest $request
+     *
+     * @return array
+     */
+    private function getAmount(RateRequest $request)
+    {
+        $price = $this->getConfigData('price');
+        $cost = $this->getConfigData('price');
+
+        if ($this->getConfigData('rate_type') == RateType::CARRIER_RATE_TYPE_TABLE) {
+            $rate = $this->getRate($request);
+
+            $price = $rate['price'];
+            $cost = $rate['cost'];
+        }
+
+        return [
+            'price' => $price,
+            'cost' => $cost
+        ];
+    }
+
+    /**
+     * @param RateRequest $request
+     *
+     * @return array|bool
+     */
+    private function getRate(RateRequest $request)
+    {
+        $request->setConditionName($this->getConfigData('condition_name'));
+
+        /** @var Tablerate $tablerate */
+        $tablerate = $this->tablerateFactory->create();
+        $rate = $tablerate->getRate($request);
+
+        return $rate;
     }
 }
