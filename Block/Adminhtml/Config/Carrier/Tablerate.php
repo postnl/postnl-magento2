@@ -88,7 +88,8 @@ class Tablerate extends MagentoTablerate
             $cacheTypeList,
             $tablerateFactory,
             $resource,
-            $resourceCollection
+            $resourceCollection,
+            $data
         );
 
         $this->_tablerateFactory = $postnlTablerateFactory;

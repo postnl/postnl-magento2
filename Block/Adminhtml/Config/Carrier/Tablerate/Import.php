@@ -62,10 +62,7 @@ class Import extends AbstractElement
      */
     public function getElementHtml()
     {
-        $html = '';
-
-        $html .= '<input id="time_condition" type="hidden" name="' . $this->getName() . '" value="' . time() . '" />';
-
+        $html = '<input id="time_condition" type="hidden" name="' . $this->getName() . '" value="' . time() . '" />';
         $html .= <<<EndHTML
         <script>
         require(['prototype'], function(){

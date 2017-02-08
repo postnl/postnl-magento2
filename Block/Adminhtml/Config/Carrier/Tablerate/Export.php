@@ -54,7 +54,7 @@ class Export extends AbstractElement
     /**
      * @var UrlInterface
      */
-    protected $backendUrl;
+    private $backendUrl;
 
     /**
      * @param Factory           $factoryElement
@@ -80,22 +80,24 @@ class Export extends AbstractElement
      */
     public function getElementHtml()
     {
+        $form = $this->getForm()->getParent();
+        $layout = $form->getLayout();
+
         /** @var \Magento\Backend\Block\Widget\Button $buttonBlock  */
-        $buttonBlock = $this->getForm()->getParent()->getLayout()->createBlock('Magento\Backend\Block\Widget\Button');
+        $buttonBlock = $layout->createBlock('Magento\Backend\Block\Widget\Button');
+        $buttonBlockRequest = $buttonBlock->getRequest();
 
-        $params = ['website' => $buttonBlock->getRequest()->getParam('website')];
-
+        $params = ['website' => $buttonBlockRequest->getParam('website')];
         $url = $this->backendUrl->getUrl("postnl/carrier_tablerate/export", $params);
         $data = [
             'label' => __('Export CSV'),
-            'onclick' => "setLocation('" .
-                $url .
-                "conditionName/' + $('carriers_tig_postnl_condition_name').value + '/tablerates.csv' )",
+            'onclick' => "setLocation('" . $url
+                . "conditionName/' + $('carriers_tig_postnl_condition_name').value + '/tablerates.csv' )",
             'class' => '',
         ];
+        $buttonBlock->setData($data);
 
-        $html = $buttonBlock->setData($data)->toHtml();
-
+        $html = $buttonBlock->toHtml();
         return $html;
     }
 }

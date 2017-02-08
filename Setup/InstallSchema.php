@@ -41,67 +41,26 @@ namespace TIG\PostNL\Setup;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
-use TIG\PostNL\Setup\V110\InstallOrderTable;
-use TIG\PostNL\Setup\V110\InstallShipmentBarcodeTable;
-use TIG\PostNL\Setup\V110\InstallShipmentLabelTable;
-use TIG\PostNL\Setup\V110\InstallShipmentTable;
-use TIG\PostNL\Setup\V110\InstallTablerateTable;
-use TIG\PostNL\Setup\V110\SalesShipmentGridColumns;
 
+/**
+ * Class InstallSchema
+ *
+ * @package TIG\PostNL\Setup
+ */
 class InstallSchema implements InstallSchemaInterface
 {
     /**
-     * @var InstallOrderTable
+     * @var
      */
-    private $installOrderTable;
+    private $installSchemaObjects;
 
     /**
-     * @var InstallShipmentTable
-     */
-    private $installShipmentTable;
-
-    /**
-     * @var InstallShipmentLabelTable
-     */
-    private $installShipmentLabelTable;
-
-    /**
-     * @var InstallShipmentBarcodeTable
-     */
-    private $installShipmentBarcodeTable;
-
-    /**
-     * @var InstallTablerateTable
-     */
-    private $installTablerateTable;
-
-    /**
-     * @var SalesShipmentGridColumns
-     */
-    private $salesShipmentGridColumns;
-
-    /**
-     * @param InstallShipmentTable        $installShipmentTable
-     * @param InstallOrderTable           $installOrderTable
-     * @param InstallShipmentLabelTable   $installShipmentLabelTable
-     * @param InstallShipmentBarcodeTable $installShipmentBarcodeTable
-     * @param InstallTablerateTable       $installTablerateTable
-     * @param SalesShipmentGridColumns    $salesShipmentGridColumns
+     * @param array $installSchemaObjects
      */
     public function __construct(
-        InstallShipmentTable $installShipmentTable,
-        InstallOrderTable $installOrderTable,
-        InstallShipmentLabelTable $installShipmentLabelTable,
-        InstallShipmentBarcodeTable $installShipmentBarcodeTable,
-        InstallTablerateTable $installTablerateTable,
-        SalesShipmentGridColumns $salesShipmentGridColumns
+        $installSchemaObjects = []
     ) {
-        $this->installShipmentTable = $installShipmentTable;
-        $this->installOrderTable = $installOrderTable;
-        $this->installShipmentLabelTable = $installShipmentLabelTable;
-        $this->installShipmentBarcodeTable = $installShipmentBarcodeTable;
-        $this->installTablerateTable = $installTablerateTable;
-        $this->salesShipmentGridColumns = $salesShipmentGridColumns;
+        $this->installSchemaObjects = $installSchemaObjects;
     }
 
     /**
@@ -117,14 +76,22 @@ class InstallSchema implements InstallSchemaInterface
         $setup->startSetup();
 
         if (version_compare($context->getVersion(), '1.1.0', '<')) {
-            $this->installOrderTable->install($setup, $context);
-            $this->installShipmentTable->install($setup, $context);
-            $this->installShipmentLabelTable->install($setup, $context);
-            $this->installShipmentBarcodeTable->install($setup, $context);
-            $this->installTablerateTable->install($setup, $context);
-            $this->salesShipmentGridColumns->install($setup, $context);
+            $this->installSchemas($this->installSchemaObjects['v1.1.0'], $setup, $context);
         }
 
         $setup->endSetup();
+    }
+
+    /**
+     * @param $schemaObjects
+     * @param $setup
+     * @param $context
+     */
+    private function installSchemas($schemaObjects, $setup, $context)
+    {
+        /** @var AbstractTableInstaller|AbstractColumnsInstaller $schema */
+        foreach ($schemaObjects as $schema) {
+            $schema->install($setup, $context);
+        }
     }
 }

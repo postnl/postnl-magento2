@@ -46,6 +46,7 @@ use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Framework\Model\ResourceModel\Db\Context;
 use Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate\Import;
 use Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate\RateQueryFactory;
+use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -122,47 +123,23 @@ class Tablerate extends \Magento\OfflineShipping\Model\ResourceModel\Carrier\Tab
      */
     public function uploadAndImport(DataObject $object)
     {
-        /**
-         * @var \Magento\Framework\App\Config\Value $object
-         */
+        // @codingStandardsIgnoreLine
         if (empty($_FILES['groups']['tmp_name']['tig_postnl']['fields']['import']['value'])) {
             return $this;
         }
-        $filePath = $_FILES['groups']['tmp_name']['tig_postnl']['fields']['import']['value'];
 
-        $websiteId = $this->storeManager->getWebsite($object->getScopeId())->getId();
-        $conditionName = $this->getConditionName($object);
+        // @codingStandardsIgnoreLine
+        $tablerateFile = $_FILES['groups']['tmp_name']['tablerate']['fields']['import']['value'];
+        // @codingStandardsIgnoreLine
+        $postnlFile = $_FILES['groups']['tmp_name']['tig_postnl']['fields']['import']['value'];
 
-        $file = $this->getCsvFile($filePath);
-        try {
-            // delete old data by website and condition name
-            $condition = [
-                'website_id = ?' => $websiteId,
-                'condition_name = ?' => $conditionName,
-            ];
-            $this->deleteByCondition($condition);
+        // @codingStandardsIgnoreLine
+        $_FILES['groups']['tmp_name']['tablerate']['fields']['import']['value'] = $postnlFile;
 
-            $columns = $this->import->getColumns();
-            $conditionFullName = $this->_getConditionFullName($conditionName);
-            foreach ($this->import->getData($file, $websiteId, $conditionName, $conditionFullName) as $bunch) {
-                $this->importData($columns, $bunch);
-            }
-        } catch (\Exception $e) {
-            $this->logger->critical($e);
-            throw new LocalizedException(
-                __('Something went wrong while importing table rates.')
-            );
-        } finally {
-            $file->close();
-        }
+        parent::uploadAndImport($object);
 
-        if ($this->import->hasErrors()) {
-            $error = __(
-                'We couldn\'t import this file because of these errors: %1',
-                implode(" \n", $this->import->getErrors())
-            );
-            throw new LocalizedException($error);
-        }
+        // @codingStandardsIgnoreLine
+        $_FILES['groups']['tmp_name']['tablerate']['fields']['import']['value'] = $tablerateFile;
     }
 
     /**
@@ -173,65 +150,12 @@ class Tablerate extends \Magento\OfflineShipping\Model\ResourceModel\Carrier\Tab
      */
     public function getConditionName(DataObject $object)
     {
+        $conditionName = $object->getData('groups/tig_postnl/fields/condition_name/value');
+
         if ($object->getData('groups/tablerate/fields/condition_name/inherit') == '1') {
             $conditionName = (string)$this->coreConfig->getValue('carriers/tig_postnl/condition_name', 'default');
-        } else {
-            $conditionName = $object->getData('groups/tig_postnl/fields/condition_name/value');
         }
+
         return $conditionName;
-    }
-
-    /**
-     * @param string $filePath
-     * @return \Magento\Framework\Filesystem\File\ReadInterface
-     */
-    private function getCsvFile($filePath)
-    {
-        $tmpDirectory = $this->filesystem->getDirectoryRead(DirectoryList::SYS_TMP);
-        $path = $tmpDirectory->getRelativePath($filePath);
-        return $tmpDirectory->openFile($path);
-    }
-
-    /**
-     * @param array $condition
-     * @return $this
-     * @throws LocalizedException
-     */
-    private function deleteByCondition(array $condition)
-    {
-        $connection = $this->getConnection();
-        $connection->beginTransaction();
-        $connection->delete($this->getMainTable(), $condition);
-        $connection->commit();
-        return $this;
-    }
-
-    /**
-     * @param array $fields
-     * @param array $values
-     * @throws LocalizedException
-     * @return void
-     */
-    private function importData(array $fields, array $values)
-    {
-        $connection = $this->getConnection();
-        $connection->beginTransaction();
-
-        try {
-            if (count($fields) && count($values)) {
-                $this->getConnection()->insertArray($this->getMainTable(), $fields, $values);
-                $this->_importedRows += count($values);
-            }
-        } catch (LocalizedException $e) {
-            $connection->rollback();
-            throw new LocalizedException(__('Unable to import data'), $e);
-        } catch (\Exception $e) {
-            $connection->rollback();
-            $this->logger->critical($e);
-            throw new LocalizedException(
-                __('Something went wrong while importing table rates.')
-            );
-        }
-        $connection->commit();
     }
 }

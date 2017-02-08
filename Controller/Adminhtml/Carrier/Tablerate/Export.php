@@ -57,12 +57,12 @@ class Export extends AbstractConfig
     /**
      * @var FileFactory
      */
-    protected $fileFactory;
+    private $fileFactory;
 
     /**
      * @var StoreManagerInterface
      */
-    protected $storeManager;
+    private $storeManager;
 
     /**
      * @param Context $context
@@ -92,21 +92,20 @@ class Export extends AbstractConfig
     public function execute()
     {
         $fileName = 'tablerates.csv';
+        $viewLayout = $this->_view->getLayout();
 
         /** @var $gridBlock \TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Grid */
-        $gridBlock = $this->_view->getLayout()->createBlock(
-            'TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Grid'
-        );
+        $gridBlock = $viewLayout->createBlock('TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Grid');
 
         $website = $this->storeManager->getWebsite($this->getRequest()->getParam('website'));
+        $conditionName = $website->getConfig('carriers/tig_postnl/condition_name');
 
         if ($this->getRequest()->getParam('conditionName')) {
             $conditionName = $this->getRequest()->getParam('conditionName');
-        } else {
-            $conditionName = $website->getConfig('carriers/tig_postnl/condition_name');
         }
 
-        $gridBlock->setWebsiteId($website->getId())->setConditionName($conditionName);
+        $gridBlock->setWebsiteId($website->getId());
+        $gridBlock->setConditionName($conditionName);
         $content = $gridBlock->getCsvFile();
 
         return $this->fileFactory->create($fileName, $content, DirectoryList::VAR_DIR);
