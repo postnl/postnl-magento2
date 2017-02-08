@@ -4,14 +4,21 @@
 "var dateAndTime":"Date and Time of Transaction",
 "var url":"track and trace url to PostNL"
 } @-->
-<h1>{{trans "Track and Trace information"}}</h1>
 
-<ul>
-    <li>
-        <b>{{trans "Order"}} {{var order_id}}</b><br/>
-        {{var DateAndTime}}
-    </li>
-    <li>
-        <a href="{{var url}}">{{trans "Click here to track your order"}}</a>
-    </li>
-</ul>
+<div style=" background: #F6F6F6; padding: 40px; margin-bottom: 50px; margin-top: 50px; float:left; width: 100%; box-sizing: border-box; ">
+    <div style=" background: #ffffff; padding: 30px;     border-radius: 10px 10px 0; border: 1px solid  #E3E3E3; float:left; width: 100%; box-sizing: border-box;">
+        <h1 style=" padding: 5px 0 5px 0;  margin: 0 0 5px 0; color:#001A73; font-weight: 100; font-size: 18px;">{{trans "Track and Trace information"}}</h1>
+
+        <div class="block-divider" style="clear: both;height: 5px;margin: 30px -10px 0;border-top: 1px solid #E3E3E3;"></div>
+
+        <ul style=" list-style:square; ">
+            <li style=" color: #868681; margin-left: -20px; ">
+                <b style="font-weight: normal; font-size: 14px; ">{{trans "Order"}} {{var order_id}}</b><br/>
+                {{var DateAndTime}}
+            </li>
+        </ul>
+
+        <a href="{{var url}}" style=" background: #ED8C00; padding: 15px 25px; border-radius: 6px 6px 0; text-decoration: none; color: white; float:right;">{{trans "Click here to track your order"}}</a>
+
+    </div>
+</div>
