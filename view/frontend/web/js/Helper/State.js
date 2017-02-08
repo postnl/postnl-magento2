@@ -57,7 +57,7 @@ define([
     fee.subscribe(function (value) {
         var shippingRates = shippingService.getShippingRates()();
 
-        if (value == 0) {
+        if (value <= 0) {
             value = null;
         }
 
@@ -91,7 +91,7 @@ define([
         pickupOptionsAreLoading: pickupOptionsAreLoading,
         isLoading: isLoading,
         method: ko.observable(null),
-        fee: ko.observable(null),
+        fee: fee,
 
         selectShippingMethod: function () {
             selectShippingMethodAction(this.method());
