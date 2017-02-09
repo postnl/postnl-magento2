@@ -60,11 +60,6 @@ use TIG\PostNL\Model\Carrier\Tablerate as CarrierTablerate;
 class Tablerate extends \Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate
 {
     /**
-     * @var Import
-     */
-    private $import;
-
-    /**
      * Tablerate constructor.
      * By overriding the parameters of the consturctor,
      * the PostNL Tablerate model will be used instead the one of OfflineShipping.
@@ -101,8 +96,6 @@ class Tablerate extends \Magento\OfflineShipping\Model\ResourceModel\Carrier\Tab
             $rateQueryFactory,
             $connectionName
         );
-
-        $this->import = $import;
     }
 
     /**
