@@ -36,40 +36,40 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
+namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Grid\Shipment;
 
-class ConfirmStatus extends AbstractGrid
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Block\Adminhtml\Grid\Shipment\ConfirmStatus;
+
+class ConfirmStatusTest extends TestCase
 {
-    /**
-     * @param $item
-     *
-     * @return string
-     */
-    //@codingStandardsIgnoreLine
-    protected function getCellContents($item)
+    protected $instanceClass = ConfirmStatus::class;
+
+    public function getIsConfirmedProvider()
     {
-        $confirmedAt = $this->getIsConfirmed($item);
-
-        if (!$confirmedAt) {
-            return __('Not confirmed');
-        }
-
-        return __('Confirmed');
+        return [
+            'exists_but_not_confirmed' => [null, false],
+            'exists_and_confirmed' => ['2016-11-19 21:13:12', true],
+        ];
     }
 
     /**
-     * @param $item
+     * @param $confirmedAt
+     * @param $expected
      *
-     * @return bool
+     * @dataProvider getIsConfirmedProvider
      */
-    private function getIsConfirmed($item)
+    public function testGetCellContents($confirmedAt, $expected)
     {
-        $confirmedAt = $item['tig_postnl_confirmed_at'];
+        $item = ['tig_postnl_confirmed_at' => $confirmedAt];
 
-        if ($confirmedAt === null) {
-            return false;
-        }
+        $instance = $this->getFakeMock($this->instanceClass)->getMock();
 
-        return true;
+        /** @var \Magento\Framework\Phrase $result */
+        $result = $this->invokeArgs('getCellContents', [$item], $instance);
+
+        $this->assertInstanceOf(\Magento\Framework\Phrase::class, $result);
+        $text = ucfirst(($expected ? '' : 'not ') . 'confirmed');
+        $this->assertEquals($text, $result->getText());
     }
 }

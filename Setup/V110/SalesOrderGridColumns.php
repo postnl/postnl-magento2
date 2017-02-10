@@ -36,41 +36,32 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Shipment\Grid;
+namespace TIG\PostNL\Setup\V110;
 
-use TIG\PostNL\Block\Adminhtml\Shipment\Grid\ConfirmStatus;
-use TIG\PostNL\Model\Shipment as PostNLShipment;
-use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Setup\AbstractColumnsInstaller;
 
-class ConfirmStatusTest extends TestCase
+class SalesOrderGridColumns extends AbstractColumnsInstaller
 {
-    protected $instanceClass = ConfirmStatus::class;
+    const TABLE_NAME = 'sales_order_grid';
 
-    public function getIsConfirmedProvider()
-    {
-        return [
-            'exists_but_not_confirmed' => [null, false],
-            'exists_and_confirmed' => ['2016-11-19 21:13:12', true],
-        ];
-    }
+    // @codingStandardsIgnoreLine
+    protected $columns = [
+        'tig_postnl_ship_at',
+    ];
 
     /**
-     * @param $confirmedAt
-     * @param $expected
-     *
-     * @dataProvider getIsConfirmedProvider
+     * @return array
      */
-    public function testGetCellContents($confirmedAt, $expected)
+    public function installTigPostnlShipAtColumn()
     {
-        $item = ['tig_postnl_confirmed_at' => $confirmedAt];
-
-        $instance = $this->getFakeMock($this->instanceClass)->getMock();
-
-        /** @var \Magento\Framework\Phrase $result */
-        $result = $this->invokeArgs('getCellContents', [$item], $instance);
-
-        $this->assertInstanceOf(\Magento\Framework\Phrase::class, $result);
-        $text = ucfirst(($expected ? '' : 'not ') . 'confirmed');
-        $this->assertEquals($text, $result->getText());
+        return [
+            // @codingStandardsIgnoreLine
+            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            'length' => 255,
+            'nullable' => true,
+            'default' => null,
+            'comment' => 'When is this shipment due for sending',
+            'after' => 'shipping_information',
+        ];
     }
 }
