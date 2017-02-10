@@ -44,9 +44,13 @@ use Magento\Framework\View\Element\BlockInterface;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\Order\Shipment;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\AbstractExtensibleObject;
 
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
+use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use TIG\PostNL\Model\Shipment as PostNLShipment;
 
 /**
  * Class Options
@@ -81,11 +85,23 @@ class Options extends Template implements BlockInterface
     private $registry;
 
     /**
+     * @var PostNLShipmentRepository
+     */
+    private $postNLShipmentRepository;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
      * @param Context $context
      * @param ProductOptions $productOptions
      * @param ProductOptionSource $productOptionsSource
      * @param OrderRepository $orderRepository
      * @param Registry $registry
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param PostNLShipmentRepository $shipmentRepository
      * @param array $data
      */
     public function __construct(
@@ -94,6 +110,8 @@ class Options extends Template implements BlockInterface
         ProductOptionSource $productOptionsSource,
         OrderRepository $orderRepository,
         Registry $registry,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        PostNLShipmentRepository $shipmentRepository,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -103,11 +121,15 @@ class Options extends Template implements BlockInterface
         $this->orderRepository = $orderRepository;
         $this->registry        = $registry;
 
+        $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
+        $this->postNLShipmentRepository = $shipmentRepository;
+
         $request     = $context->getRequest();
         $orderId     = (int)$request->getParam('order_id');
-        if ($orderId) {
-            $this->order = $this->orderRepository->get($orderId);
+        if (!$orderId) {
+            $orderId = $this->getShipment()->getOrderId();
         }
+        $this->order = $this->orderRepository->get($orderId);
     }
 
     /**
@@ -141,5 +163,27 @@ class Options extends Template implements BlockInterface
     public function getShipment()
     {
         return $this->registry->registry('current_shipment');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProductOption()
+    {
+        /** @var PostNLShipment $postNLShipment */
+        $postNLShipment = $this->getPostNLShipment();
+        return $this->productSource->getOptionsByCode($postNLShipment->getProductCode());
+    }
+
+    /**
+     * @return AbstractExtensibleObject
+     */
+    public function getPostNLShipment()
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('shipment_id', $this->getShipment()->getId());
+        $searchCriteria->setPageSize(1);
+        /** @var \Magento\Framework\Api\SearchResults $list */
+        $list = $this->postNLShipmentRepository->getList($searchCriteria->create());
+        return $list->getItems()[0];
     }
 }

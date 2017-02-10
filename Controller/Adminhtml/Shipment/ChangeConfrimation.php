@@ -41,8 +41,14 @@ namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 
+/**
+ * Class ChangeConfrimation
+ *
+ * @package TIG\PostNL\Controller\Adminhtml\Shipment
+ */
 class ChangeConfrimation extends Action
 {
+
     public function __construct(
         Context $context
     ) {
@@ -51,6 +57,10 @@ class ChangeConfrimation extends Action
 
     public function execute()
     {
-        // Alter the confirm information.
+        // Change the confirm information.
+        // 1. By deleting the shipments confirmedAt date
+        // 2. Delete all associated barcodes
+        // 3. Delete its shipping labels
+        // 4. Delete al the shipments associated tracks
     }
 }
