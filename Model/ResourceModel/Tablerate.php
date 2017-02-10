@@ -60,47 +60,6 @@ use TIG\PostNL\Model\Carrier\Tablerate as CarrierTablerate;
 class Tablerate extends \Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate
 {
     /**
-     * Tablerate constructor.
-     * By overriding the parameters of the consturctor,
-     * the PostNL Tablerate model will be used instead the one of OfflineShipping.
-     *
-     * @param Context               $context
-     * @param LoggerInterface       $logger
-     * @param ScopeConfigInterface  $coreConfig
-     * @param StoreManagerInterface $storeManager
-     * @param CarrierTablerate      $carrierTablerate
-     * @param Filesystem            $filesystem
-     * @param Import                $import
-     * @param RateQueryFactory      $rateQueryFactory
-     * @param null                  $connectionName
-     */
-    // @codingStandardsIgnoreStart
-    public function __construct(
-        Context $context,
-        LoggerInterface $logger,
-        ScopeConfigInterface $coreConfig,
-        StoreManagerInterface $storeManager,
-        CarrierTablerate $carrierTablerate,
-        Filesystem $filesystem,
-        Import $import,
-        RateQueryFactory $rateQueryFactory,
-        $connectionName = null
-    ) {
-        parent::__construct(
-            $context,
-            $logger,
-            $coreConfig,
-            $storeManager,
-            $carrierTablerate,
-            $filesystem,
-            $import,
-            $rateQueryFactory,
-            $connectionName
-        );
-    }
-    // @codingStandardsIgnoreEnd
-
-    /**
      * Constructor defining the resource model table and primary key
      */
     // @codingStandardsIgnoreLine

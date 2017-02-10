@@ -40,22 +40,12 @@ namespace TIG\PostNL\Unit\Model\ResourceModel;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObject;
-use TIG\PostNL\Model\Carrier\Tablerate as CarrierTablerate;
 use TIG\PostNL\Model\ResourceModel\Tablerate;
 use TIG\PostNL\Test\TestCase;
 
 class TablerateTest extends TestCase
 {
     protected $instanceClass = Tablerate::class;
-
-    public function testInstance()
-    {
-        $instance = $this->getInstance();
-        $carrierTablerateProperty = $this->getProperty('carrierTablerate', $instance);
-
-        $this->assertInstanceOf(Tablerate::class, $instance);
-        $this->assertInstanceOf(CarrierTablerate::class, $carrierTablerateProperty);
-    }
 
     /**
      * @return array
