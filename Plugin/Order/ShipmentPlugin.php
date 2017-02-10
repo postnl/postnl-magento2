@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,7 +36,38 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="\Magento\Shipping\Block\Adminhtml\View" type="\TIG\PostNL\Block\Adminhtml\Shipment\View" />
-</config>
+namespace TIG\PostNL\Plugin\Order;
+
+/**
+ * Class ShipmentPlugin
+ *
+ * @package TIG\PostNL\Plugin\Order
+ */
+class ShipmentPlugin
+{
+    /**
+     * The default getShippingMethod does a explode with the underscore '_' as delimeter.
+     * And that will return the wrong carrier.
+     *
+     * @param \Magento\Sales\Model\Order $subject
+     * @param string|\Magento\Framework\DataObject $result
+     *
+     * @return string|\Magento\Framework\DataObject
+     */
+    public function afterGetShippingMethod($subject, $result)
+    {
+        if (is_string($result)) {
+            return $result;
+        }
+
+        $carrierCode = $result->getData('carrier_code');
+        $method      = $result->getData('method');
+
+        if ($carrierCode == 'tig' && $method == 'postnl_regular') {
+            $result->setData('carrier_code', 'tig_postnl');
+            $result->setData('method', 'regular');
+        }
+
+        return $result;
+    }
+}

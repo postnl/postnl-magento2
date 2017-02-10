@@ -246,4 +246,14 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     {
         return $this->getProductoptions(['group' => 'standard_options']);
     }
+
+    /**
+     * @param $code
+     *
+     * @return mixed
+     */
+    public function getOptionsByCode($code)
+    {
+        return isset($this->availableOptions[$code]) ? $this->availableOptions[$code] : null;
+    }
 }

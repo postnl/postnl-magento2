@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -37,7 +36,43 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="\Magento\Shipping\Block\Adminhtml\View" type="\TIG\PostNL\Block\Adminhtml\Shipment\View" />
-</config>
+?>
+<?php if ($block->getIsPostNLOrder()) :?>
+<div id="postnl_shipping_options" style="margin-top: 20px; border-top: 1px solid #cecece; padding-top: 5px;">
+    <div class="field admin__field admin__field-option field-postnl-colli">
+        <label for="tig_postnl_colli"
+               class="admin__field-label" style="display:inline-block; min-width: 170px;">
+            <span><?php /* @escapeNotVerified */ echo __('Colli amount') ?></span>
+        </label>
+        <input id="tig_postnl_colli"
+               name="shipment[tig_postnl_colli_amount]"
+               value="1"
+               class="admin__control-text"/>
+    </div>
+    <?php if ($block->getProductOptions()) :?>
+    <div class="field admin__field admin__field-option field-postnl-products">
+        <label for="tig_postnl_product"
+               class="admin__field-label" style="display:inline-block; min-width: 170px;">
+            <span><?php /* @escapeNotVerified */ echo __('PostNL Shipping options') ?></span>
+        </label>
+        <select id="tig_postnl_product"
+                name="shipment[tig_postnl_product_code]"
+                class="admin__control-select" style="max-width:300px !important;">
+            <?php foreach ($this->getProductOptions() as $code => $option) :?>
+                <option value="<?php echo $code; ?>"><?php echo $option['label']; ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <?php endif; ?>
+</div>
+<!-- Javascript to append the postnl div inside the form elements -->
+<script type="application/javascript">
+    var items = jQuery('.admin__page-section-item-content');
+    var email = items.find('.field-email');
+
+    jQuery(function () {
+        email.after(jQuery('#postnl_shipping_options'));
+    });
+
+</script>
+<?php endif;?>
