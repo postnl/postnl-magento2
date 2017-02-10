@@ -94,6 +94,7 @@ class CalculateTablerateShippingPrice
         array_walk(
             $allRequestItems,
             function ($item, $key) use (&$request) {
+                /** @var \Magento\Quote\Model\Quote\Item $item */
                 if (!$item->getParentItem()) {
                     $newPackageValue = $request->getPackageValue() - $this->getVirtualItemRowTotal($item);
                     $request->setPackageValue($newPackageValue);
@@ -105,7 +106,7 @@ class CalculateTablerateShippingPrice
     }
 
     /**
-     * @param $item
+     * @param \Magento\Quote\Model\Quote\Item $item
      *
      * @return int
      */
@@ -120,9 +121,9 @@ class CalculateTablerateShippingPrice
 
         if ($item->getHasChildren() && $item->isShipSeparately()) {
             $itemRowTotal = 0;
-
+            $itemChildren = $item->getChildren();
             array_walk(
-                $item->getChildren(),
+                $itemChildren,
                 function ($child, $index) use (&$itemRowTotal) {
                     $itemRowTotal += $this->getVirtualItemRowTotal($child);
                 }

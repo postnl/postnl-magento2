@@ -70,7 +70,7 @@ class GetFreeBoxes
     }
 
     /**
-     * @param $item
+     * @param \Magento\Quote\Model\Quote\Item $item
      *
      * @return int
      */
@@ -96,7 +96,7 @@ class GetFreeBoxes
     }
 
     /**
-     * @param $item
+     * @param \Magento\Quote\Model\Quote\Item $item
      *
      * @return int
      */
@@ -108,13 +108,12 @@ class GetFreeBoxes
         array_walk(
             $children,
             function ($child, $key) use (&$freeChildBoxes, $item) {
+                /** @var \Magento\Quote\Model\Quote\Item\AbstractItem $child */
                 $childProduct = $child->getProduct();
 
                 if ($child->getFreeShipping() && !$childProduct->isVirtual()) {
                     $freeChildBoxes += $item->getQty() * ($child->getQty() - $child->getFreeShipping());
                 }
-
-                $freeChildBoxes = 1;
             }
         );
 

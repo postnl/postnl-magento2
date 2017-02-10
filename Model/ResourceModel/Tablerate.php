@@ -74,6 +74,7 @@ class Tablerate extends \Magento\OfflineShipping\Model\ResourceModel\Carrier\Tab
      * @param RateQueryFactory      $rateQueryFactory
      * @param null                  $connectionName
      */
+    // @codingStandardsIgnoreStart
     public function __construct(
         Context $context,
         LoggerInterface $logger,
@@ -97,6 +98,7 @@ class Tablerate extends \Magento\OfflineShipping\Model\ResourceModel\Carrier\Tab
             $connectionName
         );
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Constructor defining the resource model table and primary key
@@ -145,7 +147,7 @@ class Tablerate extends \Magento\OfflineShipping\Model\ResourceModel\Carrier\Tab
     {
         $conditionName = $object->getData('groups/tig_postnl/fields/condition_name/value');
 
-        if ($object->getData('groups/tablerate/fields/condition_name/inherit') == '1') {
+        if ($object->getData('groups/tig_postnl/fields/condition_name/inherit') == '1') {
             $conditionName = (string)$this->coreConfig->getValue('carriers/tig_postnl/condition_name', 'default');
         }
 
