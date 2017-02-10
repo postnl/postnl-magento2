@@ -141,12 +141,4 @@ class ShippingOptions extends AbstractConfigProvider
 
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_SUNDAY_FEE);
     }
-
-    /**
-     * @return mixed
-     */
-    public function sendTrackAndTraceEmail()
-    {
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE);
-    }
 }

@@ -40,90 +40,17 @@ namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\Order\ShipmentRepository;
 
-use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Helper\Labelling\SaveLabels;
-use TIG\PostNL\Helper\Pdf\Get as GetPdf;
-use TIG\PostNL\Helper\Tracking\Track;
-
-class ConfirmAndPrintShippingLabel extends Action
+class ChangeConfrimation extends Action
 {
-    /**
-     * @var GetLabels
-     */
-    private $getLabels;
-
-    /**
-     * @var SaveLabels
-     */
-    private $saveLabels;
-
-    /**
-     * @var GetPdf
-     */
-    private $getPdf;
-
-    /**
-     * @var ShipmentRepository
-     */
-    private $shipmentRepository;
-
-    /**
-     * @var Track
-     */
-    private $track;
-
-    /**
-     * @param Context            $context
-     * @param GetLabels          $getLabels
-     * @param SaveLabels         $saveLabels
-     * @param GetPdf             $getPdf
-     * @param ShipmentRepository $shipmentRepository
-     * @param Track              $track
-     */
     public function __construct(
-        Context $context,
-        GetLabels $getLabels,
-        SaveLabels $saveLabels,
-        GetPdf $getPdf,
-        ShipmentRepository $shipmentRepository,
-        Track $track
+        Context $context
     ) {
         parent::__construct($context);
-        $this->getLabels          = $getLabels;
-        $this->saveLabels         = $saveLabels;
-        $this->getPdf             = $getPdf;
-        $this->shipmentRepository = $shipmentRepository;
-        $this->track              = $track;
     }
 
-    /**
-     * @return \Magento\Framework\App\ResponseInterface
-     */
     public function execute()
     {
-        $shipment   = $this->getShipment();
-
-        if (!$shipment->getTracks()) {
-            $this->track->set($shipment);
-        }
-
-        $labels     = $this->getLabels->get($shipment->getId());
-        $labelModel = $this->saveLabels->save($labels);
-
-        return $this->getPdf->get($labelModel);
-    }
-
-    /**
-     * Retrieve shipment model instance
-     *
-     * @return Shipment
-     */
-    private function getShipment()
-    {
-        $shipmentId = $this->getRequest()->getParam('shipment_id');
-        return $this->shipmentRepository->get($shipmentId);
+        // Alter the confirm information.
     }
 }

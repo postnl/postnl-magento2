@@ -134,7 +134,7 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     {
         return false;
     }
-    
+
     /**
      * @param $tracking
      *

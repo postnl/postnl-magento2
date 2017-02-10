@@ -40,6 +40,10 @@ namespace TIG\PostNL\Block\Adminhtml\Shipment;
 
 use \Magento\Backend\Block\Widget\Context;
 use \Magento\Framework\Registry;
+use \Magento\Framework\Api\SearchCriteriaBuilder;
+use \Magento\Framework\Api\AbstractExtensibleObject;
+use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use \TIG\PostNL\Model\Shipment as PostNLShipment;
 
 use \Magento\Shipping\Block\Adminhtml\View as MagentoView;
 
@@ -51,15 +55,42 @@ use \Magento\Shipping\Block\Adminhtml\View as MagentoView;
 class View extends MagentoView
 {
     /**
-     * @param Context  $context
-     * @param Registry $registry
-     * @param array    $data
+     * @var string
+     */
+    private $printRoute = 'postnl/shipment/confirmAndPrintShippingLabel';
+
+    /**
+     * @var string
+     */
+    private $printLabel = 'PostNL - Confirm And Print Shipment Label';
+
+    /**
+     * @var PostNLShipmentRepository
+     */
+    private $postNLShipmentRepository;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
+     * @param Context                   $context
+     * @param Registry                  $registry
+     * @param PostNLShipmentRepository  $shipmentRepository
+     * @param SearchCriteriaBuilder     $searchCriteriaBuilder
+     * @param array                     $data
      */
     public function __construct(
         Context $context,
         Registry $registry,
+        PostNLShipmentRepository $shipmentRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
         array $data = []
     ) {
+        $this->postNLShipmentRepository = $shipmentRepository;
+        $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
+
         parent::__construct($context, $registry, $data);
     }
 
@@ -76,19 +107,49 @@ class View extends MagentoView
         }
 
         $this->buttonList->remove('print');
-        $this->setPostNLPrintLabel();
+        $this->buttonList->update('save', 'label', __('Send Shipment Email'));
+        $this->setPostNLPrintLabelButtonData();
+        $this->setPostNLPrintLabelButton();
     }
 
-    private function setPostNLPrintLabel()
+    private function setPostNLPrintLabelButton()
     {
         $this->buttonList->add(
-            'test',
+            'postnl_print',
             [
-                'label' => __('PostNL - Confirm shipment and print'),
+                'label' => __($this->printLabel),
                 'class' => 'save primary',
                 'onclick' => 'setLocation(\'' .$this->getLabelUrl() .'\')'
             ]
         );
+    }
+
+    private function setPostNLChangeConfirmButton()
+    {
+        $this->buttonList->add(
+            'postnl_change_confirm',
+            [
+                'label'   => __('PostNL - Change Confirmation'),
+                'class'   => 'delete primary',
+                'style'   => 'background-color: #ea2102;',
+                'onclick' =>
+                    'deleteConfirm(\'' . __(
+                        'Are you sure that you wish to reset the confirmation status of this shipment? You will need to '
+                        . 'confirm this shipment with PostNL again before you can send it. This action will remove all barcodes'
+                        . ' and labels associated with this shipment. You can not undo this action.'
+                    ) . '\', \'' . $this->getAlterUrl() . '\')'
+            ]
+        );
+    }
+
+    private function setPostNLPrintLabelButtonData()
+    {
+        /** @var PostNLShipment $postNLShipment */
+        $postNLShipment = $this->getPostNLShipment();
+        if (!empty($postNLShipment->getConfirmedAt())) {
+            $this->printLabel = 'PostNL - Print label';
+            $this->setPostNLChangeConfirmButton();
+        }
     }
 
     /**
@@ -96,9 +157,35 @@ class View extends MagentoView
      */
     private function getLabelUrl()
     {
+        return $this->getUrl($this->printRoute, ['shipment_id' => $this->getShipment()->getId()]);
+    }
+
+    /**
+     * @return string
+     */
+    private function getAlterUrl()
+    {
+        /** @var PostNLShipment $postNLShipment */
+        $postNLShipment = $this->getPostNLShipment();
+
         return $this->getUrl(
-            'postnl/shipment/confirmAndPrintShippingLabel',
-            ['shipment_id' => $this->getShipment()->getId()]
+            'postnl/shipment/ChangeConfrimation',
+            [
+                'postnl_shipment_id' => $postNLShipment->getId(),
+                'shipment_id'        => $this->getShipment()->getId()
+            ]
         );
+    }
+
+    /**
+     * @return AbstractExtensibleObject
+     */
+    private function getPostNLShipment()
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('shipment_id', $this->getShipment()->getId());
+        $searchCriteria->setPageSize(1);
+        /** @var \Magento\Framework\Api\SearchResults $list */
+        $list = $this->postNLShipmentRepository->getList($searchCriteria->create());
+        return $list->getItems()[0];
     }
 }

@@ -77,7 +77,6 @@
                 <max_deliverydays>7</max_deliverydays>
                 <eveningdelivery_fee>2</eveningdelivery_fee>
                 <sundaydelivery_fee>2</sundaydelivery_fee>
-                <send_track_and_trace_email>1</send_track_and_trace_email>
             </shippingoptions>
             <endpoints>
                 <cif_base_url>https://service.postnl.com/CIF/</cif_base_url>
