@@ -118,7 +118,7 @@ class ChangeConfrimation extends Action
         $this->deleteBarcodes();
         $this->deleteLabels();
 
-        // 4. Delete al the shipments associated tracks
+        // @todo Delete al the shipments associated tracks
     }
 
     /**
