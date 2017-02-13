@@ -82,6 +82,7 @@ class Log extends Logger
         if (!$this->logConfig->canLog($level)) {
             return false;
         }
+
         return parent::addRecord($level, $message, $context);
     }
 }

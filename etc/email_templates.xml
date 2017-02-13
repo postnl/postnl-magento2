@@ -1,5 +1,5 @@
-<?php
-/**
+<?xml version="1.0" encoding="UTF-8"?><!--
+**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -36,64 +36,7 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
-
-class Webshop extends AbstractConfigProvider
-{
-    const XPATH_WEBSHOP_LABEL_SIZE    = 'tig_postnl/webshop_printer/label_size';
-    const XPATH_WEBSHOP_CUTOFFTIME    = 'tig_postnl/webshop_shipping/cutoff_time';
-    const XPATH_WEBSHOP_SHIPMENTDAYS  = 'tig_postnl/webshop_shipping/shipment_days';
-
-    const XPATH_TRACK_AND_TRACE_ENABLED       = 'tig_postnl/webshop_track_and_trace/email_enabled';
-    const XPATH_TRACK_AND_TRACE_SERVICE_URL   = 'tig_postnl/webshop_track_and_trace/service_url';
-    const XPATH_TRACK_AND_TRACE_MAIL_TEMPLATE = 'tig_postnl/webshop_track_and_trace/template';
-
-    /**
-     * @return mixed
-     */
-    public function getLabelSize()
-    {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_LABEL_SIZE);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCutOffTime()
-    {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_CUTOFFTIME);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getShipmentDays()
-    {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SHIPMENTDAYS);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function isTrackAndTraceEnabled()
-    {
-        return $this->getConfigFromXpath(self::XPATH_TRACK_AND_TRACE_ENABLED);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTrackAndTraceServiceUrl()
-    {
-        return $this->getConfigFromXpath(self::XPATH_TRACK_AND_TRACE_SERVICE_URL);
-    }
-
-    /**
-     * @param $storeId
-     * @return mixed
-     */
-    public function getTrackAndTraceEmailTemplate($storeId = null)
-    {
-        return $this->getConfigFromXpath(self::XPATH_TRACK_AND_TRACE_MAIL_TEMPLATE, $storeId);
-    }
-}
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="tig_postnl_track_and_trace_template" label="Track and Trace" file="track_and_trace.html" type="html" module="TIG_PostNL" area="adminhtml"/>
+</config>
