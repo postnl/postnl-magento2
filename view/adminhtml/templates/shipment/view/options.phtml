@@ -1,0 +1,108 @@
+<?php
+/**
+ *                  ___________       __            __
+ *                  \__    ___/____ _/  |_ _____   |  |
+ *                    |    |  /  _ \\   __\\__  \  |  |
+ *                    |    | |  |_| ||  |   / __ \_|  |__
+ *                    |____|  \____/ |__|  (____  /|____/
+ *                                              \/
+ *          ___          __                                   __
+ *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
+ *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
+ *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
+ *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
+ *                  \/                           \/
+ *                  ________
+ *                 /  _____/_______   ____   __ __ ______
+ *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
+ *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
+ *                 \______  /|__|    \____/ |____/ |   __/
+ *                        \/                       |__|
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ *
+ * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
+?>
+<?php if ($block->getIsPostNLOrder()) : ?>
+<!--@todo move style to less and add style to header trough xml-->
+    <style>
+        #postnl_shipping_options_selected {
+            height: 100px;
+            width: 100%;
+            background-color: #efefef;
+            margin-top: 1px;
+        }
+
+        .tig_postnl_delivery_info ul {
+            padding-top: 10px;
+            padding-left: 1rem;
+        }
+
+        .tig_postnl_delivery_info ul li {
+            margin-bottom: 10px;
+        }
+
+        .tig_postnl_delivery_info ul li span.type {
+            display: inline-block;
+            width: 300px;
+            font-weight: 800;
+        }
+
+    </style>
+<div id="postnl_shipping_options_selected">
+    <!--
+    This is not for the buttons, but it is to show the options that where chosen.
+    The buttons are added in TIG/PostNL/Block/Adminhtml/Shipment/View.php to the buttonList.
+    -->
+    <?php
+    /** @var TIG\PostNL\Model\Shipment $postNLShipment */
+        $postNLShipment = $block->getPostNLShipment();
+    ?>
+    <div class="tig_postnl_delivery_info">
+        <ul>
+            <li>
+                <span class="type"><?php /* @escapeNotVerified */ echo __('Product option :'); ?></span>
+                <span class="value option">
+                    <?php $group = str_replace('_', ' ', $block->getProductOption()['group']); ?>
+                    <?php echo ucfirst($group). ' (' . $block->getProductOption()['value'] . ')'; ?>
+                </span>
+            </li>
+            <li>
+                <span class="type"><?php /* @escapeNotVerified */ echo __('Ship at :'); ?></span>
+                <span class="value ship_at">
+                    <?php echo $postNLShipment->getShipAt(); ?>
+                </span>
+            </li>
+            <li>
+                <span class="type"><?php /* @escapeNotVerified */ echo __('Parcel count :'); ?></span>
+                <span class="value parcels">
+                    <?php echo $postNLShipment->getParcelCount(); ?>
+                </span>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+<script type="application/javascript">
+    var controls = jQuery('.admin__control-table-wrapper');
+    var table    = jQuery('#shipment_tracking_info');
+    jQuery(function () {
+        table.after(jQuery('#postnl_shipping_options_selected'));
+    });
+</script>
+<?php endif; ?>
