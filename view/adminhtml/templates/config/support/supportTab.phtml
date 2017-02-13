@@ -84,13 +84,12 @@
                 <ul class="version-compatibility">
                     <li>
                         <span class="text"><?php echo $block->escapeHtml(__('Magento Enterprise Edition version'));?>:</span>
-                        <span class="version"> 2.1.2 </span>
+                        <span class="version"><?php echo $this->getSupportedMagentoVersion(); ?></span>
                     </li>
                     <li>
                         <span class="text"><?php echo $block->escapeHtml(__('Magento Community Edition version'));?>:</span>
-                        <span class="version"> 2.1.2 </span>
+                        <span class="version"><?php echo $this->getSupportedMagentoVersion(); ?></span>
                     </li>
-
                 </ul>
             </div>
         </div>

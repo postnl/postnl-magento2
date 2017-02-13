@@ -41,9 +41,13 @@ namespace TIG\PostNL\Block\Adminhtml\Config\Support;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class SupportTab extends \Magento\Framework\View\Element\Template implements RendererInterface
 {
+
+    const XPATH_SUPPORTED_MAGENTO_VERSION = 'tig_postnl/supported_magento_version';
+
     // @codingStandardsIgnoreLine
     protected $_template = 'TIG_PostNL::config/support/supportTab.phtml';
 
@@ -53,20 +57,28 @@ class SupportTab extends \Magento\Framework\View\Element\Template implements Ren
     private $moduleContext;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
      * Override the parent constructor to require our own dependencies.
      *
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Framework\Module\ModuleResource         $moduleContext
+     * @param ScopeConfigInterface                             $scopeConfigInterface
      * @param array                                            $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\Module\ModuleResource $moduleContext,
+        ScopeConfigInterface $scopeConfigInterface,
         array $data = []
     ) {
         parent::__construct($context, $data);
 
         $this->moduleContext = $moduleContext;
+        $this->scopeConfig   = $scopeConfigInterface;
     }
 
     /**
@@ -92,5 +104,17 @@ class SupportTab extends \Magento\Framework\View\Element\Template implements Ren
         $version = $this->moduleContext->getDbVersion('TIG_PostNL');
 
         return $version;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSupportedMagentoVersion()
+    {
+        return $this->scopeConfig->getValue(
+            self::XPATH_SUPPORTED_MAGENTO_VERSION,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            0
+        );
     }
 }
