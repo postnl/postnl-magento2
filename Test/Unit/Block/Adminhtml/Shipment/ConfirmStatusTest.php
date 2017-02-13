@@ -1,3 +1,4 @@
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -35,52 +36,40 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define([
-    'uiComponent',
-    'ko',
-    'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Helper/AddressFinder'
-], function (
-    Component,
-    ko,
-    State,
-    AddressFinder
-) {
-    return Component.extend({
-        defaults: {
-            template: 'TIG_PostNL/DeliveryOptions/Main',
-            shipmentType: 'delivery'
-        },
+namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Grid\Shipment;
 
-        initObservable: function () {
-            this._super().observe([
-                'shipmentType'
-            ]);
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Block\Adminhtml\Grid\Shipment\ConfirmStatus;
 
-            this.isLoading = ko.computed(function () {
-                return State.isLoading();
-            });
+class ConfirmStatusTest extends TestCase
+{
+    protected $instanceClass = ConfirmStatus::class;
 
-            /**
-             * If we have a valid address we can load the deliveryoptions
-             */
-            this.canUseDeliveryOptions = ko.computed(function () {
-                return AddressFinder() !== false;
-            });
+    public function getIsConfirmedProvider()
+    {
+        return [
+            'exists_but_not_confirmed' => [null, false],
+            'exists_and_confirmed' => ['2016-11-19 21:13:12', true],
+        ];
+    }
 
-            return this;
-        },
+    /**
+     * @param $confirmedAt
+     * @param $expected
+     *
+     * @dataProvider getIsConfirmedProvider
+     */
+    public function testGetCellContents($confirmedAt, $expected)
+    {
+        $item = ['tig_postnl_confirmed_at' => $confirmedAt];
 
-        canUsePakjegemak: function () {
-            return window.checkoutConfig.shipping.postnl.pakjegemak_active == 1;
-        },
+        $instance = $this->getFakeMock($this->instanceClass)->getMock();
 
-        setDelivery: function () {
-            this.shipmentType('delivery');
-        },
+        /** @var \Magento\Framework\Phrase $result */
+        $result = $this->invokeArgs('getCellContents', [$item], $instance);
 
-        setPickup: function () {
-            this.shipmentType('pickup');
-        }
-    });
-});
+        $this->assertInstanceOf(\Magento\Framework\Phrase::class, $result);
+        $text = ucfirst(($expected ? '' : 'not ') . 'confirmed');
+        $this->assertEquals($text, $result->getText());
+    }
+}

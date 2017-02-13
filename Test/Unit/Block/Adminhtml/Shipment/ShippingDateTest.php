@@ -1,3 +1,4 @@
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -35,52 +36,55 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define([
-    'uiComponent',
-    'ko',
-    'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Helper/AddressFinder'
-], function (
-    Component,
-    ko,
-    State,
-    AddressFinder
-) {
-    return Component.extend({
-        defaults: {
-            template: 'TIG_PostNL/DeliveryOptions/Main',
-            shipmentType: 'delivery'
-        },
+namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Grid\Shipment;
 
-        initObservable: function () {
-            this._super().observe([
-                'shipmentType'
-            ]);
+use \Magento\Framework\Phrase;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use TIG\PostNL\Block\Adminhtml\Grid\Shipment\ShippingDate;
+use TIG\PostNL\Test\TestCase;
 
-            this.isLoading = ko.computed(function () {
-                return State.isLoading();
-            });
+class ShippingDateTest extends TestCase
+{
+    protected $instanceClass = ShippingDate::class;
 
-            /**
-             * If we have a valid address we can load the deliveryoptions
-             */
-            this.canUseDeliveryOptions = ko.computed(function () {
-                return AddressFinder() !== false;
-            });
+    /**
+     * @param array $args
+     *
+     * @return ShippingDate
+     */
+    public function getInstance(array $args = [])
+    {
+        if (!isset($args['context'])) {
+            $contextMock = $this->getMockForAbstractClass(ContextInterface::class, [], '', false, true, true, []);
+            $processor   = $this->getMockBuilder('Magento\Framework\View\Element\UiComponent\Processor')
+                ->disableOriginalConstructor()
+                ->getMock();
+            $contextMock->expects($this->any())->method('getProcessor')->willReturn($processor);
 
-            return this;
-        },
-
-        canUsePakjegemak: function () {
-            return window.checkoutConfig.shipping.postnl.pakjegemak_active == 1;
-        },
-
-        setDelivery: function () {
-            this.shipmentType('delivery');
-        },
-
-        setPickup: function () {
-            this.shipmentType('pickup');
+            $args['context'] = $contextMock;
         }
-    });
-});
+
+        return parent::getInstance($args);
+    }
+
+    public function testGetCellContents()
+    {
+        $randomString = uniqid();
+        $randomResult = uniqid();
+
+        $rendererMock = $this->getFakeMock(\TIG\PostNL\Block\Adminhtml\Renderer\ShippingDate::class)->getMock();
+
+        $renderExpects = $rendererMock->expects($this->once());
+        $renderExpects->method('render');
+        $renderExpects->with($randomString);
+        $renderExpects->willReturn($randomResult);
+
+        $instance = $this->getInstance([
+            'shippingDateRenderer' => $rendererMock,
+        ]);
+
+        $result = $this->invokeArgs('getCellContents', [['tig_postnl_ship_at' => $randomString]], $instance);
+
+        $this->assertEquals($randomResult, $result);
+    }
+}

@@ -1,3 +1,4 @@
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -35,52 +36,42 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define([
-    'uiComponent',
-    'ko',
-    'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Helper/AddressFinder'
-], function (
-    Component,
-    ko,
-    State,
-    AddressFinder
-) {
-    return Component.extend({
-        defaults: {
-            template: 'TIG_PostNL/DeliveryOptions/Main',
-            shipmentType: 'delivery'
-        },
+namespace TIG\PostNL\Block\Adminhtml\Grid\Shipment;
 
-        initObservable: function () {
-            this._super().observe([
-                'shipmentType'
-            ]);
+use TIG\PostNL\Block\Adminhtml\Grid\AbstractGrid;
 
-            this.isLoading = ko.computed(function () {
-                return State.isLoading();
-            });
+class ConfirmStatus extends AbstractGrid
+{
+    /**
+     * @param $item
+     *
+     * @return string
+     */
+    //@codingStandardsIgnoreLine
+    protected function getCellContents($item)
+    {
+        $confirmedAt = $this->getIsConfirmed($item);
 
-            /**
-             * If we have a valid address we can load the deliveryoptions
-             */
-            this.canUseDeliveryOptions = ko.computed(function () {
-                return AddressFinder() !== false;
-            });
-
-            return this;
-        },
-
-        canUsePakjegemak: function () {
-            return window.checkoutConfig.shipping.postnl.pakjegemak_active == 1;
-        },
-
-        setDelivery: function () {
-            this.shipmentType('delivery');
-        },
-
-        setPickup: function () {
-            this.shipmentType('pickup');
+        if (!$confirmedAt) {
+            return __('Not confirmed');
         }
-    });
-});
+
+        return __('Confirmed');
+    }
+
+    /**
+     * @param $item
+     *
+     * @return bool
+     */
+    private function getIsConfirmed($item)
+    {
+        $confirmedAt = $item['tig_postnl_confirmed_at'];
+
+        if ($confirmedAt === null) {
+            return false;
+        }
+
+        return true;
+    }
+}

@@ -1,3 +1,4 @@
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -35,52 +36,62 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define([
-    'uiComponent',
-    'ko',
-    'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Helper/AddressFinder'
-], function (
-    Component,
-    ko,
-    State,
-    AddressFinder
-) {
-    return Component.extend({
-        defaults: {
-            template: 'TIG_PostNL/DeliveryOptions/Main',
-            shipmentType: 'delivery'
-        },
+namespace TIG\PostNL\Observer;
 
-        initObservable: function () {
-            this._super().observe([
-                'shipmentType'
-            ]);
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Sales\Model\ResourceModel\GridInterface;
+use TIG\PostNL\Api\OrderRepositoryInterface;
+use TIG\PostNL\Model\Shipment;
 
-            this.isLoading = ko.computed(function () {
-                return State.isLoading();
-            });
+class UpdateOrderGrid implements ObserverInterface
+{
+    /**
+     * @var GridInterface
+     */
+    private $orderGrid;
 
-            /**
-             * If we have a valid address we can load the deliveryoptions
-             */
-            this.canUseDeliveryOptions = ko.computed(function () {
-                return AddressFinder() !== false;
-            });
+    /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepositoryInterface;
 
-            return this;
-        },
+    /**
+     * @param OrderRepositoryInterface $orderRepositoryInterface
+     * @param GridInterface            $orderGrid
+     */
+    public function __construct(
+        OrderRepositoryInterface $orderRepositoryInterface,
+        GridInterface $orderGrid
+    ) {
+        $this->orderRepositoryInterface = $orderRepositoryInterface;
+        $this->orderGrid = $orderGrid;
+    }
 
-        canUsePakjegemak: function () {
-            return window.checkoutConfig.shipping.postnl.pakjegemak_active == 1;
-        },
+    /**
+     * @param Observer $observer
+     *
+     * @return void
+     */
+    public function execute(Observer $observer)
+    {
+        /** @var Shipment $shipment */
+        $shipment = $observer->getData('data_object');
 
-        setDelivery: function () {
-            this.shipmentType('delivery');
-        },
+        $this->updateOrder($shipment);
+        $this->orderGrid->refresh($shipment->getOrderId());
+    }
 
-        setPickup: function () {
-            this.shipmentType('pickup');
-        }
-    });
-});
+    /**
+     * @param Shipment $shipment
+     */
+    private function updateOrder(Shipment $shipment)
+    {
+        /** @var \TIG\PostNL\Model\Order $order */
+        $order = $this->orderRepositoryInterface->getById($shipment->getOrderId());
+        $order->setData('ship_at', $shipment->getShipAt());
+
+        $this->orderRepositoryInterface->save($order);
+    }
+}

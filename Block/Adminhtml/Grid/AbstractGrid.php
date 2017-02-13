@@ -1,3 +1,4 @@
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -35,52 +36,62 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define([
-    'uiComponent',
-    'ko',
-    'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Helper/AddressFinder'
-], function (
-    Component,
-    ko,
-    State,
-    AddressFinder
-) {
-    return Component.extend({
-        defaults: {
-            template: 'TIG_PostNL/DeliveryOptions/Main',
-            shipmentType: 'delivery'
-        },
+namespace TIG\PostNL\Block\Adminhtml\Grid;
 
-        initObservable: function () {
-            this._super().observe([
-                'shipmentType'
-            ]);
+use Magento\Ui\Component\Listing\Columns\Column;
 
-            this.isLoading = ko.computed(function () {
-                return State.isLoading();
-            });
+abstract class AbstractGrid extends Column
+{
+    /**
+     * @var array
+     */
+    // @codingStandardsIgnoreLine
+    protected $items = [];
 
-            /**
-             * If we have a valid address we can load the deliveryoptions
-             */
-            this.canUseDeliveryOptions = ko.computed(function () {
-                return AddressFinder() !== false;
-            });
+    /**
+     * @param array $dataSource
+     *
+     * @return array
+     */
+    public function prepareDataSource(array $dataSource)
+    {
+        if (isset($dataSource['data']['items'])) {
+            $this->items = $dataSource['data']['items'];
 
-            return this;
-        },
+            $this->prepareData();
+            $this->handleItems();
 
-        canUsePakjegemak: function () {
-            return window.checkoutConfig.shipping.postnl.pakjegemak_active == 1;
-        },
-
-        setDelivery: function () {
-            this.shipmentType('delivery');
-        },
-
-        setPickup: function () {
-            this.shipmentType('pickup');
+            $dataSource['data']['items'] = $this->items;
         }
-    });
-});
+
+        return $dataSource;
+    }
+
+    /**
+     * Load all the needed data in only 1 query.
+     */
+    // @codingStandardsIgnoreLine
+    protected function prepareData()
+    {
+        return null;
+    }
+
+    /**
+     * @return array
+     */
+    // @codingStandardsIgnoreLine
+    protected function handleItems()
+    {
+        foreach ($this->items as $index => $item) {
+            $this->items[$index][$this->getData('name')] = $this->getCellContents($item);
+        }
+    }
+
+    /**
+     * @param object $item
+     *
+     * @return string
+     */
+    // @codingStandardsIgnoreLine
+    abstract protected function getCellContents($item);
+}

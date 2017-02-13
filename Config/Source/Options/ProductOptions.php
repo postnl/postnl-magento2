@@ -165,6 +165,14 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             'group'             => 'pakjegemak_options',
         ],
         // EU Options
+        '4950' => [
+            'value'             => '4950',
+            'label'             => 'EU Pack Special',
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => false,
+            'group'             => 'eu_options',
+        ],
         '4952' => [
             'value'             => '4952',
             'label'             => 'EU Pack Special Consumer (incl. signature)',

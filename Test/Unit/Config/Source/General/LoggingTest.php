@@ -1,3 +1,4 @@
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -35,52 +36,37 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define([
-    'uiComponent',
-    'ko',
-    'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Helper/AddressFinder'
-], function (
-    Component,
-    ko,
-    State,
-    AddressFinder
-) {
-    return Component.extend({
-        defaults: {
-            template: 'TIG_PostNL/DeliveryOptions/Main',
-            shipmentType: 'delivery'
-        },
+namespace TIG\PostNL\Unit\Config\Source\General;
 
-        initObservable: function () {
-            this._super().observe([
-                'shipmentType'
-            ]);
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\Source\General\Logging;
+use Monolog\Logger as Monolog;
 
-            this.isLoading = ko.computed(function () {
-                return State.isLoading();
-            });
+class LoggingTest extends TestCase
+{
+    protected $instanceClass = Logging::class;
 
-            /**
-             * If we have a valid address we can load the deliveryoptions
-             */
-            this.canUseDeliveryOptions = ko.computed(function () {
-                return AddressFinder() !== false;
-            });
+    public function testToOptionArray()
+    {
+        $instance = $this->getInstance();
+        $options  = $instance->toOptionArray();
 
-            return this;
-        },
+        $this->assertCount(8, $options);
 
-        canUsePakjegemak: function () {
-            return window.checkoutConfig.shipping.postnl.pakjegemak_active == 1;
-        },
-
-        setDelivery: function () {
-            this.shipmentType('delivery');
-        },
-
-        setPickup: function () {
-            this.shipmentType('pickup');
+        foreach ($options as $option) {
+            $this->assertArrayHasKey('label', $option);
+            $this->assertArrayHasKey('value', $option);
         }
-    });
-});
+    }
+
+    public function testEqualToMonolog()
+    {
+        $postnlOptions  = $this->getProperty('levels');
+        $monoLogOptions = $this->getProperty('levels', $this->getObject(Monolog::class));
+
+        $this->assertEquals(
+            $monoLogOptions, $postnlOptions,
+            'PostNL log options are not the same as Monologs'
+        );
+    }
+}

@@ -48,6 +48,7 @@ use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as Shipme
 use TIG\PostNL\Helper\Labelling\GetLabels;
 use TIG\PostNL\Helper\Labelling\SaveLabels;
 use TIG\PostNL\Helper\Pdf\Get as GetPdf;
+use TIG\PostNL\Helper\Tracking\Track;
 
 class MassPrintShippingLabel extends Action
 {
@@ -82,12 +83,18 @@ class MassPrintShippingLabel extends Action
     private $getPdf;
 
     /**
+     * @var Track
+     */
+    private $track;
+
+    /**
      * @param Context                   $context
      * @param Filter                    $filter
      * @param ShipmentCollectionFactory $collectionFactory
      * @param GetLabels                 $getLabels
      * @param SaveLabels                $saveLabels
      * @param GetPdf                    $getPdf
+     * @param Track                     $track
      */
     public function __construct(
         Context $context,
@@ -95,7 +102,8 @@ class MassPrintShippingLabel extends Action
         ShipmentCollectionFactory $collectionFactory,
         GetLabels $getLabels,
         SaveLabels $saveLabels,
-        GetPdf $getPdf
+        GetPdf $getPdf,
+        Track $track
     ) {
         parent::__construct($context);
         $this->filter = $filter;
@@ -103,6 +111,7 @@ class MassPrintShippingLabel extends Action
         $this->getLabels = $getLabels;
         $this->saveLabels = $saveLabels;
         $this->getPdf = $getPdf;
+        $this->track = $track;
     }
 
     /**
@@ -118,6 +127,7 @@ class MassPrintShippingLabel extends Action
 
         /** @var Shipment $shipment */
         foreach ($collection as $shipment) {
+            $this->track->set($shipment);
             $this->getLabel($shipment->getId());
         }
 

@@ -73,37 +73,50 @@ class ExceptionHandlerTest extends TestCase
     public function hasValidErrorsOnlyProvider()
     {
         return [
-            [
+            'contains a valid error' => [
                 'errors' => [
                     ['message' => 'error message', 'number' => ExceptionHandler::SHIPMENT_NOT_FOUND_ERROR_NUMBER],
-                    ['message' => 'error message', 'number' => '18']
+                    ['message' => 'error message', 'number' => '18'],
                 ],
-                'length' => false
+                'xml' => 'notempty',
+                'expected' => false
             ],
-            [
+            'no valid errors' => [
                 'errors' => [
                     ['message' => 'error message', 'number' => ExceptionHandler::SHIPMENT_NOT_FOUND_ERROR_NUMBER],
-                    ['message' => 'error message 2', 'number' => ExceptionHandler::SHIPMENT_NOT_FOUND_ERROR_NUMBER]
+                    ['message' => 'error message 2', 'number' => ExceptionHandler::SHIPMENT_NOT_FOUND_ERROR_NUMBER],
                 ],
-                'length' => true
+                'xml' => 'notempty',
+                'expected' => true
             ],
-            [
+            'only valid errors' => [
                 'errors' => [
                     ['message' => 'error message', 'number' => 10],
-                    ['message' => 'error message 2', 'number' => 10]
+                    ['message' => 'error message 2', 'number' => 10],
                 ],
-                'length' => false
+                'xml' => 'notempty',
+                'expected' => false
+            ],
+            'empty xml' => [
+                'errors' => [],
+                'xml' => '',
+                'expected' => false
             ],
         ];
     }
 
     /**
      * @dataProvider hasValidErrorsOnlyProvider
+     *
+     * @param $errors
+     * @param $xml
+     * @param $expected
      */
-    public function testHasValidErrorsOnly($errors, $expected)
+    public function testHasValidErrorsOnly($errors, $xml, $expected)
     {
         $instance = $this->getInstance();
         $this->setProperty('errors', $errors, $instance);
+        $this->setProperty('responseXml', $xml, $instance);
 
         $result = $this->invoke('hasValidErrorsOnly', $instance);
 
