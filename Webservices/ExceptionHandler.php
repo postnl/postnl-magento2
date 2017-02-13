@@ -166,6 +166,10 @@ class ExceptionHandler
      */
     private function hasValidErrorsOnly()
     {
+        if (empty($this->responseXml)) {
+            return false;
+        }
+
         $errors = $this->getErrorsFromResponse();
 
         $errors = array_filter($errors, function ($error) {

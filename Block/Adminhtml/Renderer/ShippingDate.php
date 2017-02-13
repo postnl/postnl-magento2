@@ -36,89 +36,79 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Shipment\Grid;
+namespace TIG\PostNL\Block\Adminhtml\Renderer;
 
-use TIG\PostNL\Model\ShipmentFactory;
-use Magento\Ui\Component\Listing\Columns\Column;
-use Magento\Framework\View\Element\UiComponent\ContextInterface;
-use Magento\Framework\View\Element\UiComponentFactory;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Framework\Stdlib\DateTime\DateTimeFormatterInterface;
+use TIG\PostNL\Model\Shipment;
 
-abstract class AbstractGrid extends Column
+class ShippingDate
 {
     /**
-     * @var array
-     */
-    // @codingStandardsIgnoreLine
-    protected $items = [];
-
-    /**
-     * @var ShipmentFactory
-     */
-    // @codingStandardsIgnoreLine
-    protected $shipmentFactory;
-
-    /**
-     * @param ContextInterface     $context
-     * @param UiComponentFactory   $uiComponentFactory
-     * @param ShipmentFactory      $shipmentFactory
-     * @param array                $components
-     * @param array                $data
+     * @param TimezoneInterface          $timezoneInterface
+     * @param DateTimeFormatterInterface $dateTimeFormatterInterface
      */
     public function __construct(
-        ContextInterface $context,
-        UiComponentFactory $uiComponentFactory,
-        ShipmentFactory $shipmentFactory,
-        array $components = [],
-        array $data = []
+        TimezoneInterface $timezoneInterface,
+        DateTimeFormatterInterface $dateTimeFormatterInterface
     ) {
-        parent::__construct($context, $uiComponentFactory, $components, $data);
-
-        $this->shipmentFactory = $shipmentFactory;
+        $this->timezoneInterface = $timezoneInterface;
+        $this->dateTimeFormatterInterface = $dateTimeFormatterInterface;
     }
 
     /**
-     * @param array $dataSource
+     * @param null|Shipment $item
      *
-     * @return array
+     * @return string|null
      */
-    public function prepareDataSource(array $dataSource)
+    public function render($item)
     {
-        if (isset($dataSource['data']['items'])) {
-            $this->items = $dataSource['data']['items'];
-
-            $this->prepareData();
-            $this->handleItems();
-
-            $dataSource['data']['items'] = $this->items;
+        $shipAt = $this->getShipAt($item);
+        if ($shipAt === null) {
+            return null;
         }
 
-        return $dataSource;
+        return $this->formatShippingDate($shipAt);
     }
 
     /**
-     * Load all the needed data in only 1 query.
-     */
-    public function prepareData()
-    {
-        return null;
-    }
-
-    /**
-     * @return array
-     */
-    // @codingStandardsIgnoreLine
-    protected function handleItems()
-    {
-        foreach ($this->items as $index => $item) {
-            $this->items[$index][$this->getData('name')] = $this->getCellContents($item);
-        }
-    }
-
-    /**
-     * @param object $item
+     * @param null|Shipment $shipAt
      *
-     * @return string
+     * @return null|string
      */
-    // @codingStandardsIgnoreLine
-    abstract protected function getCellContents($item);
+    private function getShipAt($shipAt)
+    {
+        if ($shipAt instanceof Shipment) {
+            $shipAt = $shipAt->getShipAt();
+        }
+
+        return $shipAt;
+    }
+
+    /**
+     * @param $shipAt
+     *
+     * @return null|int
+     */
+    private function formatShippingDate($shipAt)
+    {
+        $now = $this->timezoneInterface->date();
+        $whenToShip = $this->timezoneInterface->date($shipAt);
+        $difference = $now->diff($whenToShip);
+        $days = $difference->days;
+
+        if ($days == 0) {
+            return __('Today');
+        }
+
+        if (!$difference->invert && $days === 1) {
+            return __('Tomorrow');
+        }
+
+        if (!$difference->invert) {
+            return __('In %1 days', [$days]);
+        }
+
+        return $whenToShip->format('d M. Y');
+    }
 }

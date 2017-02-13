@@ -68,20 +68,27 @@
         </div>
 
         <div class="block-version">
+            <h3 ><?php echo $block->escapeHtml(__('Extension version'));?></h3>
+            <div>
+                <ul class="version-compatibility">
+
+                    <li>
+                        <span class="text"><?php echo $block->escapeHtml(__('PostNL version'));?>:</span>
+                        <span class="version"><?php echo $this->getVersionNumber(); ?></span>
+                    </li>
+                </ul>
+            </div>
+
             <h3 ><?php echo $block->escapeHtml(__('Magento &amp; 3rd party version compatibility'));?></h3>
             <div>
                 <ul class="version-compatibility">
                     <li>
-                        <span class="text"><?php echo $block->escapeHtml(__('Magento Community Edition version'));?>:</span>
-                        <span class="version"> 2.1.2 </span>
-                    </li>
-                    <li>
                         <span class="text"><?php echo $block->escapeHtml(__('Magento Enterprise Edition version'));?>:</span>
-                        <span class="version"> 2.1.2 </span>
+                        <span class="version"><?php echo $this->getSupportedMagentoVersion(); ?></span>
                     </li>
                     <li>
-                        <span class="text"><?php echo $block->escapeHtml(__('PostNL version'));?>:</span>
-                        <span class="version"><?php echo $this->getVersionNumber(); ?></span>
+                        <span class="text"><?php echo $block->escapeHtml(__('Magento Community Edition version'));?>:</span>
+                        <span class="version"><?php echo $this->getSupportedMagentoVersion(); ?></span>
                     </li>
                 </ul>
             </div>

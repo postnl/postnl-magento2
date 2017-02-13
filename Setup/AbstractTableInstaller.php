@@ -201,27 +201,26 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     }
 
     /**
-     * @param $ref_table
-     * @param $ref_table_field
-     * @param $table
-     * @param $table_field
-     *
-     * @throws \Zend_Db_Exception
+     * @param        $ref_table
+     * @param        $ref_table_field
+     * @param        $table
+     * @param        $table_field
+     * @param string $onDelete
      */
     // @codingStandardsIgnoreLine
     protected function addForeignKey(
         $ref_table,
         $ref_table_field,
         $table,
-        $table_field
+        $table_field,
+        $onDelete = Table::ACTION_CASCADE
     ) {
         $this->table->addForeignKey(
             $this->setup->getFkName($table, $table_field, $ref_table, $ref_table_field),
             $table_field,
             $this->setup->getTable($ref_table),
             $ref_table_field,
-            Table::ACTION_CASCADE,
-            Table::ACTION_CASCADE
+            $onDelete
         );
     }
 

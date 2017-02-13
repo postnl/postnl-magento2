@@ -58,7 +58,7 @@ class UpdateOrderShipmentGridTest extends TestCase
 
         /** @var UpdateOrderShipmentGrid $instance */
         $instance = $this->getInstance([
-            'entityGrid' => $gridMock,
+            'shipmentGrid' => $gridMock,
         ]);
 
         $shipment = $this->getObject(\TIG\PostNL\Model\Shipment::class);
