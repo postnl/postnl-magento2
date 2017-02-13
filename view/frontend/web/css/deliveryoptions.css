@@ -69,6 +69,20 @@
 .postnl-deliveryoptions .delivery_options button.btn.btn-default.button-active:hover {
   color: #001A73;
 }
+.postnl-deliveryoptions .delivery_options input.tig-postnl-delivery-radio,
+.postnl-deliveryoptions .delivery_options input.tig-postnl-pickup-radio {
+  box-shadow: none;
+}
+.postnl-deliveryoptions .delivery_options input.tig-postnl-delivery-radio:active,
+.postnl-deliveryoptions .delivery_options input.tig-postnl-pickup-radio:active,
+.postnl-deliveryoptions .delivery_options input.tig-postnl-delivery-radio:hover,
+.postnl-deliveryoptions .delivery_options input.tig-postnl-pickup-radio:hover,
+.postnl-deliveryoptions .delivery_options input.tig-postnl-delivery-radio:focus,
+.postnl-deliveryoptions .delivery_options input.tig-postnl-pickup-radio:focus,
+.postnl-deliveryoptions .delivery_options input.tig-postnl-delivery-radio:visited,
+.postnl-deliveryoptions .delivery_options input.tig-postnl-pickup-radio:visited {
+  box-shadow: none;
+}
 .postnl-deliveryoptions .delivery_options .delivery,
 .postnl-deliveryoptions .delivery_options .pickup {
   float: left;
