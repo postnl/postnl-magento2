@@ -45,7 +45,6 @@ use TIG\PostNL\Model\OrderFactory;
 use Magento\Sales\Model\Order as MagentoOrder;
 use TIG\PostNL\Model\Order as PostNLOrder;
 use TIG\PostNL\Model\OrderRepository;
-use TIG\PostNL\Webservices\Endpoints\SentDate;
 
 class SalesOrderSaveAfterEvent implements ObserverInterface
 {

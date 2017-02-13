@@ -50,7 +50,7 @@
             <config_path>tig_postnl/shippingoptions/shippingoptions_active</config_path>
         </field>
 
-        <field id="stockoptions" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+        <field id="stockoptions" translate="label" type="radios" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Stockoptions</label>
             <source_model>TIG\PostNL\Config\Source\Options\StockOptions</source_model>
             <config_path>tig_postnl/shippingoptions/stockoptions</config_path>
