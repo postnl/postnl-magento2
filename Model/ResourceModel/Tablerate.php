@@ -39,26 +39,67 @@
 namespace TIG\PostNL\Model\ResourceModel;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Config\Value;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Filesystem;
-use Magento\Framework\Filesystem\DirectoryList;
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Context;
-use Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate\Import;
+use Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate\RateQuery;
 use Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate\RateQueryFactory;
-use Magento\Store\Api\Data\WebsiteInterface;
+use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
-use TIG\PostNL\Model\Carrier\Tablerate as CarrierTablerate;
+use TIG\PostNL\Services\Import\Csv;
 
 /**
  * Class Tablerate
  *
  * @package TIG\PostNL\Model\ResourceModel
  */
-class Tablerate extends \Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate
+class Tablerate extends AbstractDb
 {
+    /** @var ScopeConfigInterface */
+    private $coreConfig;
+
+    /** @var LoggerInterface */
+    private $logger;
+
+    /** @var StoreManagerInterface */
+    private $storeManager;
+
+    /** @var RateQueryFactory */
+    private $rateQueryFactory;
+
+    /** @var Csv */
+    private $csv;
+
+    /**
+     * @param Context               $context
+     * @param LoggerInterface       $logger
+     * @param ScopeConfigInterface  $coreConfig
+     * @param StoreManagerInterface $storeManager
+     * @param RateQueryFactory      $rateQueryFactory
+     * @param Csv                   $csv
+     * @param null|string           $connectionName
+     */
+    public function __construct(
+        Context $context,
+        LoggerInterface $logger,
+        ScopeConfigInterface $coreConfig,
+        StoreManagerInterface $storeManager,
+        RateQueryFactory $rateQueryFactory,
+        Csv $csv,
+        $connectionName = null
+    ) {
+        parent::__construct($context, $connectionName);
+        $this->coreConfig = $coreConfig;
+        $this->logger = $logger;
+        $this->storeManager = $storeManager;
+        $this->rateQueryFactory = $rateQueryFactory;
+        $this->csv = $csv;
+    }
+
     /**
      * Constructor defining the resource model table and primary key
      */
@@ -70,37 +111,85 @@ class Tablerate extends \Magento\OfflineShipping\Model\ResourceModel\Carrier\Tab
     }
 
     /**
-     * The parent method has lines that always refer to the uploaded files of OfflineShipping.
-     * By overriding the method, the correct uploaded file can be refered and imported.
+     * Return table rate array or false by rate request
      *
-     * {@inheritdoc}
+     * @param RateRequest $request
+     *
+     * @return array|bool
+     * @throws LocalizedException
      */
-    public function uploadAndImport(DataObject $object)
+    public function getRate(RateRequest $request)
     {
-        // @codingStandardsIgnoreLine
-        if (empty($_FILES['groups']['tmp_name']['tig_postnl']['fields']['import']['value'])) {
-            return $this;
+        $connection = $this->getConnection();
+        $select = $connection->select();
+        $select = $select->from($this->getMainTable());
+
+        /** @var RateQuery $rateQuery */
+        $rateQuery = $this->rateQueryFactory->create(['request' => $request]);
+        $rateQuery->prepareSelect($select);
+        $bindings = $rateQuery->getBindings();
+        $result = $connection->fetchRow($select, $bindings);
+
+        if ($result && $result['dest_zip'] == '*') {
+            $result['dest_zip'] = '';
         }
 
-        // @codingStandardsIgnoreLine
-        $tablerateFile = $_FILES['groups']['tmp_name']['tablerate']['fields']['import']['value'];
-        // @codingStandardsIgnoreLine
-        $postnlFile = $_FILES['groups']['tmp_name']['tig_postnl']['fields']['import']['value'];
-
-        // @codingStandardsIgnoreLine
-        $_FILES['groups']['tmp_name']['tablerate']['fields']['import']['value'] = $postnlFile;
-
-        parent::uploadAndImport($object);
-
-        // @codingStandardsIgnoreLine
-        $_FILES['groups']['tmp_name']['tablerate']['fields']['import']['value'] = $tablerateFile;
+        return $result;
     }
 
     /**
-     * The parent method has lines that always refer to the configuration values of OfflineShipping.
-     * By overriding the method, the configuration values of PostNL will be used.
+     * @param DataObject|Value $object
      *
-     * {@inheritdoc}
+     * @return $this
+     * @throws LocalizedException
+     */
+    public function uploadAndImport(DataObject $object)
+    {
+        $csvData = $this->getCsvData($object);
+
+        if (empty($csvData)) {
+            return $this;
+        }
+
+        try {
+            $this->deleteByCondition($object);
+            $this->importData($csvData);
+        } catch (\Exception $exception) {
+            $this->logger->critical($exception);
+            throw new LocalizedException(__('Something went wrong while importing table rates.'));
+        }
+    }
+
+    /**
+     * @param $object
+     *
+     * @return array
+     * @throws LocalizedException
+     */
+    private function getCsvData($object)
+    {
+        $csvData = [];
+
+        // @codingStandardsIgnoreLine
+        if (empty($_FILES['groups']['tmp_name']['tig_postnl']['fields']['import']['value'])) {
+            return $csvData;
+        }
+
+        // @codingStandardsIgnoreLine
+        $filePath = $_FILES['groups']['tmp_name']['tig_postnl']['fields']['import']['value'];
+        $website = $this->storeManager->getWebsite($object->getScopeId());
+        $websiteId = $website->getId();
+        $conditionName = $this->getConditionName($object);
+
+        $csvData = $this->csv->getData($filePath, $websiteId, $conditionName);
+
+        return $csvData;
+    }
+
+    /**
+     * @param DataObject $object
+     *
+     * @return mixed|string
      */
     public function getConditionName(DataObject $object)
     {
@@ -111,5 +200,62 @@ class Tablerate extends \Magento\OfflineShipping\Model\ResourceModel\Carrier\Tab
         }
 
         return $conditionName;
+    }
+
+    /**
+     * @param DataObject|Value $object
+     *
+     * @throws LocalizedException
+     */
+    private function deleteByCondition(DataObject $object)
+    {
+        $website = $this->storeManager->getWebsite($object->getScopeId());
+        $websiteId = $website->getId();
+        $condition = ['website_id = ?' => $websiteId, 'condition_name = ?' => $this->getConditionName($object)];
+
+        $connection = $this->getConnection();
+        $connection->beginTransaction();
+        $connection->delete($this->getMainTable(), $condition);
+        $connection->commit();
+    }
+
+    /**
+     * @param array $data
+     */
+    private function importData(array $data)
+    {
+        $columns = $data['columns'];
+        $records = $data['records'];
+
+        if (!empty($columns) && !empty($records)) {
+            array_walk($records, [$this, 'saveImportData'], $columns);
+        }
+    }
+
+    /**
+     * @param $records
+     * @param $index
+     * @param $columns
+     *
+     * @throws LocalizedException
+     */
+    // @codingStandardsIgnoreLine
+    private function saveImportData($records, $index, $columns)
+    {
+        $connection = $this->getConnection();
+        $connection->beginTransaction();
+
+        try {
+            $this->getConnection()->insertArray($this->getMainTable(), $columns, $records);
+        } catch (LocalizedException $exception) {
+            $connection->rollback();
+            throw new LocalizedException(__('Unable to import data'), $exception);
+        } catch (\Exception $exception) {
+            $connection->rollback();
+            $this->logger->critical($exception);
+            throw new LocalizedException(__('Something went wrong while importing table rates.'));
+        }
+
+        $connection->commit();
     }
 }
