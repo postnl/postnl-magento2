@@ -36,54 +36,26 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Shipment;
+namespace TIG\PostNL\Block\Adminhtml\Shipment\Options;
 
-use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
-use Magento\Framework\View\Element\BlockInterface;
-use Magento\Sales\Model\OrderRepository;
-use Magento\Framework\Registry;
-use Magento\Sales\Model\Order\Shipment;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Api\AbstractExtensibleObject;
-
+use Magento\Framework\Registry;
+use Magento\Sales\Model\OrderRepository;
+use TIG\PostNL\Block\Adminhtml\Shipment\OptionsAbstract;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
+use Magento\Framework\Api\AbstractExtensibleObject;
 
 /**
- * Class Options
+ * Class View
  *
- * @package TIG\PostNL\Block\Adminhtml\Shipment\Create
+ * @package TIG\PostNL\Block\Adminhtml\Shipment\Options
  */
-class Options extends Template implements BlockInterface
+class View extends OptionsAbstract
 {
-    /**
-     * @var \Magento\Sales\Model\Order
-     */
-    private $order;
-
-    /**
-     * @var ProductOptions
-     */
-    private $productConfig;
-
-    /**
-     * @var ProductOptionSource
-     */
-    private $productSource;
-
-    /**
-     * @var OrderRepository
-     */
-    private $orderRepository;
-
-    /**
-     * @var Registry
-     */
-    private $registry;
-
     /**
      * @var PostNLShipmentRepository
      */
@@ -95,14 +67,14 @@ class Options extends Template implements BlockInterface
     private $searchCriteriaBuilder;
 
     /**
-     * @param Context $context
-     * @param ProductOptions $productOptions
-     * @param ProductOptionSource $productOptionsSource
-     * @param OrderRepository $orderRepository
-     * @param Registry $registry
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param Context                  $context
+     * @param ProductOptions           $productOptions
+     * @param ProductOptionSource      $productOptionsSource
+     * @param OrderRepository          $orderRepository
+     * @param Registry                 $registry
+     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      * @param PostNLShipmentRepository $shipmentRepository
-     * @param array $data
+     * @param array                    $data
      */
     public function __construct(
         Context $context,
@@ -114,56 +86,21 @@ class Options extends Template implements BlockInterface
         PostNLShipmentRepository $shipmentRepository,
         array $data = []
     ) {
-        parent::__construct($context, $data);
-
-        $this->productConfig   = $productOptions;
-        $this->productSource   = $productOptionsSource;
-        $this->orderRepository = $orderRepository;
-        $this->registry        = $registry;
+        parent::__construct(
+            $context,
+            $productOptions,
+            $productOptionsSource,
+            $orderRepository,
+            $registry,
+            $searchCriteriaBuilder,
+            $shipmentRepository,
+            $data
+        );
 
         $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
         $this->postNLShipmentRepository = $shipmentRepository;
-
-        $request     = $context->getRequest();
-        $orderId     = (int)$request->getParam('order_id');
-        if (!$orderId) {
-            $orderId = $this->getShipment()->getOrderId();
-        }
-        $this->order = $this->orderRepository->get($orderId);
     }
 
-    /**
-     * @return bool
-     */
-    public function getIsPostNLOrder()
-    {
-        $method = $this->order->getShippingMethod();
-        return ($method == 'tig_postnl_regular');
-    }
-
-    /**
-     * @return array
-     */
-    public function getProductOptions()
-    {
-        $supportedCodes = $this->productConfig->getSupportedProductOptions();
-        $productOptions = [];
-        foreach (explode(',',$supportedCodes) as $code) {
-            $productOptions[$code] = $this->productSource->getOptionsByCode($code);
-        }
-
-        return $productOptions;
-    }
-
-    /**
-     * Retrieve shipment model instance
-     *
-     * @return Shipment
-     */
-    public function getShipment()
-    {
-        return $this->registry->registry('current_shipment');
-    }
 
     /**
      * @return mixed

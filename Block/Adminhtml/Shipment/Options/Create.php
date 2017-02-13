@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
-**
+<?php
+/**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -36,11 +36,45 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <body>
-        <referenceContainer name="before.body.end">
-            <block class="TIG\PostNL\Block\Adminhtml\Shipment\Options\View" name="postnl.shipment.view.options" template="TIG_PostNL::shipment/view/options.phtml" />
-        </referenceContainer>
-    </body>
-</page>
+namespace TIG\PostNL\Block\Adminhtml\Shipment\Options;
+
+use Magento\Backend\Block\Template\Context;
+use Magento\Framework\Registry;
+use Magento\Sales\Model\OrderRepository;
+use TIG\PostNL\Block\Adminhtml\Shipment\OptionsAbstract;
+use TIG\PostNL\Config\Provider\ProductOptions;
+use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
+
+/**
+ * Class Create
+ *
+ * @package TIG\PostNL\Block\Adminhtml\Shipment\Options
+ */
+class Create extends OptionsAbstract
+{
+    /**
+     * @param Context             $context
+     * @param ProductOptions      $productOptions
+     * @param ProductOptionSource $productOptionsSource
+     * @param OrderRepository     $orderRepository
+     * @param Registry            $registry
+     * @param array               $data
+     */
+    public function __construct(
+        Context $context,
+        ProductOptions $productOptions,
+        ProductOptionSource $productOptionsSource,
+        OrderRepository $orderRepository,
+        Registry $registry,
+        array $data = []
+    ) {
+        parent::__construct(
+            $context,
+            $productOptions,
+            $productOptionsSource,
+            $orderRepository,
+            $registry,
+            $data
+        );
+    }
+}

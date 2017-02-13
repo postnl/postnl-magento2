@@ -104,7 +104,7 @@ class ConfirmAndPrintShippingLabel extends Action
      */
     public function execute()
     {
-        $shipment   = $this->getShipment();
+        $shipment = $this->getShipment();
 
         if (!$shipment->getTracks()) {
             $this->track->set($shipment);
