@@ -45,6 +45,12 @@
         <!-- Creates the tig_postnl_order record -->
         <observer name="tig_postnl_sales_order_place_after" instance="TIG\PostNL\Observer\SalesOrderSaveAfterEvent" />
     </event>
+
+    <event name="sales_quote_address_collect_totals_after">
+        <!-- Adjust the totals with the PostNL fee -->
+        <observer name="tig_postnl_add_fee_to_the_quote" instance="TIG\PostNL\Observer\SalesQuoteSaveBefore\AddFeeToTheQuote" />
+    </event>
+
     <event name="tig_postnl_shipment_save_after">
         <!--Updates the sales_order_grid table-->
         <observer name="tig_postnl_update_sales_order_grid" instance="TIG\PostNL\Observer\UpdateOrderGrid" />

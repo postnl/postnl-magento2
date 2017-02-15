@@ -53,13 +53,11 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     /**
      * @var Table
      */
-    // @codingStandardsIgnoreLine
     protected $table;
 
     /**
      * @var SchemaSetupInterface
      */
-    // @codingStandardsIgnoreLine
     protected $setup;
 
     /**
@@ -86,7 +84,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     /**
      * @return Table
      */
-    // @codingStandardsIgnoreLine
     protected function createTable()
     {
         $connection = $this->setup->getConnection();
@@ -98,13 +95,11 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     /**
      * @return void
      */
-    // @codingStandardsIgnoreLine
     abstract protected function defineTable();
 
     /**
      * @throws \Zend_Db_Exception
      */
-    // @codingStandardsIgnoreLine
     protected function addEntityId()
     {
         $this->table->addColumn(
@@ -129,7 +124,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
      *
      * @throws \Zend_Db_Exception
      */
-    // @codingStandardsIgnoreLine
     protected function addDate($name, $comment, $nullable = true, $default = null)
     {
         $this->table->addColumn(
@@ -155,7 +149,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
      *
      * @throws \Zend_Db_Exception
      */
-    // @codingStandardsIgnoreLine
     protected function addTimestamp($name, $comment, $nullable = true, $default = null)
     {
         $this->table->addColumn(
@@ -182,7 +175,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
      *
      * @throws \Zend_Db_Exception
      */
-    // @codingStandardsIgnoreLine
     protected function addInt($name, $comment, $nullable = true, $unsigned = false, $default = null)
     {
         $this->table->addColumn(
@@ -207,7 +199,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
      * @param        $table_field
      * @param string $onDelete
      */
-    // @codingStandardsIgnoreLine
     protected function addForeignKey(
         $ref_table,
         $ref_table_field,
@@ -233,7 +224,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
      *
      * @throws \Zend_Db_Exception
      */
-    // @codingStandardsIgnoreLine
     protected function addText($name, $comment, $length = 255, $nullable = true, $default = null)
     {
         $this->table->addColumn(
@@ -254,13 +244,11 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     /**
      * @param      $name
      * @param      $comment
-     * @param int  $length
      * @param bool $nullable
      * @param null $default
      *
      * @throws \Zend_Db_Exception
      */
-    // @codingStandardsIgnoreLine
     protected function addBlob($name, $comment, $nullable = true, $default = null)
     {
         $this->table->addColumn(
@@ -279,9 +267,34 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     }
 
     /**
+     * @param        $name
+     * @param        $comment
+     * @param string $size
+     * @param bool   $nullable
+     * @param null   $default
+     *
+     * @throws \Zend_Db_Exception
+     */
+    protected function addDecimal($name, $comment, $size = '15,4', $nullable = true, $default = null)
+    {
+        $this->table->addColumn(
+            $name,
+            Table::TYPE_DECIMAL,
+            $size,
+            [
+                'identity' => false,
+                'unsigned' => false,
+                'nullable' => $nullable,
+                'primary' => false,
+                'default' => $default,
+            ],
+            $comment
+        );
+    }
+
+    /**
      * @return \Zend_Db_Statement_Interface
      */
-    // @codingStandardsIgnoreLine
     protected function saveTable()
     {
         $connection = $this->setup->getConnection();

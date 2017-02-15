@@ -148,7 +148,8 @@ class OrderParams
             'pg_location_code'             => isset($params['LocationCode']) ? $params['LocationCode'] : '',
             'pg_retail_network_id'         => isset($params['RetailNetworkID']) ? $params['RetailNetworkID'] : '',
             'pg_address'                   => $this->addExtraToAddress($params),
-            'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : ''
+            'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : '',
+            'fee'                          => isset($params['fee']) ? $params['fee'] : '',
         ];
     }
 

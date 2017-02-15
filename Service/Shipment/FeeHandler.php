@@ -36,47 +36,61 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Setup\V110;
+namespace TIG\PostNL\Service\Shipment;
 
-use Magento\Framework\DB\Ddl\Table;
-use TIG\PostNL\Setup\AbstractTableInstaller;
+use TIG\PostNL\Service\Wrapper;
 
-class InstallOrderTable extends AbstractTableInstaller
+class FeeHandler
 {
-    const TABLE_NAME = 'tig_postnl_order';
+    /**
+     * @var Wrapper\QuoteInterface
+     */
+    private $quoteWrapper;
+    /**
+     * @var Wrapper\CheckoutSessionInterface
+     */
+    private $checkoutSession;
 
     /**
-     * @return void
-     * @codingStandardsIgnoreLine
+     * @param Wrapper\QuoteInterface           $quoteWrapper
+     * @param Wrapper\CheckoutSessionInterface $checkoutSession
      */
-    // @codingStandardsIgnoreLine
-    protected function defineTable()
+    public function __construct(
+        Wrapper\QuoteInterface $quoteWrapper,
+        Wrapper\CheckoutSessionInterface $checkoutSession
+    ) {
+        $this->quoteWrapper = $quoteWrapper;
+        $this->checkoutSession = $checkoutSession;
+    }
+
+    /**
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     */
+    public function add($total)
     {
-        $this->addEntityId();
+        $shippingAmount = $this->getShippingAmount();
 
-        $this->addInt('order_id', 'Order ID', true, true);
-        $this->addForeignKey('sales_order', 'entity_id', static::TABLE_NAME, 'order_id');
+        if ($shippingAmount === null) {
+            return;
+        }
 
-        $this->addInt('quote_id', 'Quote ID', true, true);
-        $this->addForeignKey('quote', 'entity_id', static::TABLE_NAME, 'quote_id', Table::ACTION_SET_NULL);
+        $total->setShippingAmount($shippingAmount);
+        $total->setBaseShippingAmount($shippingAmount);
+        $total->setShippingInclTax($shippingAmount);
+        $total->setBaseShippingInclTax($shippingAmount);
+    }
 
-        $this->addText('type', 'Type', 32);
+    private function getShippingAmount()
+    {
+        return 13.37;
 
-        $this->addTimestamp('delivery_date', 'Delivery date');
-        $this->addText('expected_delivery_time_start', 'Expected delivery time start', 16);
-        $this->addText('expected_delivery_time_end', 'Expected delivery time end', 16);
+        $baseAmount = $this->checkoutSession->getValue('tig_postnl_regular_base_amount');
+        $feeAmount = $this->checkoutSession->getValue('tig_postnl_regular_fee_amount');
 
-        $this->addText('is_pakjegemak', 'Is Pakjegemak', 1);
-        $this->addInt('pg_order_address_id', 'Pakjegemak Order Address ID', true, true);
-        $this->addText('pg_location_code', 'PakjeGemak Location Code', 32);
-        $this->addText('pg_retail_network_id', 'PakjeGemak Retail Netwerok ID', 32);
+        if ($baseAmount === null || $feeAmount === null) {
+            return null;
+        }
 
-        $this->addDecimal('fee', 'The fee that is calculated', 15.4);
-
-        $this->addDate('ship_at', 'Ship at');
-
-        $this->addTimestamp('confirmed_at', 'Confirmed at');
-        $this->addTimestamp('created_at', 'Created at');
-        $this->addTimestamp('updated_at', 'Updated at');
+        return $baseAmount + $feeAmount;
     }
 }
