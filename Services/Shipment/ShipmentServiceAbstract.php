@@ -36,87 +36,86 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Controller\Adminhtml\Shipment;
+namespace TIG\PostNL\Services\Shipment;
 
-use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
-use Magento\Backend\App\Action\Context;
-use Magento\Sales\Model\Order\Shipment;
+use \TIG\PostNL\Logging\Log;
+
+use Magento\Framework\Api\SearchCriteriaBuilder;
+
 use Magento\Sales\Model\Order\ShipmentRepository;
+use Magento\Sales\Model\Order\Shipment;
 
-use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Helper\Labelling\SaveLabels;
-use TIG\PostNL\Helper\Pdf\Get as GetPdf;
-use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use TIG\PostNL\Model\Shipment as PostNLShipment;
 
 /**
- * Class ConfirmAndPrintShippingLabel
+ * Class ShipmentService
  *
- * @package TIG\PostNL\Controller\Adminhtml\Shipment
+ * @package TIG\PostNL\Services\Shipment
  */
-class ConfirmAndPrintShippingLabel extends LabelAbstract
+abstract class ShipmentServiceAbstract
 {
+    /**
+     * @var Log
+     */
+    //@codingStandardsIgnoreLine
+    protected $logger;
+
     /**
      * @var ShipmentRepository
      */
-    private $shipmentRepository;
+    //@codingStandardsIgnoreLine
+    protected $shipmentRepository;
 
     /**
-     * @var Track
+     * @var PostNLShipmentRepository
      */
-    private $track;
+    //@codingStandardsIgnoreLine
+    protected $postnlShipmentRepository;
 
     /**
-     * @param Context            $context
-     * @param GetLabels          $getLabels
-     * @param SaveLabels         $saveLabels
-     * @param GetPdf             $getPdf
-     * @param ShipmentRepository $shipmentRepository
-     * @param Track              $track
+     * @var SearchCriteriaBuilder
+     */
+    //@codingStandardsIgnoreLine
+    protected $searchCriteriaBuilder;
+
+    /**
+     * @param Log                      $log
+     * @param PostNLShipmentRepository $postNLShipmentRepository
+     * @param ShipmentRepository       $shipmentRepository
      */
     public function __construct(
-        Context $context,
-        GetLabels $getLabels,
-        SaveLabels $saveLabels,
-        GetPdf $getPdf,
+        Log $log,
+        PostNLShipmentRepository $postNLShipmentRepository,
         ShipmentRepository $shipmentRepository,
-        Track $track
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
-        parent::__construct(
-            $context,
-            $getLabels,
-            $saveLabels,
-            $getPdf
-        );
-
+        $this->logger = $log;
+        $this->postnlShipmentRepository = $postNLShipmentRepository;
         $this->shipmentRepository = $shipmentRepository;
-        $this->track              = $track;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface
+     * @param $identifier
+     *
+     * @return PostNLShipment
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function execute()
+    public function getPostNLShipment($identifier)
     {
-        $shipment = $this->getShipment();
-
-        if (!$shipment->getTracks()) {
-            $this->track->set($shipment);
-        }
-
-        $labels     = $this->getLabels->get($shipment->getId());
-        $labelModel = $this->saveLabels->save($labels);
-
-        return $this->getPdf->get($labelModel);
+        return $this->postnlShipmentRepository->getById($identifier);
     }
 
     /**
-     * Retrieve shipment model instance
+     * @param $identifier
      *
      * @return Shipment
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function getShipment()
+    public function getShipment($identifier)
     {
-        $shipmentId = $this->getRequest()->getParam('shipment_id');
-        return $this->shipmentRepository->get($shipmentId);
+        return $this->shipmentRepository->get($identifier);
     }
 }

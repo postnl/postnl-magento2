@@ -36,49 +36,82 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Shipment\Options;
+namespace TIG\PostNL\Controller\Adminhtml;
 
-use Magento\Backend\Block\Template\Context;
-use Magento\Framework\Registry;
-use Magento\Sales\Model\OrderRepository;
-use TIG\PostNL\Block\Adminhtml\Shipment\OptionsAbstract;
-use TIG\PostNL\Config\Provider\ProductOptions;
-use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
+use Magento\Backend\App\Action;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Backend\App\Action\Context;
+
+use TIG\PostNL\Helper\Labelling\GetLabels;
+use TIG\PostNL\Helper\Labelling\SaveLabels;
+use TIG\PostNL\Helper\Pdf\Get as GetPdf;
 
 /**
- * Class Create
+ * Class LabelAbstract
  *
- * @package TIG\PostNL\Block\Adminhtml\Shipment\Options
- *
+ * @package TIG\PostNL\Controller\Adminhtml
  */
-class Create extends OptionsAbstract
+abstract class LabelAbstract extends Action
 {
     /**
-     * @param Context             $context
-     * @param ProductOptions      $productOptions
-     * @param ProductOptionSource $productOptionsSource
-     * @param OrderRepository     $orderRepository
-     * @param Registry            $registry
-     * @param array               $data
-     *
+     * @var array
      */
-    // @codingStandardsIgnoreStart
+    //@codingStandardsIgnoreLine
+    protected $labels = [];
+
+    /**
+     * @var GetLabels
+     */
+    //@codingStandardsIgnoreLine
+    protected $getLabels;
+
+    /**
+     * @var SaveLabels
+     */
+    //@codingStandardsIgnoreLine
+    protected $saveLabels;
+
+    /**
+     * @var GetPdf
+     */
+    //@codingStandardsIgnoreLine
+    protected $getPdf;
+
+    /**
+     * @param Context    $context
+     * @param GetLabels  $getLabels
+     * @param SaveLabels $saveLabels
+     * @param GetPdf     $getPdf
+     */
     public function __construct(
         Context $context,
-        ProductOptions $productOptions,
-        ProductOptionSource $productOptionsSource,
-        OrderRepository $orderRepository,
-        Registry $registry,
-        array $data = []
+        GetLabels $getLabels,
+        SaveLabels $saveLabels,
+        GetPdf $getPdf
     ) {
-        parent::__construct(
-            $context,
-            $productOptions,
-            $productOptionsSource,
-            $orderRepository,
-            $registry,
-            $data
-        );
+        parent::__construct($context);
+
+        $this->getLabels  = $getLabels;
+        $this->saveLabels = $saveLabels;
+        $this->getPdf     = $getPdf;
     }
-    // @codingStandardsIgnoreEnd
+
+    /**
+     * @param $shipmentId
+     */
+    //@codingStandardsIgnoreLine
+    protected function setLabel($shipmentId)
+    {
+        $labels = $this->getLabels->get($shipmentId);
+
+        /**
+         * @codingStandardsIgnoreLine
+         * TODO: add a proper warning notifying of a non-postnl shipment
+         */
+        if (count($labels) < 0) {
+            return;
+        }
+
+        $this->labels = $this->labels + $labels;
+    }
 }

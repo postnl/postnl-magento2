@@ -41,19 +41,12 @@ namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
+use TIG\PostNL\Services\Shipment\ShipmentService;
+use TIG\PostNL\Services\Shipment\Track\DeleteTrack;
+use TIG\PostNL\Services\Shipment\Label\DeleteLabel;
+use TIG\PostNL\Services\Shipment\Barcode\DeleteBarcode;
 
-use Magento\Sales\Model\Order\ShipmentRepository;
-use Magento\Sales\Model\Order\Shipment;
-
-use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
-
-use TIG\PostNL\Model\ShipmentLabelRepository;
-use TIG\PostNL\Model\ShipmentLabelInterface;
-
-use TIG\PostNL\Model\ShipmentBarcodeRepository;
-use TIG\PostNL\Model\ShipmentBarcodeInterface;
 
 /**
  * Class ChangeConfrimation
@@ -63,122 +56,91 @@ use TIG\PostNL\Model\ShipmentBarcodeInterface;
 class ChangeConfrimation extends Action
 {
     /**
-     * @var ShipmentRepository
+     * @var ShipmentService
      */
-    private $shipmentRepository;
+    private $shipmentService;
 
     /**
-     * @var PostNLShipmentRepository
+     * @var DeleteLabel
      */
-    private $postNLShipmentRepository;
+    private $labelDeleteHandler;
 
     /**
-     * @var ShipmentLabelRepository
+     * @var DeleteBarcode
      */
-    private $shipmentLabelRepository;
+    private $barcodeDeleteHandler;
 
     /**
-     * @var SearchCriteriaBuilder
+     * @var DeleteTrack
      */
-    private $searchCriteriaBuilder;
+    private $trackDeleteHandler;
 
     /**
-     * @var ShipmentBarcodeRepository
+     * @var int
      */
-    private $shipmentBarcodeRepository;
+    private $postNLShipmentId;
 
     /**
-     * @param Context                   $context
-     * @param ShipmentRepository        $shipmentRepository
-     * @param PostNLShipmentRepository  $postNLShipmentRepository
-     * @param ShipmentLabelRepository   $shipmentLabelRepository
-     * @param SearchCriteriaBuilder     $searchCriteriaBuilder
-     * @param ShipmentBarcodeRepository $shipmentBarcodeRepository
+     * @var int
+     */
+    private $shipmentId;
+
+    /**
+     * @param Context         $context
+     * @param ShipmentService $shipmentService
+     * @param DeleteLabel     $labelDeleteHandler
+     * @param DeleteBarcode   $barcodeDeleteHandler
+     * @param DeleteTrack     $trackDeleteHandler
      */
     public function __construct(
         Context $context,
-        ShipmentRepository $shipmentRepository,
-        PostNLShipmentRepository $postNLShipmentRepository,
-        ShipmentLabelRepository $shipmentLabelRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        ShipmentBarcodeRepository $shipmentBarcodeRepository
+        ShipmentService $shipmentService,
+        DeleteLabel $labelDeleteHandler,
+        DeleteBarcode $barcodeDeleteHandler,
+        DeleteTrack $trackDeleteHandler
     ) {
         parent::__construct($context);
 
-        $this->shipmentRepository        = $shipmentRepository;
-        $this->shipmentLabelRepository   = $shipmentLabelRepository;
-        $this->postNLShipmentRepository  = $postNLShipmentRepository;
-        $this->searchCriteriaBuilder     = $searchCriteriaBuilder;
-        $this->shipmentBarcodeRepository = $shipmentBarcodeRepository;
-    }
-
-    public function execute()
-    {
-        $this->resetConfirmedAt();
-        $this->deleteBarcodes();
-        $this->deleteLabels();
-
-        // @todo Delete al the shipments associated tracks
+        $this->shipmentService      = $shipmentService;
+        $this->barcodeDeleteHandler = $barcodeDeleteHandler;
+        $this->labelDeleteHandler   = $labelDeleteHandler;
+        $this->trackDeleteHandler   = $trackDeleteHandler;
     }
 
     /**
+     * When you change the consignment confirmation,
+     * all the associated elements in question will be removed from the shipment.
+     * After that, new information like the shipping address can be set, before re-confirming the consignment.
+     *
+     * @return $this
+     */
+    public function execute()
+    {
+        $this->postNLShipmentId = $this->getRequest()->getParam('postnl_shipment_id');
+        $this->shipmentId       = $this->getRequest()->getParam('shipment_id');
+
+        $this->resetConfirmedAt();
+        $this->barcodeDeleteHandler->deleteAllByShipmentId($this->postNLShipmentId);
+        $this->labelDeleteHandler->deleteAllByParentId($this->postNLShipmentId);
+        $this->trackDeleteHandler->deleteAllByShipmentId($this->shipmentId);
+
+        $resultDirect = $this->resultRedirectFactory->create();
+        return $resultDirect->setPath(
+            'sales/shipment/view',
+            ['shipment_id' => $this->shipmentId]
+        );
+    }
+
+    /**
+     * Resets the confirmation date to null.
+     *
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
     private function resetConfirmedAt()
     {
         /** @var PostNLShipment $postNLShipment */
-        $postNLShipment = $this->getPostNLShipment();
+        $postNLShipment = $this->shipmentService->getPostNLShipment($this->postNLShipmentId);
         $postNLShipment->setConfirmedAt(null);
-        $this->postNLShipmentRepository->save($postNLShipment);
-    }
-
-    /**
-     * @throws \Magento\Framework\Exception\CouldNotDeleteException
-     */
-    private function deleteBarcodes()
-    {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('shipment_id', $this->getPostNLShipment()->getId());
-        $barcodes = $this->shipmentBarcodeRepository->getList($searchCriteria->create());
-
-        /** @var ShipmentBarcodeInterface $barcode */
-        foreach ($barcodes->getItems() as $barcode) {
-            $this->shipmentBarcodeRepository->delete($barcode);
-        }
-    }
-
-    /**
-     * @throws \Magento\Framework\Exception\CouldNotDeleteException
-     */
-    private function deleteLabels()
-    {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('shipment_id', $this->getPostNLShipment()->getId());
-        $labels = $this->shipmentLabelRepository->getList($searchCriteria->create());
-
-        /** @var ShipmentLabelInterface $label */
-        foreach ($labels->getItems() as $label) {
-            $this->shipmentLabelRepository->delete($label);
-        }
-    }
-
-    /**
-     * Retrieve postnl shipment model instance
-     *
-     * @return PostNLShipment
-     */
-    private function getPostNLShipment()
-    {
-        $shipmentId = $this->getRequest()->getParam('postnl_shipment_id');
-        return $this->postNLShipmentRepository->getById($shipmentId);
-    }
-
-    /**
-     * Retrieve shipment model instance
-     *
-     * @return Shipment
-     */
-    private function getShipment()
-    {
-        $shipmentId = $this->getRequest()->getParam('shipment_id');
-        return $this->shipmentRepository->get($shipmentId);
+        $this->shipmentService->save($postNLShipment);
     }
 }

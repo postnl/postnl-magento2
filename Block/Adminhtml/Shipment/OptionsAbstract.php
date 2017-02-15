@@ -113,6 +113,7 @@ abstract class OptionsAbstract extends Template implements BlockInterface
         if (!$orderId) {
             $orderId = $this->getShipment()->getOrderId();
         }
+
         $this->order = $this->orderRepository->get($orderId);
     }
 
@@ -132,7 +133,7 @@ abstract class OptionsAbstract extends Template implements BlockInterface
     {
         $supportedCodes = $this->productConfig->getSupportedProductOptions();
         $productOptions = [];
-        foreach (explode(',',$supportedCodes) as $code) {
+        foreach (explode(',', $supportedCodes) as $code) {
             $productOptions[$code] = $this->productSource->getOptionsByCode($code);
         }
 

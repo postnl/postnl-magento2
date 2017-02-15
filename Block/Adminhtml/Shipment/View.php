@@ -106,7 +106,12 @@ class View extends MagentoView
             return;
         }
 
+        if (!$this->getPostNLShipment()) {
+            return;
+        }
+
         $this->buttonList->remove('print');
+        //@codingStandardsIgnoreLine
         $this->buttonList->update('save', 'label', __('Send Shipment Email'));
         $this->setPostNLPrintLabelButtonData();
         $this->setPostNLPrintLabelButton();
@@ -117,6 +122,7 @@ class View extends MagentoView
         $this->buttonList->add(
             'postnl_print',
             [
+                // @codingStandardsIgnoreLine
                 'label' => __($this->printLabel),
                 'class' => 'save primary',
                 'onclick' => 'setLocation(\'' .$this->getLabelUrl() .'\')'
@@ -126,20 +132,22 @@ class View extends MagentoView
 
     private function setPostNLChangeConfirmButton()
     {
+        /** @codingStandardsIgnoreStart */
         $this->buttonList->add(
             'postnl_change_confirm',
             [
                 'label'   => __('PostNL - Change Confirmation'),
                 'class'   => 'delete primary',
-                'style'   => 'background-color: #ea2102;',
                 'onclick' =>
                     'deleteConfirm(\'' . __(
-                        'Are you sure that you wish to reset the confirmation status of this shipment? You will need to '
-                        . 'confirm this shipment with PostNL again before you can send it. This action will remove all barcodes'
+                        'Are you sure that you wish to reset the confirmation status of this shipment?'
+                        . ' You will need to confirm this shipment with PostNL again before you can send it.'
+                        .' This action will remove all barcodes'
                         . ' and labels associated with this shipment. You can not undo this action.'
                     ) . '\', \'' . $this->getAlterUrl() . '\')'
             ]
         );
+        /** @codingStandardsIgnoreEnd */
     }
 
     private function setPostNLPrintLabelButtonData()
@@ -186,6 +194,10 @@ class View extends MagentoView
         $searchCriteria->setPageSize(1);
         /** @var \Magento\Framework\Api\SearchResults $list */
         $list = $this->postNLShipmentRepository->getList($searchCriteria->create());
-        return $list->getItems()[0];
+        if ($list->getTotalCount() != 0) {
+            return $list->getItems()[0];
+        }
+
+        return false;
     }
 }

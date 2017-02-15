@@ -36,87 +36,93 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Controller\Adminhtml\Shipment;
+namespace TIG\PostNL\Services\Shipment\Track;
 
-use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
-use Magento\Backend\App\Action\Context;
-use Magento\Sales\Model\Order\Shipment;
+use \Magento\Sales\Model\Order\Shipment\Track;
+use TIG\PostNL\Services\Shipment\ShipmentServiceAbstract;
+
+
+use Magento\Framework\Api\SearchCriteriaBuilder;
+
+use TIG\PostNL\Logging\Log;
+use TIG\PostNL\Exception as PostNLException;
+
 use Magento\Sales\Model\Order\ShipmentRepository;
+use Magento\Sales\Model\Order\Shipment;
 
-use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Helper\Labelling\SaveLabels;
-use TIG\PostNL\Helper\Pdf\Get as GetPdf;
-use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 
 /**
- * Class ConfirmAndPrintShippingLabel
+ * Class DeleteTrack
  *
- * @package TIG\PostNL\Controller\Adminhtml\Shipment
+ * @package TIG\PostNL\Services\Track
  */
-class ConfirmAndPrintShippingLabel extends LabelAbstract
+class DeleteTrack extends ShipmentServiceAbstract
 {
-    /**
-     * @var ShipmentRepository
-     */
-    private $shipmentRepository;
-
     /**
      * @var Track
      */
     private $track;
 
     /**
-     * @param Context            $context
-     * @param GetLabels          $getLabels
-     * @param SaveLabels         $saveLabels
-     * @param GetPdf             $getPdf
-     * @param ShipmentRepository $shipmentRepository
-     * @param Track              $track
+     * @param Track                    $track
+     * @param Log                      $log
+     * @param PostNLShipmentRepository $postNLShipmentRepository
+     * @param ShipmentRepository       $shipmentRepository
+     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      */
     public function __construct(
-        Context $context,
-        GetLabels $getLabels,
-        SaveLabels $saveLabels,
-        GetPdf $getPdf,
+        Track $track,
+        Log $log,
+        PostNLShipmentRepository $postNLShipmentRepository,
         ShipmentRepository $shipmentRepository,
-        Track $track
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         parent::__construct(
-            $context,
-            $getLabels,
-            $saveLabels,
-            $getPdf
+            $log,
+            $postNLShipmentRepository,
+            $shipmentRepository,
+            $searchCriteriaBuilder
         );
 
-        $this->shipmentRepository = $shipmentRepository;
-        $this->track              = $track;
+        $this->track  = $track;
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface
+     * Deletes a single track.
+     *
+     * @param int $trackId
      */
-    public function execute()
+    public function delete($trackId)
     {
-        $shipment = $this->getShipment();
-
-        if (!$shipment->getTracks()) {
-            $this->track->set($shipment);
+        /** @var Track $track */
+        $track = $this->track->load($trackId);
+        if (!$track->getId()) {
+            $this->logger->alert('Can\'t initialize track for deletion', [$trackId]);
         }
 
-        $labels     = $this->getLabels->get($shipment->getId());
-        $labelModel = $this->saveLabels->save($labels);
-
-        return $this->getPdf->get($labelModel);
+        try {
+            $track->delete();
+        } catch (PostNLException $exception) {
+            $this->logger->alert('Can\'t delete tracking number', $exception->getLogMessage());
+        }
     }
 
     /**
-     * Retrieve shipment model instance
+     * Deletes all track (T&T) information associated to the Shipment ID.
      *
-     * @return Shipment
+     * @param $shipmentId
      */
-    private function getShipment()
+    public function deleteAllByShipmentId($shipmentId)
     {
-        $shipmentId = $this->getRequest()->getParam('shipment_id');
-        return $this->shipmentRepository->get($shipmentId);
+        /** @var Shipment $shipment */
+        $shipment = $this->getShipment($shipmentId);
+        $tracks   = $shipment->getAllTracks();
+
+        /** @var Track $track */
+        foreach ($tracks as $track) {
+            // @codingStandardsIgnoreLine
+            $this->delete($track->getId());
+        }
     }
 }

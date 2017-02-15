@@ -67,13 +67,15 @@
     <?php endif; ?>
 </div>
 <!-- Javascript to append the postnl div inside the form elements -->
-<script type="application/javascript">
-    var items = jQuery('.admin__page-section-item-content');
-    var email = items.find('.field-email');
-
-    jQuery(function () {
-        email.after(jQuery('#postnl_shipping_options'));
-    });
-
+<script>
+    require([
+        "jquery"
+    ], function (jQuery) {
+        var items = jQuery('.admin__page-section-item-content');
+        var email = items.find('.field-email');
+        $(function () {
+            email.after(jQuery('#postnl_shipping_options'));
+        });
+    })
 </script>
 <?php endif;?>

@@ -92,15 +92,12 @@ class View extends OptionsAbstract
             $productOptionsSource,
             $orderRepository,
             $registry,
-            $searchCriteriaBuilder,
-            $shipmentRepository,
             $data
         );
 
         $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
         $this->postNLShipmentRepository = $shipmentRepository;
     }
-
 
     /**
      * @return mixed
@@ -121,6 +118,10 @@ class View extends OptionsAbstract
         $searchCriteria->setPageSize(1);
         /** @var \Magento\Framework\Api\SearchResults $list */
         $list = $this->postNLShipmentRepository->getList($searchCriteria->create());
-        return $list->getItems()[0];
+        if ($list->getTotalCount() != 0) {
+            return $list->getItems()[0];
+        }
+
+        return false;
     }
 }

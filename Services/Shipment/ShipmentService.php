@@ -36,49 +36,22 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Shipment\Options;
-
-use Magento\Backend\Block\Template\Context;
-use Magento\Framework\Registry;
-use Magento\Sales\Model\OrderRepository;
-use TIG\PostNL\Block\Adminhtml\Shipment\OptionsAbstract;
-use TIG\PostNL\Config\Provider\ProductOptions;
-use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
+namespace TIG\PostNL\Services\Shipment;
 
 /**
- * Class Create
+ * Class ShipmentService
  *
- * @package TIG\PostNL\Block\Adminhtml\Shipment\Options
- *
+ * @package TIG\PostNL\Services\Shipment
  */
-class Create extends OptionsAbstract
+class ShipmentService extends ShipmentServiceAbstract
 {
     /**
-     * @param Context             $context
-     * @param ProductOptions      $productOptions
-     * @param ProductOptionSource $productOptionsSource
-     * @param OrderRepository     $orderRepository
-     * @param Registry            $registry
-     * @param array               $data
+     * @param $postNLShipment
      *
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    // @codingStandardsIgnoreStart
-    public function __construct(
-        Context $context,
-        ProductOptions $productOptions,
-        ProductOptionSource $productOptionsSource,
-        OrderRepository $orderRepository,
-        Registry $registry,
-        array $data = []
-    ) {
-        parent::__construct(
-            $context,
-            $productOptions,
-            $productOptionsSource,
-            $orderRepository,
-            $registry,
-            $data
-        );
+    public function save($postNLShipment)
+    {
+        $this->postnlShipmentRepository->save($postNLShipment);
     }
-    // @codingStandardsIgnoreEnd
 }

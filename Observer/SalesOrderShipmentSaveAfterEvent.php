@@ -118,10 +118,8 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
         $shipment = $observer->getData('data_object');
 
         /** @var \TIG\PostNL\Model\Shipment $model */
-        $model = $this->shipmentFactory->create();
-
-
-        $sentDate = $this->sentDateHandler->get($shipment);
+        $model       = $this->shipmentFactory->create();
+        $sentDate    = $this->sentDateHandler->get($shipment);
         $mainBarcode = $this->barcodeHandler->generate();
 
         $model->setData([
@@ -133,7 +131,6 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
         ]);
 
         $model->setData($this->formatModelData($shipment));
-
         $model->save();
         $this->handleMultipleParcels($model);
     }

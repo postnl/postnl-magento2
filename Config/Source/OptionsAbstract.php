@@ -189,6 +189,16 @@ abstract class OptionsAbstract
     }
 
     /**
+     * @param $code
+     *
+     * @return mixed
+     */
+    public function getOptionsByCode($code)
+    {
+        return isset($this->availableOptions[$code]) ? $this->availableOptions[$code] : null;
+    }
+
+    /**
      * @return array
      */
     public function getGroupedOptions()

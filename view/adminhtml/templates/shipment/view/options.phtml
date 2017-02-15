@@ -63,46 +63,48 @@
         }
 
     </style>
-<div id="postnl_shipping_options_selected">
-    <!--
-    This is not for the buttons, but it is to show the options that where chosen.
-    The buttons are added in TIG/PostNL/Block/Adminhtml/Shipment/View.php to the buttonList.
-    -->
+
     <?php
     /** @var TIG\PostNL\Model\Shipment $postNLShipment */
-        $postNLShipment = $block->getPostNLShipment();
+    $postNLShipment = $block->getPostNLShipment();
     ?>
-    <div class="tig_postnl_delivery_info">
-        <ul>
-            <li>
-                <span class="type"><?php /* @escapeNotVerified */ echo __('Product option :'); ?></span>
-                <span class="value option">
-                    <?php $group = str_replace('_', ' ', $block->getProductOption()['group']); ?>
-                    <?php echo ucfirst($group). ' (' . $block->getProductOption()['value'] . ')'; ?>
-                </span>
-            </li>
-            <li>
-                <span class="type"><?php /* @escapeNotVerified */ echo __('Ship at :'); ?></span>
-                <span class="value ship_at">
-                    <?php echo $postNLShipment->getShipAt(); ?>
-                </span>
-            </li>
-            <li>
-                <span class="type"><?php /* @escapeNotVerified */ echo __('Parcel count :'); ?></span>
-                <span class="value parcels">
-                    <?php echo $postNLShipment->getParcelCount(); ?>
-                </span>
-            </li>
-        </ul>
+    <?php if ($postNLShipment) :?>
+    <div id="postnl_shipping_options_selected">
+        <div class="tig_postnl_delivery_info">
+            <ul>
+                <li>
+                    <span class="type"><?php /* @escapeNotVerified */ echo __('Product option :'); ?></span>
+                    <span class="value option">
+                        <?php $group = str_replace('_', ' ', $block->getProductOption()['group']); ?>
+                        <?php echo ucfirst($group). ' (' . $block->getProductOption()['value'] . ')'; ?>
+                    </span>
+                </li>
+                <li>
+                    <span class="type"><?php /* @escapeNotVerified */ echo __('Ship at :'); ?></span>
+                    <span class="value ship_at">
+                        <?php echo $postNLShipment->getShipAt(); ?>
+                    </span>
+                </li>
+                <li>
+                    <span class="type"><?php /* @escapeNotVerified */ echo __('Parcel count :'); ?></span>
+                    <span class="value parcels">
+                        <?php echo $postNLShipment->getParcelCount(); ?>
+                    </span>
+                </li>
+            </ul>
+        </div>
     </div>
 
-</div>
-
-<script type="application/javascript">
-    var controls = jQuery('.admin__control-table-wrapper');
-    var table    = jQuery('#shipment_tracking_info');
-    jQuery(function () {
-        table.after(jQuery('#postnl_shipping_options_selected'));
-    });
-</script>
+    <!-- Javascript to append the postnl div inside the form elements -->
+    <script>
+        require([
+            "jquery"
+        ], function (jQuery) {
+            var table    = jQuery('#shipment_tracking_info');
+            jQuery(function () {
+                table.after(jQuery('#postnl_shipping_options_selected'));
+            });
+        })
+    </script>
+    <?php endif; ?>
 <?php endif; ?>

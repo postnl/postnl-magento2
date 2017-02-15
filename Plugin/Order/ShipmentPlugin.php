@@ -54,6 +54,7 @@ class ShipmentPlugin
      *
      * @return string|\Magento\Framework\DataObject
      */
+    // @codingStandardsIgnoreLine
     public function afterGetShippingMethod($subject, $result)
     {
         if (is_string($result)) {
