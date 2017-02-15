@@ -58,6 +58,11 @@ use TIG\PostNL\Helper\Tracking\Track;
 class MassPrintShippingLabel extends LabelAbstract
 {
     /**
+     * @var array
+     */
+    private $labels = [];
+
+    /**
      * @var Filter
      */
     private $filter;
@@ -124,5 +129,22 @@ class MassPrintShippingLabel extends LabelAbstract
         $pdfFile = $this->getPdf->get($labelModels);
 
         return $pdfFile;
+    }
+    /**
+     * @param $shipmentId
+     */
+    private function setLabel($shipmentId)
+    {
+        $labels = $this->getLabels->get($shipmentId);
+
+        /**
+         * @codingStandardsIgnoreLine
+         * TODO: add a proper warning notifying of a non-postnl shipment
+         */
+        if (count($labels) < 0) {
+            return;
+        }
+
+        $this->labels = $this->labels + $labels;
     }
 }

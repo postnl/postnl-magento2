@@ -54,12 +54,6 @@ use TIG\PostNL\Helper\Pdf\Get as GetPdf;
 abstract class LabelAbstract extends Action
 {
     /**
-     * @var array
-     */
-    //@codingStandardsIgnoreLine
-    protected $labels = [];
-
-    /**
      * @var GetLabels
      */
     //@codingStandardsIgnoreLine
@@ -94,24 +88,5 @@ abstract class LabelAbstract extends Action
         $this->getLabels  = $getLabels;
         $this->saveLabels = $saveLabels;
         $this->getPdf     = $getPdf;
-    }
-
-    /**
-     * @param $shipmentId
-     */
-    //@codingStandardsIgnoreLine
-    protected function setLabel($shipmentId)
-    {
-        $labels = $this->getLabels->get($shipmentId);
-
-        /**
-         * @codingStandardsIgnoreLine
-         * TODO: add a proper warning notifying of a non-postnl shipment
-         */
-        if (count($labels) < 0) {
-            return;
-        }
-
-        $this->labels = $this->labels + $labels;
     }
 }
