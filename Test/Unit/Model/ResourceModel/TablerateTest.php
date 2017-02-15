@@ -116,7 +116,7 @@ class TablerateTest extends TestCase
         $dataObject = $this->getObject(DataObject::class);
 
         $instance = $this->getInstance();
-        $result = $instance->uploadAndImport($dataObject);
+        $result = $instance->uploadAndImport($dataObject, []);
 
         $this->assertEquals($instance, $result);
     }

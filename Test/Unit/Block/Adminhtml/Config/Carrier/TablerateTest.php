@@ -49,7 +49,7 @@ class TablerateTest extends TestCase
     public function testInstance()
     {
         $instance = $this->getInstance();
-        $tablerateFactoryProperty = $this->getProperty('_tablerateFactory', $instance);
+        $tablerateFactoryProperty = $this->getProperty('tablerateFactory', $instance);
 
         $this->assertInstanceOf(Tablerate::class, $instance);
         $this->assertInstanceOf(TablerateFactory::class, $tablerateFactoryProperty);

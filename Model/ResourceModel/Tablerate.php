@@ -50,8 +50,6 @@ use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
-use TIG\PostNL\Services\Import\Csv;
-
 /**
  * Class Tablerate
  *
@@ -59,20 +57,25 @@ use TIG\PostNL\Services\Import\Csv;
  */
 class Tablerate extends AbstractDb
 {
-    /** @var ScopeConfigInterface */
+    /**
+     * @var ScopeConfigInterface
+     */
     private $coreConfig;
 
-    /** @var LoggerInterface */
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
-    /** @var StoreManagerInterface */
+    /**
+     * @var StoreManagerInterface
+     */
     private $storeManager;
 
-    /** @var RateQueryFactory */
+    /**
+     * @var RateQueryFactory
+     */
     private $rateQueryFactory;
-
-    /** @var Csv */
-    private $csv;
 
     /**
      * @param Context               $context
@@ -80,7 +83,6 @@ class Tablerate extends AbstractDb
      * @param ScopeConfigInterface  $coreConfig
      * @param StoreManagerInterface $storeManager
      * @param RateQueryFactory      $rateQueryFactory
-     * @param Csv                   $csv
      * @param null|string           $connectionName
      */
     public function __construct(
@@ -89,7 +91,6 @@ class Tablerate extends AbstractDb
         ScopeConfigInterface $coreConfig,
         StoreManagerInterface $storeManager,
         RateQueryFactory $rateQueryFactory,
-        Csv $csv,
         $connectionName = null
     ) {
         parent::__construct($context, $connectionName);
@@ -97,7 +98,6 @@ class Tablerate extends AbstractDb
         $this->logger = $logger;
         $this->storeManager = $storeManager;
         $this->rateQueryFactory = $rateQueryFactory;
-        $this->csv = $csv;
     }
 
     /**
@@ -143,47 +143,19 @@ class Tablerate extends AbstractDb
      * @return $this
      * @throws LocalizedException
      */
-    public function uploadAndImport(DataObject $object)
+    public function uploadAndImport(DataObject $object, $importData)
     {
-        $csvData = $this->getCsvData($object);
-
-        if (empty($csvData)) {
+        if (empty($importData)) {
             return $this;
         }
 
         try {
             $this->deleteByCondition($object);
-            $this->importData($csvData);
+            $this->importData($importData);
         } catch (\Exception $exception) {
             $this->logger->critical($exception);
             throw new LocalizedException(__('Something went wrong while importing table rates.'));
         }
-    }
-
-    /**
-     * @param $object
-     *
-     * @return array
-     * @throws LocalizedException
-     */
-    private function getCsvData($object)
-    {
-        $csvData = [];
-
-        // @codingStandardsIgnoreLine
-        if (empty($_FILES['groups']['tmp_name']['tig_postnl']['fields']['import']['value'])) {
-            return $csvData;
-        }
-
-        // @codingStandardsIgnoreLine
-        $filePath = $_FILES['groups']['tmp_name']['tig_postnl']['fields']['import']['value'];
-        $website = $this->storeManager->getWebsite($object->getScopeId());
-        $websiteId = $website->getId();
-        $conditionName = $this->getConditionName($object);
-
-        $csvData = $this->csv->getData($filePath, $websiteId, $conditionName);
-
-        return $csvData;
     }
 
     /**
