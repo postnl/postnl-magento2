@@ -47,8 +47,7 @@ use \Magento\Quote\Model\Quote\Address\ToOrderAddress;
 use \Magento\Sales\Model\Order\AddressFactory;
 use TIG\PostNL\Exception;
 use TIG\PostNL\Helper\DeliveryOptions\PickupAddress;
-use TIG\PostNL\Model\Order as PostNLOrder;
-use \TIG\PostNL\Service\Order\Factory as OrderFactory;
+use \TIG\PostNL\Model\OrderRepository;
 
 /**
  * Class AddressToOrder
@@ -73,26 +72,26 @@ class AddressToOrder implements ObserverInterface
     private $addressFactory;
 
     /**
-     * @var OrderFactory
+     * @var OrderRepository
      */
-    private $orderFactory;
+    private $orderRepository;
 
     /**
      * @param ToOrderAddress  $toOrderAddress
      * @param PickupAddress   $pickupAddress
      * @param AddressFactory  $addressFactory
-     * @param OrderFactory    $orderFactory
+     * @param OrderRepository $orderRepository
      */
     public function __construct(
         ToOrderAddress $toOrderAddress,
         PickupAddress $pickupAddress,
         AddressFactory $addressFactory,
-        OrderFactory $orderFactory
+        OrderRepository $orderRepository
     ) {
         $this->quoteAddressToOrderAddress = $toOrderAddress;
         $this->pickupAddressHelper = $pickupAddress;
         $this->addressFactory = $addressFactory;
-        $this->orderFactory = $orderFactory;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -113,13 +112,28 @@ class AddressToOrder implements ObserverInterface
             $order->addAddress($pgAddress);
         }
 
-        $postnlOrder = $this->orderFactory->getByQuoteId($order->getQuoteId());
+        $postnlOrder = $this->getPostNLOrder($order);
         if (false !== $pgAddress && $postnlOrder->getId()) {
             $postnlOrder->setData('pg_order_address_id', $pgAddress->getId());
-            $this->orderFactory->save($postnlOrder);
+            $this->orderRepository->save($postnlOrder);
         }
 
         return $this;
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return null|\TIG\PostNL\Model\Order
+     */
+    private function getPostNLOrder(Order $order)
+    {
+        $postnlOrder = $this->orderRepository->getByFieldWithValue('quote_id', $order->getQuoteId());
+        if (!$postnlOrder) {
+            $postnlOrder = $this->orderRepository->create();
+        }
+
+        return $postnlOrder;
     }
 
     /**

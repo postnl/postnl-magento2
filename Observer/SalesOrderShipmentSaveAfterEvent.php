@@ -42,7 +42,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
 use TIG\PostNL\Config\Provider\ProductOptions;
-use \TIG\PostNL\Service\Order\Factory as OrderFactory;
+use \TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Model\Order as PostNLOrder;
 use TIG\PostNL\Model\ShipmentFactory;
 
@@ -54,9 +54,9 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     private $shipmentFactory;
 
     /**
-     * @var OrderFactory
+     * @var OrderRepository
      */
-    private $orderFactory;
+    private $orderRepository;
 
     /**
      * @var Handlers\BarcodeHandler
@@ -75,20 +75,20 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
 
     /**
      * @param ShipmentFactory          $shipmentFactory
-     * @param OrderFactory             $orderFactory
+     * @param OrderRepository          $orderRepository
      * @param Handlers\BarcodeHandler  $barcodeHandler
      * @param Handlers\SentDateHandler $sendDateHandler
      * @param ProductOptions           $productOptions
      */
     public function __construct(
         ShipmentFactory $shipmentFactory,
-        OrderFactory $orderFactory,
+        OrderRepository $orderRepository,
         Handlers\BarcodeHandler $barcodeHandler,
         Handlers\SentDateHandler $sendDateHandler,
         ProductOptions $productOptions
     ) {
         $this->shipmentFactory = $shipmentFactory;
-        $this->orderFactory = $orderFactory;
+        $this->orderRepository = $orderRepository;
         $this->barcodeHandler = $barcodeHandler;
         $this->sentDateHandler = $sendDateHandler;
         $this->productOptions = $productOptions;
@@ -134,7 +134,8 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     {
         /** @var MagentoOrder $magentoOrder */
         $magentoOrder = $shipment->getOrder();
-        $postNLOrder  = $this->orderFactory->getByQuoteId($magentoOrder->getQuoteId());
+        /** @var PostNLOrder $postNLOrder */
+        $postNLOrder  = $this->orderRepository->getByFieldWithValue('quote_id', $magentoOrder->getQuoteId());
 
         $productCode = $this->productOptions->getDefaultProductOption();
         if ($postNLOrder->getIsPakjegemak()) {
@@ -142,7 +143,7 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
         }
 
         $postNLOrder->setData(['product_code' => $productCode]);
-        $this->orderFactory->save($postNLOrder);
+        $this->orderRepository->save($postNLOrder);
 
         return $productCode;
     }
