@@ -64,7 +64,7 @@ class ShipmentPlugin
     // @codingStandardsIgnoreLine
     public function afterGetShippingMethod($subject, $result)
     {
-        if (is_string($result) || null == $result) {
+        if (is_string($result) || null === $result) {
             return $result;
         }
 
