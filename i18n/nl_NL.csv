@@ -29,7 +29,7 @@ ok,ok
 "Invalid GenerateBarcode response: %1","Ongeldig GenerateBarcode response: %1"
 "Failed on soap call : %1","Failed on soap call : %1"
 "SOAP extension is not loaded.","De SOAP extension is niet geladen."
-Legend,Legende
+Legend,Legenda
 "Shipping method","Verzend methode"
 Disabled,Uit
 "Test Mode","Test Modus"
@@ -48,7 +48,7 @@ https://www.postnl.nl/zakelijke-oplossingen/webwinkels/bezorgopties-voor-mijn-kl
 www.postnl.com,www.postnl.com
 "Extension support and advanced configuration","Extensie ondersteuning en vragen over de configuratie"
 "For questions about installing and configuring the extension please consult the relevant documentation:","Heeft u vragen over de installatie of configuratie van de extensie? Raadpleeg altijd eerst de relevante documentatie:"
-"Frequently asked questions :","Veelgestelde vragen"
+"Frequently asked questions:","Veelgestelde vragen:"
 FAQ,FAQ
 "Support by email:","Support per email:"
 Documentation,Documentatie
