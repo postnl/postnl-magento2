@@ -36,73 +36,84 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Service\Order;
 
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use TIG\PostNL\Helper\Data;
-use \TIG\PostNL\Service\Order\Factory as OrderFactory;
-use Magento\Sales\Model\Order as MagentoOrder;
-use TIG\PostNL\Model\Order as PostNLOrder;
+use \Magento\Framework\Api\SearchCriteriaBuilder;
+use \TIG\PostNL\Model\OrderRepository as PostNLOrderRepository;
+use \TIG\PostNL\Model\Order;
 
-class SalesOrderSaveAfterEvent implements ObserverInterface
+/**
+ * Class Factory
+ *
+ * @package TIG\PostNL\Service\Order
+ */
+class Factory
 {
-    /**
-     * @var OrderFactory
-     */
-    private $orderFactory;
+    private $searchCriteriaBuilder;
+
+    private $postNLOrderRepository;
 
     /**
-     * @var Data
-     */
-    private $helper;
-
-    /**
-     * @param OrderFactory    $orderFactory
-     * @param Data            $helper
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param PostNLOrderRepository $orderRepository
      */
     public function __construct(
-        OrderFactory $orderFactory,
-        Data $helper
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        PostNLOrderRepository $orderRepository
     ) {
-        $this->orderFactory = $orderFactory;
-        $this->helper = $helper;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->postNLOrderRepository = $orderRepository;
     }
 
     /**
-     * @param Observer $observer
+     * @param $identifier
      *
-     * @return void
+     * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function execute(Observer $observer)
+    public function get($identifier)
     {
-        /** @var MagentoOrder $order */
-        $magentoOrder = $observer->getData('data_object');
+        return $this->postNLOrderRepository->getById($identifier);
+    }
 
-        if (!$this->helper->isPostNLOrder($magentoOrder)) {
-            return;
+    /**
+     * @param string $field
+     * @param $value
+     *
+     * @return Order|null
+     */
+    public function getByFieldWithValue($field, $value)
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter($field, $value);
+        $searchCriteria->setPageSize(1);
+
+        /** @var \Magento\Framework\Api\SearchResults $list */
+        $list = $this->postNLOrderRepository->getList($searchCriteria->create());
+
+        if ($list->getTotalCount()) {
+            return $list->getItems()[0];
         }
 
-        $postnlOrder = $this->getPostNLOrder($magentoOrder);
-
-        $postnlOrder->setData('order_id', $magentoOrder->getId());
-        $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
-
-        $this->orderFactory->save($postnlOrder);
+        return null;
     }
 
     /**
-     * @param MagentoOrder $magentoOrder
+     * @param $quoteId
      *
-     * @return PostNLOrder
+     * @return null|Order
      */
-    private function getPostNLOrder(MagentoOrder $magentoOrder)
+    public function getByQuoteId($quoteId)
     {
-        /** @var PostNLOrder $postnlOrder */
-        $postnlOrder = $this->orderFactory->getByFieldWithValue(
-            'quote_id', $magentoOrder->getQuoteId()
-        );
+        return $this->getByFieldWithValue('quote_id', $quoteId);
+    }
 
-        return $postnlOrder;
+    /**
+     * @param Order $postNLOrder
+     *
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     */
+    public function save(Order $postNLOrder)
+    {
+        $this->postNLOrderRepository->save($postNLOrder);
     }
 }
