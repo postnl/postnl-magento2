@@ -6,7 +6,7 @@ Tomorrow,Tomorrow
 Live,Live
 Test,Test
 Off,Off
-"All products","All products"
+"Always show deliveryoptions","Always show deliveryoptions"
 "Only for products that are in stock","Only for products that are in stock"
 "There are no available options","There are no available options"
 label,label
@@ -49,7 +49,7 @@ https://www.postnl.nl/zakelijke-oplossingen/webwinkels/bezorgopties-voor-mijn-kl
 www.postnl.com,www.postnl.com
 "Extension support and advanced configuration","Extension support and advanced configuration"
 "For questions about installing and configuring the extension please consult the relevant documentation:","For questions about installing and configuring the extension please consult the relevant documentation:"
-"Frequently asked questions :","Frequently asked questions :"
+"Frequently asked questions:","Frequently asked questions:"
 FAQ,FAQ
 "Support by email:","Support by email:"
 Documentation,Documentation
@@ -73,13 +73,14 @@ Title,Title
 "General configuration and account information","General configuration and account information"
 "Extension status","Extension status"
 Modus,Modus
-Customernumber,Customernumber
-Customercode,Customercode
-"Api Key","Api Key"
-"BLS location code","BLS location code"
-"Customernumber (test)","Customernumber (test)"
-"Customercode (test)","Customercode (test)"
-"BLS location code (test)","BLS location code (test)"
+"Customernumber live mode","Customernumber live mode"
+"Customercode live mode","Customercode live mode"
+"Api Key live mode","Api Key live mode"
+"Api Key test mode","Api Key test mode"
+"BLS location code live mode","BLS location code live mode"
+"Customernumber test mode","Customernumber test mode"
+"Customercode test mode","Customercode test mode"
+"BLS location code test mode","BLS location code test mode"
 Shippingaddress,Shippingaddress
 Firstname,Firstname
 Lastname,Lastname

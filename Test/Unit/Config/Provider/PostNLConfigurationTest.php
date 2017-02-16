@@ -1,3 +1,4 @@
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -35,49 +36,35 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define([
-    'uiComponent',
-    'ko',
-    'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Helper/AddressFinder'
-], function (
-    Component,
-    ko,
-    State,
-    AddressFinder
-) {
-    return Component.extend({
-        defaults: {
-            template: 'TIG_PostNL/DeliveryOptions/Main',
-            shipmentType: 'delivery'
-        },
+namespace TIG\PostNL\Test\Unit\Config\Provider;
 
-        initObservable: function () {
-            this._super().observe([
-                'shipmentType'
-            ]);
+use TIG\PostNL\Config\Provider\PostNLConfiguration;
 
-            this.isLoading = ko.computed(function () {
-                return State.isLoading();
-            });
+class PostNLConfigurationTest extends AbstractConfigurationTest
+{
+    protected $instanceClass = PostNLConfiguration::class;
 
-            return this;
-        },
+    /**
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
+     *
+     * @param $value
+     */
+    public function testGetStability($value)
+    {
+        $instance = $this->getInstance();
+        $this->setXpath(PostNLConfiguration::XPATH_STABILITY, $value);
+        $this->assertEquals($value, $instance->getStability());
+    }
 
-        canUseDeliveryOptions: ko.computed(function () {
-            return State.deliveryOptionsAreAvailable() && AddressFinder() != false;
-        }),
-
-        canUsePickupLocations: ko.computed(function () {
-            return window.checkoutConfig.shipping.postnl.pakjegemak_active == 1 && State.pickupOptionsAreAvailable();
-        }),
-
-        setDelivery: function () {
-            this.shipmentType('delivery');
-        },
-
-        setPickup: function () {
-            this.shipmentType('pickup');
-        }
-    });
-});
+    /**
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
+     *
+     * @param $value
+     */
+    public function testGetSupportedMagentoVersions($value)
+    {
+        $instance = $this->getInstance();
+        $this->setXpath(PostNLConfiguration::XPATH_SUPPORTED_MAGENTO_VERSION, $value);
+        $this->assertEquals($value, $instance->getSupportedMagentoVersions());
+    }
+}

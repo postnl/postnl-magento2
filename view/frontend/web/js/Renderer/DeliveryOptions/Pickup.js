@@ -116,7 +116,7 @@ define([
 
                 $.ajax({
                     method: 'POST',
-                    url: '/postnl/deliveryoptions/save',
+                    url: window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
                     data: {
                         type: 'pickup',
                         name : value.Name,
@@ -145,10 +145,10 @@ define([
 
             jQuery.ajax({
                 method: 'POST',
-                url : '/postnl/deliveryoptions/pickup',
+                url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_locations,
                 data : {address: address}
             }).done(function (data) {
-                State.pickupOptionsAreLoading(false);
+                State.pickupOptionsAreAvailable(true);
 
                 data = ko.utils.arrayMap(data, function (data) {
                     return new Location(data);
@@ -156,7 +156,10 @@ define([
 
                 this.setPickupAddresses(data);
             }.bind(this)).fail(function (data) {
+                State.pickupOptionsAreAvailable(false);
                 Logger.error(data);
+            }).always(function () {
+                State.pickupOptionsAreLoading(false);
             });
         },
 

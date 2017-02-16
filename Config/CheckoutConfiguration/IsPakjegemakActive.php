@@ -1,3 +1,4 @@
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -35,49 +36,31 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define([
-    'uiComponent',
-    'ko',
-    'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Helper/AddressFinder'
-], function (
-    Component,
-    ko,
-    State,
-    AddressFinder
-) {
-    return Component.extend({
-        defaults: {
-            template: 'TIG_PostNL/DeliveryOptions/Main',
-            shipmentType: 'delivery'
-        },
+namespace TIG\PostNL\Config\CheckoutConfiguration;
 
-        initObservable: function () {
-            this._super().observe([
-                'shipmentType'
-            ]);
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
-            this.isLoading = ko.computed(function () {
-                return State.isLoading();
-            });
+class IsPakjegemakActive extends AbstractCheckoutConfiguration
+{
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
 
-            return this;
-        },
+    /**
+     * @param ShippingOptions      $shippingOptions
+     */
+    public function __construct(
+        ShippingOptions $shippingOptions
+    ) {
+        $this->shippingOptions = $shippingOptions;
+    }
 
-        canUseDeliveryOptions: ko.computed(function () {
-            return State.deliveryOptionsAreAvailable() && AddressFinder() != false;
-        }),
-
-        canUsePickupLocations: ko.computed(function () {
-            return window.checkoutConfig.shipping.postnl.pakjegemak_active == 1 && State.pickupOptionsAreAvailable();
-        }),
-
-        setDelivery: function () {
-            this.shipmentType('delivery');
-        },
-
-        setPickup: function () {
-            this.shipmentType('pickup');
-        }
-    });
-});
+    /**
+     * @return bool
+     */
+    public function getValue()
+    {
+        return $this->shippingOptions->isPakjegemakActive();
+    }
+}

@@ -52,7 +52,9 @@ define([
     });
 
     return {
+        deliveryOptionsAreAvailable: ko.observable(true),
         deliveryOptionsAreLoading: deliveryOptionsAreLoading,
+        pickupOptionsAreAvailable: ko.observable(true),
         pickupOptionsAreLoading: pickupOptionsAreLoading,
         isLoading: isLoading,
         method: ko.observable(null),
