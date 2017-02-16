@@ -1,3 +1,4 @@
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -35,49 +36,42 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define([
-    'uiComponent',
-    'ko',
-    'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Helper/AddressFinder'
-], function (
-    Component,
-    ko,
-    State,
-    AddressFinder
-) {
-    return Component.extend({
-        defaults: {
-            template: 'TIG_PostNL/DeliveryOptions/Main',
-            shipmentType: 'delivery'
-        },
+namespace TIG\PostNL\Test\Unit\Config\CheckoutConfiguration;
 
-        initObservable: function () {
-            this._super().observe([
-                'shipmentType'
-            ]);
+use TIG\PostNL\Config\CheckoutConfiguration\IsPakjegemakActive;
+use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Test\TestCase;
 
-            this.isLoading = ko.computed(function () {
-                return State.isLoading();
-            });
+class IsPakjegemakActiveTest extends TestCase
+{
+    public $instanceClass = IsPakjegemakActive::class;
 
-            return this;
-        },
+    public function getValueProvider()
+    {
+        return [
+            'is active' => [true],
+            'is not active' => [true],
+        ];
+    }
 
-        canUseDeliveryOptions: ko.computed(function () {
-            return State.deliveryOptionsAreAvailable() && AddressFinder() != false;
-        }),
+    /**
+     * @dataProvider getValueProvider
+     *
+     * @param $expected
+     */
+    public function testGetValue($expected)
+    {
+        $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
 
-        canUsePickupLocations: ko.computed(function () {
-            return window.checkoutConfig.shipping.postnl.pakjegemak_active == 1 && State.pickupOptionsAreAvailable();
-        }),
+        $expects = $shippingOptions->expects($this->once());
+        $expects->method('isPakjegemakActive');
+        $expects->willReturn($expected);
 
-        setDelivery: function () {
-            this.shipmentType('delivery');
-        },
+        /** @var IsPakjegemakActive $instance */
+        $instance = $this->getInstance([
+            'shippingOptions' => $shippingOptions,
+        ]);
 
-        setPickup: function () {
-            this.shipmentType('pickup');
-        }
-    });
-});
+        $this->assertEquals($expected, $instance->getValue());
+    }
+}

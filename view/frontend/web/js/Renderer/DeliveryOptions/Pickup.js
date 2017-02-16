@@ -148,7 +148,7 @@ define([
                 url : '/postnl/deliveryoptions/pickup',
                 data : {address: address}
             }).done(function (data) {
-                State.pickupOptionsAreLoading(false);
+                State.pickupOptionsAreAvailable(true);
 
                 data = ko.utils.arrayMap(data, function (data) {
                     return new Location(data);
@@ -156,7 +156,10 @@ define([
 
                 this.setPickupAddresses(data);
             }.bind(this)).fail(function (data) {
+                State.pickupOptionsAreAvailable(false);
                 Logger.error(data);
+            }).always(function () {
+                State.pickupOptionsAreLoading(false);
             });
         },
 

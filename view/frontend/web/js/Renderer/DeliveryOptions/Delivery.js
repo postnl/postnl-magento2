@@ -122,7 +122,7 @@ define([
                 url : '/postnl/deliveryoptions/days',
                 data : {address: address}
             }).done(function (data) {
-                State.deliveryOptionsAreLoading(false);
+                State.deliveryOptionsAreAvailable(true);
                 Logger.info(data);
 
                 data = ko.utils.arrayMap(data, function (day) {
@@ -133,7 +133,10 @@ define([
 
                 this.setDeliverydays(data);
             }.bind(this)).fail(function (data) {
+                State.deliveryOptionsAreAvailable(false);
                 Logger.error(data);
+            }).always(function () {
+                State.deliveryOptionsAreLoading(false);
             });
         },
 

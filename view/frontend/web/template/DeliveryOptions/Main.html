@@ -1,20 +1,25 @@
 <div class="delivery_options" data-bind="visible: canUseDeliveryOptions()">
     <div class="btn-group" role="group">
+        <!-- ko if: canUseDeliveryOptions() -->
         <button type="button" class="btn btn-default" data-bind="i18n: 'Delivery', click: setDelivery, css: { 'button-active': shipmentType() == 'delivery' }"></button>
-        <!-- ko if: canUsePakjegemak() -->
+        <!-- /ko -->
+
+        <!-- ko if: canUsePickupLocations() -->
         <button type="button" class="btn btn-default" data-bind="i18n: 'Pickup', click: setPickup, css: { 'button-active': shipmentType() == 'pickup' }"></button>
         <!-- /ko -->
     </div>
 
     <div data-bind="visible: isLoading()" class="tig-postnl-loading"></div>
 
+    <!-- ko if: canUseDeliveryOptions() -->
     <div class="delivery" data-bind="visible: shipmentType() == 'delivery'">
         <!-- ko foreach: getRegion('postnl-deliveryoptions-delivery') -->
         <!-- ko template: getTemplate() --><!-- /ko -->
         <!-- /ko -->
     </div>
+    <!-- /ko -->
 
-    <!-- ko if: canUsePakjegemak() -->
+    <!-- ko if: canUsePickupLocations() -->
     <div class="pickup" data-bind="visible: shipmentType() == 'pickup'">
         <!-- ko foreach: getRegion('postnl-deliveryoptions-pickup') -->
         <!-- ko template: getTemplate() --><!-- /ko -->
