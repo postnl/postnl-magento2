@@ -36,66 +36,49 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Controller\Adminhtml\Shipment;
+namespace TIG\PostNL\Block\Adminhtml\Shipment\Options;
 
-use TIG\PostNL\Controller\Adminhtml\Shipment\MassPrintShippingLabel;
-use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Test\TestCase;
+use Magento\Backend\Block\Template\Context;
+use Magento\Framework\Registry;
+use Magento\Sales\Model\OrderRepository;
+use TIG\PostNL\Block\Adminhtml\Shipment\OptionsAbstract;
+use TIG\PostNL\Config\Provider\ProductOptions;
+use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 
-class MassPrintShippingLabelTest extends TestCase
+/**
+ * Class Create
+ *
+ * @package TIG\PostNL\Block\Adminhtml\Shipment\Options
+ *
+ */
+class Create extends OptionsAbstract
 {
-    protected $instanceClass = MassPrintShippingLabel::class;
-
     /**
-     * @return array
-     */
-    public function getLabelProvider()
-    {
-        return [
-            'no_shipment_ids' => [[], []],
-            'single_shipment_id' => [
-                [123],
-                ['abcdef']
-            ],
-            'multi_shipment_ids' => [
-                [456, 789],
-                ['ghijkl', 'mnopqr']
-            ]
-        ];
-    }
-
-    /**
-     * @param $shipmentIds
-     * @param $getLabelReturn
+     * @param Context             $context
+     * @param ProductOptions      $productOptions
+     * @param ProductOptionSource $productOptionsSource
+     * @param OrderRepository     $orderRepository
+     * @param Registry            $registry
+     * @param array               $data
      *
-     * @dataProvider getLabelProvider
      */
-    public function testGetLabel($shipmentIds, $getLabelReturn)
-    {
-        $getLabelsMock = $this->getFakeMock(GetLabels::class);
-        $getLabelsMock->setMethods(['get']);
-        $getLabelsMock = $getLabelsMock->getMock();
-
-        $map = [];
-        $expectedResult = [];
-        for ($i = 0; $i < count($shipmentIds); $i++) {
-            $expectedResult[$shipmentIds[$i]] = $getLabelReturn[$i];
-
-            $returnValue = [$shipmentIds[$i] => $getLabelReturn[$i]];
-            $map[] = [$shipmentIds[$i], $returnValue];
-        }
-
-        $getExpects = $getLabelsMock->expects($this->exactly(count($shipmentIds)));
-        $getExpects->method('get');
-        $getExpects->willReturnMap($map);
-
-        $instance = $this->getInstance(['getLabels' => $getLabelsMock]);
-
-        foreach ($shipmentIds as $shipmentId) {
-            $this->invokeArgs('setLabel', [$shipmentId], $instance);
-        }
-
-        $labelsProperty = $this->getProperty('labels', $instance);
-        $this->assertEquals($expectedResult, $labelsProperty);
+    // @codingStandardsIgnoreStart
+    public function __construct(
+        Context $context,
+        ProductOptions $productOptions,
+        ProductOptionSource $productOptionsSource,
+        OrderRepository $orderRepository,
+        Registry $registry,
+        array $data = []
+    ) {
+        parent::__construct(
+            $context,
+            $productOptions,
+            $productOptionsSource,
+            $orderRepository,
+            $registry,
+            $data
+        );
     }
+    // @codingStandardsIgnoreEnd
 }

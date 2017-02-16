@@ -36,66 +36,46 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Controller\Adminhtml\Shipment;
+namespace TIG\PostNL\Plugin\Order;
 
-use TIG\PostNL\Controller\Adminhtml\Shipment\MassPrintShippingLabel;
-use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Test\TestCase;
-
-class MassPrintShippingLabelTest extends TestCase
+/**
+ * Class ShipmentPlugin
+ *
+ * @package TIG\PostNL\Plugin\Order
+ */
+class ShipmentPlugin
 {
-    protected $instanceClass = MassPrintShippingLabel::class;
-
     /**
-     * @return array
-     */
-    public function getLabelProvider()
-    {
-        return [
-            'no_shipment_ids' => [[], []],
-            'single_shipment_id' => [
-                [123],
-                ['abcdef']
-            ],
-            'multi_shipment_ids' => [
-                [456, 789],
-                ['ghijkl', 'mnopqr']
-            ]
-        ];
-    }
-
-    /**
-     * @param $shipmentIds
-     * @param $getLabelReturn
+     * The default getShippingMethod does a explode with the underscore '_' as delimeter.
      *
-     * @dataProvider getLabelProvider
+     * So in our case tig_postnl_reqular was returned as
+     * [
+     *      carrier_code => 'tig',
+     *      method       => 'postnl_regular'
+     * ]
+     *
+     * And that will try to load an 'tig' carrier that doesn't exists, which will trow an exception.
+     *
+     * @param \Magento\Sales\Model\Order $subject
+     * @param string|\Magento\Framework\DataObject $result
+     *
+     * @return string|\Magento\Framework\DataObject
      */
-    public function testGetLabel($shipmentIds, $getLabelReturn)
+    // @codingStandardsIgnoreLine
+    public function afterGetShippingMethod($subject, $result)
     {
-        $getLabelsMock = $this->getFakeMock(GetLabels::class);
-        $getLabelsMock->setMethods(['get']);
-        $getLabelsMock = $getLabelsMock->getMock();
-
-        $map = [];
-        $expectedResult = [];
-        for ($i = 0; $i < count($shipmentIds); $i++) {
-            $expectedResult[$shipmentIds[$i]] = $getLabelReturn[$i];
-
-            $returnValue = [$shipmentIds[$i] => $getLabelReturn[$i]];
-            $map[] = [$shipmentIds[$i], $returnValue];
+        if (is_string($result)) {
+            return $result;
         }
 
-        $getExpects = $getLabelsMock->expects($this->exactly(count($shipmentIds)));
-        $getExpects->method('get');
-        $getExpects->willReturnMap($map);
+        $carrierCode = $result->getData('carrier_code');
+        $method      = $result->getData('method');
 
-        $instance = $this->getInstance(['getLabels' => $getLabelsMock]);
-
-        foreach ($shipmentIds as $shipmentId) {
-            $this->invokeArgs('setLabel', [$shipmentId], $instance);
+        if ($carrierCode == 'tig' && $method == 'postnl_regular') {
+            $result->setData('carrier_code', 'tig_postnl');
+            $result->setData('method', 'regular');
         }
 
-        $labelsProperty = $this->getProperty('labels', $instance);
-        $this->assertEquals($expectedResult, $labelsProperty);
+        return $result;
     }
 }

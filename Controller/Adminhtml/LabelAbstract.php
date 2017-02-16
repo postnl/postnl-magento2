@@ -36,66 +36,57 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Controller\Adminhtml\Shipment;
+namespace TIG\PostNL\Controller\Adminhtml;
 
-use TIG\PostNL\Controller\Adminhtml\Shipment\MassPrintShippingLabel;
+use Magento\Backend\App\Action;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Backend\App\Action\Context;
+
 use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Helper\Labelling\SaveLabels;
+use TIG\PostNL\Helper\Pdf\Get as GetPdf;
 
-class MassPrintShippingLabelTest extends TestCase
+/**
+ * Class LabelAbstract
+ *
+ * @package TIG\PostNL\Controller\Adminhtml
+ */
+abstract class LabelAbstract extends Action
 {
-    protected $instanceClass = MassPrintShippingLabel::class;
+    /**
+     * @var GetLabels
+     */
+    //@codingStandardsIgnoreLine
+    protected $getLabels;
 
     /**
-     * @return array
+     * @var SaveLabels
      */
-    public function getLabelProvider()
-    {
-        return [
-            'no_shipment_ids' => [[], []],
-            'single_shipment_id' => [
-                [123],
-                ['abcdef']
-            ],
-            'multi_shipment_ids' => [
-                [456, 789],
-                ['ghijkl', 'mnopqr']
-            ]
-        ];
-    }
+    //@codingStandardsIgnoreLine
+    protected $saveLabels;
 
     /**
-     * @param $shipmentIds
-     * @param $getLabelReturn
-     *
-     * @dataProvider getLabelProvider
+     * @var GetPdf
      */
-    public function testGetLabel($shipmentIds, $getLabelReturn)
-    {
-        $getLabelsMock = $this->getFakeMock(GetLabels::class);
-        $getLabelsMock->setMethods(['get']);
-        $getLabelsMock = $getLabelsMock->getMock();
+    //@codingStandardsIgnoreLine
+    protected $getPdf;
 
-        $map = [];
-        $expectedResult = [];
-        for ($i = 0; $i < count($shipmentIds); $i++) {
-            $expectedResult[$shipmentIds[$i]] = $getLabelReturn[$i];
+    /**
+     * @param Context    $context
+     * @param GetLabels  $getLabels
+     * @param SaveLabels $saveLabels
+     * @param GetPdf     $getPdf
+     */
+    public function __construct(
+        Context $context,
+        GetLabels $getLabels,
+        SaveLabels $saveLabels,
+        GetPdf $getPdf
+    ) {
+        parent::__construct($context);
 
-            $returnValue = [$shipmentIds[$i] => $getLabelReturn[$i]];
-            $map[] = [$shipmentIds[$i], $returnValue];
-        }
-
-        $getExpects = $getLabelsMock->expects($this->exactly(count($shipmentIds)));
-        $getExpects->method('get');
-        $getExpects->willReturnMap($map);
-
-        $instance = $this->getInstance(['getLabels' => $getLabelsMock]);
-
-        foreach ($shipmentIds as $shipmentId) {
-            $this->invokeArgs('setLabel', [$shipmentId], $instance);
-        }
-
-        $labelsProperty = $this->getProperty('labels', $instance);
-        $this->assertEquals($expectedResult, $labelsProperty);
+        $this->getLabels  = $getLabels;
+        $this->saveLabels = $saveLabels;
+        $this->getPdf     = $getPdf;
     }
 }

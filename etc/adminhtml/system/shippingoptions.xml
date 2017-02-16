@@ -123,11 +123,5 @@
             </depends>
         </field>
 
-        <field id="send_track_and_trace_email" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Send track and trace info</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>tig_postnl/shippingoptions/send_track_and_trace_email</config_path>
-        </field>
-
     </group>
 </include>

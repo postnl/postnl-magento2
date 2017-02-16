@@ -39,11 +39,9 @@
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
-use Magento\Framework\App\ResponseInterface;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\Shipment;
-use Magento\Ui\Component\MassAction\Filter;
-use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
+use Magento\Sales\Model\Order\ShipmentRepository;
 
 use TIG\PostNL\Helper\Labelling\GetLabels;
 use TIG\PostNL\Helper\Labelling\SaveLabels;
@@ -51,26 +49,16 @@ use TIG\PostNL\Helper\Pdf\Get as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
 
 /**
- * Class MassPrintShippingLabel
+ * Class ConfirmAndPrintShippingLabel
  *
  * @package TIG\PostNL\Controller\Adminhtml\Shipment
  */
-class MassPrintShippingLabel extends LabelAbstract
+class ConfirmAndPrintShippingLabel extends LabelAbstract
 {
     /**
-     * @var array
+     * @var ShipmentRepository
      */
-    private $labels = [];
-
-    /**
-     * @var Filter
-     */
-    private $filter;
-
-    /**
-     * @var ShipmentCollectionFactory
-     */
-    private $collectionFactory;
+    private $shipmentRepository;
 
     /**
      * @var Track
@@ -78,21 +66,19 @@ class MassPrintShippingLabel extends LabelAbstract
     private $track;
 
     /**
-     * @param Context                   $context
-     * @param Filter                    $filter
-     * @param ShipmentCollectionFactory $collectionFactory
-     * @param GetLabels                 $getLabels
-     * @param SaveLabels                $saveLabels
-     * @param GetPdf                    $getPdf
-     * @param Track                     $track
+     * @param Context            $context
+     * @param GetLabels          $getLabels
+     * @param SaveLabels         $saveLabels
+     * @param GetPdf             $getPdf
+     * @param ShipmentRepository $shipmentRepository
+     * @param Track              $track
      */
     public function __construct(
         Context $context,
-        Filter $filter,
-        ShipmentCollectionFactory $collectionFactory,
         GetLabels $getLabels,
         SaveLabels $saveLabels,
         GetPdf $getPdf,
+        ShipmentRepository $shipmentRepository,
         Track $track
     ) {
         parent::__construct(
@@ -102,49 +88,35 @@ class MassPrintShippingLabel extends LabelAbstract
             $getPdf
         );
 
-        $this->filter = $filter;
-        $this->collectionFactory = $collectionFactory;
-        $this->track = $track;
+        $this->shipmentRepository = $shipmentRepository;
+        $this->track              = $track;
     }
 
     /**
-     * Dispatch request
-     *
-     * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
-     * @throws \Magento\Framework\Exception\NotFoundException
+     * @return \Magento\Framework\App\ResponseInterface
      */
     public function execute()
     {
-        $collection = $this->collectionFactory->create();
-        $collection = $this->filter->getCollection($collection);
+        $shipment = $this->getShipment();
 
-        /** @var Shipment $shipment */
-        foreach ($collection as $shipment) {
+        if (!$shipment->getTracks()) {
             $this->track->set($shipment);
-            $this->setLabel($shipment->getId());
         }
 
-        $labelModels = $this->saveLabels->save($this->labels);
+        $labels     = $this->getLabels->get($shipment->getId());
+        $labelModel = $this->saveLabels->save($labels);
 
-        $pdfFile = $this->getPdf->get($labelModels);
-
-        return $pdfFile;
+        return $this->getPdf->get($labelModel);
     }
+
     /**
-     * @param $shipmentId
+     * Retrieve shipment model instance
+     *
+     * @return Shipment
      */
-    private function setLabel($shipmentId)
+    private function getShipment()
     {
-        $labels = $this->getLabels->get($shipmentId);
-
-        /**
-         * @codingStandardsIgnoreLine
-         * TODO: add a proper warning notifying of a non-postnl shipment
-         */
-        if (count($labels) < 0) {
-            return;
-        }
-
-        $this->labels = $this->labels + $labels;
+        $shipmentId = $this->getRequest()->getParam('shipment_id');
+        return $this->shipmentRepository->get($shipmentId);
     }
 }

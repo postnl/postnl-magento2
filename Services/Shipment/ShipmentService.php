@@ -36,66 +36,22 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Controller\Adminhtml\Shipment;
+namespace TIG\PostNL\Services\Shipment;
 
-use TIG\PostNL\Controller\Adminhtml\Shipment\MassPrintShippingLabel;
-use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Test\TestCase;
-
-class MassPrintShippingLabelTest extends TestCase
+/**
+ * Class ShipmentService
+ *
+ * @package TIG\PostNL\Services\Shipment
+ */
+class ShipmentService extends ShipmentServiceAbstract
 {
-    protected $instanceClass = MassPrintShippingLabel::class;
-
     /**
-     * @return array
-     */
-    public function getLabelProvider()
-    {
-        return [
-            'no_shipment_ids' => [[], []],
-            'single_shipment_id' => [
-                [123],
-                ['abcdef']
-            ],
-            'multi_shipment_ids' => [
-                [456, 789],
-                ['ghijkl', 'mnopqr']
-            ]
-        ];
-    }
-
-    /**
-     * @param $shipmentIds
-     * @param $getLabelReturn
+     * @param $postNLShipment
      *
-     * @dataProvider getLabelProvider
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function testGetLabel($shipmentIds, $getLabelReturn)
+    public function save($postNLShipment)
     {
-        $getLabelsMock = $this->getFakeMock(GetLabels::class);
-        $getLabelsMock->setMethods(['get']);
-        $getLabelsMock = $getLabelsMock->getMock();
-
-        $map = [];
-        $expectedResult = [];
-        for ($i = 0; $i < count($shipmentIds); $i++) {
-            $expectedResult[$shipmentIds[$i]] = $getLabelReturn[$i];
-
-            $returnValue = [$shipmentIds[$i] => $getLabelReturn[$i]];
-            $map[] = [$shipmentIds[$i], $returnValue];
-        }
-
-        $getExpects = $getLabelsMock->expects($this->exactly(count($shipmentIds)));
-        $getExpects->method('get');
-        $getExpects->willReturnMap($map);
-
-        $instance = $this->getInstance(['getLabels' => $getLabelsMock]);
-
-        foreach ($shipmentIds as $shipmentId) {
-            $this->invokeArgs('setLabel', [$shipmentId], $instance);
-        }
-
-        $labelsProperty = $this->getProperty('labels', $instance);
-        $this->assertEquals($expectedResult, $labelsProperty);
+        $this->postnlShipmentRepository->save($postNLShipment);
     }
 }
