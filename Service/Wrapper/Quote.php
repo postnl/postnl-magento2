@@ -81,6 +81,16 @@ class Quote implements QuoteInterface
     }
 
     /**
+     * @return MagentoQuote
+     */
+    public function getQuoteId()
+    {
+        $this->getQuote();
+
+        return $this->quote->getId();
+    }
+
+    /**
      * @return \Magento\Quote\Model\Quote\Address
      */
     public function getShippingAddress()

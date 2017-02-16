@@ -1,3 +1,4 @@
+<?php
 /**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
@@ -35,39 +36,68 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(
-    [
-        'Magento_Checkout/js/view/summary/abstract-total',
-        'Magento_Checkout/js/model/quote',
-        'Magento_Catalog/js/price-utils',
-        'Magento_Checkout/js/model/totals'
-    ],
-    function (Component, quote, priceUtils, totals) {
-        "use strict";
-        return Component.extend({
-            defaults: {
-                isFullTaxSummaryDisplayed: window.checkoutConfig.isFullTaxSummaryDisplayed || false,
-                template: 'Sugarcode_Test/checkout/summary/fee'
-            },
-            totals: quote.getTotals(),
-            isTaxDisplayedInGrandTotal: window.checkoutConfig.includeTaxInGrandTotal || false,
-            isDisplayed: function() {
-                return this.isFullMode();
-            },
-            getValue: function() {
-                var price = 0;
-                if (this.totals()) {
-                    price = totals.getSegment('fee').value;
-                }
-                return this.getFormattedPrice(price);
-            },
-            getBaseValue: function() {
-                var price = 0;
-                if (this.totals()) {
-                    price = this.totals().base_fee;
-                }
-                return priceUtils.formatPrice(price, quote.getBasePriceFormat());
-            }
-        });
+namespace TIG\PostNL\Service\Order;
+
+use \Magento\Framework\Api\SearchCriteriaBuilder;
+use \TIG\PostNL\Model\OrderRepository as PostNLOrderRepository;
+use \TIG\PostNL\Model\Order as PostNLOrder;
+use TIG\PostNL\Service\Wrapper\QuoteInterface;
+
+class CurrentPostNLOrder
+{
+    /**
+     * @var PostNLOrderRepository
+     */
+    private $postNLOrderRepository;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
+     * @var QuoteInterface
+     */
+    private $quote;
+
+    /**
+     * @param PostNLOrderRepository $orderRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param QuoteInterface        $quote
+     */
+    public function __construct(
+        PostNLOrderRepository $orderRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        QuoteInterface $quote
+    ) {
+        $this->postNLOrderRepository = $orderRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->quote = $quote;
     }
-);
+
+    /**
+     * @return PostNLOrder|null
+     */
+    public function get()
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $this->getQuoteId());
+        $searchCriteria->setPageSize(1);
+
+        /** @var \Magento\Framework\Api\SearchResults $list */
+        $list = $this->postNLOrderRepository->getList($searchCriteria->create());
+
+        if ($list->getTotalCount()) {
+            return $list->getItems()[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * @return \Magento\Quote\Model\Quote
+     */
+    private function getQuoteId()
+    {
+        return $this->quote->getQuoteId();
+    }
+}

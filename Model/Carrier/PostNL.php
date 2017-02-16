@@ -117,7 +117,6 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         $method->setMethodTitle($this->getConfigData('name'));
 
         $amount = $this->getConfigData('price');
-        $amount = 133.7;
 
         $method->setPrice($amount);
         $method->setCost($amount);

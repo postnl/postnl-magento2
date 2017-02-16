@@ -55,6 +55,11 @@ interface QuoteInterface
     public function getQuote();
 
     /**
+     * @return Quote
+     */
+    public function getQuoteId();
+
+    /**
      * @return Quote\Address
      */
     public function getShippingAddress();

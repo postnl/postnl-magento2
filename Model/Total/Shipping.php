@@ -38,91 +38,139 @@
  */
 namespace TIG\PostNL\Model\Total;
 
-use Magento\Quote\Model\Quote\Address\Total\AbstractTotal;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
+use Magento\Quote\Api\Data\ShippingAssignmentInterface;
+use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote\Address\FreeShippingInterface;
+use TIG\PostNL\Service\Order\CurrentPostNLOrder;
 
-class Shipping extends AbstractTotal
+class Shipping extends Quote\Address\Total\Shipping
 {
     /**
-     * Collect grand total address amount
-     *
-     * @param \Magento\Quote\Model\Quote $quote
-     * @param \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment
-     * @param \Magento\Quote\Model\Quote\Address\Total $total
-     * @return $this
+     * @var PriceCurrencyInterface
      */
-    protected $quoteValidator = null;
+    protected $priceCurrency;
 
-    public function __construct(\Magento\Quote\Model\QuoteValidator $quoteValidator)
-    {
-        $this->quoteValidator = $quoteValidator;
+    /**
+     * @var FreeShippingInterface
+     */
+    protected $freeShipping;
+
+    /**
+     * @var GetCurrentPostNLOrder
+     */
+    private $currentPostNLOrder;
+
+    /**
+     * @param PriceCurrencyInterface $priceCurrency
+     * @param FreeShippingInterface  $freeShipping
+     * @param CurrentPostNLOrder     $currentPostNLOrder
+     */
+    public function __construct(
+        PriceCurrencyInterface $priceCurrency,
+        FreeShippingInterface $freeShipping,
+        CurrentPostNLOrder $currentPostNLOrder
+    ) {
+        $this->setCode('shipping');
+        $this->priceCurrency = $priceCurrency;
+        $this->freeShipping = $freeShipping;
+        $this->currentPostNLOrder = $currentPostNLOrder;
     }
 
+    /**
+     * @param Quote                       $quote
+     * @param ShippingAssignmentInterface $shippingAssignment
+     * @param Quote\Address\Total         $total
+     *
+     * @return $this
+     */
     public function collect(
-        \Magento\Quote\Model\Quote $quote,
-        \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment,
-        \Magento\Quote\Model\Quote\Address\Total $total
+        Quote $quote,
+        ShippingAssignmentInterface $shippingAssignment,
+        Quote\Address\Total $total
     ) {
         parent::collect($quote, $shippingAssignment, $total);
 
+        $shipping = $shippingAssignment->getShipping();
+        $address = $shipping->getAddress();
+        $rate = $this->getRate($shipping->getMethod(), $address);
 
-        $exist_amount = 0; //$quote->getFee();
-        $fee = 100; //Excellence_Fee_Model_Fee::getFee();
-        $balance = $fee - $exist_amount;
+        if (!$rate) {
+            return $this;
+        }
 
-        $total->setTotalAmount('fee', $balance);
-        $total->setBaseTotalAmount('fee', $balance);
-
-        $total->setFee($balance);
-        $total->setBaseFee($balance);
-
-        $total->setGrandTotal($total->getGrandTotal() + $balance);
-        $total->setBaseGrandTotal($total->getBaseGrandTotal() + $balance);
+        $this->processTotal($quote, $total, $rate, $address);
 
         return $this;
     }
 
-    protected function clearValues(Address\Total $total)
-    {
-        $total->setTotalAmount('subtotal', 0);
-        $total->setBaseTotalAmount('subtotal', 0);
-        $total->setTotalAmount('tax', 0);
-        $total->setBaseTotalAmount('tax', 0);
-        $total->setTotalAmount('discount_tax_compensation', 0);
-        $total->setBaseTotalAmount('discount_tax_compensation', 0);
-        $total->setTotalAmount('shipping_discount_tax_compensation', 0);
-        $total->setBaseTotalAmount('shipping_discount_tax_compensation', 0);
-        $total->setSubtotalInclTax(0);
-        $total->setBaseSubtotalInclTax(0);
-    }
     /**
-     * @param \Magento\Quote\Model\Quote $quote
-     * @param Address\Total $total
-     * @return array|null
-     */
-    /**
-     * Assign subtotal amount and label to address object
-     *
-     * @param \Magento\Quote\Model\Quote $quote
-     * @param Address\Total $total
-     * @return array
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function fetch(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Address\Total $total)
-    {
-        return [
-            'code' => 'fee',
-            'title' => 'Fee',
-            'value' => 100
-        ];
-    }
-
-    /**
-     * Get Subtotal label
+     * Get Shipping label
      *
      * @return \Magento\Framework\Phrase
      */
     public function getLabel()
     {
-        return __('Fee');
+        return __('PostNL');
+    }
+
+    /**
+     * @param                                    $method
+     * @param \Magento\Quote\Model\Quote\Address $address
+     *
+     * @return $this
+     */
+    private function getRate($method, $address)
+    {
+        if ($method != 'tig_postnl_regular') {
+            return null;
+        }
+
+        $rate = array_filter($address->getAllShippingRates(), function (Quote\Address\Rate $rate) use ($method) {
+            return $rate->getCode() == $method;
+        });
+
+        if (!$rate) {
+            return null;
+        }
+
+        return array_shift($rate);
+    }
+
+    /**
+     * @param Quote               $quote
+     * @param Quote\Address\Total $total
+     * @param                     $rate
+     * @param Quote\Address       $address
+     */
+    private function processTotal(Quote $quote, Quote\Address\Total $total, $rate, $address)
+    {
+        $fee = $this->getFee();
+        $store       = $quote->getStore();
+        $amountPrice = $this->priceCurrency->convert(
+            $rate->getPrice() + $fee,
+            $store
+        );
+
+        $total->setTotalAmount($this->getCode(), $amountPrice);
+        $total->setBaseTotalAmount($this->getCode(), $rate->getPrice());
+        $address->setShippingDescription($rate->getCarrierTitle());
+        $total->setBaseShippingAmount($rate->getPrice());
+        $total->setShippingAmount($amountPrice);
+        $total->setShippingDescription($address->getShippingDescription());
+    }
+
+    /**
+     * @return float
+     */
+    private function getFee()
+    {
+        $order = $this->currentPostNLOrder->get();
+
+        if (!$order) {
+            return 0;
+        }
+
+        return $order->getFee();
     }
 }
