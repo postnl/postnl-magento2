@@ -177,15 +177,15 @@ class RowParser
     private function getConditionValue($rowData, $rowCount, $conditionFullName)
     {
         $conditionValue = $this->getColumnValue(self::COLUMN_CONDITION_VALUE, $rowData, $rowCount);
-        $conditionValue = $this->parseToDecimal($conditionValue);
+        $formattedConditionValue = $this->parseToDecimal($conditionValue);
 
-        if ($conditionValue === false) {
+        if ($formattedConditionValue === false) {
             throw new LocalizedException(
                 __('Please correct %1 "%2" in the Row #%3.', $conditionFullName, $conditionValue, $rowCount)
             );
         }
 
-        return $conditionValue;
+        return $formattedConditionValue;
     }
 
     /**
@@ -198,13 +198,13 @@ class RowParser
     private function getPrice($rowData, $rowCount)
     {
         $price = $this->getColumnValue(self::COLUMN_PRICE, $rowData, $rowCount);
-        $price = $this->parseToDecimal($price);
+        $formatedPrice = $this->parseToDecimal($price);
 
-        if ($price === false) {
+        if ($formatedPrice === false) {
             throw new LocalizedException(__('Please correct Shipping Price "%1" in the Row #%2.', $price, $rowCount));
         }
 
-        return $price;
+        return $formatedPrice;
     }
 
     /**
