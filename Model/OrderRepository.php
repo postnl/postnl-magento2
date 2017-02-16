@@ -41,12 +41,13 @@ namespace TIG\PostNL\Model;
 use Magento\Sales\Model\Order as SalesOrder;
 use TIG\PostNL\Api\OrderRepositoryInterface;
 use TIG\PostNL\Model\ResourceModel\Order\CollectionFactory;
-
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
+use \Magento\Framework\Api\SearchCriteriaBuilder;
+use \TIG\PostNL\Model\Order as PostNLOrder;
 
 class OrderRepository implements OrderRepositoryInterface
 {
@@ -61,18 +62,26 @@ class OrderRepository implements OrderRepositoryInterface
     private $collectionFactory;
 
     /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
      * @param OrderFactory                  $objectFactory
      * @param CollectionFactory             $collectionFactory
      * @param SearchResultsInterfaceFactory $searchResultsFactory
+     * @param SearchCriteriaBuilder         $searchCriteriaBuilder
      */
     public function __construct(
         OrderFactory $objectFactory,
         CollectionFactory $collectionFactory,
-        SearchResultsInterfaceFactory $searchResultsFactory
+        SearchResultsInterfaceFactory $searchResultsFactory,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
-        $this->orderFactory         = $objectFactory;
-        $this->collectionFactory    = $collectionFactory;
-        $this->searchResultsFactory = $searchResultsFactory;
+        $this->orderFactory          = $objectFactory;
+        $this->collectionFactory     = $collectionFactory;
+        $this->searchResultsFactory  = $searchResultsFactory;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
@@ -96,7 +105,7 @@ class OrderRepository implements OrderRepositoryInterface
     /**
      * @param $identifier
      *
-     * @return mixed
+     * @return \Magento\Framework\DataObject
      * @throws NoSuchEntityException
      */
     public function getById($identifier)
@@ -113,26 +122,34 @@ class OrderRepository implements OrderRepositoryInterface
     }
 
     /**
-     * @param SalesOrder $order
+     * @param array $data
      *
-     * @return \Magento\Framework\DataObject
-     * @throws NoSuchEntityException
+     * @return Order
      */
-    public function getByOrder(SalesOrder $order)
+    public function create(array $data = [])
     {
-        $collection = $this->collectionFactory->create();
-        $collection->addFieldToFilter('order_id', $order->getId());
-        $collection->setPageSize(1);
+        return $this->orderFactory->create($data);
+    }
 
-        // @codingStandardsIgnoreLine
-        $object = $collection->getFirstItem();
+    /**
+     * @param $field
+     * @param $value
+     *
+     * @return PostNLOrder|null
+     */
+    public function getByFieldWithValue($field, $value)
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter($field, $value);
+        $searchCriteria->setPageSize(1);
 
-        if (!$object->getId()) {
-            // @codingStandardsIgnoreLine
-            throw new NoSuchEntityException(__('Object with order id "%1" does not exist.', $order->getId()));
+        /** @var \Magento\Framework\Api\SearchResults $list */
+        $list = $this->getList($searchCriteria->create());
+
+        if ($list->getTotalCount()) {
+            return $list->getItems()[0];
         }
 
-        return $object;
+        return null;
     }
 
     /**

@@ -42,8 +42,8 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
 use TIG\PostNL\Config\Provider\ProductOptions;
+use \TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Model\Order as PostNLOrder;
-use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Model\ShipmentFactory;
 
 class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
@@ -54,9 +54,9 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     private $shipmentFactory;
 
     /**
-     * @var OrderFactory
+     * @var OrderRepository
      */
-    private $orderFactory;
+    private $orderRepository;
 
     /**
      * @var Handlers\BarcodeHandler
@@ -75,20 +75,20 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
 
     /**
      * @param ShipmentFactory          $shipmentFactory
-     * @param OrderFactory             $orderFactory
+     * @param OrderRepository          $orderRepository
      * @param Handlers\BarcodeHandler  $barcodeHandler
      * @param Handlers\SentDateHandler $sendDateHandler
      * @param ProductOptions           $productOptions
      */
     public function __construct(
         ShipmentFactory $shipmentFactory,
-        OrderFactory $orderFactory,
+        OrderRepository $orderRepository,
         Handlers\BarcodeHandler $barcodeHandler,
         Handlers\SentDateHandler $sendDateHandler,
         ProductOptions $productOptions
     ) {
         $this->shipmentFactory = $shipmentFactory;
-        $this->orderFactory = $orderFactory;
+        $this->orderRepository = $orderRepository;
         $this->barcodeHandler = $barcodeHandler;
         $this->sentDateHandler = $sendDateHandler;
         $this->productOptions = $productOptions;
@@ -132,38 +132,24 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
      */
     private function getProductCode($shipment)
     {
-        $postNLOrder = $this->getPostNLOrder($shipment->getOrder());
-        $productCode = $this->productOptions->getDefaultProductOption();
+        /** @var MagentoOrder $magentoOrder */
+        $magentoOrder = $shipment->getOrder();
+        /** @var PostNLOrder $postNLOrder */
+        $postNLOrder  = $this->orderRepository->getByFieldWithValue('quote_id', $magentoOrder->getQuoteId());
 
+        $productCode = $this->productOptions->getDefaultProductOption();
         if ($postNLOrder->getIsPakjegemak()) {
             $productCode = $this->productOptions->getDefaultPakjeGemakProductOption();
         }
+
+        $postNLOrder->setData(['product_code' => $productCode]);
+        $this->orderRepository->save($postNLOrder);
 
         return $productCode;
     }
 
     /**
-     * @param MagentoOrder $magentoOrder
-     *
-     * @return PostNLOrder
-     */
-    private function getPostNLOrder(MagentoOrder $magentoOrder)
-    {
-        /** @var PostNLOrder $postnlOrder */
-        $postnlOrder = $this->orderFactory->create();
-
-        /** @var \TIG\PostNL\Model\ResourceModel\Order\Collection $collection */
-        $collection = $postnlOrder->getCollection();
-        $collection->addFieldToFilter('quote_id', $magentoOrder->getQuoteId());
-
-        // @codingStandardsIgnoreLine
-        $postnlOrder = $collection->setPageSize(1)->getFirstItem();
-
-        return $postnlOrder;
-    }
-
-    /**
-     * @param $model
+     * @param \TIG\PostNL\Model\Shipment $model
      */
     private function handleMultipleParcels($model)
     {
