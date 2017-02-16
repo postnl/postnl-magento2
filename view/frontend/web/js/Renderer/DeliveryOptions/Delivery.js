@@ -96,7 +96,7 @@ define([
 
                 $.ajax({
                     method: 'POST',
-                    url: '/postnl/deliveryoptions/save',
+                    url: window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
                     data: {
                         type: 'delivery',
                         date : value.date,
@@ -119,7 +119,7 @@ define([
 
             $.ajax({
                 method: 'POST',
-                url : '/postnl/deliveryoptions/days',
+                url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_timeframes,
                 data : {address: address}
             }).done(function (data) {
                 State.deliveryOptionsAreAvailable(true);
