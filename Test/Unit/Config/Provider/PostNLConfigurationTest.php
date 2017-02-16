@@ -38,57 +38,33 @@
  */
 namespace TIG\PostNL\Test\Unit\Config\Provider;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Store\Model\ScopeInterface;
-use TIG\PostNL\Config\Provider\DefaultConfiguration;
 use TIG\PostNL\Config\Provider\PostNLConfiguration;
-use TIG\PostNL\Test\TestCase;
 
-abstract class AbstractConfigurationTest extends TestCase
+class PostNLConfigurationTest extends AbstractConfigurationTest
 {
-    /**
-     * @var ScopeConfigInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $scopeConfigMock;
-
-    protected function initScopeConfigMock()
-    {
-        $this->scopeConfigMock = $this->getMock(ScopeConfigInterface::class);
-    }
+    protected $instanceClass = PostNLConfiguration::class;
 
     /**
-     * @param array $args
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      *
-     * @return DefaultConfiguration|PostNLConfiguration
+     * @param $value
      */
-    public function getInstance(array $args = [])
+    public function testGetStability($value)
     {
-        $this->initScopeConfigMock();
-
-        $args['scopeConfig'] = $this->scopeConfigMock;
-
-        return parent::getInstance($args);
+        $instance = $this->getInstance();
+        $this->setXpath(PostNLConfiguration::XPATH_STABILITY, $value);
+        $this->assertEquals($value, $instance->getStability());
     }
 
     /**
-     * @param      $xpath
-     * @param      $value
-     * @param null $storeId
-     * @param null $matcher
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
+     *
+     * @param $value
      */
-    protected function setXpath($xpath, $value, $storeId = null, $matcher = null)
+    public function testGetSupportedMagentoVersions($value)
     {
-        if ($matcher === null) {
-            $matcher = $this->once();
-        }
-
-        $getValueExpects = $this->scopeConfigMock->expects($matcher);
-        $getValueExpects->method('getValue');
-        $getValueExpects->with(
-            $xpath,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
-        $getValueExpects->willReturn($value);
+        $instance = $this->getInstance();
+        $this->setXpath(PostNLConfiguration::XPATH_SUPPORTED_MAGENTO_VERSION, $value);
+        $this->assertEquals($value, $instance->getSupportedMagentoVersions());
     }
 }

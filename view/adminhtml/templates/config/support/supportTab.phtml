@@ -36,10 +36,9 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-?>
 
-<?php
-/** @var \TIG\PostNL\Block\Adminhtml\Config\Support\SupportTab $this */
+/** @var Magento\Framework\View\TemplateEngine\Php $this */
+/** @var \TIG\PostNL\Block\Adminhtml\Config\Support\SupportTab $block */
 ?>
 <div id="supporttab" class="tig-postnl-supporttab" data-mage-init='{"postnlConfig": true}'>
 
@@ -74,21 +73,21 @@
 
                     <li>
                         <span class="text"><?php echo $block->escapeHtml(__('PostNL version'));?>:</span>
-                        <span class="version"><?php echo $this->getVersionNumber(); ?></span>
+                        <span class="version"><?php echo $block->getVersionNumber() . $block->getStability(); ?></span>
                     </li>
                 </ul>
             </div>
 
-            <h3 ><?php echo $block->escapeHtml(__('Magento &amp; 3rd party version compatibility'));?></h3>
+            <h3><?php echo $block->escapeHtml(__('Magento &amp; 3rd party version compatibility'));?></h3>
             <div>
                 <ul class="version-compatibility">
                     <li>
                         <span class="text"><?php echo $block->escapeHtml(__('Magento Enterprise Edition version'));?>:</span>
-                        <span class="version"><?php echo $this->getSupportedMagentoVersion(); ?></span>
+                        <span class="version"><?php echo $block->getSupportedMagentoVersions(); ?></span>
                     </li>
                     <li>
                         <span class="text"><?php echo $block->escapeHtml(__('Magento Community Edition version'));?>:</span>
-                        <span class="version"><?php echo $this->getSupportedMagentoVersion(); ?></span>
+                        <span class="version"><?php echo $block->getSupportedMagentoVersions(); ?></span>
                     </li>
                 </ul>
             </div>
