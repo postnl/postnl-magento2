@@ -73,13 +73,14 @@ Title,Title
 "General configuration and account information","General configuration and account information"
 "Extension status","Extension status"
 Modus,Modus
-Customernumber,Customernumber
-Customercode,Customercode
-"Api Key","Api Key"
-"BLS location code","BLS location code"
-"Customernumber (test)","Customernumber (test)"
-"Customercode (test)","Customercode (test)"
-"BLS location code (test)","BLS location code (test)"
+"Customernumber live mode","Customernumber live mode"
+"Customercode live mode","Customercode live mode"
+"Api Key live mode","Api Key live mode"
+"Api Key test mode","Api Key test mode"
+"BLS location code live mode","BLS location code live mode"
+"Customernumber test mode","Customernumber test mode"
+"Customercode test mode","Customercode test mode"
+"BLS location code test mode","BLS location code test mode"
 Shippingaddress,Shippingaddress
 Firstname,Firstname
 Lastname,Lastname

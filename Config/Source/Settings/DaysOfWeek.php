@@ -37,6 +37,7 @@ class DaysOfWeek implements ArrayInterface
 {
     public function toOptionArray()
     {
+        // @codingStandardsIgnoreStart
         return [
             ['value' => 1, 'label' => __('Monday')],
             ['value' => 2, 'label' => __('Tuesday')],
@@ -46,5 +47,6 @@ class DaysOfWeek implements ArrayInterface
             ['value' => 6, 'label' => __('Saturday')],
             ['value' => 0, 'label' => __('Sunday')],
         ];
+        // @codingStandardsIgnoreEnd
     }
 }
