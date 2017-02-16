@@ -2,7 +2,8 @@
 <!--@vars {
 "var order_id":"Increment ID",
 "var dateAndTime":"Date and Time of Transaction",
-"var url":"track and trace url to PostNL"
+"var url":"track and trace url to PostNL",
+"var logo_url":"PostNL Track & Trace"
 } @-->
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -22,11 +23,7 @@
                         <tr>
                             <td style=" background: #ffffff; padding: 30px; border-radius: 10px 10px 0; border: 1px solid  #E3E3E3; ">
                                 <div style="float: left;">
-
-                                    <!-- @TODO: Get image path to postnl_logo.png -->
-                                    <!--<img src='{{var logo_url}}' alt="PostNL Track & Trace" height="30" width="30"  style="margin-right: 15px; padding-bottom: 15px;"/>-->
-
-                                    <img src='https://www.postnl.nl/img/logo.png' alt="PostNL Track & Trace" height="30" width="30"  style="margin-right: 15px; padding-bottom: 15px;"/>
+                                    <img src='{{var logo_url}}' alt="PostNL Track & Trace" height="30" width="30"  style="margin-right: 15px; padding-bottom: 15px;"/>
                                 </div>
 
                                 <h1 style=" padding: 6px 0 5px 0;  margin: 0 0 5px 0; color:#001A73; font-weight: 300; font-size: 18px; display:inline; float:left; ">{{trans "Track and Trace information"}}</h1>
