@@ -139,6 +139,7 @@ class Tablerate extends AbstractDb
 
     /**
      * @param DataObject|Value $object
+     * @param array            $importData
      *
      * @return $this
      * @throws LocalizedException

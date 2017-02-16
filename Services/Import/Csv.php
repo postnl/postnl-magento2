@@ -41,9 +41,9 @@ namespace TIG\PostNL\Services\Import;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\DirectoryList;
-use Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate\Import;
 
 use TIG\PostNL\Model\Carrier\Tablerate;
+use TIG\PostNL\Services\Import\Csv\FileParser;
 
 /**
  * Class GetFreeBoxes
@@ -58,9 +58,9 @@ class Csv
     private $filesystem;
 
     /**
-     * @var Import
+     * @var FileParser
      */
-    private $import;
+    private $fileParser;
 
     /**
      * @var Tablerate
@@ -69,17 +69,17 @@ class Csv
 
     /**
      * @param Filesystem $filesystem
-     * @param Import     $import
+     * @param FileParser $fileParser
      * @param Tablerate  $tablerate
      */
     public function __construct(
         Filesystem $filesystem,
-        Import $import,
+        FileParser $fileParser,
         Tablerate $tablerate
     ) {
         $this->filesystem = $filesystem;
-        $this->import = $import;
         $this->tablerate = $tablerate;
+        $this->fileParser = $fileParser;
     }
 
     /**
@@ -94,9 +94,9 @@ class Csv
     {
         $file = $this->getCsvFile($filePath);
         $conditionFullName = $this->tablerate->getCode('condition_name_short', $conditionName);
-        $importData = $this->import->getData($file, $websiteId, $conditionName, $conditionFullName);
+        $importData = $this->fileParser->getRows($file, $websiteId, $conditionName, $conditionFullName);
 
-        $columns = $this->import->getColumns();
+        $columns = $this->fileParser->getColumns();
         $records = [];
 
         foreach ($importData as $data) {
@@ -130,11 +130,11 @@ class Csv
      */
     private function checkImportErrors()
     {
-        if ($this->import->hasErrors()) {
+        if ($this->fileParser->hasErrors()) {
             // @codingStandardsIgnoreLine
             $error = __(
                 'We couldn\'t import this file because of these errors: %1',
-                implode(" \n", $this->import->getErrors())
+                implode(" \n", $this->fileParser->getErrors())
             );
 
             throw new LocalizedException($error);

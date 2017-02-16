@@ -62,17 +62,14 @@ class CsvTest extends TestCase
     {
         return [
             'no_records' => [
-                ['column_1', 'column_2'],
                 []
             ],
             'single_record' => [
-                ['column_1', 'column_2'],
                 [
                     ['record_1_1', 'record_1_2']
                 ]
             ],
             'multiple_records' => [
-                ['column_1', 'column_2'],
                 [
                     ['record_2_1', 'record_2_2'],
                     ['record_3_1', 'record_3_2'],
@@ -83,12 +80,11 @@ class CsvTest extends TestCase
     }
 
     /**
-     * @param $columns
      * @param $records
      *
      * @dataProvider getDataProvider
      */
-    public function testGetData($columns, $records)
+    public function testGetData($records)
     {
         $fileReadInterface = $this->getMockBuilder(FileReadInterface::class)->getMock();
 
@@ -98,19 +94,18 @@ class CsvTest extends TestCase
         $filesystemMock = $this->getFakeMock(Filesystem::class)->setMethods(['getDirectoryRead'])->getMock();
         $filesystemMock->expects($this->any())->method('getDirectoryRead')->willReturn($dirReadInterface);
 
-        $importMock = $this->getFakeMock(Import::class)->setMethods(['getData', 'getColumns'])->getMock();
-        $importMock->expects($this->any())->method('getColumns')->willReturn($columns);
-        $importMock->expects($this->any())->method('getData')->willReturn($records);
+        $fileParserMock = $this->getFakeMock(Csv\FileParser::class)->setMethods(['getRows', 'getColumns'])->getMock();
+        $fileParserMock->expects($this->once())->method('getColumns');
+        $fileParserMock->expects($this->once())->method('getRows')->willReturn($records);
 
-        $instance = $this->getInstance(['filesystem' => $filesystemMock, 'import' => $importMock]);
+        $instance = $this->getInstance(['filesystem' => $filesystemMock, 'fileParser' => $fileParserMock]);
         $result = $instance->getData('somefile.csv', 1, 'package_value');
 
         $this->assertInternalType('array', $result);
 
         $this->assertArrayHasKey('columns', $result);
-        $this->assertEquals($columns, $result['columns']);
-
         $this->assertArrayHasKey('records', $result);
+
         $this->assertEquals($records, $result['records']);
     }
 
@@ -146,11 +141,11 @@ class CsvTest extends TestCase
      */
     public function testCheckImportErrors($hasErrors, $errorMessages)
     {
-        $import = $this->getFakeMock(Import::class)->setMethods(['hasErrors', 'getErrors'])->getMock();
-        $import->expects($this->once())->method('hasErrors')->willReturn($hasErrors);
-        $import->expects($this->exactly((int)$hasErrors))->method('getErrors')->willReturn($errorMessages);
+        $fileParserMock = $this->getFakeMock(Csv\FileParser::class)->setMethods(['hasErrors', 'getErrors'])->getMock();
+        $fileParserMock->expects($this->once())->method('hasErrors')->willReturn($hasErrors);
+        $fileParserMock->expects($this->exactly((int)$hasErrors))->method('getErrors')->willReturn($errorMessages);
 
-        $instance = $this->getInstance(['import' => $import]);
+        $instance = $this->getInstance(['fileParser' => $fileParserMock]);
 
         $expectedErrorMessage = 'We couldn\'t import this file because of these errors: ';
         $expectedErrorMessage .= implode(" \n", $errorMessages);
