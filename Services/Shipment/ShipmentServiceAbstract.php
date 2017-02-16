@@ -39,12 +39,9 @@
 namespace TIG\PostNL\Services\Shipment;
 
 use \TIG\PostNL\Logging\Log;
-
 use Magento\Framework\Api\SearchCriteriaBuilder;
-
 use Magento\Sales\Model\Order\ShipmentRepository;
 use Magento\Sales\Model\Order\Shipment;
-
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
 

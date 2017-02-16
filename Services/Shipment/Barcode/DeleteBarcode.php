@@ -40,17 +40,12 @@ namespace TIG\PostNL\Services\Shipment\Barcode;
 
 use TIG\PostNL\Model\ShipmentBarcodeRepository;
 use TIG\PostNL\Model\ShipmentBarcodeInterface;
-
 use TIG\PostNL\Services\Shipment\ShipmentServiceAbstract;
-
 use Magento\Framework\Api\SearchCriteriaBuilder;
-
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Exception as PostNLException;
-
 use Magento\Sales\Model\Order\ShipmentRepository;
 use Magento\Sales\Model\Order\Shipment;
-
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 
 /**

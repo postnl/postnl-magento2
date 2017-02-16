@@ -47,7 +47,14 @@ class ShipmentPlugin
 {
     /**
      * The default getShippingMethod does a explode with the underscore '_' as delimeter.
-     * And that will return the wrong carrier.
+     *
+     * So in our case tig_postnl_reqular was returned as
+     * [
+     *      carrier_code => 'tig',
+     *      method       => 'postnl_regular'
+     * ]
+     *
+     * And that will try to load an 'tig' carrier that doesn't exists, which will trow an exception.
      *
      * @param \Magento\Sales\Model\Order $subject
      * @param string|\Magento\Framework\DataObject $result

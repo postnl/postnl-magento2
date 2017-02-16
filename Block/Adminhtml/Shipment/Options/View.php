@@ -100,6 +100,17 @@ class View extends OptionsAbstract
     }
 
     /**
+     * @return string
+     */
+    public function getProductOptionValue()
+    {
+        $productOption = $this->getProductOption();
+        $group = str_replace('_', ' ', $productOption['group']);
+
+        return ucfirst($group) . '(' . $productOption['value'] . ')';
+    }
+
+    /**
      * @return mixed
      */
     public function getProductOption()

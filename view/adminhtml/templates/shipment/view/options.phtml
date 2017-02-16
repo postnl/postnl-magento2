@@ -75,8 +75,7 @@
                 <li>
                     <span class="type"><?php /* @escapeNotVerified */ echo __('Product option :'); ?></span>
                     <span class="value option">
-                        <?php $group = str_replace('_', ' ', $block->getProductOption()['group']); ?>
-                        <?php echo ucfirst($group). ' (' . $block->getProductOption()['value'] . ')'; ?>
+                        <?php echo $block->getProductOptionValue(); ?>
                     </span>
                 </li>
                 <li>

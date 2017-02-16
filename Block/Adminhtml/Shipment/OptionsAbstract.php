@@ -44,7 +44,6 @@ use Magento\Framework\View\Element\BlockInterface;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\Order\Shipment;
-
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 

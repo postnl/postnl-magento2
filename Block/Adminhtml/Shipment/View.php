@@ -44,7 +44,6 @@ use \Magento\Framework\Api\SearchCriteriaBuilder;
 use \Magento\Framework\Api\AbstractExtensibleObject;
 use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use \TIG\PostNL\Model\Shipment as PostNLShipment;
-
 use \Magento\Shipping\Block\Adminhtml\View as MagentoView;
 
 /**
