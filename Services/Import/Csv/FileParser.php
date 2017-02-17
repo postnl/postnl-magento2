@@ -41,22 +41,28 @@ use Magento\Framework\Filesystem\File\ReadInterface;
  */
 class FileParser
 {
-    /**
-     * @var array
-     */
-    private $errors = [];
+    private $validatedRows = [];
 
     /**
-     * @var
+     * @var RowParser
      */
     private $rowParser;
 
     /**
-     * @param RowParser $rowParser
+     * @var ParserErrors
      */
-    public function __construct(RowParser $rowParser)
-    {
+    private $parserErrors;
+
+    /**
+     * @param RowParser    $rowParser
+     * @param ParserErrors $parserErrors
+     */
+    public function __construct(
+        RowParser $rowParser,
+        ParserErrors $parserErrors
+    ) {
         $this->rowParser = $rowParser;
+        $this->parserErrors = $parserErrors;
     }
 
     /**
@@ -66,7 +72,7 @@ class FileParser
     {
         $hasErrors = false;
 
-        if (!empty($this->getErrors())) {
+        if ($this->parserErrors->getErrorCount()) {
             $hasErrors = true;
         }
 
@@ -78,7 +84,7 @@ class FileParser
      */
     public function getErrors()
     {
-        return $this->errors;
+        return $this->parserErrors->getErrors();
     }
 
     /**
@@ -108,49 +114,49 @@ class FileParser
      */
     public function getRows($file, $websiteId, $conditionName, $conditionFullName, $rowLimit = 5000)
     {
+        $currentRowCount = 1;
+        $limitCount = 0;
         $parsedRows = [];
-        $this->validateHeaders($file);
 
-        try {
-            $parsedRows = $this->parseRows($file, $websiteId, $conditionName, $conditionFullName, $rowLimit);
-        } catch (LocalizedException $exception) {
-            $this->errors[] = $exception->getMessage();
+        $this->validateHeaders($file);
+        $csvRows = $this->getCsvRows($file);
+
+        foreach ($csvRows as $row) {
+            $currentRowCount++;
+
+            $rowData = $this->parseRow($row, $websiteId, $conditionName, $conditionFullName, $currentRowCount);
+
+            $parsedRows[$limitCount][] = $rowData;
+            $limitCount += (int)((($currentRowCount - 1) % $rowLimit) == 0);
         }
 
         return $parsedRows;
     }
 
     /**
-     * @param $file
+     * @param $csvRow
      * @param $websiteId
      * @param $conditionName
      * @param $conditionFullName
-     * @param $rowLimit
+     * @param $currentRowCount
      *
      * @return array
      * @throws LocalizedException
      */
-    private function parseRows($file, $websiteId, $conditionName, $conditionFullName, $rowLimit)
+    private function parseRow($csvRow, $websiteId, $conditionName, $conditionFullName, $currentRowCount)
     {
-        $currentRowCount = 1;
-        $limitCount = 0;
-        $parsedRows = [];
-        $validatedRows = [];
-        $fileLines = $this->getCsvRows($file);
+        $rowData = [];
 
-        foreach ($fileLines as $line) {
-            $currentRowCount++;
-
+        try {
             $rowData = $this->rowParser
-                ->parseRow($line, $currentRowCount, $websiteId, $conditionName, $conditionFullName);
+                ->parseRow($csvRow, $currentRowCount, $websiteId, $conditionName, $conditionFullName);
 
-            $validatedRows = $this->validateDuplicates($rowData, $validatedRows, $currentRowCount);
-
-            $parsedRows[$limitCount][] = $rowData;
-            $limitCount += (int)(($currentRowCount % $rowLimit) == 0);
+            $this->validateDuplicates($rowData, $currentRowCount);
+        } catch (LocalizedException $exception) {
+            $this->parserErrors->addError($exception->getMessage());
         }
 
-        return $parsedRows;
+        return $rowData;
     }
 
     /**
@@ -182,50 +188,49 @@ class FileParser
      */
     private function validateHeaders($file)
     {
-        $headers = $file->readCsv();
+        try {
+            $headers = $file->readCsv();
 
+            $this->validateHeaderFormat($headers);
+        } catch (LocalizedException $exception) {
+            $this->parserErrors->addError($exception->getMessage());
+        }
+    }
+
+    /**
+     * @param $headers
+     *
+     * @throws LocalizedException
+     */
+    private function validateHeaderFormat($headers)
+    {
         if ($headers === false || count($headers) < 5) {
+            // @codingStandardsIgnoreLine
             throw new LocalizedException(__('Please correct Table Rates File Format.'));
         }
     }
 
     /**
      * @param array $rowData
-     * @param array $validatedRows
      * @param int   $currentRowCount
      *
-     * @return array
      * @throws LocalizedException
      */
-    private function validateDuplicates($rowData, $validatedRows, $currentRowCount)
+    private function validateDuplicates($rowData, $currentRowCount)
     {
-        $rowKey = $this->getRowKey($rowData);
+        $destinationCountry = $rowData['dest_country_id'];
+        $destinationRegion = $rowData['dest_region_id'];
+        $destinationZip = $rowData['dest_zip'];
+        $conditionValue = $rowData['condition_value'];
 
-        if (array_key_exists($rowKey, $validatedRows)) {
+        $rowKey = $destinationCountry . '-' . $destinationRegion . '-' . $destinationZip . '-' . $conditionValue;
+
+        if (array_key_exists($rowKey, $this->validatedRows)) {
             throw new LocalizedException(
-                __('Row #%1 is a dupplicate of row #%2', $currentRowCount, $validatedRows[$rowKey])
+                __('Row #%1 is a dupplicate of row #%2', $currentRowCount, $this->validatedRows[$rowKey])
             );
         }
 
-        $validatedRows[$rowKey] = $currentRowCount;
-
-        return $validatedRows;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return string
-     */
-    private function getRowKey($data)
-    {
-        $destinationCountry = $data['dest_country_id'];
-        $destinationRegion = $data['dest_region_id'];
-        $destinationZip = $data['dest_zip'];
-        $conditionValue = $data['condition_value'];
-
-        $key = $destinationCountry . '-' . $destinationRegion . '-' . $destinationZip . '-' . $conditionValue;
-
-        return $key;
+        $this->validatedRows[$rowKey] = $currentRowCount;
     }
 }

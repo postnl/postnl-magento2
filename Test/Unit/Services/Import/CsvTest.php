@@ -42,7 +42,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\ReadInterface as DirectoryReadInterface;
 use Magento\Framework\Filesystem\File\ReadInterface as FileReadInterface;
-use Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate\Import;
 use TIG\PostNL\Services\Import\Csv;
 use TIG\PostNL\Test\TestCase;
 
@@ -94,9 +93,12 @@ class CsvTest extends TestCase
         $filesystemMock = $this->getFakeMock(Filesystem::class)->setMethods(['getDirectoryRead'])->getMock();
         $filesystemMock->expects($this->any())->method('getDirectoryRead')->willReturn($dirReadInterface);
 
-        $fileParserMock = $this->getFakeMock(Csv\FileParser::class)->setMethods(['getRows', 'getColumns'])->getMock();
+        $fileParserMock = $this->getFakeMock(Csv\FileParser::class)
+            ->setMethods(['getRows', 'getColumns', 'hasErrors'])
+            ->getMock();
         $fileParserMock->expects($this->once())->method('getColumns');
         $fileParserMock->expects($this->once())->method('getRows')->willReturn($records);
+        $fileParserMock->expects($this->once())->method('hasErrors')->willReturn(false);
 
         $instance = $this->getInstance(['filesystem' => $filesystemMock, 'fileParser' => $fileParserMock]);
         $result = $instance->getData('somefile.csv', 1, 'package_value');

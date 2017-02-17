@@ -36,13 +36,161 @@ use TIG\PostNL\Services\Import\Csv\RowParser;
 use TIG\PostNL\Test\TestCase;
 
 /**
- * Class CsvTest
+ * Class RowParserTest
  *
- * @package TIG\PostNL\Unit\Services\Import
+ * @package TIG\PostNL\Unit\Services\Import\Csv
  */
 class RowParserTest extends TestCase
 {
     protected $instanceClass = RowParser::class;
+
+    /**
+     * @return array
+     */
+    public function parseRowProvider()
+    {
+        return [
+            'valid_data ' => [
+                [0 => '*', 1 => '*', 2 => '1234 AB', 3 => 56.78, 4 => 90.12],
+                3,
+                4,
+                'package_value',
+                null
+            ],
+            'incomplete_data ' => [
+                [0 => '*', 1 => '*', 2 => '5678 CD'],
+                9,
+                0,
+                'package_value',
+                'Please correct Table Rates format in the Row #9.'
+            ]
+        ];
+    }
+
+    /**
+     * @param $rowData
+     * @param $rowCount
+     * @param $websiteId
+     * @param $conditionName
+     * @param $expectedException
+     *
+     * @dataProvider parseRowProvider
+     */
+    public function testParseRow($rowData, $rowCount, $websiteId, $conditionName, $expectedException)
+    {
+        $instance = $this->getInstance();
+
+        try {
+            $result = $instance->parseRow($rowData, $rowCount, $websiteId, $conditionName, 'full_condition_name');
+
+            $this->assertCount(7, $result);
+
+            $this->assertEquals($websiteId, $result['website_id']);
+            $this->assertEquals($conditionName, $result['condition_name']);
+
+            $this->assertInternalType('float', $result['condition_value']);
+            $this->assertInternalType('float', $result['price']);
+
+            $this->assertArrayHasKey('dest_country_id', $result);
+            $this->assertArrayHasKey('dest_region_id', $result);
+            $this->assertArrayHasKey('dest_zip', $result);
+
+            $this->assertNull($expectedException);
+        } catch (LocalizedException $exception) {
+            $this->validateCaughtException($exception, $expectedException);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getCountryIdProvider()
+    {
+        return [
+            'wildcard_country' => [
+                [0 => '*'],
+                1,
+                '0',
+            ],
+            'invalid_column' => [
+                [3 => 'incorrect column'],
+                4,
+                'Please correct Table Rates format in the Row #4.'
+            ]
+        ];
+    }
+
+    /**
+     * @param $rowData
+     * @param $rowCount
+     * @param $expected
+     *
+     * @throws LocalizedException
+     *
+     * @dataProvider getCountryIdProvider
+     */
+    public function testGetCountryId($rowData, $rowCount, $expected)
+    {
+        $instance = $this->getInstance();
+
+        try {
+            $result = $this->invokeArgs('getCountryId', [$rowData, $rowCount], $instance);
+
+            $this->assertEquals($expected, $result);
+        } catch (LocalizedException $exception) {
+            $this->validateCaughtException($exception, $expected);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getRegionIdProvider()
+    {
+        return [
+            'wildcard_by_region' => [
+                [1 => '*'],
+                2,
+                3,
+                '0',
+            ],
+            'wildcard_by_country' => [
+                [1 => 'ID'],
+                0,
+                4,
+                '0',
+            ],
+            'invalid_column' => [
+                [5 => 'incorrect column'],
+                6,
+                7,
+                'Please correct Table Rates format in the Row #7.'
+            ]
+        ];
+    }
+
+    /**
+     * @param $rowData
+     * @param $countryId
+     * @param $rowCount
+     * @param $expected
+     *
+     * @throws LocalizedException
+     *
+     * @dataProvider getRegionIdProvider
+     */
+    public function testGetRegionId($rowData, $countryId, $rowCount, $expected)
+    {
+        $instance = $this->getInstance();
+
+        try {
+            $result = $this->invokeArgs('getRegionId', [$rowData, $countryId, $rowCount], $instance);
+
+            $this->assertEquals($expected, $result);
+        } catch (LocalizedException $exception) {
+            $this->validateCaughtException($exception, $expected);
+        }
+    }
 
     /**
      * @return array
@@ -74,7 +222,6 @@ class RowParserTest extends TestCase
      * @param $expected
      *
      * @throws LocalizedException
-     * @throws \Exception
      *
      * @dataProvider getZipCodeProvider
      */
@@ -125,7 +272,6 @@ class RowParserTest extends TestCase
      * @param $expected
      *
      * @throws LocalizedException
-     * @throws \Exception
      *
      * @dataProvider getConditionValueProvider
      */
@@ -173,7 +319,6 @@ class RowParserTest extends TestCase
      * @param $expected
      *
      * @throws LocalizedException
-     * @throws \Exception
      *
      * @dataProvider getPriceProvider
      */
@@ -195,7 +340,7 @@ class RowParserTest extends TestCase
      * @param LocalizedException $exception
      * @param mixed              $expected
      *
-     * @throws
+     * @throws LocalizedException
      */
     private function validateCaughtException($exception, $expected)
     {
