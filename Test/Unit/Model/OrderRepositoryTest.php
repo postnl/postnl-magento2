@@ -41,6 +41,8 @@ use \TIG\PostNL\Model\OrderFactory;
 use \Magento\Framework\Api\SearchResults;
 use \Magento\Framework\Api\SearchResultsInterfaceFactory;
 use \Magento\Framework\Api\Search\FilterGroup;
+use \Magento\Framework\Api\Filter;
+use \Magento\Framework\Api\SearchCriteria;
 
 class OrderRepositoryTest extends TestCase
 {
@@ -107,47 +109,48 @@ class OrderRepositoryTest extends TestCase
      */
     public function testGetFieldWithValue($field = 'order_id', $value = 10)
     {
-        $this->markTestSkipped('Rik : Needs to be finished, getList method is a pain in the ...');
-        $order = $this->getOrderReturned();
 
-        $filter = $this->getObject('Magento\Framework\Api\Filter');
-        $filter->setField($field);
-        $filter->setValue($value);
+        $builder = $this->getFakeMock(SearchCriteriaBuilder::class)->getMock();
 
-        $filterGroup = $this->getMockBuilder('Magento\Framework\Api\Search\FilterGroup')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $filterGroup->expects($this->once())
-            ->method('getFilters')
-            ->willReturn([$filter]);
+        $filterExpects = $builder->expects($this->once());
+        $filterExpects->method('addFilter');
+        $filterExpects->with($field, $value);
+        $filterExpects->willReturnSelf();
 
-        $criteria = $this->getSearchCriteria();
-        $expectsFilterGroups = $criteria->expects($this->once());
-        $expectsFilterGroups->method('getFilterGroups');
-        $expectsFilterGroups->willReturn([$filterGroup]);
+        $pageSizeExpects = $builder->expects($this->once());
+        $pageSizeExpects->method('setPageSize');
+        $pageSizeExpects->with(1);
+        $pageSizeExpects->willReturnSelf();
 
-        $orderRepositoryMock = $this->getFakeMock(OrderRepository::class)->getMock();
-        $geListExpects = $orderRepositoryMock->expects($this->once());
-        $geListExpects->method('getList');
-        $geListExpects->with($criteria);
-        $geListExpects->willReturn($order);
+        $listResults = $this->getList($field, $value, true);
 
-        $collectionMock = $this->getFakeMock(CollectionFactory::class);
-        $collectionMock->setMethods(['create']);
-        $collectionMock = $collectionMock->getMock();
-
-        $expectsCreate = $collectionMock->expects($this->once());
-        $expectsCreate->method('create');
-        $expectsCreate->willReturnSelf();
+        $createExpects = $builder->expects($this->once());
+        $createExpects->method('create');
+        $createExpects->willReturn($listResults['searchCreteria']);
 
         $instance = $this->getInstance([
-            'collectionFactory'     => $collectionMock,
-            'searchResultsFactory'  => $this->getSearchResults(),
-            'searchCriteriaBuilder' => $this->getSearchCriteriaBuilder($field, $value)
+            'collectionFactory'     => $listResults['collectionFactory'],
+            'searchResultsFactory'  => $listResults['searchResult'],
+            'searchCriteriaBuilder' => $builder
         ]);
+
         $result = $instance->getByFieldWithValue($field, $value);
 
-        $this->assertEquals($order, $result);
+        $this->assertEquals($listResults['searchResult'], $result);
+
+    }
+
+    public function testGetList()
+    {
+        $listData = $this->getList('order_id', 10);
+        $instance = $this->getInstance([
+            'collectionFactory'    => $listData['collectionFactory'],
+            'searchResultsFactory' => $listData['searchResult']
+        ]);
+
+        $result = $instance->getList($listData['searchCreteria']);
+
+        $this->assertEquals($listData['searchResult'], $result);
     }
 
     public function testGetSearchResults()
@@ -163,59 +166,82 @@ class OrderRepositoryTest extends TestCase
         $this->assertEquals($searchResults, $result);
     }
 
+    /**
+     * @param      $field
+     * @param      $value
+     * @param bool $isFieldWithValue
+     *
+     * @return array
+     */
+    private function getList($field, $value, $isFieldWithValue = false)
+    {
+        $filterGroup    = $this->getMock(FilterGroup::class, [], [], '', false);
+        $filter         = $this->getMock(Filter::class, [], [], '', false);
+        $searchCriteria = $this->getMock(SearchCriteria::class, [], [], '', false);
 
-    private function getSearchResults()
+        $searchCriteria->expects($this->once())->method('getFilterGroups')->willReturn([$filterGroup]);
+        $filterGroup->expects($this->once())->method('getFilters')->willReturn([$filter]);
+        $filter->expects($this->exactly(2))->method('getConditionType')->willReturn('eq');
+        $filter->expects($this->atLeastOnce())->method('getField')->willReturn($field);
+        $filter->expects($this->once())->method('getValue')->willReturn($value);
+
+        $orderCollection = $this->getMock(
+            CollectionFactory::class,
+            ['create', 'addFieldToFilter', 'getSize', 'setCurPage', 'setPageSize'],
+            [],
+            '',
+            false
+        );
+
+        $orderCollection->expects($this->atLeastOnce())->method('create')->willReturnSelf();
+        $orderCollection->expects($this->once())->method('setCurPage')->with(1);
+        $searchCriteria->expects($this->once())->method('getCurrentPage')->willReturn(1);
+        $orderCollection->expects($this->once())->method('setPageSize')->with(1);
+        $searchCriteria->expects($this->once())->method('getPageSize')->willReturn(1);
+        $orderCollection->expects($this->once())->method('addFieldToFilter')->withAnyParameters();
+        $orderCollection->expects($this->once())->method('getSize')->willReturn(1);
+
+        $objects = [];
+
+        foreach ($orderCollection as $objectModel) {
+            $objects[] = $objectModel;
+        }
+
+        $searchResultFactory = $this->getSearchResults($searchCriteria);
+        $searchResultFactory->expects($this->once())->method('setTotalCount')->with(1);
+
+        if ($isFieldWithValue) {
+            $searchResultFactory->expects($this->once())->method('getTotalCount')->willReturn(1);
+            $searchResultFactory->expects($this->once())->method('getItems')->willReturn([$searchResultFactory]);
+        }
+
+        $searchResultFactory->expects($this->once())->method('setItems')->with($objects)->willReturnSelf();
+
+        return [
+            'searchResult'      => $searchResultFactory,
+            'searchCreteria'    => $searchCriteria,
+            'collectionFactory' => $orderCollection
+        ];
+    }
+
+    private function getSearchResults($searchCriteria = null)
     {
         $searchResults = $this->getFakeMock(SearchResultsInterfaceFactory::class);
-        $searchResults->setMethods(['create','setSearchCriteria']);
+        $searchResults->setMethods(['create','setSearchCriteria', 'setTotalCount', 'setItems', 'getTotalCount', 'getItems']);
         $searchResults = $searchResults->getMock();
 
         $expectsCreate = $searchResults->expects($this->once());
         $expectsCreate->method('create');
         $expectsCreate->willReturnSelf();
 
+        $searchCriteria = $searchCriteria == null ? $this->getSearchCriteria() : $searchCriteria;
+
         $expectsSetSearchCriteria = $searchResults->expects($this->once());
         $expectsSetSearchCriteria->method('setSearchCriteria');
-        $expectsSetSearchCriteria->with($this->getSearchCriteria());
+        $expectsSetSearchCriteria->with($searchCriteria);
         $expectsSetSearchCriteria->willReturnSelf();
 
         return $searchResults;
-    }
-
-    private function getOrderReturned()
-    {
-        $searchResults = $this->getMock(SearchResults::class);
-
-        $getTotalCountExpects = $searchResults->expects($this->once());
-        $getTotalCountExpects->method('getTotalCount');
-        $getTotalCountExpects->willReturn(1);
-
-        $getItemsExpects = $searchResults->expects($this->once());
-        $getItemsExpects->method('getItems');
-        $getItemsExpects->willReturn(1);
-
-        return $searchResults;
-    }
-
-    private function getSearchCriteriaBuilder($field, $value)
-    {
-        $builder = $this->getFakeMock(SearchCriteriaBuilder::class)->getMock();
-
-        $filterExpects = $builder->expects($this->once());
-        $filterExpects->method('addFilter');
-        $filterExpects->with($field, $value);
-        $filterExpects->willReturnSelf();
-
-        $pageSizeExpects = $builder->expects($this->once());
-        $pageSizeExpects->method('setPageSize');
-        $pageSizeExpects->with(1);
-        $pageSizeExpects->willReturnSelf();
-
-        $createExpects = $builder->expects($this->once());
-        $createExpects->method('create');
-        $createExpects->willReturn($this->getSearchCriteria());
-
-        return $builder;
     }
 
     private function getOrderFactoryMock()
