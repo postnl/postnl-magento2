@@ -36,61 +36,46 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Plugin\Order;
 
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use TIG\PostNL\Helper\Data;
-use \TIG\PostNL\Model\OrderRepository;
-use Magento\Sales\Model\Order as MagentoOrder;
-use TIG\PostNL\Model\Order as PostNLOrder;
-
-class SalesOrderSaveAfterEvent implements ObserverInterface
+/**
+ * Class ShipmentPlugin
+ *
+ * @package TIG\PostNL\Plugin\Order
+ */
+class ShipmentPlugin
 {
     /**
-     * @var OrderRepository
-     */
-    private $orderRepository;
-
-    /**
-     * @var Data
-     */
-    private $helper;
-
-    /**
-     * @param OrderRepository $orderRepository
-     * @param Data            $helper
-     */
-    public function __construct(
-        OrderRepository $orderRepository,
-        Data $helper
-    ) {
-        $this->orderRepository = $orderRepository;
-        $this->helper = $helper;
-    }
-
-    /**
-     * @param Observer $observer
+     * The default getShippingMethod does a explode with the underscore '_' as delimeter.
      *
-     * @return void
+     * So in our case tig_postnl_reqular was returned as
+     * [
+     *      carrier_code => 'tig',
+     *      method       => 'postnl_regular'
+     * ]
+     *
+     * And that will try to load an 'tig' carrier that doesn't exists, which will trow an exception.
+     *
+     * @param \Magento\Sales\Model\Order $subject
+     * @param string|\Magento\Framework\DataObject $result
+     *
+     * @return string|\Magento\Framework\DataObject
      */
-    public function execute(Observer $observer)
+    // @codingStandardsIgnoreLine
+    public function afterGetShippingMethod($subject, $result)
     {
-        /** @var MagentoOrder $order */
-        $magentoOrder = $observer->getData('data_object');
-
-        if (!$this->helper->isPostNLOrder($magentoOrder)) {
-            return;
+        if (is_string($result) || null === $result) {
+            return $result;
         }
 
-        $postnlOrder = $this->orderRepository->getByFieldWithValue('quote_id', $magentoOrder->getQuoteId());
-        if (!$postnlOrder) {
-            $postnlOrder = $this->orderRepository->create();
+        $carrierCode = $result->getData('carrier_code');
+        $method      = $result->getData('method');
+
+        if ($carrierCode == 'tig' && $method == 'postnl_regular') {
+            $result->setData('carrier_code', 'tig_postnl');
+            $result->setData('method', 'regular');
         }
 
-        $postnlOrder->setData('order_id', $magentoOrder->getId());
-        $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
-
-        $this->orderRepository->save($postnlOrder);
+        return $result;
     }
 }

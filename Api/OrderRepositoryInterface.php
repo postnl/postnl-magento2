@@ -13,4 +13,8 @@ interface OrderRepositoryInterface
     public function getList(SearchCriteriaInterface $criteria);
 
     public function delete(OrderInterface $order);
+
+    public function create(array $data);
+
+    public function getByFieldWithValue($field, $value);
 }

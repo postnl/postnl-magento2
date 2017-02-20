@@ -36,61 +36,87 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use TIG\PostNL\Helper\Data;
-use \TIG\PostNL\Model\OrderRepository;
-use Magento\Sales\Model\Order as MagentoOrder;
-use TIG\PostNL\Model\Order as PostNLOrder;
+use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
+use Magento\Backend\App\Action\Context;
+use Magento\Sales\Model\Order\Shipment;
+use Magento\Sales\Model\Order\ShipmentRepository;
 
-class SalesOrderSaveAfterEvent implements ObserverInterface
+use TIG\PostNL\Helper\Labelling\GetLabels;
+use TIG\PostNL\Helper\Labelling\SaveLabels;
+use TIG\PostNL\Helper\Pdf\Get as GetPdf;
+use TIG\PostNL\Helper\Tracking\Track;
+
+/**
+ * Class ConfirmAndPrintShippingLabel
+ *
+ * @package TIG\PostNL\Controller\Adminhtml\Shipment
+ */
+class ConfirmAndPrintShippingLabel extends LabelAbstract
 {
     /**
-     * @var OrderRepository
+     * @var ShipmentRepository
      */
-    private $orderRepository;
+    private $shipmentRepository;
 
     /**
-     * @var Data
+     * @var Track
      */
-    private $helper;
+    private $track;
 
     /**
-     * @param OrderRepository $orderRepository
-     * @param Data            $helper
+     * @param Context            $context
+     * @param GetLabels          $getLabels
+     * @param SaveLabels         $saveLabels
+     * @param GetPdf             $getPdf
+     * @param ShipmentRepository $shipmentRepository
+     * @param Track              $track
      */
     public function __construct(
-        OrderRepository $orderRepository,
-        Data $helper
+        Context $context,
+        GetLabels $getLabels,
+        SaveLabels $saveLabels,
+        GetPdf $getPdf,
+        ShipmentRepository $shipmentRepository,
+        Track $track
     ) {
-        $this->orderRepository = $orderRepository;
-        $this->helper = $helper;
+        parent::__construct(
+            $context,
+            $getLabels,
+            $saveLabels,
+            $getPdf
+        );
+
+        $this->shipmentRepository = $shipmentRepository;
+        $this->track              = $track;
     }
 
     /**
-     * @param Observer $observer
-     *
-     * @return void
+     * @return \Magento\Framework\App\ResponseInterface
      */
-    public function execute(Observer $observer)
+    public function execute()
     {
-        /** @var MagentoOrder $order */
-        $magentoOrder = $observer->getData('data_object');
+        $shipment = $this->getShipment();
 
-        if (!$this->helper->isPostNLOrder($magentoOrder)) {
-            return;
+        if (!$shipment->getTracks()) {
+            $this->track->set($shipment);
         }
 
-        $postnlOrder = $this->orderRepository->getByFieldWithValue('quote_id', $magentoOrder->getQuoteId());
-        if (!$postnlOrder) {
-            $postnlOrder = $this->orderRepository->create();
-        }
+        $labels     = $this->getLabels->get($shipment->getId());
+        $labelModel = $this->saveLabels->save($labels);
 
-        $postnlOrder->setData('order_id', $magentoOrder->getId());
-        $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
+        return $this->getPdf->get($labelModel);
+    }
 
-        $this->orderRepository->save($postnlOrder);
+    /**
+     * Retrieve shipment model instance
+     *
+     * @return Shipment
+     */
+    private function getShipment()
+    {
+        $shipmentId = $this->getRequest()->getParam('shipment_id');
+        return $this->shipmentRepository->get($shipmentId);
     }
 }

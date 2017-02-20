@@ -65,7 +65,7 @@ define([
         },
 
         canUseDeliveryOptions: ko.computed(function () {
-            return State.deliveryOptionsAreAvailable() && AddressFinder() != false;
+            return State.deliveryOptionsAreAvailable() && AddressFinder() !== false;
         }),
 
         canUsePickupLocations: ko.computed(function () {

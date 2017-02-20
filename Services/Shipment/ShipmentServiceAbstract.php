@@ -36,61 +36,83 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Services\Shipment;
 
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use TIG\PostNL\Helper\Data;
-use \TIG\PostNL\Model\OrderRepository;
-use Magento\Sales\Model\Order as MagentoOrder;
-use TIG\PostNL\Model\Order as PostNLOrder;
+use \TIG\PostNL\Logging\Log;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Sales\Model\Order\ShipmentRepository;
+use Magento\Sales\Model\Order\Shipment;
+use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use TIG\PostNL\Model\Shipment as PostNLShipment;
 
-class SalesOrderSaveAfterEvent implements ObserverInterface
+/**
+ * Class ShipmentService
+ *
+ * @package TIG\PostNL\Services\Shipment
+ */
+abstract class ShipmentServiceAbstract
 {
     /**
-     * @var OrderRepository
+     * @var Log
      */
-    private $orderRepository;
+    //@codingStandardsIgnoreLine
+    protected $logger;
 
     /**
-     * @var Data
+     * @var ShipmentRepository
      */
-    private $helper;
+    //@codingStandardsIgnoreLine
+    protected $shipmentRepository;
 
     /**
-     * @param OrderRepository $orderRepository
-     * @param Data            $helper
+     * @var PostNLShipmentRepository
+     */
+    //@codingStandardsIgnoreLine
+    protected $postnlShipmentRepository;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    //@codingStandardsIgnoreLine
+    protected $searchCriteriaBuilder;
+
+    /**
+     * @param Log                      $log
+     * @param PostNLShipmentRepository $postNLShipmentRepository
+     * @param ShipmentRepository       $shipmentRepository
      */
     public function __construct(
-        OrderRepository $orderRepository,
-        Data $helper
+        Log $log,
+        PostNLShipmentRepository $postNLShipmentRepository,
+        ShipmentRepository $shipmentRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
-        $this->orderRepository = $orderRepository;
-        $this->helper = $helper;
+        $this->logger = $log;
+        $this->postnlShipmentRepository = $postNLShipmentRepository;
+        $this->shipmentRepository = $shipmentRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
-     * @param Observer $observer
+     * @param $identifier
      *
-     * @return void
+     * @return PostNLShipment
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function execute(Observer $observer)
+    public function getPostNLShipment($identifier)
     {
-        /** @var MagentoOrder $order */
-        $magentoOrder = $observer->getData('data_object');
+        return $this->postnlShipmentRepository->getById($identifier);
+    }
 
-        if (!$this->helper->isPostNLOrder($magentoOrder)) {
-            return;
-        }
-
-        $postnlOrder = $this->orderRepository->getByFieldWithValue('quote_id', $magentoOrder->getQuoteId());
-        if (!$postnlOrder) {
-            $postnlOrder = $this->orderRepository->create();
-        }
-
-        $postnlOrder->setData('order_id', $magentoOrder->getId());
-        $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
-
-        $this->orderRepository->save($postnlOrder);
+    /**
+     * @param $identifier
+     *
+     * @return Shipment
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getShipment($identifier)
+    {
+        return $this->shipmentRepository->get($identifier);
     }
 }

@@ -36,61 +36,49 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Block\Adminhtml\Shipment\Options;
 
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use TIG\PostNL\Helper\Data;
-use \TIG\PostNL\Model\OrderRepository;
-use Magento\Sales\Model\Order as MagentoOrder;
-use TIG\PostNL\Model\Order as PostNLOrder;
+use Magento\Backend\Block\Template\Context;
+use Magento\Framework\Registry;
+use Magento\Sales\Model\OrderRepository;
+use TIG\PostNL\Block\Adminhtml\Shipment\OptionsAbstract;
+use TIG\PostNL\Config\Provider\ProductOptions;
+use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 
-class SalesOrderSaveAfterEvent implements ObserverInterface
+/**
+ * Class Create
+ *
+ * @package TIG\PostNL\Block\Adminhtml\Shipment\Options
+ *
+ */
+class Create extends OptionsAbstract
 {
     /**
-     * @var OrderRepository
-     */
-    private $orderRepository;
-
-    /**
-     * @var Data
-     */
-    private $helper;
-
-    /**
-     * @param OrderRepository $orderRepository
-     * @param Data            $helper
-     */
-    public function __construct(
-        OrderRepository $orderRepository,
-        Data $helper
-    ) {
-        $this->orderRepository = $orderRepository;
-        $this->helper = $helper;
-    }
-
-    /**
-     * @param Observer $observer
+     * @param Context             $context
+     * @param ProductOptions      $productOptions
+     * @param ProductOptionSource $productOptionsSource
+     * @param OrderRepository     $orderRepository
+     * @param Registry            $registry
+     * @param array               $data
      *
-     * @return void
      */
-    public function execute(Observer $observer)
-    {
-        /** @var MagentoOrder $order */
-        $magentoOrder = $observer->getData('data_object');
-
-        if (!$this->helper->isPostNLOrder($magentoOrder)) {
-            return;
-        }
-
-        $postnlOrder = $this->orderRepository->getByFieldWithValue('quote_id', $magentoOrder->getQuoteId());
-        if (!$postnlOrder) {
-            $postnlOrder = $this->orderRepository->create();
-        }
-
-        $postnlOrder->setData('order_id', $magentoOrder->getId());
-        $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
-
-        $this->orderRepository->save($postnlOrder);
+    // @codingStandardsIgnoreStart
+    public function __construct(
+        Context $context,
+        ProductOptions $productOptions,
+        ProductOptionSource $productOptionsSource,
+        OrderRepository $orderRepository,
+        Registry $registry,
+        array $data = []
+    ) {
+        parent::__construct(
+            $context,
+            $productOptions,
+            $productOptionsSource,
+            $orderRepository,
+            $registry,
+            $data
+        );
     }
+    // @codingStandardsIgnoreEnd
 }

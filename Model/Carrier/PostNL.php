@@ -112,6 +112,30 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     }
 
     /**
+     * @note This is for the internal Magento Label service,
+     *       after packages are given the request needs to be handeld trough this method.
+     *       needs further implementation if packages is required.
+     *
+     * @param \Magento\Shipping\Model\Shipment\Request $request
+     * @return mixed
+     */
+    public function requestToShipment($request)
+    {
+        return $this;
+    }
+
+    /**
+     * @note This is for the internal Magento Label service,
+     *       set to true if packages is needed for further implementation
+     *
+     * @return bool
+     */
+    public function isShippingLabelsAvailable()
+    {
+        return false;
+    }
+
+    /**
      * @param $tracking
      *
      * @return string

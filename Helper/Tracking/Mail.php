@@ -165,7 +165,8 @@ class Mail extends AbstractTracking
     {
         try {
             return $this->assetRepository->getUrlWithParams(
-                'TIG_Postnl::images/postnl_logo.png', ['_secure' => true]
+                'TIG_Postnl::images/postnl_logo.png',
+                ['_secure' => true]
             );
         } catch (LocalizedException $exception) {
             $this->logging->critical($exception->getLogMessage(), $exception->getTrace());
