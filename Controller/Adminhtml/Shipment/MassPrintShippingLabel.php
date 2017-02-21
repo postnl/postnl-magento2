@@ -38,7 +38,7 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
-use Magento\Backend\App\Action;
+use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\Shipment;
@@ -50,7 +50,12 @@ use TIG\PostNL\Helper\Labelling\SaveLabels;
 use TIG\PostNL\Helper\Pdf\Get as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
 
-class MassPrintShippingLabel extends Action
+/**
+ * Class MassPrintShippingLabel
+ *
+ * @package TIG\PostNL\Controller\Adminhtml\Shipment
+ */
+class MassPrintShippingLabel extends LabelAbstract
 {
     /**
      * @var array
@@ -66,21 +71,6 @@ class MassPrintShippingLabel extends Action
      * @var ShipmentCollectionFactory
      */
     private $collectionFactory;
-
-    /**
-     * @var GetLabels
-     */
-    private $getLabels;
-
-    /**
-     * @var SaveLabels
-     */
-    private $saveLabels;
-
-    /**
-     * @var GetPdf
-     */
-    private $getPdf;
 
     /**
      * @var Track
@@ -105,12 +95,15 @@ class MassPrintShippingLabel extends Action
         GetPdf $getPdf,
         Track $track
     ) {
-        parent::__construct($context);
+        parent::__construct(
+            $context,
+            $getLabels,
+            $saveLabels,
+            $getPdf
+        );
+
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
-        $this->getLabels = $getLabels;
-        $this->saveLabels = $saveLabels;
-        $this->getPdf = $getPdf;
         $this->track = $track;
     }
 
@@ -128,7 +121,7 @@ class MassPrintShippingLabel extends Action
         /** @var Shipment $shipment */
         foreach ($collection as $shipment) {
             $this->track->set($shipment);
-            $this->getLabel($shipment->getId());
+            $this->setLabel($shipment->getId());
         }
 
         $labelModels = $this->saveLabels->save($this->labels);
@@ -137,11 +130,10 @@ class MassPrintShippingLabel extends Action
 
         return $pdfFile;
     }
-
     /**
      * @param $shipmentId
      */
-    private function getLabel($shipmentId)
+    private function setLabel($shipmentId)
     {
         $labels = $this->getLabels->get($shipmentId);
 

@@ -47,10 +47,13 @@ use \Magento\Quote\Model\Quote\Address\ToOrderAddress;
 use \Magento\Sales\Model\Order\AddressFactory;
 use TIG\PostNL\Exception;
 use TIG\PostNL\Helper\DeliveryOptions\PickupAddress;
-use TIG\PostNL\Model\Order as PostNLOrder;
-use TIG\PostNL\Model\OrderFactory;
-use TIG\PostNL\Model\OrderRepository;
+use \TIG\PostNL\Model\OrderRepository;
 
+/**
+ * Class AddressToOrder
+ *
+ * @package TIG\PostNL\Observer
+ */
 class AddressToOrder implements ObserverInterface
 {
     /**
@@ -69,11 +72,6 @@ class AddressToOrder implements ObserverInterface
     private $addressFactory;
 
     /**
-     * @var OrderFactory
-     */
-    private $orderFactory;
-
-    /**
      * @var OrderRepository
      */
     private $orderRepository;
@@ -82,20 +80,17 @@ class AddressToOrder implements ObserverInterface
      * @param ToOrderAddress  $toOrderAddress
      * @param PickupAddress   $pickupAddress
      * @param AddressFactory  $addressFactory
-     * @param OrderFactory    $orderFactory
      * @param OrderRepository $orderRepository
      */
     public function __construct(
         ToOrderAddress $toOrderAddress,
         PickupAddress $pickupAddress,
         AddressFactory $addressFactory,
-        OrderFactory $orderFactory,
         OrderRepository $orderRepository
     ) {
         $this->quoteAddressToOrderAddress = $toOrderAddress;
         $this->pickupAddressHelper = $pickupAddress;
         $this->addressFactory = $addressFactory;
-        $this->orderFactory = $orderFactory;
         $this->orderRepository = $orderRepository;
     }
 
@@ -127,6 +122,21 @@ class AddressToOrder implements ObserverInterface
     }
 
     /**
+     * @param Order $order
+     *
+     * @return null|\TIG\PostNL\Model\Order
+     */
+    private function getPostNLOrder(Order $order)
+    {
+        $postnlOrder = $this->orderRepository->getByFieldWithValue('quote_id', $order->getQuoteId());
+        if (!$postnlOrder) {
+            $postnlOrder = $this->orderRepository->create();
+        }
+
+        return $postnlOrder;
+    }
+
+    /**
      * @param Order\Address $orderPgAddress
      * @param Order $order
      *
@@ -150,25 +160,5 @@ class AddressToOrder implements ObserverInterface
         $pgAddress->save();
 
         return $pgAddress;
-    }
-
-    /**
-     * @param Order $magentoOrder
-     *
-     * @return PostNLOrder
-     */
-    private function getPostNLOrder(Order $magentoOrder)
-    {
-        /** @var PostNLOrder $postnlOrder */
-        $postnlOrder = $this->orderFactory->create();
-
-        /** @var \TIG\PostNL\Model\ResourceModel\Order\Collection $collection */
-        $collection = $postnlOrder->getCollection();
-        $collection->addFieldToFilter('quote_id', $magentoOrder->getQuoteId());
-
-        // @codingStandardsIgnoreLine
-        $postnlOrder = $collection->setPageSize(1)->getFirstItem();
-
-        return $postnlOrder;
     }
 }

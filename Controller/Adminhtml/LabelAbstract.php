@@ -36,61 +36,57 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Controller\Adminhtml;
 
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use TIG\PostNL\Helper\Data;
-use \TIG\PostNL\Model\OrderRepository;
-use Magento\Sales\Model\Order as MagentoOrder;
-use TIG\PostNL\Model\Order as PostNLOrder;
+use Magento\Backend\App\Action;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Backend\App\Action\Context;
 
-class SalesOrderSaveAfterEvent implements ObserverInterface
+use TIG\PostNL\Helper\Labelling\GetLabels;
+use TIG\PostNL\Helper\Labelling\SaveLabels;
+use TIG\PostNL\Helper\Pdf\Get as GetPdf;
+
+/**
+ * Class LabelAbstract
+ *
+ * @package TIG\PostNL\Controller\Adminhtml
+ */
+abstract class LabelAbstract extends Action
 {
     /**
-     * @var OrderRepository
+     * @var GetLabels
      */
-    private $orderRepository;
+    //@codingStandardsIgnoreLine
+    protected $getLabels;
 
     /**
-     * @var Data
+     * @var SaveLabels
      */
-    private $helper;
+    //@codingStandardsIgnoreLine
+    protected $saveLabels;
 
     /**
-     * @param OrderRepository $orderRepository
-     * @param Data            $helper
+     * @var GetPdf
+     */
+    //@codingStandardsIgnoreLine
+    protected $getPdf;
+
+    /**
+     * @param Context    $context
+     * @param GetLabels  $getLabels
+     * @param SaveLabels $saveLabels
+     * @param GetPdf     $getPdf
      */
     public function __construct(
-        OrderRepository $orderRepository,
-        Data $helper
+        Context $context,
+        GetLabels $getLabels,
+        SaveLabels $saveLabels,
+        GetPdf $getPdf
     ) {
-        $this->orderRepository = $orderRepository;
-        $this->helper = $helper;
-    }
+        parent::__construct($context);
 
-    /**
-     * @param Observer $observer
-     *
-     * @return void
-     */
-    public function execute(Observer $observer)
-    {
-        /** @var MagentoOrder $order */
-        $magentoOrder = $observer->getData('data_object');
-
-        if (!$this->helper->isPostNLOrder($magentoOrder)) {
-            return;
-        }
-
-        $postnlOrder = $this->orderRepository->getByFieldWithValue('quote_id', $magentoOrder->getQuoteId());
-        if (!$postnlOrder) {
-            $postnlOrder = $this->orderRepository->create();
-        }
-
-        $postnlOrder->setData('order_id', $magentoOrder->getId());
-        $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
-
-        $this->orderRepository->save($postnlOrder);
+        $this->getLabels  = $getLabels;
+        $this->saveLabels = $saveLabels;
+        $this->getPdf     = $getPdf;
     }
 }

@@ -36,61 +36,22 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Services\Shipment;
 
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use TIG\PostNL\Helper\Data;
-use \TIG\PostNL\Model\OrderRepository;
-use Magento\Sales\Model\Order as MagentoOrder;
-use TIG\PostNL\Model\Order as PostNLOrder;
-
-class SalesOrderSaveAfterEvent implements ObserverInterface
+/**
+ * Class ShipmentService
+ *
+ * @package TIG\PostNL\Services\Shipment
+ */
+class ShipmentService extends ShipmentServiceAbstract
 {
     /**
-     * @var OrderRepository
-     */
-    private $orderRepository;
-
-    /**
-     * @var Data
-     */
-    private $helper;
-
-    /**
-     * @param OrderRepository $orderRepository
-     * @param Data            $helper
-     */
-    public function __construct(
-        OrderRepository $orderRepository,
-        Data $helper
-    ) {
-        $this->orderRepository = $orderRepository;
-        $this->helper = $helper;
-    }
-
-    /**
-     * @param Observer $observer
+     * @param $postNLShipment
      *
-     * @return void
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function execute(Observer $observer)
+    public function save($postNLShipment)
     {
-        /** @var MagentoOrder $order */
-        $magentoOrder = $observer->getData('data_object');
-
-        if (!$this->helper->isPostNLOrder($magentoOrder)) {
-            return;
-        }
-
-        $postnlOrder = $this->orderRepository->getByFieldWithValue('quote_id', $magentoOrder->getQuoteId());
-        if (!$postnlOrder) {
-            $postnlOrder = $this->orderRepository->create();
-        }
-
-        $postnlOrder->setData('order_id', $magentoOrder->getId());
-        $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
-
-        $this->orderRepository->save($postnlOrder);
+        $this->postnlShipmentRepository->save($postNLShipment);
     }
 }

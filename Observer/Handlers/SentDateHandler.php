@@ -41,6 +41,7 @@ namespace TIG\PostNL\Observer\Handlers;
 use Magento\Sales\Model\Order\Shipment;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Webservices\Endpoints\SentDate;
+use \TIG\PostNL\Model\Order;
 
 class SentDateHandler
 {
@@ -73,6 +74,7 @@ class SentDateHandler
      */
     public function get(Shipment $shipment)
     {
+        /** @var  Order $postnlOrder */
         $postnlOrder = $this->getPostnlOrder($shipment);
 
         $this->sentDate->setParameters($shipment, $postnlOrder);
@@ -87,6 +89,6 @@ class SentDateHandler
      */
     private function getPostnlOrder(Shipment $shipment)
     {
-        return $this->orderRepository->getByOrder($shipment->getOrder());
+        return $this->orderRepository->getById($shipment->getOrderId());
     }
 }
