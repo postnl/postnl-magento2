@@ -52,23 +52,39 @@ class CutOffSettings implements ArrayInterface
      */
     public function toOptionArray()
     {
-        $option = [
+        $options = [
             // @codingStandardsIgnoreLine
             ['value' => '', 'label' => __('No cut-off time')],
-            ['value' => '01:00:00', 'label' => '01:00'], ['value' => '02:00:00', 'label' => '02:00'],
-            ['value' => '03:00:00', 'label' => '03:00'], ['value' => '04:00:00', 'label' => '04:00'],
-            ['value' => '05:00:00', 'label' => '05:00'], ['value' => '06:00:00', 'label' => '06:00'],
-            ['value' => '07:00:00', 'label' => '07:00'], ['value' => '08:00:00', 'label' => '08:00'],
-            ['value' => '09:00:00', 'label' => '09:00'], ['value' => '10:00:00', 'label' => '10:00'],
-            ['value' => '11:00:00', 'label' => '11:00'], ['value' => '12:00:00', 'label' => '12:00'],
-            ['value' => '13:00:00', 'label' => '13:00'], ['value' => '14:00:00', 'label' => '14:00'],
-            ['value' => '15:00:00', 'label' => '15:00'], ['value' => '16:00:00', 'label' => '16:00'],
-            ['value' => '17:00:00', 'label' => '17:00'], ['value' => '18:00:00', 'label' => '18:00'],
-            ['value' => '19:00:00', 'label' => '19:00'], ['value' => '20:00:00', 'label' => '20:00'],
-            ['value' => '21:00:00', 'label' => '21:00'], ['value' => '22:00:00', 'label' => '22:00'],
-            ['value' => '23:00:00', 'label' => '23:00'],
         ];
 
-        return $option;
+        for ($hour = 0; $hour < 24; $hour++) {
+            $options = array_merge($options, $this->addHour($hour));
+        }
+
+        return $options;
+    }
+
+    /**
+     * @param $hour
+     *
+     * @return array
+     */
+    private function addHour($hour)
+    {
+        $hour = str_pad($hour, 2, '0', STR_PAD_LEFT);
+
+        $options = [];
+        if ($hour !== '00') {
+            // @codingStandardsIgnoreLine
+            $options[] = ['value' => $hour . ':00:00', 'label' => __($hour . ':00')];
+        }
+
+        // @codingStandardsIgnoreStart
+        $options[] = ['value' => $hour . ':15:00', 'label' => __($hour . ':15')];
+        $options[] = ['value' => $hour . ':30:00', 'label' => __($hour . ':30')];
+        $options[] = ['value' => $hour . ':45:00', 'label' => __($hour . ':45')];
+        // @codingStandardsIgnoreEnd
+
+        return $options;
     }
 }

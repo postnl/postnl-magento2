@@ -54,8 +54,8 @@ FAQ,FAQ
 "Support by email:","Support by email:"
 Documentation,Documentation
 "A list of documents regarding the extension.","A list of documents regarding the extension."
-"Download a PDF format of the manual. Currently the manual is only available in Dutch.","Download a PDF format of the manual. Currently the manual is only available in Dutch."
-"Installation and Configuration Manual PostNL.pdf","Installation and Configuration Manual PostNL.pdf"
+"View the user manual. Currently the manual is only available in Dutch.","View the user manual. Currently the manual is only available in Dutch."
+"User manual","User manual"
 "View the complete release notes of the extension. Currently the release notes is only available in Dutch.","View the complete release notes of the extension. Currently the release notes is only available in Dutch."
 "Full Release Notes","Full Release Notes"
 "Shipping Address","Shipping Address"
@@ -131,3 +131,5 @@ Friday,Friday
 Saturday,Saturday
 Sunday,Sunday
 Extension version,Extension version
+"For an A4 example, <a href=""%1"" target=""_blank"">click here</a>.","For an A4 example, <a href=""%1"" target=""_blank"">click here</a>."
+"For an A6 example, <a href=""%1"" target=""_blank"">click here</a>.","For an A6 example, <a href=""%1"" target=""_blank"">click here</a>."

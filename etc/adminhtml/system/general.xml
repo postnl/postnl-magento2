@@ -41,9 +41,8 @@
     <!--General configuration section-->
     <group id="generalconfiguration" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>General configuration and account information</label>
-        <frontend_model>TIG\PostNL\Block\Config\Form\Field\Fieldset</frontend_model>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-section</fieldset_css>
-
 
         <group id="extension_status" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Extension status</label>
