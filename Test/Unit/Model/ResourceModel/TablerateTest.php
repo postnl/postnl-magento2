@@ -167,13 +167,9 @@ class TablerateTest extends TestCase
                 null,
                 null
             ],
-            'localizedException' => [
-                '\Magento\Framework\Exception\LocalizedException',
-                'Unable to import data'
-            ],
             'exception' => [
-                '\Exception',
-                'Something went wrong while importing table rates.'
+                '\TIG\PostNL\Exception',
+                '[POSTNL-0251] An error occurred while importing the table rates.'
             ],
         ];
     }

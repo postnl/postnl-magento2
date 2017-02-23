@@ -31,8 +31,8 @@
  */
 namespace TIG\PostNL\Unit\Services\Import\Csv;
 
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem\File\ReadInterface;
+use TIG\PostNL\Exception;
 use TIG\PostNL\Services\Import\Csv\FileParser;
 use TIG\PostNL\Services\Import\Csv\ParserErrors;
 use TIG\PostNL\Services\Import\Csv\RowParser;
@@ -234,11 +234,11 @@ class FileParserTest extends TestCase
             ],
             'incomplete_headers' => [
                 ['Header_6', 'Header_7'],
-                'Please correct Table Rates File Format.'
+                '[POSTNL-0246] Invalid PostNL Table Rates File Format'
             ],
             'no_headers' => [
                 false,
-                'Please correct Table Rates File Format.'
+                '[POSTNL-0246] Invalid PostNL Table Rates File Format'
             ],
         ];
     }
@@ -307,7 +307,7 @@ class FileParserTest extends TestCase
                 ],
                 ['abc-def-ghi-12.34' => 3],
                 5,
-                'Row #5 is a dupplicate of row #3'
+                '[POSTNL-0250] Row #5 is a dupplicate of row #3'
             ],
         ];
     }
@@ -318,7 +318,7 @@ class FileParserTest extends TestCase
      * @param $rowCount
      * @param $expected
      *
-     * @throws LocalizedException
+     * @throws Exception
      *
      * @dataProvider validateDuplicatesProvider
      */
@@ -332,16 +332,16 @@ class FileParserTest extends TestCase
             $result = $this->getProperty('validatedRows', $instance);
 
             $this->assertEquals($expected, $result);
-        } catch (LocalizedException $exception) {
+        } catch (Exception $exception) {
             $this->validateCaughtException($exception, $expected);
         }
     }
 
     /**
-     * @param LocalizedException $exception
-     * @param mixed              $expected
+     * @param Exception $exception
+     * @param mixed     $expected
      *
-     * @throws LocalizedException
+     * @throws Exception
      */
     private function validateCaughtException($exception, $expected)
     {

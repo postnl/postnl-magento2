@@ -35,6 +35,8 @@ use Magento\Directory\Model\CountryFactory;
 use Magento\Directory\Model\RegionFactory;
 use Magento\Framework\Exception\LocalizedException;
 
+use TIG\PostNL\Exception as PostnlException;
+
 /**
  * Class RowParser
  *
@@ -83,7 +85,7 @@ class RowParser
     public function parseRow($rowData, $rowCount, $websiteId, $conditionName, $conditionFullName)
     {
         if (count($rowData) < 5) { // @codingStandardsIgnoreLine
-            throw new LocalizedException(__('Please correct Table Rates format in the Row #%1.', $rowCount));
+            throw new PostnlException(__('Invalid PostNL Table Rates File Format in Row #%1', $rowCount), 'POSTNL-0247');
         }
 
         $countryId = $this->getCountryId($rowData, $rowCount);
@@ -180,9 +182,9 @@ class RowParser
         $formattedConditionValue = $this->parseToDecimal($conditionValue);
 
         if ($formattedConditionValue === false) {
-            throw new LocalizedException(
-                __('Please correct %1 "%2" in the Row #%3.', $conditionFullName, $conditionValue, $rowCount)
-            );
+            $message = __('Invalid %1 "%2" supplied in row #%3', $conditionFullName, $conditionValue, $rowCount);
+
+            throw new PostnlException($message, 'POSTNL-0248');
         }
 
         return $formattedConditionValue;
@@ -201,7 +203,9 @@ class RowParser
         $formatedPrice = $this->parseToDecimal($price);
 
         if ($formatedPrice === false) {
-            throw new LocalizedException(__('Please correct Shipping Price "%1" in the Row #%2.', $price, $rowCount));
+            $message = __('Invalid Shipping Price "%1" supplied in row #%2', $price, $rowCount);
+
+            throw new PostnlException($message, 'POSTNL-249');
         }
 
         return $formatedPrice;
@@ -217,9 +221,8 @@ class RowParser
      */
     private function getColumnValue($column, $row, $rowCount)
     {
-        if (!array_key_exists($column, $row)) {
-            // @codingStandardsIgnoreLine
-            throw new LocalizedException(__('Please correct Table Rates format in the Row #%1.', $rowCount));
+        if (!array_key_exists($column, $row)) { // @codingStandardsIgnoreLine
+            throw new PostnlException(__('Invalid PostNL Table Rates File Format in Row #%1', $rowCount), 'POSTNL-0247');
         }
 
         return trim($row[$column]);

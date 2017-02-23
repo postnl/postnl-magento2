@@ -149,7 +149,7 @@ class CsvTest extends TestCase
 
         $instance = $this->getInstance(['fileParser' => $fileParserMock]);
 
-        $expectedErrorMessage = 'We couldn\'t import this file because of these errors: ';
+        $expectedErrorMessage = '[POSTNL-0196] File has not been imported. See the following list of errors: ';
         $expectedErrorMessage .= implode(" \n", $errorMessages);
 
         try {

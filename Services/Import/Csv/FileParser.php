@@ -34,6 +34,8 @@ namespace TIG\PostNL\Services\Import\Csv;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem\File\ReadInterface;
 
+use TIG\PostNL\Exception as PostnlException;
+
 /**
  * Class FileParser
  *
@@ -146,7 +148,7 @@ class FileParser
                 ->parseRow($csvRow, $currentRowCount, $websiteId, $conditionName, $conditionFullName);
 
             $this->validateDuplicates($rowData, $currentRowCount);
-        } catch (LocalizedException $exception) {
+        } catch (PostnlException $exception) {
             $this->parserErrors->addError($exception->getMessage());
         }
 
@@ -186,7 +188,7 @@ class FileParser
             $headers = $file->readCsv();
 
             $this->validateHeaderFormat($headers);
-        } catch (LocalizedException $exception) {
+        } catch (PostnlException $exception) {
             $this->parserErrors->addError($exception->getMessage());
         }
     }
@@ -200,7 +202,7 @@ class FileParser
     {
         if ($headers === false || count($headers) < 5) {
             // @codingStandardsIgnoreLine
-            throw new LocalizedException(__('Please correct Table Rates File Format.'));
+            throw new PostnlException(__('Invalid PostNL Table Rates File Format'), 'POSTNL-0246');
         }
     }
 
@@ -220,8 +222,9 @@ class FileParser
         $rowKey = $destinationCountry . '-' . $destinationRegion . '-' . $destinationZip . '-' . $conditionValue;
 
         if (array_key_exists($rowKey, $this->validatedRows)) {
-            throw new LocalizedException(
-                __('Row #%1 is a dupplicate of row #%2', $currentRowCount, $this->validatedRows[$rowKey])
+            throw new PostnlException(
+                __('Row #%1 is a dupplicate of row #%2', $currentRowCount, $this->validatedRows[$rowKey]),
+                'POSTNL-0250'
             );
         }
 

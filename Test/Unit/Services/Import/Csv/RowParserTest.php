@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Unit\Services\Import\Csv;
 
-use Magento\Framework\Exception\LocalizedException;
+use \TIG\PostNL\Exception;
 use TIG\PostNL\Services\Import\Csv\RowParser;
 use TIG\PostNL\Test\TestCase;
 
@@ -62,7 +62,7 @@ class RowParserTest extends TestCase
                 9,
                 0,
                 'package_value',
-                'Please correct Table Rates format in the Row #9.'
+                '[POSTNL-0247] Invalid PostNL Table Rates File Format in Row #9'
             ]
         ];
     }
@@ -96,7 +96,7 @@ class RowParserTest extends TestCase
             $this->assertArrayHasKey('dest_zip', $result);
 
             $this->assertNull($expectedException);
-        } catch (LocalizedException $exception) {
+        } catch (Exception $exception) {
             $this->validateCaughtException($exception, $expectedException);
         }
     }
@@ -115,7 +115,7 @@ class RowParserTest extends TestCase
             'invalid_column' => [
                 [3 => 'incorrect column'],
                 4,
-                'Please correct Table Rates format in the Row #4.'
+                '[POSTNL-0247] Invalid PostNL Table Rates File Format in Row #4'
             ]
         ];
     }
@@ -125,7 +125,7 @@ class RowParserTest extends TestCase
      * @param $rowCount
      * @param $expected
      *
-     * @throws LocalizedException
+     * @throws Exception
      *
      * @dataProvider getCountryIdProvider
      */
@@ -137,7 +137,7 @@ class RowParserTest extends TestCase
             $result = $this->invokeArgs('getCountryId', [$rowData, $rowCount], $instance);
 
             $this->assertEquals($expected, $result);
-        } catch (LocalizedException $exception) {
+        } catch (Exception $exception) {
             $this->validateCaughtException($exception, $expected);
         }
     }
@@ -164,7 +164,7 @@ class RowParserTest extends TestCase
                 [5 => 'incorrect column'],
                 6,
                 7,
-                'Please correct Table Rates format in the Row #7.'
+                '[POSTNL-0247] Invalid PostNL Table Rates File Format in Row #7'
             ]
         ];
     }
@@ -175,7 +175,7 @@ class RowParserTest extends TestCase
      * @param $rowCount
      * @param $expected
      *
-     * @throws LocalizedException
+     * @throws Exception
      *
      * @dataProvider getRegionIdProvider
      */
@@ -187,7 +187,7 @@ class RowParserTest extends TestCase
             $result = $this->invokeArgs('getRegionId', [$rowData, $countryId, $rowCount], $instance);
 
             $this->assertEquals($expected, $result);
-        } catch (LocalizedException $exception) {
+        } catch (Exception $exception) {
             $this->validateCaughtException($exception, $expected);
         }
     }
@@ -211,7 +211,7 @@ class RowParserTest extends TestCase
             'invalid_column' => [
                 [3 => 'incorrect column'],
                 9,
-                'Please correct Table Rates format in the Row #9.'
+                '[POSTNL-0247] Invalid PostNL Table Rates File Format in Row #9'
             ]
         ];
     }
@@ -221,7 +221,7 @@ class RowParserTest extends TestCase
      * @param $rowCount
      * @param $expected
      *
-     * @throws LocalizedException
+     * @throws Exception
      *
      * @dataProvider getZipCodeProvider
      */
@@ -233,7 +233,7 @@ class RowParserTest extends TestCase
             $result = $this->invokeArgs('getZipcode', [$rowData, $rowCount], $instance);
 
             $this->assertEquals($expected, $result);
-        } catch (LocalizedException $exception) {
+        } catch (Exception $exception) {
             $this->validateCaughtException($exception, $expected);
         }
     }
@@ -254,13 +254,13 @@ class RowParserTest extends TestCase
                 [3 => 'non-integer'],
                 2,
                 'Order Subtotal (and above)',
-                'Please correct Order Subtotal (and above) "non-integer" in the Row #2.',
+                '[POSTNL-0248] Invalid Order Subtotal (and above) "non-integer" supplied in row #2',
             ],
             'invalid_column' => [
                 [1 => 'incorrect column'],
                 8,
                 null,
-                'Please correct Table Rates format in the Row #8.'
+                '[POSTNL-0247] Invalid PostNL Table Rates File Format in Row #8'
             ]
         ];
     }
@@ -271,7 +271,7 @@ class RowParserTest extends TestCase
      * @param $conditionFullName
      * @param $expected
      *
-     * @throws LocalizedException
+     * @throws Exception
      *
      * @dataProvider getConditionValueProvider
      */
@@ -284,7 +284,7 @@ class RowParserTest extends TestCase
 
             $this->assertNotInternalType('string', $expected);
             $this->assertEquals($expected, $result);
-        } catch (LocalizedException $exception) {
+        } catch (Exception $exception) {
             $this->validateCaughtException($exception, $expected);
         }
     }
@@ -303,12 +303,12 @@ class RowParserTest extends TestCase
             'invalid_price' => [
                 [4 => 'non-integer value'],
                 7,
-                'Please correct Shipping Price "non-integer value" in the Row #7.'
+                '[POSTNL-249] Invalid Shipping Price "non-integer value" supplied in row #7'
             ],
             'invalid_column' => [
                 [5 => 'non-integer value'],
                 4,
-                'Please correct Table Rates format in the Row #4.'
+                '[POSTNL-0247] Invalid PostNL Table Rates File Format in Row #4'
             ]
         ];
     }
@@ -318,7 +318,7 @@ class RowParserTest extends TestCase
      * @param $rowCount
      * @param $expected
      *
-     * @throws LocalizedException
+     * @throws Exception
      *
      * @dataProvider getPriceProvider
      */
@@ -331,16 +331,16 @@ class RowParserTest extends TestCase
 
             $this->assertNotInternalType('string', $expected);
             $this->assertEquals($expected, $result);
-        } catch (LocalizedException $exception) {
+        } catch (Exception $exception) {
             $this->validateCaughtException($exception, $expected);
         }
     }
 
     /**
-     * @param LocalizedException $exception
-     * @param mixed              $expected
+     * @param Exception $exception
+     * @param mixed     $expected
      *
-     * @throws LocalizedException
+     * @throws Exception
      */
     private function validateCaughtException($exception, $expected)
     {

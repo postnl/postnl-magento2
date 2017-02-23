@@ -50,6 +50,8 @@ use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
+use TIG\PostNL\Exception as PostnlException;
+
 /**
  * Class Tablerate
  *
@@ -155,7 +157,7 @@ class Tablerate extends AbstractDb
             $this->importData($importData);
         } catch (\Exception $exception) {
             $this->logger->critical($exception);
-            throw new LocalizedException(__('Something went wrong while importing table rates.'));
+            throw new PostnlException(__('An error occurred while importing the table rates.'), 'POSTNL-0251');
         }
     }
 
@@ -220,13 +222,10 @@ class Tablerate extends AbstractDb
 
         try {
             $this->getConnection()->insertArray($this->getMainTable(), $columns, $records);
-        } catch (LocalizedException $exception) {
-            $connection->rollback();
-            throw new LocalizedException(__('Unable to import data'), $exception);
         } catch (\Exception $exception) {
             $connection->rollback();
             $this->logger->critical($exception);
-            throw new LocalizedException(__('Something went wrong while importing table rates.'));
+            throw new PostnlException(__('An error occurred while importing the table rates.'), 'POSTNL-0251');
         }
 
         $connection->commit();

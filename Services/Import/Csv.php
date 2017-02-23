@@ -42,6 +42,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\DirectoryList;
 
+use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Model\Carrier\Tablerate;
 use TIG\PostNL\Services\Import\Csv\FileParser;
 
@@ -133,11 +134,11 @@ class Csv
         if ($this->fileParser->hasErrors()) {
             // @codingStandardsIgnoreLine
             $error = __(
-                'We couldn\'t import this file because of these errors: %1',
+                'File has not been imported. See the following list of errors: %1',
                 implode(" \n", $this->fileParser->getErrors())
             );
 
-            throw new LocalizedException($error);
+            throw new PostnlException($error, 'POSTNL-0196');
         }
     }
 }
