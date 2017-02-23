@@ -1,23 +1,16 @@
 <?php
 /**
- *                  ___________       __            __
- *                  \__    ___/____ _/  |_ _____   |  |
- *                    |    |  /  _ \\   __\\__  \  |  |
- *                    |    | |  |_| ||  |   / __ \_|  |__
- *                    |____|  \____/ |__|  (____  /|____/
- *                                              \/
- *          ___          __                                   __
- *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
- *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
- *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
- *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
- *                  \/                           \/
- *                  ________
- *                 /  _____/_______   ____   __ __ ______
- *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
- *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
- *                 \______  /|__|    \____/ |____/ |   __/
- *                        \/                       |__|
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
  *
  * NOTICE OF LICENSE
  *
@@ -25,35 +18,35 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Config\Carrier;
+namespace TIG\PostNL\Test\Unit\Config\Csv;
 
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate;
+use TIG\PostNL\Config\Csv\Import;
 use TIG\PostNL\Model\ResourceModel\Tablerate as TablerateResource;
 use TIG\PostNL\Model\ResourceModel\TablerateFactory;
 use TIG\PostNL\Services\Import\Csv;
 use TIG\PostNL\Test\TestCase;
 
 /**
- * Class TablerateTest
+ * Class ImportTest
  *
- * @package TIG\PostNL\Test\Unit\Block\Adminhtml\Config\Carrier
+ * @package TIG\PostNL\Test\Unit\Config\Csv
  */
-class TablerateTest extends TestCase
+class ImportTest extends TestCase
 {
-    protected $instanceClass = Tablerate::class;
+    protected $instanceClass = Import::class;
 
     public function testAfterSave()
     {
@@ -70,7 +63,7 @@ class TablerateTest extends TestCase
         $instance = $this->getInstance(['tablerateFactory' => $tablerateFactoryMock]);
         $result = $instance->afterSave();
 
-        $this->assertInstanceOf(Tablerate::class, $result);
+        $this->assertInstanceOf(Import::class, $result);
     }
 
     /**

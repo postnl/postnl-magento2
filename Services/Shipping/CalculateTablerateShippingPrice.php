@@ -67,6 +67,12 @@ class CalculateTablerateShippingPrice
         $this->getFreeBoxes = $getFreeBoxes;
     }
 
+    /**
+     * @param RateRequest $request
+     * @param             $includeVirtualPrice
+     *
+     * @return array|bool
+     */
     public function getTableratePrice(RateRequest $request, $includeVirtualPrice)
     {
         $allRequestItems = $request->getAllItems();

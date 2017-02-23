@@ -70,13 +70,7 @@ class FileParser
      */
     public function hasErrors()
     {
-        $hasErrors = false;
-
-        if ($this->parserErrors->getErrorCount()) {
-            $hasErrors = true;
-        }
-
-        return $hasErrors;
+        return (bool)$this->parserErrors->getErrorCount();
     }
 
     /**

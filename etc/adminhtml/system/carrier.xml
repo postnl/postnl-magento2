@@ -78,7 +78,7 @@
             </field>
             <field id="import" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Import" sortOrder="30" showInDefault="0" showInWebsite="1" showInStore="0">
                 <label>Import Rates</label>
-                <backend_model>TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate</backend_model>
+                <backend_model>TIG\PostNL\Config\Csv\Import</backend_model>
                 <depends>
                     <field id="rate_type">table</field>
                 </depends>
