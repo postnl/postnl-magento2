@@ -38,16 +38,16 @@
  */
 namespace TIG\PostNL\Service\Wrapper;
 
-use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote as MagentoQuote;
 
 interface QuoteInterface
 {
     /**
-     * @param Quote $quote
+     * @param MagentoQuote $quote
      *
      * @return mixed
      */
-    public function setQuote(Quote $quote);
+    public function setQuote(MagentoQuote $quote);
 
     /**
      * @return Quote
@@ -60,12 +60,12 @@ interface QuoteInterface
     public function getQuoteId();
 
     /**
-     * @return Quote\Address
+     * @return MagentoQuote\Address
      */
     public function getShippingAddress();
 
     /**
-     * @return Quote\Address
+     * @return MagentoQuote\Address
      */
     public function getBillingAddress();
 }

@@ -101,12 +101,12 @@ abstract class AbstractDeliveryOptions extends Action
     /**
      * Create json response
      *
-     * @param string $response
+     * @param string $data
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
     //@codingStandardsIgnoreLine
-    protected function jsonResponse($response = '', $code = null)
+    protected function jsonResponse($data = '', $code = null)
     {
         $response = $this->getResponse();
 
@@ -115,7 +115,7 @@ abstract class AbstractDeliveryOptions extends Action
         }
 
         return $response->representJson(
-            $this->jsonHelper->jsonEncode($response)
+            $this->jsonHelper->jsonEncode($data)
         );
     }
 

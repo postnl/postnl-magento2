@@ -43,6 +43,9 @@ define(['jquery'], function ($) {
 
         this.optionLabel = '';
 
+        /**
+         * Make sure the label is translated, and the translation is available.
+         */
         var option = this.option.toLowerCase();
         if (option == 'daytime') {
             this.optionLabel = $.mage.__('Daytime');
@@ -50,6 +53,28 @@ define(['jquery'], function ($) {
             this.optionLabel = $.mage.__('Evening');
         } else if (option == 'sunday') {
             this.optionLabel = $.mage.__('Sunday');
+        }
+
+        /**
+         * Check if there is a fee available.
+         */
+        this.hasFee = function () {
+            return this.getFee() !== '';
+        };
+
+        /**
+         * Calculate the fee for this option
+         */
+        this.getFee = function () {
+            var option = this.option.toLowerCase();
+
+            if (option == 'evening') {
+                return window.checkoutConfig.shipping.postnl.eveningdelivery_fee;
+            }
+
+            if (option == 'sunday') {
+                return window.checkoutConfig.shipping.postnl.sundaydelivery_fee;
+            }
         }
     };
 });

@@ -47,17 +47,7 @@ use TIG\PostNL\Service\Order\CurrentPostNLOrder;
 class Shipping extends Quote\Address\Total\Shipping
 {
     /**
-     * @var PriceCurrencyInterface
-     */
-    protected $priceCurrency;
-
-    /**
-     * @var FreeShippingInterface
-     */
-    protected $freeShipping;
-
-    /**
-     * @var GetCurrentPostNLOrder
+     * @var CurrentPostNLOrder
      */
     private $currentPostNLOrder;
 
@@ -111,6 +101,7 @@ class Shipping extends Quote\Address\Total\Shipping
      */
     public function getLabel()
     {
+        // @codingStandardsIgnoreLine
         return __('PostNL');
     }
 

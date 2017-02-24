@@ -40,6 +40,7 @@
 namespace TIG\PostNL\Helper\DeliveryOptions;
 
 use TIG\PostNL\Exception as PostnlException;
+use TIG\PostNL\Service\Order\FeeCalculator;
 
 /**
  * Class OrderParams
@@ -74,6 +75,19 @@ class OrderParams
             'pickup' => true, 'delivery' => false
         ]
     ];
+    /**
+     * @var FeeCalculator
+     */
+    private $feeCalculator;
+
+    /**
+     * @param FeeCalculator $feeCalculator
+     */
+    public function __construct(
+        FeeCalculator $feeCalculator
+    ) {
+        $this->feeCalculator = $feeCalculator;
+    }
 
     /**
      * @param $params
@@ -88,6 +102,8 @@ class OrderParams
 
         if (!empty($requiredOrderParams)) {
             throw new PostnlException(
+            // @codingStandardsIgnoreLine
+            // @todo POSTNL-XXX toevoegen
             // @codingStandardsIgnoreLine
                 __('Missing required parameters: %1', implode(', ',$requiredOrderParams))
             );
@@ -149,7 +165,7 @@ class OrderParams
             'pg_retail_network_id'         => isset($params['RetailNetworkID']) ? $params['RetailNetworkID'] : '',
             'pg_address'                   => $this->addExtraToAddress($params),
             'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : '',
-            'fee'                          => isset($params['fee']) ? $params['fee'] : '',
+            'fee'                          => $this->feeCalculator->get($params),
         ];
     }
 

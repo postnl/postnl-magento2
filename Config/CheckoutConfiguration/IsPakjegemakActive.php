@@ -36,61 +36,31 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment;
+namespace TIG\PostNL\Config\CheckoutConfiguration;
 
-use TIG\PostNL\Service\Wrapper;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
-class FeeHandler
+class IsPakjegemakActive extends AbstractCheckoutConfiguration
 {
     /**
-     * @var Wrapper\QuoteInterface
+     * @var ShippingOptions
      */
-    private $quoteWrapper;
-    /**
-     * @var Wrapper\CheckoutSessionInterface
-     */
-    private $checkoutSession;
+    private $shippingOptions;
 
     /**
-     * @param Wrapper\QuoteInterface           $quoteWrapper
-     * @param Wrapper\CheckoutSessionInterface $checkoutSession
+     * @param ShippingOptions      $shippingOptions
      */
     public function __construct(
-        Wrapper\QuoteInterface $quoteWrapper,
-        Wrapper\CheckoutSessionInterface $checkoutSession
+        ShippingOptions $shippingOptions
     ) {
-        $this->quoteWrapper = $quoteWrapper;
-        $this->checkoutSession = $checkoutSession;
+        $this->shippingOptions = $shippingOptions;
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @return bool
      */
-    public function add($total)
+    public function getValue()
     {
-        $shippingAmount = $this->getShippingAmount();
-
-        if ($shippingAmount === null) {
-            return;
-        }
-
-        $total->setShippingAmount($shippingAmount);
-        $total->setBaseShippingAmount($shippingAmount);
-        $total->setShippingInclTax($shippingAmount);
-        $total->setBaseShippingInclTax($shippingAmount);
-    }
-
-    private function getShippingAmount()
-    {
-        return 13.37;
-
-        $baseAmount = $this->checkoutSession->getValue('tig_postnl_regular_base_amount');
-        $feeAmount = $this->checkoutSession->getValue('tig_postnl_regular_fee_amount');
-
-        if ($baseAmount === null || $feeAmount === null) {
-            return null;
-        }
-
-        return $baseAmount + $feeAmount;
+        return $this->shippingOptions->isPakjegemakActive();
     }
 }

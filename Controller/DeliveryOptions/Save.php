@@ -127,9 +127,9 @@ class Save extends AbstractDeliveryOptions
      */
     private function saveDeliveryOption($params)
     {
-        $params      = $this->addSessionDataToParams($params);
-        $params      = $this->orderParams->get($params);
-        $postnlOrder = $this->getPostNLOrderByQuoteId($params['quote_id']);
+        $params        = $this->addSessionDataToParams($params);
+        $params        = $this->orderParams->get($params);
+        $postnlOrder   = $this->getPostNLOrderByQuoteId($params['quote_id']);
 
         foreach ($params as $key => $value) {
             $postnlOrder->setData($key, $value);
