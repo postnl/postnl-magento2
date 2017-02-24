@@ -104,4 +104,9 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <!-- Add the PostNL fee to the shipping total -->
+    <type name="\Magento\Quote\Model\Quote\Address\Total\Shipping">
+        <plugin name="TIG_PostNL_QuoteAddressTotalShipping" type="\TIG\PostNL\Plugin\Quote\Address\Total\Shipping" sortOrder="1"/>
+    </type>
 </config>

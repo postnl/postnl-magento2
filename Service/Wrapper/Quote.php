@@ -52,6 +52,9 @@ class Quote implements QuoteInterface
      */
     private $quote;
 
+    /**
+     * @param CheckoutSession $checkoutSession
+     */
     public function __construct(
         CheckoutSession $checkoutSession
     ) {

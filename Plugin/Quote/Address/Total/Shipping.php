@@ -1,23 +1,16 @@
 <?php
 /**
- *                  ___________       __            __
- *                  \__    ___/____ _/  |_ _____   |  |
- *                    |    |  /  _ \\   __\\__  \  |  |
- *                    |    | |  |_| ||  |   / __ \_|  |__
- *                    |____|  \____/ |__|  (____  /|____/
- *                                              \/
- *          ___          __                                   __
- *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
- *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
- *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
- *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
- *                  \/                           \/
- *                  ________
- *                 /  _____/_______   ____   __ __ ______
- *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
- *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
- *                 \______  /|__|    \____/ |____/ |   __/
- *                        \/                       |__|
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
  *
  * NOTICE OF LICENSE
  *
@@ -25,61 +18,67 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Model\Total;
+namespace TIG\PostNL\Plugin\Quote\Address\Total;
 
 use Magento\Framework\Pricing\PriceCurrencyInterface;
+use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface;
 use Magento\Quote\Model\Quote;
-use Magento\Quote\Model\Quote\Address\FreeShippingInterface;
+use Magento\Quote\Model\Quote\Address\Total\Shipping as TotalShipping;
 use TIG\PostNL\Service\Order\CurrentPostNLOrder;
 
-class Shipping extends Quote\Address\Total\Shipping
+class Shipping
 {
+    /**
+     * @var PriceCurrencyInterface
+     */
+    protected $priceCurrency;
+
     /**
      * @var CurrentPostNLOrder
      */
     private $currentPostNLOrder;
 
     /**
-     * @param PriceCurrencyInterface $priceCurrency
-     * @param FreeShippingInterface  $freeShipping
      * @param CurrentPostNLOrder     $currentPostNLOrder
+     * @param PriceCurrencyInterface $priceCurrency
      */
     public function __construct(
-        PriceCurrencyInterface $priceCurrency,
-        FreeShippingInterface $freeShipping,
-        CurrentPostNLOrder $currentPostNLOrder
+        CurrentPostNLOrder $currentPostNLOrder,
+        PriceCurrencyInterface $priceCurrency
     ) {
-        $this->setCode('shipping');
-        $this->priceCurrency = $priceCurrency;
-        $this->freeShipping = $freeShipping;
         $this->currentPostNLOrder = $currentPostNLOrder;
+        $this->priceCurrency = $priceCurrency;
     }
 
     /**
+     * @param TotalShipping               $subject
+     * @param callable                    $proceed
      * @param Quote                       $quote
      * @param ShippingAssignmentInterface $shippingAssignment
      * @param Quote\Address\Total         $total
      *
      * @return $this
      */
-    public function collect(
+    public function aroundCollect(
+        TotalShipping $subject,
+        callable $proceed,
         Quote $quote,
         ShippingAssignmentInterface $shippingAssignment,
         Quote\Address\Total $total
     ) {
-        parent::collect($quote, $shippingAssignment, $total);
+        $proceed($quote, $shippingAssignment, $total);
 
         $shipping = $shippingAssignment->getShipping();
         $address = $shipping->getAddress();
@@ -90,24 +89,11 @@ class Shipping extends Quote\Address\Total\Shipping
         }
 
         $this->processTotal($quote, $total, $rate, $address);
-
-        return $this;
     }
 
     /**
-     * Get Shipping label
-     *
-     * @return \Magento\Framework\Phrase
-     */
-    public function getLabel()
-    {
-        // @codingStandardsIgnoreLine
-        return __('PostNL');
-    }
-
-    /**
-     * @param                                    $method
-     * @param \Magento\Quote\Model\Quote\Address $address
+     * @param                  $method
+     * @param AddressInterface $address
      *
      * @return $this
      */
@@ -132,7 +118,7 @@ class Shipping extends Quote\Address\Total\Shipping
      * @param Quote               $quote
      * @param Quote\Address\Total $total
      * @param                     $rate
-     * @param Quote\Address       $address
+     * @param AddressInterface    $address
      */
     private function processTotal(Quote $quote, Quote\Address\Total $total, $rate, $address)
     {
@@ -163,5 +149,13 @@ class Shipping extends Quote\Address\Total\Shipping
         }
 
         return $order->getFee();
+    }
+
+    /**
+     * @return string
+     */
+    private function getCode()
+    {
+        return 'shipping';
     }
 }
