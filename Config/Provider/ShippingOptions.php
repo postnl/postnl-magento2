@@ -45,16 +45,18 @@ namespace TIG\PostNL\Config\Provider;
  */
 class ShippingOptions extends AbstractConfigProvider
 {
-    const XPATH_SHIPPING_OPTION_ACITVE              = 'tig_postnl/shippingoptions/shippingoptions_active';
-    const XPATH_SHIPPING_OPTION_STOCK               = 'tig_postnl/shippingoptions/stockoptions';
-    const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE = 'tig_postnl/shippingoptions/deliverydays_active';
-    const XPATH_SHIPPING_OPTION_MAX_DELIVERYDAYS    = 'tig_postnl/shippingoptions/max_deliverydays';
-    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE   = 'tig_postnl/shippingoptions/pakjegemak_active';
-    const XPATH_SHIPPING_OPTION_EVENING_ACTIVE      = 'tig_postnl/shippingoptions/eveningdelivery_active';
-    const XPATH_SHIPPING_OPTION_EVENING_FEE         = 'tig_postnl/shippingoptions/eveningdelivery_fee';
-    const XPATH_SHIPPING_OPTION_SUNDAY_ACTIVE       = 'tig_postnl/shippingoptions/sundaydelivery_active';
-    const XPATH_SHIPPING_OPTION_SUNDAY_FEE          = 'tig_postnl/shippingoptions/sundaydelivery_fee';
-    const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE  = 'tig_postnl/shippingoptions/send_track_and_trace_email';
+    const XPATH_SHIPPING_OPTION_ACITVE                    = 'tig_postnl/shippingoptions/shippingoptions_active';
+    const XPATH_SHIPPING_OPTION_STOCK                     = 'tig_postnl/shippingoptions/stockoptions';
+    const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE       = 'tig_postnl/shippingoptions/deliverydays_active';
+    const XPATH_SHIPPING_OPTION_MAX_DELIVERYDAYS          = 'tig_postnl/shippingoptions/max_deliverydays';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE         = 'tig_postnl/shippingoptions/pakjegemak_active';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_ACTIVE = 'tig_postnl/shippingoptions/pakjegemak_express_active';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_FEE    = 'tig_postnl/shippingoptions/pakjegemak_express_fee';
+    const XPATH_SHIPPING_OPTION_EVENING_ACTIVE            = 'tig_postnl/shippingoptions/eveningdelivery_active';
+    const XPATH_SHIPPING_OPTION_EVENING_FEE               = 'tig_postnl/shippingoptions/eveningdelivery_fee';
+    const XPATH_SHIPPING_OPTION_SUNDAY_ACTIVE             = 'tig_postnl/shippingoptions/sundaydelivery_active';
+    const XPATH_SHIPPING_OPTION_SUNDAY_FEE                = 'tig_postnl/shippingoptions/sundaydelivery_fee';
+    const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE        = 'tig_postnl/shippingoptions/send_track_and_trace_email';
 
     private $defaultMaxDeliverydays = '5';
 
@@ -100,6 +102,30 @@ class ShippingOptions extends AbstractConfigProvider
     public function isPakjegemakActive()
     {
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE);
+    }
+
+    /**
+     * @return mixed|bool
+     */
+    public function isPakjegemakExpressActive()
+    {
+        if (!$this->isPakjegemakActive()) {
+            return false;
+        }
+
+        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_ACTIVE);
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getPakjegemakExpressFee()
+    {
+        if (!$this->isPakjegemakActive()) {
+            return '0';
+        }
+
+        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_FEE);
     }
 
     /**
