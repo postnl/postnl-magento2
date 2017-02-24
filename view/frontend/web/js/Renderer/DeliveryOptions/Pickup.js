@@ -241,7 +241,19 @@ define([
          */
         toggle: function ($data) {
             $data.expanded(!$data.expanded());
-        }
+        },
+
+        /**
+         *
+         * @param $deliveryOptions
+         * @returns {boolean}
+         */
+        hasPGE: function ($deliveryOptions) {
+            var pgeActive = window.checkoutConfig.shipping.postnl.pakjegemak_express_active;
+            var pgeInDeliveryOptions = ($deliveryOptions['string'].indexOf('PGE') >= '0');
+
+            return pgeActive && pgeInDeliveryOptions;
+        },
     });
 
     function Location(data)
