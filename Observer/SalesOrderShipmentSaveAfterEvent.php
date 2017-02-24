@@ -150,7 +150,7 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
             $productCode = $this->productOptions->getDefaultPakjeGemakProductOption();
         }
 
-        $postNLOrder->setData('product_code',$productCode);
+        $postNLOrder->setData('product_code', $productCode);
         $this->orderRepository->save($postNLOrder);
 
         return $productCode;
