@@ -47,6 +47,8 @@ use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Store\Model\StoreManagerInterface;
 
+use TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Grid as PostnlGrid;
+
 /**
  * Class ExportTablerates
  *
@@ -94,8 +96,8 @@ class Export extends AbstractConfig
         $fileName = 'tablerates.csv';
         $viewLayout = $this->_view->getLayout();
 
-        /** @var $gridBlock \TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Grid */
-        $gridBlock = $viewLayout->createBlock('TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Grid');
+        /** @var $gridBlock PostnlGrid */
+        $gridBlock = $viewLayout->createBlock(PostnlGrid::class);
 
         $website = $this->storeManager->getWebsite($this->getRequest()->getParam('website'));
         $conditionName = $website->getConfig('carriers/tig_postnl/condition_name');
