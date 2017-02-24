@@ -141,3 +141,10 @@ Thursday,Donderdag
 Friday,Vrijdag
 Saturday,Zaterdag
 Sunday,Zondag
+"Export CSV","Exporteer CSV"
+"An error occurred while importing the table rates.","Een fout is opgetreden tijdens het importeren van de tabeltarieven."
+"File has not been imported. See the following list of errors: %1","Bestand is niet geïmporteerd. Zie de lijst van foutmeldingen: %1"
+"Invalid PostNL Table Rates File Format","Incorrect PostNL Tabeltarieven bestandsformaat"
+"Invalid PostNL Table Rates File Format in Row #%1","Incorrect PostNL Tabeltarieven bestandsformaat in regel #%1"
+"Row #%1 is a dupplicate of row #%2","Regel #%1 is een duplicaat van regel #%2"
+"Invalid Shipping Price ""%1"" supplied in row #%2","Incorrecte verzendprijs ""%1"" op regel #%2"

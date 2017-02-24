@@ -129,3 +129,10 @@ Thursday,Thursday
 Friday,Friday
 Saturday,Saturday
 Sunday,Sunday
+"Export CSV","Export CSV"
+"An error occurred while importing the table rates.","An error occurred while importing the table rates."
+"File has not been imported. See the following list of errors: %1","File has not been imported. See the following list of errors: %1"
+"Invalid PostNL Table Rates File Format","Invalid PostNL Table Rates File Format"
+"Invalid PostNL Table Rates File Format in Row #%1","Invalid PostNL Table Rates File Format in Row #%1"
+"Row #%1 is a dupplicate of row #%2","Row #%1 is a dupplicate of row #%2"
+"Invalid Shipping Price ""%1"" supplied in row #%2","Invalid Shipping Price ""%1"" supplied in row #%2"
