@@ -37,10 +37,14 @@
  */
 define([
     'Magento_Checkout/js/view/shipping',
-    'TIG_PostNL/js/Helper/State'
+    'TIG_PostNL/js/Helper/State',
+    'Magento_Checkout/js/model/quote',
+    'Magento_Catalog/js/price-utils'
 ], function (
     Shipping,
-    State
+    State,
+    quote,
+    priceUtils
 ) {
     return Shipping.extend({
         canUseDeliveryOption: function () {
@@ -59,6 +63,10 @@ define([
             }
 
             return result;
+        },
+
+        formatPrice: function (price) {
+            return priceUtils.formatPrice(price, quote.getPriceFormat());
         }
     });
 });

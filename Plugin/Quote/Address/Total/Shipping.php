@@ -43,12 +43,17 @@ class Shipping
     /**
      * @var PriceCurrencyInterface
      */
-    protected $priceCurrency;
+    private $priceCurrency;
 
     /**
      * @var CurrentPostNLOrder
      */
     private $currentPostNLOrder;
+
+    /**
+     * @var TotalShipping
+     */
+    private $subject;
 
     /**
      * @param CurrentPostNLOrder     $currentPostNLOrder
@@ -78,6 +83,7 @@ class Shipping
         ShippingAssignmentInterface $shippingAssignment,
         Quote\Address\Total $total
     ) {
+        $this->subject = $subject;
         $proceed($quote, $shippingAssignment, $total);
 
         $shipping = $shippingAssignment->getShipping();
@@ -129,8 +135,8 @@ class Shipping
             $store
         );
 
-        $total->setTotalAmount($this->getCode(), $amountPrice);
-        $total->setBaseTotalAmount($this->getCode(), $rate->getPrice());
+        $total->setTotalAmount($this->subject->getCode(), $amountPrice);
+        $total->setBaseTotalAmount($this->subject->getCode(), $rate->getPrice());
         $address->setShippingDescription($rate->getCarrierTitle());
         $total->setBaseShippingAmount($rate->getPrice());
         $total->setShippingAmount($amountPrice);
@@ -149,13 +155,5 @@ class Shipping
         }
 
         return $order->getFee();
-    }
-
-    /**
-     * @return string
-     */
-    private function getCode()
-    {
-        return 'shipping';
     }
 }

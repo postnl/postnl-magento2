@@ -110,7 +110,7 @@
                                     <!-- /ko -->
 
                                     <!-- ko if: method.fee != null -->
-                                    Fee: <span data-bind="text: method.fee"></span>
+                                    Fee: <span data-bind="text: $parent.formatPrice(method.fee)"></span>
                                     <!-- /ko -->
                                 </td>
 
