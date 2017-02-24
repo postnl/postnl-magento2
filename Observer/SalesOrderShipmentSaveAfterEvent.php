@@ -142,17 +142,15 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
      */
     private function getProductCode($shipment)
     {
-        /** @var MagentoOrder $magentoOrder */
-        $magentoOrder = $shipment->getOrder();
         /** @var PostNLOrder $postNLOrder */
-        $postNLOrder  = $this->orderRepository->getByFieldWithValue('quote_id', $magentoOrder->getQuoteId());
+        $postNLOrder  = $this->orderRepository->getByFieldWithValue('order_id', $shipment->getOrderId());
 
         $productCode = $this->productOptions->getDefaultProductOption();
         if ($postNLOrder->getIsPakjegemak()) {
             $productCode = $this->productOptions->getDefaultPakjeGemakProductOption();
         }
 
-        $postNLOrder->setData(['product_code' => $productCode]);
+        $postNLOrder->setData('product_code',$productCode);
         $this->orderRepository->save($postNLOrder);
 
         return $productCode;
