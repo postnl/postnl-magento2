@@ -36,44 +36,9 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
+namespace TIG\PostNL\Config\CheckoutConfiguration;
 
-use Magento\Checkout\Model\ConfigProviderInterface;
-use TIG\PostNL\Config\CheckoutConfiguration\AbstractCheckoutConfiguration;
-
-class CheckoutConfiguration implements ConfigProviderInterface
+abstract class AbstractCheckoutConfiguration
 {
-    /**
-     * @var array
-     */
-    private $shippingConfiguration;
-
-    /**
-     * @param AbstractCheckoutConfiguration[] $shippingConfiguration
-     */
-    public function __construct(
-        $shippingConfiguration = []
-    ) {
-        $this->shippingConfiguration = $shippingConfiguration;
-    }
-
-    /**
-     * Retrieve assoc array of checkout configuration
-     *
-     * @return array
-     */
-    public function getConfig()
-    {
-        $shipping = [];
-
-        foreach ($this->shippingConfiguration as $key => $configuration) {
-            $shipping[$key] = $configuration->getValue();
-        }
-
-        return [
-            'shipping' => [
-                'postnl' => $shipping,
-            ]
-        ];
-    }
+    abstract public function getValue();
 }

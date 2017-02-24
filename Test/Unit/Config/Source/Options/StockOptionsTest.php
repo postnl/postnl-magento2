@@ -36,44 +36,45 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
 
-use Magento\Checkout\Model\ConfigProviderInterface;
-use TIG\PostNL\Config\CheckoutConfiguration\AbstractCheckoutConfiguration;
+namespace TIG\PostNL\Test\Unit\Config\Source\Options;
 
-class CheckoutConfiguration implements ConfigProviderInterface
+use TIG\PostNL\Config\Source\Options\StockOptions;
+
+/**
+ * Class StockOptions
+ *
+ * @package TIG\PostNL\Config\Source\Options
+ */
+class StockOptionsTest extends \TIG\PostNL\Test\TestCase
 {
-    /**
-     * @var array
-     */
-    private $shippingConfiguration;
+    public $instanceClass = StockOptions::class;
 
-    /**
-     * @param AbstractCheckoutConfiguration[] $shippingConfiguration
-     */
-    public function __construct(
-        $shippingConfiguration = []
-    ) {
-        $this->shippingConfiguration = $shippingConfiguration;
+    public function returnsTheCorrectOptionsProvider()
+    {
+        return [
+            ['value' => 'in_stock'],
+            ['value' => 'backordered'],
+        ];
     }
 
     /**
-     * Retrieve assoc array of checkout configuration
-     *
-     * @return array
+     * @dataProvider returnsTheCorrectOptionsProvider
      */
-    public function getConfig()
+    public function testReturnsTheCorrectOptions($value)
     {
-        $shipping = [];
+        /** @var StockOptions $instance */
+        $instance = $this->getInstance();
 
-        foreach ($this->shippingConfiguration as $key => $configuration) {
-            $shipping[$key] = $configuration->getValue();
+        $result = $instance->toOptionArray();
+
+        $hasValue = false;
+        foreach ($result as $option) {
+            if ($option['value'] == $value) {
+                $hasValue = true;
+            }
         }
 
-        return [
-            'shipping' => [
-                'postnl' => $shipping,
-            ]
-        ];
+        $this->assertTrue($hasValue, '$result should contains ["value" => "' . $value . '"]');
     }
 }
