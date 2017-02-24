@@ -75,6 +75,6 @@ define(['jquery'], function ($) {
             if (option == 'sunday') {
                 return window.checkoutConfig.shipping.postnl.sundaydelivery_fee;
             }
-        }
+        };
     };
 });
