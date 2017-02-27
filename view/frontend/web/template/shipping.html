@@ -70,6 +70,7 @@
                             <tr class="row">
                                 <th class="col col-method" data-bind="i18n: 'Select Method'"></th>
                                 <th class="col col-price" data-bind="i18n: 'Price'"></th>
+                                <th class="col col-fee" data-bind="i18n: 'Fee'"></th>
                                 <th class="col col-method" data-bind="i18n: 'Method Title'"></th>
                                 <th class="col col-carrier" data-bind="i18n: 'Carrier Title'"></th>
                             </tr>
@@ -109,8 +110,11 @@
                                     <!-- ko template: getTemplate() --><!-- /ko -->
                                     <!-- /ko -->
 
+
+                                </td>
+                                <td class="col col-fee">
                                     <!-- ko if: method.fee != null -->
-                                    Fee: <span data-bind="text: $parent.formatPrice(method.fee)"></span>
+                                <span data-bind="i18n: 'Fee:'"></span> + <span data-bind="text: $parent.formatPrice(method.fee)"></span>
                                     <!-- /ko -->
                                 </td>
 

@@ -19,11 +19,17 @@
                         <span class="tig-postnl-delivery-dash"> - </span>
                         <span class="tig-postnl-delivery-to" data-bind="text: to_friendly"></span>
 
-                        <!-- ko if: hasFee() -->
-                        <span class="tig-postnl-delivery-fee" data-bind="text: getFeeFormatted()"></span>
-                        <!-- /ko -->
+                        <div class="tig-postnl-delivery-option">
+                            <!-- ko if: hasFee() -->
+                            <span class="test">+ <span class="tig-postnl-delivery-fee" data-bind="text: getFeeFormatted()"></span> </span>
+                            <!-- /ko -->
 
-                        <span class="tig-postnl-delivery-option" data-bind="text: optionLabel"></span>
+                            <span class="" data-bind="text: optionLabel"> </span>
+
+                        </div>
+
+
+
                     </label>
 
                 </li>
@@ -33,3 +39,9 @@
 
     </div>
 </div>
+<style>
+    .test {
+        margin-right: 10px;
+        color:#001A73;
+    }
+</style>
