@@ -88,23 +88,33 @@ define([
                 });
             }.bind(this));
 
+            State.currentSelectedShipmentType.subscribe(function (shipmentType) {
+                if (shipmentType != 'delivery') {
+                    this.selectedOption(null);
+                }
+            }.bind(this));
+
             /**
              * Save the selected delivery option
              */
             this.selectedOption.subscribe(function (value) {
                 State.selectShippingMethod();
 
-                $.ajax({
-                    method: 'POST',
-                    url: window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
-                    data: {
-                        type: 'delivery',
-                        date : value.date,
-                        option: value.option,
-                        from: value.from,
-                        to: value.to
-                    }
-                });
+                if (value !== null) {
+                    State.currentSelectedShipmentType('delivery');
+
+                    $.ajax({
+                        method : 'POST',
+                        url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
+                        data   : {
+                            type   : 'delivery',
+                            date   : value.date,
+                            option : value.option,
+                            from   : value.from,
+                            to     : value.to
+                        }
+                    });
+                }
             });
 
             return this;

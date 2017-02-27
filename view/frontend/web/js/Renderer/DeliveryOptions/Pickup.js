@@ -108,24 +108,34 @@ define([
                 });
             }.bind(this));
 
+            State.currentSelectedShipmentType.subscribe(function (shipmentType) {
+                if (shipmentType != 'pickup') {
+                    this.selectedOption(null);
+                }
+            }.bind(this));
+
             /**
              * Save the selected pickup option
              */
             this.selectedOption.subscribe(function (value) {
                 State.selectShippingMethod();
 
-                $.ajax({
-                    method: 'POST',
-                    url: window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
-                    data: {
-                        type: 'pickup',
-                        name : value.Name,
-                        RetailNetworkID: value.RetailNetworkID,
-                        LocationCode : value.LocationCode,
-                        address: value.Address,
-                        customerData : AddressFinder()
-                    }
-                });
+                if (value !== null) {
+                    State.currentSelectedShipmentType('pickup');
+
+                    $.ajax({
+                        method : 'POST',
+                        url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
+                        data   : {
+                            type            : 'pickup',
+                            name            : value.Name,
+                            RetailNetworkID : value.RetailNetworkID,
+                            LocationCode    : value.LocationCode,
+                            address         : value.Address,
+                            customerData    : AddressFinder()
+                        }
+                    });
+                }
             });
 
             return this;

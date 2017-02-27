@@ -58,6 +58,7 @@ define([
         pickupOptionsAreLoading: pickupOptionsAreLoading,
         isLoading: isLoading,
         method: ko.observable(null),
+        currentSelectedShipmentType: ko.observable(null),
 
         selectShippingMethod: function () {
             selectShippingMethodAction(this.method());
