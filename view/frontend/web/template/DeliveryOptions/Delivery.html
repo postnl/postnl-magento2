@@ -21,10 +21,10 @@
 
                         <div class="tig-postnl-delivery-option">
                             <!-- ko if: hasFee() -->
-                            <span class="test">+ <span class="tig-postnl-delivery-fee" data-bind="text: getFeeFormatted()"></span> </span>
+                            <span class="tig-postnl-delivery-fee-container">+ <span class="tig-postnl-delivery-fee" data-bind="text: getFeeFormatted()"></span> </span>
                             <!-- /ko -->
 
-                            <span class="" data-bind="text: optionLabel"> </span>
+                            <span data-bind="text: optionLabel"> </span>
 
                         </div>
 
@@ -39,9 +39,3 @@
 
     </div>
 </div>
-<style>
-    .test {
-        margin-right: 10px;
-        color:#001A73;
-    }
-</style>
