@@ -41,17 +41,16 @@ namespace TIG\PostNL\Observer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use TIG\PostNL\Helper\Data;
-use TIG\PostNL\Model\OrderFactory;
+use \TIG\PostNL\Model\OrderRepository;
 use Magento\Sales\Model\Order as MagentoOrder;
 use TIG\PostNL\Model\Order as PostNLOrder;
-use TIG\PostNL\Model\OrderRepository;
 
 class SalesOrderSaveAfterEvent implements ObserverInterface
 {
     /**
-     * @var OrderFactory
+     * @var OrderRepository
      */
-    private $orderFactory;
+    private $orderRepository;
 
     /**
      * @var Data
@@ -59,23 +58,15 @@ class SalesOrderSaveAfterEvent implements ObserverInterface
     private $helper;
 
     /**
-     * @var OrderRepository
-     */
-    private $orderRepository;
-
-    /**
-     * @param OrderFactory    $orderFactory
      * @param OrderRepository $orderRepository
      * @param Data            $helper
      */
     public function __construct(
-        OrderFactory $orderFactory,
         OrderRepository $orderRepository,
         Data $helper
     ) {
-        $this->orderFactory = $orderFactory;
-        $this->helper = $helper;
         $this->orderRepository = $orderRepository;
+        $this->helper = $helper;
     }
 
     /**
@@ -92,31 +83,14 @@ class SalesOrderSaveAfterEvent implements ObserverInterface
             return;
         }
 
-        $postnlOrder = $this->getPostNLOrder($magentoOrder);
+        $postnlOrder = $this->orderRepository->getByFieldWithValue('quote_id', $magentoOrder->getQuoteId());
+        if (!$postnlOrder) {
+            $postnlOrder = $this->orderRepository->create();
+        }
 
         $postnlOrder->setData('order_id', $magentoOrder->getId());
         $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
 
         $this->orderRepository->save($postnlOrder);
-    }
-
-    /**
-     * @param MagentoOrder $magentoOrder
-     *
-     * @return PostNLOrder
-     */
-    private function getPostNLOrder(MagentoOrder $magentoOrder)
-    {
-        /** @var PostNLOrder $postnlOrder */
-        $postnlOrder = $this->orderFactory->create();
-
-        /** @var \TIG\PostNL\Model\ResourceModel\Order\Collection $collection */
-        $collection = $postnlOrder->getCollection();
-        $collection->addFieldToFilter('quote_id', $magentoOrder->getQuoteId());
-
-        // @codingStandardsIgnoreLine
-        $postnlOrder = $collection->setPageSize(1)->getFirstItem();
-
-        return $postnlOrder;
     }
 }

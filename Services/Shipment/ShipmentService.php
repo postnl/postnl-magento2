@@ -36,36 +36,22 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Config\Form\Field;
+namespace TIG\PostNL\Services\Shipment;
 
 /**
- * Class Fieldset
+ * Class ShipmentService
  *
- * @package TIG\PostNL\Block\Config\Form\Field
+ * @package TIG\PostNL\Services\Shipment
  */
-class Fieldset extends \Magento\Config\Block\System\Config\Form\Fieldset
+class ShipmentService extends ShipmentServiceAbstract
 {
-    private $classNames = [
-        '1' => 'modus_live',
-        '2' => 'modus_test',
-        '0' => 'modus_off'
-    ];
-
     /**
-     * {@inheritdoc}
+     * @param $postNLShipment
+     *
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    // @codingStandardsIgnoreLine
-    protected function _getFrontendClass($element)
+    public function save($postNLShipment)
     {
-        $modus = $this->_scopeConfig->getValue(
-            \TIG\PostNL\Config\Provider\AccountConfiguration::XPATH_GENERAL_STATUS_MODUS
-        );
-
-        $className = 'modus_off';
-        if (array_key_exists($modus, $this->classNames)) {
-            $className = $this->classNames[$modus];
-        }
-
-        return parent::_getFrontendClass($element) . ' ' . $className;
+        $this->postnlShipmentRepository->save($postNLShipment);
     }
 }

@@ -51,6 +51,8 @@
         <arguments>
             <argument name="shippingConfiguration" xsi:type="array">
                 <item name="shippingoptions_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsShippingOptionsActive</item>
+                <item name="pakjegemak_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsPakjegemakActive</item>
+                <item name="urls" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\Urls</item>
             </argument>
         </arguments>
     </type>

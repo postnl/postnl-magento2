@@ -41,6 +41,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
+use TIG\PostNL\Config\Provider\PostNLConfiguration;
 use TIG\PostNL\Test\TestCase;
 
 abstract class AbstractConfigurationTest extends TestCase
@@ -58,7 +59,7 @@ abstract class AbstractConfigurationTest extends TestCase
     /**
      * @param array $args
      *
-     * @return DefaultConfiguration
+     * @return DefaultConfiguration|PostNLConfiguration
      */
     public function getInstance(array $args = [])
     {

@@ -47,6 +47,7 @@ class IsShippingOptionsActive extends AbstractCheckoutConfiguration
      * @var ShippingOptions
      */
     private $shippingOptions;
+
     /**
      * @var CheckIfQuoteItemsAreInStock
      */

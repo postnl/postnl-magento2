@@ -41,6 +41,7 @@ namespace TIG\PostNL\Helper\Tracking;
 use \TIG\PostNL\Helper\AbstractTracking;
 use \Magento\Framework\App\Helper\Context;
 use \Magento\Framework\Mail\Template\TransportBuilder;
+use \Magento\Framework\Exception\LocalizedException;
 use \TIG\PostNL\Helper\Data as PostNLHelper;
 use \Magento\Framework\Api\SearchCriteriaBuilder;
 use \Magento\Sales\Model\Order\ShipmentRepository;
@@ -50,6 +51,7 @@ use \Magento\Framework\Exception\MailException;
 use \Magento\Sales\Model\Order\Shipment;
 use \TIG\PostNL\Config\Provider\Webshop;
 use \TIG\PostNL\Logging\Log;
+use \Magento\Framework\View\Asset\Repository as AssetRepository;
 
 /**
  * Class Mail
@@ -74,6 +76,11 @@ class Mail extends AbstractTracking
     private $trackAndTraceEmail;
 
     /**
+     * @var AssetRepository
+     */
+    private $assetRepository;
+
+    /**
      * @param Context                  $context
      * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      * @param ShipmentRepository       $shipmentRepository
@@ -82,6 +89,7 @@ class Mail extends AbstractTracking
      * @param PostNLHelper             $data
      * @param Webshop                  $webshop
      * @param Log                      $logging
+     * @param AssetRepository          $assetRepository
      */
     public function __construct(
         Context $context,
@@ -91,10 +99,12 @@ class Mail extends AbstractTracking
         TransportBuilder $transportBuilder,
         PostNLHelper $data,
         Webshop $webshop,
-        Log $logging
+        Log $logging,
+        AssetRepository $assetRepository
     ) {
         $this->transportBuilder     = $transportBuilder;
         $this->postNLHelperData     = $data;
+        $this->assetRepository      = $assetRepository;
 
         parent::__construct(
             $context,
@@ -136,15 +146,31 @@ class Mail extends AbstractTracking
         $transport->setTemplateVars([
            'order_id'      => $shipment->getIncrementId(),
            'dateAndTime'   => $this->postNLHelperData->getDateYmd(),
-           'url'           => $url
+           'url'           => $url,
+           'logo_url'      => $this->getLogoUrl()
         ]);
         $transport->setFrom('general');
         $address = $shipment->getShippingAddress();
-        $transport->addTo(
-            $address->getEmail(),
-            $address->getFirstname() . ' '. $address->getLastname()
-        );
+        $transport->addTo($address->getEmail(), $address->getFirstname() . ' '. $address->getLastname());
         $this->logging->addInfo('Track And Trace email build for :'. $address->getEmail());
         $this->trackAndTraceEmail = $transport->getTransport();
+    }
+
+    /**
+     * Get the url to the logo
+     *
+     * @return string
+     */
+    private function getLogoUrl()
+    {
+        try {
+            return $this->assetRepository->getUrlWithParams(
+                'TIG_Postnl::images/postnl_logo.png',
+                ['_secure' => true]
+            );
+        } catch (LocalizedException $exception) {
+            $this->logging->critical($exception->getLogMessage(), $exception->getTrace());
+            return 'https://www.postnl.nl/img/logo.png';
+        }
     }
 }

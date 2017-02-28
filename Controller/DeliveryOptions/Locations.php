@@ -49,12 +49,7 @@ use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Webservices\Endpoints\Locations as LocationsEndpoint;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 
-/**
- * Class Pickup
- *
- * @package TIG\PostNL\Controller\DeliveryOptions
- */
-class Pickup extends AbstractDeliveryOptions
+class Locations extends AbstractDeliveryOptions
 {
     /**
      * @var AddressEnhancer

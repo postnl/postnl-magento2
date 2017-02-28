@@ -49,7 +49,7 @@ use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
 
-class Days extends AbstractDeliveryOptions
+class Timeframes extends AbstractDeliveryOptions
 {
     /**
      * @var AddressEnhancer
@@ -66,6 +66,16 @@ class Days extends AbstractDeliveryOptions
      */
     private $timeFrameEndpoint;
 
+    /**
+     * @param Context         $context
+     * @param OrderFactory    $orderFactory
+     * @param OrderRepository $orderRepository
+     * @param Data            $jsonHelper
+     * @param Session         $checkoutSession
+     * @param AddressEnhancer $addressEnhancer
+     * @param DeliveryDate    $deliveryDate
+     * @param TimeFrame       $timeFrame
+     */
     public function __construct(
         Context $context,
         OrderFactory $orderFactory,

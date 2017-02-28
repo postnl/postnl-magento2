@@ -41,7 +41,7 @@
     <!--Webshop section-->
     <group id="webshop" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Webshop</label>
-        <frontend_model>TIG\PostNL\Block\Config\Form\Field\Fieldset</frontend_model>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-section</fieldset_css>
 
         <group id="printer" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -52,6 +52,7 @@
                 <label>Label size</label>
                 <source_model>TIG\PostNL\Config\Source\Settings\LabelsizeSettings</source_model>
                 <config_path>tig_postnl/webshop_printer/label_size</config_path>
+                <comment><model>TIG\PostNL\Config\Comment\LabelSize</model></comment>
             </field>
         </group>
 
@@ -66,7 +67,7 @@
 
             <field id="shipment_days" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Shipment days</label>
-                <source_model>Magento\Config\Model\Config\Source\Locale\Weekdays</source_model>
+                <source_model>TIG\PostNL\Config\Source\Settings\DaysOfWeek</source_model>
                 <config_path>tig_postnl/webshop_shipping/shipment_days</config_path>
             </field>
         </group>

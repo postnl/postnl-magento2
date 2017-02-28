@@ -49,6 +49,7 @@ use \Magento\Sales\Model\Order\ShipmentRepository;
 use \TIG\PostNL\Helper\Tracking\Mail;
 use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use \TIG\PostNL\Logging\Log;
+use \TIG\PostNL\Model\Shipment as PostNLShipment;
 
 /**
  * Class Track
@@ -116,18 +117,10 @@ class Track extends AbstractTracking
     public function set($shipment)
     {
         $trackingNumbers = [];
-        foreach ($this->getPostNLshipments($shipment->getId()) as $postnlShipment) {
+        $postnlShipments = $this->getPostNLshipments($shipment->getId());
+        foreach ($postnlShipments as $postnlShipment) {
             $trackingNumbers[] = $postnlShipment->getMainBarcode();
-            //@codingStandardsIgnoreStart
-            if (!$this->webshopConfig->isTrackAndTraceEnabled()) {
-                continue;
-            }
-            //@codingStandardsIgnoreEnd
-            $this->trackAndTraceEmail->set(
-                $shipment,
-                $this->getTrackAndTraceUrl($postnlShipment->getMainBarcode())
-            );
-            $this->trackAndTraceEmail->send();
+            $this->sendTrackAndTraceEmail($shipment, $postnlShipment);
         }
 
         $this->addTrackingNumbersToShipment($shipment, $trackingNumbers);
@@ -154,12 +147,18 @@ class Track extends AbstractTracking
     }
 
     /**
+     * @notice: Magento Bug, can not save track after shipment creation (addTrack is triggert on _afterSave)
+     *        So when the shipment is saved the packages value is automaticly s6:"a:{}" which will return in
+     *        a fatal error in shipment view.
+     *
      * @param Shipment $shipment
      * @param $trackingNumbers
      */
     private function addTrackingNumbersToShipment($shipment, $trackingNumbers)
     {
-        $this->logging->addDebug('Adding trackingnumbers to shipment'. $shipment->getId(), $trackingNumbers);
+        $this->logging->addDebug('Adding trackingnumbers to shipment_id : '. $shipment->getId(), $trackingNumbers);
+
+        $shipment = $this->resetTrackingKey($shipment);
         foreach ($trackingNumbers as $number) {
             $track = $this->trackFactory->create();
             $track->setNumber($number);
@@ -169,13 +168,46 @@ class Track extends AbstractTracking
         }
 
         /**
-         * @notice: Magento Bug, can not save track after shipment creation (addTrack is triggert on _afterSave)
-         *        So when the shipment is saved the packages value is automaticly s6:"a:{}" which will return in
-         *        a fatal error in shipment view.
          * @codingStandardsIgnoreLine
          * @todo : Recalculate packages and set correct data.
          */
         $shipment->setPackages([]);
         $this->shimpentRepository->save($shipment);
+    }
+
+    /**
+     * @notice : Because the tracks key is cached within the data object it could be this will result in an empty array.
+     *           When this happends core Magento will trow an Exception because its will try
+     *           to add an item on an non-object.
+     *
+     * @param Shipment $shipment
+     * @return Shipment $shipment
+     */
+    private function resetTrackingKey($shipment)
+    {
+        $data = $shipment->getData();
+        if (isset($data['tracks']) && count($data['tracks']) === 0) {
+            unset($data['tracks']);
+        }
+
+        $shipment->setData($data);
+        return $shipment;
+    }
+
+    /**
+     * @param Shipment $shipment
+     * @param PostNLShipment $postnlShipment
+     */
+    private function sendTrackAndTraceEmail($shipment, $postnlShipment)
+    {
+        if (!$this->webshopConfig->isTrackAndTraceEnabled()) {
+            return;
+        }
+
+        $this->trackAndTraceEmail->set(
+            $shipment,
+            $this->getTrackAndTraceUrl($postnlShipment->getMainBarcode())
+        );
+        $this->trackAndTraceEmail->send();
     }
 }
