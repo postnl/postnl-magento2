@@ -89,6 +89,16 @@ class FeeCalculatorTest extends TestCase
                     'getSundayDeliveryFee' => '',
                 ],
                 'expected' => 0.0
+            ],
+            'option key is missing' => [
+                'params' => [],
+                'config options' => [
+                    'isSundayDeliveryActive' => true,
+                    'getSundayDeliveryFee' => 3,
+                    'isEveningDeliveryActive' => true,
+                    'getEveningDeliveryFee' => 3,
+                ],
+                'expected' => 0.0
             ]
         ];
     }

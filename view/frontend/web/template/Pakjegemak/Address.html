@@ -1,0 +1,20 @@
+<!-- ko if: isVisible && address -->
+<div class="shipping-information">
+    <div class="pakjegemak-address">
+        <div class="shipping-information-title">
+            <span data-bind="i18n: 'Post office location:'"></span>
+            <button class="action action-edit" data-bind="click: back">
+                <span data-bind="i18n: 'edit'"></span>
+            </button>
+        </div>
+        <div class="shipping-information-content">
+            <!-- ko text: address().company --><!-- /ko --><br/>
+            <!-- ko text: address().prefix --><!-- /ko --> <!-- ko text: address().firstname --><!-- /ko -->
+            <!-- ko text: address().street --><!-- /ko --><br/>
+            <!-- ko text: address().city --><!-- /ko -->, <!-- ko text: address().region --><!-- /ko --> <!-- ko text: address().postcode --><!-- /ko --><br/>
+            <!-- ko text: getCountryName(address().countryId) --><!-- /ko --><br/>
+            <!-- ko text: address().telephone --><!-- /ko --><br/>
+        </div>
+    </div>
+</div>
+<!-- /ko -->

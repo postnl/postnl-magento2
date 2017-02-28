@@ -43,6 +43,7 @@ use Magento\Framework\Model\AbstractModel;
 
 /**
  * @method float getFee()
+ * @method string getType()
  * @method string getDeliveryDate()
  * @method string getIsPakjegemak()
  * @method string getPgOrderAddressId()
