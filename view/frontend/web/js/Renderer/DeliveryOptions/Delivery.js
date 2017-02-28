@@ -88,6 +88,9 @@ define([
                 });
             }.bind(this));
 
+            /**
+             * Deselect the selected dekuvert option when a different option type is being selected.
+             */
             State.currentSelectedShipmentType.subscribe(function (shipmentType) {
                 if (shipmentType != 'delivery') {
                     this.selectedOption(null);
@@ -98,23 +101,24 @@ define([
              * Save the selected delivery option
              */
             this.selectedOption.subscribe(function (value) {
-                State.selectShippingMethod();
-
-                if (value !== null) {
-                    State.currentSelectedShipmentType('delivery');
-
-                    $.ajax({
-                        method : 'POST',
-                        url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
-                        data   : {
-                            type   : 'delivery',
-                            date   : value.date,
-                            option : value.option,
-                            from   : value.from,
-                            to     : value.to
-                        }
-                    });
+                if (value === null) {
+                    return;
                 }
+
+                State.selectShippingMethod();
+                State.currentSelectedShipmentType('delivery');
+
+                $.ajax({
+                    method : 'POST',
+                    url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
+                    data   : {
+                        type   : 'delivery',
+                        date   : value.date,
+                        option : value.option,
+                        from   : value.from,
+                        to     : value.to
+                    }
+                });
             });
 
             return this;
