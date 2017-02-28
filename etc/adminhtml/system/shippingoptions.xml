@@ -41,7 +41,7 @@
     <!--Shippingoptions section-->
     <group id="shippingoptions" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Shippingoptions</label>
-        <frontend_model>TIG\PostNL\Block\Config\Form\Field\Fieldset</frontend_model>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-section</fieldset_css>
 
         <field id="shippingoptions_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -50,7 +50,7 @@
             <config_path>tig_postnl/shippingoptions/shippingoptions_active</config_path>
         </field>
 
-        <field id="stockoptions" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+        <field id="stockoptions" translate="label" type="radios" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Stockoptions</label>
             <source_model>TIG\PostNL\Config\Source\Options\StockOptions</source_model>
             <config_path>tig_postnl/shippingoptions/stockoptions</config_path>
@@ -121,12 +121,6 @@
                 <field id="shippingoptions_active">1</field>
                 <field id="sundaydelivery_active">1</field>
             </depends>
-        </field>
-
-        <field id="send_track_and_trace_email" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Send track and trace info</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>tig_postnl/shippingoptions/send_track_and_trace_email</config_path>
         </field>
 
     </group>

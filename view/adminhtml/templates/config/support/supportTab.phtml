@@ -36,10 +36,9 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-?>
 
-<?php
-/** @var \TIG\PostNL\Block\Adminhtml\Config\Support\SupportTab $this */
+/** @var Magento\Framework\View\TemplateEngine\Php $this */
+/** @var \TIG\PostNL\Block\Adminhtml\Config\Support\SupportTab $block */
 ?>
 <div id="supporttab" class="tig-postnl-supporttab" data-mage-init='{"postnlConfig": true}'>
 
@@ -68,20 +67,27 @@
         </div>
 
         <div class="block-version">
-            <h3 ><?php echo $block->escapeHtml(__('Magento &amp; 3rd party version compatibility'));?></h3>
+            <h3 ><?php echo $block->escapeHtml(__('Extension version'));?></h3>
+            <div>
+                <ul class="version-compatibility">
+
+                    <li>
+                        <span class="text"><?php echo $block->escapeHtml(__('PostNL version'));?>:</span>
+                        <span class="version"><?php echo $block->getVersionNumber() . $block->getStability(); ?></span>
+                    </li>
+                </ul>
+            </div>
+
+            <h3><?php echo $block->escapeHtml(__('Magento &amp; 3rd party version compatibility'));?></h3>
             <div>
                 <ul class="version-compatibility">
                     <li>
-                        <span class="text"><?php echo $block->escapeHtml(__('Magento Community Edition version'));?>:</span>
-                        <span class="version"> 2.1.2 </span>
-                    </li>
-                    <li>
                         <span class="text"><?php echo $block->escapeHtml(__('Magento Enterprise Edition version'));?>:</span>
-                        <span class="version"> 2.1.2 </span>
+                        <span class="version"><?php echo $block->getSupportedMagentoVersions(); ?></span>
                     </li>
                     <li>
-                        <span class="text"><?php echo $block->escapeHtml(__('PostNL version'));?>:</span>
-                        <span class="version"><?php echo $this->getVersionNumber(); ?></span>
+                        <span class="text"><?php echo $block->escapeHtml(__('Magento Community Edition version'));?>:</span>
+                        <span class="version"><?php echo $block->getSupportedMagentoVersions(); ?></span>
                     </li>
                 </ul>
             </div>
@@ -102,7 +108,7 @@
             <div class="block_contact">
                 <ul>
                     <li class="first"><img src="<?php echo $this->getViewFileUrl('TIG_PostNL::images/nl.png'); ?> " alt="" /><?php echo $block->escapeHtml(__('Phone:'));?></li>
-                    <li class="last">+31 (0)58-2333343</li>
+                    <li class="last">+31 (0)88-2255652</li>
                 </ul>
                 <ul>
                     <li class="first"><img src="<?php echo $this->getViewFileUrl('TIG_PostNL::images/website.png'); ?> " alt="" /><?php echo $block->escapeHtml(__('Website:'));?></li>
@@ -111,17 +117,19 @@
             </div>
 
             <ul>
-                <h4><?php echo $block->escapeHtml(__('Extension support and advanced configuration'));?></h4>
-                <p><?php echo $block->escapeHtml(__('For questions about installing and configuring the extension please consult the relevant documentation:'));?></p>
+                <li>
+                    <h4><?php echo $block->escapeHtml(__('Extension support and advanced configuration'));?></h4>
+                    <p><?php echo $block->escapeHtml(__('For questions about installing and configuring the extension please consult the relevant documentation:'));?></p>
+                </li>
             </ul>
             <div class="block_support">
                 <ul>
-                    <li class="first"><?php echo $block->escapeHtml(__('Frequently asked questions :'));?></li>
+                    <li class="first"><?php echo $block->escapeHtml(__('Frequently asked questions:'));?></li>
                     <li class="last"><a target="_blank" href="http://servicedesk.tig.nl/"><?php echo $block->escapeHtml(__('FAQ'));?></a></li>
                 </ul>
                 <ul>
                     <li class="first"><?php echo $block->escapeHtml(__('Support by email:'));?></li>
-                    <li class="last"><a href="mailto:citservicedesk@postnl.nl">servicedesk@postnl.nl</a></li>
+                    <li class="last"><a href="mailto:citservicedesk@postnl.nl">citservicedesk@postnl.nl</a></li>
                 </ul>
             </div>
         </div>
@@ -135,11 +143,15 @@
         <div class="collapse-content" data-role="content" style="display:none;">
             <ul>
                 <p><?php echo $block->escapeHtml(__('Documents regarding the PostNL Magento 2 extension:'));?></p>
-                <li><a class="pdf" target="_blank" href="#" title="<?php echo $block->escapeHtml(__('Download a PDF format of the manual. Currently the manual is only available in Dutch.'));?>"><?php echo $block->escapeHtml(__('Installation and Configuration Manual PostNL.pdf'));?>
-                        <img class="external_link" src="<?php echo $this->getViewFileUrl('TIG_PostNL::images/external_link_32.png')?>" alt="<?php echo $block->escapeHtml(__('Installation and Configuration Manual PostNL.pdf'));?>" width="16" height="16"/>
+                <li>
+                    <a class="pdf" target="_blank" href="https://servicedesk.tig.nl/hc/nl/articles/115001631247-PostNL-Magento-2-extensie-installatiehandleiding" title="<?php echo $block->escapeHtml(__('View the user manual. Currently the manual is only available in Dutch.'));?>">
+                        <?php echo $block->escapeHtml(__('User manual'));?>
+                        <img class="external_link" src="<?php echo $this->getViewFileUrl('TIG_PostNL::images/external_link_32.png')?>" alt="<?php echo $block->escapeHtml(__('User manual'));?>" width="16" height="16"/>
                     </a>
                 </li>
-                <li><a target="_blank" href="#" title="<?php echo $block->escapeHtml(__('View the complete release notes of the extension. Currently the release notes is only available in Dutch.'));?>"><?php echo $block->escapeHtml(__('Full Release Notes'));?>
+                <li>
+                    <a target="_blank" href="https://servicedesk.tig.nl/hc/nl/articles/115001726388-Release-notes-van-de-PostNL-Magento-2-extensie" title="<?php echo $block->escapeHtml(__('View the complete release notes of the extension. Currently the release notes is only available in Dutch.'));?>">
+                        <?php echo $block->escapeHtml(__('Full Release Notes'));?>
                         <img class="external_link" src="<?php echo $this->getViewFileUrl('TIG_PostNL::images/external_link_32.png')?>" alt="<?php echo $block->escapeHtml(__('Full Release Notes'));?>" width="16" height="16"/>
                     </a>
                 </li>

@@ -59,15 +59,15 @@ class ShippingOptions extends AbstractConfigProvider
     private $defaultMaxDeliverydays = '5';
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isShippingoptionsActive()
     {
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_ACITVE);
+        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_ACITVE);
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getShippingStockoptions()
     {
@@ -75,7 +75,7 @@ class ShippingOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isDeliverydaysActive()
     {
@@ -140,13 +140,5 @@ class ShippingOptions extends AbstractConfigProvider
         }
 
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_SUNDAY_FEE);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function sendTrackAndTraceEmail()
-    {
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE);
     }
 }

@@ -53,7 +53,7 @@
         </massaction>
     </listingToolbar>
     <columns name="sales_order_shipment_columns">
-        <column name="tig_postnl_confirmed_at" class="TIG\PostNL\Block\Adminhtml\Shipment\Grid\ConfirmStatus">
+        <column name="tig_postnl_confirmed_at" class="TIG\PostNL\Block\Adminhtml\Grid\Shipment\ConfirmStatus">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>
@@ -62,7 +62,7 @@
                 </item>
             </argument>
         </column>
-        <column name="tig_postnl_ship_at" class="TIG\PostNL\Block\Adminhtml\Shipment\Grid\ShippingDate">
+        <column name="tig_postnl_ship_at" class="TIG\PostNL\Block\Adminhtml\Grid\Shipment\ShippingDate">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>

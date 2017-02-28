@@ -116,7 +116,7 @@ define([
 
                 $.ajax({
                     method: 'POST',
-                    url: '/postnl/deliveryoptions/save',
+                    url: window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
                     data: {
                         type: 'pickup',
                         name : value.Name,
@@ -145,10 +145,10 @@ define([
 
             jQuery.ajax({
                 method: 'POST',
-                url : '/postnl/deliveryoptions/pickup',
+                url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_locations,
                 data : {address: address}
             }).done(function (data) {
-                State.pickupOptionsAreLoading(false);
+                State.pickupOptionsAreAvailable(true);
 
                 data = ko.utils.arrayMap(data, function (data) {
                     return new Location(data);
@@ -156,12 +156,31 @@ define([
 
                 this.setPickupAddresses(data);
             }.bind(this)).fail(function (data) {
+                State.pickupOptionsAreAvailable(false);
                 Logger.error(data);
+            }).always(function () {
+                State.pickupOptionsAreLoading(false);
             });
         },
 
         isRowSelected: function ($data) {
             return JSON.stringify(this.selectedOption()) == JSON.stringify($data);
+        },
+
+        getDistanceText: function (distance) {
+            var text = '';
+
+            distance = parseInt(distance);
+
+            if (distance < 1000 && distance > 0) {
+                text = distance + ' m';
+            }
+
+            if (distance > 1000) {
+                text = parseFloat(Math.round(distance / 100) / 10).toFixed(1) + ' km';
+            }
+
+            return text;
         },
 
         /**
@@ -231,7 +250,7 @@ define([
             this[key] = value;
         }.bind(this));
 
-        this.expanded = ko.observable(false);
+        this.expanded = ko.observable(true);
 
         this.toggle = function () {
             this.expanded(!this.expanded());

@@ -39,21 +39,22 @@
 namespace TIG\PostNL\Config\Provider;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
+use TIG\PostNL\Config\CheckoutConfiguration\AbstractCheckoutConfiguration;
 
 class CheckoutConfiguration implements ConfigProviderInterface
 {
     /**
-     * @var ShippingOptions
+     * @var array
      */
-    private $shippingOptions;
+    private $shippingConfiguration;
 
     /**
-     * @param ShippingOptions $shippingOptions
+     * @param AbstractCheckoutConfiguration[] $shippingConfiguration
      */
     public function __construct(
-        ShippingOptions $shippingOptions
+        $shippingConfiguration = []
     ) {
-        $this->shippingOptions = $shippingOptions;
+        $this->shippingConfiguration = $shippingConfiguration;
     }
 
     /**
@@ -63,11 +64,15 @@ class CheckoutConfiguration implements ConfigProviderInterface
      */
     public function getConfig()
     {
+        $shipping = [];
+
+        foreach ($this->shippingConfiguration as $key => $configuration) {
+            $shipping[$key] = $configuration->getValue();
+        }
+
         return [
             'shipping' => [
-                'postnl' => [
-                    'shippingoptions_active' => $this->shippingOptions->isShippingoptionsActive(),
-                ]
+                'postnl' => $shipping
             ]
         ];
     }

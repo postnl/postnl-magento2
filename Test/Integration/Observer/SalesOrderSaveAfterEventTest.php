@@ -42,7 +42,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
-use TIG\PostNL\Model\OrderFactory;
+use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Observer\SalesOrderSaveAfterEvent;
 use TIG\PostNL\Test\Integration\TestCase;
 
@@ -75,15 +75,10 @@ class TestSalesOrderSaveAfterEvent extends TestCase
 
         $this->getInstance()->execute($observer);
 
-        /** @var OrderFactory $orderFactory */
-        $factory = $this->objectManager->create(OrderFactory::class);
+        /** @var OrderRepository $orderRepository */
+        $orderRepository = $this->objectManager->create(OrderRepository::class);
+        $postnlOrder = $orderRepository->getByFieldWithValue('order_id', $order->getId());
 
-        /** @var Order $postnlOrder */
-        $postnlOrder = $factory->create();
-        $orderCollection = $postnlOrder->getCollection();
-        $orderCollection->addFieldToFilter('order_id', $order->getId());
-        $model = $orderCollection->getFirstItem();
-
-        $this->assertEquals($order->getId(), $model->getData('order_id'));
+        $this->assertEquals($order->getId(), $postnlOrder->getData('order_id'));
     }
 }

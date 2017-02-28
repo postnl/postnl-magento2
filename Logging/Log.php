@@ -40,7 +40,49 @@ namespace TIG\PostNL\Logging;
 
 use Monolog\Logger;
 
-// @codingStandardsIgnoreLine
+use \TIG\PostNL\Config\Provider\LoggingConfiguration;
+
+/**
+ * Class Log
+ *
+ * @package TIG\PostNL\Logging
+ */
 class Log extends Logger
 {
+    /**
+     * @var LoggingConfiguration
+     */
+    private $logConfig;
+
+    /**
+     * @param string               $name
+     * @param array                $handlers
+     * @param array                $processors
+     * @param LoggingConfiguration $loggingConfiguration
+     */
+    public function __construct(
+        LoggingConfiguration $loggingConfiguration,
+        $name,
+        array $handlers = [],
+        array $processors = []
+    ) {
+        $this->logConfig = $loggingConfiguration;
+        parent::__construct($name, $handlers, $processors);
+    }
+
+    /**
+     * @param int    $level
+     * @param string $message
+     * @param array  $context
+     *
+     * @return bool
+     */
+    public function addRecord($level, $message, array $context = [])
+    {
+        if (!$this->logConfig->canLog($level)) {
+            return false;
+        }
+
+        return parent::addRecord($level, $message, $context);
+    }
 }

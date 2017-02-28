@@ -41,9 +41,14 @@ namespace TIG\PostNL\Block\Adminhtml\Config\Support;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
+use Magento\Framework\Module\ModuleResource;
+use Magento\Framework\View\Element\Template;
+use TIG\PostNL\Config\Provider\PostNLConfiguration;
 
-class SupportTab extends \Magento\Framework\View\Element\Template implements RendererInterface
+class SupportTab extends Template implements RendererInterface
 {
+    const XPATH_SUPPORTED_MAGENTO_VERSION = 'tig_postnl/supported_magento_version';
+
     // @codingStandardsIgnoreLine
     protected $_template = 'TIG_PostNL::config/support/supportTab.phtml';
 
@@ -53,20 +58,28 @@ class SupportTab extends \Magento\Framework\View\Element\Template implements Ren
     private $moduleContext;
 
     /**
+     * @var PostNLConfiguration
+     */
+    private $configuration;
+
+    /**
      * Override the parent constructor to require our own dependencies.
      *
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\Framework\Module\ModuleResource         $moduleContext
-     * @param array                                            $data
+     * @param Template\Context    $context
+     * @param ModuleResource      $moduleContext
+     * @param PostNLConfiguration $configuration
+     * @param array               $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Magento\Framework\Module\ModuleResource $moduleContext,
+        Template\Context $context,
+        ModuleResource $moduleContext,
+        PostNLConfiguration $configuration,
         array $data = []
     ) {
         parent::__construct($context, $data);
 
         $this->moduleContext = $moduleContext;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -92,5 +105,27 @@ class SupportTab extends \Magento\Framework\View\Element\Template implements Ren
         $version = $this->moduleContext->getDbVersion('TIG_PostNL');
 
         return $version;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSupportedMagentoVersions()
+    {
+        return $this->configuration->getSupportedMagentoVersions();
+    }
+
+    /**
+     * @return string
+     */
+    public function getStability()
+    {
+        $stability = $this->configuration->getStability();
+
+        if ($stability === null || $stability == 'stable') {
+            return '';
+        }
+
+        return ' - ' . ucfirst($stability);
     }
 }

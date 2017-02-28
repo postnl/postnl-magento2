@@ -92,7 +92,7 @@ class MassPrintShippingLabelTest extends TestCase
         $instance = $this->getInstance(['getLabels' => $getLabelsMock]);
 
         foreach ($shipmentIds as $shipmentId) {
-            $this->invokeArgs('getLabel', [$shipmentId], $instance);
+            $this->invokeArgs('setLabel', [$shipmentId], $instance);
         }
 
         $labelsProperty = $this->getProperty('labels', $instance);

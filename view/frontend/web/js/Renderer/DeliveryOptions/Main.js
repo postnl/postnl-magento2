@@ -61,15 +61,16 @@ define([
                 return State.isLoading();
             });
 
-            /**
-             * If we have a valid address we can load the deliveryoptions
-             */
-            this.canUseDeliveryOptions = ko.computed(function () {
-                return AddressFinder() !== false;
-            });
-
             return this;
         },
+
+        canUseDeliveryOptions: ko.computed(function () {
+            return State.deliveryOptionsAreAvailable() && AddressFinder() !== false;
+        }),
+
+        canUsePickupLocations: ko.computed(function () {
+            return window.checkoutConfig.shipping.postnl.pakjegemak_active == 1 && State.pickupOptionsAreAvailable();
+        }),
 
         setDelivery: function () {
             this.shipmentType('delivery');

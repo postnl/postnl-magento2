@@ -39,6 +39,7 @@
 namespace TIG\PostNL\Model\Carrier;
 
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use \TIG\PostNL\Helper\Tracking\Track;
 
 class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     \Magento\Shipping\Model\Carrier\CarrierInterface
@@ -47,11 +48,17 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     protected $_code = 'tig_postnl';
 
     /**
+     * @var Track
+     */
+    private $track;
+
+    /**
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
      * @param \Psr\Log\LoggerInterface $logger
      * @param \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory
      * @param \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory
+     * @param Track $track
      * @param array $data
      */
     public function __construct(
@@ -60,10 +67,12 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         \Psr\Log\LoggerInterface $logger,
         \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory,
         \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory,
+        Track $track,
         array $data = []
     ) {
         $this->_rateResultFactory = $rateResultFactory;
         $this->_rateMethodFactory = $rateMethodFactory;
+        $this->track              = $track;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
 
@@ -100,6 +109,40 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         $result->append($method);
 
         return $result;
+    }
+
+    /**
+     * @note This is for the internal Magento Label service,
+     *       after packages are given the request needs to be handeld trough this method.
+     *       needs further implementation if packages is required.
+     *
+     * @param \Magento\Shipping\Model\Shipment\Request $request
+     * @return mixed
+     */
+    public function requestToShipment($request)
+    {
+        return $this;
+    }
+
+    /**
+     * @note This is for the internal Magento Label service,
+     *       set to true if packages is needed for further implementation
+     *
+     * @return bool
+     */
+    public function isShippingLabelsAvailable()
+    {
+        return false;
+    }
+
+    /**
+     * @param $tracking
+     *
+     * @return string
+     */
+    public function getTrackingInfo($tracking)
+    {
+        return $this->track->get($tracking);
     }
 
     /**

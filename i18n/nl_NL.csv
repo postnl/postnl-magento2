@@ -6,8 +6,8 @@ Tomorrow,Morgen
 Live,Live
 Test,Test
 Off,Off
-"All products","Alle producten"
-"Only for products that are in stock","Alleen voor producten die in voorraad zijn"
+"Always show deliveryoptions","Altijd verzendopties tonen"
+"Only for products that are in stock","Alleen voor producten die op voorraad zijn"
 "There are no available options","Er zijn geen beschikbare opties"
 label,label
 "No cut-off time","Geen cut-off tijd"
@@ -29,7 +29,7 @@ ok,ok
 "Invalid GenerateBarcode response: %1","Ongeldig GenerateBarcode response: %1"
 "Failed on soap call : %1","Failed on soap call : %1"
 "SOAP extension is not loaded.","De SOAP extension is niet geladen."
-Legend,Legende
+Legend,Legenda
 "Shipping method","Verzend methode"
 Disabled,Uit
 "Test Mode","Test Modus"
@@ -48,13 +48,13 @@ https://www.postnl.nl/zakelijke-oplossingen/webwinkels/bezorgopties-voor-mijn-kl
 www.postnl.com,www.postnl.com
 "Extension support and advanced configuration","Extensie ondersteuning en vragen over de configuratie"
 "For questions about installing and configuring the extension please consult the relevant documentation:","Heeft u vragen over de installatie of configuratie van de extensie? Raadpleeg altijd eerst de relevante documentatie:"
-"Frequently asked questions :","Veelgestelde vragen"
+"Frequently asked questions:","Veelgestelde vragen:"
 FAQ,FAQ
 "Support by email:","Support per email:"
 Documentation,Documentatie
 "Documents regarding the PostNL Magento 2 extension:","Documentatie over de PostNL Magento 2 extensie:"
-"Download a PDF format of the manual. Currently the manual is only available in Dutch.","Download de handleiding in PDF formaat. Momenteel is deze handleiding alleen in het Nederlands beschikbaar."
-"Installation and Configuration Manual PostNL.pdf","Installatie en Configuratie Handleiding PostNL Magneto 2.pdf"
+"View the user manual. Currently the manual is only available in Dutch.","Download de handleiding in PDF formaat. Momenteel is deze handleiding alleen in het Nederlands beschikbaar."
+"User manual","Gebruikershandleiding"
 "View the complete release notes of the extension. Currently the release notes is only available in Dutch.","Bekijk de release notes van de extensie. Deze zijn alleen in het Nederlands beschikbaar."
 "Full Release Notes","Volledige Release Notes"
 PostNL,PostNL
@@ -71,13 +71,14 @@ Title,Titel
 "General configuration and account information","Algemene configuratie en account informatie"
 "Extension status","Extensie status"
 Modus,Modus
-Customernumber,Klant nummer
-Customercode,Klant code
-"Api Key","Api Key"
-"BLS location code","BLS locatie code"
-"Customernumber (test)","Klant nummer (test)"
-"Customercode (test)","Klant code (test)"
-"BLS location code (test)","BLS locatie code (test)"
+"Customernumber live mode","Klantnummer live modus"
+"Customercode live mode","Klantcode live modus"
+"Api Key live mode","Api Key live modus"
+"Api Key test mode","Api Key test modus"
+"BLS location code live mode","BLS locatie code live modus"
+"Customernumber test mode","Klantnummer test modus"
+"Customercode test mode","Klantcode test modus"
+"BLS location code test mode","BLS locatie code test modus"
 Shippingaddress,Verzendadres
 Firstname,Voornaam
 Lastname,Achternaam
@@ -141,3 +142,8 @@ Thursday,Donderdag
 Friday,Vrijdag
 Saturday,Zaterdag
 Sunday,Zondag
+Extension version,Extensie versie
+"For an A4 example, <a href=""%1"" target=""_blank"">click here</a>.","Voor een A4 voorbeeld, <a href=""%1"" target=""_blank"">klik hier</a>."
+"For an A6 example, <a href=""%1"" target=""_blank"">click here</a>.","Voor een A6 voorbeeld, <a href=""%1"" target=""_blank"">klik hier</a>."
+"PostNL Shipping options","PostNL Verzendopties"
+"Colli amount","Aantal pakketten"
