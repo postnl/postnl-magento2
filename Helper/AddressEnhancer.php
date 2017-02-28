@@ -104,7 +104,8 @@ class AddressEnhancer
     protected function extractHousenumber($address)
     {
         if (isset($address['street'][1]) && is_numeric($address['street'][1])) {
-            return $address['housenumber'] = $address['street'][1];
+            $address['housenumber'] = $address['street'][1];
+            return $address;
         }
 
         $matched = preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER, $address['street'][0], $result);

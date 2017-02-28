@@ -106,7 +106,7 @@ class Timeframes extends AbstractDeliveryOptions
     {
         $params = $this->getRequest()->getParams();
 
-        if (!isset($params['address'])) {
+        if (!isset($params['address']) || !is_array($params['address'])) {
             return $this->jsonResponse(__('No Address data found.'));
         }
 
