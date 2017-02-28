@@ -145,7 +145,7 @@ class DeliveryDate extends AbstractEndpoint
                 'ShippingDuration'   => '1',
                 'AllowSundaySorting' => 'true',
                 'CutOffTimes'        => $this->cutoffTimes->get(),
-                'Options'            => ['Sunday', 'Daytime', 'Evening']
+                'Options'            => $this->postNLhelper->getDeliveryTimeframesOptions()
             ],
             'Message' => $this->message->get('')
         ];

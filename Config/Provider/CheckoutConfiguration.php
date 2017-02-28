@@ -72,7 +72,7 @@ class CheckoutConfiguration implements ConfigProviderInterface
 
         return [
             'shipping' => [
-                'postnl' => $shipping
+                'postnl' => $shipping,
             ]
         ];
     }

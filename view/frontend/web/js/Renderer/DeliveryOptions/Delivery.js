@@ -89,20 +89,43 @@ define([
             }.bind(this));
 
             /**
+             * Deselect the selected delivery option when a different option type is being selected.
+             */
+            State.currentSelectedShipmentType.subscribe(function (shipmentType) {
+                if (shipmentType != 'delivery') {
+                    this.selectedOption(null);
+                }
+            }.bind(this));
+
+            /**
              * Save the selected delivery option
+             *
+             * @param TimeFrame
              */
             this.selectedOption.subscribe(function (value) {
+                if (value === null) {
+                    return;
+                }
+
                 State.selectShippingMethod();
+                State.currentSelectedShipmentType('delivery');
+
+                var fee = null;
+                if (value.hasFee()) {
+                    fee = value.getFee();
+                }
+
+                State.fee(fee);
 
                 $.ajax({
-                    method: 'POST',
-                    url: window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
-                    data: {
-                        type: 'delivery',
-                        date : value.date,
-                        option: value.option,
-                        from: value.from,
-                        to: value.to
+                    method : 'POST',
+                    url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
+                    data   : {
+                        type   : 'delivery',
+                        date   : value.date,
+                        option : value.option,
+                        from   : value.from,
+                        to     : value.to
                     }
                 });
             });

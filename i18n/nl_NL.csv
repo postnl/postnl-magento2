@@ -39,7 +39,7 @@ Disabled,Uit
 "Magento Enterprise Edition version","Magento Enterprise Edition versie"
 "PostNL version","PostNL versie"
 Support,Support
-"This extension is developed by TIG, commissioned by PostNL.","De extensie is ontwikkeld door TIG in opdracht van PostNL."
+"This extension is developed by Total Internet Group (<a href=""https://tig.nl"" target=""_blank"">TIG</a>) commissioned by PostNL.","Deze extensie is ontwikkeld door Total Internet Group (<a href=""https://tig.nl"" target=""_blank"">TIG</a>) in opdracht van PostNL."
 "Extension basic configuration and account information","Extensie basis configuratie en account informatie"
 "For questions related to your PostNL account and PostNL delivery options, please contact PostNL.","Voor vragen met betrekking tot uw PostNL account en PostNL bezorgopties, neem a.u.b. contact op met PostNL."
 Phone:,Telefoon:
@@ -147,3 +147,23 @@ Extension version,Extensie versie
 "For an A6 example, <a href=""%1"" target=""_blank"">click here</a>.","Voor een A6 voorbeeld, <a href=""%1"" target=""_blank"">klik hier</a>."
 "PostNL Shipping options","PostNL Verzendopties"
 "Colli amount","Aantal pakketten"
+"Export CSV","Exporteer CSV"
+"An error occurred while importing the table rates.","Een fout is opgetreden tijdens het importeren van de tabeltarieven."
+"File has not been imported. See the following list of errors: %1","Bestand is niet geïmporteerd. Zie de lijst van foutmeldingen: %1"
+"Invalid PostNL Table Rates File Format","Incorrect PostNL Tabeltarieven bestandsformaat"
+"Invalid PostNL Table Rates File Format in Row #%1","Incorrect PostNL Tabeltarieven bestandsformaat in regel #%1"
+"Row #%1 is a dupplicate of row #%2","Regel #%1 is een duplicaat van regel #%2"
+"Invalid Shipping Price ""%1"" supplied in row #%2","Incorrecte verzendprijs ""%1"" op regel #%2"
+"Rate Type","Rate Type"
+Flat,Plat
+Table,Tabel
+Condition,Conditie
+"Include Virtual Products in Price Calculation","Gebruik Virtuele Producten in de prijs calculatie"
+"Weight vs. Destination","Gewicht vs. Bestemming"
+"Price vs. Destination","Prijs vs. Bestemming"
+"# of Items vs. Destination","Aantal items vs. Bestemming"
+Fixed,Vast
+Percent,Percentage
+"You can import and export rates on the website scope. You can change your current scope with the dropdown at the top left of this page.","U kunt tarieven importeren en exporteren op website niveau. U kunt het huidige niveau van de configuratie aanpassen met het selectieveld links bovenaan deze pagina."
+"Export Rates","Export Rates"
+"Import Rates","Import Rates"

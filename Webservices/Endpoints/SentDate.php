@@ -145,7 +145,7 @@ class SentDate extends AbstractEndpoint
                 'DeliveryDate'       => $this->postNLhelper->getDateDmy($postNLOrder->getDeliveryDate()),
                 'ShippingDuration'   => '1',
                 'AllowSundaySorting' => 'true',
-                'Options'            => ['Sunday', 'Daytime', 'Evening']
+                'Options'            => $this->postNLhelper->getDeliveryTimeframesOptions()
             ],
             'Message' => $this->message
         ];

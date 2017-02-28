@@ -41,6 +41,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="TIG\PostNL\Api\OrderRepositoryInterface" type="TIG\PostNL\Model\OrderRepository" />
     <preference for="TIG\PostNL\Api\ShipmentRepositoryInterface" type="TIG\PostNL\Model\ShipmentRepository" />
+    <preference for="TIG\PostNL\Service\Wrapper\QuoteInterface" type="TIG\PostNL\Service\Wrapper\Quote" />
+    <preference for="TIG\PostNL\Service\Wrapper\CheckoutSessionInterface" type="TIG\PostNL\Service\Wrapper\CheckoutSession" />
 
     <type name="\Magento\Sales\Model\Order">
         <plugin name="TIG_PostNL_Order_Shipment" type="TIG\PostNL\Plugin\Order\ShipmentPlugin" sortOrder="1"/>
@@ -52,6 +54,22 @@
             <argument name="handlers"  xsi:type="array">
                 <item name="exception" xsi:type="object">TIG\PostNL\Logging\CriticalHandler</item>
                 <item name="debug" xsi:type="object">TIG\PostNL\Logging\DebugHandler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="TIG\PostNL\Setup\InstallSchema">
+        <arguments>
+            <argument name="installSchemaObjects" xsi:type="array">
+                <item name="v1.1.0" xsi:type="array">
+                    <item name="InstallShipmentTable" xsi:type="object">TIG\PostNL\Setup\V110\InstallShipmentTable</item>
+                    <item name="InstallOrderTable" xsi:type="object">TIG\PostNL\Setup\V110\InstallOrderTable</item>
+                    <item name="InstallShipmentLabelTable" xsi:type="object">TIG\PostNL\Setup\V110\InstallShipmentLabelTable</item>
+                    <item name="InstallShipmentBarcodeTable" xsi:type="object">TIG\PostNL\Setup\V110\InstallShipmentBarcodeTable</item>
+                    <item name="InstallTablerateTable" xsi:type="object">TIG\PostNL\Setup\V110\InstallTablerateTable</item>
+                    <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V110\SalesShipmentGridColumns</item>
+                    <item name="SalesOrderGridColumns" xsi:type="object">TIG\PostNL\Setup\V110\SalesOrderGridColumns</item>
+                </item>
             </argument>
         </arguments>
     </type>
@@ -106,4 +124,9 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <!-- Add the PostNL fee to the shipping total -->
+    <type name="\Magento\Quote\Model\Quote\Address\Total\Shipping">
+        <plugin name="TIG_PostNL_QuoteAddressTotalShipping" type="\TIG\PostNL\Plugin\Quote\Address\Total\Shipping" sortOrder="1"/>
+    </type>
 </config>

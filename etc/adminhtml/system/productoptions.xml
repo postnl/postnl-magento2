@@ -44,19 +44,19 @@
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-section</fieldset_css>
 
-        <field id="supported_options" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+        <field id="supported_options" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Select the available options</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions</source_model>
             <config_path>tig_postnl/productoptions/supported_options</config_path>
         </field>
 
-        <field id="default_option" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+        <field id="default_option" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default shipping option</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
             <config_path>tig_postnl/productoptions/default_option</config_path>
         </field>
 
-        <field id="default_evening_option" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+        <field id="default_evening_option" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default evening option</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsEveningOptions</source_model>
             <config_path>tig_postnl/productoptions/default_evening_option</config_path>
@@ -65,7 +65,7 @@
             </depends>
         </field>
 
-        <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+        <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default postoffice delivery option</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakOptions</source_model>
             <config_path>tig_postnl/productoptions/default_pakjegemak_option</config_path>
@@ -74,7 +74,7 @@
             </depends>
         </field>
 
-        <field id="default_sunday_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+        <field id="default_sunday_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default sundaydelivery option</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsSundayOptions</source_model>
             <config_path>tig_postnl/productoptions/default_sunday_option</config_path>

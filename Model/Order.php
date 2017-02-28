@@ -42,6 +42,7 @@ use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
 
 /**
+ * @method float getFee()
  * @method string getDeliveryDate()
  * @method string getIsPakjegemak()
  * @method string getPgOrderAddressId()

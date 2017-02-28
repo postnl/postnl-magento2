@@ -81,6 +81,7 @@ abstract class AbstractDeliveryOptions extends Action
      * @param Data            $jsonHelper
      * @param OrderFactory    $orderFactory
      * @param OrderRepository $orderRepository
+     * @param Session         $checkoutSession
      */
     public function __construct(
         Context $context,
@@ -100,15 +101,21 @@ abstract class AbstractDeliveryOptions extends Action
     /**
      * Create json response
      *
-     * @param string $response
+     * @param string $data
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
     //@codingStandardsIgnoreLine
-    protected function jsonResponse($response = '')
+    protected function jsonResponse($data = '', $code = null)
     {
-        return $this->getResponse()->representJson(
-            $this->jsonHelper->jsonEncode($response)
+        $response = $this->getResponse();
+
+        if ($code !== null) {
+            $response->setStatusCode($code);
+        }
+
+        return $response->representJson(
+            $this->jsonHelper->jsonEncode($data)
         );
     }
 

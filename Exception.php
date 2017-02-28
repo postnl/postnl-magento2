@@ -43,6 +43,8 @@ use Magento\Framework\Phrase;
 
 class Exception extends LocalizedException
 {
+    private $exceptionMessage;
+
     /**
      * @param $message
      * @param int                       $code
@@ -50,20 +52,22 @@ class Exception extends LocalizedException
      */
     public function __construct($message, $code = 0, $previous = null)
     {
+        // @codingStandardsIgnoreLine
+        $this->exceptionMessage = __($message);
+
+        if ($code !== 0) {
+            $code = (string) $code;
+            $this->code = $code;
+
+            $message = '[' . $code . '] ' . $message;
+        }
+
         if (is_string($message)) {
             // @codingStandardsIgnoreLine
             $message = __($message);
         }
 
         parent::__construct($message, $previous);
-
-        /**
-         * Replace the code with the actual, non-integer code.
-         */
-        if ($code !== 0) {
-            $code = (string) $code;
-            $this->code = $code;
-        }
     }
 
     /**
@@ -77,7 +81,7 @@ class Exception extends LocalizedException
      */
     public function __toString()
     {
-        $string = "exception '" . __CLASS__ . "' with message '" . $this->getMessage() . "'";
+        $string = "exception '" . __CLASS__ . "' with message '" . $this->exceptionMessage . "'";
 
         $code = $this->getCode();
         if ($code !== 0 && !empty($code)) {

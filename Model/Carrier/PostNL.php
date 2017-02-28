@@ -38,11 +38,20 @@
  */
 namespace TIG\PostNL\Model\Carrier;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory;
+use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
+use Magento\Shipping\Model\Carrier\AbstractCarrier;
+use Magento\Shipping\Model\Carrier\CarrierInterface;
+use Magento\Shipping\Model\Rate\ResultFactory;
+use Psr\Log\LoggerInterface;
 use \TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Config\Source\Carrier\RateType;
+use TIG\PostNL\Services\Shipping\CalculateTablerateShippingPrice;
+use TIG\PostNL\Services\Shipping\GetFreeBoxes;
 
-class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
-    \Magento\Shipping\Model\Carrier\CarrierInterface
+class PostNL extends AbstractCarrier implements CarrierInterface
 {
     // @codingStandardsIgnoreLine
     protected $_code = 'tig_postnl';
@@ -53,26 +62,53 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     private $track;
 
     /**
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
-     * @param \Psr\Log\LoggerInterface $logger
-     * @param \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory
-     * @param \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory
-     * @param Track $track
-     * @param array $data
+     * @var GetFreeBoxes
+     */
+    private $getFreeBoxes;
+
+    /**
+     * @var CalculateTablerateShippingPrice
+     */
+    private $calculateTablerateShippingPrice;
+
+    /**
+     * @var ResultFactory
+     */
+    private $rateResultFactory;
+
+    /**
+     * @var MethodFactory
+     */
+    private $rateMethodFactory;
+
+    /**
+     * @param ScopeConfigInterface            $scopeConfig
+     * @param ErrorFactory                    $rateErrorFactory
+     * @param LoggerInterface                 $logger
+     * @param ResultFactory                   $rateResultFactory
+     * @param MethodFactory                   $rateMethodFactory
+     * @param Track                           $track
+     * @param GetFreeBoxes                    $getFreeBoxes
+     * @param CalculateTablerateShippingPrice $calculateTablerateShippingPrice
+     * @param array                           $data
      */
     public function __construct(
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory,
-        \Psr\Log\LoggerInterface $logger,
-        \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory,
-        \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory,
+        ScopeConfigInterface $scopeConfig,
+        ErrorFactory $rateErrorFactory,
+        LoggerInterface $logger,
+        ResultFactory $rateResultFactory,
+        MethodFactory $rateMethodFactory,
         Track $track,
+        GetFreeBoxes $getFreeBoxes,
+        CalculateTablerateShippingPrice $calculateTablerateShippingPrice,
         array $data = []
     ) {
-        $this->_rateResultFactory = $rateResultFactory;
-        $this->_rateMethodFactory = $rateMethodFactory;
-        $this->track              = $track;
+        $this->calculateTablerateShippingPrice = $calculateTablerateShippingPrice;
+        $this->rateResultFactory = $rateResultFactory;
+        $this->rateMethodFactory = $rateMethodFactory;
+        $this->getFreeBoxes = $getFreeBoxes;
+        $this->track = $track;
+
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
 
@@ -103,9 +139,11 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         }
 
         /** @var \Magento\Shipping\Model\Rate\Result $result */
-        $result = $this->_rateResultFactory->create();
+        $result = $this->rateResultFactory->create();
 
-        $method = $this->getMethod();
+        $price = $this->getPrice($request);
+        $method = $this->getMethod($price);
+
         $result->append($method);
 
         return $result;
@@ -146,12 +184,14 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     }
 
     /**
+     * @param array $price
+     *
      * @return \Magento\Quote\Model\Quote\Address\RateResult\Method
      */
-    private function getMethod()
+    private function getMethod($price)
     {
         /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
-        $method = $this->_rateMethodFactory->create();
+        $method = $this->rateMethodFactory->create();
 
         $method->setCarrier('tig_postnl');
         $method->setCarrierTitle($this->getConfigData('title'));
@@ -159,11 +199,58 @@ class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         $method->setMethod('regular');
         $method->setMethodTitle($this->getConfigData('name'));
 
-        $amount = $this->getConfigData('price');
-
-        $method->setPrice($amount);
-        $method->setCost($amount);
+        $method->setPrice($price['price']);
+        $method->setCost($price['cost']);
 
         return $method;
+    }
+
+    /**
+     * @param RateRequest $request
+     *
+     * @return array
+     */
+    private function getPrice(RateRequest $request)
+    {
+        $price = $this->getFinalPriceWithHandlingFee($this->getConfigData('price'));
+        $cost = $price;
+
+        if ($this->getConfigData('rate_type') == RateType::CARRIER_RATE_TYPE_TABLE) {
+            $ratePrice = $this->getTableratePrice($request);
+
+            $price = $ratePrice['price'];
+            $cost = $ratePrice['cost'];
+        }
+
+        if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
+            $price = '0.00';
+            $cost = '0.00';
+        }
+
+        return [
+            'price' => $price,
+            'cost' => $cost
+        ];
+    }
+
+    /**
+     * @param RateRequest $request
+     *
+     * @return array
+     */
+    private function getTableratePrice(RateRequest $request)
+    {
+        $request->setConditionName($this->getConfigData('condition_name'));
+
+        $includeVirtualPrice = $this->getConfigFlag('include_virtual_price');
+        $ratePrice = $this->calculateTablerateShippingPrice->getTableratePrice($request, $includeVirtualPrice);
+
+        $price = $this->getFinalPriceWithHandlingFee($ratePrice['price']);
+        $cost = $this->getFinalPriceWithHandlingFee($ratePrice['cost']);
+
+        return [
+            'price' => $price,
+            'cost' => $cost
+        ];
     }
 }

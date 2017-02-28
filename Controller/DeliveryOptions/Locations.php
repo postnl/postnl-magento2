@@ -38,6 +38,7 @@
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
+use Magento\Framework\App\Response\Http;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Json\Helper\Data;
@@ -115,9 +116,9 @@ class Locations extends AbstractDeliveryOptions
         try {
             return $this->jsonResponse($this->getLocations($this->addressEnhancer->get()));
         } catch (LocalizedException $exception) {
-            return $this->jsonResponse($exception->getMessage());
+            return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
         } catch (\Exception $exception) {
-            return $this->jsonResponse($exception->getMessage());
+            return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
         }
     }
 
