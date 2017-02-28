@@ -89,7 +89,7 @@ define([
             }.bind(this));
 
             /**
-             * Deselect the selected dekuvert option when a different option type is being selected.
+             * Deselect the selected delivery option when a different option type is being selected.
              */
             State.currentSelectedShipmentType.subscribe(function (shipmentType) {
                 if (shipmentType != 'delivery') {
