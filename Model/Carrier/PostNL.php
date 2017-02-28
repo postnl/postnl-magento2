@@ -39,10 +39,11 @@
 namespace TIG\PostNL\Model\Carrier;
 
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Shipping\Model\Carrier\AbstractCarrier;
+use Magento\Shipping\Model\Carrier\CarrierInterface;
 use \TIG\PostNL\Helper\Tracking\Track;
 
-class PostNL extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
-    \Magento\Shipping\Model\Carrier\CarrierInterface
+class PostNL extends AbstractCarrier implements CarrierInterface
 {
     // @codingStandardsIgnoreLine
     protected $_code = 'tig_postnl';
