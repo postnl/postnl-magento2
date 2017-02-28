@@ -212,6 +212,11 @@
   position: relative;
   color: #ED8C00;
 }
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li .tig-postnl-delivery-fee-container,
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li .tig-postnl-delivery-fee-container {
+  margin-right: 10px;
+  color: #001A73;
+}
 @media screen and (min-width: 400px) {
   .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul li .data-container,
   .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol li .data-container {
@@ -344,7 +349,10 @@
 * Override Magento Narrow Shipping Table
 *
 * =================================================================================================================== */
-.table-checkout-shipping-method {
+#opc-shipping_method #checkout-shipping-method-load .table-checkout-shipping-method {
   width: 100% !important;
   max-width: 500px;
+}
+#opc-shipping_method #checkout-shipping-method-load .table-checkout-shipping-method .col-price {
+  min-width: 100px;
 }

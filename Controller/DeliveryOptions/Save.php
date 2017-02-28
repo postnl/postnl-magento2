@@ -38,6 +38,7 @@
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
+use Magento\Framework\App\Response\Http;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Json\Helper\Data;
@@ -66,13 +67,13 @@ class Save extends AbstractDeliveryOptions
     private $pickupAddress;
 
     /**
-     * @param Context          $context
-     * @param OrderFactory     $orderFactory
-     * @param OrderRepository  $orderRepository
-     * @param Data             $jsonHelper
-     * @param OrderParams      $orderParams
-     * @param Session          $checkoutSession
-     * @param PickupAddress    $pickupAddress
+     * @param Context         $context
+     * @param OrderFactory    $orderFactory
+     * @param OrderRepository $orderRepository
+     * @param Data            $jsonHelper
+     * @param OrderParams     $orderParams
+     * @param Session         $checkoutSession
+     * @param PickupAddress   $pickupAddress
      */
     public function __construct(
         Context $context,
@@ -83,9 +84,6 @@ class Save extends AbstractDeliveryOptions
         Session $checkoutSession,
         PickupAddress $pickupAddress
     ) {
-        $this->orderParams   = $orderParams;
-        $this->pickupAddress = $pickupAddress;
-
         parent::__construct(
             $context,
             $jsonHelper,
@@ -93,6 +91,9 @@ class Save extends AbstractDeliveryOptions
             $orderRepository,
             $checkoutSession
         );
+
+        $this->orderParams   = $orderParams;
+        $this->pickupAddress = $pickupAddress;
     }
 
     /**
@@ -112,9 +113,9 @@ class Save extends AbstractDeliveryOptions
         try {
             return $this->jsonResponse($saved);
         } catch (LocalizedException $exception) {
-            return $this->jsonResponse($exception->getMessage());
+            return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
         } catch (\Exception $exception) {
-            return $this->jsonResponse($exception->getMessage());
+            return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
         }
     }
 
@@ -126,9 +127,9 @@ class Save extends AbstractDeliveryOptions
      */
     private function saveDeliveryOption($params)
     {
-        $params      = $this->addSessionDataToParams($params);
-        $params      = $this->orderParams->get($params);
-        $postnlOrder = $this->getPostNLOrderByQuoteId($params['quote_id']);
+        $params        = $this->addSessionDataToParams($params);
+        $params        = $this->orderParams->get($params);
+        $postnlOrder   = $this->getPostNLOrderByQuoteId($params['quote_id']);
 
         foreach ($params as $key => $value) {
             $postnlOrder->setData($key, $value);

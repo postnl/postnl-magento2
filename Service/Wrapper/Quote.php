@@ -36,44 +36,80 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
+namespace TIG\PostNL\Service\Wrapper;
 
-use Magento\Checkout\Model\ConfigProviderInterface;
-use TIG\PostNL\Config\CheckoutConfiguration\AbstractCheckoutConfiguration;
+use Magento\Quote\Model\Quote as MagentoQuote;
 
-class CheckoutConfiguration implements ConfigProviderInterface
+class Quote implements QuoteInterface
 {
     /**
-     * @var array
+     * @var \Magento\Checkout\Model\Session
      */
-    private $shippingConfiguration;
+    private $checkoutSession;
 
     /**
-     * @param AbstractCheckoutConfiguration[] $shippingConfiguration
+     * @var MagentoQuote
+     */
+    private $quote;
+
+    /**
+     * @param CheckoutSession $checkoutSession
      */
     public function __construct(
-        $shippingConfiguration = []
+        CheckoutSession $checkoutSession
     ) {
-        $this->shippingConfiguration = $shippingConfiguration;
+        $this->checkoutSession = $checkoutSession;
     }
 
     /**
-     * Retrieve assoc array of checkout configuration
+     * @param MagentoQuote $quote
      *
-     * @return array
+     * @return mixed
      */
-    public function getConfig()
+    public function setQuote(MagentoQuote $quote)
     {
-        $shipping = [];
+        $this->quote = $quote;
+    }
 
-        foreach ($this->shippingConfiguration as $key => $configuration) {
-            $shipping[$key] = $configuration->getValue();
+    /**
+     * @return MagentoQuote
+     */
+    public function getQuote()
+    {
+        if ($this->quote === null) {
+            $this->quote = $this->checkoutSession->getQuote();
         }
 
-        return [
-            'shipping' => [
-                'postnl' => $shipping,
-            ]
-        ];
+        return $this->quote;
+    }
+
+    /**
+     * @return MagentoQuote
+     */
+    public function getQuoteId()
+    {
+        $this->getQuote();
+
+        return $this->quote->getId();
+    }
+
+    /**
+     * @return \Magento\Quote\Model\Quote\Address
+     */
+    public function getShippingAddress()
+    {
+        $quote = $this->getQuote();
+
+        return $quote->getShippingAddress();
+    }
+
+    /**
+     * @return \Magento\Quote\Model\Quote\Address
+     */
+    public function getBillingAddress()
+    {
+        $quote = $this->getQuote();
+
+        return $quote->getBillingAddress();
     }
 }

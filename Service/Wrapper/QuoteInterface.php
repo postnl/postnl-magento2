@@ -36,44 +36,36 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
+namespace TIG\PostNL\Service\Wrapper;
 
-use Magento\Checkout\Model\ConfigProviderInterface;
-use TIG\PostNL\Config\CheckoutConfiguration\AbstractCheckoutConfiguration;
+use Magento\Quote\Model\Quote as MagentoQuote;
 
-class CheckoutConfiguration implements ConfigProviderInterface
+interface QuoteInterface
 {
     /**
-     * @var array
-     */
-    private $shippingConfiguration;
-
-    /**
-     * @param AbstractCheckoutConfiguration[] $shippingConfiguration
-     */
-    public function __construct(
-        $shippingConfiguration = []
-    ) {
-        $this->shippingConfiguration = $shippingConfiguration;
-    }
-
-    /**
-     * Retrieve assoc array of checkout configuration
+     * @param MagentoQuote $quote
      *
-     * @return array
+     * @return mixed
      */
-    public function getConfig()
-    {
-        $shipping = [];
+    public function setQuote(MagentoQuote $quote);
 
-        foreach ($this->shippingConfiguration as $key => $configuration) {
-            $shipping[$key] = $configuration->getValue();
-        }
+    /**
+     * @return Quote
+     */
+    public function getQuote();
 
-        return [
-            'shipping' => [
-                'postnl' => $shipping,
-            ]
-        ];
-    }
+    /**
+     * @return Quote
+     */
+    public function getQuoteId();
+
+    /**
+     * @return MagentoQuote\Address
+     */
+    public function getShippingAddress();
+
+    /**
+     * @return MagentoQuote\Address
+     */
+    public function getBillingAddress();
 }

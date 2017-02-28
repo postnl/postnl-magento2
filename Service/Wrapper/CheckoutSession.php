@@ -36,44 +36,53 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
+namespace TIG\PostNL\Service\Wrapper;
 
-use Magento\Checkout\Model\ConfigProviderInterface;
-use TIG\PostNL\Config\CheckoutConfiguration\AbstractCheckoutConfiguration;
+use \Magento\Checkout\Model\Session\Proxy as MagentoCheckoutSession;
 
-class CheckoutConfiguration implements ConfigProviderInterface
+class CheckoutSession implements CheckoutSessionInterface
 {
     /**
-     * @var array
+     * @var \Magento\Checkout\Model\Session
      */
-    private $shippingConfiguration;
+    private $session;
 
     /**
-     * @param AbstractCheckoutConfiguration[] $shippingConfiguration
+     * @param MagentoCheckoutSession $session
      */
     public function __construct(
-        $shippingConfiguration = []
+        MagentoCheckoutSession $session
     ) {
-        $this->shippingConfiguration = $shippingConfiguration;
+        $this->session = $session;
     }
 
     /**
-     * Retrieve assoc array of checkout configuration
-     *
-     * @return array
+     * @return \Magento\Quote\Model\Quote
      */
-    public function getConfig()
+    public function getQuote()
     {
-        $shipping = [];
+        return $this->session->getQuote();
+    }
 
-        foreach ($this->shippingConfiguration as $key => $configuration) {
-            $shipping[$key] = $configuration->getValue();
-        }
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function getValue($key)
+    {
+        $this->session->getData($key);
+    }
 
-        return [
-            'shipping' => [
-                'postnl' => $shipping,
-            ]
-        ];
+    /**
+     * @param string $key
+     * @param        $value
+     *
+     * @return mixed
+     */
+    public function setData($key, $value)
+    {
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->session->setData($key, $value);
     }
 }

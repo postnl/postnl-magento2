@@ -153,7 +153,7 @@ class Soap
     }
 
     /**
-     * @return \SoapClient
+     * @return ZendSoapClient
      */
     public function getClient()
     {
@@ -175,13 +175,11 @@ class Soap
          * Unable to find an alternative, so ignore the coding standards.
          */
         // @codingStandardsIgnoreLine
-        $stream_context = stream_context_create(
-            [
-                'http' => [
-                    'header' => 'apikey:' . $this->getApiKey()
-                ]
+        $stream_context = stream_context_create([
+            'http' => [
+                'header' => 'apikey:' . $this->getApiKey() . "\r\n"
             ]
-        );
+        ]);
 
         return [
             'location'       => $this->getLocation(),

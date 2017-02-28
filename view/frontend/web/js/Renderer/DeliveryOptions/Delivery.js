@@ -90,9 +90,18 @@ define([
 
             /**
              * Save the selected delivery option
+             *
+             * @param TimeFrame
              */
             this.selectedOption.subscribe(function (value) {
                 State.selectShippingMethod();
+
+                var fee = null;
+                if (value.hasFee()) {
+                    fee = value.getFee();
+                }
+
+                State.fee(fee);
 
                 $.ajax({
                     method: 'POST',

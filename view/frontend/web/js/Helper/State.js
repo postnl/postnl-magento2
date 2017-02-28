@@ -38,17 +38,52 @@
 define([
     'ko',
     'Magento_Checkout/js/action/select-shipping-method',
-    'Magento_Checkout/js/checkout-data'
+    'Magento_Checkout/js/checkout-data',
+    'Magento_Checkout/js/model/shipping-service'
 ], function (
     ko,
     selectShippingMethodAction,
-    checkoutData
+    checkoutData,
+    shippingService
 ) {
     var deliveryOptionsAreLoading = ko.observable(false);
     var pickupOptionsAreLoading = ko.observable(false);
+    var fee = ko.observable(null);
 
     var isLoading = ko.computed(function () {
         return deliveryOptionsAreLoading() || pickupOptionsAreLoading();
+    });
+
+    fee.subscribe(function (value) {
+        var shippingRates = shippingService.getShippingRates()();
+
+        if (value <= 0) {
+            value = null;
+        }
+
+        /**
+         * For some unknown reason the rates would not update on the easy way (rate['fee'] = fee).
+         * That's why we had to follow this path.
+         */
+        ko.utils.arrayForEach(shippingRates, function (rate, index) {
+            if (rate.carrier_code != 'tig_postnl') {
+                return;
+            }
+
+            delete rate.fee;
+
+            var newRate = {
+                'fee': value
+            };
+
+            ko.utils.arrayForEach(Object.keys(rate), function (key) {
+                newRate[key] = rate[key];
+            });
+
+            shippingRates[index] = newRate;
+        });
+
+        shippingService.setShippingRates(shippingRates);
     });
 
     return {
@@ -58,6 +93,7 @@ define([
         pickupOptionsAreLoading: pickupOptionsAreLoading,
         isLoading: isLoading,
         method: ko.observable(null),
+        fee: fee,
 
         selectShippingMethod: function () {
             selectShippingMethodAction(this.method());

@@ -1,5 +1,6 @@
-<?php
-/**
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+**
  *                  ___________       __            __
  *                  \__    ___/____ _/  |_ _____   |  |
  *                    |    |  /  _ \\   __\\__  \  |  |
@@ -36,44 +37,11 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
-
-use Magento\Checkout\Model\ConfigProviderInterface;
-use TIG\PostNL\Config\CheckoutConfiguration\AbstractCheckoutConfiguration;
-
-class CheckoutConfiguration implements ConfigProviderInterface
-{
-    /**
-     * @var array
-     */
-    private $shippingConfiguration;
-
-    /**
-     * @param AbstractCheckoutConfiguration[] $shippingConfiguration
-     */
-    public function __construct(
-        $shippingConfiguration = []
-    ) {
-        $this->shippingConfiguration = $shippingConfiguration;
-    }
-
-    /**
-     * Retrieve assoc array of checkout configuration
-     *
-     * @return array
-     */
-    public function getConfig()
-    {
-        $shipping = [];
-
-        foreach ($this->shippingConfiguration as $key => $configuration) {
-            $shipping[$key] = $configuration->getValue();
-        }
-
-        return [
-            'shipping' => [
-                'postnl' => $shipping,
-            ]
-        ];
-    }
-}
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="order_totals">
+            <block class="TIG\PostNL\Block\Sales\Order\Fee" name="fee"/>
+        </referenceContainer>
+    </body>
+</page>

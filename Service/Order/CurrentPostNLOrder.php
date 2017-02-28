@@ -36,44 +36,68 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Provider;
+namespace TIG\PostNL\Service\Order;
 
-use Magento\Checkout\Model\ConfigProviderInterface;
-use TIG\PostNL\Config\CheckoutConfiguration\AbstractCheckoutConfiguration;
+use \Magento\Framework\Api\SearchCriteriaBuilder;
+use \TIG\PostNL\Model\OrderRepository as PostNLOrderRepository;
+use \TIG\PostNL\Model\Order as PostNLOrder;
+use TIG\PostNL\Service\Wrapper\QuoteInterface;
 
-class CheckoutConfiguration implements ConfigProviderInterface
+class CurrentPostNLOrder
 {
     /**
-     * @var array
+     * @var PostNLOrderRepository
      */
-    private $shippingConfiguration;
+    private $postNLOrderRepository;
 
     /**
-     * @param AbstractCheckoutConfiguration[] $shippingConfiguration
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
+     * @var QuoteInterface
+     */
+    private $quote;
+
+    /**
+     * @param PostNLOrderRepository $orderRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param QuoteInterface        $quote
      */
     public function __construct(
-        $shippingConfiguration = []
+        PostNLOrderRepository $orderRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        QuoteInterface $quote
     ) {
-        $this->shippingConfiguration = $shippingConfiguration;
+        $this->postNLOrderRepository = $orderRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->quote = $quote;
     }
 
     /**
-     * Retrieve assoc array of checkout configuration
-     *
-     * @return array
+     * @return PostNLOrder|null
      */
-    public function getConfig()
+    public function get()
     {
-        $shipping = [];
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $this->getQuoteId());
+        $searchCriteria->setPageSize(1);
 
-        foreach ($this->shippingConfiguration as $key => $configuration) {
-            $shipping[$key] = $configuration->getValue();
+        /** @var \Magento\Framework\Api\SearchResults $list */
+        $list = $this->postNLOrderRepository->getList($searchCriteria->create());
+
+        if ($list->getTotalCount()) {
+            return $list->getItems()[0];
         }
 
-        return [
-            'shipping' => [
-                'postnl' => $shipping,
-            ]
-        ];
+        return null;
+    }
+
+    /**
+     * @return \Magento\Quote\Model\Quote
+     */
+    private function getQuoteId()
+    {
+        return $this->quote->getQuoteId();
     }
 }

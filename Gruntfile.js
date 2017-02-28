@@ -23,7 +23,7 @@ module.exports = function (grunt) {
             unitTests: 'cd ' + magento2path + ' && vendor/phpunit/phpunit/phpunit -c "' + phpunitXmlPath + '"',
             integrationTests:
                 'cd ' + magento2path + 'dev/tests/integration &&' +
-                '../../../vendor/phpunit/phpunit/phpunit --testsuite "TIG PostNL Integration Tests"',
+                'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit --testsuite "TIG PostNL Integration Tests"',
             phplint: 'find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l',
             translations_nl: 'mv vendor ../postnl-vendor && ../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/nl_NL.csv && mv ../postnl-vendor vendor',
             translations_en: 'mv vendor ../postnl-vendor && ../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/en_US.csv && mv ../postnl-vendor vendor',

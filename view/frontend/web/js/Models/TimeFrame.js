@@ -35,7 +35,15 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['jquery'], function ($) {
+define([
+    'jquery',
+    'Magento_Checkout/js/model/quote',
+    'Magento_Catalog/js/price-utils'
+], function (
+    $,
+    quote,
+    priceUtils
+) {
     return function (data) {
         $.each(data, function (key, value) {
             this[key] = value;
@@ -43,6 +51,9 @@ define(['jquery'], function ($) {
 
         this.optionLabel = '';
 
+        /**
+         * Make sure the label is translated, and the translation is available.
+         */
         var option = this.option.toLowerCase();
         if (option == 'daytime') {
             this.optionLabel = $.mage.__('Daytime');
@@ -51,5 +62,37 @@ define(['jquery'], function ($) {
         } else if (option == 'sunday') {
             this.optionLabel = $.mage.__('Sunday');
         }
+
+        /**
+         * Check if there is a fee available.
+         */
+        this.hasFee = function () {
+            var fee = this.getFee();
+            return fee !== 0 && fee !== '';
+        };
+
+        /**
+         * Calculate the fee for this option
+         */
+        this.getFee = function () {
+            var option = this.option.toLowerCase();
+
+            if (option == 'evening') {
+                return window.checkoutConfig.shipping.postnl.eveningdelivery_fee;
+            }
+
+            if (option == 'sunday') {
+                return window.checkoutConfig.shipping.postnl.sundaydelivery_fee;
+            }
+
+            return 0;
+        };
+
+        /**
+         * Format the fee
+         */
+        this.getFeeFormatted = function () {
+            return priceUtils.formatPrice(this.getFee(), quote.getPriceFormat());
+        };
     };
 });
