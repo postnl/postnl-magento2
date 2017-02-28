@@ -104,13 +104,14 @@
                                     <!--/ko-->
                                     <!-- /ko -->
                                 </td>
+
                                 <td class="col col-price">
                                     <!-- ko foreach: $parent.getRegion('price') -->
                                     <!-- ko template: getTemplate() --><!-- /ko -->
                                     <!-- /ko -->
 
                                     <!-- ko if: method.fee != null -->
-                                    Fee: <span data-bind="text: $parent.formatPrice(method.fee)"></span>
+                                    + <span data-bind="text: $parent.formatPrice(method.fee)"></span>
                                     <!-- /ko -->
                                 </td>
 
