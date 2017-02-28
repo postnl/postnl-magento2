@@ -114,15 +114,23 @@ define([
             this.selectedOption.subscribe(function (value) {
                 State.selectShippingMethod();
 
+                var dataObject = value.data;
+                var selectedFrom = '15:00:00';
+
+                if (value.type == 'PGE') {
+                    selectedFrom = '9:00:00';
+                }
+
                 $.ajax({
                     method: 'POST',
                     url: window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
                     data: {
                         type: 'pickup',
-                        name : value.Name,
-                        RetailNetworkID: value.RetailNetworkID,
-                        LocationCode : value.LocationCode,
-                        address: value.Address,
+                        name : dataObject.Name,
+                        RetailNetworkID: dataObject.RetailNetworkID,
+                        LocationCode : dataObject.LocationCode,
+                        from: selectedFrom,
+                        address: dataObject.Address,
                         customerData : AddressFinder()
                     }
                 });
