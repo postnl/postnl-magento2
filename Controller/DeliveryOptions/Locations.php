@@ -114,7 +114,7 @@ class Locations extends AbstractDeliveryOptions
         $this->addressEnhancer->set($params['address']);
 
         try {
-            return $this->jsonResponse($this->getLocations($this->addressEnhancer->get()));
+            return $this->jsonResponse($this->getValidResponeType());
         } catch (LocalizedException $exception) {
             return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
         } catch (\Exception $exception) {
@@ -143,6 +143,20 @@ class Locations extends AbstractDeliveryOptions
 
         //@codingStandardsIgnoreLine
         return $response->GetLocationsResult->ResponseLocation;
+    }
+
+    /**
+     * @return array|\Magento\Framework\Phrase
+     */
+    private function getValidResponeType()
+    {
+        $address  = $this->addressEnhancer->get();
+
+        if (isset($address['error'])) {
+            return __('%1 : %2', $address['error']['code'], $address['error']['message']);
+        }
+
+        return $this->getLocations($this->addressEnhancer->get());
     }
 
     /**

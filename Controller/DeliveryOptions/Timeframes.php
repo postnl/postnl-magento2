@@ -114,7 +114,7 @@ class Timeframes extends AbstractDeliveryOptions
         $this->addressEnhancer->set($params['address']);
 
         try {
-            return $this->jsonResponse($this->getPosibleDeliveryDays($this->addressEnhancer->get()));
+            return $this->jsonResponse($this->getValidResponeType());
         } catch (LocalizedException $exception) {
             return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
         } catch (\Exception $exception) {
@@ -151,6 +151,20 @@ class Timeframes extends AbstractDeliveryOptions
 
         $this->checkoutSession->setPostNLDeliveryDate($response->DeliveryDate);
         return $response->DeliveryDate;
+    }
+
+    /**
+     * @return array|\Magento\Framework\Phrase
+     */
+    private function getValidResponeType()
+    {
+        $address  = $this->addressEnhancer->get();
+
+        if (isset($address['error'])) {
+            return __('%1 : %2', $address['error']['code'], $address['error']['message']);
+        }
+
+        return $this->getPosibleDeliveryDays($this->addressEnhancer->get());
     }
 
     /**
