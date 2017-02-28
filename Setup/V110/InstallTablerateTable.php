@@ -36,67 +36,45 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL;
+namespace TIG\PostNL\Setup\V110;
 
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Phrase;
+use TIG\PostNL\Setup\AbstractTableInstaller;
 
-class Exception extends LocalizedException
+/**
+ * Class InstallTablerateTable
+ *
+ * @package TIG\PostNL\Setup\V110
+ */
+class InstallTablerateTable extends AbstractTableInstaller
 {
-    private $exceptionMessage;
+    const TABLE_NAME = 'tig_postnl_tablerate';
 
     /**
-     * @param $message
-     * @param int                       $code
-     * @param null                      $previous
+     * @return void
      */
-    public function __construct($message, $code = 0, $previous = null)
+    // @codingStandardsIgnoreLine
+    protected function defineTable()
     {
-        // @codingStandardsIgnoreLine
-        $this->exceptionMessage = __($message);
+        $this->addEntityId();
 
-        if ($code !== 0) {
-            $code = (string) $code;
-            $this->code = $code;
+        $this->addInt('website_id', 'Website ID', false, true, 0);
+        $this->addText('dest_country_id', 'Destination coutry ISO/2 or ISO/3 code', 4, false, '0');
+        $this->addInt('dest_region_id', 'Destination Region ID', false, true, 0);
+        $this->addText('dest_zip', 'Destination Post Code (Zip)', 10, false, '*');
+        $this->addText('condition_name', 'Rate Condition name', 20, false);
+        $this->addDecimal('condition_value', 'Rate condition value', '12,4', false, '0.0000');
+        $this->addDecimal('price', 'Price', '12,4', false, '0.0000');
+        $this->addDecimal('cost', 'Cost', '12,4', false, '0.0000');
 
-            $message = '[' . $code . '] ' . $message;
-        }
-
-        if (is_string($message)) {
-            // @codingStandardsIgnoreLine
-            $message = __($message);
-        }
-
-        parent::__construct($message, $previous);
-    }
-
-    /**
-     * Custom __toString method that includes the error code, if present.
-     *
-     * @return string
-     *
-     * @see Exception::__toString()
-     *
-     * @link http://www.php.net/manual/en/exception.tostring.php
-     */
-    public function __toString()
-    {
-        $string = "exception '" . __CLASS__ . "' with message '" . $this->exceptionMessage . "'";
-
-        $code = $this->getCode();
-        if ($code !== 0 && !empty($code)) {
-            $string .= " and code '" . $this->getCode() . "'";
-        }
-
-        $string .= " in "
-            . $this->getFile()
-            . ':'
-            . $this->getLine()
-            . PHP_EOL
-            . 'Stack trace:'
-            . PHP_EOL
-            . $this->getTraceAsString();
-
-        return $string;
+        $this->addIndex([
+            'website_id',
+            'dest_country_id',
+            'dest_region_id',
+            'dest_zip',
+            'condition_name',
+            'condition_value',
+            'price',
+            'cost'
+        ]);
     }
 }

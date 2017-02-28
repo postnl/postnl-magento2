@@ -36,67 +36,44 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL;
+namespace TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate;
 
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Phrase;
+use Magento\Backend\Block\Template\Context;
+use Magento\Backend\Helper\Data;
+use Magento\OfflineShipping\Block\Adminhtml\Carrier\Tablerate\Grid as MagentoGrid;
+use Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate\CollectionFactory as MagentoCollectionFactory;
 
-class Exception extends LocalizedException
+use TIG\PostNL\Model\Carrier\Tablerate;
+use TIG\PostNL\Model\ResourceModel\Tablerate\CollectionFactory;
+
+/**
+ * Class Grid
+ *
+ * @package TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate
+ */
+class Grid extends MagentoGrid
 {
-    private $exceptionMessage;
-
     /**
-     * @param $message
-     * @param int                       $code
-     * @param null                      $previous
+     * By overriding the parameters of the consturctor,
+     * the PostNL Tablerate model and collection will be used instead those of OfflineShipping.
+     *
+     * @param Context                  $context
+     * @param Data                     $backendHelper
+     * @param MagentoCollectionFactory $collectionFactory
+     * @param Tablerate                $tablerate
+     * @param CollectionFactory        $postNLCollectionFactory
+     * @param array                    $data
      */
-    public function __construct($message, $code = 0, $previous = null)
-    {
-        // @codingStandardsIgnoreLine
-        $this->exceptionMessage = __($message);
+    public function __construct(
+        Context $context,
+        Data $backendHelper,
+        MagentoCollectionFactory $collectionFactory,
+        Tablerate $tablerate,
+        CollectionFactory $postNLCollectionFactory,
+        array $data = []
+    ) {
+        parent::__construct($context, $backendHelper, $collectionFactory, $tablerate, $data);
 
-        if ($code !== 0) {
-            $code = (string) $code;
-            $this->code = $code;
-
-            $message = '[' . $code . '] ' . $message;
-        }
-
-        if (is_string($message)) {
-            // @codingStandardsIgnoreLine
-            $message = __($message);
-        }
-
-        parent::__construct($message, $previous);
-    }
-
-    /**
-     * Custom __toString method that includes the error code, if present.
-     *
-     * @return string
-     *
-     * @see Exception::__toString()
-     *
-     * @link http://www.php.net/manual/en/exception.tostring.php
-     */
-    public function __toString()
-    {
-        $string = "exception '" . __CLASS__ . "' with message '" . $this->exceptionMessage . "'";
-
-        $code = $this->getCode();
-        if ($code !== 0 && !empty($code)) {
-            $string .= " and code '" . $this->getCode() . "'";
-        }
-
-        $string .= " in "
-            . $this->getFile()
-            . ':'
-            . $this->getLine()
-            . PHP_EOL
-            . 'Stack trace:'
-            . PHP_EOL
-            . $this->getTraceAsString();
-
-        return $string;
+        $this->_collectionFactory = $postNLCollectionFactory;
     }
 }

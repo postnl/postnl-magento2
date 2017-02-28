@@ -36,67 +36,64 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL;
+namespace TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate;
 
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Phrase;
+use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\Data\Form\Element\CollectionFactory;
+use Magento\Framework\Data\Form\Element\Factory;
+use Magento\Framework\Escaper;
 
-class Exception extends LocalizedException
+use TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Renderer\Import as ImportBlock;
+
+/**
+ * Class TablerateExport
+ *
+ * @package TIG\PostNL\Block\Adminhtml\Config\Carrier
+ */
+class Import extends AbstractElement
 {
-    private $exceptionMessage;
+    /** @var ImportBlock */
+    private $importBlock;
 
     /**
-     * @param $message
-     * @param int                       $code
-     * @param null                      $previous
+     * @param Factory           $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper           $escaper
+     * @param ImportBlock       $importBlock
+     * @param array             $data
      */
-    public function __construct($message, $code = 0, $previous = null)
-    {
-        // @codingStandardsIgnoreLine
-        $this->exceptionMessage = __($message);
+    public function __construct(
+        Factory $factoryElement,
+        CollectionFactory $factoryCollection,
+        Escaper $escaper,
+        ImportBlock $importBlock,
+        $data = []
+    ) {
+        parent::__construct($factoryElement, $factoryCollection, $escaper, $data);
 
-        if ($code !== 0) {
-            $code = (string) $code;
-            $this->code = $code;
-
-            $message = '[' . $code . '] ' . $message;
-        }
-
-        if (is_string($message)) {
-            // @codingStandardsIgnoreLine
-            $message = __($message);
-        }
-
-        parent::__construct($message, $previous);
+        $this->importBlock = $importBlock;
     }
 
     /**
-     * Custom __toString method that includes the error code, if present.
-     *
-     * @return string
-     *
-     * @see Exception::__toString()
-     *
-     * @link http://www.php.net/manual/en/exception.tostring.php
+     * @return void
      */
-    public function __toString()
+    // @codingStandardsIgnoreLine
+    protected function _construct()
     {
-        $string = "exception '" . __CLASS__ . "' with message '" . $this->exceptionMessage . "'";
+        parent::_construct();
+        $this->setType('file');
+    }
 
-        $code = $this->getCode();
-        if ($code !== 0 && !empty($code)) {
-            $string .= " and code '" . $this->getCode() . "'";
-        }
+    /**
+     * @return string
+     */
+    public function getElementHtml()
+    {
+        $this->importBlock->setTimeConditionName($this->getName());
 
-        $string .= " in "
-            . $this->getFile()
-            . ':'
-            . $this->getLine()
-            . PHP_EOL
-            . 'Stack trace:'
-            . PHP_EOL
-            . $this->getTraceAsString();
+        $html = $this->importBlock->toHtml();
+        $html .= parent::getElementHtml();
 
-        return $string;
+        return $html;
     }
 }

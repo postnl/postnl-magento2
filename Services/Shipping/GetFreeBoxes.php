@@ -36,67 +36,87 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL;
+namespace TIG\PostNL\Services\Shipping;
 
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Phrase;
+use Magento\Quote\Model\Quote\Address\RateRequest;
 
-class Exception extends LocalizedException
+/**
+ * Class GetFreeBoxes
+ *
+ * @package TIG\PostNL\Services\Shipping
+ */
+class GetFreeBoxes
 {
-    private $exceptionMessage;
-
     /**
-     * @param $message
-     * @param int                       $code
-     * @param null                      $previous
+     * @param RateRequest $request
+     *
+     * @return int
      */
-    public function __construct($message, $code = 0, $previous = null)
+    public function get(RateRequest $request)
     {
-        // @codingStandardsIgnoreLine
-        $this->exceptionMessage = __($message);
+        $freeBoxes = 0;
 
-        if ($code !== 0) {
-            $code = (string) $code;
-            $this->code = $code;
+        $allItems = $request->getAllItems();
 
-            $message = '[' . $code . '] ' . $message;
+        if (!$allItems) {
+            return $freeBoxes;
         }
 
-        if (is_string($message)) {
-            // @codingStandardsIgnoreLine
-            $message = __($message);
+        foreach ($allItems as $item) {
+            $freeBoxes += $this->getFreeBoxesToAdd($item);
         }
 
-        parent::__construct($message, $previous);
+        return $freeBoxes;
     }
 
     /**
-     * Custom __toString method that includes the error code, if present.
+     * @param \Magento\Quote\Model\Quote\Item $item
      *
-     * @return string
-     *
-     * @see Exception::__toString()
-     *
-     * @link http://www.php.net/manual/en/exception.tostring.php
+     * @return int
      */
-    public function __toString()
+    private function getFreeBoxesToAdd($item)
     {
-        $string = "exception '" . __CLASS__ . "' with message '" . $this->exceptionMessage . "'";
+        $boxesCountToAdd = 0;
 
-        $code = $this->getCode();
-        if ($code !== 0 && !empty($code)) {
-            $string .= " and code '" . $this->getCode() . "'";
+        if ($item->getHasChildren() && $item->isShipSeparately()) {
+            $boxesCountToAdd = $this->getFreeBoxesCountFromChildren($item);
         }
 
-        $string .= " in "
-            . $this->getFile()
-            . ':'
-            . $this->getLine()
-            . PHP_EOL
-            . 'Stack trace:'
-            . PHP_EOL
-            . $this->getTraceAsString();
+        if ($item->getFreeShipping()) {
+            $boxesCountToAdd = $item->getQty() - $item->getFreeShipping();
+        }
 
-        return $string;
+        $itemProduct = $item->getProduct();
+
+        if ($itemProduct->isVirtual() || $item->getParentItem()) {
+            $boxesCountToAdd = 0;
+        }
+
+        return $boxesCountToAdd;
+    }
+
+    /**
+     * @param \Magento\Quote\Model\Quote\Item $item
+     *
+     * @return int
+     */
+    private function getFreeBoxesCountFromChildren($item)
+    {
+        $children = $item->getChildren();
+        $freeChildBoxes = 0;
+
+        array_walk(
+            $children,
+            function ($child, $key) use (&$freeChildBoxes, $item) {
+                /** @var \Magento\Quote\Model\Quote\Item\AbstractItem $child */
+                $childProduct = $child->getProduct();
+
+                if ($child->getFreeShipping() && !$childProduct->isVirtual()) {
+                    $freeChildBoxes += $item->getQty() * ($child->getQty() - $child->getFreeShipping());
+                }
+            }
+        );
+
+        return $freeChildBoxes;
     }
 }

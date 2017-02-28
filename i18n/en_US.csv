@@ -133,3 +133,23 @@ Sunday,Sunday
 Extension version,Extension version
 "For an A4 example, <a href=""%1"" target=""_blank"">click here</a>.","For an A4 example, <a href=""%1"" target=""_blank"">click here</a>."
 "For an A6 example, <a href=""%1"" target=""_blank"">click here</a>.","For an A6 example, <a href=""%1"" target=""_blank"">click here</a>."
+"Export CSV","Export CSV"
+"An error occurred while importing the table rates.","An error occurred while importing the table rates."
+"File has not been imported. See the following list of errors: %1","File has not been imported. See the following list of errors: %1"
+"Invalid PostNL Table Rates File Format","Invalid PostNL Table Rates File Format"
+"Invalid PostNL Table Rates File Format in Row #%1","Invalid PostNL Table Rates File Format in Row #%1"
+"Row #%1 is a dupplicate of row #%2","Row #%1 is a dupplicate of row #%2"
+"Invalid Shipping Price ""%1"" supplied in row #%2","Invalid Shipping Price ""%1"" supplied in row #%2"
+"Rate Type","Rate Type"
+Flat,Flat
+Table,Table
+Condition,Condition
+"Include Virtual Products in Price Calculation","Include Virtual Products in Price Calculation"
+"Weight vs. Destination","Weight vs. Destination"
+"Price vs. Destination","Price vs. Destination"
+"# of Items vs. Destination","# of Items vs. Destination"
+Fixed,Fixed
+Percent,Percent
+"You can import and export rates on the website scope. You can change your current scope with the dropdown at the top left of this page.","You can import and export rates on the website scope. You can change your current scope with the dropdown at the top left of this page."
+"Export Rates","Export Rates"
+"Import Rates","Import Rates"

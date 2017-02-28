@@ -36,67 +36,25 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL;
+namespace TIG\PostNL\Unit\Config\Source\Carrier;
 
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Phrase;
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\Source\Carrier\RateType;
 
-class Exception extends LocalizedException
+class RateTypeTest extends TestCase
 {
-    private $exceptionMessage;
+    protected $instanceClass = RateType::class;
 
-    /**
-     * @param $message
-     * @param int                       $code
-     * @param null                      $previous
-     */
-    public function __construct($message, $code = 0, $previous = null)
+    public function testToOptionArray()
     {
-        // @codingStandardsIgnoreLine
-        $this->exceptionMessage = __($message);
+        $instance = $this->getInstance();
+        $options  = $instance->toOptionArray();
 
-        if ($code !== 0) {
-            $code = (string) $code;
-            $this->code = $code;
+        $this->assertCount(2, $options);
 
-            $message = '[' . $code . '] ' . $message;
+        foreach ($options as $option) {
+            $this->assertArrayHasKey('label', $option);
+            $this->assertArrayHasKey('value', $option);
         }
-
-        if (is_string($message)) {
-            // @codingStandardsIgnoreLine
-            $message = __($message);
-        }
-
-        parent::__construct($message, $previous);
-    }
-
-    /**
-     * Custom __toString method that includes the error code, if present.
-     *
-     * @return string
-     *
-     * @see Exception::__toString()
-     *
-     * @link http://www.php.net/manual/en/exception.tostring.php
-     */
-    public function __toString()
-    {
-        $string = "exception '" . __CLASS__ . "' with message '" . $this->exceptionMessage . "'";
-
-        $code = $this->getCode();
-        if ($code !== 0 && !empty($code)) {
-            $string .= " and code '" . $this->getCode() . "'";
-        }
-
-        $string .= " in "
-            . $this->getFile()
-            . ':'
-            . $this->getLine()
-            . PHP_EOL
-            . 'Stack trace:'
-            . PHP_EOL
-            . $this->getTraceAsString();
-
-        return $string;
     }
 }

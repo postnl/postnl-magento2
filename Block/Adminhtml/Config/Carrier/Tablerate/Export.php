@@ -36,67 +36,68 @@
  * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL;
+namespace TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate;
 
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Phrase;
+use Magento\Backend\Model\UrlInterface;
+use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\Data\Form\Element\CollectionFactory;
+use Magento\Framework\Data\Form\Element\Factory;
+use Magento\Framework\Escaper;
 
-class Exception extends LocalizedException
+/**
+ * Class TablerateExport
+ *
+ * @package TIG\PostNL\Block\Adminhtml\Config\Carrier
+ */
+class Export extends AbstractElement
 {
-    private $exceptionMessage;
+    /**
+     * @var UrlInterface
+     */
+    private $backendUrl;
 
     /**
-     * @param $message
-     * @param int                       $code
-     * @param null                      $previous
+     * @param Factory           $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper           $escaper
+     * @param UrlInterface      $backendUrl
+     * @param array             $data
      */
-    public function __construct($message, $code = 0, $previous = null)
-    {
-        // @codingStandardsIgnoreLine
-        $this->exceptionMessage = __($message);
+    public function __construct(
+        Factory $factoryElement,
+        CollectionFactory $factoryCollection,
+        Escaper $escaper,
+        UrlInterface $backendUrl,
+        array $data = []
+    ) {
+        parent::__construct($factoryElement, $factoryCollection, $escaper, $data);
 
-        if ($code !== 0) {
-            $code = (string) $code;
-            $this->code = $code;
-
-            $message = '[' . $code . '] ' . $message;
-        }
-
-        if (is_string($message)) {
-            // @codingStandardsIgnoreLine
-            $message = __($message);
-        }
-
-        parent::__construct($message, $previous);
+        $this->backendUrl = $backendUrl;
     }
 
     /**
-     * Custom __toString method that includes the error code, if present.
-     *
      * @return string
-     *
-     * @see Exception::__toString()
-     *
-     * @link http://www.php.net/manual/en/exception.tostring.php
      */
-    public function __toString()
+    public function getElementHtml()
     {
-        $string = "exception '" . __CLASS__ . "' with message '" . $this->exceptionMessage . "'";
+        $form = $this->getForm()->getParent();
+        $layout = $form->getLayout();
 
-        $code = $this->getCode();
-        if ($code !== 0 && !empty($code)) {
-            $string .= " and code '" . $this->getCode() . "'";
-        }
+        /** @var \Magento\Backend\Block\Widget\Button $buttonBlock  */
+        $buttonBlock = $layout->createBlock('Magento\Backend\Block\Widget\Button');
+        $buttonBlockRequest = $buttonBlock->getRequest();
 
-        $string .= " in "
-            . $this->getFile()
-            . ':'
-            . $this->getLine()
-            . PHP_EOL
-            . 'Stack trace:'
-            . PHP_EOL
-            . $this->getTraceAsString();
+        $params = ['website' => $buttonBlockRequest->getParam('website')];
+        $url = $this->backendUrl->getUrl("postnl/carrier_tablerate/export", $params);
+        $data = [
+            'label' => __('Export CSV'),
+            'onclick' => "setLocation('" . $url
+                . "conditionName/' + $('carriers_tig_postnl_condition_name').value + '/tablerates.csv' )",
+            'class' => '',
+        ];
+        $buttonBlock->setData($data);
 
-        return $string;
+        $html = $buttonBlock->toHtml();
+        return $html;
     }
 }
