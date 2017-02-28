@@ -70,7 +70,6 @@
                             <tr class="row">
                                 <th class="col col-method" data-bind="i18n: 'Select Method'"></th>
                                 <th class="col col-price" data-bind="i18n: 'Price'"></th>
-                                <th class="col col-fee" data-bind="i18n: 'Fee'"></th>
                                 <th class="col col-method" data-bind="i18n: 'Method Title'"></th>
                                 <th class="col col-carrier" data-bind="i18n: 'Carrier Title'"></th>
                             </tr>
@@ -105,16 +104,13 @@
                                     <!--/ko-->
                                     <!-- /ko -->
                                 </td>
-                                <td class="col col-price">
+                                <td style="min-width:100px;" class="col col-price">
                                     <!-- ko foreach: $parent.getRegion('price') -->
                                     <!-- ko template: getTemplate() --><!-- /ko -->
                                     <!-- /ko -->
 
-
-                                </td>
-                                <td class="col col-fee">
                                     <!-- ko if: method.fee != null -->
-                                + <span data-bind="text: $parent.formatPrice(method.fee)"></span>
+                                    + <span data-bind="text: $parent.formatPrice(method.fee)"></span>
                                     <!-- /ko -->
                                 </td>
 
