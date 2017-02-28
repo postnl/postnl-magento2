@@ -250,7 +250,7 @@ define([
             this[key] = value;
         }.bind(this));
 
-        this.expanded = ko.observable(false);
+        this.expanded = ko.observable(true);
 
         this.toggle = function () {
             this.expanded(!this.expanded());
