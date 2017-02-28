@@ -43,7 +43,7 @@
         <carriers>
             <tig_postnl>
                 <active>1</active>
-                <allowspecific>0</allowspecific>
+                <sallowspecific>0</sallowspecific>
                 <model>TIG\PostNL\Model\Carrier\PostNL</model>
                 <name>PostNL</name>
                 <price>5.00</price>
@@ -55,12 +55,18 @@
         <tig_postnl>
             <stability>alpha</stability>
             <supported_magento_version>2.1.3</supported_magento_version>
+            <generalconfiguration_extension_status>
+                <modus>2</modus>
+                <customer_number_test>11223344</customer_number_test>
+                <customer_code_test>TOTA</customer_code_test>
+                <api_key_test>qLNy5m86BYYjD67CPrGZ1BaYU2A6OFrl</api_key_test>
+            </generalconfiguration_extension_status>
             <generalconfiguration_logging>
                 <types>300,400,500,550,600</types>
             </generalconfiguration_logging>
-            <webshop_printer>
+            <printer>
                 <label_size>A4</label_size>
-            </webshop_printer>
+            </printer>
             <webshop_shipping>
                 <cutoff_time>18:00:00</cutoff_time>
                 <shipment_days>0,1,2,3,4,5,6</shipment_days>
@@ -76,6 +82,7 @@
                 <deliverydays_active>0</deliverydays_active>
                 <stockoptions>in_stock</stockoptions>
                 <pakjegemak_active>1</pakjegemak_active>
+                <sundaydelivery_active>1</sundaydelivery_active>
                 <eveningdelivery_active>1</eveningdelivery_active>
                 <max_deliverydays>7</max_deliverydays>
                 <eveningdelivery_fee>2</eveningdelivery_fee>
