@@ -328,7 +328,10 @@
 * Override Magento Narrow Shipping Table
 *
 * =================================================================================================================== */
-.table-checkout-shipping-method {
+#opc-shipping_method #checkout-shipping-method-load .table-checkout-shipping-method {
   width: 100% !important;
   max-width: 500px;
+}
+#opc-shipping_method #checkout-shipping-method-load .table-checkout-shipping-method .col-price {
+  min-width: 100px;
 }
