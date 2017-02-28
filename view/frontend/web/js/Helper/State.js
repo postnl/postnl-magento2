@@ -91,6 +91,7 @@ define([
         deliveryOptionsAreLoading: deliveryOptionsAreLoading,
         pickupOptionsAreAvailable: ko.observable(true),
         pickupOptionsAreLoading: pickupOptionsAreLoading,
+        currentSelectedShipmentType: ko.observable(null),
         isLoading: isLoading,
         method: ko.observable(null),
         fee: fee,
