@@ -38,25 +38,53 @@
 define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote, $) {
     'use strict';
 
-    var address, shippingAddress, oldAddress = false;
+    var address = {
+            postalCode  : null,
+            countryCode : null,
+            street      : null,
+            firstname   : null,
+            lastname    : null,
+            telephone   : null
+        },
+        shippingAddress,
+        oldAddress  = false,
+        countryCode,
+        valueUpdateNotifier = ko.observable(null);
+
+    var fields = [
+        "input[name*='postcode']",
+        "select[name*='country_id']"
+    ];
+
+    /**
+     * Without cookie data Magento is not observing the fields so the AddressFinder is never triggert.
+     * The Timeout is needed so it gives the Notifier the change to retrieve the correct country code,
+     * and not the default value.
+     */
+    $(document).on('change', fields.join(','), function() {
+        setTimeout(function() {
+            countryCode = $("select[name*='country_id']").val();
+            valueUpdateNotifier.notifySubscribers();
+        }, 2000);
+    });
 
     /**
      * Collect the needed information from the quote
      */
     return ko.computed(function () {
+        valueUpdateNotifier();
         shippingAddress = quote.shippingAddress();
-        if (!shippingAddress) {
-            return oldAddress;
-        }
 
-        address = {
-            postalCode  : shippingAddress.postcode,
-            countryCode : shippingAddress.countryId,
-            street      : shippingAddress.street,
-            firstname   : shippingAddress.firstname,
-            lastname    : shippingAddress.lastname,
-            telephone   : shippingAddress.telephone
-        };
+        if (shippingAddress) {
+            address = {
+                postalCode  : shippingAddress.postcode,
+                countryCode : shippingAddress.countryId,
+                street      : shippingAddress.street,
+                firstname   : shippingAddress.firstname,
+                lastname    : shippingAddress.lastname,
+                telephone   : shippingAddress.telephone
+            };
+        }
 
         /**
          * Unfortunately Magento does not always fill all fields, so get them ourselves.
@@ -82,6 +110,10 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
 
         if (!address.telephone) {
             address.telephone = $("input[name*='telephone']").val();
+        }
+
+        if (!address.countryCode || address.countryCode !== countryCode) {
+            address.countryCode = countryCode;
         }
 
         if (!address.postalCode || !address.countryCode || !address.street) {
