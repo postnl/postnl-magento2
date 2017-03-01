@@ -64,44 +64,13 @@ define([
         }
     });
 
-    fee.subscribe(function (value) {
-        var shippingRates = shippingService.getShippingRates()();
-
-        if (value <= 0) {
-            value = null;
-        }
-
-        /**
-         * For some unknown reason the rates would not update on the easy way (rate['fee'] = fee).
-         * That's why we had to follow this path.
-         */
-        ko.utils.arrayForEach(shippingRates, function (rate, index) {
-            if (rate.carrier_code != 'tig_postnl') {
-                return;
-            }
-
-            delete rate.fee;
-
-            var newRate = {
-                'fee': value
-            };
-
-            ko.utils.arrayForEach(Object.keys(rate), function (key) {
-                newRate[key] = rate[key];
-            });
-
-            shippingRates[index] = newRate;
-        });
-
-        shippingService.setShippingRates(shippingRates);
-    });
-
     return {
         deliveryOptionsAreAvailable: ko.observable(true),
         deliveryOptionsAreLoading: deliveryOptionsAreLoading,
         pickupOptionsAreAvailable: ko.observable(true),
         pickupOptionsAreLoading: pickupOptionsAreLoading,
         currentSelectedShipmentType: currentSelectedShipmentType,
+        currentOpenPane: ko.observable('delivery'),
         pickupAddress: ko.observable(null),
         isLoading: isLoading,
         method: ko.observable(null),

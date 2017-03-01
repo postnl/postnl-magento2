@@ -73,19 +73,6 @@ define([
                 return State.currentSelectedShipmentType() === 'pickup';
             });
 
-            if (!this.address()) {
-                $.ajax({
-                    url     : window.checkoutConfig.shipping.postnl.urls.pakjegemak_address,
-                    success : function (result) {
-                        State.currentSelectedShipmentType('pickup');
-                        State.pickupAddress(result.address);
-                    }.bind(this),
-                    error   : function () {
-                        State.currentSelectedShipmentType('delivery');
-                    }.bind(this)
-                });
-            }
-
             return this;
         },
 
