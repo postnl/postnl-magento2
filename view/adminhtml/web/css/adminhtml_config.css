@@ -365,6 +365,16 @@
     background-position: calc(100% - 50px) 15px;
 }
 
+
+h4#carriers_tig_postnl_import_export_header {
+    margin-left: 33%;
+    color: #303030;
+    font-size: 12px;
+    width: 40%;
+    font-weight: normal;
+    padding: 1rem 1.5rem 0 0;
+}
+
 /* Specific Select element fix ====================================================================================== */
 
 #tig_postnl_productoptions_supported_options option { white-space: normal; }
