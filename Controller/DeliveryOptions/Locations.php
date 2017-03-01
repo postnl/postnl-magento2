@@ -63,11 +63,6 @@ class Locations extends AbstractDeliveryOptions
     private $locationsEndpoint;
 
     /**
-     * @var DeliveryDate
-     */
-    private $deliveryEndpoint;
-
-    /**
      * @param Context           $context
      * @param OrderFactory      $orderFactory
      * @param OrderRepository   $orderRepository
@@ -89,14 +84,14 @@ class Locations extends AbstractDeliveryOptions
     ) {
         $this->addressEnhancer   = $addressEnhancer;
         $this->locationsEndpoint = $locations;
-        $this->deliveryEndpoint  = $deliveryDate;
 
         parent::__construct(
             $context,
             $jsonHelper,
             $orderFactory,
             $orderRepository,
-            $checkoutSession
+            $checkoutSession,
+            $deliveryDate
         );
     }
 
@@ -153,32 +148,10 @@ class Locations extends AbstractDeliveryOptions
         $address  = $this->addressEnhancer->get();
 
         if (isset($address['error'])) {
+            //@codingStandardsIgnoreLine
             return __('%1 : %2', $address['error']['code'], $address['error']['message']);
         }
 
         return $this->getLocations($this->addressEnhancer->get());
-    }
-
-    /**
-     * CIF call to get the delivery day needed for the StartDate param in TimeFrames Call.
-     * @param array $address
-     *
-     * @return array
-     */
-    private function getDeliveryDay($address)
-    {
-        if ($this->checkoutSession->getPostNLDeliveryDate()) {
-            return $this->checkoutSession->getPostNLDeliveryDate();
-        }
-
-        $this->deliveryEndpoint->setParameters($address);
-        $response = $this->deliveryEndpoint->call();
-
-        if (!is_object($response) || !isset($response->DeliveryDate)) {
-            return __('Invalid GetDeliveryDate response: %1', var_export($response, true));
-        }
-
-        $this->checkoutSession->setPostNLDeliveryDate($response->DeliveryDate);
-        return $response->DeliveryDate;
     }
 }

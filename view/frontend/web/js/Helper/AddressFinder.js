@@ -49,6 +49,7 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
         shippingAddress,
         oldAddress  = false,
         countryCode,
+        timer,
         valueUpdateNotifier = ko.observable(null);
 
     var fields = [
@@ -56,16 +57,22 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
         "select[name*='country_id']"
     ];
 
+
     /**
      * Without cookie data Magento is not observing the fields so the AddressFinder is never triggert.
-     * The Timeout is needed so it gives the Notifier the change to retrieve the correct country code,
+     * The Timeout is needed so it gives the Notifier the chance to retrieve the correct country code,
      * and not the default value.
      */
     $(document).on('change', fields.join(','), function() {
-        setTimeout(function() {
+        // Clear timeout if exists.
+        if (typeof timer !== 'undefined') {
+            clearTimeout(timer);
+        }
+
+        timer = setTimeout(function() {
             countryCode = $("select[name*='country_id']").val();
             valueUpdateNotifier.notifySubscribers();
-        }, 2000);
+        }, 500);
     });
 
     /**
