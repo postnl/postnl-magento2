@@ -4,14 +4,14 @@
   "description": "The official PostNL Magento 2 extension build by TIG",
   "main": "Gruntfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "grunt"
   },
   "author": "TIG",
-  "license": "ISC",
+  "license": "CC-BY-NC-ND-3.0",
   "bugs": {
-    "url": "https://github.com/tig-nl/tig-extension-tig-postnl-magento2/issues"
+    "url": "https://servicedesk.tig.nl/hc/nl/categories/115000341267-PostNL-Magento-2"
   },
-  "homepage": "https://github.com/tig-nl/tig-extension-tig-postnl-magento2",
+  "homepage": "https://tig.nl/postnl-magento-2-extensie-community-edition/",
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-jshint": "^1.1.0",

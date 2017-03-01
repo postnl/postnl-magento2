@@ -100,6 +100,7 @@ class ImportTest extends TestCase
     {
         $expectedCallCount = (int)(null !== $file);
 
+        // @codingStandardsIgnoreLine
         $_FILES['groups']['tmp_name']['tig_postnl']['fields']['import']['value'] = $file;
 
         $websiteMock = $this->getFakeMock(WebsiteInterface::class)->getMock();
