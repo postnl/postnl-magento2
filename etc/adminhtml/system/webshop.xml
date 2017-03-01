@@ -59,14 +59,16 @@
         <group id="shipping" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Shipping Settings</label>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
-            <field id="cutoff_time" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <field id="cutoff_time" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Cutoff time</label>
+                <comment><![CDATA[When an order is placed after this time, another day will be added to the shipping duration. Please enter this time in the Europe/Amsterdam time zone.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Settings\CutOffSettings</source_model>
                 <config_path>tig_postnl/webshop_shipping/cutoff_time</config_path>
             </field>
 
             <field id="shipment_days" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Shipment days</label>
+                <comment><![CDATA[Select on which days of the week orders are shipped. You can read more about shipping and delivery days <a href="https://servicedesk.tig.nl/hc/nl/articles/115003398667" target="_blank" title="PostNL shipping days">here</a>]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Settings\DaysOfWeek</source_model>
                 <config_path>tig_postnl/webshop_shipping/shipment_days</config_path>
             </field>

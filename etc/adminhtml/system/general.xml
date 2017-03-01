@@ -45,7 +45,7 @@
         <fieldset_css>tig_postnl-section</fieldset_css>
 
         <group id="extension_status" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Extension status</label>
+            <label>Account settings</label>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
             <field id="modus" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Modus</label>
@@ -53,60 +53,68 @@
                 <config_path>tig_postnl/generalconfiguration_extension_status/modus</config_path>
             </field>
             <!--Live Fields-->
-            <field id="customer_number" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+            <field id="customer_number" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Customernumber live mode</label>
+                <comment><![CDATA[Enter you PostNL customer number.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/customer_number</config_path>
                 <depends>
                     <field id="modus">1</field>
                 </depends>
             </field>
-            <field id="customer_code" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+            <field id="customer_code" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Customercode live mode</label>
+                <comment><![CDATA[Enter your PostNL customer code. It must contain between 3 and 4 letters.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/customer_code</config_path>
                 <depends>
                     <field id="modus">1</field>
                 </depends>
             </field>
-            <field id="api_key" translate="label" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+            <field id="api_key" translate="label comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Api Key live mode</label>
+                <comment><![CDATA[Enter your PostNL API key. If you haven't got an API key, please contact PostNL support.]]></comment>
                 <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 <config_path>tig_postnl/generalconfiguration_extension_status/api_key</config_path>
                 <depends>
                     <field id="modus">1</field>
                 </depends>
             </field>
-            <field id="bls_code" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+            <field id="bls_code" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>BLS location code  live mode</label>
+                <comment><![CDATA[Enter your PostNL BLS location code.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/bls_code</config_path>
                 <depends>
                     <field id="modus">1</field>
                 </depends>
             </field>
             <!--Test Fields-->
-            <field id="customer_number_test" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+            <field id="customer_number_test" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Customernumber test mode</label>
+                <comment><![CDATA[You can use the test account credentials found <a href="https://servicedesk.tig.nl/hc/nl/articles/115003510508" target="_blank" title="PostNL test account">here</a>.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/customer_number_test</config_path>
                 <depends>
                     <field id="modus">2</field>
                 </depends>
             </field>
-            <field id="customer_code_test" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+            <field id="customer_code_test" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Customercode test mode</label>
+                <comment><![CDATA[You can use the test account credentials found <a href="https://servicedesk.tig.nl/hc/nl/articles/115003510508" target="_blank" title="PostNL test account">here</a>.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/customer_code_test</config_path>
                 <depends>
                     <field id="modus">2</field>
                 </depends>
             </field>
-            <field id="api_key_test" translate="label" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+            <field id="api_key_test" translate="label comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Api Key test mode</label>
+                <comment><![CDATA[You can use the test account credentials found <a href="https://servicedesk.tig.nl/hc/nl/articles/115003510508" target="_blank" title="PostNL test account">here</a>.]]></comment>
                 <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 <config_path>tig_postnl/generalconfiguration_extension_status/api_key_test</config_path>
                 <depends>
                     <field id="modus">2</field>
                 </depends>
             </field>
-            <field id="bls_code_test" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+            <field id="bls_code_test" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>BLS location code test mode</label>
+                <comment><![CDATA[You can use the test account credentials found <a href="https://servicedesk.tig.nl/hc/nl/articles/115003510508" target="_blank" title="PostNL test account">here</a>.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/bls_code_test</config_path>
                 <depends>
                     <field id="modus">2</field>
@@ -155,8 +163,9 @@
             </field>
         </group>
 
-        <group id="logging" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+        <group id="logging" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Logging</label>
+            <comment><![CDATA[Logs will be created within the var/log/PostNL/ directory. You can find more information about the different kinds of logs <a href="https://servicedesk.tig.nl/hc/nl/articles/115003513908" target="_blank" title="PostNL logs">here</a>.]]></comment>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
             <field id="types" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Types of logging</label>
