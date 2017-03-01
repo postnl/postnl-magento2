@@ -134,14 +134,14 @@ class Timeframes extends AbstractDeliveryOptions
      */
     private function getValidResponeType()
     {
-        $address  = $this->addressEnhancer->get();
+        $address = $this->addressEnhancer->get();
 
         if (isset($address['error'])) {
             //@codingStandardsIgnoreLine
             return __('%1 : %2', $address['error']['code'], $address['error']['message']);
         }
 
-        return $this->getPosibleDeliveryDays($this->addressEnhancer->get());
+        return $this->getPosibleDeliveryDays($address);
     }
 
     /**
