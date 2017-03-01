@@ -1,0 +1,37 @@
+<?php
+/**
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
+?>
+<div id="section">
+    <p><?php echo __('You need to be a contract customer in order to use the PostNL extension. If you are not a contract customer, please <a href="%1" target="_blank">register here</a>.', [$block->getInfoUrlForDeliveryoptions()]); ?> </p>
+    <p><?php echo __('After registration you will receive an email containing information about you account settings. <br />If you did not received or cannot find this email, please contact PostNL support at 058-2333343.');?> </p>
+    <p><?php echo __('In case you like to test the extension, you can use these <a href="%1" target="_blank">test account credentials</a>.', [$block->getInfoUrlForTestAccount()]);?></p>
+</div>

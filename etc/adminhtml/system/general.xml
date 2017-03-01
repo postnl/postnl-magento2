@@ -43,7 +43,10 @@
         <label>General configuration and account information</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-section</fieldset_css>
-
+        <group id="extension_use" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+            <attribute type="expanded">1</attribute>
+            <frontend_model>\TIG\PostNL\Block\Adminhtml\Config\Comment\AccountSettings</frontend_model>
+        </group>
         <group id="extension_status" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Account settings</label>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
