@@ -71,7 +71,7 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', 'Lint all PHP al JavaScript files', ['exec:phplint', 'jshint:all']);
     grunt.registerTask('phpcs', 'Run the Code Sniffer: For all production code and for the test code', ['exec:phpcs', 'exec:phpcsTest']);
     grunt.registerTask('codeCoverage', 'Generate the code coverage report in build', ['exec:codeCoverage']);
-    grunt.registerTask('runTests', 'Generate the code coverage report in build', ['exec:unitTests', 'exec:integrationTests']);
+    grunt.registerTask('runTests', 'Run all available tests: Unit and integration', ['exec:unitTests', 'exec:integrationTests']);
     grunt.registerTask('test', 'Run all code validation check: Unit tests, Code Sniffer, Linting, etc.', [
         'phpcs',
         'lint',
