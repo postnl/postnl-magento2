@@ -46,12 +46,22 @@ define([
     checkoutData,
     shippingService
 ) {
-    var deliveryOptionsAreLoading = ko.observable(false);
-    var pickupOptionsAreLoading = ko.observable(false);
-    var fee = ko.observable(null);
+    var deliveryOptionsAreLoading = ko.observable(false),
+        pickupOptionsAreLoading = ko.observable(false),
+        fee = ko.observable(null),
+        currentSelectedShipmentType = ko.observable(null);
 
     var isLoading = ko.computed(function () {
         return deliveryOptionsAreLoading() || pickupOptionsAreLoading();
+    });
+
+    /**
+     * When switching from delivery to pickup, the fee must be removed.
+     */
+    currentSelectedShipmentType.subscribe(function (value) {
+        if (value == 'pickup') {
+            fee(0);
+        }
     });
 
     fee.subscribe(function (value) {
@@ -91,11 +101,17 @@ define([
         deliveryOptionsAreLoading: deliveryOptionsAreLoading,
         pickupOptionsAreAvailable: ko.observable(true),
         pickupOptionsAreLoading: pickupOptionsAreLoading,
-        currentSelectedShipmentType: ko.observable(null),
+        currentSelectedShipmentType: currentSelectedShipmentType,
+        pickupAddress: ko.observable(null),
         isLoading: isLoading,
         method: ko.observable(null),
         fee: fee,
 
+        /**
+         * Make sure that the PostNL shipping method gets selected when the customer picks a delivery or pickup option.
+         *
+         * @returns {boolean}
+         */
         selectShippingMethod: function () {
             selectShippingMethodAction(this.method());
             checkoutData.setSelectedShippingRate(this.method().carrier_code + '_' + this.method().method_code);

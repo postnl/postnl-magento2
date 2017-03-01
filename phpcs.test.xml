@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="TIG_PostNL">
+    <description>TIG PostNL Coding Standard</description>
+
+    <config name="installed_paths" value="vendor/squizlabs/php_codesniffer/CodeSniffer/Standards,vendor/magento/marketplace-eqp,vendor/object-calisthenics/phpcs-calisthenics-rules/src/"/>
+
+    <rule ref="MEQP2"/>
+
+    <include-pattern>*/Test/*</include-pattern>
+
+    <extension>php</extension>
+</ruleset>

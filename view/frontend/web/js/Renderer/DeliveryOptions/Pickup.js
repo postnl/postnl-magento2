@@ -127,6 +127,19 @@ define([
 
                 State.selectShippingMethod();
                 State.currentSelectedShipmentType('pickup');
+                State.pickupAddress({
+                    company: value.Name,
+                    prefix: '',
+                    firstname: '',
+                    lastname: '',
+                    suffix: '',
+                    street: this.getStreet(value.Address),
+                    city: value.Address.City,
+                    region: '',
+                    postcode: value.Address.Zipcode,
+                    countryId: value.Address.Countrycode,
+                    telephone: ''
+                });
 
                 $.ajax({
                     method : 'POST',
@@ -140,7 +153,7 @@ define([
                         customerData    : AddressFinder()
                     }
                 });
-            });
+            }.bind(this));
 
             return this;
         },
@@ -177,10 +190,22 @@ define([
             });
         },
 
+        /**
+         * Check if the current row is selected.
+         *
+         * @param $data
+         * @returns {boolean}
+         */
         isRowSelected: function ($data) {
             return JSON.stringify(this.selectedOption()) == JSON.stringify($data);
         },
 
+        /**
+         * Format the distance to the location
+         *
+         * @param distance
+         * @returns {string}
+         */
         getDistanceText: function (distance) {
             var text = '';
 
@@ -255,6 +280,16 @@ define([
          */
         toggle: function ($data) {
             $data.expanded(!$data.expanded());
+        },
+
+        getStreet: function (Address) {
+            var houseNumber = Address.HouseNr;
+
+            if (Address.HouseNrExt) {
+                houseNumber += ' ' + Address.HouseNrExt;
+            }
+
+            return [Address.Street, houseNumber];
         }
     });
 

@@ -55,7 +55,7 @@ interface QuoteInterface
     public function getQuote();
 
     /**
-     * @return Quote
+     * @return int
      */
     public function getQuoteId();
 
