@@ -69,7 +69,7 @@ define([
             ]);
 
             this.address = State.pickupAddress;
-            this.isVisible = ko.computed( function () {
+            this.isVisible = ko.computed(function () {
                 return State.currentSelectedShipmentType() === 'pickup';
             });
 
