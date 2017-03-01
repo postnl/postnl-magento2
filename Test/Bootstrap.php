@@ -37,7 +37,7 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-if (strpos(__DIR__, 'app/code')) {
+if (strpos(__DIR__, 'app/code') !== false) {
     /**
      * From app/code/TIG/PostNL
      */
