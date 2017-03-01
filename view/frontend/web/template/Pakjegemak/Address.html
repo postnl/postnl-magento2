@@ -1,4 +1,4 @@
-<!-- ko if: isVisible && address -->
+<!-- ko if: isVisible() && address() !== null -->
 <div class="shipping-information">
     <div class="pakjegemak-address">
         <div class="shipping-information-title">
@@ -10,7 +10,7 @@
         <div class="shipping-information-content">
             <!-- ko text: address().company --><!-- /ko --><br/>
             <!-- ko text: address().prefix --><!-- /ko --> <!-- ko text: address().firstname --><!-- /ko -->
-            <!-- ko text: address().street --><!-- /ko --><br/>
+            <!-- ko text: address().street.join(' ') --><!-- /ko --><br/>
             <!-- ko text: address().city --><!-- /ko -->, <!-- ko text: address().region --><!-- /ko --> <!-- ko text: address().postcode --><!-- /ko --><br/>
             <!-- ko text: getCountryName(address().countryId) --><!-- /ko --><br/>
             <!-- ko text: address().telephone --><!-- /ko --><br/>

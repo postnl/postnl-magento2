@@ -68,17 +68,20 @@ define([
                 'isVisible'
             ]);
 
-            this.address(State.pickupAddress());
+            this.address = State.pickupAddress;
+            this.isVisible = ko.computed( function () {
+                return State.currentSelectedShipmentType() === 'pickup';
+            });
 
             if (!this.address()) {
                 $.ajax({
                     url     : window.checkoutConfig.shipping.postnl.urls.pakjegemak_address,
                     success : function (result) {
-                        this.isVisible(result.isPakjegemakOrder);
-                        this.address(result.address);
+                        State.currentSelectedShipmentType('pickup');
+                        State.pickupAddress(result.address);
                     }.bind(this),
                     error   : function () {
-                        this.isVisible(false);
+                        State.currentSelectedShipmentType('delivery');
                     }.bind(this)
                 });
             }

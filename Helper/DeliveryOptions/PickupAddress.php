@@ -146,7 +146,7 @@ class PickupAddress
         $address->setCompany($pgData['Name']);
         $address->setCity($pgData['City']);
         $address->setCountryId($pgData['Countrycode']);
-        $address->setStreet([$pgData['Street'],$pgData['HouseNr']]);
+        $address->setStreet($this->getStreet($pgData));
         $address->setPostcode($pgData['Zipcode']);
         $address->setFirstname($pgData['customer']['firstname']);
         $address->setLastname($pgData['customer']['lastname']);
@@ -154,5 +154,21 @@ class PickupAddress
         $address->save();
 
         return $address;
+    }
+
+    /**
+     * @param $address
+     *
+     * @return array
+     */
+    private function getStreet($address)
+    {
+        $houseNr = $address['HouseNr'];
+
+        if (array_key_exists('HouseNrExt', $address)) {
+            $houseNr .= ' ' . $address['HouseNrExt'];
+        }
+
+        return [$address['Street'], $houseNr];
     }
 }
