@@ -92,10 +92,16 @@ define([
         pickupOptionsAreAvailable: ko.observable(true),
         pickupOptionsAreLoading: pickupOptionsAreLoading,
         currentSelectedShipmentType: ko.observable(null),
+        pickupAddress: ko.observable(null),
         isLoading: isLoading,
         method: ko.observable(null),
         fee: fee,
 
+        /**
+         * Make sure that the PostNL shipping method gets selected when the customer picks a delivery or pickup option.
+         *
+         * @returns {boolean}
+         */
         selectShippingMethod: function () {
             selectShippingMethodAction(this.method());
             checkoutData.setSelectedShippingRate(this.method().carrier_code + '_' + this.method().method_code);

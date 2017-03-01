@@ -52,9 +52,15 @@ class Urls extends AbstractCheckoutConfiguration
             'deliveryoptions_timeframes' => $this->getUrl('postnl/deliveryoptions/timeframes'),
             'deliveryoptions_locations' => $this->getUrl('postnl/deliveryoptions/locations'),
             'deliveryoptions_save' => $this->getUrl('postnl/deliveryoptions/save'),
+            'pakjegemak_address' => $this->getUrl('postnl/pakjegemak/address'),
         ];
     }
 
+    /**
+     * @param $path
+     *
+     * @return string
+     */
     private function getUrl($path)
     {
         return $this->urlBuilder->getUrl($path, ['_secure' => true]);

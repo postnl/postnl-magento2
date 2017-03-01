@@ -56,6 +56,10 @@ class FeeCalculator
      */
     public function get($params)
     {
+        if (!array_key_exists('option', $params)) {
+            return (float)0.0;
+        }
+
         if ($this->shippingOptions->isEveningDeliveryActive() && $params['option'] == 'Evening') {
             return (float)$this->shippingOptions->getEveningDeliveryFee();
         }

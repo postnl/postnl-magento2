@@ -47,6 +47,8 @@
         <referenceContainer name="content">
             <referenceBlock name="checkout.root">
                 <arguments>
+
+
                     <argument name="jsLayout" xsi:type="array">
                         <item name="components" xsi:type="array">
                             <item name="checkout" xsi:type="array">
@@ -75,6 +77,18 @@
                                                         </item>
                                                     </item>
                                                 </item>
+                                            </item>
+                                        </item>
+                                    </item>
+
+                                    <item name="sidebar" xsi:type="array">
+                                        <item name="children" xsi:type="array">
+                                            <item name="tig-postnl-pakjegemak-address" xsi:type="array">
+                                                <item name="component" xsi:type="string">TIG_PostNL/js/Renderer/Pakjegemak/Address</item>
+                                                <item name="config" xsi:type="array">
+                                                    <item name="deps" xsi:type="string">checkout.steps.shipping-step.shippingAddress</item>
+                                                </item>
+                                                <item name="displayArea" xsi:type="string">shipping-information</item>
                                             </item>
                                         </item>
                                     </item>

@@ -127,6 +127,19 @@ define([
 
                 State.selectShippingMethod();
                 State.currentSelectedShipmentType('pickup');
+                State.pickupAddress({
+                    company: value.Name,
+                    prefix: '',
+                    firstname: '',
+                    lastname: '',
+                    suffix: '',
+                    street: value.Address.Street + ' ' + value.Address.HouseNr,
+                    city: value.Address.City,
+                    region: '',
+                    postcode: value.Address.Zipcode,
+                    countryId: value.Address.Countrycode,
+                    telephone: ''
+                });
 
                 $.ajax({
                     method : 'POST',

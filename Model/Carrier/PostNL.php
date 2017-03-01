@@ -108,7 +108,6 @@ class PostNL extends AbstractCarrier implements CarrierInterface
         $this->rateMethodFactory = $rateMethodFactory;
         $this->getFreeBoxes = $getFreeBoxes;
         $this->track = $track;
-
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
 
