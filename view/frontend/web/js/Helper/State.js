@@ -31,13 +31,11 @@
 define([
     'ko',
     'Magento_Checkout/js/action/select-shipping-method',
-    'Magento_Checkout/js/checkout-data',
-    'Magento_Checkout/js/model/shipping-service'
+    'Magento_Checkout/js/checkout-data'
 ], function (
     ko,
     selectShippingMethodAction,
-    checkoutData,
-    shippingService
+    checkoutData
 ) {
     var deliveryOptionsAreLoading = ko.observable(false),
         pickupOptionsAreLoading = ko.observable(false),

@@ -31,10 +31,14 @@
 define([
     'ko',
     'jquery',
+    'Magento_Checkout/js/model/quote',
+    'Magento_Catalog/js/price-utils',
     'TIG_PostNL/js/Helper/State'
 ], function (
     ko,
     $,
+    quote,
+    priceUtils,
     State
 ) {
     var daysLabels = {
@@ -93,6 +97,53 @@ define([
             }
 
             return text;
+        };
+
+        /**
+         * @returns {boolean}
+         */
+        this.hasPGE = function () {
+            var pgeActive = window.checkoutConfig.shipping.postnl.pakjegemak_express_active;
+            var pgeInDeliveryOptions = (this.DeliveryOptions.string.indexOf('PGE') >= '0');
+
+            return pgeActive && pgeInDeliveryOptions;
+        };
+
+        /**
+         * Check if there is valid fee.
+         *
+         * @returns {boolean}
+         */
+        this.hasFee = function () {
+            var fee = this.getFee();
+
+            if (!fee) {
+                return false;
+            }
+
+            return fee > 0;
+        };
+
+        /**
+         * Retrieve the fee from the backend configuration.
+         *
+         * @returns {*}
+         */
+        this.getFee = function () {
+            if (!this.hasPGE()) {
+                return null;
+            }
+
+            return window.checkoutConfig.shipping.postnl.pakjegemak_express_fee;
+        };
+
+        /**
+         * Format the fee using the priceUtils
+         *
+         * @returns {*}
+         */
+        this.getFormattedFee = function () {
+            return priceUtils.formatPrice(this.getFee(), quote.getPriceFormat());
         };
 
         /**

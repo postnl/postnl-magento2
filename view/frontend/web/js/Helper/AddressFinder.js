@@ -39,17 +39,17 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
             lastname    : null,
             telephone   : null
         },
-        shippingAddress,
-        oldAddress  = false,
         countryCode,
         timer,
+        allFieldsExists = true,
         valueUpdateNotifier = ko.observable(null);
 
     var fields = [
+        "input[name*='street[0]']",
+        "input[name*='street[1]']",
         "input[name*='postcode']",
         "select[name*='country_id']"
     ];
-
 
     /**
      * Without cookie data Magento is not observing the fields so the AddressFinder is never triggert.
@@ -73,17 +73,17 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
      */
     return ko.computed(function () {
         valueUpdateNotifier();
-        shippingAddress = quote.shippingAddress();
 
-        if (shippingAddress) {
-            address = {
-                postalCode  : shippingAddress.postcode,
-                countryCode : shippingAddress.countryId,
-                street      : shippingAddress.street,
-                firstname   : shippingAddress.firstname,
-                lastname    : shippingAddress.lastname,
-                telephone   : shippingAddress.telephone
-            };
+        allFieldsExists = true;
+        $.each(fields, function () {
+            if (!$(this).length) {
+                allFieldsExists = false;
+                return false;
+            }
+        });
+
+        if (!allFieldsExists) {
+            return null;
         }
 
         /**
@@ -115,17 +115,6 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
         if (!address.countryCode || address.countryCode !== countryCode) {
             address.countryCode = countryCode;
         }
-
-        if (!address.postalCode || !address.countryCode || !address.street) {
-            return oldAddress;
-        }
-
-        if (!address.postalCode.length || !address.countryCode.length || address.street[0] === ''
-        ) {
-            return oldAddress;
-        }
-
-        oldAddress = address;
 
         return address;
     }.bind(this));

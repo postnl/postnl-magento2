@@ -48,6 +48,7 @@ define([
     TimeFrame
 ) {
     'use strict';
+
     return Component.extend({
         defaults: {
             template: 'TIG_PostNL/DeliveryOptions/Delivery',
@@ -126,10 +127,11 @@ define([
             return this;
         },
 
-        setDeliverydays: function (data) {
-            this.deliverydays(data);
-        },
-
+        /**
+         * Retrieve the Deliverydays from PostNL.
+         *
+         * @param address
+         */
         getDeliverydays: function (address) {
             State.deliveryOptionsAreLoading(true);
 
@@ -147,7 +149,7 @@ define([
                     });
                 });
 
-                this.setDeliverydays(data);
+                this.deliverydays(data);
             }.bind(this)).fail(function (data) {
                 State.deliveryOptionsAreAvailable(false);
                 Logger.error(data);
