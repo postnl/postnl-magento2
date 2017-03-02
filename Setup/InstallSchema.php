@@ -1,23 +1,16 @@
 <?php
 /**
- *                  ___________       __            __
- *                  \__    ___/____ _/  |_ _____   |  |
- *                    |    |  /  _ \\   __\\__  \  |  |
- *                    |    | |  |_| ||  |   / __ \_|  |__
- *                    |____|  \____/ |__|  (____  /|____/
- *                                              \/
- *          ___          __                                   __
- *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
- *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
- *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
- *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
- *                  \/                           \/
- *                  ________
- *                 /  _____/_______   ____   __ __ ______
- *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
- *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
- *                 \______  /|__|    \____/ |____/ |   __/
- *                        \/                       |__|
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
  *
  * NOTICE OF LICENSE
  *
@@ -25,15 +18,15 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Setup;
@@ -41,68 +34,21 @@ namespace TIG\PostNL\Setup;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
-use TIG\PostNL\Setup\V110\InstallOrderTable;
-use TIG\PostNL\Setup\V110\InstallShipmentBarcodeTable;
-use TIG\PostNL\Setup\V110\InstallShipmentLabelTable;
-use TIG\PostNL\Setup\V110\InstallShipmentTable;
-use TIG\PostNL\Setup\V110\SalesOrderGridColumns;
-use TIG\PostNL\Setup\V110\SalesShipmentGridColumns;
 
-// @codingStandardsIgnoreStart
 class InstallSchema implements InstallSchemaInterface
 {
     /**
-     * @var InstallOrderTable
+     * @var
      */
-    private $installOrderTable;
+    private $installSchemaObjects;
 
     /**
-     * @var InstallShipmentTable
-     */
-    private $installShipmentTable;
-
-    /**
-     * @var InstallShipmentLabelTable
-     */
-    private $installShipmentLabelTable;
-
-    /**
-     * @var InstallShipmentBarcodeTable
-     */
-    private $installShipmentBarcodeTable;
-
-    /**
-     * @var SalesShipmentGridColumns
-     */
-    private $salesShipmentGridColumns;
-
-    /**
-     * @var SalesOrderGridColumns
-     */
-    private $salesOrderGridColumns;
-
-    /**
-     * @param InstallShipmentTable        $installShipmentTable
-     * @param InstallOrderTable           $installOrderTable
-     * @param InstallShipmentLabelTable   $installShipmentLabelTable
-     * @param InstallShipmentBarcodeTable $installShipmentBarcodeTable
-     * @param SalesShipmentGridColumns    $salesShipmentGridColumns
-     * @param SalesOrderGridColumns       $salesOrderGridColumns
+     * @param array $installSchemaObjects
      */
     public function __construct(
-        InstallShipmentTable $installShipmentTable,
-        InstallOrderTable $installOrderTable,
-        InstallShipmentLabelTable $installShipmentLabelTable,
-        InstallShipmentBarcodeTable $installShipmentBarcodeTable,
-        SalesShipmentGridColumns $salesShipmentGridColumns,
-        SalesOrderGridColumns $salesOrderGridColumns
+        $installSchemaObjects = []
     ) {
-        $this->installShipmentTable = $installShipmentTable;
-        $this->installOrderTable = $installOrderTable;
-        $this->installShipmentLabelTable = $installShipmentLabelTable;
-        $this->installShipmentBarcodeTable = $installShipmentBarcodeTable;
-        $this->salesShipmentGridColumns = $salesShipmentGridColumns;
-        $this->salesOrderGridColumns = $salesOrderGridColumns;
+        $this->installSchemaObjects = $installSchemaObjects;
     }
 
     /**
@@ -118,15 +64,22 @@ class InstallSchema implements InstallSchemaInterface
         $setup->startSetup();
 
         if (version_compare($context->getVersion(), '1.1.0', '<')) {
-            $this->installOrderTable->install($setup, $context);
-            $this->installShipmentTable->install($setup, $context);
-            $this->installShipmentLabelTable->install($setup, $context);
-            $this->installShipmentBarcodeTable->install($setup, $context);
-            $this->salesShipmentGridColumns->install($setup, $context);
-            $this->salesOrderGridColumns->install($setup, $context);
+            $this->installSchemas($this->installSchemaObjects['v1.1.0'], $setup, $context);
         }
 
         $setup->endSetup();
     }
+
+    /**
+     * @param $schemaObjects
+     * @param $setup
+     * @param $context
+     */
+    private function installSchemas($schemaObjects, $setup, $context)
+    {
+        /** @var AbstractTableInstaller|AbstractColumnsInstaller $schema */
+        foreach ($schemaObjects as $schema) {
+            $schema->install($setup, $context);
+        }
+    }
 }
-// @codingStandardsIgnoreEnd

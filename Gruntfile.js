@@ -1,3 +1,33 @@
+/**
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
 module.exports = function (grunt) {
     var magento2path = '../../../../';
     var phpunitXmlPath = __dirname + '/phpunit.xml';
@@ -8,26 +38,27 @@ module.exports = function (grunt) {
         phpunitXmlPath = '/tmp/magento2/vendor/tig/postnl/phpunit.xml.dist';
     }
 
-    var phpcsCommand = 'php -ddisplay_errors=1 ~/.composer/vendor/bin/phpcs -v --standard=phpcs.xml ' +
+    var phpcsCommand = 'php -ddisplay_errors=1 ~/.composer/vendor/bin/phpcs -p ' +
         '--runtime-set installed_paths ' +
-        'vendor/squizlabs/php_codesniffer/CodeSniffer/Standards,' + '' +
-        'vendor/magento/marketplace-eqp,' + '' +
+        'vendor/squizlabs/php_codesniffer/CodeSniffer/Standards,' +
+        'vendor/magento/marketplace-eqp,' +
         'vendor/object-calisthenics/phpcs-calisthenics-rules/src/ ';
 
-    // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         exec: {
-            phpcs_easy: phpcsCommand + '--severity=10 .',
-            phpcs_full: phpcsCommand + ' .',
+            phpcs: phpcsCommand + '--standard=phpcs.xml  .',
+            phpcsTest: phpcsCommand + '--standard=phpcs.test.xml --severity=10 Test',
+
             unitTests: 'cd ' + magento2path + ' && vendor/phpunit/phpunit/phpunit -c "' + phpunitXmlPath + '"',
+
             integrationTests:
                 'cd ' + magento2path + 'dev/tests/integration &&' +
-                '../../../vendor/phpunit/phpunit/phpunit --testsuite "TIG PostNL Integration Tests"',
-            phplint: 'find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l',
-            translations_nl: 'mv vendor ../postnl-vendor && ../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/nl_NL.csv && mv ../postnl-vendor vendor',
-            translations_en: 'mv vendor ../postnl-vendor && ../../../../bin/magento i18n:collect-phrases -vvv . -o i18n/en_US.csv && mv ../postnl-vendor vendor',
-            code_coverage:
+                'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit --testsuite "TIG PostNL Integration Tests"',
+
+            phplint: 'if find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l | grep -v "No syntax errors detected"; then exit 1; fi',
+
+            codeCoverage:
                 'mkdir -p ' + buildPath + '/coverage/{unit,integration} && ' +
                 'cd ' + magento2path + ' && ' +
                 'vendor/bin/phpunit -c "' + phpunitXmlPath + '" --coverage-html ' + buildPath + '/coverage/unit && ' +
@@ -63,19 +94,20 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
-    // Default task(s).
-    grunt.registerTask('test', ['jshint:all', 'exec:phplint', 'exec:phpunit', 'exec:phpcs']);
-    grunt.registerTask('translations', ['exec:translations_nl', 'exec:translations_en']);
-    grunt.registerTask('lint', ['exec:phplint', 'jshint:all']);
-    grunt.registerTask('phpcs', ['exec:phpcs_full']);
-    grunt.registerTask('code_coverage', ['exec:code_coverage']);
-    grunt.registerTask('test', [
-        'exec:unitTests',
-        'exec:integrationTests',
-        'exec:phpcs_full',
-        'exec:phplint',
-        'jshint:all'
+
+    /**
+     * Register the available tasks
+     */
+    grunt.registerTask('lint', 'Lint all PHP al JavaScript files', ['exec:phplint', 'jshint:all']);
+    grunt.registerTask('phpcs', 'Run the Code Sniffer: For all production code and for the test code', ['exec:phpcs', 'exec:phpcsTest']);
+    grunt.registerTask('codeCoverage', 'Generate the code coverage report in build', ['exec:codeCoverage']);
+    grunt.registerTask('runTests', 'Run all available tests: Unit and integration', ['exec:unitTests', 'exec:integrationTests']);
+    grunt.registerTask('test', 'Run all code validation check: Unit tests, Code Sniffer, Linting, etc.', [
+        'phpcs',
+        'lint',
+        'runTests'
     ]);
-    grunt.registerTask('default', []);
+
+    grunt.registerTask('default', 'Run the default task (test)', ['test']);
 
 };

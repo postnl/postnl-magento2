@@ -8,7 +8,8 @@
                     <span class="tig-postnl-pickup-name" data-bind="text: Name"></span>
                     <span class="tig-postnl-pickup-street" data-bind="text: Address.Street"></span>
                     <span class="tig-postnl-pickup-number" data-bind="text: Address.HouseNr"></span>
-                    <span class="tig-postnl-distance" data-bind="text: $parent.getDistanceText(Distance)"></span>
+                    <span class="tig-postnl-pickup-number-addition" data-bind="text: Address.HouseNrExt"></span>
+                    <span class="tig-postnl-distance" data-bind="text: getDistanceText()"></span>
                 </span>
 
                 <a class="tig-postnl-pickup-hours" data-bind="click: toggle($data)">
@@ -29,7 +30,7 @@
                 <!-- /ko -->
 
                 <ul class="tig-postnl-pickup-list" data-bind="css: LocationCode, visible: expanded">
-                    <!-- ko foreach: $parent.getOpeningHours(OpeningHours) -->
+                    <!-- ko foreach: getOpeningHours() -->
                     <li>
                         <span class="pickup-list-day" data-bind="text: $data.day"></span>
                         <ul>

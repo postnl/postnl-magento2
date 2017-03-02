@@ -1,22 +1,15 @@
 /**
- *                  ___________       __            __
- *                  \__    ___/____ _/  |_ _____   |  |
- *                    |    |  /  _ \\   __\\__  \  |  |
- *                    |    | |  |_| ||  |   / __ \_|  |__
- *                    |____|  \____/ |__|  (____  /|____/
- *                                              \/
- *          ___          __                                   __
- *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
- *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
- *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
- *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
- *                  \/                           \/
- *                  ________
- *                 /  _____/_______   ____   __ __ ______
- *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
- *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
- *                 \______  /|__|    \____/ |____/ |   __/
- *                        \/                       |__|
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
  *
  * NOTICE OF LICENSE
  *
@@ -24,27 +17,37 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 define([
     'Magento_Checkout/js/view/shipping',
-    'TIG_PostNL/js/Helper/State'
+    'TIG_PostNL/js/Helper/State',
+    'Magento_Checkout/js/model/quote',
+    'Magento_Catalog/js/price-utils'
 ], function (
     Shipping,
-    State
+    State,
+    quote,
+    priceUtils
 ) {
     return Shipping.extend({
+        PostNLFee: State.fee,
+
         canUseDeliveryOption: function () {
             return window.checkoutConfig.shipping.postnl.shippingoptions_active == 1;
+        },
+
+        isPostNLDeliveryMethod: function (method) {
+            return method.carrier_code == 'tig_postnl';
         },
 
         canUsePostnlDeliveryOptions: function (method) {
@@ -52,13 +55,17 @@ define([
                 return false;
             }
 
-            var result = method.carrier_code == 'tig_postnl';
+            var result = this.isPostNLDeliveryMethod(method);
 
             if (result) {
                 State.method(method);
             }
 
             return result;
+        },
+
+        formatPrice: function (price) {
+            return priceUtils.formatPrice(price, quote.getPriceFormat());
         }
     });
 });
