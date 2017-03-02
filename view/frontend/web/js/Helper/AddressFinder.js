@@ -63,13 +63,13 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
      * The Timeout is needed so it gives the Notifier the chance to retrieve the correct country code,
      * and not the default value.
      */
-    $(document).on('change', fields.join(','), function() {
+    $(document).on('change', fields.join(','), function () {
         // Clear timeout if exists.
         if (typeof timer !== 'undefined') {
             clearTimeout(timer);
         }
 
-        timer = setTimeout(function() {
+        timer = setTimeout(function () {
             countryCode = $("select[name*='country_id']").val();
             valueUpdateNotifier.notifySubscribers();
         }, 500);
