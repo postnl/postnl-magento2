@@ -31,55 +31,57 @@
  */
 namespace TIG\PostNL\Setup;
 
-use Magento\Framework\Setup\InstallSchemaInterface;
+use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
-use Magento\Framework\Setup\SchemaSetupInterface;
+use Magento\Framework\Setup\ModuleDataSetupInterface;
 
-class InstallSchema implements InstallSchemaInterface
+class InstallData implements InstallDataInterface
 {
     /**
      * @var array
      */
-    private $installSchemaObjects;
+    private $installDataObjects;
 
     /**
-     * @param array $installSchemaObjects
+     * @param array $installDataObjects
      */
     public function __construct(
-        $installSchemaObjects = []
+        $installDataObjects = []
     ) {
-        $this->installSchemaObjects = $installSchemaObjects;
+        $this->installDataObjects = $installDataObjects;
     }
 
     /**
-     * Installs DB schema for a module
+     * Installs data for a module
      *
-     * @param SchemaSetupInterface   $setup
-     * @param ModuleContextInterface $context
+     * @param ModuleDataSetupInterface $setup
+     * @param ModuleContextInterface   $context
      *
      * @return void
      */
-    public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
+    public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
 
         if (version_compare($context->getVersion(), '1.1.0', '<')) {
-            $this->installSchemas($this->installSchemaObjects['v1.1.0'], $setup, $context);
+            $this->installData($this->installDataObjects['v1.1.0'], $setup, $context);
         }
 
         $setup->endSetup();
     }
 
     /**
-     * @param $schemaObjects
-     * @param $setup
-     * @param $context
+     * @param \TIG\PostNL\Setup\AbstractDataInstaller[] $installSchemaObjects
+     * @param ModuleDataSetupInterface                  $setup
+     * @param ModuleContextInterface                    $context
      */
-    private function installSchemas($schemaObjects, $setup, $context)
-    {
-        /** @var AbstractTableInstaller|AbstractColumnsInstaller $schema */
-        foreach ($schemaObjects as $schema) {
-            $schema->install($setup, $context);
+    private function installData(
+        array $installSchemaObjects,
+        ModuleDataSetupInterface $setup,
+        ModuleContextInterface $context
+    ) {
+        foreach ($installSchemaObjects as $installer) {
+            $installer->install($setup, $context);
         }
     }
 }
