@@ -31,6 +31,9 @@
  */
 namespace TIG\PostNL\Config\Provider;
 
+/**
+ * @codingStandardsIgnoreStart
+ */
 class ShippingOptions extends AbstractConfigProvider
 {
     const XPATH_SHIPPING_OPTION_ACITVE                    = 'tig_postnl/shippingoptions/shippingoptions_active';
@@ -156,3 +159,6 @@ class ShippingOptions extends AbstractConfigProvider
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_SUNDAY_FEE);
     }
 }
+/**
+ * @codingStandardsIgnoreEnd
+ */
