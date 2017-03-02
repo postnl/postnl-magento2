@@ -47,8 +47,14 @@ define([
     priceUtils
 ) {
     return Shipping.extend({
+        PostNLFee: State.fee,
+
         canUseDeliveryOption: function () {
             return window.checkoutConfig.shipping.postnl.shippingoptions_active == 1;
+        },
+
+        isPostNLDeliveryMethod: function (method) {
+            return method.carrier_code == 'tig_postnl';
         },
 
         canUsePostnlDeliveryOptions: function (method) {
@@ -56,7 +62,7 @@ define([
                 return false;
             }
 
-            var result = method.carrier_code == 'tig_postnl';
+            var result = this.isPostNLDeliveryMethod(method);
 
             if (result) {
                 State.method(method);

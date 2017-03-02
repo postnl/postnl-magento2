@@ -42,7 +42,8 @@ define([
     'jquery',
     'TIG_PostNL/js/Helper/AddressFinder',
     'TIG_PostNL/js/Helper/Logger',
-    'TIG_PostNL/js/Helper/State'
+    'TIG_PostNL/js/Helper/State',
+    'TIG_PostNL/js/Models/Location'
 ], function (
     Component,
     ko,
@@ -50,7 +51,8 @@ define([
     $,
     AddressFinder,
     Logger,
-    State
+    State,
+    Location
 ) {
     'use strict';
     return Component.extend({
@@ -61,26 +63,6 @@ define([
             street : null,
             hasAddress :false,
             pickupAddresses: []
-        },
-
-        daysSorting: {
-            'monday': 1,
-            'tuesday': 2,
-            'wednesday': 3,
-            'thursday': 4,
-            'friday': 5,
-            'saturday': 6,
-            'sunday': 7
-        },
-
-        daysLabels: {
-            monday: $.mage.__('Monday'),
-            tuesday: $.mage.__('Tuesday'),
-            wednesday: $.mage.__('Wednesday'),
-            thursday: $.mage.__('Thursday'),
-            friday: $.mage.__('Friday'),
-            saturday: $.mage.__('Saturday'),
-            sunday: $.mage.__('Sunday')
         },
 
         initObservable : function () {
@@ -127,13 +109,14 @@ define([
 
                 State.selectShippingMethod();
                 State.currentSelectedShipmentType('pickup');
+
                 State.pickupAddress({
                     company: value.Name,
                     prefix: '',
                     firstname: '',
                     lastname: '',
                     suffix: '',
-                    street: this.getStreet(value.Address),
+                    street: value.getStreet(),
                     city: value.Address.City,
                     region: '',
                     postcode: value.Address.Zipcode,
@@ -198,112 +181,7 @@ define([
          */
         isRowSelected: function ($data) {
             return JSON.stringify(this.selectedOption()) == JSON.stringify($data);
-        },
-
-        /**
-         * Format the distance to the location
-         *
-         * @param distance
-         * @returns {string}
-         */
-        getDistanceText: function (distance) {
-            var text = '';
-
-            distance = parseInt(distance);
-
-            if (distance < 1000 && distance > 0) {
-                text = distance + ' m';
-            }
-
-            if (distance > 1000) {
-                text = parseFloat(Math.round(distance / 100) / 10).toFixed(1) + ' km';
-            }
-
-            return text;
-        },
-
-        /**
-         * Convert the OpeningHours object to a format readable by Knockout
-         *
-         * @param OpeningHours
-         * @returns {*}
-         */
-        getOpeningHours: function (OpeningHours) {
-            var output = [];
-
-            $.each(OpeningHours, function (index, record) {
-                var data = {
-                    index : index,
-                    day   : this.daysLabels[index.toLowerCase()],
-                    hours : this.getHours(record)
-                };
-
-                output.push(data);
-            }.bind(this));
-
-            return this.sortDays(output);
-        },
-
-        /**
-         * Format the hours to a knockout readable format.
-         *
-         * @param hours
-         * @returns {Array}
-         */
-        getHours: function (hours) {
-            var output = [];
-            $.each(hours, function (index, hour) {
-                output.push(hour[0]);
-            });
-
-            return output;
-        },
-
-        /**
-         * The data does not comes sorted by day from PostNL, so sort it.
-         *
-         * @param data
-         * @returns {*}
-         */
-        sortDays: function (data) {
-            return data.sort(function (a, b) {
-                var day1 = a.index.toLowerCase();
-                var day2 = b.index.toLowerCase();
-                return this.daysSorting[day1] > this.daysSorting[day2];
-            }.bind(this));
-        },
-
-        /**
-         * Toggle the pickup hours visibility.
-         *
-         * @param $data
-         */
-        toggle: function ($data) {
-            $data.expanded(!$data.expanded());
-        },
-
-        getStreet: function (Address) {
-            var houseNumber = Address.HouseNr;
-
-            if (Address.HouseNrExt) {
-                houseNumber += ' ' + Address.HouseNrExt;
-            }
-
-            return [Address.Street, houseNumber];
         }
     });
-
-    function Location(data)
-    {
-        $.each(data, function (key, value) {
-            this[key] = value;
-        }.bind(this));
-
-        this.expanded = ko.observable(true);
-
-        this.toggle = function () {
-            this.expanded(!this.expanded());
-        };
-    }
 });
 

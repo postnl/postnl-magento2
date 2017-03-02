@@ -10,9 +10,9 @@
                 <li data-bind="css: { 'selected-row': $parents[1].isRowSelected($data), 'odd': $parents[1].isOdd() }">
                     <label>
                         <input type="radio"
-                               data-bind=" value: date, checked: $parents[1].selectedOption, checkedValue: $data"
-                               name="      deliveryday"
-                               id="        delivery-choice"
+                               data-bind="value: date, checked: $parents[1].selectedOption, checkedValue: $data"
+                               name="deliveryday"
+                               id="delivery-choice"
                                class="tig-postnl-delivery-radio" />
 
                         <span class="tig-postnl-delivery-from" data-bind="text: from_friendly"></span>
@@ -25,17 +25,10 @@
                             <!-- /ko -->
 
                             <span data-bind="text: optionLabel"> </span>
-
                         </div>
-
-
-
                     </label>
-
                 </li>
             </ul>
-
         </div>
-
     </div>
 </div>

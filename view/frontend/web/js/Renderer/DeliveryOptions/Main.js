@@ -57,9 +57,8 @@ define([
                 'shipmentType'
             ]);
 
-            this.isLoading = ko.computed(function () {
-                return State.isLoading();
-            });
+            this.shipmentType = State.currentOpenPane;
+            this.isLoading = State.isLoading;
 
             return this;
         },
@@ -74,11 +73,11 @@ define([
         }),
 
         setDelivery: function () {
-            this.shipmentType('delivery');
+            State.currentOpenPane('delivery');
         },
 
         setPickup: function () {
-            this.shipmentType('pickup');
+            State.currentOpenPane('pickup');
         }
     });
 });
