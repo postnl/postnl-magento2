@@ -60,18 +60,18 @@ class OrderRepository implements OrderRepositoryInterface
     private $searchCriteriaBuilder;
 
     /**
-     * @param OrderFactory                  $objectFactory
+     * @param OrderFactory                  $orderFactory
      * @param CollectionFactory             $collectionFactory
      * @param SearchResultsInterfaceFactory $searchResultsFactory
      * @param SearchCriteriaBuilder         $searchCriteriaBuilder
      */
     public function __construct(
-        OrderFactory $objectFactory,
+        OrderFactory $orderFactory,
         CollectionFactory $collectionFactory,
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
-        $this->orderFactory          = $objectFactory;
+        $this->orderFactory          = $orderFactory;
         $this->collectionFactory     = $collectionFactory;
         $this->searchResultsFactory  = $searchResultsFactory;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
