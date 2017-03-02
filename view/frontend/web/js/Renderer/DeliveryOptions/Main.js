@@ -69,7 +69,8 @@ define([
         }),
 
         canUsePickupLocations: ko.computed(function () {
-            return window.checkoutConfig.shipping.postnl.pakjegemak_active == 1 && State.pickupOptionsAreAvailable();
+            var isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
+            return isActive == 1 && State.pickupOptionsAreAvailable() && AddressFinder() !== false;
         }),
 
         setDelivery: function () {
