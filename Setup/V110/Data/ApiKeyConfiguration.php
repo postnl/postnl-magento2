@@ -76,6 +76,7 @@ class ApiKeyConfiguration extends AbstractDataInstaller
      *
      * @return void
      */
+    // @codingStandardsIgnoreLine
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
         $originalValue = $this->scopeConfig->getValue('tig_postnl/generalconfiguration_extension_status/api_key_test');
