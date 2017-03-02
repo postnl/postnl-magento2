@@ -31,11 +31,6 @@
  */
 namespace TIG\PostNL\Services\Import\Csv;
 
-/**
- * Class ParserErrors
- *
- * @package TIG\PostNL\Services\Import\Csv
- */
 class ParserErrors
 {
     /**

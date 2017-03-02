@@ -34,11 +34,6 @@ namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Config\Carrier\Tablerate\Renderer
 use TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Renderer\Import;
 use TIG\PostNL\Test\TestCase;
 
-/**
- * Class ImportTest
- *
- * @package TIG\PostNL\Test\Unit\Block\Adminhtml\Config\Carrier\Tablerate\Renderer
- */
 class ImportTest extends TestCase
 {
     protected $instanceClass = Import::class;

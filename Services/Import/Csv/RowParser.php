@@ -37,11 +37,6 @@ use Magento\Framework\Exception\LocalizedException;
 
 use TIG\PostNL\Exception as PostnlException;
 
-/**
- * Class RowParser
- *
- * @package TIG\PostNL\Services\Import\Csv
- */
 class RowParser
 {
     const COLUMN_COUNTRY = 0;

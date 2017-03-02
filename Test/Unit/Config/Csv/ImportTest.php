@@ -39,11 +39,6 @@ use TIG\PostNL\Model\ResourceModel\TablerateFactory;
 use TIG\PostNL\Services\Import\Csv;
 use TIG\PostNL\Test\TestCase;
 
-/**
- * Class ImportTest
- *
- * @package TIG\PostNL\Test\Unit\Config\Csv
- */
 class ImportTest extends TestCase
 {
     protected $instanceClass = Import::class;

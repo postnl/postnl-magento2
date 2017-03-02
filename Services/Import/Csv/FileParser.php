@@ -36,11 +36,6 @@ use Magento\Framework\Filesystem\File\ReadInterface;
 
 use TIG\PostNL\Exception as PostnlException;
 
-/**
- * Class FileParser
- *
- * @package TIG\PostNL\Services\Import\Csv
- */
 class FileParser
 {
     private $validatedRows = [];

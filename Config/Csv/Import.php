@@ -43,11 +43,6 @@ use Magento\Store\Model\StoreManagerInterface;
 use TIG\PostNL\Model\ResourceModel\TablerateFactory;
 use TIG\PostNL\Services\Import\Csv;
 
-/**
- * Class Import
- *
- * @package TIG\PostNL\Config\Csv
- */
 class Import extends Value
 {
     /**
