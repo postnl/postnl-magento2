@@ -95,7 +95,7 @@ class GetFreeBoxes
 
         array_walk(
             $children,
-            function ($child, $key) use (&$freeChildBoxes, $item) {
+            function ($child) use (&$freeChildBoxes, $item) {
                 /** @var \Magento\Quote\Model\Quote\Item\AbstractItem $child */
                 $childProduct = $child->getProduct();
 
