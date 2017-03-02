@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Config\CheckoutConfiguration;
 
+use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Quote\CheckIfQuoteItemsAreInStock;
 
@@ -47,15 +48,23 @@ class IsShippingOptionsActive extends AbstractCheckoutConfiguration
     private $quoteItemsAreInStock;
 
     /**
-     * @param ShippingOptions      $shippingOptions
+     * @var AccountConfiguration
+     */
+    private $accountConfiguration;
+
+    /**
+     * @param ShippingOptions             $shippingOptions
+     * @param AccountConfiguration        $accountConfiguration
      * @param CheckIfQuoteItemsAreInStock $quoteItemsAreInStock
      */
     public function __construct(
         ShippingOptions $shippingOptions,
+        AccountConfiguration $accountConfiguration,
         CheckIfQuoteItemsAreInStock $quoteItemsAreInStock
     ) {
         $this->shippingOptions = $shippingOptions;
         $this->quoteItemsAreInStock = $quoteItemsAreInStock;
+        $this->accountConfiguration = $accountConfiguration;
     }
 
     /**
@@ -63,12 +72,37 @@ class IsShippingOptionsActive extends AbstractCheckoutConfiguration
      */
     public function getValue()
     {
+        if (!$this->shippingOptions->isShippingoptionsActive()) {
+            return false;
+        }
+
+        if (!$this->hasValidApiSettings()) {
+            return false;
+        }
+
         if ($this->shippingOptions->getShippingStockoptions() == 'backordered' &&
             !$this->quoteItemsAreInStock->getValue()
         ) {
             return false;
         }
 
-        return $this->shippingOptions->isShippingoptionsActive();
+        return true;
+    }
+
+    private function hasValidApiSettings()
+    {
+        if (!$this->accountConfiguration->getCustomerCode()) {
+            return false;
+        }
+
+        if (!$this->accountConfiguration->getCustomerNumber()) {
+            return false;
+        }
+
+        if (!$this->accountConfiguration->getApiKey()) {
+            return false;
+        }
+
+        return true;
     }
 }

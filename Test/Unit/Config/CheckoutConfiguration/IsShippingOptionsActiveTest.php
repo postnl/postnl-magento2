@@ -33,6 +33,7 @@ namespace TIG\PostNL\Test\Unit\Config\CheckoutConfiguration;
 
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use TIG\PostNL\Config\CheckoutConfiguration\IsShippingOptionsActive;
+use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Test\TestCase;
 
@@ -40,53 +41,135 @@ class IsShippingOptionsActiveTest extends TestCase
 {
     public $instanceClass = IsShippingOptionsActive::class;
 
+    /**
+     * @var ShippingOptions|MockObject
+     */
+    private $shippingOptions;
+
+    /**
+     * @var AccountConfiguration|MockObject
+     */
+    private $accountConfiguration;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
+        $this->accountConfiguration = $this->getFakeMock(AccountConfiguration::class)->getMock();
+    }
+
     public function getValueProvider()
     {
         return [
-            'active, in stock and all_products' => [
+            'active, in stock, all_products and valid api settings' => [
                 'shippingOptionsActive' => true,
+                'hasValidApiSettings' => true,
                 'stockOptions' => 'in_stock',
                 'productsInStock' => true,
                 'expected' => true,
             ],
-            'active, not in stock and all_products' => [
+            'active, in stock, all_products and invalid api settings' => [
                 'shippingOptionsActive' => true,
+                'hasValidApiSettings' => false,
+                'stockOptions' => 'in_stock',
+                'productsInStock' => true,
+                'expected' => false,
+            ],
+            'active, not in stock, all_products and valid api settings' => [
+                'shippingOptionsActive' => true,
+                'hasValidApiSettings' => true,
                 'stockOptions' => 'in_stock',
                 'productsInStock' => true,
                 'expected' => true,
             ],
-            'active, in stock and stock_products' => [
+            'active, not in stock, all_products and invalid api settings' => [
                 'shippingOptionsActive' => true,
+                'hasValidApiSettings' => false,
+                'stockOptions' => 'in_stock',
+                'productsInStock' => true,
+                'expected' => false,
+            ],
+            'active, in stock, stock_products and valid api settings' => [
+                'shippingOptionsActive' => true,
+                'hasValidApiSettings' => true,
                 'stockOptions' => 'backordered',
                 'productsInStock' => true,
                 'expected' => true,
             ],
-            'active, not in stock and stock_products' => [
+            'active, in stock, stock_products and invalid api settings' => [
                 'shippingOptionsActive' => true,
+                'hasValidApiSettings' => false,
+                'stockOptions' => 'backordered',
+                'productsInStock' => true,
+                'expected' => false,
+            ],
+            'active, not in stock, stock_products and valid api settings' => [
+                'shippingOptionsActive' => true,
+                'hasValidApiSettings' => true,
                 'stockOptions' => 'backordered',
                 'productsInStock' => false,
                 'expected' => false,
             ],
-            'inactive, in stock and all_products' => [
+            'active, not in stock, stock_products and invalid api settings' => [
+                'shippingOptionsActive' => true,
+                'hasValidApiSettings' => false,
+                'stockOptions' => 'backordered',
+                'productsInStock' => false,
+                'expected' => false,
+            ],
+            'inactive, in stock, all_products and valid api settings' => [
                 'shippingOptionsActive' => false,
+                'hasValidApiSettings' => true,
                 'stockOptions' => 'in_stock',
                 'productsInStock' => true,
                 'expected' => false,
             ],
-            'inactive, not in stock and all_products' => [
+            'inactive, in stock, all_products and invalid api settings' => [
                 'shippingOptionsActive' => false,
+                'hasValidApiSettings' => false,
+                'stockOptions' => 'in_stock',
+                'productsInStock' => true,
+                'expected' => false,
+            ],
+            'inactive, not in stock, all_products and valid api settings' => [
+                'shippingOptionsActive' => false,
+                'hasValidApiSettings' => true,
                 'stockOptions' => 'in_stock',
                 'productsInStock' => false,
                 'expected' => false,
             ],
-            'inactive, in stock and stock_products' => [
+            'inactive, not in stock, all_products and invalid api settings' => [
                 'shippingOptionsActive' => false,
+                'hasValidApiSettings' => false,
+                'stockOptions' => 'in_stock',
+                'productsInStock' => false,
+                'expected' => false,
+            ],
+            'inactive, in stock, stock_products and valid api settings' => [
+                'shippingOptionsActive' => false,
+                'hasValidApiSettings' => true,
                 'stockOptions' => 'backordered',
                 'productsInStock' => true,
                 'expected' => false,
             ],
-            'inactive, not in stock and stock_products' => [
+            'inactive, in stock, stock_products and invalid api settings' => [
                 'shippingOptionsActive' => false,
+                'hasValidApiSettings' => false,
+                'stockOptions' => 'backordered',
+                'productsInStock' => true,
+                'expected' => false,
+            ],
+            'inactive, not in stock, stock_products and valid api settings' => [
+                'shippingOptionsActive' => false,
+                'hasValidApiSettings' => true,
+                'stockOptions' => 'backordered',
+                'productsInStock' => false,
+                'expected' => false,
+            ],
+            'inactive, not in stock, stock_products and invalid api settings' => [
+                'shippingOptionsActive' => false,
+                'hasValidApiSettings' => false,
                 'stockOptions' => 'backordered',
                 'productsInStock' => false,
                 'expected' => false,
@@ -96,15 +179,20 @@ class IsShippingOptionsActiveTest extends TestCase
 
     /**
      * @param $shippingOptionsActive
+     * @param $hasValidApiSettings
      * @param $stockOptions
      * @param $productsInStock
      * @param $expected
      *
      * @dataProvider getValueProvider
      */
-    public function testGetValue($shippingOptionsActive, $stockOptions, $productsInStock, $expected)
-    {
-        $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
+    public function testGetValue(
+        $shippingOptionsActive,
+        $hasValidApiSettings,
+        $stockOptions,
+        $productsInStock,
+        $expected
+    ) {
         $quoteItemsAreInStock = $this
             ->getFakeMock(\TIG\PostNL\Service\Quote\CheckIfQuoteItemsAreInStock::class)
             ->getMock();
@@ -114,34 +202,98 @@ class IsShippingOptionsActiveTest extends TestCase
 
         /** @var IsShippingOptionsActive $instance */
         $instance = $this->getInstance([
-            'shippingOptions' => $shippingOptions,
+            'shippingOptions' => $this->shippingOptions,
+            'accountConfiguration' => $this->accountConfiguration,
             'quoteItemsAreInStock' => $quoteItemsAreInStock,
         ]);
 
-        $this->getShippingOptionsActive($shippingOptions, $shippingOptionsActive);
-        $this->getShippingStockoptions($shippingOptions, $stockOptions);
+        $this->mockShippingOptionsMethod('isShippingoptionsActive', $shippingOptionsActive);
+        $this->mockAccountConfigurationMethod('getCustomerCode', $hasValidApiSettings);
+        $this->mockAccountConfigurationMethod('getCustomerNumber', $hasValidApiSettings);
+        $this->mockAccountConfigurationMethod('getApiKey', $hasValidApiSettings);
+        $this->getShippingStockoptions($stockOptions);
 
         $this->assertEquals($expected, $instance->getValue());
     }
 
+    public function hasEnteredApiDataProvider()
+    {
+        return [
+            'without customer code customer number and api key' => [
+                'customerCode' => null,
+                'customerNumber' => null,
+                'apiKey' => null,
+                'expected' => false,
+            ],
+            'with customer code, without customer number and api key' => [
+                'customerCode' => '12345',
+                'customerNumber' => null,
+                'apiKey' => null,
+                'expected' => false,
+            ],
+            'with customer code and customer number, without api key' => [
+                'customerCode' => '12345',
+                'customerNumber' => '12345',
+                'apiKey' => null,
+                'expected' => false,
+            ],
+            'with customer code, customer number and api key' => [
+                'customerCode' => '12345',
+                'customerNumber' => '12345',
+                'apiKey' => '12345',
+                'expected' => true,
+            ],
+        ];
+    }
+
     /**
-     * @param $shippingOptions
+     * @param $customerCode
+     * @param $customerNumber
+     * @param $apiKey
+     * @param $expected
+     *
+     * @dataProvider hasEnteredApiDataProvider
+     */
+    public function testHasEnteredApiDataProvider($customerCode, $customerNumber, $apiKey, $expected)
+    {
+        /** @var IsShippingOptionsActive $instance */
+        $instance = $this->getInstance([
+            'accountConfiguration' => $this->accountConfiguration,
+        ]);
+
+        $this->mockAccountConfigurationMethod('getCustomerCode', $customerCode);
+        $this->mockAccountConfigurationMethod('getCustomerNumber', $customerNumber);
+        $this->mockAccountConfigurationMethod('getApiKey', $apiKey);
+
+        $result = $this->invoke('hasValidApiSettings', $instance);
+
+        $this->assertSame($expected, $result);
+    }
+
+    /**
      * @param $value
      */
-    private function getShippingOptionsActive(MockObject $shippingOptions, $value)
+    private function mockShippingOptionsMethod($method, $value)
     {
-        $expects = $shippingOptions->method('isShippingoptionsActive');
+        $expects = $this->shippingOptions->method($method);
         $expects->willReturn($value);
     }
 
     /**
-     * @param $shippingOptions
      * @param $value
      */
-    private function getShippingStockoptions(MockObject $shippingOptions, $value)
+    private function mockAccountConfigurationMethod($method, $value)
     {
-        $expects = $shippingOptions->expects($this->once());
-        $expects->method('getShippingStockoptions');
+        $expects = $this->accountConfiguration->method($method);
+        $expects->willReturn($value);
+    }
+
+    /**
+     * @param $value
+     */
+    private function getShippingStockoptions($value)
+    {
+        $expects = $this->shippingOptions->method('getShippingStockoptions');
         $expects->willReturn($value);
     }
 }
