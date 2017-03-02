@@ -29,11 +29,10 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Services\Shipment\Barcode;
+namespace TIG\PostNL\Service\Shipment\Track;
 
-use TIG\PostNL\Model\ShipmentBarcodeRepository;
-use TIG\PostNL\Model\ShipmentBarcodeInterface;
-use TIG\PostNL\Services\Shipment\ShipmentServiceAbstract;
+use \Magento\Sales\Model\Order\Shipment\Track;
+use TIG\PostNL\Service\Shipment\ShipmentServiceAbstract;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Exception as PostNLException;
@@ -41,22 +40,22 @@ use Magento\Sales\Model\Order\ShipmentRepository;
 use Magento\Sales\Model\Order\Shipment;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 
-class DeleteBarcode extends ShipmentServiceAbstract
+class DeleteTrack extends ShipmentServiceAbstract
 {
     /**
-     * @var ShipmentBarcodeRepository
+     * @var Track
      */
-    private $shipmentBarcodeRepository;
+    private $track;
 
     /**
-     * @param ShipmentBarcodeRepository $shipmentBarcodeRepository
-     * @param Log                       $log
-     * @param PostNLShipmentRepository  $postNLShipmentRepository
-     * @param ShipmentRepository        $shipmentRepository
-     * @param SearchCriteriaBuilder     $searchCriteriaBuilder
+     * @param Track                    $track
+     * @param Log                      $log
+     * @param PostNLShipmentRepository $postNLShipmentRepository
+     * @param ShipmentRepository       $shipmentRepository
+     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      */
     public function __construct(
-        ShipmentBarcodeRepository $shipmentBarcodeRepository,
+        Track $track,
         Log $log,
         PostNLShipmentRepository $postNLShipmentRepository,
         ShipmentRepository $shipmentRepository,
@@ -69,41 +68,44 @@ class DeleteBarcode extends ShipmentServiceAbstract
             $searchCriteriaBuilder
         );
 
-        $this->shipmentBarcodeRepository = $shipmentBarcodeRepository;
+        $this->track  = $track;
     }
 
     /**
-     * Deletes a single barcode.
+     * Deletes a single track.
      *
-     * @param ShipmentBarcodeInterface $barcode
+     * @param int $trackId
      */
-    public function delete($barcode)
+    public function delete($trackId)
     {
+        /** @var Track $track */
+        $track = $this->track->load($trackId);
+        if (!$track->getId()) {
+            $this->logger->alert('Can\'t initialize track for deletion', [$trackId]);
+        }
+
         try {
-            $this->shipmentBarcodeRepository->delete($barcode);
+            $track->delete();
         } catch (PostNLException $exception) {
-            $this->logger->alert('Can\'t delete shipment barcode', $exception->getLogMessage());
+            $this->logger->alert('Can\'t delete tracking number', $exception->getLogMessage());
         }
     }
 
     /**
-     * Deletes all barcodes associated to the PostNL Shipment ID.
+     * Deletes all track (T&T) information associated to the Shipment ID.
      *
-     * @param $postNLShipmentId
+     * @param $shipmentId
      */
-    public function deleteAllByShipmentId($postNLShipmentId)
+    public function deleteAllByShipmentId($shipmentId)
     {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter(
-            'shipment_id',
-            $postNLShipmentId
-        );
+        /** @var Shipment $shipment */
+        $shipment = $this->getShipment($shipmentId);
+        $tracks   = $shipment->getAllTracks();
 
-        $barcodes = $this->shipmentBarcodeRepository->getList($searchCriteria->create());
-
-        /** @var ShipmentBarcodeInterface $barcode */
-        foreach ($barcodes->getItems() as $barcode) {
+        /** @var Track $track */
+        foreach ($tracks as $track) {
             // @codingStandardsIgnoreLine
-            $this->delete($barcode);
+            $this->delete($track->getId());
         }
     }
 }

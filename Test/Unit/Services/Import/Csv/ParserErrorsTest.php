@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Unit\Services\Import\Csv;
 
-use TIG\PostNL\Services\Import\Csv\ParserErrors;
+use TIG\PostNL\Service\Import\Csv\ParserErrors;
 use TIG\PostNL\Test\TestCase;
 
 class ParserErrorsTest extends TestCase

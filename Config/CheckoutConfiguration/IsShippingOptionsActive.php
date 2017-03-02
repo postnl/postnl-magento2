@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Config\CheckoutConfiguration;
 
 use TIG\PostNL\Config\Provider\ShippingOptions;
-use TIG\PostNL\Services\Quote\CheckIfQuoteItemsAreInStock;
+use TIG\PostNL\Service\Quote\CheckIfQuoteItemsAreInStock;
 
 class IsShippingOptionsActive extends AbstractCheckoutConfiguration
 {

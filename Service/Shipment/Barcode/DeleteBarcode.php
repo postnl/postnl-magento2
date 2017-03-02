@@ -29,11 +29,11 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Services\Shipment\Label;
+namespace TIG\PostNL\Service\Shipment\Barcode;
 
-use TIG\PostNL\Model\ShipmentLabelRepository;
-use TIG\PostNL\Model\ShipmentLabelInterface;
-use TIG\PostNL\Services\Shipment\ShipmentServiceAbstract;
+use TIG\PostNL\Model\ShipmentBarcodeRepository;
+use TIG\PostNL\Model\ShipmentBarcodeInterface;
+use TIG\PostNL\Service\Shipment\ShipmentServiceAbstract;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Exception as PostNLException;
@@ -41,22 +41,22 @@ use Magento\Sales\Model\Order\ShipmentRepository;
 use Magento\Sales\Model\Order\Shipment;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 
-class DeleteLabel extends ShipmentServiceAbstract
+class DeleteBarcode extends ShipmentServiceAbstract
 {
     /**
-     * @var ShipmentLabelRepository
+     * @var ShipmentBarcodeRepository
      */
-    private $shipmentLabelRepository;
+    private $shipmentBarcodeRepository;
 
     /**
-     * @param ShipmentLabelRepository $shipmentLabelRepository
+     * @param ShipmentBarcodeRepository $shipmentBarcodeRepository
      * @param Log                       $log
      * @param PostNLShipmentRepository  $postNLShipmentRepository
      * @param ShipmentRepository        $shipmentRepository
      * @param SearchCriteriaBuilder     $searchCriteriaBuilder
      */
     public function __construct(
-        ShipmentLabelRepository $shipmentLabelRepository,
+        ShipmentBarcodeRepository $shipmentBarcodeRepository,
         Log $log,
         PostNLShipmentRepository $postNLShipmentRepository,
         ShipmentRepository $shipmentRepository,
@@ -69,43 +69,41 @@ class DeleteLabel extends ShipmentServiceAbstract
             $searchCriteriaBuilder
         );
 
-        $this->shipmentLabelRepository = $shipmentLabelRepository;
+        $this->shipmentBarcodeRepository = $shipmentBarcodeRepository;
     }
 
     /**
-     * Deletes one single label.
+     * Deletes a single barcode.
      *
-     * @param ShipmentLabelInterface $label
+     * @param ShipmentBarcodeInterface $barcode
      */
-    public function delete($label)
+    public function delete($barcode)
     {
         try {
-            $this->shipmentLabelRepository->delete($label);
+            $this->shipmentBarcodeRepository->delete($barcode);
         } catch (PostNLException $exception) {
-            $this->logger->alert('Can\'t delete shipment label', $exception->getLogMessage());
+            $this->logger->alert('Can\'t delete shipment barcode', $exception->getLogMessage());
         }
     }
 
     /**
-     * Deletes all labels associated to the PostNL Shipment ID.
+     * Deletes all barcodes associated to the PostNL Shipment ID.
      *
      * @param $postNLShipmentId
-     *
-     * @throws \Magento\Framework\Exception\CouldNotDeleteException
      */
-    public function deleteAllByParentId($postNLShipmentId)
+    public function deleteAllByShipmentId($postNLShipmentId)
     {
         $searchCriteria = $this->searchCriteriaBuilder->addFilter(
-            'parent_id',
+            'shipment_id',
             $postNLShipmentId
         );
 
-        $labels = $this->shipmentLabelRepository->getList($searchCriteria->create());
+        $barcodes = $this->shipmentBarcodeRepository->getList($searchCriteria->create());
 
-        /** @var ShipmentLabelInterface $label */
-        foreach ($labels->getItems() as $label) {
+        /** @var ShipmentBarcodeInterface $barcode */
+        foreach ($barcodes->getItems() as $barcode) {
             // @codingStandardsIgnoreLine
-            $this->delete($label);
+            $this->delete($barcode);
         }
     }
 }
