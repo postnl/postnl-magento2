@@ -178,6 +178,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
     protected function getObject($class, $args = [])
     {
+        if ($this->objectManager === null) {
+            throw new \Exception('The object manager is not loaded. Dit you forget to call parent::setUp();?');
+        }
+
         return $this->objectManager->getObject($class, $args);
     }
 }
