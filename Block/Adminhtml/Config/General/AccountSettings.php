@@ -29,7 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Config\Comment;
+namespace TIG\PostNL\Block\Adminhtml\Config\General;
 
 use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
 use Magento\Framework\View\Element\Template;
@@ -46,18 +46,6 @@ class AccountSettings extends Template implements RendererInterface
 
     // @codingStandardsIgnoreLine
     protected $_template = 'TIG_PostNL::config/general/accountSettings.phtml';
-
-    /**
-     * @param Template\Context $context
-     * @param array            $data
-     */
-    public function __construct(
-        Template\Context $context,
-        array $data = []
-    ) {
-        parent::__construct($context, $data);
-
-    }
 
     /**
      * Render form element as HTML
