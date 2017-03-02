@@ -35,11 +35,6 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
 use Magento\Framework\View\Element\Template;
 
-/**
- * Class Import
- *
- * @package TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Renderer
- */
 class Import extends Template implements RendererInterface
 {
     // @codingStandardsIgnoreLine

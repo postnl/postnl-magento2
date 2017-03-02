@@ -34,11 +34,6 @@ namespace TIG\PostNL\Unit\Services\Import\Csv;
 use TIG\PostNL\Services\Import\Csv\ParserErrors;
 use TIG\PostNL\Test\TestCase;
 
-/**
- * Class ParserErrorsTest
- *
- * @package TIG\PostNL\Unit\Services\Import\Csv
- */
 class ParserErrorsTest extends TestCase
 {
     protected $instanceClass = ParserErrors::class;

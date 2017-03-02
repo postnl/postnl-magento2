@@ -35,11 +35,6 @@ use \TIG\PostNL\Exception;
 use TIG\PostNL\Services\Import\Csv\RowParser;
 use TIG\PostNL\Test\TestCase;
 
-/**
- * Class RowParserTest
- *
- * @package TIG\PostNL\Unit\Services\Import\Csv
- */
 class RowParserTest extends TestCase
 {
     protected $instanceClass = RowParser::class;

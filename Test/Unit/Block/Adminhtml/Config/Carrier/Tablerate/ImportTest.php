@@ -37,11 +37,6 @@ use TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Import;
 use TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Renderer\Import as ImportBlock;
 use TIG\PostNL\Test\TestCase;
 
-/**
- * Class ImportTest
- *
- * @package TIG\PostNL\Test\Unit\Block\Adminhtml\Config\Carrier\Tablerate
- */
 class ImportTest extends TestCase
 {
     protected $instanceClass = Import::class;
