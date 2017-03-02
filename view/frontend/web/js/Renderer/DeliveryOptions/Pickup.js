@@ -60,7 +60,8 @@ define([
             countryCode : null,
             street : null,
             hasAddress :false,
-            pickupAddresses: []
+            pickupAddresses: [],
+            pgeFee: 10
         },
 
         daysSorting: {
@@ -262,6 +263,10 @@ define([
 
             return pgeActive && pgeInDeliveryOptions;
         },
+
+        getFeeFormatted: function () {
+            
+        }
     });
 
     function Location(data)
