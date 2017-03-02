@@ -29,7 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Services\Import\Csv;
+namespace TIG\PostNL\Unit\Service\Import\Csv;
 
 use Magento\Framework\Filesystem\File\ReadInterface;
 use TIG\PostNL\Exception;
