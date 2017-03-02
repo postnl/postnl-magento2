@@ -85,7 +85,7 @@ abstract class AbstractDeliveryOptions extends Action
         OrderFactory $orderFactory,
         OrderRepository $orderRepository,
         Session $checkoutSession,
-        DeliveryDate $deliveryDate
+        DeliveryDate $deliveryDate = null
     ) {
         $this->jsonHelper       = $jsonHelper;
         $this->orderFactory     = $orderFactory;

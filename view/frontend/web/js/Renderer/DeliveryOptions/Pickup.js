@@ -48,6 +48,7 @@ define([
     Location
 ) {
     'use strict';
+
     return Component.extend({
         defaults: {
             template: 'TIG_PostNL/DeliveryOptions/Pickup',
@@ -103,32 +104,50 @@ define([
                 State.selectShippingMethod();
                 State.currentSelectedShipmentType('pickup');
 
+                var dataObject = value.data,
+                    selectedFrom = '15:00:00',
+                    option = 'PG';
+
+                if (value.type == 'PGE') {
+                    selectedFrom = '9:00:00';
+                    option = 'PGE';
+                }
+
+                var fee = 0;
+                if (value.type == 'PGE' && dataObject.hasFee()) {
+                    fee = dataObject.getFee();
+                }
+                State.fee(fee);
+
                 State.pickupAddress({
-                    company: value.Name,
+                    company: dataObject.Name,
                     prefix: '',
                     firstname: '',
                     lastname: '',
                     suffix: '',
-                    street: value.getStreet(),
-                    city: value.Address.City,
+                    street: dataObject.getStreet(),
+                    city: dataObject.Address.City,
                     region: '',
-                    postcode: value.Address.Zipcode,
-                    countryId: value.Address.Countrycode,
+                    postcode: dataObject.Address.Zipcode,
+                    countryId: dataObject.Address.Countrycode,
                     telephone: ''
                 });
 
                 $.ajax({
-                    method : 'POST',
-                    url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
-                    data   : {
-                        type            : 'pickup',
-                        name            : value.Name,
-                        RetailNetworkID : value.RetailNetworkID,
-                        LocationCode    : value.LocationCode,
-                        address         : value.Address,
-                        customerData    : AddressFinder()
+                    method: 'POST',
+                    url: window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
+                    data: {
+                        type: 'pickup',
+                        option: option,
+                        name : dataObject.Name,
+                        RetailNetworkID: dataObject.RetailNetworkID,
+                        LocationCode : dataObject.LocationCode,
+                        from: selectedFrom,
+                        address: dataObject.Address,
+                        customerData : AddressFinder()
                     }
                 });
+
             }.bind(this));
 
             return this;
@@ -164,6 +183,10 @@ define([
             }).always(function () {
                 State.pickupOptionsAreLoading(false);
             });
+        },
+
+        getFeeFormatted: function () {
+
         },
 
         /**

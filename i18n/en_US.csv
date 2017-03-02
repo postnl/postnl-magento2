@@ -133,6 +133,9 @@ Sunday,Sunday
 Extension version,Extension version
 "For an A4 example, <a href=""%1"" target=""_blank"">click here</a>.","For an A4 example, <a href=""%1"" target=""_blank"">click here</a>."
 "For an A6 example, <a href=""%1"" target=""_blank"">click here</a>.","For an A6 example, <a href=""%1"" target=""_blank"">click here</a>."
+"Activate early delivery postoffice locations","Activate early delivery postoffice locations"
+"Early delivery fee","Early delivery fee"
+"Early Delivery from 9:00","Early Delivery from 9:00"
 "Export CSV","Export CSV"
 "An error occurred while importing the table rates.","An error occurred while importing the table rates."
 "File has not been imported. See the following list of errors: %1","File has not been imported. See the following list of errors: %1"
