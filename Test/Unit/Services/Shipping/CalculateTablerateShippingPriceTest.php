@@ -35,7 +35,7 @@ use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Quote\Model\Quote\Item;
 use TIG\PostNL\Model\ResourceModel\Tablerate;
 use TIG\PostNL\Model\ResourceModel\TablerateFactory;
-use TIG\PostNL\Services\Shipping\CalculateTablerateShippingPrice;
+use TIG\PostNL\Service\Shipping\CalculateTablerateShippingPrice;
 use TIG\PostNL\Test\TestCase;
 
 class CalculateTablerateShippingPriceTest extends TestCase

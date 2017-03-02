@@ -41,8 +41,8 @@ use Magento\Shipping\Model\Rate\ResultFactory;
 use Psr\Log\LoggerInterface;
 use \TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Config\Source\Carrier\RateType;
-use TIG\PostNL\Services\Shipping\CalculateTablerateShippingPrice;
-use TIG\PostNL\Services\Shipping\GetFreeBoxes;
+use TIG\PostNL\Service\Shipping\CalculateTablerateShippingPrice;
+use TIG\PostNL\Service\Shipping\GetFreeBoxes;
 
 class PostNL extends AbstractCarrier implements CarrierInterface
 {

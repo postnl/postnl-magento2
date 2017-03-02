@@ -36,7 +36,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use TIG\PostNL\Config\Csv\Import;
 use TIG\PostNL\Model\ResourceModel\Tablerate as TablerateResource;
 use TIG\PostNL\Model\ResourceModel\TablerateFactory;
-use TIG\PostNL\Services\Import\Csv;
+use TIG\PostNL\Service\Import\Csv;
 use TIG\PostNL\Test\TestCase;
 
 class ImportTest extends TestCase

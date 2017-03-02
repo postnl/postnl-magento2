@@ -34,11 +34,10 @@ namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 
-use TIG\PostNL\Services\Shipment\ShipmentService;
-use TIG\PostNL\Services\Shipment\Track\DeleteTrack;
-use TIG\PostNL\Services\Shipment\Label\DeleteLabel;
-use TIG\PostNL\Services\Shipment\Barcode\DeleteBarcode;
-
+use TIG\PostNL\Service\Shipment\ShipmentService;
+use TIG\PostNL\Service\Shipment\Track\DeleteTrack;
+use TIG\PostNL\Service\Shipment\Label\DeleteLabel;
+use TIG\PostNL\Service\Shipment\Barcode\DeleteBarcode;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
 
 class ChangeConfrimation extends Action

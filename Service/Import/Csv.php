@@ -29,7 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Services\Import;
+namespace TIG\PostNL\Service\Import;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
@@ -37,7 +37,7 @@ use Magento\Framework\Filesystem\DirectoryList;
 
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Model\Carrier\Tablerate;
-use TIG\PostNL\Services\Import\Csv\FileParser;
+use TIG\PostNL\Service\Import\Csv\FileParser;
 
 class Csv
 {

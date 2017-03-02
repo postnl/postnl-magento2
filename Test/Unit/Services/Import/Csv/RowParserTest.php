@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Unit\Services\Import\Csv;
 
 use \TIG\PostNL\Exception;
-use TIG\PostNL\Services\Import\Csv\RowParser;
+use TIG\PostNL\Service\Import\Csv\RowParser;
 use TIG\PostNL\Test\TestCase;
 
 class RowParserTest extends TestCase

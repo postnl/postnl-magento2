@@ -35,7 +35,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\ReadInterface as DirectoryReadInterface;
 use Magento\Framework\Filesystem\File\ReadInterface as FileReadInterface;
-use TIG\PostNL\Services\Import\Csv;
+use TIG\PostNL\Service\Import\Csv;
 use TIG\PostNL\Test\TestCase;
 
 class CsvTest extends TestCase

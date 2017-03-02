@@ -33,9 +33,9 @@ namespace TIG\PostNL\Unit\Services\Import\Csv;
 
 use Magento\Framework\Filesystem\File\ReadInterface;
 use TIG\PostNL\Exception;
-use TIG\PostNL\Services\Import\Csv\FileParser;
-use TIG\PostNL\Services\Import\Csv\ParserErrors;
-use TIG\PostNL\Services\Import\Csv\RowParser;
+use TIG\PostNL\Service\Import\Csv\FileParser;
+use TIG\PostNL\Service\Import\Csv\ParserErrors;
+use TIG\PostNL\Service\Import\Csv\RowParser;
 use TIG\PostNL\Test\TestCase;
 
 class FileParserTest extends TestCase

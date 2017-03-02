@@ -34,7 +34,7 @@ namespace TIG\PostNL\Unit\Services\Shipping;
 use Magento\Catalog\Model\Product;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Quote\Model\Quote\Item;
-use TIG\PostNL\Services\Shipping\GetFreeBoxes;
+use TIG\PostNL\Service\Shipping\GetFreeBoxes;
 use TIG\PostNL\Test\TestCase;
 
 class GetFreeBoxesTest extends TestCase

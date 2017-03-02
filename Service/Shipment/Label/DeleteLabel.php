@@ -29,10 +29,11 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Services\Shipment\Track;
+namespace TIG\PostNL\Service\Shipment\Label;
 
-use \Magento\Sales\Model\Order\Shipment\Track;
-use TIG\PostNL\Services\Shipment\ShipmentServiceAbstract;
+use TIG\PostNL\Model\ShipmentLabelRepository;
+use TIG\PostNL\Model\ShipmentLabelInterface;
+use TIG\PostNL\Service\Shipment\ShipmentServiceAbstract;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Exception as PostNLException;
@@ -40,22 +41,22 @@ use Magento\Sales\Model\Order\ShipmentRepository;
 use Magento\Sales\Model\Order\Shipment;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 
-class DeleteTrack extends ShipmentServiceAbstract
+class DeleteLabel extends ShipmentServiceAbstract
 {
     /**
-     * @var Track
+     * @var ShipmentLabelRepository
      */
-    private $track;
+    private $shipmentLabelRepository;
 
     /**
-     * @param Track                    $track
-     * @param Log                      $log
-     * @param PostNLShipmentRepository $postNLShipmentRepository
-     * @param ShipmentRepository       $shipmentRepository
-     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
+     * @param ShipmentLabelRepository $shipmentLabelRepository
+     * @param Log                       $log
+     * @param PostNLShipmentRepository  $postNLShipmentRepository
+     * @param ShipmentRepository        $shipmentRepository
+     * @param SearchCriteriaBuilder     $searchCriteriaBuilder
      */
     public function __construct(
-        Track $track,
+        ShipmentLabelRepository $shipmentLabelRepository,
         Log $log,
         PostNLShipmentRepository $postNLShipmentRepository,
         ShipmentRepository $shipmentRepository,
@@ -68,44 +69,43 @@ class DeleteTrack extends ShipmentServiceAbstract
             $searchCriteriaBuilder
         );
 
-        $this->track  = $track;
+        $this->shipmentLabelRepository = $shipmentLabelRepository;
     }
 
     /**
-     * Deletes a single track.
+     * Deletes one single label.
      *
-     * @param int $trackId
+     * @param ShipmentLabelInterface $label
      */
-    public function delete($trackId)
+    public function delete($label)
     {
-        /** @var Track $track */
-        $track = $this->track->load($trackId);
-        if (!$track->getId()) {
-            $this->logger->alert('Can\'t initialize track for deletion', [$trackId]);
-        }
-
         try {
-            $track->delete();
+            $this->shipmentLabelRepository->delete($label);
         } catch (PostNLException $exception) {
-            $this->logger->alert('Can\'t delete tracking number', $exception->getLogMessage());
+            $this->logger->alert('Can\'t delete shipment label', $exception->getLogMessage());
         }
     }
 
     /**
-     * Deletes all track (T&T) information associated to the Shipment ID.
+     * Deletes all labels associated to the PostNL Shipment ID.
      *
-     * @param $shipmentId
+     * @param $postNLShipmentId
+     *
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
      */
-    public function deleteAllByShipmentId($shipmentId)
+    public function deleteAllByParentId($postNLShipmentId)
     {
-        /** @var Shipment $shipment */
-        $shipment = $this->getShipment($shipmentId);
-        $tracks   = $shipment->getAllTracks();
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter(
+            'parent_id',
+            $postNLShipmentId
+        );
 
-        /** @var Track $track */
-        foreach ($tracks as $track) {
+        $labels = $this->shipmentLabelRepository->getList($searchCriteria->create());
+
+        /** @var ShipmentLabelInterface $label */
+        foreach ($labels->getItems() as $label) {
             // @codingStandardsIgnoreLine
-            $this->delete($track->getId());
+            $this->delete($label);
         }
     }
 }
