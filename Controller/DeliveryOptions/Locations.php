@@ -63,11 +63,6 @@ class Locations extends AbstractDeliveryOptions
     private $locationsEndpoint;
 
     /**
-     * @var DeliveryDate
-     */
-    private $deliveryEndpoint;
-
-    /**
      * @param Context           $context
      * @param OrderFactory      $orderFactory
      * @param OrderRepository   $orderRepository
@@ -89,14 +84,14 @@ class Locations extends AbstractDeliveryOptions
     ) {
         $this->addressEnhancer   = $addressEnhancer;
         $this->locationsEndpoint = $locations;
-        $this->deliveryEndpoint  = $deliveryDate;
 
         parent::__construct(
             $context,
             $jsonHelper,
             $orderFactory,
             $orderRepository,
-            $checkoutSession
+            $checkoutSession,
+            $deliveryDate
         );
     }
 
@@ -107,14 +102,14 @@ class Locations extends AbstractDeliveryOptions
     {
         $params = $this->getRequest()->getParams();
 
-        if (!isset($params['address'])) {
+        if (!isset($params['address']) || !is_array($params['address'])) {
             return $this->jsonResponse(__('No Address data found.'));
         }
 
         $this->addressEnhancer->set($params['address']);
 
         try {
-            return $this->jsonResponse($this->getLocations($this->addressEnhancer->get()));
+            return $this->jsonResponse($this->getValidResponeType());
         } catch (LocalizedException $exception) {
             return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
         } catch (\Exception $exception) {
@@ -146,25 +141,17 @@ class Locations extends AbstractDeliveryOptions
     }
 
     /**
-     * CIF call to get the delivery day needed for the StartDate param in TimeFrames Call.
-     * @param array $address
-     *
-     * @return array
+     * @return array|\Magento\Framework\Phrase
      */
-    private function getDeliveryDay($address)
+    private function getValidResponeType()
     {
-        if ($this->checkoutSession->getPostNLDeliveryDate()) {
-            return $this->checkoutSession->getPostNLDeliveryDate();
+        $address = $this->addressEnhancer->get();
+
+        if (isset($address['error'])) {
+            //@codingStandardsIgnoreLine
+            return __('%1 : %2', $address['error']['code'], $address['error']['message']);
         }
 
-        $this->deliveryEndpoint->setParameters($address);
-        $response = $this->deliveryEndpoint->call();
-
-        if (!is_object($response) || !isset($response->DeliveryDate)) {
-            return __('Invalid GetDeliveryDate response: %1', var_export($response, true));
-        }
-
-        $this->checkoutSession->setPostNLDeliveryDate($response->DeliveryDate);
-        return $response->DeliveryDate;
+        return $this->getLocations($address);
     }
 }

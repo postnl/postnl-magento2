@@ -44,6 +44,7 @@ use Magento\Framework\Json\Helper\Data;
 use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Model\OrderRepository;
 use \Magento\Checkout\Model\Session;
+use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 
 /**
  * Class AbstractDeliveryOptions
@@ -77,23 +78,32 @@ abstract class AbstractDeliveryOptions extends Action
     protected $checkoutSession;
 
     /**
+     * @var DeliveryDate
+     */
+    //@codingStandardsIgnoreLine
+    protected $deliveryEndpoint;
+
+    /**
      * @param Context         $context
      * @param Data            $jsonHelper
      * @param OrderFactory    $orderFactory
      * @param OrderRepository $orderRepository
      * @param Session         $checkoutSession
+     * @param DeliveryDate    $deliveryDate
      */
     public function __construct(
         Context $context,
         Data $jsonHelper,
         OrderFactory $orderFactory,
         OrderRepository $orderRepository,
-        Session $checkoutSession
+        Session $checkoutSession,
+        DeliveryDate $deliveryDate
     ) {
-        $this->jsonHelper      = $jsonHelper;
-        $this->orderFactory    = $orderFactory;
-        $this->orderRepository = $orderRepository;
-        $this->checkoutSession = $checkoutSession;
+        $this->jsonHelper       = $jsonHelper;
+        $this->orderFactory     = $orderFactory;
+        $this->orderRepository  = $orderRepository;
+        $this->checkoutSession  = $checkoutSession;
+        $this->deliveryEndpoint = $deliveryDate;
 
         parent::__construct($context);
     }
@@ -138,5 +148,29 @@ abstract class AbstractDeliveryOptions extends Action
         $postnlOrder = $collection->setPageSize(1)->getFirstItem();
 
         return $postnlOrder;
+    }
+
+    /**
+     * CIF call to get the delivery day needed for the StartDate param in TimeFrames Call.
+     * @param array $address
+     *
+     * @return array
+     */
+    //@codingStandardsIgnoreLine
+    protected function getDeliveryDay($address)
+    {
+        if ($this->checkoutSession->getPostNLDeliveryDate()) {
+            return $this->checkoutSession->getPostNLDeliveryDate();
+        }
+
+        $this->deliveryEndpoint->setParameters($address);
+        $response = $this->deliveryEndpoint->call();
+
+        if (!is_object($response) || !isset($response->DeliveryDate)) {
+            return __('Invalid GetDeliveryDate response: %1', var_export($response, true));
+        }
+
+        $this->checkoutSession->setPostNLDeliveryDate($response->DeliveryDate);
+        return $response->DeliveryDate;
     }
 }
