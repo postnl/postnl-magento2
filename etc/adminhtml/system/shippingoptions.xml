@@ -62,8 +62,9 @@
             </depends>
         </field>
 
-        <field id="max_deliverydays" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+        <field id="max_deliverydays" translate="label comment" type="select" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Maximum number of deliverydays</label>
+            <comment><![CDATA[Submit how many days in the future after the first delivery moment your customers can choose to receive their orders.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\DeliverydaysOptions</source_model>
             <config_path>tig_postnl/shippingoptions/max_deliverydays</config_path>
             <depends>
