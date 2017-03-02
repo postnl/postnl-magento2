@@ -104,7 +104,7 @@ define([
          */
         this.hasPGE = function () {
             var pgeActive = window.checkoutConfig.shipping.postnl.pakjegemak_express_active;
-            var pgeInDeliveryOptions = (this.DeliveryOptions['string'].indexOf('PGE') >= '0');
+            var pgeInDeliveryOptions = (this.DeliveryOptions.string.indexOf('PGE') >= '0');
 
             return pgeActive && pgeInDeliveryOptions;
         };
