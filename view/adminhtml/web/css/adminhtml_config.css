@@ -379,3 +379,23 @@ h4#carriers_tig_postnl_import_export_header {
 
 #tig_postnl_productoptions_supported_options option { white-space: normal; }
 #tig_postnl_productoptions_supported_options option:before { content: ''; }
+
+
+/* TIG Admin 2 Columns col-set ====================================================================================== */
+
+.tig-admin-col-set.box {
+    background: #F8F8F8;
+    padding: 10px;
+    box-sizing:border-box;
+}
+
+.tig-admin-col-set {
+    float:left;
+    width:100%;
+}
+
+.tig-admin-col-set .col {
+    float:left;
+    width: 50%;
+    padding: 20px;
+}
