@@ -92,7 +92,7 @@ class CalculateTablerateShippingPrice
 
         array_walk(
             $allRequestItems,
-            function ($item, $key) use (&$request) {
+            function ($item) use (&$request) {
                 /** @var \Magento\Quote\Model\Quote\Item $item */
                 if (!$item->getParentItem()) {
                     $newPackageValue = $request->getPackageValue() - $this->getVirtualItemRowTotal($item);
@@ -123,7 +123,7 @@ class CalculateTablerateShippingPrice
             $itemChildren = $item->getChildren();
             array_walk(
                 $itemChildren,
-                function ($child, $index) use (&$itemRowTotal) {
+                function ($child) use (&$itemRowTotal) {
                     $itemRowTotal += $this->getVirtualItemRowTotal($child);
                 }
             );
@@ -148,7 +148,7 @@ class CalculateTablerateShippingPrice
 
         array_walk(
             $requestItems,
-            function ($item, $index) use (&$freePackages) {
+            function ($item) use (&$freePackages) {
                 $itemProduct = $item->getProduct();
                 if (!$itemProduct->isVirtual() && !$item->getParentItem() && $item->getFreeShipping()) {
                     $freePackages += $item->getBaseRowTotal();
