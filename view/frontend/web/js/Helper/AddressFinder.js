@@ -89,12 +89,11 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
         /**
          * Unfortunately Magento does not always fill all fields, so get them ourselves.
          */
-        if (!address.street) {
-            address.street = {
-                0 : $("input[name*='street[0]']").val(),
-                1 : $("input[name*='street[1]']").val()
-            };
-        }
+        address.street = {
+            0 : $("input[name*='street[0]']").val(),
+            1 : $("input[name*='street[1]']").val()
+        };
+
 
         if (!address.postalCode) {
             address.postalCode = $("input[name*='postcode']").val();
@@ -114,6 +113,10 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
 
         if (!address.countryCode || address.countryCode !== countryCode) {
             address.countryCode = countryCode;
+        }
+
+        if (!address.countryCode || !address.postalCode || !address.street) {
+            return false;
         }
 
         return address;
