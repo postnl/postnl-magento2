@@ -1,23 +1,16 @@
 <?php
 /**
- *                  ___________       __            __
- *                  \__    ___/____ _/  |_ _____   |  |
- *                    |    |  /  _ \\   __\\__  \  |  |
- *                    |    | |  |_| ||  |   / __ \_|  |__
- *                    |____|  \____/ |__|  (____  /|____/
- *                                              \/
- *          ___          __                                   __
- *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
- *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
- *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
- *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
- *                  \/                           \/
- *                  ________
- *                 /  _____/_______   ____   __ __ ______
- *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
- *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
- *                 \______  /|__|    \____/ |____/ |   __/
- *                        \/                       |__|
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
  *
  * NOTICE OF LICENSE
  *
@@ -25,19 +18,20 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Setup;
 
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -53,13 +47,11 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     /**
      * @var Table
      */
-    // @codingStandardsIgnoreLine
     protected $table;
 
     /**
      * @var SchemaSetupInterface
      */
-    // @codingStandardsIgnoreLine
     protected $setup;
 
     /**
@@ -86,7 +78,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     /**
      * @return Table
      */
-    // @codingStandardsIgnoreLine
     protected function createTable()
     {
         $connection = $this->setup->getConnection();
@@ -98,13 +89,11 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     /**
      * @return void
      */
-    // @codingStandardsIgnoreLine
     abstract protected function defineTable();
 
     /**
      * @throws \Zend_Db_Exception
      */
-    // @codingStandardsIgnoreLine
     protected function addEntityId()
     {
         $this->table->addColumn(
@@ -129,7 +118,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
      *
      * @throws \Zend_Db_Exception
      */
-    // @codingStandardsIgnoreLine
     protected function addDate($name, $comment, $nullable = true, $default = null)
     {
         $this->table->addColumn(
@@ -155,7 +143,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
      *
      * @throws \Zend_Db_Exception
      */
-    // @codingStandardsIgnoreLine
     protected function addTimestamp($name, $comment, $nullable = true, $default = null)
     {
         $this->table->addColumn(
@@ -182,7 +169,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
      *
      * @throws \Zend_Db_Exception
      */
-    // @codingStandardsIgnoreLine
     protected function addInt($name, $comment, $nullable = true, $unsigned = false, $default = null)
     {
         $this->table->addColumn(
@@ -207,7 +193,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
      * @param        $table_field
      * @param string $onDelete
      */
-    // @codingStandardsIgnoreLine
     protected function addForeignKey(
         $ref_table,
         $ref_table_field,
@@ -225,6 +210,21 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     }
 
     /**
+     * @param array  $fields
+     * @param string $indexType
+     *
+     * @throws \Zend_Db_Exception
+     */
+    protected function addIndex($fields, $indexType = AdapterInterface::INDEX_TYPE_UNIQUE)
+    {
+        $this->table->addIndex(
+            $this->setup->getIdxName($this->table->getName(), $fields, $indexType),
+            $fields,
+            ['type' => $indexType]
+        );
+    }
+
+    /**
      * @param      $name
      * @param      $comment
      * @param int  $length
@@ -233,7 +233,6 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
      *
      * @throws \Zend_Db_Exception
      */
-    // @codingStandardsIgnoreLine
     protected function addText($name, $comment, $length = 255, $nullable = true, $default = null)
     {
         $this->table->addColumn(
@@ -254,13 +253,11 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     /**
      * @param      $name
      * @param      $comment
-     * @param int  $length
      * @param bool $nullable
      * @param null $default
      *
      * @throws \Zend_Db_Exception
      */
-    // @codingStandardsIgnoreLine
     protected function addBlob($name, $comment, $nullable = true, $default = null)
     {
         $this->table->addColumn(
@@ -279,9 +276,34 @@ abstract class AbstractTableInstaller implements InstallSchemaInterface
     }
 
     /**
+     * @param        $name
+     * @param        $comment
+     * @param string $size
+     * @param bool   $nullable
+     * @param null   $default
+     *
+     * @throws \Zend_Db_Exception
+     */
+    protected function addDecimal($name, $comment, $size = '15,4', $nullable = true, $default = null)
+    {
+        $this->table->addColumn(
+            $name,
+            Table::TYPE_DECIMAL,
+            $size,
+            [
+                'identity' => false,
+                'unsigned' => false,
+                'nullable' => $nullable,
+                'primary' => false,
+                'default' => $default,
+            ],
+            $comment
+        );
+    }
+
+    /**
      * @return \Zend_Db_Statement_Interface
      */
-    // @codingStandardsIgnoreLine
     protected function saveTable()
     {
         $connection = $this->setup->getConnection();

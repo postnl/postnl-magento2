@@ -104,10 +104,17 @@
                                     <!--/ko-->
                                     <!-- /ko -->
                                 </td>
+
                                 <td class="col col-price">
                                     <!-- ko foreach: $parent.getRegion('price') -->
                                     <!-- ko template: getTemplate() --><!-- /ko -->
                                     <!-- /ko -->
+
+                                    <!-- TIG PostNL modification start -->
+                                        <!-- ko if: $parent.isPostNLDeliveryMethod(method) && $parent.PostNLFee() -->
+                                        + <span data-bind="text: $parent.formatPrice($parent.PostNLFee())"></span>
+                                        <!-- /ko -->
+                                    <!-- TIG PostNL modification end -->
                                 </td>
 
                                 <td class="col col-method"
@@ -130,6 +137,7 @@
                             </tr>
                             <!-- /ko -->
 
+                            <!-- TIG PostNL modification start -->
                             <!-- ko if: $parent.canUsePostnlDeliveryOptions(method) -->
                             <tr>
                                 <td colspan="10" class="postnl-deliveryoptions">
@@ -139,6 +147,7 @@
                                 </td>
                             </tr>
                             <!-- /ko -->
+                            <!-- TIG PostNL modification end -->
 
                             <!-- /ko -->
                         </tbody>

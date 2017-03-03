@@ -1,23 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
-**
- *                  ___________       __            __
- *                  \__    ___/____ _/  |_ _____   |  |
- *                    |    |  /  _ \\   __\\__  \  |  |
- *                    |    | |  |_| ||  |   / __ \_|  |__
- *                    |____|  \____/ |__|  (____  /|____/
- *                                              \/
- *          ___          __                                   __
- *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
- *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
- *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
- *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
- *                  \/                           \/
- *                  ________
- *                 /  _____/_______   ____   __ __ ______
- *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
- *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
- *                 \______  /|__|    \____/ |____/ |   __/
- *                        \/                       |__|
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
  *
  * NOTICE OF LICENSE
  *
@@ -25,17 +19,17 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+ *
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <!--Productoptions section-->
@@ -44,19 +38,19 @@
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-section</fieldset_css>
 
-        <field id="supported_options" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+        <field id="supported_options" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Select the available options</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions</source_model>
             <config_path>tig_postnl/productoptions/supported_options</config_path>
         </field>
 
-        <field id="default_option" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+        <field id="default_option" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default shipping option</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
             <config_path>tig_postnl/productoptions/default_option</config_path>
         </field>
 
-        <field id="default_evening_option" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+        <field id="default_evening_option" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default evening option</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsEveningOptions</source_model>
             <config_path>tig_postnl/productoptions/default_evening_option</config_path>
@@ -65,7 +59,7 @@
             </depends>
         </field>
 
-        <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+        <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default postoffice delivery option</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakOptions</source_model>
             <config_path>tig_postnl/productoptions/default_pakjegemak_option</config_path>
@@ -74,7 +68,7 @@
             </depends>
         </field>
 
-        <field id="default_sunday_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+        <field id="default_sunday_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default sundaydelivery option</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsSundayOptions</source_model>
             <config_path>tig_postnl/productoptions/default_sunday_option</config_path>
