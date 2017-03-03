@@ -46,7 +46,6 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
 
     var fields = [
         "input[name*='street[0]']",
-        "input[name*='street[1]']",
         "input[name*='postcode']",
         "select[name*='country_id']"
     ];
@@ -94,25 +93,13 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
             1 : $("input[name*='street[1]']").val()
         };
 
-
-        if (!address.postalCode) {
-            address.postalCode = $("input[name*='postcode']").val();
-        }
-
-        if (!address.firstname) {
-            address.firstname = $("input[name*='firstname']").val();
-        }
-
-        if (!address.lastname) {
-            address.lastname = $("input[name*='lastname']").val();
-        }
-
-        if (!address.telephone) {
-            address.telephone = $("input[name*='telephone']").val();
-        }
+        address.postalCode = $("input[name*='postcode']").val();
+        address.firstname  = $("input[name*='firstname']").val();
+        address.lastname   = $("input[name*='lastname']").val();
+        address.telephone  = $("input[name*='telephone']").val();
 
         if (!address.countryCode || address.countryCode !== countryCode) {
-            address.countryCode = countryCode;
+            address.countryCode = $("select[name*='country_id']").val();
         }
 
         if (!address.countryCode || !address.postalCode || !address.street) {
