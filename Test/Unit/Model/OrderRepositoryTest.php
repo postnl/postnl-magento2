@@ -33,12 +33,11 @@ namespace TIG\PostNL\Unit\Model;
 
 use TIG\PostNL\Test\TestCase;
 use \TIG\PostNL\Model\OrderRepository;
-use \TIG\PostNL\Model\OrderInterface;
+use \TIG\PostNL\Api\Data\OrderInterface;
 use \Magento\Framework\Api\SearchCriteriaInterface;
 use \Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Model\ResourceModel\Order\CollectionFactory;
 use \TIG\PostNL\Model\OrderFactory;
-use \Magento\Framework\Api\SearchResults;
 use \Magento\Framework\Api\SearchResultsInterfaceFactory;
 use \Magento\Framework\Api\Search\FilterGroup;
 use \Magento\Framework\Api\Filter;

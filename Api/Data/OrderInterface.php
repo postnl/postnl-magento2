@@ -29,29 +29,8 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Api;
+namespace TIG\PostNL\Api\Data;
 
-use TIG\PostNL\Api\Data\OrderInterface;
-use Magento\Framework\Api\SearchCriteriaInterface;
-
-interface OrderRepositoryInterface
+interface OrderInterface
 {
-    public function save(OrderInterface $order);
-
-    /**
-     * Return a specific order.
-     *
-     * @api
-     * @param int $identifier
-     * @return \TIG\PostNL\Api\Data\OrderInterface
-     */
-    public function getById($identifier);
-
-    public function getList(SearchCriteriaInterface $criteria);
-
-    public function delete(OrderInterface $order);
-
-    public function create(array $data);
-
-    public function getByFieldWithValue($field, $value);
 }

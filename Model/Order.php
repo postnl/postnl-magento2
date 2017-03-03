@@ -33,6 +33,7 @@ namespace TIG\PostNL\Model;
 
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Api\Data\OrderInterface;
 
 /**
  * @method float getFee()
