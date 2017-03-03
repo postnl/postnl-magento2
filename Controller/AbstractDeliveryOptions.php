@@ -1,23 +1,16 @@
 <?php
 /**
- *                  ___________       __            __
- *                  \__    ___/____ _/  |_ _____   |  |
- *                    |    |  /  _ \\   __\\__  \  |  |
- *                    |    | |  |_| ||  |   / __ \_|  |__
- *                    |____|  \____/ |__|  (____  /|____/
- *                                              \/
- *          ___          __                                   __
- *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
- *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
- *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
- *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
- *                  \/                           \/
- *                  ________
- *                 /  _____/_______   ____   __ __ ______
- *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
- *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
- *                 \______  /|__|    \____/ |____/ |   __/
- *                        \/                       |__|
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
  *
  * NOTICE OF LICENSE
  *
@@ -25,15 +18,15 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Controller;
@@ -44,12 +37,8 @@ use Magento\Framework\Json\Helper\Data;
 use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Model\OrderRepository;
 use \Magento\Checkout\Model\Session;
+use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 
-/**
- * Class AbstractDeliveryOptions
- *
- * @package TIG\PostNL\Controller
- */
 abstract class AbstractDeliveryOptions extends Action
 {
     /**
@@ -77,22 +66,32 @@ abstract class AbstractDeliveryOptions extends Action
     protected $checkoutSession;
 
     /**
+     * @var DeliveryDate
+     */
+    //@codingStandardsIgnoreLine
+    protected $deliveryEndpoint;
+
+    /**
      * @param Context         $context
      * @param Data            $jsonHelper
      * @param OrderFactory    $orderFactory
      * @param OrderRepository $orderRepository
+     * @param Session         $checkoutSession
+     * @param DeliveryDate    $deliveryDate
      */
     public function __construct(
         Context $context,
         Data $jsonHelper,
         OrderFactory $orderFactory,
         OrderRepository $orderRepository,
-        Session $checkoutSession
+        Session $checkoutSession,
+        DeliveryDate $deliveryDate = null
     ) {
-        $this->jsonHelper      = $jsonHelper;
-        $this->orderFactory    = $orderFactory;
-        $this->orderRepository = $orderRepository;
-        $this->checkoutSession = $checkoutSession;
+        $this->jsonHelper       = $jsonHelper;
+        $this->orderFactory     = $orderFactory;
+        $this->orderRepository  = $orderRepository;
+        $this->checkoutSession  = $checkoutSession;
+        $this->deliveryEndpoint = $deliveryDate;
 
         parent::__construct($context);
     }
@@ -100,15 +99,21 @@ abstract class AbstractDeliveryOptions extends Action
     /**
      * Create json response
      *
-     * @param string $response
+     * @param string $data
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
     //@codingStandardsIgnoreLine
-    protected function jsonResponse($response = '')
+    protected function jsonResponse($data = '', $code = null)
     {
-        return $this->getResponse()->representJson(
-            $this->jsonHelper->jsonEncode($response)
+        $response = $this->getResponse();
+
+        if ($code !== null) {
+            $response->setStatusCode($code);
+        }
+
+        return $response->representJson(
+            $this->jsonHelper->jsonEncode($data)
         );
     }
 
@@ -131,5 +136,29 @@ abstract class AbstractDeliveryOptions extends Action
         $postnlOrder = $collection->setPageSize(1)->getFirstItem();
 
         return $postnlOrder;
+    }
+
+    /**
+     * CIF call to get the delivery day needed for the StartDate param in TimeFrames Call.
+     * @param array $address
+     *
+     * @return array
+     */
+    //@codingStandardsIgnoreLine
+    protected function getDeliveryDay($address)
+    {
+        if ($this->checkoutSession->getPostNLDeliveryDate()) {
+            return $this->checkoutSession->getPostNLDeliveryDate();
+        }
+
+        $this->deliveryEndpoint->setParameters($address);
+        $response = $this->deliveryEndpoint->call();
+
+        if (!is_object($response) || !isset($response->DeliveryDate)) {
+            return __('Invalid GetDeliveryDate response: %1', var_export($response, true));
+        }
+
+        $this->checkoutSession->setPostNLDeliveryDate($response->DeliveryDate);
+        return $response->DeliveryDate;
     }
 }

@@ -1,23 +1,16 @@
 <?php
 /**
- *                  ___________       __            __
- *                  \__    ___/____ _/  |_ _____   |  |
- *                    |    |  /  _ \\   __\\__  \  |  |
- *                    |    | |  |_| ||  |   / __ \_|  |__
- *                    |____|  \____/ |__|  (____  /|____/
- *                                              \/
- *          ___          __                                   __
- *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
- *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
- *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
- *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
- *                  \/                           \/
- *                  ________
- *                 /  _____/_______   ____   __ __ ______
- *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
- *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
- *                 \______  /|__|    \____/ |____/ |   __/
- *                        \/                       |__|
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
  *
  * NOTICE OF LICENSE
  *
@@ -25,36 +18,36 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Config\Provider;
 
 /**
- * Class ShippingOptions
- *
- * @package TIG\PostNL\Config\Provider
+ * @codingStandardsIgnoreStart
  */
 class ShippingOptions extends AbstractConfigProvider
 {
-    const XPATH_SHIPPING_OPTION_ACITVE              = 'tig_postnl/shippingoptions/shippingoptions_active';
-    const XPATH_SHIPPING_OPTION_STOCK               = 'tig_postnl/shippingoptions/stockoptions';
-    const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE = 'tig_postnl/shippingoptions/deliverydays_active';
-    const XPATH_SHIPPING_OPTION_MAX_DELIVERYDAYS    = 'tig_postnl/shippingoptions/max_deliverydays';
-    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE   = 'tig_postnl/shippingoptions/pakjegemak_active';
-    const XPATH_SHIPPING_OPTION_EVENING_ACTIVE      = 'tig_postnl/shippingoptions/eveningdelivery_active';
-    const XPATH_SHIPPING_OPTION_EVENING_FEE         = 'tig_postnl/shippingoptions/eveningdelivery_fee';
-    const XPATH_SHIPPING_OPTION_SUNDAY_ACTIVE       = 'tig_postnl/shippingoptions/sundaydelivery_active';
-    const XPATH_SHIPPING_OPTION_SUNDAY_FEE          = 'tig_postnl/shippingoptions/sundaydelivery_fee';
-    const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE  = 'tig_postnl/shippingoptions/send_track_and_trace_email';
+    const XPATH_SHIPPING_OPTION_ACITVE                    = 'tig_postnl/shippingoptions/shippingoptions_active';
+    const XPATH_SHIPPING_OPTION_STOCK                     = 'tig_postnl/shippingoptions/stockoptions';
+    const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE       = 'tig_postnl/shippingoptions/deliverydays_active';
+    const XPATH_SHIPPING_OPTION_MAX_DELIVERYDAYS          = 'tig_postnl/shippingoptions/max_deliverydays';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE         = 'tig_postnl/shippingoptions/pakjegemak_active';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_ACTIVE = 'tig_postnl/shippingoptions/pakjegemak_express_active';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_FEE    = 'tig_postnl/shippingoptions/pakjegemak_express_fee';
+    const XPATH_SHIPPING_OPTION_EVENING_ACTIVE            = 'tig_postnl/shippingoptions/eveningdelivery_active';
+    const XPATH_SHIPPING_OPTION_EVENING_FEE               = 'tig_postnl/shippingoptions/eveningdelivery_fee';
+    const XPATH_SHIPPING_OPTION_SUNDAY_ACTIVE             = 'tig_postnl/shippingoptions/sundaydelivery_active';
+    const XPATH_SHIPPING_OPTION_SUNDAY_FEE                = 'tig_postnl/shippingoptions/sundaydelivery_fee';
+    const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE        = 'tig_postnl/shippingoptions/send_track_and_trace_email';
 
     private $defaultMaxDeliverydays = '5';
 
@@ -103,6 +96,30 @@ class ShippingOptions extends AbstractConfigProvider
     }
 
     /**
+     * @return mixed|bool
+     */
+    public function isPakjegemakExpressActive()
+    {
+        if (!$this->isPakjegemakActive()) {
+            return false;
+        }
+
+        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_ACTIVE);
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getPakjegemakExpressFee()
+    {
+        if (!$this->isPakjegemakActive()) {
+            return '0';
+        }
+
+        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_FEE);
+    }
+
+    /**
      * @return mixed
      */
     public function isEveningDeliveryActive()
@@ -142,3 +159,6 @@ class ShippingOptions extends AbstractConfigProvider
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_SUNDAY_FEE);
     }
 }
+/**
+ * @codingStandardsIgnoreEnd
+ */

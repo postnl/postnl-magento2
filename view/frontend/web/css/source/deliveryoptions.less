@@ -1,3 +1,34 @@
+/**
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
+
 /* =================================================================================================================== *
 /*
 /* Do you want to customize the colors of the PostNL extension?
@@ -222,6 +253,7 @@
               .tig-postnl-delivery-dash    { float:left; margin: 0 3px; }
               .tig-postnl-delivery-from    { float:left; }
               .tig-postnl-delivery-option  { float:left; margin-left: 37px; width: 100%; position: relative; color: @postnl-orange; }
+              .tig-postnl-delivery-fee-container { margin-right: 10px; color: @postnl-blue; }
 
               @media screen and (min-width: 400px){
                 .data-container { width: calc(~'100% - 100px'); }
@@ -282,7 +314,8 @@
           .tig-postnl-pickup-radio  { float:left; margin: 0 15px 0 0; width: 20px; height: 40px; }
           .tig-postnl-pickup-name   { float:left; margin: 0 3px 0 0;  width: 100%; font-weight: bold; }
           .tig-postnl-pickup-street { float:left; margin: 0 3px 0 0; }
-          .tig-postnl-pickup-number { float:left; }
+          .tig-postnl-pickup-number { float:left; margin: 0 3px 0 0; }
+          .tig-postnl-pickup-number-addition { float:left; }
 
           .tig-postnl-pickup-hours {
             position: absolute;
@@ -335,6 +368,12 @@
             }
           }
 
+          .tig-postnl-distance {
+            float:right;
+            margin-top:-10px;
+            margin-right: 15px;
+          }
+
           &:nth-child(even) {
             background :@custom-list-background-even;
 
@@ -377,7 +416,16 @@
 *
 * =================================================================================================================== */
 
-.table-checkout-shipping-method {
-  width: 100% !important;
-  max-width: 500px;
+#opc-shipping_method {
+  #checkout-shipping-method-load {
+    .table-checkout-shipping-method {
+      width: 100% !important;
+      max-width: 500px;
+
+      .col-price {
+        min-width:100px;
+      }
+
+    }
+  }
 }

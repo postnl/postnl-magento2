@@ -1,23 +1,16 @@
 <?php
 /**
- *                  ___________       __            __
- *                  \__    ___/____ _/  |_ _____   |  |
- *                    |    |  /  _ \\   __\\__  \  |  |
- *                    |    | |  |_| ||  |   / __ \_|  |__
- *                    |____|  \____/ |__|  (____  /|____/
- *                                              \/
- *          ___          __                                   __
- *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
- *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
- *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
- *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
- *                  \/                           \/
- *                  ________
- *                 /  _____/_______   ____   __ __ ______
- *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
- *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
- *                 \______  /|__|    \____/ |____/ |   __/
- *                        \/                       |__|
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
  *
  * NOTICE OF LICENSE
  *
@@ -25,19 +18,20 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
+use Magento\Framework\App\Response\Http;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Json\Helper\Data;
@@ -62,11 +56,6 @@ class Locations extends AbstractDeliveryOptions
     private $locationsEndpoint;
 
     /**
-     * @var DeliveryDate
-     */
-    private $deliveryEndpoint;
-
-    /**
      * @param Context           $context
      * @param OrderFactory      $orderFactory
      * @param OrderRepository   $orderRepository
@@ -88,14 +77,14 @@ class Locations extends AbstractDeliveryOptions
     ) {
         $this->addressEnhancer   = $addressEnhancer;
         $this->locationsEndpoint = $locations;
-        $this->deliveryEndpoint  = $deliveryDate;
 
         parent::__construct(
             $context,
             $jsonHelper,
             $orderFactory,
             $orderRepository,
-            $checkoutSession
+            $checkoutSession,
+            $deliveryDate
         );
     }
 
@@ -106,18 +95,18 @@ class Locations extends AbstractDeliveryOptions
     {
         $params = $this->getRequest()->getParams();
 
-        if (!isset($params['address'])) {
+        if (!isset($params['address']) || !is_array($params['address'])) {
             return $this->jsonResponse(__('No Address data found.'));
         }
 
         $this->addressEnhancer->set($params['address']);
 
         try {
-            return $this->jsonResponse($this->getLocations($this->addressEnhancer->get()));
+            return $this->jsonResponse($this->getValidResponeType());
         } catch (LocalizedException $exception) {
-            return $this->jsonResponse($exception->getMessage());
+            return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
         } catch (\Exception $exception) {
-            return $this->jsonResponse($exception->getMessage());
+            return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
         }
     }
 
@@ -145,25 +134,17 @@ class Locations extends AbstractDeliveryOptions
     }
 
     /**
-     * CIF call to get the delivery day needed for the StartDate param in TimeFrames Call.
-     * @param array $address
-     *
-     * @return array
+     * @return array|\Magento\Framework\Phrase
      */
-    private function getDeliveryDay($address)
+    private function getValidResponeType()
     {
-        if ($this->checkoutSession->getPostNLDeliveryDate()) {
-            return $this->checkoutSession->getPostNLDeliveryDate();
+        $address = $this->addressEnhancer->get();
+
+        if (isset($address['error'])) {
+            //@codingStandardsIgnoreLine
+            return __('%1 : %2', $address['error']['code'], $address['error']['message']);
         }
 
-        $this->deliveryEndpoint->setParameters($address);
-        $response = $this->deliveryEndpoint->call();
-
-        if (!is_object($response) || !isset($response->DeliveryDate)) {
-            return __('Invalid GetDeliveryDate response: %1', var_export($response, true));
-        }
-
-        $this->checkoutSession->setPostNLDeliveryDate($response->DeliveryDate);
-        return $response->DeliveryDate;
+        return $this->getLocations($address);
     }
 }

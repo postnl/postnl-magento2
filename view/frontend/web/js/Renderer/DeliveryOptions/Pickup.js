@@ -1,22 +1,15 @@
 /**
- *                  ___________       __            __
- *                  \__    ___/____ _/  |_ _____   |  |
- *                    |    |  /  _ \\   __\\__  \  |  |
- *                    |    | |  |_| ||  |   / __ \_|  |__
- *                    |____|  \____/ |__|  (____  /|____/
- *                                              \/
- *          ___          __                                   __
- *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
- *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
- *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
- *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
- *                  \/                           \/
- *                  ________
- *                 /  _____/_______   ____   __ __ ______
- *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
- *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
- *                 \______  /|__|    \____/ |____/ |   __/
- *                        \/                       |__|
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
  *
  * NOTICE OF LICENSE
  *
@@ -24,15 +17,15 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 define([
@@ -42,7 +35,8 @@ define([
     'jquery',
     'TIG_PostNL/js/Helper/AddressFinder',
     'TIG_PostNL/js/Helper/Logger',
-    'TIG_PostNL/js/Helper/State'
+    'TIG_PostNL/js/Helper/State',
+    'TIG_PostNL/js/Models/Location'
 ], function (
     Component,
     ko,
@@ -50,9 +44,11 @@ define([
     $,
     AddressFinder,
     Logger,
-    State
+    State,
+    Location
 ) {
     'use strict';
+
     return Component.extend({
         defaults: {
             template: 'TIG_PostNL/DeliveryOptions/Pickup',
@@ -61,26 +57,6 @@ define([
             street : null,
             hasAddress :false,
             pickupAddresses: []
-        },
-
-        daysSorting: {
-            'monday': 1,
-            'tuesday': 2,
-            'wednesday': 3,
-            'thursday': 4,
-            'friday': 5,
-            'saturday': 6,
-            'sunday': 7
-        },
-
-        daysLabels: {
-            monday: $.mage.__('Monday'),
-            tuesday: $.mage.__('Tuesday'),
-            wednesday: $.mage.__('Wednesday'),
-            thursday: $.mage.__('Thursday'),
-            friday: $.mage.__('Friday'),
-            saturday: $.mage.__('Saturday'),
-            sunday: $.mage.__('Sunday')
         },
 
         initObservable : function () {
@@ -109,24 +85,70 @@ define([
             }.bind(this));
 
             /**
+             * Deselect the selected pickup option when a different option type is being selected.
+             */
+            State.currentSelectedShipmentType.subscribe(function (shipmentType) {
+                if (shipmentType != 'pickup') {
+                    this.selectedOption(null);
+                }
+            }.bind(this));
+
+            /**
              * Save the selected pickup option
              */
             this.selectedOption.subscribe(function (value) {
+                if (value === null) {
+                    return;
+                }
+
                 State.selectShippingMethod();
+                State.currentSelectedShipmentType('pickup');
+
+                var dataObject = value.data,
+                    selectedFrom = '15:00:00',
+                    option = 'PG';
+
+                if (value.type == 'PGE') {
+                    selectedFrom = '9:00:00';
+                    option = 'PGE';
+                }
+
+                var fee = 0;
+                if (value.type == 'PGE' && dataObject.hasFee()) {
+                    fee = dataObject.getFee();
+                }
+                State.fee(fee);
+
+                State.pickupAddress({
+                    company: dataObject.Name,
+                    prefix: '',
+                    firstname: '',
+                    lastname: '',
+                    suffix: '',
+                    street: dataObject.getStreet(),
+                    city: dataObject.Address.City,
+                    region: '',
+                    postcode: dataObject.Address.Zipcode,
+                    countryId: dataObject.Address.Countrycode,
+                    telephone: ''
+                });
 
                 $.ajax({
                     method: 'POST',
                     url: window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
                     data: {
                         type: 'pickup',
-                        name : value.Name,
-                        RetailNetworkID: value.RetailNetworkID,
-                        LocationCode : value.LocationCode,
-                        address: value.Address,
+                        option: option,
+                        name : dataObject.Name,
+                        RetailNetworkID: dataObject.RetailNetworkID,
+                        LocationCode : dataObject.LocationCode,
+                        from: selectedFrom,
+                        address: dataObject.Address,
                         customerData : AddressFinder()
                     }
                 });
-            });
+
+            }.bind(this));
 
             return this;
         },
@@ -163,98 +185,19 @@ define([
             });
         },
 
-        isRowSelected: function ($data) {
-            return JSON.stringify(this.selectedOption()) == JSON.stringify($data);
-        },
+        getFeeFormatted: function () {
 
-        getDistanceText: function (distance) {
-            var text = '';
-
-            distance = parseInt(distance);
-
-            if (distance < 1000 && distance > 0) {
-                text = distance + ' m';
-            }
-
-            if (distance > 1000) {
-                text = parseFloat(Math.round(distance / 100) / 10).toFixed(1) + ' km';
-            }
-
-            return text;
         },
 
         /**
-         * Convert the OpeningHours object to a format readable by Knockout
-         *
-         * @param OpeningHours
-         * @returns {*}
-         */
-        getOpeningHours: function (OpeningHours) {
-            var output = [];
-
-            $.each(OpeningHours, function (index, record) {
-                var data = {
-                    index : index,
-                    day   : this.daysLabels[index.toLowerCase()],
-                    hours : this.getHours(record)
-                };
-
-                output.push(data);
-            }.bind(this));
-
-            return this.sortDays(output);
-        },
-
-        /**
-         * Format the hours to a knockout readable format.
-         *
-         * @param hours
-         * @returns {Array}
-         */
-        getHours: function (hours) {
-            var output = [];
-            $.each(hours, function (index, hour) {
-                output.push(hour[0]);
-            });
-
-            return output;
-        },
-
-        /**
-         * The data does not comes sorted by day from PostNL, so sort it.
-         *
-         * @param data
-         * @returns {*}
-         */
-        sortDays: function (data) {
-            return data.sort(function (a, b) {
-                var day1 = a.index.toLowerCase();
-                var day2 = b.index.toLowerCase();
-                return this.daysSorting[day1] > this.daysSorting[day2];
-            }.bind(this));
-        },
-
-        /**
-         * Toggle the pickup hours visibility.
+         * Check if the current row is selected.
          *
          * @param $data
+         * @returns {boolean}
          */
-        toggle: function ($data) {
-            $data.expanded(!$data.expanded());
+        isRowSelected: function ($data) {
+            return JSON.stringify(this.selectedOption()) == JSON.stringify($data);
         }
     });
-
-    function Location(data)
-    {
-        $.each(data, function (key, value) {
-            this[key] = value;
-        }.bind(this));
-
-        this.expanded = ko.observable(true);
-
-        this.toggle = function () {
-            this.expanded(!this.expanded());
-        };
-    }
 });
 

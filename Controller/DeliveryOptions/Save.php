@@ -1,23 +1,16 @@
 <?php
 /**
- *                  ___________       __            __
- *                  \__    ___/____ _/  |_ _____   |  |
- *                    |    |  /  _ \\   __\\__  \  |  |
- *                    |    | |  |_| ||  |   / __ \_|  |__
- *                    |____|  \____/ |__|  (____  /|____/
- *                                              \/
- *          ___          __                                   __
- *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
- *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
- *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
- *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
- *                  \/                           \/
- *                  ________
- *                 /  _____/_______   ____   __ __ ______
- *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
- *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
- *                 \______  /|__|    \____/ |____/ |   __/
- *                        \/                       |__|
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
  *
  * NOTICE OF LICENSE
  *
@@ -25,19 +18,20 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
+use Magento\Framework\App\Response\Http;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Json\Helper\Data;
@@ -48,11 +42,6 @@ use TIG\PostNL\Helper\DeliveryOptions\OrderParams;
 use \Magento\Checkout\Model\Session;
 use TIG\PostNL\Helper\DeliveryOptions\PickupAddress;
 
-/**
- * Class Save
- *
- * @package TIG\PostNL\Controller\DeliveryOptions
- */
 class Save extends AbstractDeliveryOptions
 {
     /**
@@ -66,13 +55,13 @@ class Save extends AbstractDeliveryOptions
     private $pickupAddress;
 
     /**
-     * @param Context          $context
-     * @param OrderFactory     $orderFactory
-     * @param OrderRepository  $orderRepository
-     * @param Data             $jsonHelper
-     * @param OrderParams      $orderParams
-     * @param Session          $checkoutSession
-     * @param PickupAddress    $pickupAddress
+     * @param Context         $context
+     * @param OrderFactory    $orderFactory
+     * @param OrderRepository $orderRepository
+     * @param Data            $jsonHelper
+     * @param OrderParams     $orderParams
+     * @param Session         $checkoutSession
+     * @param PickupAddress   $pickupAddress
      */
     public function __construct(
         Context $context,
@@ -83,9 +72,6 @@ class Save extends AbstractDeliveryOptions
         Session $checkoutSession,
         PickupAddress $pickupAddress
     ) {
-        $this->orderParams   = $orderParams;
-        $this->pickupAddress = $pickupAddress;
-
         parent::__construct(
             $context,
             $jsonHelper,
@@ -93,6 +79,9 @@ class Save extends AbstractDeliveryOptions
             $orderRepository,
             $checkoutSession
         );
+
+        $this->orderParams   = $orderParams;
+        $this->pickupAddress = $pickupAddress;
     }
 
     /**
@@ -112,9 +101,9 @@ class Save extends AbstractDeliveryOptions
         try {
             return $this->jsonResponse($saved);
         } catch (LocalizedException $exception) {
-            return $this->jsonResponse($exception->getMessage());
+            return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
         } catch (\Exception $exception) {
-            return $this->jsonResponse($exception->getMessage());
+            return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
         }
     }
 
@@ -126,9 +115,9 @@ class Save extends AbstractDeliveryOptions
      */
     private function saveDeliveryOption($params)
     {
-        $params      = $this->addSessionDataToParams($params);
-        $params      = $this->orderParams->get($params);
-        $postnlOrder = $this->getPostNLOrderByQuoteId($params['quote_id']);
+        $params        = $this->addSessionDataToParams($params);
+        $params        = $this->orderParams->get($params);
+        $postnlOrder   = $this->getPostNLOrderByQuoteId($params['quote_id']);
 
         foreach ($params as $key => $value) {
             $postnlOrder->setData($key, $value);

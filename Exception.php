@@ -1,23 +1,16 @@
 <?php
 /**
- *                  ___________       __            __
- *                  \__    ___/____ _/  |_ _____   |  |
- *                    |    |  /  _ \\   __\\__  \  |  |
- *                    |    | |  |_| ||  |   / __ \_|  |__
- *                    |____|  \____/ |__|  (____  /|____/
- *                                              \/
- *          ___          __                                   __
- *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
- *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
- *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
- *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
- *                  \/                           \/
- *                  ________
- *                 /  _____/_______   ____   __ __ ______
- *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
- *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
- *                 \______  /|__|    \____/ |____/ |   __/
- *                        \/                       |__|
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
  *
  * NOTICE OF LICENSE
  *
@@ -25,15 +18,15 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL;
@@ -43,6 +36,8 @@ use Magento\Framework\Phrase;
 
 class Exception extends LocalizedException
 {
+    private $exceptionMessage;
+
     /**
      * @param $message
      * @param int                       $code
@@ -50,20 +45,22 @@ class Exception extends LocalizedException
      */
     public function __construct($message, $code = 0, $previous = null)
     {
+        // @codingStandardsIgnoreLine
+        $this->exceptionMessage = __($message);
+
+        if ($code !== 0) {
+            $code = (string) $code;
+            $this->code = $code;
+
+            $message = '[' . $code . '] ' . $message;
+        }
+
         if (is_string($message)) {
             // @codingStandardsIgnoreLine
             $message = __($message);
         }
 
         parent::__construct($message, $previous);
-
-        /**
-         * Replace the code with the actual, non-integer code.
-         */
-        if ($code !== 0) {
-            $code = (string) $code;
-            $this->code = $code;
-        }
     }
 
     /**
@@ -77,7 +74,7 @@ class Exception extends LocalizedException
      */
     public function __toString()
     {
-        $string = "exception '" . __CLASS__ . "' with message '" . $this->getMessage() . "'";
+        $string = "exception '" . __CLASS__ . "' with message '" . $this->exceptionMessage . "'";
 
         $code = $this->getCode();
         if ($code !== 0 && !empty($code)) {

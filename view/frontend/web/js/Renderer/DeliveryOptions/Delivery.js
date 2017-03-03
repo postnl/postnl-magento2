@@ -1,22 +1,15 @@
 /**
- *                  ___________       __            __
- *                  \__    ___/____ _/  |_ _____   |  |
- *                    |    |  /  _ \\   __\\__  \  |  |
- *                    |    | |  |_| ||  |   / __ \_|  |__
- *                    |____|  \____/ |__|  (____  /|____/
- *                                              \/
- *          ___          __                                   __
- *         |   |  ____ _/  |_   ____ _______   ____    ____ _/  |_
- *         |   | /    \\   __\_/ __ \\_  __ \ /    \ _/ __ \\   __\
- *         |   ||   |  \|  |  \  ___/ |  | \/|   |  \\  ___/ |  |
- *         |___||___|  /|__|   \_____>|__|   |___|  / \_____>|__|
- *                  \/                           \/
- *                  ________
- *                 /  _____/_______   ____   __ __ ______
- *                /   \  ___\_  __ \ /  _ \ |  |  \\____ \
- *                \    \_\  \|  | \/|  |_| ||  |  /|  |_| |
- *                 \______  /|__|    \____/ |____/ |   __/
- *                        \/                       |__|
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
  *
  * NOTICE OF LICENSE
  *
@@ -24,15 +17,15 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
- * @copyright   Copyright (c) 2017 Total Internet Group B.V. (http://www.totalinternetgroup.nl)
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 define([
@@ -55,6 +48,7 @@ define([
     TimeFrame
 ) {
     'use strict';
+
     return Component.extend({
         defaults: {
             template: 'TIG_PostNL/DeliveryOptions/Delivery',
@@ -89,20 +83,43 @@ define([
             }.bind(this));
 
             /**
+             * Deselect the selected delivery option when a different option type is being selected.
+             */
+            State.currentSelectedShipmentType.subscribe(function (shipmentType) {
+                if (shipmentType != 'delivery') {
+                    this.selectedOption(null);
+                }
+            }.bind(this));
+
+            /**
              * Save the selected delivery option
+             *
+             * @param TimeFrame
              */
             this.selectedOption.subscribe(function (value) {
+                if (value === null) {
+                    return;
+                }
+
                 State.selectShippingMethod();
+                State.currentSelectedShipmentType('delivery');
+
+                var fee = null;
+                if (value.hasFee()) {
+                    fee = value.getFee();
+                }
+
+                State.fee(fee);
 
                 $.ajax({
-                    method: 'POST',
-                    url: window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
-                    data: {
-                        type: 'delivery',
-                        date : value.date,
-                        option: value.option,
-                        from: value.from,
-                        to: value.to
+                    method : 'POST',
+                    url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
+                    data   : {
+                        type   : 'delivery',
+                        date   : value.date,
+                        option : value.option,
+                        from   : value.from,
+                        to     : value.to
                     }
                 });
             });
@@ -110,10 +127,11 @@ define([
             return this;
         },
 
-        setDeliverydays: function (data) {
-            this.deliverydays(data);
-        },
-
+        /**
+         * Retrieve the Deliverydays from PostNL.
+         *
+         * @param address
+         */
         getDeliverydays: function (address) {
             State.deliveryOptionsAreLoading(true);
 
@@ -131,7 +149,7 @@ define([
                     });
                 });
 
-                this.setDeliverydays(data);
+                this.deliverydays(data);
             }.bind(this)).fail(function (data) {
                 State.deliveryOptionsAreAvailable(false);
                 Logger.error(data);
