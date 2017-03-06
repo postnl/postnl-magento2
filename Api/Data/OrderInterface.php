@@ -31,6 +31,206 @@
  */
 namespace TIG\PostNL\Api\Data;
 
+// @codingStandardsIgnoreFile
+/**
+ * Too many public methods for the code inspection.
+ */
 interface OrderInterface
 {
+    /**
+     * @return int
+     */
+    public function getEntityId();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setOrderId($value);
+
+    /**
+     * @return int
+     */
+    public function getOrderId();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setQuoteId($value);
+
+    /**
+     * @return int
+     */
+    public function getQuoteId();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setType($value);
+
+    /**
+     * @return string
+     */
+    public function getType();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setDeliveryDate($value);
+
+    /**
+     * @return string
+     */
+    public function getDeliveryDate();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setExpectedDeliveryTimeStart($value);
+
+    /**
+     * @return string
+     */
+    public function getExpectedDeliveryTimeStart();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setExpectedDeliveryTimeEnd($value);
+
+    /**
+     * @return string
+     */
+    public function getExpectedDeliveryTimeEnd();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setIsPakjegemak($value);
+
+    /**
+     * @return bool
+     */
+    public function getIsPakjegemak();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setPgOrderAddressId($value);
+
+    /**
+     * @return int
+     */
+    public function getPgOrderAddressId();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setPgLocationCode($value);
+
+    /**
+     * @return string
+     */
+    public function getPgLocationCode();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setPgRetailNetworkId($value);
+
+    /**
+     * @return string
+     */
+    public function getPgRetailNetworkId();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setProductCode($value);
+
+    /**
+     * @return int
+     */
+    public function getProductCode();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setFee($value);
+
+    /**
+     * @return float
+     */
+    public function getFee();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setShipAt($value);
+
+    /**
+     * @return string
+     */
+    public function getShipAt();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setConfirmedAt($value);
+
+    /**
+     * @return string
+     */
+    public function getConfirmedAt();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setCreatedAt($value);
+
+    /**
+     * @return string
+     */
+    public function getCreatedAt();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setUpdatedAt($value);
+
+    /**
+     * @return string
+     */
+    public function getUpdatedAt();
 }

@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Model;
 
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Model\ResourceModel\Shipment\CollectionFactory;
 
@@ -53,16 +54,16 @@ class ShipmentRepository implements ShipmentRepositoryInterface
     private $collectionFactory;
 
     /**
-     * @param ShipmentFactory               $objectFactory
+     * @param ShipmentFactory               $shipmentFactory
      * @param CollectionFactory             $collectionFactory
      * @param SearchResultsInterfaceFactory $searchResultsFactory
      */
     public function __construct(
-        ShipmentFactory $objectFactory,
+        ShipmentFactory $shipmentFactory,
         CollectionFactory $collectionFactory,
         SearchResultsInterfaceFactory $searchResultsFactory
     ) {
-        $this->shipmentFactory      = $objectFactory;
+        $this->shipmentFactory      = $shipmentFactory;
         $this->collectionFactory    = $collectionFactory;
         $this->searchResultsFactory = $searchResultsFactory;
     }
@@ -93,27 +94,27 @@ class ShipmentRepository implements ShipmentRepositoryInterface
      */
     public function getById($identifier)
     {
-        $object = $this->shipmentFactory->create();
-        $object->load($identifier);
+        $shipment = $this->shipmentFactory->create();
+        $shipment->load($identifier);
 
-        if (!$object->getId()) {
+        if (!$shipment->getId()) {
             // @codingStandardsIgnoreLine
-            throw new NoSuchEntityException(__('Object with id "%1" does not exist.', $identifier));
+            throw new NoSuchEntityException(__('Shipment with id "%1" does not exist.', $identifier));
         }
 
-        return $object;
+        return $shipment;
     }
 
     /**
-     * @param ShipmentInterface $object
+     * @param ShipmentInterface $shipment
      *
      * @return bool
      * @throws CouldNotDeleteException
      */
-    public function delete(ShipmentInterface $object)
+    public function delete(ShipmentInterface $shipment)
     {
         try {
-            $object->delete();
+            $shipment->delete();
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
             throw new CouldNotDeleteException(__($exception->getMessage()));
@@ -140,12 +141,12 @@ class ShipmentRepository implements ShipmentRepositoryInterface
 
         $collection->setCurPage($criteria->getCurrentPage());
         $collection->setPageSize($criteria->getPageSize());
-        $objects = [];
-        foreach ($collection as $objectModel) {
-            $objects[] = $objectModel;
+        $shipments = [];
+        foreach ($collection as $shipmentModel) {
+            $shipments[] = $shipmentModel;
         }
 
-        $searchResults->setItems($objects);
+        $searchResults->setItems($shipments);
 
         return $searchResults;
     }
@@ -154,7 +155,7 @@ class ShipmentRepository implements ShipmentRepositoryInterface
      * @param $filterGroup
      * @param $collection
      */
-    public function handleFilterGroups($filterGroup, $collection)
+    private function handleFilterGroups($filterGroup, $collection)
     {
         $fields     = [];
         $conditions = [];
@@ -173,7 +174,7 @@ class ShipmentRepository implements ShipmentRepositoryInterface
      * @param SearchCriteriaInterface $criteria
      * @param                         $collection
      */
-    public function handleSortOrders(SearchCriteriaInterface $criteria, $collection)
+    private function handleSortOrders(SearchCriteriaInterface $criteria, $collection)
     {
         $sortOrders = $criteria->getSortOrders();
 
@@ -195,11 +196,39 @@ class ShipmentRepository implements ShipmentRepositoryInterface
      *
      * @return mixed
      */
-    public function getSearchResults(SearchCriteriaInterface $criteria)
+    private function getSearchResults(SearchCriteriaInterface $criteria)
     {
         $searchResults = $this->searchResultsFactory->create();
         $searchResults->setSearchCriteria($criteria);
 
         return $searchResults;
+    }
+
+    /**
+     * Delete a PostNL shipment.
+     *
+     * @api
+     *
+     * @param int $identifier
+     *
+     * @return bool
+     */
+    public function deleteById($identifier)
+    {
+        $shipment = $this->getById($identifier);
+
+        return $this->delete($shipment);
+    }
+
+    /**
+     * Create a PostNL shipment.
+     *
+     * @api
+     * @param array $data
+     * @return Shipmentinterface
+     */
+    public function create(array $data = [])
+    {
+        return $this->shipmentFactory->create($data);
     }
 }

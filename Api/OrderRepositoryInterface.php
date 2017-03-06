@@ -31,15 +31,19 @@
  */
 namespace TIG\PostNL\Api;
 
-use TIG\PostNL\Api\Data\OrderInterface;
-use Magento\Framework\Api\SearchCriteriaInterface;
-
 interface OrderRepositoryInterface
 {
-    public function save(OrderInterface $order);
+    /**
+     * Save a PostNL order
+     *
+     * @api
+     * @param \TIG\PostNL\Api\Data\OrderInterface $order
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function save(\TIG\PostNL\Api\Data\OrderInterface $order);
 
     /**
-     * Return a specific order.
+     * Return a specific PostNL order.
      *
      * @api
      * @param int $identifier
@@ -47,11 +51,46 @@ interface OrderRepositoryInterface
      */
     public function getById($identifier);
 
-    public function getList(SearchCriteriaInterface $criteria);
+    /**
+     * Retrieve a list of PostNL orders.
+     *
+     * @api
+     * @param \Magento\Framework\Api\SearchCriteriaInterface $criteria
+     * @return \Magento\Framework\Api\SearchResultsInterface
+     */
+    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $criteria);
 
-    public function delete(OrderInterface $order);
+    /**
+     * Delete a specific PostNL order.
+     *
+     * @api
+     * @param \TIG\PostNL\Api\Data\OrderInterface $order
+     * @return bool
+     */
+    public function delete(\TIG\PostNL\Api\Data\OrderInterface $order);
 
-    public function create(array $data);
+    /**
+     * Delete a PostNL order.
+     *
+     * @api
+     * @param int $identifier
+     * @return bool
+     */
+    public function deleteById($identifier);
 
+    /**
+     * Create a PostNL order.
+     *
+     * @api
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function create();
+
+    /**
+     * @param string $field
+     * @param string $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
     public function getByFieldWithValue($field, $value);
 }

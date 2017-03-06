@@ -32,10 +32,131 @@
  */
 -->
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-    <route url="/V1/postnl/orders/get/:id" method="GET">
+    <!-- Webapi description for the TIG PostNL Order model -->
+    <route url="/V1/postnl/orders/:id" method="GET">
         <service class="TIG\PostNL\Api\OrderRepositoryInterface" method="getById"/>
         <resources>
             <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
+    <route url="/V1/postnl/orders/search" method="GET">
+        <service class="TIG\PostNL\Api\OrderRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
+    <route url="/V1/postnl/orders" method="PUT">
+        <service class="TIG\PostNL\Api\OrderRepositoryInterface" method="create"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/postnl/orders/:id" method="DELETE">
+        <service class="TIG\PostNL\Api\OrderRepositoryInterface" method="delete"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/postnl/orders" method="POST">
+        <service class="TIG\PostNL\Api\OrderRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+
+    <!-- Webapi description for the TIG PostNL Shipment model -->
+    <route url="/V1/postnl/shipments/:id" method="GET">
+        <service class="TIG\PostNL\Api\ShipmentRepositoryInterface" method="getById"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments/search" method="GET">
+        <service class="TIG\PostNL\Api\ShipmentRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments" method="PUT">
+        <service class="TIG\PostNL\Api\ShipmentRepositoryInterface" method="create"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments/:id" method="DELETE">
+        <service class="TIG\PostNL\Api\ShipmentRepositoryInterface" method="delete"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments" method="POST">
+        <service class="TIG\PostNL\Api\ShipmentRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+
+    <!-- Webapi description for the TIG PostNL Shipment Barcode model -->
+    <route url="/V1/postnl/shipments/barcode/:id" method="GET">
+        <service class="TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface" method="getById"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments/barcode/search" method="GET">
+        <service class="TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments/barcode" method="PUT">
+        <service class="TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface" method="create"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments/barcode/:id" method="DELETE">
+        <service class="TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface" method="delete"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments/barcode" method="POST">
+        <service class="TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+
+    <!-- Webapi description for the TIG PostNL Shipment Label model -->
+    <route url="/V1/postnl/shipments/label/:id" method="GET">
+        <service class="TIG\PostNL\Api\ShipmentLabelRepositoryInterface" method="getById"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments/label/search" method="GET">
+        <service class="TIG\PostNL\Api\ShipmentLabelRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments/label" method="PUT">
+        <service class="TIG\PostNL\Api\ShipmentLabelRepositoryInterface" method="create"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments/label/:id" method="DELETE">
+        <service class="TIG\PostNL\Api\ShipmentLabelRepositoryInterface" method="delete"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments/label" method="POST">
+        <service class="TIG\PostNL\Api\ShipmentLabelRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
         </resources>
     </route>
 </routes>

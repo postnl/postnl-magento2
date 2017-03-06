@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Service\Shipment\Barcode;
 
 use TIG\PostNL\Model\ShipmentBarcodeRepository;
-use TIG\PostNL\Model\ShipmentBarcodeInterface;
+use TIG\PostNL\Api\Data\ShipmentBarcodeInterface;
 use TIG\PostNL\Service\Shipment\ShipmentServiceAbstract;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Logging\Log;

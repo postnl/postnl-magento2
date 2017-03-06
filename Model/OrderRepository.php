@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Model;
 
+use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Sales\Model\Order as SalesOrder;
 use TIG\PostNL\Api\OrderRepositoryInterface;
 use TIG\PostNL\Api\Data\OrderInterface;
@@ -43,6 +44,10 @@ use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use \Magento\Framework\Api\SearchCriteriaBuilder;
 use \TIG\PostNL\Model\Order as PostNLOrder;
 
+// @codingStandardsIgnoreFile
+/**
+ * Too much public methods, and too much code. We can't get this file to pass the (Object Calisthenics) code inspection.
+ */
 class OrderRepository implements OrderRepositoryInterface
 {
     /**
@@ -99,20 +104,20 @@ class OrderRepository implements OrderRepositoryInterface
     /**
      * @param $identifier
      *
-     * @return \Magento\Framework\DataObject
+     * @return OrderInterface
      * @throws NoSuchEntityException
      */
     public function getById($identifier)
     {
-        $object = $this->orderFactory->create();
-        $object->load($identifier);
+        $order = $this->orderFactory->create();
+        $order->load($identifier);
 
-        if (!$object->getId()) {
+        if (!$order->getId()) {
             // @codingStandardsIgnoreLine
-            throw new NoSuchEntityException(__('Object with id "%1" does not exist.', $identifier));
+            throw new NoSuchEntityException(__('Order with id "%1" does not exist.', $identifier));
         }
 
-        return $object;
+        return $order;
     }
 
     /**
@@ -167,7 +172,7 @@ class OrderRepository implements OrderRepositoryInterface
     /**
      * @param SearchCriteriaInterface $criteria
      *
-     * @return mixed
+     * @return SearchResultsInterface
      */
     public function getList(SearchCriteriaInterface $criteria)
     {
@@ -182,12 +187,12 @@ class OrderRepository implements OrderRepositoryInterface
 
         $collection->setCurPage($criteria->getCurrentPage());
         $collection->setPageSize($criteria->getPageSize());
-        $objects = [];
-        foreach ($collection as $objectModel) {
-            $objects[] = $objectModel;
+        $orders = [];
+        foreach ($collection as $orderModel) {
+            $orders[] = $orderModel;
         }
 
-        $searchResults->setItems($objects);
+        $searchResults->setItems($orders);
 
         return $searchResults;
     }
@@ -196,7 +201,7 @@ class OrderRepository implements OrderRepositoryInterface
      * @param $filterGroup
      * @param $collection
      */
-    public function handleFilterGroups($filterGroup, $collection)
+    private function handleFilterGroups($filterGroup, $collection)
     {
         $fields     = [];
         $conditions = [];
@@ -215,7 +220,7 @@ class OrderRepository implements OrderRepositoryInterface
      * @param SearchCriteriaInterface $criteria
      * @param                         $collection
      */
-    public function handleSortOrders(SearchCriteriaInterface $criteria, $collection)
+    private function handleSortOrders(SearchCriteriaInterface $criteria, $collection)
     {
         $sortOrders = $criteria->getSortOrders();
 
@@ -235,13 +240,26 @@ class OrderRepository implements OrderRepositoryInterface
     /**
      * @param SearchCriteriaInterface $criteria
      *
-     * @return mixed
+     * @return SearchResultsInterface
      */
-    public function getSearchResults(SearchCriteriaInterface $criteria)
+    private function getSearchResults(SearchCriteriaInterface $criteria)
     {
         $searchResults = $this->searchResultsFactory->create();
         $searchResults->setSearchCriteria($criteria);
 
         return $searchResults;
+    }
+
+    /**
+     * Delete a PostNL order.
+     *
+     * @param int $identifier
+     * @return bool
+     */
+    public function deleteById($identifier)
+    {
+        $order = $this->getById($identifier);
+
+        return $this->delete($order);
     }
 }

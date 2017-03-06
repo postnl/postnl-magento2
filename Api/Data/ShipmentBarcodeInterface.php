@@ -29,10 +29,56 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Model;
+namespace TIG\PostNL\Api\Data;
 
-interface ShipmentInterface
+interface ShipmentBarcodeInterface
 {
-    // @codingStandardsIgnoreLine
-    public function getIdentities();
+    /**
+     * @return int
+     */
+    public function getEntityId();
+
+    /**
+     * @return int
+     */
+    public function getParentId();
+
+    /**
+     * @param int $value
+     * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
+     */
+    public function setParentId($value);
+
+    /**
+     * @return string
+     */
+    public function getType();
+
+    /**
+     * @param string $value
+     * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
+     */
+    public function setType($value);
+
+    /**
+     * @return int
+     */
+    public function getNumber();
+
+    /**
+     * @param int $value
+     * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
+     */
+    public function setNumber($value);
+
+    /**
+     * @return string
+     */
+    public function getValue();
+
+    /**
+     * @param string $value
+     * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
+     */
+    public function setValue($value);
 }

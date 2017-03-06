@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Service\Shipment\Label;
 
 use TIG\PostNL\Model\ShipmentLabelRepository;
-use TIG\PostNL\Model\ShipmentLabelInterface;
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Service\Shipment\ShipmentServiceAbstract;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Logging\Log;

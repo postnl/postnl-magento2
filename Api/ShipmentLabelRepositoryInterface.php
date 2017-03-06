@@ -31,16 +31,49 @@
  */
 namespace TIG\PostNL\Api;
 
-use TIG\PostNL\Model\ShipmentLabelInterface;
-use Magento\Framework\Api\SearchCriteriaInterface;
-
 interface ShipmentLabelRepositoryInterface
 {
-    public function save(ShipmentLabelInterface $shipment);
+    /**
+     * Save a PostNL Shipment Label.
+     *
+     * @api
+     * @param \TIG\PostNL\Api\Data\ShipmentLabelInterface $shipmentLabel
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function save(\TIG\PostNL\Api\Data\ShipmentLabelInterface $shipmentLabel);
 
+    /**
+     * Create a PostNL Shipment Label.
+     *
+     * @api
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function create();
+
+    /**
+     * Return a specific PostNL Shipment Label.
+     *
+     * @api
+     * @param int $identifier
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
     public function getById($identifier);
 
-    public function getList(SearchCriteriaInterface $criteria);
+    /**
+     * Retrieve a list of PostNL Shipment Labels.
+     *
+     * @api
+     * @param \Magento\Framework\Api\SearchCriteriaInterface $criteria
+     * @return \Magento\Framework\Api\SearchResultsInterface
+     */
+    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $criteria);
 
-    public function delete(ShipmentLabelInterface $shipment);
+    /**
+     * Delete a specific PostNL Shipment Label.
+     *
+     * @api
+     * @param \TIG\PostNL\Api\Data\ShipmentLabelInterface $shipmentLabel
+     * @return bool
+     */
+    public function delete(\TIG\PostNL\Api\Data\ShipmentLabelInterface $shipmentLabel);
 }

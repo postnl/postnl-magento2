@@ -33,6 +33,7 @@ namespace TIG\PostNL\Unit\Model;
 
 use TIG\PostNL\Test\TestCase;
 use \TIG\PostNL\Model\OrderRepository;
+use \TIG\PostNL\Model\Order;
 use \TIG\PostNL\Api\Data\OrderInterface;
 use \Magento\Framework\Api\SearchCriteriaInterface;
 use \Magento\Framework\Api\SearchCriteriaBuilder;
@@ -49,7 +50,9 @@ class OrderRepositoryTest extends TestCase
 
     public function testSave()
     {
-        $orderInterface = $this->getMock(OrderInterface::class, ['getIdentities', 'save']);
+        $orderInterface = $this->getFakeMock(Order::class);
+        $orderInterface->setMethods(['getIdentities', 'save']);
+        $orderInterface = $orderInterface->getMock();
 
         $saveExpects = $orderInterface->expects($this->once());
         $saveExpects->method('save');
@@ -160,7 +163,7 @@ class OrderRepositoryTest extends TestCase
             'searchResultsFactory'  => $searchResults
         ]);
 
-        $result = $instance->getSearchResults($this->getSearchCriteria());
+        $result = $this->invokeArgs('getSearchResults', [$this->getSearchCriteria()], $instance);
 
         $this->assertEquals($searchResults, $result);
     }
