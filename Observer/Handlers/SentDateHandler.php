@@ -82,6 +82,6 @@ class SentDateHandler
      */
     private function getPostnlOrder(Shipment $shipment)
     {
-        return $this->orderRepository->getById($shipment->getOrderId());
+        return $this->orderRepository->getByFieldWithValue('order_id', $shipment->getOrderId());
     }
 }

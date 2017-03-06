@@ -147,7 +147,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
      */
     public function getDeliveryDate()
     {
-        return $this->setData(static::FIELD_DELIVERY_DATE);
+        return $this->getData(static::FIELD_DELIVERY_DATE);
     }
 
     /**
@@ -201,7 +201,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
      */
     public function getIsPakjegemak()
     {
-        return $this->setData(static::FIELD_IS_PAKJEGEMAK);
+        return $this->getData(static::FIELD_IS_PAKJEGEMAK);
     }
 
     /**
@@ -219,7 +219,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
      */
     public function getPgOrderAddressId()
     {
-        return $this->setData(static::FIELD_PG_ORDER_ADDRESS_ID);
+        return $this->getData(static::FIELD_PG_ORDER_ADDRESS_ID);
     }
 
     /**
@@ -287,11 +287,11 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     }
 
     /**
-     * @return \TIG\PostNL\Api\Data\OrderInterface
+     * @return float
      */
     public function getFee()
     {
-        return $this->setData(static::FIELD_FEE);
+        return $this->getData(static::FIELD_FEE);
     }
 
     /**
