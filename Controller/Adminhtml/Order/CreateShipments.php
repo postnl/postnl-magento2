@@ -152,7 +152,7 @@ class CreateShipments extends Action
         if (!$this->currentOrder->canShip()) {
             return false;
         }
-        
+
         if ($this->currentOrder->getShippingMethod() !== 'tig_postnl_regular') {
             return false;
         }
