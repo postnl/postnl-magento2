@@ -35,6 +35,7 @@ use \Magento\Backend\Block\Widget\Context;
 use \Magento\Framework\Registry;
 use \Magento\Framework\Api\SearchCriteriaBuilder;
 use \Magento\Framework\Api\AbstractExtensibleObject;
+use TIG\PostNL\Config\Validator\ValidAddress;
 use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use \TIG\PostNL\Model\Shipment as PostNLShipment;
 use \Magento\Shipping\Block\Adminhtml\View as MagentoView;
@@ -62,21 +63,29 @@ class View extends MagentoView
     private $searchCriteriaBuilder;
 
     /**
-     * @param Context                   $context
-     * @param Registry                  $registry
-     * @param PostNLShipmentRepository  $shipmentRepository
-     * @param SearchCriteriaBuilder     $searchCriteriaBuilder
-     * @param array                     $data
+     * @var ValidAddress
+     */
+    private $validAddress;
+
+    /**
+     * @param Context                  $context
+     * @param Registry                 $registry
+     * @param PostNLShipmentRepository $shipmentRepository
+     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
+     * @param ValidAddress             $validAddress
+     * @param array                    $data
      */
     public function __construct(
         Context $context,
         Registry $registry,
         PostNLShipmentRepository $shipmentRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
+        ValidAddress $validAddress,
         array $data = []
     ) {
         $this->postNLShipmentRepository = $shipmentRepository;
         $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
+        $this->validAddress = $validAddress;
 
         parent::__construct($context, $registry, $data);
     }
@@ -93,10 +102,22 @@ class View extends MagentoView
             return;
         }
 
+        if (!$this->validAddress->check()) {
+            return;
+        }
+
         if (!$this->getPostNLShipment()) {
             return;
         }
 
+        $this->processButtons();
+    }
+
+    /**
+     * Remove, update and add buttons.
+     */
+    private function processButtons()
+    {
         $this->buttonList->remove('print');
         //@codingStandardsIgnoreLine
         $this->buttonList->update('save', 'label', __('Send Shipment Email'));
@@ -104,6 +125,9 @@ class View extends MagentoView
         $this->setPostNLPrintLabelButton();
     }
 
+    /**
+     * Add the PostNL print label button.
+     */
     private function setPostNLPrintLabelButton()
     {
         $this->buttonList->add(
@@ -117,6 +141,9 @@ class View extends MagentoView
         );
     }
 
+    /**
+     * Add the PostNL change confirmation button.
+     */
     private function setPostNLChangeConfirmButton()
     {
         /** @codingStandardsIgnoreStart */
@@ -137,6 +164,9 @@ class View extends MagentoView
         /** @codingStandardsIgnoreEnd */
     }
 
+    /**
+     * Set the correct text.
+     */
     private function setPostNLPrintLabelButtonData()
     {
         /** @var PostNLShipment $postNLShipment */
@@ -171,7 +201,6 @@ class View extends MagentoView
             ]
         );
     }
-
     /**
      * @return AbstractExtensibleObject
      */
