@@ -31,16 +31,56 @@
  */
 namespace TIG\PostNL\Api;
 
-use TIG\PostNL\Model\ShipmentInterface;
-use Magento\Framework\Api\SearchCriteriaInterface;
-
 interface ShipmentRepositoryInterface
 {
-    public function save(ShipmentInterface $shipment);
+    /**
+     * Update a PostNL shipment.
+     *
+     * @api
+     * @param \TIG\PostNL\Api\Data\ShipmentInterface $shipment
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function save(\TIG\PostNL\Api\Data\ShipmentInterface $shipment);
 
+    /**
+     * Create a PostNL shipment.
+     *
+     * @api
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function create();
+
+    /**
+     * Retrieve a specific PostNL shipment.
+     *
+     * @param int $identifier
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
     public function getById($identifier);
 
-    public function getList(SearchCriteriaInterface $criteria);
+    /**
+     * Retrieve a list of PostNL shipments.
+     *
+     * @api
+     * @param \Magento\Framework\Api\SearchCriteriaInterface $criteria
+     * @return \Magento\Framework\Api\SearchResultsInterface
+     */
+    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $criteria);
 
-    public function delete(ShipmentInterface $shipment);
+    /**
+     * Delete a PostNL order.
+     *
+     * @param \TIG\PostNL\Api\Data\ShipmentInterface $shipment
+     * @return bool
+     */
+    public function delete(\TIG\PostNL\Api\Data\ShipmentInterface $shipment);
+
+    /**
+     * Delete a PostNL shipment.
+     *
+     * @api
+     * @param $identifier
+     * @return bool
+     */
+    public function deleteById($identifier);
 }

@@ -71,10 +71,10 @@ class UpdateOrderGridTest extends TestCase
         $orderRepository = $this->getMock(\TIG\PostNL\Api\OrderRepositoryInterface::class);
         $order = $this->getOrder();
 
-        $getByIdExpects = $orderRepository->expects($this->once());
-        $getByIdExpects->method('getById');
-        $getByIdExpects->with($this->orderId);
-        $getByIdExpects->willReturn($order);
+        $getByFieldWithValueExpects = $orderRepository->expects($this->once());
+        $getByFieldWithValueExpects->method('getByFieldWithValue');
+        $getByFieldWithValueExpects->with('order_id', $this->orderId);
+        $getByFieldWithValueExpects->willReturn($order);
 
         $saveExpects = $orderRepository->expects($this->once());
         $saveExpects->method('save');

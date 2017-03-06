@@ -31,25 +31,21 @@
  */
 namespace TIG\PostNL\Model;
 
+use TIG\PostNL\Api\Data\ShipmentBarcodeInterface;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
 
-/**
- * @method $this setShipmentId(string $value)
- * @method null|string getShipmentId
- * @method $this setType(string $value)
- * @method null|string getType
- * @method $this setNumber(string $value)
- * @method null|string getNumber
- * @method $this setValue(string $value)
- * @method null|string getValue
- */
 class ShipmentBarcode extends AbstractModel implements ShipmentBarcodeInterface, IdentityInterface
 {
     const CACHE_TAG = 'tig_postnl_shipment_barcode';
 
     const BARCODE_TYPE_SHIPMENT = 'shipment';
     const BARCODE_TYPE_RETURN   = 'return';
+
+    const FIELD_PARENT_ID = 'parent_id';
+    const FIELD_TYPE = 'type';
+    const FIELD_NUMBER = 'number';
+    const FIELD_VALUE = 'value';
 
     /**
      * Constructor
@@ -67,5 +63,77 @@ class ShipmentBarcode extends AbstractModel implements ShipmentBarcodeInterface,
     public function getIdentities()
     {
         return [self::CACHE_TAG . '_' . $this->getId()];
+    }
+
+    /**
+     * @return int
+     */
+    public function getParentId()
+    {
+        return $this->getData(static::FIELD_PARENT_ID);
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
+     */
+    public function setParentId($value)
+    {
+        return $this->setData(static::FIELD_PARENT_ID, $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->getData(static::FIELD_TYPE);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
+     */
+    public function setType($value)
+    {
+        return $this->setData(static::FIELD_TYPE, $value);
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumber()
+    {
+        return $this->getData(static::FIELD_NUMBER);
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
+     */
+    public function setNumber($value)
+    {
+        return $this->setData(static::FIELD_NUMBER, $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->getData(static::FIELD_VALUE);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
+     */
+    public function setValue($value)
+    {
+        return $this->setData(static::FIELD_VALUE, $value);
     }
 }
