@@ -1,5 +1,39 @@
 # Postnl Magento 2
 
+## Installation
+
+We strongly recommend to use a Staging Enviroment for the installation and to backup the system before installation. 
+
+Login using SSH and go to the Magento 2 Root.
+Run the following commands to install the extension. 
+- composer require tig/postnl-magento2
+
+Empty the following folders (Make sure to not delete the folders)
+- var/cache
+- var/pagecache
+- var/generation
+- var/di (if this folder exists)
+
+Flush the cache using the following command.
+- php bin/magento cache:flush
+
+Update the Magento 2 enviroment using the following command
+- php bin/magento setup:upgrade
+
+Re-index the Magento 2 enviroment using the following command
+- php bin/magento indexer:reindex
+
+The installation on your Staging Enviroment is now finished
+
+## User and Configuration Manual
+https://tig.zendesk.com/knowledge/articles/115001935267
+
+## Full installation Manual
+https://servicedesk.tig.nl/hc/nl/articles/115001631247
+
+## Knowledge Base
+https://servicedesk.tig.nl/hc/nl/categories/115000341267
+
 ## Running tests
 
 Place this code in an working Magento 2 installation in the folder app/code/TIG/PostNL (Case sensitive). Install all the dependencies:
