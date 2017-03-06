@@ -2,10 +2,10 @@
 
 ## Installation
 
-We strongly recommend to use a Staging Enviroment for the installation and to backup the system before installation. 
+We strongly recommend to use a Staging Environment for the installation and to back up the system before installation.
 
 Login using SSH and go to the Magento 2 Root.
-Run the following commands to install the extension. 
+Run the following commands to install the extension.
 - composer require tig/postnl-magento2
 
 Empty the following folders (Make sure to not delete the folders)
@@ -17,13 +17,13 @@ Empty the following folders (Make sure to not delete the folders)
 Flush the cache using the following command.
 - php bin/magento cache:flush
 
-Update the Magento 2 enviroment using the following command
+Update the Magento 2 environment using the following command
 - php bin/magento setup:upgrade
 
-Re-index the Magento 2 enviroment using the following command
+Re-index the Magento 2 environment using the following command
 - php bin/magento indexer:reindex
 
-The installation on your Staging Enviroment is now finished
+The installation on your Staging Environment is now finished
 
 ## User and Configuration Manual
 https://tig.zendesk.com/knowledge/articles/115001935267
@@ -36,24 +36,24 @@ https://servicedesk.tig.nl/hc/nl/categories/115000341267
 
 ## Running tests
 
-Place this code in an working Magento 2 installation in the folder app/code/TIG/PostNL (Case sensitive). Install all the dependencies:
+Place this code in a working Magento 2 installation in the folder app/code/TIG/PostNL (Case-sensitive). Install all the dependencies:
 
 - composer install
 - npm install
 - npm install -g grunt-cli
 - Setup the integration tests as [advised by Magento](http://devdocs.magento.com/guides/v2.0/test/integration/integration_test_setup.html).
-- Paste the following xml within the <testsuites> tag of dev/tests/integration/phpunit.xml:
-```
-<testsuite name="TIG PostNL Integration Tests">
-    <directory>../../../app/code/TIG/PostNL/Test/Integration</directory>
-    <directory>../../../vendor/tig/postnl/Test/Integration</directory>
-    <exclude>../../../app/code/Magento</exclude>
-</testsuite>
-```
+- Paste the following xml within the <testsuites&gt; tag of dev/tests/integration/phpunit.xml:
+'''
+<testsuite name="TIG PostNL Integration Tests"&gt;
+<directory&gt;../../../app/code/TIG/PostNL/Test/Integrationdirectory&gt;
+<directory&gt;../../../vendor/tig/postnl/Test/Integrationdirectory&gt;
+<exclude&gt;../../../app/code/Magentoexclude&gt;
+testsuite&gt;
+'''
 
 Run:
 
-`grunt test`
+'grunt test'
 
 This command will run the following tests:
 
