@@ -2,10 +2,10 @@
 
 ## Installation
 
-We strongly recommend to use a Staging Environment for the installation and to back up the system before installation.
+We strongly recommend you to use a Staging Environment for the installation and to make a backup of your environment.
 
-Login using SSH and go to the Magento 2 Root.
-Run the following commands to install the extension.
+To install the extension login to your environment using SSH. Then navigate to the Magento 2 Root and run the following commands in the same order as described. 
+
 - composer require tig/postnl-magento2
 
 Empty the following folders (Make sure to not delete the folders)
@@ -14,13 +14,13 @@ Empty the following folders (Make sure to not delete the folders)
 - var/generation
 - var/di (if this folder exists)
 
-Flush the cache using the following command.
+Flush the cache.
 - php bin/magento cache:flush
 
-Update the Magento 2 environment using the following command
+Update the Magento 2 environment.
 - php bin/magento setup:upgrade
 
-Re-index the Magento 2 environment using the following command
+Re-index the Magento 2 environment.
 - php bin/magento indexer:reindex
 
 The installation on your Staging Environment is now finished
