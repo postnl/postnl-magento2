@@ -175,3 +175,8 @@ Percent,Percentage
 "Live Mode","Live Modus"
 "From 9:00","Vanaf 9:00"
 "From 15:00","Vanaf 15:00"
+"PostNL - Confirm And Print Shipment Label","PostNL - Voormelden en label printen"
+"Send Shipment Email","Verstuur verzending e-mail"
+"PostNL - Change Confirmation","PostNL - Voormelding wijzigen"
+"Are you sure that you wish to reset the confirmation status of this shipment? You will need to confirm this shipment with PostNL again before you can send it. This action will remove all barcodes and labels associated with this shipment. You can not undo this action.","Weet je zeker dat je de voormelding van deze verzending wilt wijzgen? De verzending zal opnieuw voorgemeld moeten worden voordat je deze alsnog kunt verzenden. Deze actie verwijdert alle barcodes en labels die bij deze verzending horen. Dit kan niet ongedaan worden gemaakt."
+"PostNL - Print label","PostNL - Print label"
