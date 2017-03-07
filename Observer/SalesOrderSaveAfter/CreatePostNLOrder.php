@@ -29,7 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Observer\SalesOrderSaveAfter;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -38,7 +38,7 @@ use \TIG\PostNL\Model\OrderRepository;
 use Magento\Sales\Model\Order as MagentoOrder;
 use TIG\PostNL\Model\Order as PostNLOrder;
 
-class SalesOrderSaveAfterEvent implements ObserverInterface
+class CreatePostNLOrder implements ObserverInterface
 {
     /**
      * @var OrderRepository

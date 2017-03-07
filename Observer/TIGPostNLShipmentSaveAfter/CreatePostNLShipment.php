@@ -29,18 +29,20 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
 use Magento\Framework\App\RequestInterface;
 use TIG\PostNL\Config\Provider\ProductOptions;
-use \TIG\PostNL\Model\OrderRepository;
+use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Model\Order as PostNLOrder;
 use TIG\PostNL\Model\ShipmentFactory;
+use TIG\PostNL\Service\Handler\BarcodeHandler;
+use TIG\PostNL\Service\Handler\SentDateHandler;
 
-class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
+class CreatePostNLShipment implements ObserverInterface
 {
     /**
      * @var ShipmentFactory
@@ -53,12 +55,12 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     private $orderRepository;
 
     /**
-     * @var Handlers\BarcodeHandler
+     * @var BarcodeHandler
      */
     private $barcodeHandler;
 
     /**
-     * @var Handlers\SentDateHandler
+     * @var SentDateHandler
      */
     private $sentDateHandler;
 
@@ -76,16 +78,16 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     /**
      * @param ShipmentFactory          $shipmentFactory
      * @param OrderRepository          $orderRepository
-     * @param Handlers\BarcodeHandler  $barcodeHandler
-     * @param Handlers\SentDateHandler $sendDateHandler
+     * @param BarcodeHandler  $barcodeHandler
+     * @param SentDateHandler $sendDateHandler
      * @param ProductOptions           $productOptions
      * @param RequestInterface         $requestInterface
      */
     public function __construct(
         ShipmentFactory $shipmentFactory,
         OrderRepository $orderRepository,
-        Handlers\BarcodeHandler $barcodeHandler,
-        Handlers\SentDateHandler $sendDateHandler,
+        BarcodeHandler $barcodeHandler,
+        SentDateHandler $sendDateHandler,
         ProductOptions $productOptions,
         RequestInterface $requestInterface
     ) {
@@ -99,8 +101,6 @@ class SalesOrderShipmentSaveAfterEvent implements ObserverInterface
     }
 
     /**
-     * @codingStandardsIgnoreLine
-     *
      * @param Observer $observer
      *
      * @return void
