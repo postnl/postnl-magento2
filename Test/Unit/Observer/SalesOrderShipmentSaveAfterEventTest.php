@@ -34,13 +34,13 @@ namespace TIG\PostNL\Unit\Observer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Phrase;
 use Magento\Sales\Model\Order\Shipment;
-use TIG\PostNL\Observer\SalesOrderShipmentSaveAfterEvent;
+use TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\CreatePostNLShipment;
 use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Test\TestCase;
 
-class SalesOrderShipmentSaveAfterEventTest extends TestCase
+class CreatePostNLShipmentTest extends TestCase
 {
-    protected $instanceClass = SalesOrderShipmentSaveAfterEvent::class;
+    protected $instanceClass = CreatePostNLShipment::class;
 
     /**
      * @return array
@@ -94,13 +94,13 @@ class SalesOrderShipmentSaveAfterEventTest extends TestCase
 
         $shipmentMock->method('getId')->willReturn($id);
 
-        $sentDateHandlerMock = $this->getFakeMock(\TIG\PostNL\Observer\Handlers\SentDateHandler::class)->getMock();
+        $sentDateHandlerMock = $this->getFakeMock(\TIG\PostNL\Service\Handler\SentDateHandler::class)->getMock();
         $getExpects = $sentDateHandlerMock->expects($this->once());
         $getExpects->method('get');
         $getExpects->with($shipmentMock);
         $getExpects->willReturn($shipAt);
 
-        $barcodeHandlerMock = $this->getFakeMock(\TIG\PostNL\Observer\Handlers\BarcodeHandler::class)->getMock();
+        $barcodeHandlerMock = $this->getFakeMock(\TIG\PostNL\Service\Handler\BarcodeHandler::class)->getMock();
         $barcodeHandlerMock->method('generate')->willReturn($barcode);
 
         if ($parcelCount > 1) {

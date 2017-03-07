@@ -32,7 +32,8 @@
 namespace TIG\PostNL\Test\Unit\Observer;
 
 use Magento\Framework\Event\Observer;
-use TIG\PostNL\Observer\UpdateOrderGrid;
+use TIG\PostNL\Api\OrderRepositoryInterface;
+use TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\UpdateOrderGrid;
 use TIG\PostNL\Test\TestCase;
 
 class UpdateOrderGridTest extends TestCase
@@ -68,7 +69,7 @@ class UpdateOrderGridTest extends TestCase
      */
     private function getOrderRepository()
     {
-        $orderRepository = $this->getMock(\TIG\PostNL\Api\OrderRepositoryInterface::class);
+        $orderRepository = $this->getMock(OrderRepositoryInterface::class);
         $order = $this->getOrder();
 
         $getByFieldWithValueExpects = $orderRepository->expects($this->once());

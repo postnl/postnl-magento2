@@ -97,13 +97,14 @@
         </arguments>
     </virtualType>
 
-    <type name="TIG\PostNL\Observer\UpdateOrderShipmentGrid">
+    <!-- Update the shipment grid -->
+    <type name="TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\UpdateOrderShipmentGrid">
         <arguments>
             <argument name="shipmentGrid" xsi:type="object">PostNLShipmentGridAggregator</argument>
         </arguments>
     </type>
 
-    <type name="TIG\PostNL\Observer\UpdateOrderGrid">
+    <type name="TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\UpdateOrderGrid">
         <arguments>
             <argument name="orderGrid" xsi:type="object">PostNLOrderGridAggregator</argument>
         </arguments>

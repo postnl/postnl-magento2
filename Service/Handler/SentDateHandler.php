@@ -29,7 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer\Handlers;
+namespace TIG\PostNL\Service\Handler;
 
 use Magento\Sales\Model\Order\Shipment;
 use TIG\PostNL\Model\OrderRepository;

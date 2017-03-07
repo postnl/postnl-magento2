@@ -29,18 +29,18 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Integration\Observer;
+namespace TIG\PostNL\Test\Integration\Observer;
 
 use Magento\Sales\Model\Order;
 use Magento\Framework\Event\Observer;
 use Magento\Sales\Model\ResourceModel\Order\Collection as OrderCollection;
 use TIG\PostNL;
-use TIG\PostNL\Observer\SalesOrderShipmentSaveAfterEvent;
+use TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\CreatePostNLShipment;
 use TIG\PostNL\Test\Integration\TestCase;
 
-class SalesOrderShipmentSaveAfterEventTest extends TestCase
+class CreatePostNLShipmentTest extends TestCase
 {
-    protected $instanceClass = SalesOrderShipmentSaveAfterEvent::class;
+    protected $instanceClass = CreatePostNLShipment::class;
 
     /**
      * @magentoDataFixture Magento/Sales/_files/shipment.php
@@ -64,7 +64,7 @@ class SalesOrderShipmentSaveAfterEventTest extends TestCase
         $callExpects->method('call');
         $callExpects->willReturn((Object)['Barcode' => '3STOTA1234567890']);
 
-        /** @var SalesOrderShipmentSaveAfterEvent $instance */
+        /** @var CreatePostNLShipment $instance */
         $instance = $this->getInstance(['barcode' => $barcodeMock]);
         $instance->execute($observer);
 

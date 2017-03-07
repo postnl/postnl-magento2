@@ -29,28 +29,37 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\ResourceModel\GridInterface;
+use TIG\PostNL\Api\OrderRepositoryInterface;
 use TIG\PostNL\Model\Shipment;
 
-class UpdateOrderShipmentGrid implements ObserverInterface
+class UpdateOrderGrid implements ObserverInterface
 {
     /**
      * @var GridInterface
      */
-    private $shipmentGrid;
+    private $orderGrid;
 
     /**
-     * @param GridInterface $shipmentGrid
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepositoryInterface;
+
+    /**
+     * @param OrderRepositoryInterface $orderRepositoryInterface
+     * @param GridInterface            $orderGrid
      */
     public function __construct(
-        GridInterface $shipmentGrid
+        OrderRepositoryInterface $orderRepositoryInterface,
+        GridInterface $orderGrid
     ) {
-        $this->shipmentGrid = $shipmentGrid;
+        $this->orderRepositoryInterface = $orderRepositoryInterface;
+        $this->orderGrid = $orderGrid;
     }
 
     /**
@@ -62,8 +71,20 @@ class UpdateOrderShipmentGrid implements ObserverInterface
     {
         /** @var Shipment $shipment */
         $shipment = $observer->getData('data_object');
-        $shipmentId = $shipment->getShipmentId();
 
-        $this->shipmentGrid->refresh($shipmentId);
+        $this->updateOrder($shipment);
+        $this->orderGrid->refresh($shipment->getOrderId());
+    }
+
+    /**
+     * @param Shipment $shipment
+     */
+    private function updateOrder(Shipment $shipment)
+    {
+        /** @var \TIG\PostNL\Model\Order $order */
+        $order = $this->orderRepositoryInterface->getByFieldWithValue('order_id', $shipment->getOrderId());
+        $order->setData('ship_at', $shipment->getShipAt());
+
+        $this->orderRepositoryInterface->save($order);
     }
 }
