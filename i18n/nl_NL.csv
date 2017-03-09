@@ -19,9 +19,9 @@ label,label
 "Invalid GetLocationsResult response: %1","Ongeldig GetLocationsResult response: %1"
 "No Type specified","No Type specified"
 ok,ok
-"Unable to extract the housenumber, because the street data could not be found","Het is niet mogelijk om het huisnummer op te halen. Er is geen adres gevonden"
-"Unable to extract the housenumber, could not find an number inside the street value","Er is geen huisnummer in het adres veld beschikbaar"
-"Invalid housenumber supplied: %1","Ongeldig huisnummer opgegeven: %1"
+"Unable to extract the house number, because the street data could not be found","Het is niet mogelijk om het huisnummer op te halen. Er is geen adres gevonden"
+"Unable to extract the house number, could not find an number inside the street value","Er is geen huisnummer in het adres veld beschikbaar"
+"Invalid house number supplied: %1","Ongeldig huisnummer opgegeven: %1"
 "Unable to retrieve barcode data.","Het is niet mogelijk om de barcode data op te halen."
 "Invalid barcodetype requested: %s","Ongeldig barcodetype opgevraagd: %s"
 "Missing required parameters: %1","Er ontbreken vereiste parameters: %1"
@@ -79,32 +79,32 @@ Modus,Modus
 "Customernumber test mode","Klantnummer test modus"
 "Customercode test mode","Klantcode test modus"
 "BLS location code test mode","BLS locatie code test modus"
-Shippingaddress,Verzendadres
-Firstname,Voornaam
-Lastname,Achternaam
+Shipping address,Verzendadres
+First name,Voornaam
+Last name,Achternaam
 Company,Bedrijf
-Streetname,Straatnaam
+Street name,Straatnaam
 Department,Afdelding
-Housenumber,Huisnummer
-"Housenumber addition","Huisnummer toevoeging"
+"House number","Huisnummer"
+"House number addition","Huisnummer toevoeging"
 Postcode,Postcode
 City,Plaats
 Product options,Productopties
 "Select the available options","Selecteer de beschikbare opties"
 "Default shipping option","Standaard verzend optie"
 "Default evening option","Standaard avondverzending optie"
-"Default postoffice delivery option","Standaard Pakjegemak optie"
-"Default sundaydelivery option","Standaard zondagbezorging optie"
-Shippingoptions,Verzendopties
-"Activate shippingoptions","Activeer verzendopties"
-Stockoptions,Voorraadopties
-"Activate deliverydays","Activeer bezorgdagen"
-"Maximum number of deliverydays","Maximaal aantal bezorgdagen"
-"Activate postofficelocations","Activeer Pakjegemak"
-"Activate eveningdelivery","Activeer avondbezorging"
-"Eveningdelivery fee","Avondbezorging toeslag"
-"Activate sundaydelivery","Activeer zondagbezorging"
-"Sundaydelivery fee","Zondagbezoging toeslag"
+"Default post office delivery option","Standaard Pakjegemak optie"
+"Default sunday delivery option","Standaard zondagbezorging optie"
+Shipping options,Verzendopties
+"Activate shipping options","Activeer verzendopties"
+Stock options,Voorraadopties
+"Activate delivery days","Activeer bezorgdagen"
+"Maximum number of delivery days","Maximaal aantal bezorgdagen"
+"Activate post office locations","Activeer Pakjegemak"
+"Activate evening delivery","Activeer avondbezorging"
+"Evening delivery fee","Avondbezorging toeslag"
+"Activate sunday delivery","Activeer zondagbezorging"
+"Sunday delivery fee","Zondagbezoging toeslag"
 "Send track and trace info","Verstuur track and trace info"
 "Version & Support","Versie & Support"
 Webshop,Webshop
@@ -147,7 +147,7 @@ Extension version,Extensie versie
 "For an A6 example, <a href=""%1"" target=""_blank"">click here</a>.","Voor een A6 voorbeeld, <a href=""%1"" target=""_blank"">klik hier</a>."
 "PostNL Shipping options","PostNL Verzendopties"
 "Colli amount","Aantal pakketten"
-"Activate early delivery postoffice locations","Activeer extra vroeg ophalen"
+"Activate early delivery post office locations","Activeer extra vroeg ophalen"
 "Early delivery fee","Extra vroeg ophalen toeslag"
 "Early Delivery from 9:00","Ophalen vanaf 9:00"
 "Export CSV","Exporteer CSV"

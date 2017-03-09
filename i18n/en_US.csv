@@ -6,7 +6,7 @@ Tomorrow,Tomorrow
 Live,Live
 Test,Test
 Off,Off
-"Always show deliveryoptions","Always show deliveryoptions"
+"Always show deliveryoptions","Always show delivery options"
 "Only for products that are in stock","Only for products that are in stock"
 "There are no available options","There are no available options"
 label,label
@@ -19,9 +19,9 @@ label,label
 "Invalid GetLocationsResult response: %1","Invalid GetLocationsResult response: %1"
 "No Type specified","No Type specified"
 ok,ok
-"Unable to extract the housenumber, because the street data could not be found","Unable to extract the housenumber, because the street data could not be found"
-"Unable to extract the housenumber, could not find an number inside the street value","Unable to extract the housenumber, could not find an number inside the street value"
-"Invalid housenumber supplied: %1","Invalid housenumber supplied: %1"
+"Unable to extract the house number, because the street data could not be found","Unable to extract the house number, because the street data could not be found"
+"Unable to extract the house number, could not find an number inside the street value","Unable to extract the house number, could not find an number inside the street value"
+"Invalid house number supplied: %1","Invalid house number supplied: %1"
 "Unable to retrieve barcode data.","Unable to retrieve barcode data."
 "Invalid barcodetype requested: %s","Invalid barcodetype requested: %s"
 "Missing required parameters: %1","Missing required parameters: %1"
@@ -81,32 +81,32 @@ Modus,Modus
 "Customernumber test mode","Customernumber test mode"
 "Customercode test mode","Customercode test mode"
 "BLS location code test mode","BLS location code test mode"
-Shippingaddress,Shippingaddress
-Firstname,Firstname
-Lastname,Lastname
+Shipping address,Shipping address
+First name,First name
+Last name,Last name
 Company,Company
-Streetname,Streetname
+Street name,Street name
 Department,Department
-Housenumber,Housenumber
-"Housenumber addition","Housenumber addition"
+"House number","House number"
+"House number addition","House number addition"
 Postcode,Postcode
 City,City
 Product options,Product options
 "Select the available options","Select the available options"
 "Default shipping option","Default shipping option"
 "Default evening option","Default evening option"
-"Default postoffice delivery option","Default postoffice delivery option"
-"Default sundaydelivery option","Default sundaydelivery option"
-Shippingoptions,Shippingoptions
-"Activate shippingoptions","Activate shippingoptions"
-Stockoptions,Stockoptions
-"Activate deliverydays","Activate deliverydays"
-"Maximum number of deliverydays","Maximum number of deliverydays"
-"Activate postofficelocations","Activate postofficelocations"
-"Activate eveningdelivery","Activate eveningdelivery"
-"Eveningdelivery fee","Eveningdelivery fee"
-"Activate sundaydelivery","Activate sundaydelivery"
-"Sundaydelivery fee","Sundaydelivery fee"
+"Default post office delivery option","Default post office delivery option"
+"Default sunday delivery option","Default sunday delivery option"
+Shipping options,Shipping options
+"Activate shipping options","Activate shipping options"
+Stock options,Stock options
+"Activate delivery days","Activate delivery days"
+"Maximum number of delivery days","Maximum number of delivery days"
+"Activate post office locations","Activate post office locations"
+"Activate evening delivery","Activate evening delivery"
+"Evening delivery fee","Evening delivery fee"
+"Activate sunday delivery","Activate sunday delivery"
+"Sunday delivery fee","Sunday delivery fee"
 "Send track and trace info","Send track and trace info"
 "Version & Support","Version & Support"
 Webshop,Webshop
@@ -133,7 +133,7 @@ Sunday,Sunday
 Extension version,Extension version
 "For an A4 example, <a href=""%1"" target=""_blank"">click here</a>.","For an A4 example, <a href=""%1"" target=""_blank"">click here</a>."
 "For an A6 example, <a href=""%1"" target=""_blank"">click here</a>.","For an A6 example, <a href=""%1"" target=""_blank"">click here</a>."
-"Activate early delivery postoffice locations","Activate early delivery postoffice locations"
+"Activate early delivery post office locations","Activate early delivery post office locations"
 "Early delivery fee","Early delivery fee"
 "Early Delivery from 9:00","Early Delivery from 9:00"
 "Export CSV","Export CSV"
@@ -141,7 +141,7 @@ Extension version,Extension version
 "File has not been imported. See the following list of errors: %1","File has not been imported. See the following list of errors: %1"
 "Invalid PostNL Table Rates File Format","Invalid PostNL Table Rates File Format"
 "Invalid PostNL Table Rates File Format in Row #%1","Invalid PostNL Table Rates File Format in Row #%1"
-"Row #%1 is a dupplicate of row #%2","Row #%1 is a dupplicate of row #%2"
+"Row #%1 is a dupplicate of row #%2","Row #%1 is a duplicate of row #%2"
 "Invalid Shipping Price ""%1"" supplied in row #%2","Invalid Shipping Price ""%1"" supplied in row #%2"
 "Rate Type","Rate Type"
 Flat,Flat

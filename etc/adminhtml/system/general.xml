@@ -118,16 +118,15 @@
                 </depends>
             </field>
         </group>
-
-        <group id="shipping_address" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Shippingaddress</label>
+        <group id="shipping_address" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Shipping address</label>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
             <field id="firstname" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Firstname</label>
+                <label>First name</label>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/firstname</config_path>
             </field>
             <field id="lastname" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Lastname</label>
+                <label>Last name</label>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/lastname</config_path>
             </field>
             <field id="company" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -139,15 +138,15 @@
                 <config_path>tig_postnl/generalconfiguration_shipping_address/department</config_path>
             </field>
             <field id="streetname" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Streetname</label>
+                <label>Street name</label>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/streetname</config_path>
             </field>
             <field id="housenumber" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Housenumber</label>
+                <label>House number</label>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/housenumber</config_path>
             </field>
             <field id="housenumber_addition" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Housenumber addition</label>
+                <label>House number addition</label>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/housenumber_addition</config_path>
             </field>
             <field id="postcode" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">

@@ -40,8 +40,7 @@ use TIG\PostNL\Webservices\Soap;
 
 class Labelling extends AbstractEndpoint
 {
-    // @codingStandardsIgnoreLine
-    const PREG_MATCH_STREET = '#\A(.*?)\s+(\d+[a-zA-Z]{0,1}\s{0,1}[-]{1}\s{0,1}\d*[a-zA-Z]{0,1}|\d+[a-zA-Z-]{0,1}\d*[a-zA-Z]{0,1})#';
+    const PREG_MATCH_STREET = '/([^\d]+)\s?(.+)/i';
 
     const PREG_MATCH_HOUSENR = '#^([\d]+)(.*)#s';
 
