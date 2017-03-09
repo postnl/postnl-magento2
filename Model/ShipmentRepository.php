@@ -42,6 +42,10 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
 
+// @codingStandardsIgnoreFile
+/**
+ * This file is too big to apply with the coding standards.
+ */
 class ShipmentRepository implements ShipmentRepositoryInterface
 {
     /**
