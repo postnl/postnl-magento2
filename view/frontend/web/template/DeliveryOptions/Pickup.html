@@ -11,8 +11,6 @@
             <!-- DISTANCE -->
             <span class="tig-postnl-distance" data-bind="text: getDistanceText()"></span>
 
-
-
             <!-- ADDRESS -->
             <div class="tig-postnl-address-container">
                 <span class="tig-postnl-pickup-name" data-bind="text: Name"></span>
@@ -21,17 +19,7 @@
                 <span class="tig-postnl-pickup-number-addition" data-bind="text: Address.HouseNrExt"></span>
             </div>
 
-
-            <!-- STANDARD PICKUP -->
-            <label>
-                <input class="tig-postnl-pickup-radio" type="radio" data-bind="value: LocationCode, checked: $parent.selectedOption, checkedValue: {data: $data, type: 'PG'}" name="pickuplocation"/>
-                <span class="location-container">
-                     <span class="tig-postnl-pickup-deliver" data-bind="i18n: 'From 15:00'"></span>
-                </span>
-            </label>
-
             <!-- EARLY PICKUP -->
-
             <!-- ko if: hasPGE() -->
             <label>
                 <input class="tig-postnl-pickup-radio" type="radio" data-bind="value: LocationCode, checked: $parent.selectedOption, checkedValue: {data: $data, type: 'PGE'}" name="pickuplocation"/>
@@ -44,6 +32,13 @@
             </label>
             <!-- /ko -->
 
+            <!-- STANDARD PICKUP -->
+            <label>
+                <input class="tig-postnl-pickup-radio" type="radio" data-bind="value: LocationCode, checked: $parent.selectedOption, checkedValue: {data: $data, type: 'PG'}" name="pickuplocation"/>
+                <span class="location-container">
+                     <span class="tig-postnl-pickup-deliver" data-bind="i18n: 'From 15:00'"></span>
+                </span>
+            </label>
 
             <!-- OPENING HOURS POPUP -->
             <ul class="tig-postnl-pickup-list" data-bind="css: LocationCode, visible: expanded">

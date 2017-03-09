@@ -34,18 +34,18 @@
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <!--Shippingoptions section-->
     <group id="shippingoptions" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Shippingoptions</label>
+        <label>Shipping options</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-section</fieldset_css>
 
         <field id="shippingoptions_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Activate shippingoptions</label>
+            <label>Activate shipping options</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/shippingoptions_active</config_path>
         </field>
 
         <field id="stockoptions" translate="label" type="radios" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Stockoptions</label>
+            <label>Stock options</label>
             <source_model>TIG\PostNL\Config\Source\Options\StockOptions</source_model>
             <config_path>tig_postnl/shippingoptions/stockoptions</config_path>
             <depends>
@@ -54,7 +54,7 @@
         </field>
 
         <field id="deliverydays_active" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Activate deliverydays</label>
+            <label>Activate delivery days</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/deliverydays_active</config_path>
             <depends>
@@ -63,7 +63,7 @@
         </field>
 
         <field id="max_deliverydays" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Maximum number of deliverydays</label>
+            <label>Maximum number of delivery days</label>
             <comment><![CDATA[Submit how many days in the future after the first delivery moment your customers can choose to receive their orders.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\DeliverydaysOptions</source_model>
             <config_path>tig_postnl/shippingoptions/max_deliverydays</config_path>
@@ -74,7 +74,7 @@
         </field>
 
         <field id="pakjegemak_active" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Activate postofficelocations</label>
+            <label>Activate post office locations</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/pakjegemak_active</config_path>
             <depends>
@@ -83,7 +83,7 @@
         </field>
 
         <field id="pakjegemak_express_active" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Activate early delivery postoffice locations</label>
+            <label>Activate early delivery post office locations</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/pakjegemak_express_active</config_path>
             <depends>
@@ -103,7 +103,7 @@
         </field>
 
         <field id="eveningdelivery_active" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Activate eveningdelivery</label>
+            <label>Activate evening delivery</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/eveningdelivery_active</config_path>
             <depends>
@@ -112,7 +112,7 @@
         </field>
 
         <field id="eveningdelivery_fee" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Eveningdelivery fee</label>
+            <label>Evening delivery fee</label>
             <config_path>tig_postnl/shippingoptions/eveningdelivery_fee</config_path>
             <depends>
                 <field id="shippingoptions_active">1</field>
@@ -121,7 +121,7 @@
         </field>
 
         <field id="sundaydelivery_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Activate sundaydelivery</label>
+            <label>Activate sunday delivery</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/sundaydelivery_active</config_path>
             <depends>
@@ -130,7 +130,7 @@
         </field>
 
         <field id="sundaydelivery_fee" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Sundaydelivery fee</label>
+            <label>Sunday delivery fee</label>
             <config_path>tig_postnl/shippingoptions/sundaydelivery_fee</config_path>
             <depends>
                 <field id="shippingoptions_active">1</field>
