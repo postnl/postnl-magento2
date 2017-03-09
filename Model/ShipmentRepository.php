@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Model;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Model\ResourceModel\Shipment\CollectionFactory;
@@ -41,6 +42,10 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
 
+// @codingStandardsIgnoreFile
+/**
+ * This file is too big to apply with the coding standards.
+ */
 class ShipmentRepository implements ShipmentRepositoryInterface
 {
     /**
@@ -52,20 +57,27 @@ class ShipmentRepository implements ShipmentRepositoryInterface
      * @var CollectionFactory
      */
     private $collectionFactory;
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
 
     /**
      * @param ShipmentFactory               $shipmentFactory
      * @param CollectionFactory             $collectionFactory
      * @param SearchResultsInterfaceFactory $searchResultsFactory
+     * @param SearchCriteriaBuilder         $searchCriteriaBuilder
      */
     public function __construct(
         ShipmentFactory $shipmentFactory,
         CollectionFactory $collectionFactory,
-        SearchResultsInterfaceFactory $searchResultsFactory
+        SearchResultsInterfaceFactory $searchResultsFactory,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
-        $this->shipmentFactory      = $shipmentFactory;
-        $this->collectionFactory    = $collectionFactory;
-        $this->searchResultsFactory = $searchResultsFactory;
+        $this->shipmentFactory       = $shipmentFactory;
+        $this->collectionFactory     = $collectionFactory;
+        $this->searchResultsFactory  = $searchResultsFactory;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
@@ -202,6 +214,39 @@ class ShipmentRepository implements ShipmentRepositoryInterface
         $searchResults->setSearchCriteria($criteria);
 
         return $searchResults;
+    }
+
+    /**
+     * @param $field
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface|null
+     */
+    public function getByFieldWithValue($field, $value)
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter($field, $value);
+        $searchCriteria->setPageSize(1);
+
+        /** @var \Magento\Framework\Api\SearchResults $list */
+        $list = $this->getList($searchCriteria->create());
+
+        if ($list->getTotalCount()) {
+            return $list->getItems()[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * Retrieve a specific PostNL shipment by the Magento Shipment ID.
+     *
+     * @param int $identifier
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface|null
+     */
+    public function getByShipmentId($identifier)
+    {
+        return $this->getByFieldWithValue('shipment_id', $identifier);
     }
 
     /**

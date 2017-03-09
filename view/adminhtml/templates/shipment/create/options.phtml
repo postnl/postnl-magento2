@@ -29,6 +29,9 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+/**
+ * @var \TIG\PostNL\Block\Adminhtml\Shipment\Options\Create $this
+ */
 ?>
 <?php if ($block->getIsPostNLOrder()) :?>
 <!--@todo move style to less and add style to header trough xml-->
@@ -53,7 +56,8 @@
                 name="shipment[tig_postnl_product_code]"
                 class="admin__control-select" style="max-width:300px !important;">
             <?php foreach ($this->getProductOptions() as $code => $option) :?>
-                <option value="<?php echo $code; ?>"><?php echo $option['label']; ?></option>
+                <?php $selected = $this->getProductCode() == $code ? ' selected="selected"' : ''; ?>
+                <option value="<?php echo $code; ?>"<?php echo $selected; ?>><?php echo __($option['label']); ?></option>
             <?php endforeach; ?>
         </select>
     </div>

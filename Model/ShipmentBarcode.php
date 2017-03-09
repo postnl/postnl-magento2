@@ -48,6 +48,12 @@ class ShipmentBarcode extends AbstractModel implements ShipmentBarcodeInterface,
     const FIELD_VALUE = 'value';
 
     /**
+     * @var string
+     */
+    // @codingStandardsIgnoreLine
+    protected $_eventPrefix = 'tig_postnl_shipment_barcode';
+
+    /**
      * Constructor
      */
     // @codingStandardsIgnoreLine

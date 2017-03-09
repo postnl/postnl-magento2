@@ -35,20 +35,14 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
 use Magento\Framework\App\RequestInterface;
-use TIG\PostNL\Config\Provider\ProductOptions;
+use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Model\Order as PostNLOrder;
-use TIG\PostNL\Model\ShipmentFactory;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
 use TIG\PostNL\Service\Handler\SentDateHandler;
 
 class CreatePostNLShipment implements ObserverInterface
 {
-    /**
-     * @var ShipmentFactory
-     */
-    private $shipmentFactory;
-
     /**
      * @var OrderRepository
      */
@@ -65,37 +59,34 @@ class CreatePostNLShipment implements ObserverInterface
     private $sentDateHandler;
 
     /**
-     * @var ProductOptions
-     */
-    private $productOptions;
-
-    /**
      * Request params
      * @var array
      */
     private $shipParams = [];
 
     /**
-     * @param ShipmentFactory          $shipmentFactory
-     * @param OrderRepository          $orderRepository
-     * @param BarcodeHandler  $barcodeHandler
-     * @param SentDateHandler $sendDateHandler
-     * @param ProductOptions           $productOptions
-     * @param RequestInterface         $requestInterface
+     * @var ShipmentRepositoryInterface
+     */
+    private $shipmentRepository;
+
+    /**
+     * @param ShipmentRepositoryInterface $shipmentRepository
+     * @param OrderRepository             $orderRepository
+     * @param BarcodeHandler              $barcodeHandler
+     * @param SentDateHandler             $sendDateHandler
+     * @param RequestInterface            $requestInterface
      */
     public function __construct(
-        ShipmentFactory $shipmentFactory,
+        ShipmentRepositoryInterface $shipmentRepository,
         OrderRepository $orderRepository,
         BarcodeHandler $barcodeHandler,
         SentDateHandler $sendDateHandler,
-        ProductOptions $productOptions,
         RequestInterface $requestInterface
     ) {
-        $this->shipmentFactory = $shipmentFactory;
         $this->orderRepository = $orderRepository;
         $this->barcodeHandler = $barcodeHandler;
         $this->sentDateHandler = $sendDateHandler;
-        $this->productOptions = $productOptions;
+        $this->shipmentRepository = $shipmentRepository;
 
         $this->shipParams = $requestInterface->getParam('shipment');
     }
@@ -110,21 +101,15 @@ class CreatePostNLShipment implements ObserverInterface
         /** @var \Magento\Sales\Model\Order\Shipment $shipment */
         $shipment = $observer->getData('data_object');
 
-        /** @var \TIG\PostNL\Model\Shipment $model */
-        $model       = $this->shipmentFactory->create();
-        $sentDate    = $this->sentDateHandler->get($shipment);
-        $mainBarcode = $this->barcodeHandler->generate();
+        if ($this->shipmentRepository->getByShipmentId($shipment->getId())) {
+            return;
+        }
 
-        $model->setData([
-            'ship_at' => $sentDate,
-            'main_barcode' => $mainBarcode,
-            'shipment_id' => $shipment->getId(),
-            'order_id' => $shipment->getOrderId(),
-            'product_code' => $this->getProductCode($shipment),
-        ]);
+        /** @var \TIG\PostNL\Model\Shipment $model */
+        $model = $this->shipmentRepository->create();
 
         $model->setData($this->formatModelData($shipment));
-        $model->save();
+        $this->shipmentRepository->save($model);
         $this->handleMultipleParcels($model);
     }
 
@@ -136,17 +121,8 @@ class CreatePostNLShipment implements ObserverInterface
     private function getProductCode($shipment)
     {
         /** @var PostNLOrder $postNLOrder */
-        $postNLOrder  = $this->orderRepository->getByFieldWithValue('order_id', $shipment->getOrderId());
-
-        $productCode = $this->productOptions->getDefaultProductOption();
-        if ($postNLOrder->getIsPakjegemak()) {
-            $productCode = $this->productOptions->getDefaultPakjeGemakProductOption();
-        }
-
-        $postNLOrder->setData('product_code', $productCode);
-        $this->orderRepository->save($postNLOrder);
-
-        return $productCode;
+        $postNLOrder = $this->orderRepository->getByFieldWithValue('order_id', $shipment->getOrderId());
+        return $postNLOrder->getProductCode();
     }
 
     /**

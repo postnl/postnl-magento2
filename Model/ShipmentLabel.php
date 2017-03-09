@@ -47,6 +47,12 @@ class ShipmentLabel extends AbstractModel implements ShipmentLabelInterface, Ide
     const FIELD_TYPE = 'type';
 
     /**
+     * @var string
+     */
+    // @codingStandardsIgnoreLine
+    protected $_eventPrefix = 'tig_postnl_shipment_label';
+
+    /**
      * Constructor
      */
     // @codingStandardsIgnoreLine
