@@ -9,8 +9,7 @@ addons:
 
 language: php
 
-php:
-  - 7.0
+php: 7.0
 
 env:
   global:
