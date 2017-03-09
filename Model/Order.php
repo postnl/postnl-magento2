@@ -61,6 +61,12 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     const FIELD_UPDATED_AT = 'updated_at';
 
     /**
+     * @var string
+     */
+    // @codingStandardsIgnoreLine
+    protected $_eventPrefix = 'tig_postnl_order';
+
+    /**
      * Constructor
      */
     // @codingStandardsIgnoreLine

@@ -180,3 +180,4 @@ Percent,Percentage
 "PostNL - Change Confirmation","PostNL - Voormelding wijzigen"
 "Are you sure that you wish to reset the confirmation status of this shipment? You will need to confirm this shipment with PostNL again before you can send it. This action will remove all barcodes and labels associated with this shipment. You can not undo this action.","Weet je zeker dat je de voormelding van deze verzending wilt wijzgen? De verzending zal opnieuw voorgemeld moeten worden voordat je deze alsnog kunt verzenden. Deze actie verwijdert alle barcodes en labels die bij deze verzending horen. Dit kan niet ongedaan worden gemaakt."
 "PostNL - Print label","PostNL - Print label"
+"Default postoffice early pickup option","Standaard Pakjegemak extra vroeg optie"

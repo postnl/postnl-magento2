@@ -91,6 +91,9 @@ class CreatePostNLShipmentTest extends TestCase
         return $shipment;
     }
 
+    /**
+     * @param Order\Shipment $shipment
+     */
     private function createOrder(Order\Shipment $shipment)
     {
         $orderId = $shipment->getOrderId();

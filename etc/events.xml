@@ -45,4 +45,9 @@
         <!--Updates the sales_shipment_grid table-->
         <observer name="tig_postnl_update_sales_shipment_grid" instance="TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\UpdateOrderShipmentGrid" />
     </event>
+
+    <event name="tig_postnl_order_save_before">
+        <!-- Set some default data on the tig_postnl_order table -->
+        <observer name="tig_postnl_order_set_default_data" instance="\TIG\PostNL\Observer\TIGPostNLOrderSaveBefore\SetDefaultData" />
+    </event>
 </config>
