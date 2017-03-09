@@ -48,6 +48,10 @@ class SetDefaultData implements ObserverInterface
      */
     private $dateTime;
 
+    /**
+     * @param ProductCode $productCode
+     * @param DateTime    $dateTime
+     */
     public function __construct(
         ProductCode $productCode,
         DateTime $dateTime

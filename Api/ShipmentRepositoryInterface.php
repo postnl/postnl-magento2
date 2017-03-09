@@ -59,6 +59,22 @@ interface ShipmentRepositoryInterface
     public function getById($identifier);
 
     /**
+     * @param $field
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface|null
+     */
+    public function getByFieldWithValue($field, $value);
+
+    /**
+     * Retrieve a specific PostNL shipment by the Magento Shipment ID.
+     *
+     * @param int $identifier
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function getByShipmentId($identifier);
+
+    /**
      * Retrieve a list of PostNL shipments.
      *
      * @api
