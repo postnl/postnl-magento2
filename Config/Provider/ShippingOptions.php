@@ -165,7 +165,7 @@ class ShippingOptions extends AbstractConfigProvider
      */
     public function getDeliveryDelay()
     {
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_DELIVERY_DELAY);
+        return (int)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_DELIVERY_DELAY);
     }
 }
 /**

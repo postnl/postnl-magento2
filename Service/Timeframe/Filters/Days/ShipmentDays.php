@@ -92,6 +92,10 @@ class ShipmentDays implements DaysFilterInterface
             return false;
         }
 
+        if ($numberOfDay == $availableDays[0] && $this->isSameWeek($value->Date) && $this->isPassedCutoffTime()) {
+            return false;
+        }
+
         if ($numberOfDay == '0') {
             return false; //Sunday delivery is not implemented yet.
         }
@@ -124,11 +128,25 @@ class ShipmentDays implements DaysFilterInterface
     {
         $shipmentDays  = explode(',', $this->webshopSettings->getShipmentDays());
         $deliveryDelay = $this->shippingOptions->getDeliveryDelay();
+
         foreach ($shipmentDays as $shipday) {
             $validDay = ($shipday + $deliveryDelay) % 7;
-            $daysAvailable[] = $validDay == '0' ? '1' : $validDay;
+            $daysAvailable[] = $validDay == '0' ? 1 : $validDay;
         }
 
         return $daysAvailable;
+    }
+
+    /**
+     * When an order is placed after this time, another day will be added to the shipping duration
+     *
+     * @return bool
+     */
+    private function isPassedCutoffTime()
+    {
+        $cutOffTime  = $this->webshopSettings->getCutOffTime();
+        $currentTime = date('H:i:s', time());
+
+        return ($currentTime > $cutOffTime);
     }
 }
