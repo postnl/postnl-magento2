@@ -89,21 +89,23 @@ class CreateShipmentTest extends TestCase
     public function orderIsValidProvider()
     {
         return [
-            [false, false, false],
-            [true, false, false],
-            [false, true, true],
-            [true, true, false],
+            'all options on false' => [false, false, false, false],
+            'it has a shipment' => [true, false, false, false],
+            'it can ship' => [false, true, false, false],
+            'it is postnl' => [false, false, true, false],
+            'all options apply' => [true, true, true, false],
         ];
     }
 
     /**
      * @param $hasShipment
      * @param $canShip
+     * @param $isPostNL
      * @param $expected
      *
      * @dataProvider orderIsValidProvider
      */
-    public function testIsValidOrder($hasShipment, $canShip, $expected)
+    public function testIsValidOrder($hasShipment, $canShip, $isPostNL, $expected)
     {
         $instance = $this->getInstance();
         $orderMock = $this->getFakeMock(Order::class);
@@ -115,6 +117,10 @@ class CreateShipmentTest extends TestCase
         $canShipExpects = $order->expects($this->any());
         $canShipExpects->method('canShip');
         $canShipExpects->willReturn($canShip);
+
+        $getShippingMethodExpects = $order->expects($this->any());
+        $getShippingMethodExpects->method('getShippingMethod');
+        $getShippingMethodExpects->willReturn($isPostNL ? 'tig_postnl_regular' : 'random_random');
 
         $result = $this->invoke('isValidOrder', $instance);
 

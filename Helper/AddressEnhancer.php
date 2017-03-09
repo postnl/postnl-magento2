@@ -71,7 +71,7 @@ class AddressEnhancer
             return ['error' => [
                         'code'    => 'POSTNL-0124',
                         'message' =>
-                            'Unable to extract the housenumber, because the street data could not be found'
+                            'Unable to extract the house number, because the street data could not be found'
                 ]
             ];
         }
@@ -101,7 +101,7 @@ class AddressEnhancer
             return ['error' => [
                         'code'    => 'POSTNL-0124',
                         'message' =>
-                            'Unable to extract the housenumber, could not find an number inside the street value'
+                            'Unable to extract the house number, could not find an number inside the street value'
                 ]
             ];
         }
@@ -148,7 +148,7 @@ class AddressEnhancer
         if (!$matched && !is_array($results)) {
             throw new PostnlException(
             // @codingStandardsIgnoreLine
-                __('Invalid housenumber supplied: %1', $houseNumber),
+                __('Invalid house number supplied: %1', $houseNumber),
                 'POSTNL-0059'
             );
         }

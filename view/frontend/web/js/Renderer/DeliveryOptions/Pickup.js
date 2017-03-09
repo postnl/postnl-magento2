@@ -170,6 +170,11 @@ define([
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_locations,
                 data : {address: address}
             }).done(function (data) {
+                if (data.error) {
+                    Logger.error(data.error);
+                    State.pickupOptionsAreAvailable(false);
+                    return false;
+                }
                 State.pickupOptionsAreAvailable(true);
 
                 data = ko.utils.arrayMap(data, function (data) {

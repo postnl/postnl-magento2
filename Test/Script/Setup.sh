@@ -80,7 +80,7 @@ fi
 
 ( cd "${BUILD_DIR}/" && composer config minimum-stability dev )
 ( cd "${BUILD_DIR}/" && composer config repositories.postnl "${REPOSITORY_CONFIG}" )
-( cd "${BUILD_DIR}/" && composer require tig/postnl )
+( cd "${BUILD_DIR}/" && composer require tig/postnl --ignore-platform-reqs )
 
 mysql -u${MAGENTO_DB_USER} ${MYSQLPASS} -h${MAGENTO_DB_HOST} -P${MAGENTO_DB_PORT} -e "DROP DATABASE IF EXISTS \`${MAGENTO_DB_NAME}\`; CREATE DATABASE \`${MAGENTO_DB_NAME}\`;"
 mysql -u${MAGENTO_DB_USER} ${MYSQLPASS} -h${MAGENTO_DB_HOST} -P${MAGENTO_DB_PORT} ${MAGENTO_DB_NAME} < Test/Fixtures/tig-postnl-fixture.sql

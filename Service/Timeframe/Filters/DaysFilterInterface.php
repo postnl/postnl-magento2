@@ -29,10 +29,14 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Model;
+namespace TIG\PostNL\Service\Timeframe\Filters;
 
-interface ShipmentBarcodeInterface
+interface DaysFilterInterface
 {
-    // @codingStandardsIgnoreLine
-    public function getIdentities();
+    /**
+     * @param object|array $days
+     *
+     * @return array
+     */
+    public function filter($days);
 }

@@ -34,6 +34,7 @@ namespace TIG\PostNL\Block\Adminhtml\Shipment\Options;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\OrderRepository;
+use TIG\PostNL\Api\OrderRepositoryInterface as PostNLOrderRepository;
 use TIG\PostNL\Block\Adminhtml\Shipment\OptionsAbstract;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
@@ -41,20 +42,30 @@ use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 class Create extends OptionsAbstract
 {
     /**
-     * @param Context             $context
-     * @param ProductOptions      $productOptions
-     * @param ProductOptionSource $productOptionsSource
-     * @param OrderRepository     $orderRepository
-     * @param Registry            $registry
-     * @param array               $data
-     *
+     * @var OrderRepositoryInterface
      */
-    // @codingStandardsIgnoreStart
+    private $postnlOrderRepository;
+
+    /**
+     * @var null|int
+     */
+    private $productCode = null;
+
+    /**
+     * @param Context               $context
+     * @param ProductOptions        $productOptions
+     * @param ProductOptionSource   $productOptionsSource
+     * @param OrderRepository       $orderRepository
+     * @param PostNLOrderRepository $postnlOrderRepository
+     * @param Registry              $registry
+     * @param array                 $data
+     */
     public function __construct(
         Context $context,
         ProductOptions $productOptions,
         ProductOptionSource $productOptionsSource,
         OrderRepository $orderRepository,
+        PostNLOrderRepository $postnlOrderRepository,
         Registry $registry,
         array $data = []
     ) {
@@ -66,6 +77,20 @@ class Create extends OptionsAbstract
             $registry,
             $data
         );
+        $this->postnlOrderRepository = $postnlOrderRepository;
     }
-    // @codingStandardsIgnoreEnd
+
+    /**
+     * @return mixed
+     */
+    public function getProductCode()
+    {
+        if ($this->productCode === null) {
+            $postnlOrder = $this->postnlOrderRepository->getByFieldWithValue('order_id', $this->order->getId());
+
+            $this->productCode = $postnlOrder->getProductCode();
+        }
+
+        return $this->productCode;
+    }
 }

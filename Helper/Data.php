@@ -56,6 +56,7 @@ class Data extends AbstractHelper
 
     /**
      * @param TimezoneInterface $timezoneInterface
+     * @param ShippingOptions   $shippingOptions
      */
     public function __construct(
         TimezoneInterface $timezoneInterface,
@@ -132,7 +133,7 @@ class Data extends AbstractHelper
      */
     public function getEndDate($startDate)
     {
-        $maximumNumberOfDeliveryDays = 6;
+        $maximumNumberOfDeliveryDays = $this->shippingOptions->getMaxAmountOfDeliverydays();
 
         $endDate = $this->dateTime->date($startDate);
         // @codingStandardsIgnoreLine

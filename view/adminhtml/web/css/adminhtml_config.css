@@ -268,10 +268,8 @@
     float:left;
 }
 
-.support-postnl-tig li.first img,
-.support-postnl-tig li.last img {
-    padding-right: 5px;
-}
+.support-postnl-tig .block_contact svg { height: 16px; position: absolute; top: 5px; }
+.support-postnl-tig .block_contact span { margin-left:26px; }
 
 /* SupportTab - Documentation ======================================================================================= */
 
@@ -294,7 +292,7 @@
     height: 37px;
 
     content: ' ';
-    background-image: url(../images/postnl_logo.png) !important;
+    background-image: url(../images/postnl_logo_50.png) !important;
     background-position: 0 2px;
     background-repeat: no-repeat;
     background-size: auto 33px;
@@ -321,7 +319,7 @@
 /* Identity - Toolbar =============================================================================================== */
 
 .postnl-config-page .page-main-actions .page-actions .page-actions-inner:before {
-    background-image: url(../images/postnl_logo.png) !important;
+    background-image: url(../images/postnl_logo_50.png) !important;
     background-repeat: no-repeat;
     content: ' ';
     width: 50px;

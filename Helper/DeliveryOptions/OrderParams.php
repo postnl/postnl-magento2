@@ -33,33 +33,42 @@ namespace TIG\PostNL\Helper\DeliveryOptions;
 
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Service\Order\FeeCalculator;
+use TIG\PostNL\Service\Order\ProductCode;
 
 class OrderParams
 {
     private $optionParams = [
         'quote_id'                     => [
-            'pickup' => true, 'delivery' => true
+            'pickup' => true,
+            'delivery' => true
         ],
         'delivery_date'                => [
-            'pickup' => true, 'delivery' => true
+            'pickup' => true,
+            'delivery' => true
         ],
         'expected_delivery_time_start' => [
-            'pickup' => false, 'delivery' => true
+            'pickup' => false,
+            'delivery' => true
         ],
         'expected_delivery_time_end'   => [
-            'pickup' => false, 'delivery' => true
+            'pickup' => false,
+            'delivery' => true
         ],
         'is_pakjegemak'                => [
-            'pickup' => true, 'delivery' => false
+            'pickup' => true,
+            'delivery' => false
         ],
         'pg_location_code'             => [
-            'pickup' => true, 'delivery' => false
+            'pickup' => true,
+            'delivery' => false
         ],
         'pg_retail_network_id'         => [
-            'pickup' => true, 'delivery' => false
+            'pickup' => true,
+            'delivery' => false
         ],
         'pg_address'                   => [
-            'pickup' => true, 'delivery' => false
+            'pickup' => true,
+            'delivery' => false
         ]
     ];
     /**
@@ -68,12 +77,20 @@ class OrderParams
     private $feeCalculator;
 
     /**
+     * @var ProductCode
+     */
+    private $productCode;
+
+    /**
      * @param FeeCalculator $feeCalculator
+     * @param ProductCode   $productCode
      */
     public function __construct(
-        FeeCalculator $feeCalculator
+        FeeCalculator $feeCalculator,
+        ProductCode $productCode
     ) {
         $this->feeCalculator = $feeCalculator;
+        $this->productCode = $productCode;
     }
 
     /**
@@ -84,8 +101,9 @@ class OrderParams
      */
     public function get($params)
     {
+        $type                = $params['type'];
         $params              = $this->formatParamData($params);
-        $requiredOrderParams = $this->requiredOrderParamsMissing($params);
+        $requiredOrderParams = $this->requiredOrderParamsMissing($type, $params);
 
         if (!empty($requiredOrderParams)) {
             throw new PostnlException(
@@ -100,13 +118,14 @@ class OrderParams
     }
 
     /**
-     * @param $params
+     * @param string $type
+     * @param array  $params
      *
      * @return array
      */
-    private function requiredOrderParamsMissing($params)
+    private function requiredOrderParamsMissing($type, $params)
     {
-        $requiredList = $this->setRequiredList($params['type']);
+        $requiredList = $this->setRequiredList($type);
 
         $missing = array_filter($requiredList, function ($value, $key) use ($params) {
             $paramValue = isset($params[$key]) && !empty($params[$key]) ? $params[$key] : false;
@@ -142,7 +161,7 @@ class OrderParams
     private function formatParamData($params)
     {
         return [
-            'type'                         => $params['type'],
+            'type'                         => $params['option'],
             'quote_id'                     => isset($params['quote_id']) ? $params['quote_id'] : '',
             'delivery_date'                => isset($params['date']) ? $params['date'] : '',
             'expected_delivery_time_start' => isset($params['from']) ? $params['from'] : '',
@@ -153,6 +172,7 @@ class OrderParams
             'pg_address'                   => $this->addExtraToAddress($params),
             'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : '',
             'fee'                          => $this->feeCalculator->get($params),
+            'product_code'                 => $this->productCode->get($params['type'], $params['option']),
         ];
     }
 

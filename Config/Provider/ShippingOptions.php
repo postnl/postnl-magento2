@@ -48,6 +48,7 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_SUNDAY_ACTIVE             = 'tig_postnl/shippingoptions/sundaydelivery_active';
     const XPATH_SHIPPING_OPTION_SUNDAY_FEE                = 'tig_postnl/shippingoptions/sundaydelivery_fee';
     const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE        = 'tig_postnl/shippingoptions/send_track_and_trace_email';
+    const XPATH_SHIPPING_OPTION_DELIVERY_DELAY            = 'tig_postnl/shippingoptions/delivery_delay';
 
     private $defaultMaxDeliverydays = '5';
 
@@ -157,6 +158,14 @@ class ShippingOptions extends AbstractConfigProvider
         }
 
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_SUNDAY_FEE);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeliveryDelay()
+    {
+        return (int)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_DELIVERY_DELAY);
     }
 }
 /**
