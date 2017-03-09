@@ -35,23 +35,27 @@
     <!--Productoptions section-->
     <group id="productoptions" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Product options</label>
+        <comment><![CDATA[If you are unsure which options to select, ask your PostNL account manager. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004290928" target="_blank" title="product options">PostNL product options</a>.]]></comment>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-section</fieldset_css>
 
         <field id="supported_options" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Select the available options</label>
+            <comment><![CDATA[Select the PostNL product that you want to use for your shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions</source_model>
             <config_path>tig_postnl/productoptions/supported_options</config_path>
         </field>
 
         <field id="default_option" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default shipping option</label>
+            <comment><![CDATA[Select the default product option for domestic shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
             <config_path>tig_postnl/productoptions/default_option</config_path>
         </field>
 
         <field id="default_evening_option" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default evening option</label>
+            <comment><![CDATA[Select the default product option for evening delivery shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsEveningOptions</source_model>
             <config_path>tig_postnl/productoptions/default_evening_option</config_path>
             <depends>
@@ -61,6 +65,7 @@
 
         <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default post office delivery option</label>
+            <comment><![CDATA[Select the default product option for postoffice delivery shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakOptions</source_model>
             <config_path>tig_postnl/productoptions/default_pakjegemak_option</config_path>
             <depends>
@@ -70,22 +75,22 @@
 
         <field id="default_pakjegemak_early_option" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default postoffice early pickup option</label>
+            <comment><![CDATA[Select the default product option for early pickup option.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakEarlyDeliveryOptions</source_model>
             <config_path>tig_postnl/productoptions/default_pakjegemak_early_option</config_path>
             <depends>
                 <field id="tig_postnl/shippingoptions/pakjegemak_active">1</field>
             </depends>
         </field>
-        
         <!-- Disabled because needs further development -->
         <!--<field id="default_sunday_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">-->
             <!--<label>Default sunday delivery option</label>-->
+            <!--<comment><![CDATA[Select the default product option for sunday delivery shipments.]]></comment>-->
             <!--<source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsSundayOptions</source_model>-->
             <!--<config_path>tig_postnl/productoptions/default_sunday_option</config_path>-->
             <!--<depends>-->
                 <!--<field id="tig_postnl/shippingoptions/sundaydelivery_active">1</field>-->
             <!--</depends>-->
         <!--</field>-->
-
     </group>
 </include>
