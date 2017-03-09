@@ -140,9 +140,12 @@ define([
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_timeframes,
                 data : {address: address}
             }).done(function (data) {
+                if (data.error) {
+                    Logger.error(data.error);
+                    State.deliveryOptionsAreAvailable(false);
+                    return false;
+                }
                 State.deliveryOptionsAreAvailable(true);
-                Logger.info(data);
-
                 data = ko.utils.arrayMap(data, function (day) {
                     return ko.utils.arrayMap(day, function (timeFrame) {
                         return new TimeFrame(timeFrame);
