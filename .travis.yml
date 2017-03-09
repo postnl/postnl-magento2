@@ -11,7 +11,6 @@ language: php
 
 php:
   - 7.0
-  - 7.1
 
 env:
   global:
@@ -26,7 +25,7 @@ env:
 
 matrix:
   include:
-    env: PHP=7.0 MAGENTO_VERSION=2.1.5 CODE_COVERAGE=true
+    env: MAGENTO_VERSION=2.1.5 CODE_COVERAGE=true
 
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
