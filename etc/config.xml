@@ -49,7 +49,7 @@
             <stability>alpha</stability>
             <supported_magento_version>2.1.3</supported_magento_version>
             <generalconfiguration_extension_status>
-                <modus>2</modus>
+                <modus>0</modus>
                 <customer_number_test>11223344</customer_number_test>
                 <customer_code_test>TOTA</customer_code_test>
                 <api_key_test>qLNy5m86BYYjD67CPrGZ1BaYU2A6OFrl</api_key_test>
@@ -59,7 +59,7 @@
                 <types>300,400,500,550,600</types>
             </generalconfiguration_logging>
             <printer>
-                <label_size>A4</label_size>
+                <label_size>A6</label_size>
             </printer>
             <webshop_shipping>
                 <cutoff_time>18:00:00</cutoff_time>
