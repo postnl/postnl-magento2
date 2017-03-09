@@ -9,16 +9,15 @@ addons:
 
 language: php
 
-php: 7.0
+php:
+  - 7.0
+  - 7.1
 
 env:
   global:
     - CODE_COVERAGE=false
 
   matrix:
-    - MAGENTO_VERSION=2.0.8
-    - MAGENTO_VERSION=2.0.9
-    - MAGENTO_VERSION=2.0.10
     - MAGENTO_VERSION=2.1.0
     - MAGENTO_VERSION=2.1.1
     - MAGENTO_VERSION=2.1.2
@@ -27,7 +26,7 @@ env:
 
 matrix:
   include:
-    env: MAGENTO_VERSION=2.1.5 CODE_COVERAGE=true
+    env: PHP=7.0 MAGENTO_VERSION=2.1.5 CODE_COVERAGE=true
 
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
