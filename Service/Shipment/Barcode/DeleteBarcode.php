@@ -94,7 +94,7 @@ class DeleteBarcode extends ShipmentServiceAbstract
     public function deleteAllByShipmentId($postNLShipmentId)
     {
         $searchCriteria = $this->searchCriteriaBuilder->addFilter(
-            'shipment_id',
+            'parent_id',
             $postNLShipmentId
         );
 
