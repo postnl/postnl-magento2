@@ -143,11 +143,11 @@
                 <config_path>tig_postnl/generalconfiguration_shipping_address/streetname</config_path>
             </field>
             <field id="housenumber" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Housenumber</label>
+                <label>House number</label>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/housenumber</config_path>
             </field>
             <field id="housenumber_addition" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Housenumber addition</label>
+                <label>House number addition</label>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/housenumber_addition</config_path>
             </field>
             <field id="postcode" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -162,7 +162,7 @@
 
         <group id="logging" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Logging</label>
-            <comment><![CDATA[Logs will be created within the var/log/PostNL/ directory. You can find more information about the different kinds of logs <a href="https://servicedesk.tig.nl/hc/nl/articles/115003513908" target="_blank" title="PostNL logs">here</a>.]]></comment>
+            <comment><![CDATA[Log files will be created within the var/log/PostNL/ directory. You can find more information about the different kinds of logs <a href="https://servicedesk.tig.nl/hc/nl/articles/115003513908" target="_blank" title="PostNL logs">here</a>.]]></comment>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
             <field id="types" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Types of logging</label>
