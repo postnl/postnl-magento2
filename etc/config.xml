@@ -81,11 +81,12 @@
                 <deliverydays_active>0</deliverydays_active>
                 <stockoptions>in_stock</stockoptions>
                 <pakjegemak_active>1</pakjegemak_active>
-                <sundaydelivery_active>1</sundaydelivery_active>
+                <sundaydelivery_active>0</sundaydelivery_active>
                 <eveningdelivery_active>1</eveningdelivery_active>
                 <max_deliverydays>7</max_deliverydays>
                 <eveningdelivery_fee>2</eveningdelivery_fee>
                 <sundaydelivery_fee>2</sundaydelivery_fee>
+                <delivery_delay>1</delivery_delay>
             </shippingoptions>
             <endpoints>
                 <cif_base_url>https://service.postnl.com/CIF/</cif_base_url>
