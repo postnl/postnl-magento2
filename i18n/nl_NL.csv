@@ -79,30 +79,30 @@ Modus,Modus
 "Customernumber test mode","Klantnummer test modus"
 "Customercode test mode","Klantcode test modus"
 "BLS location code test mode","BLS locatie code test modus"
-Shippingaddress,Verzendadres
-"First name","Voornaam"
-"Last name","Achternaam"
+Shipping address,Verzendadres
+First name,Voornaam
+Last name,Achternaam
 Company,Bedrijf
-Streetname,Straatnaam
+Street name,Straatnaam
 Department,Afdelding
 "House number","Huisnummer"
 "House number addition","Huisnummer toevoeging"
 Postcode,Postcode
 City,Plaats
-Productoptions,Productopties
+Product options,Productopties
 "Select the available options","Selecteer de beschikbare opties"
 "Default shipping option","Standaard verzend optie"
 "Default evening option","Standaard avondverzending optie"
-"Default postoffice delivery option","Standaard Pakjegemak optie"
+"Default post office delivery option","Standaard Pakjegemak optie"
 "Default sunday delivery option","Standaard zondagbezorging optie"
-Shippingoptions,Verzendopties
-"Activate shippingoptions","Activeer verzendopties"
-Stockoptions,Voorraadopties
-"Activate deliverydays","Activeer bezorgdagen"
-"Maximum number of deliverydays","Maximaal aantal bezorgdagen"
-"Activate postofficelocations","Activeer Pakjegemak"
-"Activate eveningdelivery","Activeer avondbezorging"
-"Eveningdelivery fee","Avondbezorging toeslag"
+Shipping options,Verzendopties
+"Activate shipping options","Activeer verzendopties"
+Stock options,Voorraadopties
+"Activate delivery days","Activeer bezorgdagen"
+"Maximum number of delivery days","Maximaal aantal bezorgdagen"
+"Activate post office locations","Activeer Pakjegemak"
+"Activate evening delivery","Activeer avondbezorging"
+"Evening delivery fee","Avondbezorging toeslag"
 "Activate sunday delivery","Activeer zondagbezorging"
 "Sunday delivery fee","Zondagbezoging toeslag"
 "Send track and trace info","Verstuur track and trace info"
@@ -147,7 +147,7 @@ Extension version,Extensie versie
 "For an A6 example, <a href=""%1"" target=""_blank"">click here</a>.","Voor een A6 voorbeeld, <a href=""%1"" target=""_blank"">klik hier</a>."
 "PostNL Shipping options","PostNL Verzendopties"
 "Colli amount","Aantal pakketten"
-"Activate early delivery postoffice locations","Activeer extra vroeg ophalen"
+"Activate early delivery post office locations","Activeer extra vroeg ophalen"
 "Early delivery fee","Extra vroeg ophalen toeslag"
 "Early Delivery from 9:00","Ophalen vanaf 9:00"
 "Export CSV","Exporteer CSV"
@@ -184,4 +184,4 @@ Percent,Percentage
 "In order to use this extension you need to be a contract customer of PostNL. If you are not a customer of PostNL, you can <a href=""%1"" target=""_blank"" title=""register at PostNL"">register yourself here</a>.","Om deze extensie te kunnen gebruiken dient u een contract met PostNL af te sluiten. Indien u geen klant bent van PostNL dan kunt u zichzelf <a href=""%1"" target=""_blank"" title=""hier aanmelden"">hier aanmelden</a>."
 "You will then receive all necessary information in order to configure the extension. If you cannot find the email containing this information, please contact PostNL support at 058-2333343.","U ontvangt de benodigde informatie om deze extensie te configureren. Indien u deze e-mail met informatie niet heeft ontvangen, neem dan contact met PostNL support op 058-2333343."
 "If you want to test the extension, but do not have any test mode credentials you can use the account credentials found <a href=""%1"" target=""_blank"">here</a>.","Indien u deze extensie wilt uitproberen, maar geen testgegevens heeft, dan kunt u <a href=""%1"" target=""_blank"">hier</a> testgegevens vinden."
-"Log files will be created within the var/log/PostNL/ directory. You can find more information about the different kinds of logs <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003513908"" target=""_blank"" title=""PostNL logs"">here</a>.","Log bestanden worden aangemaakt in de var/log/PostNL/ folder. U kunt meer vinden over de verschillende soorten logs op <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003513908"" target=""_blank"" title=""PostNL logs"">deze pagina</a>."
+"Log files will be created within the var/log/PostNL/ directory. You can find more information about the different kinds of log files <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003513908"" target=""_blank"" title=""PostNL logs"">here</a>.","Log bestanden worden aangemaakt in de var/log/PostNL/ folder. U kunt meer vinden over de verschillende soorten log bestanden op <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003513908"" target=""_blank"" title=""PostNL logs"">deze pagina</a>."

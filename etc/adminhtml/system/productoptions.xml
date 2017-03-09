@@ -34,7 +34,7 @@
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <!--Productoptions section-->
     <group id="productoptions" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Productoptions</label>
+        <label>Product options</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-section</fieldset_css>
 
@@ -60,7 +60,7 @@
         </field>
 
         <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-            <label>Default postoffice delivery option</label>
+            <label>Default post office delivery option</label>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakOptions</source_model>
             <config_path>tig_postnl/productoptions/default_pakjegemak_option</config_path>
             <depends>
