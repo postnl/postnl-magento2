@@ -29,41 +29,34 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
 
-use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use Magento\Sales\Model\ResourceModel\GridInterface;
-use TIG\PostNL\Model\Shipment;
+namespace TIG\PostNL\Unit\Service\Timeframe\Filters\Options;
 
-class UpdateOrderShipmentGrid implements ObserverInterface
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Service\Timeframe\Filters\Options\Evening;
+use TIG\PostNL\Config\Provider\ShippingOptions;
+
+class EveningTest extends TestCase
 {
-    /**
-     * @var GridInterface
-     */
-    private $shipmentGrid;
+    protected $instanceClass = Evening::class;
 
     /**
-     * @param GridInterface $shipmentGrid
-     */
-    public function __construct(
-        GridInterface $shipmentGrid
-    ) {
-        $this->shipmentGrid = $shipmentGrid;
-    }
-
-    /**
-     * @param Observer $observer
+     * @dataProvider TIG\PostNL\Test\Fixtures\Timeframes\Options\DataProvider::evening
      *
-     * @return void
+     * @param $isEnabled
+     * @param $options
+     * @param $expected
      */
-    public function execute(Observer $observer)
+    public function testFilter($isEnabled, $options, $expected)
     {
-        /** @var Shipment $shipment */
-        $shipment = $observer->getData('data_object');
-        $shipmentId = $shipment->getShipmentId();
+        $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
+        $expects = $shippingOptions->expects($this->once());
+        $expects->method('isEveningDeliveryActive');
+        $expects->willReturn($isEnabled);
 
-        $this->shipmentGrid->refresh($shipmentId);
+        $instance = $this->getInstance(['shippingOptions' => $shippingOptions]);
+        $result   = $instance->filter($options);
+
+        $this->assertEquals($expected, $result);
     }
 }

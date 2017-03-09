@@ -29,61 +29,59 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Service\Handler;
 
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use TIG\PostNL\Helper\Data;
-use \TIG\PostNL\Model\OrderRepository;
-use Magento\Sales\Model\Order as MagentoOrder;
-use TIG\PostNL\Model\Order as PostNLOrder;
+use Magento\Sales\Model\Order\Shipment;
+use TIG\PostNL\Model\OrderRepository;
+use TIG\PostNL\Webservices\Endpoints\SentDate;
+use \TIG\PostNL\Model\Order;
 
-class SalesOrderSaveAfterEvent implements ObserverInterface
+class SentDateHandler
 {
     /**
-     * @var OrderRepository
+     * @var \TIG\PostNL\Model\ShipmentRepository
      */
     private $orderRepository;
 
     /**
-     * @var Data
+     * @var SentDate
      */
-    private $helper;
+    private $sentDate;
 
     /**
+     * @param SentDate        $sentDate
      * @param OrderRepository $orderRepository
-     * @param Data            $helper
      */
     public function __construct(
-        OrderRepository $orderRepository,
-        Data $helper
+        SentDate $sentDate,
+        OrderRepository $orderRepository
     ) {
+        $this->sentDate = $sentDate;
         $this->orderRepository = $orderRepository;
-        $this->helper = $helper;
     }
 
     /**
-     * @param Observer $observer
+     * @param Shipment $shipment
      *
-     * @return void
+     * @return mixed
      */
-    public function execute(Observer $observer)
+    public function get(Shipment $shipment)
     {
-        /** @var MagentoOrder $order */
-        $magentoOrder = $observer->getData('data_object');
+        /** @var  Order $postnlOrder */
+        $postnlOrder = $this->getPostnlOrder($shipment);
 
-        if (!$this->helper->isPostNLOrder($magentoOrder)) {
-            return;
-        }
+        $this->sentDate->setParameters($shipment, $postnlOrder);
+        return $this->sentDate->call();
+    }
 
-        $postnlOrder = $this->orderRepository->getByFieldWithValue('quote_id', $magentoOrder->getQuoteId());
-        if (!$postnlOrder) {
-            $postnlOrder = $this->orderRepository->create();
-        }
-
-        $postnlOrder->setData('order_id', $magentoOrder->getId());
-        $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
-
-        $this->orderRepository->save($postnlOrder);
+    /**
+     * @param Shipment $shipment
+     *
+     * @return \Magento\Framework\DataObject
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function getPostnlOrder(Shipment $shipment)
+    {
+        return $this->orderRepository->getByFieldWithValue('order_id', $shipment->getOrderId());
     }
 }
