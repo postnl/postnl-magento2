@@ -29,10 +29,22 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Model;
+namespace TIG\PostNL\Unit\Service\Timeframe\Filters\Days;
 
-interface ShipmentLabelInterface
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Service\Timeframe\Filters\Days\ShipmentDays;
+use TIG\PostNL\Config\Provider\Webshop;
+
+class ShipmentDaysTest extends TestCase
 {
-    // @codingStandardsIgnoreLine
-    public function getIdentities();
+    protected $instanceClass = ShipmentDays::class;
+
+    public function testFilter()
+    {
+        $this->markTestSkipped('Rik : Needs to be finished');
+
+//        $webshopSettings = $this->getFakeMock(Webshop::class)->getMock();
+//        $expects = $webshopSettings->method('getShipmentDays');
+//        $expects->willReturn($shipmentDays);
+    }
 }

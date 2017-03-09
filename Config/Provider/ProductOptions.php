@@ -33,11 +33,12 @@ namespace TIG\PostNL\Config\Provider;
 
 class ProductOptions extends AbstractConfigProvider
 {
-    const XPATH_SUPPORTED_PRODUCT_OPTIONS         = 'tig_postnl/productoptions/supported_options';
-    const XPATH_DEFAULT_PRODUCT_OPTION            = 'tig_postnl/productoptions/default_option';
-    const XPATH_DEFAULT_EVENING_PRODUCT_OPTION    = 'tig_postnl/productoptions/default_evening_option';
+    const XPATH_SUPPORTED_PRODUCT_OPTIONS = 'tig_postnl/productoptions/supported_options';
+    const XPATH_DEFAULT_PRODUCT_OPTION = 'tig_postnl/productoptions/default_option';
+    const XPATH_DEFAULT_EVENING_PRODUCT_OPTION = 'tig_postnl/productoptions/default_evening_option';
     const XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION = 'tig_postnl/productoptions/default_pakjegemak_option';
-    const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION     = 'tig_postnl/productoptions/default_sunday_option';
+    const XPATH_DEFAULT_PAKJEGEMAK_EARLY_PRODUCT_OPTION = 'tig_postnl/productoptions/default_pakjegemak_early_option';
+    const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION = 'tig_postnl/productoptions/default_sunday_option';
 
     /**
      * @return mixed
@@ -69,6 +70,14 @@ class ProductOptions extends AbstractConfigProvider
     public function getDefaultPakjeGemakProductOption()
     {
         return $this->getConfigFromXpath(self::XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultPakjeGemakEarlyProductOption()
+    {
+        return $this->getConfigFromXpath(self::XPATH_DEFAULT_PAKJEGEMAK_EARLY_PRODUCT_OPTION);
     }
 
     /**

@@ -31,24 +31,15 @@
  */
 namespace TIG\PostNL\Webservices\Parser;
 
-use TIG\PostNL\Helper\Data;
-use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Service\Timeframe\Filter;
 use Magento\Framework\Locale\ListsInterface;
 
 class TimeFrames
 {
-    const TIMEFRAME_OPTION_EVENING = 'Evening';
-    const TIMEFRAME_OPTION_DAYTIME = 'Daytime';
-
     /**
-     * @var Data
+     * @var Filter
      */
-    private $postNLhelper;
-
-    /**
-     * @var ShippingOptions
-     */
-    private $shippingOptions;
+    private $filter;
 
     /**
      * @var ListsInterface
@@ -56,32 +47,26 @@ class TimeFrames
     private $locale;
 
     /**
-     * @param Data            $postNLhelper
-     * @param ShippingOptions $shippingOptions
-     * @param ListsInterface  $locale
+
+     * @param Filter         $filter
+     * @param ListsInterface $locale
      */
     public function __construct(
-        Data $postNLhelper,
-        ShippingOptions $shippingOptions,
+        Filter $filter,
         ListsInterface $locale
     ) {
-        $this->postNLhelper = $postNLhelper;
-        $this->shippingOptions = $shippingOptions;
+        $this->filter = $filter;
         $this->locale = $locale;
     }
 
     /**
-     * @codingStandardsIgnoreLine
-     * @todo : Filter on Monday and Sunday delivery also on evening and CutoffTimes.
      * @param $timeFrames
      *
      * @return array
      */
     public function handle($timeFrames)
     {
-        $filterdTimeFrames = array_filter($timeFrames, function ($value) {
-            return !$this->isSameDay($value->Date);
-        });
+        $filteredTimeFrames = $this->filter->days($timeFrames);
 
         return array_map(function ($timeFrame) {
             $frames = $timeFrame->Timeframes;
@@ -90,7 +75,7 @@ class TimeFrames
                 $frames->TimeframeTimeFrame,
                 $timeFrame->Date
             );
-        }, $filterdTimeFrames);
+        }, $filteredTimeFrames);
     }
 
     /**
@@ -102,10 +87,7 @@ class TimeFrames
      */
     private function getTimeFrameOptions(&$filterdTimeFrames, $timeFrames, $date)
     {
-        $timeFrames = array_filter($timeFrames, function ($value) {
-            $options = $value->Options;
-            return $this->validateOnEvening($options->string[0]);
-        });
+        $timeFrames = $this->filter->options($timeFrames);
 
         foreach ($timeFrames as $timeFrame) {
             $options = $timeFrame->Options;
@@ -121,43 +103,6 @@ class TimeFrames
         }
 
         return $filterdTimeFrames;
-    }
-
-    /**
-     * @codingStandardsIgnoreLine
-     * @todo : Move to validation Classes.
-     *
-     * @param $option
-     *
-     * @return bool
-     */
-    private function validateOnEvening($option)
-    {
-        if ($option !== static::TIMEFRAME_OPTION_EVENING) {
-            return true;
-        }
-
-        if ($option === static::TIMEFRAME_OPTION_EVENING && $this->shippingOptions->isEveningDeliveryActive()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @codingStandardsIgnoreLine
-     * @todo : Move to validation Classes.
-     * @param $timeFrameDate
-     *
-     * @return bool
-     */
-    private function isSameDay($timeFrameDate)
-    {
-        if ($this->postNLhelper->getDateYmd() == $this->postNLhelper->getDateYmd($timeFrameDate)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**

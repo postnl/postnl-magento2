@@ -36,8 +36,7 @@ use Magento\Framework\Phrase;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\Collection as OrderCollection;
 use TIG\PostNL\Block\Adminhtml\Shipment\Grid\ConfirmStatus;
-use TIG\PostNL\Model\ShipmentFactory;
-use TIG\PostNL\Observer\SalesOrderShipmentSaveAfterEvent;
+use TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\CreatePostNLShipment;
 use TIG\PostNL\Test\Integration\TestCase;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
@@ -78,7 +77,6 @@ class ConfirmStatusTest extends TestCase
         $this->markTestSkipped('Should be fixed');
 
         $shipment = $this->getShipment();
-        $shipmentId = $shipment->getId();
 
         $postNLShipment = $this->getPostNLShipment($shipment);
         $postNLShipment->setConfirmedAt($confirmed_at);
@@ -133,8 +131,8 @@ class ConfirmStatusTest extends TestCase
         $callExpects->method('call');
         $callExpects->willReturn((Object)['Barcode' => '3STOTA1234567890']);
 
-        /** @var SalesOrderShipmentSaveAfterEvent $observer */
-        $observer = $this->getObject(SalesOrderShipmentSaveAfterEvent::class, ['barcode' => $barcodeMock]);
+        /** @var CreatePostNLShipment $observer */
+        $observer = $this->getObject(CreatePostNLShipment::class, ['barcode' => $barcodeMock]);
         $observer->execute($event);
 
         $shipmentCollection = $this->getObject(\TIG\PostNL\Model\ResourceModel\Shipment\Collection::class);

@@ -34,13 +34,16 @@ namespace TIG\PostNL\Config\Source\Options;
 use \Magento\Framework\Option\ArrayInterface;
 use TIG\PostNL\Config\Source\OptionsAbstract;
 
+/**
+ * As this class holds all the product options, it is too long for Code Sniffer to check.
+ */
+// @codingStandardsIgnoreFile
 class ProductOptions extends OptionsAbstract implements ArrayInterface
 {
     /**
      * All product options.
      * @var array
      */
-    // @codingStandardsIgnoreLine
     protected $availableOptions = [
         // Standard Options
         '3085' => [
@@ -122,6 +125,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             'isExtraEarly'      => false,
             'isSunday'          => false,
             'countryLimitation' => 'NL',
+            'pge'               => false,
             'group'             => 'pakjegemak_options',
         ],
         '3544' => [
@@ -131,6 +135,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             'isExtraEarly'      => true,
             'isSunday'          => false,
             'countryLimitation' => 'NL',
+            'pge'               => true,
             'group'             => 'pakjegemak_options',
         ],
         '3533' => [
@@ -140,6 +145,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             'isExtraEarly'      => false,
             'isSunday'          => false,
             'countryLimitation' => 'NL',
+            'pge'               => false,
             'group'             => 'pakjegemak_options',
         ],
         '3543' => [
@@ -149,6 +155,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             'isSunday'          => false,
             'isExtraEarly'      => true,
             'countryLimitation' => 'NL',
+            'pge'               => true,
             'group'             => 'pakjegemak_options',
         ],
         // EU Options
@@ -179,7 +186,6 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         ],
     ];
 
-    // @codingStandardsIgnoreLine
     protected $groups = [
         'standard_options'   => 'Domestic options',
         'pakjegemak_options' => 'Post Office options',
@@ -223,6 +229,15 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     public function getPakjeGemakOptions()
     {
         return $this->getProductoptions(['group' => 'pakjegemak_options']);
+    }
+
+    /**
+     * Returns options if pge equals true
+     * @return array
+     */
+    public function getPakjeGemakEarlyDeliveryOptions()
+    {
+        return $this->getProductoptions(['pge' => true]);
     }
 
     /**

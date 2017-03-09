@@ -120,22 +120,23 @@
             </depends>
         </field>
 
-        <field id="sundaydelivery_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Activate sunday delivery</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>tig_postnl/shippingoptions/sundaydelivery_active</config_path>
-            <depends>
-                <field id="shippingoptions_active">1</field>
-            </depends>
-        </field>
+        <!-- Disabled because needs further development -->
+        <!--<field id="sundaydelivery_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">-->
+            <!--<label>Activate sunday delivery</label>-->
+            <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+            <!--<config_path>tig_postnl/shippingoptions/sundaydelivery_active</config_path>-->
+            <!--<depends>-->
+                <!--<field id="shippingoptions_active">1</field>-->
+            <!--</depends>-->
+        <!--</field>-->
 
-        <field id="sundaydelivery_fee" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Sunday delivery fee</label>
-            <config_path>tig_postnl/shippingoptions/sundaydelivery_fee</config_path>
-            <depends>
-                <field id="shippingoptions_active">1</field>
-                <field id="sundaydelivery_active">1</field>
-            </depends>
-        </field>
+        <!--<field id="sundaydelivery_fee" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="0" showInStore="0">-->
+            <!--<label>Sunday delivery fee</label>-->
+            <!--<config_path>tig_postnl/shippingoptions/sundaydelivery_fee</config_path>-->
+            <!--<depends>-->
+                <!--<field id="shippingoptions_active">1</field>-->
+                <!--<field id="sundaydelivery_active">1</field>-->
+            <!--</depends>-->
+        <!--</field>-->
     </group>
 </include>
