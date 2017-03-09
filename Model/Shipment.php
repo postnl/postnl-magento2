@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Model;
 
+use Magento\Framework\Stdlib\DateTime\DateTime;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject\IdentityInterface;
@@ -90,6 +91,10 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      * @var AddressFactory
      */
     private $addressFactory;
+    /**
+     * @var DateTime
+     */
+    private $dateTime;
 
     /**
      * @param Context           $context
@@ -100,6 +105,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      * @param TimezoneInterface $timezoneInterface
      * @param AbstractResource  $resource
      * @param AbstractDb        $resourceCollection
+     * @param DateTime          $dateTime
      * @param array             $data
      */
     public function __construct(
@@ -109,6 +115,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         OrderFactory $orderFactory,
         AddressFactory $addressFactory,
         TimezoneInterface $timezoneInterface,
+        DateTime $dateTime,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -119,6 +126,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         $this->timezoneInterface = $timezoneInterface;
         $this->orderFactory = $orderFactory;
         $this->addressFactory = $addressFactory;
+        $this->dateTime = $dateTime;
     }
 
     /**
@@ -502,5 +510,19 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function getUpdatedAt()
     {
         return $this->getData(static::FIELD_UPDATED_AT);
+    }
+
+    /**
+     * @return $this
+     */
+    public function beforeSave()
+    {
+        $this->setUpdatedAt($this->dateTime->gmtDate());
+
+        if (!$this->getCreatedAt()) {
+            $this->setCreatedAt($this->dateTime->gmtDate());
+        }
+
+        return parent::beforeSave();
     }
 }
