@@ -373,16 +373,37 @@
                 transform: rotate(-135deg);
               }
 
-              .tig-postnl-pop-name {
-                font-weight: bold;
-                float: left;
-                width: 100%;
-              }
-              .tig-postnl-pop-street { }
-              .tig-postnl-pop-number { }
-              .tig-postnl-pop-extension { }
-              .tig-postnl-pop-distance { float: right; }
 
+              .tig-postnl-pop-address-one {
+                float:left;
+                width:100%;
+
+                .tig-postnl-pop-name {
+                  float:left;
+                  width:60%;
+
+                  font-weight: bold;
+                }
+
+                .tig-postnl-pop-city{
+                  float:right;
+                  width:40%;
+                  text-align:right;
+                  font-weight: bold;
+                }
+              }
+
+              .tig-postnl-pop-address-two {
+                float:left;
+                width:70%;
+              }
+
+              .tig-postnl-pop-address-three {
+                float:left;
+                width:30%;
+
+                .tig-postnl-pop-distance { float: right; }
+              }
             }
 
             li {
@@ -432,8 +453,8 @@
           .tig-postnl-pickup-name   { float:left; margin: 0 3px 0 0;  width: 100%; font-weight: bold; }
           .tig-postnl-pickup-street { float:left; margin: 0 3px 0 0; }
           .tig-postnl-pickup-number { float:left; margin: 0 3px 0 0; }
-          .tig-postnl-pickup-number-addition { float:left; }
-
+          .tig-postnl-pickup-number-addition { float:left; margin: 0 3px 0 0; }
+          .tig-postnl-pickup-city { float:left; margin: 0 3px 0 0; }
 
           // Right: Pickup Time
 
