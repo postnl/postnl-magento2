@@ -329,12 +329,30 @@
   z-index: 10;
   transform: rotate(-135deg);
 }
-.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-list .tig-postnl-pop-address-info .tig-postnl-pop-name {
-  font-weight: bold;
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-list .tig-postnl-pop-address-info .tig-postnl-pop-address-one {
   float: left;
   width: 100%;
 }
-.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-list .tig-postnl-pop-address-info .tig-postnl-pop-distance {
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-list .tig-postnl-pop-address-info .tig-postnl-pop-address-one .tig-postnl-pop-name {
+  float: left;
+  width: 60%;
+  font-weight: bold;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-list .tig-postnl-pop-address-info .tig-postnl-pop-address-one .tig-postnl-pop-city {
+  float: right;
+  width: 40%;
+  text-align: right;
+  font-weight: bold;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-list .tig-postnl-pop-address-info .tig-postnl-pop-address-two {
+  float: left;
+  width: 70%;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-list .tig-postnl-pop-address-info .tig-postnl-pop-address-three {
+  float: left;
+  width: 30%;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-list .tig-postnl-pop-address-info .tig-postnl-pop-address-three .tig-postnl-pop-distance {
   float: right;
 }
 .postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-list li {
@@ -392,6 +410,11 @@
 }
 .postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-number-addition {
   float: left;
+  margin: 0 3px 0 0;
+}
+.postnl-deliveryoptions .delivery_options .pickup .locations li .tig-postnl-pickup-city {
+  float: left;
+  margin: 0 3px 0 0;
 }
 .postnl-deliveryoptions .delivery_options .pickup .locations li label {
   padding: 10px 5px 10px 5px;
