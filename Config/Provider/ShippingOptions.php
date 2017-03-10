@@ -113,7 +113,7 @@ class ShippingOptions extends AbstractConfigProvider
      */
     public function getPakjegemakExpressFee()
     {
-        if (!$this->isPakjegemakActive()) {
+        if (!$this->isPakjegemakExpressActive()) {
             return '0';
         }
 
