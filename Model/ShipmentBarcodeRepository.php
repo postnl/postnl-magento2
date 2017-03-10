@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Model;
 
 use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
-use TIG\PostNL\Model\ShipmentBarcodeFactory;
+use TIG\PostNL\Api\Data\ShipmentBarcodeInterface;
 use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
@@ -155,7 +155,7 @@ class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
      * @param $filterGroup
      * @param $collection
      */
-    public function handleFilterGroups($filterGroup, $collection)
+    private function handleFilterGroups($filterGroup, $collection)
     {
         $fields     = [];
         $conditions = [];
@@ -174,7 +174,7 @@ class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
      * @param SearchCriteriaInterface $criteria
      * @param                         $collection
      */
-    public function handleSortOrders(SearchCriteriaInterface $criteria, $collection)
+    private function handleSortOrders(SearchCriteriaInterface $criteria, $collection)
     {
         $sortOrders = $criteria->getSortOrders();
 
@@ -196,11 +196,22 @@ class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
      *
      * @return mixed
      */
-    public function getSearchResults(SearchCriteriaInterface $criteria)
+    private function getSearchResults(SearchCriteriaInterface $criteria)
     {
         $searchResults = $this->searchResultsFactory->create();
         $searchResults->setSearchCriteria($criteria);
 
         return $searchResults;
+    }
+
+    /**
+     * Create a PostNL Shipment Barcode.
+     *
+     * @api
+     * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
+     */
+    public function create()
+    {
+        return $this->shipmentBarcodeFactory->create();
     }
 }

@@ -38,10 +38,10 @@ use TIG\PostNL\Webservices\Api\Customer;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Webservices\Soap;
 
+// @codingStandardsIgnoreFile
 class Labelling extends AbstractEndpoint
 {
-    // @codingStandardsIgnoreLine
-    const PREG_MATCH_STREET = '#\A(.*?)\s+(\d+[a-zA-Z]{0,1}\s{0,1}[-]{1}\s{0,1}\d*[a-zA-Z]{0,1}|\d+[a-zA-Z-]{0,1}\d*[a-zA-Z]{0,1})#';
+    const PREG_MATCH_STREET = '/([^\d]+)\s?(.+)/i';
 
     const PREG_MATCH_HOUSENR = '#^([\d]+)(.*)#s';
 
@@ -149,7 +149,7 @@ class Labelling extends AbstractEndpoint
      *
      * @return array
      */
-    private function getShipmentDataArray($postnlShipment, $address, $contact)
+    private function getShipmentDataArray(Shipment $postnlShipment, $address, $contact)
     {
         $shipmentData = [
             'Addresses'                => ['Address' => $address],
@@ -163,6 +163,10 @@ class Labelling extends AbstractEndpoint
             'DownPartnerLocation'      => $postnlShipment->getPgLocationCode(),
             'ProductCodeDelivery'      => $postnlShipment->getProductCode(),
         ];
+
+        if ($postnlShipment->isExtraCover()) {
+            $shipmentData['Amounts'] = $this->getAmount($postnlShipment);
+        }
 
         return $shipmentData;
     }
@@ -194,18 +198,16 @@ class Labelling extends AbstractEndpoint
      */
     private function getAddressData($shippingAddress, $addressType = '01')
     {
-        $fullStreet = implode(' ', $shippingAddress->getStreet());
-        $result = preg_match(self::PREG_MATCH_STREET, $fullStreet, $streetMatches);
-        $result = preg_match(self::PREG_MATCH_HOUSENR, $streetMatches[2], $houseNrMatches);
+        $streetData = $this->getStreet($shippingAddress);
 
         $addressArray = [
             'AddressType'      => $addressType,
             'FirstName'        => $shippingAddress->getFirstname(),
             'Name'             => $shippingAddress->getLastname(),
             'CompanyName'      => $shippingAddress->getCompany(),
-            'Street'           => $streetMatches[1],
-            'HouseNr'          => $houseNrMatches[1],
-            'HouseNrExt'       => $houseNrMatches[2],
+            'Street'           => $streetData['Street'],
+            'HouseNr'          => $streetData['HouseNr'],
+            'HouseNrExt'       => $streetData['HouseNrExt'],
             'Zipcode'          => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode())),
             'City'             => $shippingAddress->getCity(),
             'Region'           => $shippingAddress->getRegion(),
@@ -229,5 +231,57 @@ class Labelling extends AbstractEndpoint
     public function getLocation()
     {
         return $this->version . '/' . $this->endpoint;
+    }
+
+    /**
+     * @param Address $shippingAddress
+     *
+     * @return array
+     */
+    private function getStreet($shippingAddress)
+    {
+        $street = $shippingAddress->getStreet();
+        $fullStreet = implode(' ', $street);
+
+        if (empty($fullStreet)) {
+            return [
+                'Street'     => '',
+                'HouseNr'    => '',
+                'HouseNrExt' => '',
+            ];
+        }
+
+        preg_match(self::PREG_MATCH_STREET, $fullStreet, $streetMatches);
+        preg_match(self::PREG_MATCH_HOUSENR, $streetMatches[2], $houseNrMatches);
+
+        return [
+            'Street'     => trim($streetMatches[1]),
+            'HouseNr'    => trim($houseNrMatches[1]),
+            'HouseNrExt' => trim($houseNrMatches[2]),
+        ];
+    }
+
+    /**
+     * @param Shipment $postnlShipment
+     *
+     * @return array
+     */
+    private function getAmount(Shipment $postnlShipment)
+    {
+        $amounts = [];
+        $extraCoverAmount = $postnlShipment->getExtraCoverAmount();
+
+        $amounts[] = [
+            'AccountName'       => '',
+            'BIC'               => '',
+            'IBAN'              => '',
+            'AmountType'        => '02', // 01 = COD, 02 = Insured
+            'Currency'          => 'EUR',
+            'Reference'         => '',
+            'TransactionNumber' => '',
+            'Value'             => number_format($extraCoverAmount, 2, '.', ''),
+        ];
+
+        return $amounts;
     }
 }

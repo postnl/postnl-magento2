@@ -29,41 +29,45 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Test\Unit\Model;
 
-use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use Magento\Sales\Model\ResourceModel\GridInterface;
+use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Test\TestCase;
 
-class UpdateOrderShipmentGrid implements ObserverInterface
+class ShipmentTest extends TestCase
 {
-    /**
-     * @var GridInterface
-     */
-    private $shipmentGrid;
+    public $instanceClass = Shipment::class;
 
-    /**
-     * @param GridInterface $shipmentGrid
-     */
-    public function __construct(
-        GridInterface $shipmentGrid
-    ) {
-        $this->shipmentGrid = $shipmentGrid;
+    public function isExtraCoverProvider()
+    {
+        return [
+            [3085, false],
+            [3544, true],
+        ];
     }
 
     /**
-     * @param Observer $observer
+     * @param $productCode
+     * @param $expected
      *
-     * @return void
+     * @dataProvider isExtraCoverProvider
      */
-    public function execute(Observer $observer)
+    public function testIsExtraCover($productCode, $expected)
     {
-        /** @var Shipment $shipment */
-        $shipment = $observer->getData('data_object');
-        $shipmentId = $shipment->getShipmentId();
+        $functionResponse = [
+            'isExtraCover' => $expected,
+        ];
 
-        $this->shipmentGrid->refresh($shipmentId);
+        $productCodeMock = $this->getFakeMock(ProductOptions::class, true);
+        $this->mockFunction($productCodeMock, 'getOptionsByCode', $functionResponse, $productCode);
+
+        /** @var Shipment $instance */
+        $instance = $this->getInstance(['productOptions' => $productCodeMock]);
+        $instance->setProductCode($productCode);
+
+        $result = $instance->isExtraCover();
+
+        $this->assertEquals($expected, $result);
     }
 }

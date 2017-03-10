@@ -29,10 +29,34 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Model;
 
-interface ShipmentLabelInterface
+namespace TIG\PostNL\Unit\Service\Timeframe\Filters\Options;
+
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Service\Timeframe\Filters\Options\Evening;
+use TIG\PostNL\Config\Provider\ShippingOptions;
+
+class EveningTest extends TestCase
 {
-    // @codingStandardsIgnoreLine
-    public function getIdentities();
+    protected $instanceClass = Evening::class;
+
+    /**
+     * @dataProvider TIG\PostNL\Test\Fixtures\Timeframes\Options\DataProvider::evening
+     *
+     * @param $isEnabled
+     * @param $options
+     * @param $expected
+     */
+    public function testFilter($isEnabled, $options, $expected)
+    {
+        $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
+        $expects = $shippingOptions->expects($this->once());
+        $expects->method('isEveningDeliveryActive');
+        $expects->willReturn($isEnabled);
+
+        $instance = $this->getInstance(['shippingOptions' => $shippingOptions]);
+        $result   = $instance->filter($options);
+
+        $this->assertEquals($expected, $result);
+    }
 }

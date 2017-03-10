@@ -55,4 +55,18 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="TIG\PostNL\Service\Timeframe\Filter">
+        <arguments>
+            <argument name="dayFilters" xsi:type="array">
+                <item name="sameday" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\SameDay</item>
+                <item name="shipmentdays" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\ShipmentDays</item>
+            </argument>
+            <argument name="optionsFilters" xsi:type="array">
+                <item name="evening" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Options\Evening</item>
+                <item name="sunday" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Options\Sunday</item>
+            </argument>
+        </arguments>
+    </type>
+
 </config>

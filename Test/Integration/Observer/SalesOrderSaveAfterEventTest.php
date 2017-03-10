@@ -29,22 +29,22 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Integration\Observer;
+namespace TIG\PostNL\Test\Integration\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
 use TIG\PostNL\Model\OrderRepository;
-use TIG\PostNL\Observer\SalesOrderSaveAfterEvent;
+use TIG\PostNL\Observer\SalesOrderSaveAfter\CreatePostNLOrder;
 use TIG\PostNL\Test\Integration\TestCase;
 
 /**
  * @magentoDbIsolation enabled
  */
-class TestSalesOrderSaveAfterEvent extends TestCase
+class TestCreatePostNLShipment extends TestCase
 {
-    protected $instanceClass = SalesOrderSaveAfterEvent::class;
+    protected $instanceClass = CreatePostNLOrder::class;
 
     /**
      * @magentoDataFixture Magento/Sales/_files/order.php

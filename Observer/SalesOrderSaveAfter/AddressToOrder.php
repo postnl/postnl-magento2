@@ -29,17 +29,17 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer;
+namespace TIG\PostNL\Observer\SalesOrderSaveAfter;
 
-use \Magento\Framework\Event\Observer;
-use \Magento\Framework\Event\ObserverInterface;
-use \Magento\Sales\Model\Order;
-use \Magento\Quote\Model\Quote;
-use \Magento\Quote\Model\Quote\Address\ToOrderAddress;
-use \Magento\Sales\Model\Order\AddressFactory;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Sales\Model\Order;
+use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote\Address\ToOrderAddress;
+use Magento\Sales\Model\Order\AddressFactory;
 use TIG\PostNL\Exception;
 use TIG\PostNL\Helper\DeliveryOptions\PickupAddress;
-use \TIG\PostNL\Model\OrderRepository;
+use TIG\PostNL\Model\OrderRepository;
 
 class AddressToOrder implements ObserverInterface
 {

@@ -114,7 +114,7 @@ class ProductOptionsTest extends TestCase
 
         $result = $instance->getProductoptions($filter, $checkOnAvailable);
 
-        $result = array_map( function ($value) {
+        $result = array_map(function ($value) {
             return $value['value'];
         }, $result);
 
@@ -147,7 +147,7 @@ class ProductOptionsTest extends TestCase
 
         $result = $instance->getGroupedOptions();
 
-        $result = array_map( function ($value) {
+        $result = array_map(function ($value) {
             return $value['label'];
         }, $result);
 
