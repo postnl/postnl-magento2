@@ -46,6 +46,7 @@
 
         <field id="stockoptions" translate="label" type="radios" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Stock options</label>
+            <comment><![CDATA[Select for which products PostNL delivery options should be available.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\StockOptions</source_model>
             <config_path>tig_postnl/shippingoptions/stockoptions</config_path>
             <depends>
@@ -55,6 +56,7 @@
 
         <field id="deliverydays_active" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Activate delivery days</label>
+            <comment><![CDATA[Delivery days allow customers to choose on which date they want their order delivered.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/deliverydays_active</config_path>
             <depends>
@@ -75,6 +77,7 @@
 
         <field id="pakjegemak_active" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Activate post office locations</label>
+            <comment><![CDATA[Whether or not customers may choose to have their order delivered to a nearby post office.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/pakjegemak_active</config_path>
             <depends>
@@ -84,6 +87,7 @@
 
         <field id="pakjegemak_express_active" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Activate early delivery post office locations</label>
+            <comment><![CDATA[Activate early delivery locations for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004296048/" target="_blank" title="early delivery">early delivery</a>.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/pakjegemak_express_active</config_path>
             <depends>
@@ -94,6 +98,7 @@
 
         <field id="pakjegemak_express_fee" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Early delivery fee</label>
+            <comment><![CDATA[Additional costs for early delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
             <config_path>tig_postnl/shippingoptions/pakjegemak_express_fee</config_path>
             <depends>
                 <field id="pakjegemak_active">1</field>
@@ -104,6 +109,7 @@
 
         <field id="eveningdelivery_active" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Activate evening delivery</label>
+            <comment><![CDATA[Activate evening delivery for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298488" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/eveningdelivery_active</config_path>
             <depends>
@@ -112,7 +118,8 @@
         </field>
 
         <field id="eveningdelivery_fee" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Evening delivery fee</label>
+            <label>Eveningdelivery fee</label>
+            <comment><![CDATA[Additional costs for evening delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
             <config_path>tig_postnl/shippingoptions/eveningdelivery_fee</config_path>
             <depends>
                 <field id="shippingoptions_active">1</field>
@@ -123,6 +130,7 @@
         <!-- Disabled because needs further development -->
         <!--<field id="sundaydelivery_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">-->
             <!--<label>Activate sunday delivery</label>-->
+            <!--<comment><![CDATA[Activate sunday delivery for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298588" target="_blank" title="sunday delivery">sunday delivery</a>.]]></comment>-->
             <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
             <!--<config_path>tig_postnl/shippingoptions/sundaydelivery_active</config_path>-->
             <!--<depends>-->
@@ -132,6 +140,7 @@
 
         <!--<field id="sundaydelivery_fee" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="0" showInStore="0">-->
             <!--<label>Sunday delivery fee</label>-->
+            <!--<comment><![CDATA[Additional costs for sunday delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>-->
             <!--<config_path>tig_postnl/shippingoptions/sundaydelivery_fee</config_path>-->
             <!--<depends>-->
                 <!--<field id="shippingoptions_active">1</field>-->
