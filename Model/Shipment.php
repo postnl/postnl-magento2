@@ -44,6 +44,7 @@ use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\Order\AddressFactory;
 use Magento\Sales\Model\Order\Shipment as OrderShipment;
 use Magento\Sales\Model\Order\Shipment\Item;
+use TIG\PostNL\Config\Source\Options\ProductOptions;
 
 // @codingStandardsIgnoreFile
 /**
@@ -91,10 +92,16 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      * @var AddressFactory
      */
     private $addressFactory;
+
     /**
      * @var DateTime
      */
     private $dateTime;
+
+    /**
+     * @var ProductOptions
+     */
+    private $productOptions;
 
     /**
      * @param Context           $context
@@ -103,9 +110,10 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      * @param OrderFactory      $orderFactory
      * @param AddressFactory    $addressFactory
      * @param TimezoneInterface $timezoneInterface
+     * @param DateTime          $dateTime
+     * @param ProductOptions    $productOptions
      * @param AbstractResource  $resource
      * @param AbstractDb        $resourceCollection
-     * @param DateTime          $dateTime
      * @param array             $data
      */
     public function __construct(
@@ -116,6 +124,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         AddressFactory $addressFactory,
         TimezoneInterface $timezoneInterface,
         DateTime $dateTime,
+        ProductOptions $productOptions,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -127,6 +136,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         $this->orderFactory = $orderFactory;
         $this->addressFactory = $addressFactory;
         $this->dateTime = $dateTime;
+        $this->productOptions = $productOptions;
     }
 
     /**
@@ -510,6 +520,37 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function getUpdatedAt()
     {
         return $this->getData(static::FIELD_UPDATED_AT);
+    }
+
+    /**
+     * Check if this shipment must be sent using Extra Cover.
+     *
+     * @return bool
+     */
+    public function isExtraCover()
+    {
+        $productCode = $this->getProductCode();
+        $productCodeOptions = $this->productOptions->getOptionsByCode($productCode);
+
+        if ($productCodeOptions === null) {
+            return false;
+        }
+
+        if (!array_key_exists('isExtraCover', $productCodeOptions)) {
+            return false;
+        }
+
+        return $productCodeOptions['isExtraCover'];
+    }
+
+    /**
+     * This is static for the time being.
+     *
+     * @return int
+     */
+    public function getExtraCoverAmount()
+    {
+        return 500;
     }
 
     /**
