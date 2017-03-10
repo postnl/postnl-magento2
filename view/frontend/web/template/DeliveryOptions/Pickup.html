@@ -45,12 +45,21 @@
             <!-- OPENING HOURS POPUP -->
             <ul class="tig-postnl-pickup-list" data-bind="css: LocationCode, visible: expanded">
                 <div class="tig-postnl-pop-address-info">
-                    <span class="tig-postnl-pop-name" data-bind="text: Name"></span>
-                    <span class="tig-postnl-pop-street" data-bind="text: Address.Street"></span>
-                    <span class="tig-postnl-pop-number" data-bind="text: Address.HouseNr"></span>
-                    <span class="tig-postnl-pop-extension" data-bind="text: Address.HouseNrExt"></span>
-                    <span class="tig-postnl-pop-city" data-bind="text: Address.City"></span>
-                    <span class="tig-postnl-pop-distance" data-bind="text: getDistanceText()"></span>
+                    <div class="tig-postnl-pop-address-one">
+
+                        <span class="tig-postnl-pop-name" data-bind="text: Name"></span>
+                        <span class="tig-postnl-pop-city" data-bind="text: Address.City"></span>
+                    </div>
+
+                    <div class="tig-postnl-pop-address-two">
+                        <span class="tig-postnl-pop-street" data-bind="text: Address.Street"></span>
+                        <span class="tig-postnl-pop-number" data-bind="text: Address.HouseNr"></span>
+                        <span class="tig-postnl-pop-extension" data-bind="text: Address.HouseNrExt"></span>
+                    </div>
+
+                    <div class="tig-postnl-pop-address-three">
+                        <span class="tig-postnl-pop-distance" data-bind="text: getDistanceText()"></span>
+                    </div>
                 </div>
 
                 <!-- ko foreach: getOpeningHours() -->
