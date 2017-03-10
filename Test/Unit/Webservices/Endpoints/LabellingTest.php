@@ -49,8 +49,15 @@ class LabellingTest extends TestCase
         $postnlOrderMock = $postnlOrderMock->getMock();
 
         $postnlShipmentMock = $this->getFakeMock(Shipment::class);
-        $postnlShipmentMock->setMethods(['getShipment', 'getPostNLOrder', 'getTotalWeight', 'getDeliveryDateFormatted']);
+        $postnlShipmentMock->setMethods([
+            'getShipment',
+            'getPostNLOrder',
+            'getTotalWeight',
+            'getDeliveryDateFormatted',
+            'isExtraCover',
+        ]);
         $postnlShipmentMock = $postnlShipmentMock->getMock();
+        $this->mockFunction($postnlShipmentMock, 'isExtraCover', false);
 
         $getShipmentExpects = $postnlShipmentMock->expects($this->atLeastOnce());
         $getShipmentExpects->method('getShipment');
@@ -73,6 +80,59 @@ class LabellingTest extends TestCase
         $this->assertInternalType('array', $requestParamsShipment);
         $this->assertGreaterThanOrEqual(10, $requestParamsShipment);
         $this->assertGreaterThanOrEqual(10, $requestParamsShipment['Addresses']['Address']);
+    }
+
+    public function getAddressDataProvider()
+    {
+        return [
+            'normal' => [
+                'street' => 'Kabelweg 37',
+                'expected' => [
+                    'Street' => 'Kabelweg',
+                    'HouseNr' => '37',
+                    'HouseNrExt' => '',
+                ]
+            ],
+            'with ext' => [
+                'street' => 'Kabelweg 37 a',
+                'expected' => [
+                    'Street' => 'Kabelweg',
+                    'HouseNr' => '37',
+                    'HouseNrExt' => 'a',
+                ]
+            ],
+            'with empty address' => [
+                'street' => '',
+                'expected' => [
+                    'Street' => '',
+                    'HouseNr' => '',
+                    'HouseNrExt' => '',
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @param $street
+     * @param $expected
+     *
+     * @throws \Exception
+     *
+     * @dataProvider getAddressDataProvider
+     */
+    public function testGetAddressData($street, $expected)
+    {
+        /** @var Address $shippingAddress */
+        $shippingAddress = $this->getObject(Address::class);
+        $shippingAddress->setStreet($street);
+
+        $instance = $this->getInstance();
+
+        $result = $this->invokeArgs('getAddressData', [$shippingAddress], $instance);
+
+        $this->assertEquals($expected['Street'], $result['Street']);
+        $this->assertEquals($expected['HouseNr'], $result['HouseNr']);
+        $this->assertEquals($expected['HouseNrExt'], $result['HouseNrExt']);
     }
 
     /**

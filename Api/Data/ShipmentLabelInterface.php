@@ -29,10 +29,45 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Model;
+namespace TIG\PostNL\Api\Data;
 
-interface OrderInterface
+interface ShipmentLabelInterface
 {
-    // @codingStandardsIgnoreLine
-    public function getIdentities();
+    /**
+     * @return int
+     */
+    public function getEntityId();
+
+    /**
+     * @return int
+     */
+    public function getParentId();
+
+    /**
+     * @param int $value
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setParentId($value);
+
+    /**
+     * @return string
+     */
+    public function getLabel();
+
+    /**
+     * @param string $value
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setLabel($value);
+
+    /**
+     * @return string
+     */
+    public function getType();
+
+    /**
+     * @param string $value
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setType($value);
 }

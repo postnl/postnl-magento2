@@ -164,18 +164,30 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $class
+     * @param      $class
+     * @param bool $return Immediate call getMock.
      *
      * @return \PHPUnit_Framework_MockObject_MockBuilder
      */
-    protected function getFakeMock($class)
+    protected function getFakeMock($class, $return = false)
     {
         $mock = $this->getMockBuilder($class);
         $mock->disableOriginalConstructor();
 
+        if ($return) {
+            return $mock->getMock();
+        }
+
         return $mock;
     }
 
+    /**
+     * @param       $class
+     * @param array $args
+     *
+     * @return object
+     * @throws \Exception
+     */
     protected function getObject($class, $args = [])
     {
         if ($this->objectManager === null) {
@@ -183,5 +195,27 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         }
 
         return $this->objectManager->getObject($class, $args);
+    }
+
+    /**
+     * Quickly mock a function.
+     *
+     * @param                                          $function
+     * @param                                          $response
+     * @param \PHPUnit_Framework_MockObject_MockObject $instance
+     */
+    protected function mockFunction(
+        \PHPUnit_Framework_MockObject_MockObject $instance,
+        $function,
+        $response,
+        $with = []
+    ) {
+        $method = $instance->method($function);
+
+        if ($with) {
+            $method->with($with);
+        }
+
+        $method->willReturn($response);
     }
 }

@@ -84,6 +84,9 @@ abstract class OptionsAbstract
 
     /**
      * @param $flags
+     *
+     * @codingStandardsIgnoreLine
+     * @todo: Should be able to filter on multipleoptions: eg isSunday & group
      */
     public function setFilterdOptions($flags)
     {

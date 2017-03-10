@@ -29,59 +29,62 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer\Handlers;
+namespace TIG\PostNL\Service\Timeframe;
 
-use Magento\Sales\Model\Order\Shipment;
-use TIG\PostNL\Model\OrderRepository;
-use TIG\PostNL\Webservices\Endpoints\SentDate;
-use \TIG\PostNL\Model\Order;
+use \TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
+use \TIG\PostNL\Service\Timeframe\Filters\OptionsFilterInterface;
 
-class SentDateHandler
+class Filter
 {
     /**
-     * @var \TIG\PostNL\Model\ShipmentRepository
+     * @var DaysFilterInterface[] array
      */
-    private $orderRepository;
+    private $dayFilters;
 
     /**
-     * @var SentDate
+     * @var OptionsFilterInterface[] array
      */
-    private $sentDate;
+    private $optionsFilter;
 
     /**
-     * @param SentDate        $sentDate
-     * @param OrderRepository $orderRepository
+     * @param array DaysFilterInterface[] $dayFilters
+     * @param array OptionsFilterInterface[] $optionsFilters
      */
     public function __construct(
-        SentDate $sentDate,
-        OrderRepository $orderRepository
+        $dayFilters = [],
+        $optionsFilters = []
     ) {
-        $this->sentDate = $sentDate;
-        $this->orderRepository = $orderRepository;
+        $this->dayFilters = $dayFilters;
+        $this->optionsFilter = $optionsFilters;
     }
 
     /**
-     * @param Shipment $shipment
+     * @param $days
      *
-     * @return mixed
+     * @return array
      */
-    public function get(Shipment $shipment)
+    public function days($days)
     {
-        /** @var  Order $postnlOrder */
-        $postnlOrder = $this->getPostnlOrder($shipment);
+        /** @var DaysFilterInterface $filter */
+        foreach ($this->dayFilters as $filter) {
+            $days = $filter->filter($days);
+        }
 
-        $this->sentDate->setParameters($shipment, $postnlOrder);
-        return $this->sentDate->call();
+        return $days;
     }
 
     /**
-     * @param Shipment $shipment
+     * @param $options
      *
-     * @return \Magento\Framework\DataObject
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return object|array
      */
-    private function getPostnlOrder(Shipment $shipment)
+    public function options($options)
     {
-        return $this->orderRepository->getById($shipment->getOrderId());
+        /** @var OptionsFilterInterface $filter */
+        foreach ($this->optionsFilter as $filter) {
+            $options = $filter->filter($options);
+        }
+
+        return $options;
     }
 }

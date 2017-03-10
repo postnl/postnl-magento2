@@ -172,7 +172,7 @@ class Soap
             'location'       => $this->getLocation(),
             'soap_version'   => SOAP_1_2,
             'features'       => SOAP_SINGLE_ELEMENT_ARRAYS,
-            'cache_wsdl'     => WSDL_CACHE_NONE,
+            'cache_wsdl'     => WSDL_CACHE_BOTH,
             'stream_context' => $stream_context
         ];
     }

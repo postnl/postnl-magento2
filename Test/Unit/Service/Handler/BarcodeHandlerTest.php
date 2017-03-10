@@ -29,10 +29,10 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Observer\Handlers;
+namespace TIG\PostNL\Test\Unit\Service\Handler;
 
 use Magento\Framework\Phrase;
-use TIG\PostNL\Observer\Handlers\BarcodeHandler;
+use TIG\PostNL\Service\Handler\BarcodeHandler;
 use TIG\PostNL\Test\TestCase;
 
 class BarcodeHandlerTest extends TestCase
