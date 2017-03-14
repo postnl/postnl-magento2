@@ -135,7 +135,7 @@ class SentDate extends AbstractEndpoint
                 'HouseNrExt'         => '',
                 'Street'             => '',
                 'City'               => $address->getCity(),
-                'DeliveryDate'       => $this->postNLhelper->getDateDmy($postNLOrder->getDeliveryDate()),
+                'DeliveryDate'       => $this->postNLhelper->getDate($postNLOrder->getDeliveryDate(), 'd-m-Y'),
                 'ShippingDuration'   => '1',
                 'AllowSundaySorting' => 'true',
                 'Options'            => $this->postNLhelper->getDeliveryTimeframesOptions()

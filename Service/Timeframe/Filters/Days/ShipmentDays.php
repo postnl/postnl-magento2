@@ -34,6 +34,7 @@ namespace TIG\PostNL\Service\Timeframe\Filters\Days;
 use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Helper\Data;
 
 /**
  * Class ShipmentDays
@@ -54,15 +55,23 @@ class ShipmentDays implements DaysFilterInterface
     private $shippingOptions;
 
     /**
+     * @var Data
+     */
+    private $postNLHelper;
+
+    /**
      * @param Webshop $webshop
      * @param ShippingOptions $shippingOptions
+     * @param Data $data
      */
     public function __construct(
         Webshop $webshop,
-        ShippingOptions $shippingOptions
+        ShippingOptions $shippingOptions,
+        Data $data
     ) {
         $this->webshopSettings = $webshop;
         $this->shippingOptions = $shippingOptions;
+        $this->postNLHelper    = $data;
     }
 
     /**
@@ -85,14 +94,15 @@ class ShipmentDays implements DaysFilterInterface
      */
     public function isAvailableWithShipmentdays($value)
     {
-        $numberOfDay   = date('w', strtotime($value->Date)) %7;
+        $numberOfDay   = $this->postNLHelper->getDayOrWeekNumber($value->Date);
         $availableDays = $this->getDeliveryDatesArray();
 
         if ($numberOfDay < $availableDays[0] && $this->isSameWeek($value->Date)) {
             return false;
         }
 
-        if ($numberOfDay == $availableDays[0] && $this->isSameWeek($value->Date) && $this->isPassedCutoffTime()) {
+        if ($numberOfDay == $this->postNLHelper->getDayOrWeekNumber(false)
+            && $this->isSameWeek($value->Date) && $this->isPassedCutoffTime()) {
             return false;
         }
 
@@ -110,8 +120,8 @@ class ShipmentDays implements DaysFilterInterface
      */
     private function isSameWeek($date)
     {
-        $currentWeek = date('W', strtotime(date('Y-m-d')));
-        $weekOfDate  = date('W', strtotime($date));
+        $currentWeek = $this->postNLHelper->getDayOrWeekNumber(false, 'W');
+        $weekOfDate  = $this->postNLHelper->getDayOrWeekNumber($date, 'W');
 
         return ($currentWeek == $weekOfDate);
     }
@@ -145,7 +155,7 @@ class ShipmentDays implements DaysFilterInterface
     private function isPassedCutoffTime()
     {
         $cutOffTime  = $this->webshopSettings->getCutOffTime();
-        $currentTime = date('H:i:s', time());
+        $currentTime = $this->postNLHelper->getCurrentTimeStamp(true);
 
         return ($currentTime > $cutOffTime);
     }

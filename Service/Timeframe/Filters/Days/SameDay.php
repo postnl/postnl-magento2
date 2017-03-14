@@ -65,7 +65,7 @@ class SameDay implements DaysFilterInterface
     public function filter($days)
     {
         $filterdDays = array_filter($days, function ($value) {
-            return $this->postNLhelper->getDateYmd() != $this->postNLhelper->getDateYmd($value->Date);
+            return $this->postNLhelper->getDate() != $this->postNLhelper->getDate($value->Date);
         });
 
         return array_values($filterdDays);

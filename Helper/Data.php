@@ -36,6 +36,12 @@ use Magento\Sales\Model\Order;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
+/**
+ * @codingStandardsIgnoreStart
+ * @todo : Split this helper to service classes. Now the code is ignored because of the 11 methods.
+ *       1 .All the date methods should be placed within a date service
+ *       2. Remove the codingStandardsIgnore line an if posible the whole class.
+ */
 class Data extends AbstractHelper
 {
     const PAKJEGEMAK_DELIVERY_OPTION         = 'PG';
@@ -53,6 +59,8 @@ class Data extends AbstractHelper
      * @var ShippingOptions
      */
     private $shippingOptions;
+
+    private $currentDate = null;
 
     /**
      * @param TimezoneInterface $timezoneInterface
@@ -79,19 +87,25 @@ class Data extends AbstractHelper
     }
 
     /**
+     * @param $timeOnly
      * @return string
      */
-    public function getCurrentTimeStamp()
+    public function getCurrentTimeStamp($timeOnly = false)
     {
-        $stamp = $this->dateTime->date();
+        $stamp = $this->dateTime->date($this->getCurrentDate());
+        if ($timeOnly) {
+            return $stamp->format('H:i:s');
+        }
+
         return $stamp->format('d-m-Y H:i:s');
     }
 
     /**
-     * @param $date
+     * @param \DateTime|bool|object $date
+     * @param $format
      * @return \DateTime
      */
-    public function getDateYmd($date = false)
+    public function getDate($date = false, $format = 'Y-m-d')
     {
         $stamp = $this->dateTime->date();
         if ($date) {
@@ -99,22 +113,31 @@ class Data extends AbstractHelper
             $stamp = $this->dateTime->date($date);
         }
 
-        return $stamp->format('Y-m-d');
+        return $stamp->format($format);
     }
 
     /**
-     * @param $date
-     * @return \DateTime
+     * Get the number of the day inside a week or the number of the week inside the Year.
+     * day number format == 'w', week number format == 'W'
+     *
+     * @param        $date
+     * @param string $format
+     *
+     * @return int
      */
-    public function getDateDmy($date = false)
+    public function getDayOrWeekNumber($date, $format = 'w')
     {
-        $stamp = $this->dateTime->date();
+        $number = date($format, $this->getCurrentDate());
+
         if ($date) {
-            list($date) = explode(' ', $date);
-            $stamp = $this->dateTime->date($date);
+            $number = date($format, strtotime($date));
         }
 
-        return $stamp->format('d-m-Y');
+        if ($format === 'w') {
+            return $number %7;
+        }
+
+        return $number;
     }
 
     /**
@@ -122,7 +145,7 @@ class Data extends AbstractHelper
      */
     public function getTommorowsDate()
     {
-        $dateTime = $this->dateTime->date();
+        $dateTime = $this->dateTime->date($this->getCurrentDate());
         return date('Y-m-d ' . $dateTime->format('H:i:s'), strtotime('tommorow'));
     }
 
@@ -195,4 +218,19 @@ class Data extends AbstractHelper
 
         return $domDocument->saveXML();
     }
+
+    /**
+     * @return int|null
+     */
+    private function getCurrentDate()
+    {
+        if ($this->currentDate === null) {
+            $this->currentDate = time();
+        }
+
+        return $this->currentDate;
+    }
 }
+/**
+ * @codingStandardsIgnoreEnd
+ */
