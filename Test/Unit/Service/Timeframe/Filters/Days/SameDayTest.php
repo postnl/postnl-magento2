@@ -50,7 +50,7 @@ class SameDayTest extends TestCase
     {
         $postNLHelper = $this->getFakeMock(Data::class)->getMock();
 
-        $expectsWithValue = $postNLHelper->method('getDateYmd');
+        $expectsWithValue = $postNLHelper->method('getDate');
         $expectsWithValue->willReturnCallback(function($date = '') use ($today) {
             return $date == '' ? $today : $date;
         });

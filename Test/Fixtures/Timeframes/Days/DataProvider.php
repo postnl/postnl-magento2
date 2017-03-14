@@ -49,6 +49,26 @@ class DataProvider
         ];
     }
 
+    public function shipmentDays()
+    {
+        return [
+            'Filter days not beyond cutoff' => [
+                '09-03-2017',
+                $this->getDaysForShipmentDays(),
+                '10:00:00',
+                '1',
+                $this->getShipmentDaysBeforeCutoffTime()
+            ],
+            'Filter days beyond cutoff' => [
+                '09-03-2017',
+                $this->getDaysForShipmentDays(),
+                '20:00:00',
+                '1',
+                $this->getShipmentDaysBeyondCutoff()
+            ]
+        ];
+    }
+
     private function getDaysForSameDay()
     {
         return [
@@ -88,6 +108,192 @@ class DataProvider
                             'From' => '18:00:00',
                             'Options' => (object)[
                                 'string' => ['Evening']
+                            ],
+                            'To' => '22:30:00'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    private function getShipmentDaysBeyondCutoff()
+    {
+        return [
+            (object)[
+                'Date' => '10-03-2017',
+                'Timeframes' => (object)[
+                    'TimeframeTimeFrame' => [
+                        (object)[
+                            'From' => '13:00:00',
+                            'Options' => (object)[
+                                'string' => ['Daytime']
+                            ],
+                            'To' => '15:30:00'
+                        ],
+                        (object)[
+                            'From' => '18:00:00',
+                            'Options' => (object)[
+                                'string' => ['Evening']
+                            ],
+                            'To' => '22:30:00'
+                        ]
+                    ]
+                ]
+            ],
+            (object)[
+                'Date' => '11-03-2017',
+                'Timeframes' => (object)[
+                    'TimeframeTimeFrame' => [
+                        (object)[
+                            'From' => '13:00:00',
+                            'Options' => (object)[
+                                'string' => ['Daytime']
+                            ],
+                            'To' => '15:30:00'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    private function getShipmentDaysBeforeCutoffTime()
+    {
+        return [
+            (object)[
+                'Date' => '09-03-2017',
+                'Timeframes' => (object)[
+                    'TimeframeTimeFrame' => [
+                        (object)[
+                            'From' => '13:00:00',
+                            'Options' => (object)[
+                                'string' => ['Daytime']
+                            ],
+                            'To' => '15:30:00'
+                        ],
+                        (object)[
+                            'From' => '18:00:00',
+                            'Options' => (object)[
+                                'string' => ['Evening']
+                            ],
+                            'To' => '22:30:00'
+                        ]
+                    ]
+                ]
+            ],
+            (object)[
+                'Date' => '10-03-2017',
+                'Timeframes' => (object)[
+                    'TimeframeTimeFrame' => [
+                        (object)[
+                            'From' => '13:00:00',
+                            'Options' => (object)[
+                                'string' => ['Daytime']
+                            ],
+                            'To' => '15:30:00'
+                        ],
+                        (object)[
+                            'From' => '18:00:00',
+                            'Options' => (object)[
+                                'string' => ['Evening']
+                            ],
+                            'To' => '22:30:00'
+                        ]
+                    ]
+                ]
+            ],
+            (object)[
+                'Date' => '11-03-2017',
+                'Timeframes' => (object)[
+                    'TimeframeTimeFrame' => [
+                        (object)[
+                            'From' => '13:00:00',
+                            'Options' => (object)[
+                                'string' => ['Daytime']
+                            ],
+                            'To' => '15:30:00'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    private function getDaysForShipmentDays()
+    {
+        return [
+            (object)[
+                'Date' => '09-03-2017',
+                'Timeframes' => (object)[
+                    'TimeframeTimeFrame' => [
+                        (object)[
+                            'From' => '13:00:00',
+                            'Options' => (object)[
+                                'string' => ['Daytime']
+                            ],
+                            'To' => '15:30:00'
+                        ],
+                        (object)[
+                            'From' => '18:00:00',
+                            'Options' => (object)[
+                                'string' => ['Evening']
+                            ],
+                            'To' => '22:30:00'
+                        ]
+                    ]
+                ]
+            ],
+            (object)[
+                'Date' => '10-03-2017',
+                'Timeframes' => (object)[
+                    'TimeframeTimeFrame' => [
+                        (object)[
+                            'From' => '13:00:00',
+                            'Options' => (object)[
+                                'string' => ['Daytime']
+                            ],
+                            'To' => '15:30:00'
+                        ],
+                        (object)[
+                            'From' => '18:00:00',
+                            'Options' => (object)[
+                                'string' => ['Evening']
+                            ],
+                            'To' => '22:30:00'
+                        ]
+                    ]
+                ]
+            ],
+            (object)[
+                'Date' => '11-03-2017',
+                'Timeframes' => (object)[
+                    'TimeframeTimeFrame' => [
+                        (object)[
+                            'From' => '13:00:00',
+                            'Options' => (object)[
+                                'string' => ['Daytime']
+                            ],
+                            'To' => '15:30:00'
+                        ]
+                    ]
+                ]
+            ],
+            (object)[
+                'Date' => '12-03-2017',
+                'Timeframes' => (object)[
+                    'TimeframeTimeFrame' => [
+                        (object)[
+                            'From' => '13:00:00',
+                            'Options' => (object)[
+                                'string' => ['Sunday']
+                            ],
+                            'To' => '15:30:00'
+                        ],
+                        (object)[
+                            'From' => '18:00:00',
+                            'Options' => (object)[
+                                'string' => ['Sunday']
                             ],
                             'To' => '22:30:00'
                         ]

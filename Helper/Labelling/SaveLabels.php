@@ -97,7 +97,7 @@ class SaveLabels
      */
     private function updateStatus($shipmentIds)
     {
-        $deliveryDate = $this->postNLhelper->getDateYmd();
+        $deliveryDate = $this->postNLhelper->getDate();
 
         /** @var \TIG\PostNL\Model\ResourceModel\Shipment\Collection $collection */
         $collection = $this->shipmentCollectionFactory->create();
