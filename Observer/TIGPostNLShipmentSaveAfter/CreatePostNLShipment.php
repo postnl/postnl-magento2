@@ -41,8 +41,23 @@ use TIG\PostNL\Model\Order as PostNLOrder;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
 use TIG\PostNL\Service\Handler\SentDateHandler;
 
+// @codingStandardsIgnoreFile
+/**
+ * $shipmentOrderId is marked as object instance property, don't know why but thats why CodeSniffer is failing.
+ */
 class CreatePostNLShipment implements ObserverInterface
 {
+    /**
+     * @var null
+     */
+    private $shipmentOrderId = null;
+
+    /**
+     * Request params
+     * @var array
+     */
+    private $shipParams = [];
+
     /**
      * @var OrderRepository
      */
@@ -59,15 +74,14 @@ class CreatePostNLShipment implements ObserverInterface
     private $sentDateHandler;
 
     /**
-     * Request params
-     * @var array
-     */
-    private $shipParams = [];
-
-    /**
      * @var ShipmentRepositoryInterface
      */
     private $shipmentRepository;
+
+    /**
+     * @var PostNLOrder
+     */
+    private $order;
 
     /**
      * @param ShipmentRepositoryInterface $shipmentRepository
@@ -108,20 +122,20 @@ class CreatePostNLShipment implements ObserverInterface
         /** @var \TIG\PostNL\Model\Shipment $model */
         $model = $this->shipmentRepository->create();
 
+        $this->shipmentOrderId = $shipment->getOrderId();
         $model->setData($this->formatModelData($shipment));
         $this->shipmentRepository->save($model);
         $this->handleMultipleParcels($model);
     }
 
     /**
-     * @param \Magento\Sales\Model\Order\Shipment $shipment
-     *
      * @return mixed
      */
-    private function getProductCode($shipment)
+    private function getProductCode()
     {
         /** @var PostNLOrder $postNLOrder */
-        $postNLOrder = $this->orderRepository->getByFieldWithValue('order_id', $shipment->getOrderId());
+        $postNLOrder = $this->getOrder();
+
         return $postNLOrder->getProductCode();
     }
 
@@ -134,19 +148,21 @@ class CreatePostNLShipment implements ObserverInterface
     {
         $sentDate    = $this->sentDateHandler->get($shipment);
         $mainBarcode = $this->barcodeHandler->generate();
+        $shipmentType = $this->getShipmentType();
 
         $colliAmount = isset($this->shipParams['tig_postnl_colli_amount'])
             ? $this->shipParams['tig_postnl_colli_amount'] : 1;
         $productCode = isset($this->shipParams['tig_postnl_product_code'])
-            ? $this->shipParams['tig_postnl_product_code'] : $this->getProductCode($shipment);
+            ? $this->shipParams['tig_postnl_product_code'] : $this->getProductCode();
 
         return [
-            'ship_at'      => $sentDate,
-            'shipment_id'  => $shipment->getId(),
-            'order_id'     => $shipment->getOrderId(),
-            'main_barcode' => $mainBarcode,
-            'product_code' => $productCode,
-            'parcel_count' => $colliAmount
+            'ship_at'       => $sentDate,
+            'shipment_id'   => $shipment->getId(),
+            'order_id'      => $shipment->getOrderId(),
+            'main_barcode'  => $mainBarcode,
+            'product_code'  => $productCode,
+            'shipment_type' => $shipmentType,
+            'parcel_count'  => $colliAmount,
         ];
     }
 
@@ -159,5 +175,27 @@ class CreatePostNLShipment implements ObserverInterface
         if ($parcelCount > 1) {
             $this->barcodeHandler->saveShipment($model->getEntityId(), $parcelCount);
         }
+    }
+
+    /**
+     * @return null|PostNLOrder
+     */
+    private function getOrder()
+    {
+        if ($this->order === null) {
+            $this->order = $this->orderRepository->getByFieldWithValue('order_id', $this->shipmentOrderId);
+        }
+
+        return $this->order;
+    }
+
+    /**
+     * @return string
+     */
+    private function getShipmentType()
+    {
+        $order = $this->getOrder();
+
+        return $order->getType();
     }
 }
