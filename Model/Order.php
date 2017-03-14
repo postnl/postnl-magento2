@@ -32,7 +32,6 @@
 namespace TIG\PostNL\Model;
 
 use Magento\Framework\DataObject\IdentityInterface;
-use Magento\Framework\Model\AbstractModel;
 use TIG\PostNL\Api\Data\OrderInterface;
 
 // @codingStandardsIgnoreFile
@@ -57,8 +56,6 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     const FIELD_FEE = 'fee';
     const FIELD_SHIP_AT = 'ship_at';
     const FIELD_CONFIRMED_AT = 'confirmed_at';
-    const FIELD_CREATED_AT = 'created_at';
-    const FIELD_UPDATED_AT = 'updated_at';
 
     /**
      * @var string
@@ -334,41 +331,5 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     public function getConfirmedAt()
     {
         return $this->getData(static::FIELD_CONFIRMED_AT);
-    }
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\PostNL\Api\Data\OrderInterface
-     */
-    public function setCreatedAt($value)
-    {
-        return $this->setData(static::FIELD_CREATED_AT, $value);
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreatedAt()
-    {
-        return $this->getData(static::FIELD_CREATED_AT);
-    }
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\PostNL\Api\Data\OrderInterface
-     */
-    public function setUpdatedAt($value)
-    {
-        return $this->setData(static::FIELD_UPDATED_AT, $value);
-    }
-
-    /**
-     * @return string
-     */
-    public function getUpdatedAt()
-    {
-        return $this->getData(static::FIELD_UPDATED_AT);
     }
 }

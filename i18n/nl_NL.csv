@@ -213,3 +213,4 @@ Percent,Percentage
 "Enter your PostNL API key. If you haven't got an API key, please contact PostNL support.","Voer uw PostNL API key in. Heeft u nog geen API key, neem dan contact op met PostNL support."
 "Enter your PostNL BLS location code.","Voer uw PostNL BLS locatie code in."
 "You can use the test account credentials found <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003510508"" target=""_blank"" title=""PostNL test account"">here</a>.","U kunt de test account gegevens gebruiken die <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003510508"" target=""_blank"" title=""PostNL testgegevens"">hier</a> genoemd worden."
+"Eveningdelivery fee","Avondbezorging toeslag"

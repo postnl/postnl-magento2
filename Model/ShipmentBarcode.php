@@ -33,9 +33,9 @@ namespace TIG\PostNL\Model;
 
 use TIG\PostNL\Api\Data\ShipmentBarcodeInterface;
 use Magento\Framework\DataObject\IdentityInterface;
-use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Model\AbstractModel as MagentoModel;
 
-class ShipmentBarcode extends AbstractModel implements ShipmentBarcodeInterface, IdentityInterface
+class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface, IdentityInterface
 {
     const CACHE_TAG = 'tig_postnl_shipment_barcode';
 

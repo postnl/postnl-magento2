@@ -33,9 +33,9 @@ namespace TIG\PostNL\Model;
 
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use Magento\Framework\DataObject\IdentityInterface;
-use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Model\AbstractModel as MagentoModel;
 
-class ShipmentLabel extends AbstractModel implements ShipmentLabelInterface, IdentityInterface
+class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, IdentityInterface
 {
     const CACHE_TAG = 'tig_postnl_shipment_label';
 

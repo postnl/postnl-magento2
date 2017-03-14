@@ -29,6 +29,8 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 module.exports = function (grunt) {
+    var phpunitOptions = grunt.cli.tasks.indexOf('test') === -1 ? ' --testdox' : '';
+
     var magento2path = '../../../../';
     var phpunitXmlPath = __dirname + '/phpunit.xml';
     var buildPath = __dirname + '/Build/';
@@ -50,11 +52,11 @@ module.exports = function (grunt) {
             phpcs: phpcsCommand + '--standard=phpcs.xml  .',
             phpcsTest: phpcsCommand + '--standard=phpcs.test.xml --severity=10 Test',
 
-            unitTests: 'cd ' + magento2path + ' && vendor/phpunit/phpunit/phpunit -c "' + phpunitXmlPath + '"',
+            unitTests: 'cd ' + magento2path + ' && vendor/phpunit/phpunit/phpunit ' + phpunitOptions + ' -c "' + phpunitXmlPath + '"',
 
             integrationTests:
                 'cd ' + magento2path + 'dev/tests/integration &&' +
-                'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit --testsuite "TIG PostNL Integration Tests"',
+                'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit ' + phpunitOptions + ' --testsuite "TIG PostNL Integration Tests"',
 
             phplint: 'if find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l | grep -v "No syntax errors detected"; then exit 1; fi',
 

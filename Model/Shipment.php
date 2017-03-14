@@ -35,7 +35,6 @@ use Magento\Framework\Stdlib\DateTime\DateTime;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject\IdentityInterface;
-use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
@@ -66,8 +65,6 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     const FIELD_PARCEL_COUNT = 'parcel_count';
     const FIELD_SHIP_AT = 'ship_at';
     const FIELD_CONFIRMED_AT = 'confirmed_at';
-    const FIELD_CREATED_AT = 'created_at';
-    const FIELD_UPDATED_AT = 'updated_at';
 
     /**
      * @var string
@@ -92,11 +89,6 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      * @var AddressFactory
      */
     private $addressFactory;
-
-    /**
-     * @var DateTime
-     */
-    private $dateTime;
 
     /**
      * @var ProductOptions
@@ -129,13 +121,12 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+        parent::__construct($context, $registry, $dateTime, $resource, $resourceCollection, $data);
 
         $this->orderShipment = $orderShipment;
         $this->timezoneInterface = $timezoneInterface;
         $this->orderFactory = $orderFactory;
         $this->addressFactory = $addressFactory;
-        $this->dateTime = $dateTime;
         $this->productOptions = $productOptions;
     }
 
@@ -487,42 +478,6 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     }
 
     /**
-     * @param string
-     *
-     * @return $this
-     */
-    public function setCreatedAt($value)
-    {
-        return $this->setData(static::FIELD_CREATED_AT, $value);
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getCreatedAt()
-    {
-        return $this->getData(static::FIELD_CREATED_AT);
-    }
-
-    /**
-     * @param string
-     *
-     * @return $this
-     */
-    public function setUpdatedAt($value)
-    {
-        return $this->setData(static::FIELD_UPDATED_AT, $value);
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getUpdatedAt()
-    {
-        return $this->getData(static::FIELD_UPDATED_AT);
-    }
-
-    /**
      * Check if this shipment must be sent using Extra Cover.
      *
      * @return bool
@@ -551,19 +506,5 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function getExtraCoverAmount()
     {
         return 500;
-    }
-
-    /**
-     * @return $this
-     */
-    public function beforeSave()
-    {
-        $this->setUpdatedAt($this->dateTime->gmtDate());
-
-        if (!$this->getCreatedAt()) {
-            $this->setCreatedAt($this->dateTime->gmtDate());
-        }
-
-        return parent::beforeSave();
     }
 }

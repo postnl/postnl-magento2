@@ -100,6 +100,7 @@
             <label>Early delivery fee</label>
             <comment><![CDATA[Additional costs for early delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
             <config_path>tig_postnl/shippingoptions/pakjegemak_express_fee</config_path>
+            <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
             <depends>
                 <field id="pakjegemak_active">1</field>
                 <field id="pakjegemak_express_active">1</field>
@@ -121,6 +122,7 @@
             <label>Eveningdelivery fee</label>
             <comment><![CDATA[Additional costs for evening delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
             <config_path>tig_postnl/shippingoptions/eveningdelivery_fee</config_path>
+            <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
             <depends>
                 <field id="shippingoptions_active">1</field>
                 <field id="eveningdelivery_active">1</field>
@@ -142,6 +144,7 @@
             <!--<label>Sunday delivery fee</label>-->
             <!--<comment><![CDATA[Additional costs for sunday delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>-->
             <!--<config_path>tig_postnl/shippingoptions/sundaydelivery_fee</config_path>-->
+            <!--<backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>-->
             <!--<depends>-->
                 <!--<field id="shippingoptions_active">1</field>-->
                 <!--<field id="sundaydelivery_active">1</field>-->
