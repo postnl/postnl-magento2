@@ -33,6 +33,7 @@ namespace TIG\PostNL\Webservices\Endpoints;
 
 use Magento\Sales\Model\Order\Address;
 use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Service\Shipment\ProductOptions;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Customer;
 use TIG\PostNL\Webservices\Api\Message;
@@ -76,18 +77,26 @@ class Labelling extends AbstractEndpoint
     private $requestParams;
 
     /**
-     * @param Soap     $soap
-     * @param Customer $customer
-     * @param Message  $message
+     * @var ProductOptions
+     */
+    private $productOptions;
+
+    /**
+     * @param Soap           $soap
+     * @param Customer       $customer
+     * @param Message        $message
+     * @param ProductOptions $productOptions
      */
     public function __construct(
         Soap $soap,
         Customer $customer,
-        Message $message
+        Message $message,
+        ProductOptions $productOptions
     ) {
         $this->soap = $soap;
         $this->customer = $customer;
         $this->message = $message;
+        $this->productOptions = $productOptions;
     }
 
     /**
@@ -163,6 +172,11 @@ class Labelling extends AbstractEndpoint
             'DownPartnerLocation'      => $postnlShipment->getPgLocationCode(),
             'ProductCodeDelivery'      => $postnlShipment->getProductCode(),
         ];
+
+        $productOptions = $this->productOptions->get($postnlShipment);
+        if ($productOptions) {
+            $shipmentData['ProductOptions'] = $productOptions;
+        }
 
         if ($postnlShipment->isExtraCover()) {
             $shipmentData['Amounts'] = $this->getAmount($postnlShipment);
