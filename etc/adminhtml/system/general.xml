@@ -51,7 +51,7 @@
             </field>
             <!--Live Fields-->
             <field id="customer_number" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Customernumber live mode</label>
+                <label>Customer number live mode</label>
                 <comment><![CDATA[Enter you PostNL customer number.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/customer_number</config_path>
                 <depends>
@@ -59,7 +59,7 @@
                 </depends>
             </field>
             <field id="customer_code" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Customercode live mode</label>
+                <label>Customer code live mode</label>
                 <comment><![CDATA[Enter your PostNL customer code. It must contain between 3 and 4 letters.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/customer_code</config_path>
                 <depends>
@@ -85,7 +85,7 @@
             </field>
             <!--Test Fields-->
             <field id="customer_number_test" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Customernumber test mode</label>
+                <label>Customer number test mode</label>
                 <comment><![CDATA[You can use the test account credentials found <a href="https://servicedesk.tig.nl/hc/nl/articles/115003510508" target="_blank" title="PostNL test account">here</a>.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/customer_number_test</config_path>
                 <depends>
@@ -93,7 +93,7 @@
                 </depends>
             </field>
             <field id="customer_code_test" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Customercode test mode</label>
+                <label>Customer code test mode</label>
                 <comment><![CDATA[You can use the test account credentials found <a href="https://servicedesk.tig.nl/hc/nl/articles/115003510508" target="_blank" title="PostNL test account">here</a>.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/customer_code_test</config_path>
                 <depends>
