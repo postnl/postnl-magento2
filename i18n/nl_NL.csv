@@ -71,13 +71,13 @@ Title,Titel
 "General configuration and account information","Algemene configuratie en account informatie"
 "Extension status","Extensie status"
 Modus,Modus
-"Customernumber live mode","Klantnummer live modus"
-"Customercode live mode","Klantcode live modus"
+"Customer number live mode","Klantnummer live modus"
+"Customer code live mode","Klantcode live modus"
 "Api Key live mode","Api Key live modus"
 "Api Key test mode","Api Key test modus"
 "BLS location code live mode","BLS locatie code live modus"
-"Customernumber test mode","Klantnummer test modus"
-"Customercode test mode","Klantcode test modus"
+"Customer number test mode","Klantnummer test modus"
+"Customer code test mode","Klantcode test modus"
 "BLS location code test mode","BLS locatie code test modus"
 Shipping address,Verzendadres
 First name,Voornaam
