@@ -76,4 +76,15 @@ interface ShipmentBarcodeRepositoryInterface
      * @return bool
      */
     public function delete(\TIG\PostNL\Api\Data\ShipmentBarcodeInterface $shipmentBarcode);
+
+    /**
+     * Retrieve a barcode for a shipment specified by number.
+     *
+     * @api
+     * @param Data\ShipmentInterface $shipment
+     * @param int                    $number
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
+     */
+    public function getForShipment(\TIG\PostNL\Api\Data\ShipmentInterface $shipment, $number);
 }

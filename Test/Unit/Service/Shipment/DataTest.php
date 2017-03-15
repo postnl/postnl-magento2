@@ -113,6 +113,28 @@ class DataTest extends TestCase
         $this->assertArrayNotHasKey('Amounts', $result);
     }
 
+    public function testAddGroupWhenSingleColliShipment()
+    {
+        $result = $this->addParcelCount(1, 1);
+
+        $this->assertArrayNotHasKey('Group', $result);
+    }
+
+    public function testAddGroupWhenMultiColliShipment()
+    {
+        $result = $this->addParcelCount(4, 3);
+
+        $expected = [
+            'GroupCount' => 4,
+            'GroupSequence' => 3,
+            'GroupType' => '03',
+            'MainBarcode' => '',
+        ];
+
+        $this->assertArrayHasKey('Group', $result);
+        $this->assertEquals($expected, $result['Group']);
+    }
+
     private function getAddress()
     {
         return [
@@ -143,7 +165,7 @@ class DataTest extends TestCase
     {
         $shipmentData = [
             'Addresses'                => ['Address' => $addresses],
-            'Barcode'                  => 'aa12345',
+            'Barcode'                  => null,
             'CollectionTimeStampEnd'   => '',
             'CollectionTimeStampStart' => '',
             'Contacts'                 => ['Contact' => $contact],
@@ -197,6 +219,25 @@ class DataTest extends TestCase
         /** @var Data $instance */
         $instance = $this->getInstance();
         $result = $instance->get($this->shipmentMock, $address, $contact);
+
+        return $result;
+    }
+
+    /**
+     * @param $count
+     * @param $current
+     *
+     * @return array
+     */
+    private function addParcelCount($count, $current)
+    {
+        $address = $this->getAddress();
+        $contact = $this->getContact();
+        $this->mockFunction($this->shipmentMock, 'getParcelCount', $count);
+
+        /** @var Data $instance */
+        $instance = $this->getInstance();
+        $result   = $instance->get($this->shipmentMock, $address, $contact, $current);
 
         return $result;
     }

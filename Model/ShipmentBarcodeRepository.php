@@ -31,6 +31,9 @@
  */
 namespace TIG\PostNL\Model;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchResultsInterface;
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
 use TIG\PostNL\Api\Data\ShipmentBarcodeInterface;
 use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory;
@@ -41,6 +44,10 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
 
+// @codingStandardsIgnoreFile
+/**
+ * File became to big, that's why we disabled Code Sniffer checking.
+ */
 class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
 {
     /**
@@ -52,20 +59,27 @@ class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
      * @var CollectionFactory
      */
     private $collectionFactory;
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
 
     /**
      * @param ShipmentBarcodeFactory        $objectFactory
      * @param CollectionFactory             $collectionFactory
      * @param SearchResultsInterfaceFactory $searchResultsFactory
+     * @param SearchCriteriaBuilder         $searchCriteriaBuilder
      */
     public function __construct(
         ShipmentBarcodeFactory $objectFactory,
         CollectionFactory $collectionFactory,
-        SearchResultsInterfaceFactory $searchResultsFactory
+        SearchResultsInterfaceFactory $searchResultsFactory,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->shipmentBarcodeFactory = $objectFactory;
         $this->collectionFactory      = $collectionFactory;
         $this->searchResultsFactory   = $searchResultsFactory;
+        $this->searchCriteriaBuilder  = $searchCriteriaBuilder;
     }
 
     /**
@@ -126,7 +140,7 @@ class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
     /**
      * @param SearchCriteriaInterface $criteria
      *
-     * @return mixed
+     * @return SearchResultsInterface
      */
     public function getList(SearchCriteriaInterface $criteria)
     {
@@ -194,7 +208,7 @@ class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
     /**
      * @param SearchCriteriaInterface $criteria
      *
-     * @return mixed
+     * @return SearchResultsInterface
      */
     private function getSearchResults(SearchCriteriaInterface $criteria)
     {
@@ -213,5 +227,27 @@ class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
     public function create()
     {
         return $this->shipmentBarcodeFactory->create();
+    }
+
+    /**
+     * @param ShipmentInterface $shipment
+     * @param int               $number
+     *
+     * @return \Magento\Framework\Api\ExtensibleDataInterface|null
+     */
+    public function getForShipment(ShipmentInterface $shipment, $number)
+    {
+        $shipmentId = $shipment->getId();
+        $this->searchCriteriaBuilder->addFilter('parent_id', $shipmentId);
+        $this->searchCriteriaBuilder->addFilter('number', $number);
+        $searchCriteria = $this->searchCriteriaBuilder->create();
+
+        $items = $this->getList($searchCriteria);
+
+        if ($items->getTotalCount()) {
+            return $items->getItems()[0];
+        }
+
+        return null;
     }
 }

@@ -31,10 +31,11 @@
  */
 namespace TIG\PostNL\Test\Unit\Helper\Labelling;
 
+use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Model\ResourceModel\Shipment\Collection;
-use TIG\PostNL\Model\ResourceModel\Shipment\CollectionFactory;
 use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Service\Shipment\Label\Validator;
 use TIG\PostNL\Test\TestCase;
 use TIG\PostNL\Webservices\Endpoints\Labelling;
 
@@ -46,50 +47,19 @@ class GetLabelsTest extends TestCase
     {
         return [
             'no_shipments' => [
-                [],
+                null,
                 [],
                 0
             ],
-            'all_fail' => [
-                [1],
-                [
-                    'Failed call'
-                ],
-                0
-            ],
-            'all_success' => [
-                [2, 3],
-                [
-                    (Object)['ResponseShipments' => (Object)['ResponseShipment' => [
-                        0 => (Object)['Labels' => (Object)['Label' => [
-                            0 => (Object)['Content' => 'Successful call']
-                        ]]]
-                    ]]],
-                    (Object)['ResponseShipments' => (Object)['ResponseShipment' => [
-                        0 => (Object)['Labels' => (Object)['Label' => [
-                            0 => (Object)['Content' => 'Another successful call']
-                        ]]]
+            'success' => [
+                3,
+                (Object)['ResponseShipments' => (Object)['ResponseShipment' => [
+                    0 => (Object)['Labels' => (Object)['Label' => [
+                        0 => (Object)['Content' => 'Successful call']
                     ]]]
-                ],
-                2
+                ]]],
+                1
             ],
-            'mixed' => [
-                [4, 5, 6],
-                [
-                    (Object)['ResponseShipments' => (Object)['ResponseShipment' => [
-                        0 => (Object)['Labels' => (Object)['Label' => [
-                            0 => (Object)['Content' => 'Successful call']
-                        ]]]
-                    ]]],
-                    'Failed call',
-                    (Object)['ResponseShipments' => (Object)['ResponseShipment' => [
-                        0 => (Object)['Labels' => (Object)['Label' => [
-                            0 => (Object)['Content' => 'Second successful call']
-                        ]]]
-                    ]]]
-                ],
-                2
-            ]
         ];
     }
 
@@ -102,7 +72,7 @@ class GetLabelsTest extends TestCase
      */
     public function testGet($shipmentIds, $callResponses, $expectedLabelCount)
     {
-        $collectionFactoryMock = $this->getCollectionFactoryMock($shipmentIds);
+        $shipmentRepositoryMock = $this->getShipmentRepositoryMock($shipmentIds);
 
         $labellingMock = $this->getFakeMock(Labelling::class);
         $labellingMock->setMethods(['setParameters', 'call']);
@@ -113,67 +83,48 @@ class GetLabelsTest extends TestCase
 
         $callExpects = $labellingMock->expects($this->exactly(count($shipmentIds)));
         $callExpects->method('call');
-        $callExpects->will(new \PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls($callResponses));
+        $callExpects->willReturn($callResponses);
 
-        $instance = $this->getInstance(['labelling' => $labellingMock, 'collectionFactory' => $collectionFactoryMock]);
+        $validatorMock = $this->getMock(Validator::class);
+        $validateMethod = $validatorMock->method('validate');
+        $validateMethod->willReturnCallback(function ($input) {
+            return $input;
+        });
+
+        /** @var GetLabels $instance */
+        $instance = $this->getInstance([
+            'labelling' => $labellingMock,
+            'shipmentRepository' => $shipmentRepositoryMock,
+            'labelValidator' => $validatorMock,
+        ]);
         $result = $instance->get($shipmentIds);
 
         $this->assertCount($expectedLabelCount, $result);
     }
 
     /**
-     * @param $shipmentIds
-     *
-     * @return \PHPUnit_Framework_MockObject_MockBuilder|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private function getCollectionFactoryMock($shipmentIds)
-    {
-        $shipmentMocks = $this->getShipmentMocks($shipmentIds);
-
-        $collectionMock = $this->getFakeMock(Collection::class);
-        $collectionMock->setMethods(['addFieldToFilter', 'count', 'getItems']);
-        $collectionMock = $collectionMock->getMock();
-
-        $countExpects = $collectionMock->expects($this->once());
-        $countExpects->method('count');
-        $countExpects->willReturn(count($shipmentIds));
-
-        $getItemsExpect = $collectionMock->expects($this->any());
-        $getItemsExpect->method('getItems');
-        $getItemsExpect->willReturn($shipmentMocks);
-
-        $collectionFactoryMock = $this->getFakeMock(CollectionFactory::class);
-        $collectionFactoryMock->setMethods(['create']);
-        $collectionFactoryMock = $collectionFactoryMock->getMock();
-
-        $createExpects = $collectionFactoryMock->expects($this->once());
-        $createExpects->method('create');
-        $createExpects->willReturn($collectionMock);
-
-        return $collectionFactoryMock;
-    }
-
-    /**
-     * @param $shipmentIds
+     * @param $id
      *
      * @return array
      */
-    private function getShipmentMocks($shipmentIds)
+    private function getShipmentMocks($id)
     {
-        $shipmentMocks = [];
+        $mock = $this->getMock(ShipmentInterface::class);
+        $this->mockFunction($mock, 'getParcelCount', 1);
 
-        foreach ($shipmentIds as $id) {
-            $mock = $this->getFakeMock(Shipment::class);
-            $mock->setMethods(['getEntityId']);
-            $mock = $mock->getMock();
+        return $mock;
+    }
 
-            $getEntityIdExpects = $mock->expects($this->once());
-            $getEntityIdExpects->method('getEntityId');
-            $getEntityIdExpects->willReturn($id);
-
-            $shipmentMocks[] = $mock;
+    private function getShipmentRepositoryMock($shipmentIds)
+    {
+        $shipmentMocks = null;
+        if ($shipmentIds) {
+            $shipmentMocks = $this->getShipmentMocks($shipmentIds);
         }
 
-        return $shipmentMocks;
+        $mock = $this->getMock(ShipmentRepositoryInterface::class);
+        $this->mockFunction($mock, 'getByFieldWithValue', $shipmentMocks);
+
+        return $mock;
     }
 }

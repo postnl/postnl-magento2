@@ -29,22 +29,45 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Config\Source;
+namespace TIG\PostNL\Service\Shipment\Label;
 
-use TIG\PostNL\Config\Source\OptionsAbstract;
-use TIG\PostNL\Test\TestCase;
-
-class OptionsAbstractTest extends TestCase
+class Validator
 {
-    protected $instanceClass = OptionsAbstract::class;
-
-    public function testSetOptionsBySupportedType()
+    /**
+     * Removes all labels that are empty or not a string. If a shipment has no valid labels, the shipment will be
+     * removed from the stack.
+     *
+     * @param $input
+     * @return array
+     */
+    public function validate($input)
     {
-        $this->markTestIncomplete('to be done.');
+        $input = array_map(function ($row) {
+            $row['labels'] = array_values(array_filter($row['labels'], [$this, 'getValidLabels']));
+
+            return $row;
+        }, $input);
+
+        $filtered = array_filter($input, function ($row) {
+            return !empty($row['labels']);
+        });
+
+        return array_values($filtered);
     }
 
-    public function testSetOptionsByFlagFilters()
+    /**
+     * @param mixed $label
+     * @return array
+     */
+    private function getValidLabels($label)
     {
-        $this->markTestIncomplete('to be done.');
+        if (!is_string($label) || empty($label)) {
+            return false;
+        }
+
+        $start = substr($label, 0, strlen('invalid'));
+        $start = strtolower($start);
+
+        return $start != 'invalid';
     }
 }

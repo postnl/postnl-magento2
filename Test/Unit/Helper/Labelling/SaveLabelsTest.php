@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Test\Unit\Helper\Labelling;
 
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Helper\Labelling\SaveLabels;
 use TIG\PostNL\Model\ResourceModel\Shipment\Collection;
 use TIG\PostNL\Model\ResourceModel\Shipment\CollectionFactory;
@@ -49,13 +50,28 @@ class SaveLabelsTest extends TestCase
         return [
             'single_shipment' => [
                 [
-                    1 => 'abc'
+                    [
+                        'shipment' => $this->getShipmentMockWithId(1),
+                        'labels' => [
+                            1 => 'abc'
+                        ],
+                    ]
                 ]
             ],
             'multiple_shipments' => [
                 [
-                    2 => 'def',
-                    3 => 'ghi'
+                    [
+                        'shipment' => $this->getShipmentMockWithId(2),
+                        'labels' => [
+                            'def',
+                        ]
+                    ],
+                    [
+                        'shipment' => $this->getShipmentMockWithId(3),
+                        'labels' => [
+                            'ghi',
+                        ]
+                    ],
                 ]
             ],
             'no_shipments' => [[]]
@@ -73,6 +89,7 @@ class SaveLabelsTest extends TestCase
         $labelCollectionFactoryMock = $this->getLabelCollectionFactoryMock();
         $shipmentLabelFactoryMock = $this->getShipmentLabelFactory($shipmentLabels);
 
+        /** @var SaveLabels $instance */
         $instance = $this->getInstance([
             'shipmentCollectionFactory' => $collectionFactoryMock,
             'shipmentLabelCollectionFactory' => $labelCollectionFactoryMock,
@@ -171,5 +188,18 @@ class SaveLabelsTest extends TestCase
         $createExpects->willReturn($shipmentLabelMock);
 
         return $shipmentLabelFactoryMock;
+    }
+
+    /**
+     * @param $id
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getShipmentMockWithId($id)
+    {
+        $shipmentMock = $this->getMock(ShipmentInterface::class);
+        $this->mockFunction($shipmentMock, 'getId', $id);
+
+        return $shipmentMock;
     }
 }

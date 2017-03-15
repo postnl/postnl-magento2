@@ -38,6 +38,16 @@ namespace TIG\PostNL\Api\Data;
 interface ShipmentInterface
 {
     /**
+     * @return int|null
+     */
+    public function getId();
+
+    /**
+     * @return int|null
+     */
+    public function getEntityId();
+
+    /**
      * @param $value
      * @return \TIG\PostNL\Api\Data\ShipmentInterface
      */
@@ -69,6 +79,13 @@ interface ShipmentInterface
      * @return string|null
      */
     public function getMainBarcode();
+
+    /**
+     * @param int $currentShipmentNumber
+     *
+     * @return string
+     */
+    public function getBarcode($currentShipmentNumber = 1);
 
     /**
      * @param string $value

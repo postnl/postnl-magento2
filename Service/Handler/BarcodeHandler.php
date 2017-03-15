@@ -101,7 +101,7 @@ class BarcodeHandler
 
             /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
             $barcodeModel = $this->shipmentBarcodeFactory->create();
-            $barcodeModel->setShipmentId($shipmentId);
+            $barcodeModel->setParentId($shipmentId);
             $barcodeModel->setType(ShipmentBarcode::BARCODE_TYPE_SHIPMENT);
             $barcodeModel->setNumber($count);
             $barcodeModel->setValue($barcode);

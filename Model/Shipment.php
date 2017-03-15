@@ -43,6 +43,7 @@ use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\Order\AddressFactory;
 use Magento\Sales\Model\Order\Shipment as OrderShipment;
 use Magento\Sales\Model\Order\Shipment\Item;
+use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
 
 // @codingStandardsIgnoreFile
@@ -96,17 +97,23 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     private $productOptions;
 
     /**
-     * @param Context           $context
-     * @param Registry          $registry
-     * @param OrderShipment     $orderShipment
-     * @param OrderFactory      $orderFactory
-     * @param AddressFactory    $addressFactory
-     * @param TimezoneInterface $timezoneInterface
-     * @param DateTime          $dateTime
-     * @param ProductOptions    $productOptions
-     * @param AbstractResource  $resource
-     * @param AbstractDb        $resourceCollection
-     * @param array             $data
+     * @var ShipmentBarcodeRepositoryInterface
+     */
+    private $barcodeRepository;
+
+    /**
+     * @param Context                            $context
+     * @param Registry                           $registry
+     * @param OrderShipment                      $orderShipment
+     * @param OrderFactory                       $orderFactory
+     * @param AddressFactory                     $addressFactory
+     * @param TimezoneInterface                  $timezoneInterface
+     * @param DateTime                           $dateTime
+     * @param ProductOptions                     $productOptions
+     * @param ShipmentBarcodeRepositoryInterface $barcodeRepository
+     * @param AbstractResource                   $resource
+     * @param AbstractDb                         $resourceCollection
+     * @param array                              $data
      */
     public function __construct(
         Context $context,
@@ -117,6 +124,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         TimezoneInterface $timezoneInterface,
         DateTime $dateTime,
         ProductOptions $productOptions,
+        ShipmentBarcodeRepositoryInterface $barcodeRepository,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -128,6 +136,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         $this->orderFactory = $orderFactory;
         $this->addressFactory = $addressFactory;
         $this->productOptions = $productOptions;
+        $this->barcodeRepository = $barcodeRepository;
     }
 
     /**
@@ -171,11 +180,11 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
 
         $pgOrderAddressId = $postNLOrder->getPgOrderAddressId();
         $order = $shipment->getOrder();
-        $orderbillingid = $order->getBillingAddressId();
+        $orderBillingId = $order->getBillingAddressId();
 
         $pgAddressStreet = implode("\n", $this->getPakjegemakAddress()->getStreet());
 
-        $shippingAddress = $this->filterShippingAddress([$pgOrderAddressId, $orderbillingid], $pgAddressStreet);
+        $shippingAddress = $this->filterShippingAddress([$pgOrderAddressId, $orderBillingId], $pgAddressStreet);
 
         return $shippingAddress;
     }
@@ -305,6 +314,26 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function setMainBarcode($value)
     {
         return $this->setData(static::FIELD_MAIN_BARCODE, $value);
+    }
+
+    /**
+     * @param int $currentShipmentNumber
+     *
+     * @return string
+     */
+    public function getBarcode($currentShipmentNumber = 1)
+    {
+        if ($currentShipmentNumber == 1) {
+            return $this->getMainBarcode();
+        }
+
+        $barcode = $this->barcodeRepository->getForShipment($this, $currentShipmentNumber);
+
+        if (!$barcode) {
+            return null;
+        }
+
+        return $barcode->getValue();
     }
 
     /**
