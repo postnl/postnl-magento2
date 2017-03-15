@@ -51,7 +51,7 @@ class DataTest extends TestCase
 
         $this->shipmentMock = $this->getMock(ShipmentInterface::class);
     }
-    
+
     public function testReturnsTheDefaultData()
     {
         $address = $this->getAddress();
