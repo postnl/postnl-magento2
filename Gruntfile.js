@@ -29,7 +29,7 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 module.exports = function (grunt) {
-    var phpunitOptions = grunt.cli.tasks.indexOf('test') === -1 ? ' --testdox' : '';
+    var phpunitOptions = grunt.cli.tasks.length === 0 ? ' --testdox' : '';
 
     var magento2path = '../../../../';
     var phpunitXmlPath = __dirname + '/phpunit.xml';

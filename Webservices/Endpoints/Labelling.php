@@ -125,7 +125,7 @@ class Labelling extends AbstractEndpoint
         $this->requestParams = [
             'Message' => $message,
             'Customer' => $customer,
-            'Shipments' => ['Shipment' => $shipmentData]
+            'Shipments' => ['Shipment' => $shipmentData],
         ];
     }
 
