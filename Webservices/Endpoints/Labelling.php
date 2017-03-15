@@ -33,7 +33,7 @@ namespace TIG\PostNL\Webservices\Endpoints;
 
 use Magento\Sales\Model\Order\Address;
 use TIG\PostNL\Model\Shipment;
-use TIG\PostNL\Service\Shipment\ProductOptions;
+use TIG\PostNL\Service\Shipment\Data as ShipmentData;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Customer;
 use TIG\PostNL\Webservices\Api\Message;
@@ -77,26 +77,26 @@ class Labelling extends AbstractEndpoint
     private $requestParams;
 
     /**
-     * @var ProductOptions
+     * @var ShipmentData
      */
-    private $productOptions;
+    private $shipmentData;
 
     /**
      * @param Soap           $soap
      * @param Customer       $customer
      * @param Message        $message
-     * @param ProductOptions $productOptions
+     * @param ShipmentData   $shipmentData
      */
     public function __construct(
         Soap $soap,
         Customer $customer,
         Message $message,
-        ProductOptions $productOptions
+        ShipmentData $shipmentData
     ) {
         $this->soap = $soap;
         $this->customer = $customer;
         $this->message = $message;
-        $this->productOptions = $productOptions;
+        $this->shipmentData = $shipmentData;
     }
 
     /**
@@ -146,41 +146,7 @@ class Labelling extends AbstractEndpoint
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
 
-        $shipmentData = $this->getShipmentDataArray($postnlShipment, $address, $contact);
-
-        return $shipmentData;
-    }
-
-    /**
-     * @param Shipment $postnlShipment
-     * @param          $address
-     * @param          $contact
-     *
-     * @return array
-     */
-    private function getShipmentDataArray(Shipment $postnlShipment, $address, $contact)
-    {
-        $shipmentData = [
-            'Addresses'                => ['Address' => $address],
-            'Barcode'                  => $postnlShipment->getMainBarcode(),
-            'CollectionTimeStampEnd'   => '',
-            'CollectionTimeStampStart' => '',
-            'Contacts'                 => ['Contact' => $contact],
-            'Dimension'                => ['Weight'  => round($postnlShipment->getTotalWeight())],
-            'DeliveryDate'             => $postnlShipment->getDeliveryDateFormatted(),
-            'DownPartnerID'            => $postnlShipment->getPgRetailNetworkId(),
-            'DownPartnerLocation'      => $postnlShipment->getPgLocationCode(),
-            'ProductCodeDelivery'      => $postnlShipment->getProductCode(),
-        ];
-
-        $productOptions = $this->productOptions->get($postnlShipment);
-        if ($productOptions) {
-            $shipmentData['ProductOptions'] = $productOptions;
-        }
-
-        if ($postnlShipment->isExtraCover()) {
-            $shipmentData['Amounts'] = $this->getAmount($postnlShipment);
-        }
+        $shipmentData = $this->shipmentData->get($postnlShipment, $address, $contact);
 
         return $shipmentData;
     }
@@ -273,29 +239,5 @@ class Labelling extends AbstractEndpoint
             'HouseNr'    => trim($houseNrMatches[1]),
             'HouseNrExt' => trim($houseNrMatches[2]),
         ];
-    }
-
-    /**
-     * @param Shipment $postnlShipment
-     *
-     * @return array
-     */
-    private function getAmount(Shipment $postnlShipment)
-    {
-        $amounts = [];
-        $extraCoverAmount = $postnlShipment->getExtraCoverAmount();
-
-        $amounts[] = [
-            'AccountName'       => '',
-            'BIC'               => '',
-            'IBAN'              => '',
-            'AmountType'        => '02', // 01 = COD, 02 = Insured
-            'Currency'          => 'EUR',
-            'Reference'         => '',
-            'TransactionNumber' => '',
-            'Value'             => number_format($extraCoverAmount, 2, '.', ''),
-        ];
-
-        return $amounts;
     }
 }

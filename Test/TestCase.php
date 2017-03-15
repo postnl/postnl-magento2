@@ -167,7 +167,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      * @param      $class
      * @param bool $return Immediate call getMock.
      *
-     * @return \PHPUnit_Framework_MockObject_MockBuilder
+     * @return \PHPUnit_Framework_MockObject_MockBuilder|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function getFakeMock($class, $return = false)
     {

@@ -190,4 +190,26 @@ interface ShipmentInterface
      * @return string|null
      */
     public function getUpdatedAt();
+
+    /**
+     * @return float
+     */
+    public function getTotalWeight();
+
+    /**
+     * @param string $format
+     *
+     * @return string
+     */
+    public function getDeliveryDateFormatted($format = 'd-m-Y');
+
+    /**
+     * @return bool
+     */
+    public function isExtraCover();
+
+    /**
+     * @return float
+     */
+    public function getExtraCoverAmount();
 }
