@@ -53,12 +53,13 @@ class Data
      * @param ShipmentInterface $shipment
      * @param                   $address
      * @param                   $contact
+     * @param int               $currentShipmentNumber
      *
      * @return array
      */
-    public function get(ShipmentInterface $shipment, $address, $contact)
+    public function get(ShipmentInterface $shipment, $address, $contact, $currentShipmentNumber = 0)
     {
-        $shipmentData = $this->getDefaultShipmentData($shipment, $address, $contact);
+        $shipmentData = $this->getDefaultShipmentData($shipment, $address, $contact, $currentShipmentNumber);
 
         $productOptions = $this->productOptions->get($shipment);
         if ($productOptions) {
@@ -69,6 +70,10 @@ class Data
             $shipmentData['Amounts'] = $this->getAmount($shipment);
         }
 
+        if ($shipment->getParcelCount() > 1) {
+            $shipmentData['Group'] = $this->getGroupData($shipment, $currentShipmentNumber);
+        }
+
         return $shipmentData;
     }
 
@@ -76,14 +81,15 @@ class Data
      * @param ShipmentInterface $shipment
      * @param                   $address
      * @param                   $contact
+     * @param                   $currentShipmentNumber
      *
      * @return array
      */
-    private function getDefaultShipmentData(ShipmentInterface $shipment, $address, $contact)
+    private function getDefaultShipmentData(ShipmentInterface $shipment, $address, $contact, $currentShipmentNumber)
     {
         return [
             'Addresses'                => ['Address' => $address],
-            'Barcode'                  => $shipment->getMainBarcode(),
+            'Barcode'                  => $shipment->getBarcode($currentShipmentNumber),
             'CollectionTimeStampEnd'   => '',
             'CollectionTimeStampStart' => '',
             'Contacts'                 => ['Contact' => $contact],
@@ -117,5 +123,15 @@ class Data
         ];
 
         return $amounts;
+    }
+
+    private function getGroupData(ShipmentInterface $shipment, $currentShipmentNumber)
+    {
+        return [
+            'GroupCount'    => $shipment->getParcelCount(),
+            'GroupSequence' => $currentShipmentNumber,
+            'GroupType'     => '03',
+            'MainBarcode'   => $shipment->getMainBarcode(),
+        ];
     }
 }

@@ -70,14 +70,8 @@ class SetDefaultData implements ObserverInterface
         /** @var \TIG\PostNL\Api\Data\OrderInterface $order */
         $order = $observer->getData('data_object');
 
-        $order->setUpdatedAt($this->dateTime->gmtDate());
-
         if (!$order->getProductCode()) {
             $order->setProductCode($this->productCode->get());
-        }
-
-        if (!$order->getCreatedAt()) {
-            $order->setCreatedAt($this->dateTime->gmtDate());
         }
     }
 }

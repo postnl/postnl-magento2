@@ -218,7 +218,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     }
 
     /**
-     * @return \TIG\PostNL\Api\Data\OrderInterface
+     * @return string
      */
     public function getPgOrderAddressId()
     {

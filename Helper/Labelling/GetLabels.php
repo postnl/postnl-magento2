@@ -31,7 +31,10 @@
  */
 namespace TIG\PostNL\Helper\Labelling;
 
+use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Model\ResourceModel\Shipment\CollectionFactory;
+use TIG\PostNL\Service\Shipment\Label\Validator;
 use TIG\PostNL\Webservices\Endpoints\Labelling;
 
 class GetLabels
@@ -47,16 +50,27 @@ class GetLabels
     private $labelling;
 
     /**
-     * @param CollectionFactory $collectionFactory
-     * @param Labelling         $labelling
+     * @var ShipmentRepositoryInterface
+     */
+    private $shipmentRepository;
+    /**
+     * @var Validator
+     */
+    private $labelValidator;
+
+    /**
+     * @param ShipmentRepositoryInterface $shipmentRepository
+     * @param Validator                   $labelValidator
+     * @param Labelling                   $labelling
      */
     public function __construct(
-        CollectionFactory $collectionFactory,
+        ShipmentRepositoryInterface $shipmentRepository,
+        Validator $labelValidator,
         Labelling $labelling
     ) {
-
-        $this->collectionFactory = $collectionFactory;
-        $this->labelling = $labelling;
+        $this->labelling          = $labelling;
+        $this->shipmentRepository = $shipmentRepository;
+        $this->labelValidator     = $labelValidator;
     }
 
     /**
@@ -68,33 +82,47 @@ class GetLabels
     {
         $labels = [];
 
-        $collection = $this->collectionFactory->create();
-        $collection->addFieldToFilter('shipment_id', ['eq' => $shipmentId]);
+        $shipment = $this->shipmentRepository->getByFieldWithValue('shipment_id', $shipmentId);
 
-         // @codingStandardsIgnoreLine
-         // TODO: add a proper warning notifying of a non-postnl shipment
-        if (count($collection) <= 0) {
+        if (!$shipment) {
             return $labels;
         }
 
-        /** @var \TIG\PostNL\Model\Shipment $postnlShipment */
-        foreach ($collection->getItems() as $postnlShipment) {
-            $labels[$postnlShipment->getEntityId()] = $this->generateLabel($postnlShipment);
-        }
+        $labels[] = [
+            'shipment' => $shipment,
+            'labels' => $this->getLabel($shipment),
+        ];
 
-        $labels = $this->checkWarnings($labels);
+        $labels = $this->labelValidator->validate($labels);
+
+        return $labels;
+    }
+
+    /**
+     * @param ShipmentInterface $shipment
+     *
+     * @return array
+     */
+    private function getLabel(ShipmentInterface $shipment)
+    {
+        $labels = [];
+        $parcelCount = $shipment->getParcelCount();
+        for ($number = 1; $number <= $parcelCount; $number++) {
+            $labels[] = $this->generateLabel($shipment, $parcelCount, $number);
+        }
 
         return $labels;
     }
 
     /**
      * @param \TIG\PostNL\Model\Shipment $postnlShipment
+     * @param                            $currentShipmentNumber
      *
-     * @return string|\Magento\Framework\Phrase
+     * @return \Magento\Framework\Phrase|string
      */
-    private function generateLabel($postnlShipment)
+    private function generateLabel($postnlShipment, $currentShipmentNumber)
     {
-        $this->labelling->setParameters($postnlShipment);
+        $this->labelling->setParameters($postnlShipment, $currentShipmentNumber);
         $response = $this->labelling->call();
         $responseShipments = null;
 
@@ -111,26 +139,5 @@ class GetLabels
          * TODO: GenerateLabel call usually returns one label, but update so multiple labels are taking in account
          */
         return $responseShipments->ResponseShipment[0]->Labels->Label[0]->Content;
-    }
-
-    /**
-     * @param $labels
-     *
-     * @return array
-     */
-    private function checkWarnings($labels)
-    {
-        /**
-         * @codingStandardsIgnoreLine
-         * TODO: Notify the user of the warning
-         */
-        $labels = array_filter(
-            $labels,
-            function ($value) {
-                return (is_string($value));
-            }
-        );
-
-        return $labels;
     }
 }

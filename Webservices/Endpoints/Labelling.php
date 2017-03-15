@@ -109,14 +109,15 @@ class Labelling extends AbstractEndpoint
 
     /**
      * @param Shipment $shipment
+     * @param int      $currentShipmentNumber
      */
-    public function setParameters($shipment)
+    public function setParameters($shipment, $currentShipmentNumber = 1)
     {
         $customer = $this->customer->get();
         $customer['Address'] = $this->customer->address();
         $customer['CollectionLocation'] = $this->customer->blsCode();
 
-        $shipmentData = $this->getShipmentData($shipment);
+        $shipmentData = $this->getShipmentData($shipment, $currentShipmentNumber);
 
         $barcode = $shipment->getMainBarcode();
         $printerType = ['Printertype' => 'GraphicFile|PDF'];
@@ -131,10 +132,11 @@ class Labelling extends AbstractEndpoint
 
     /**
      * @param Shipment $postnlShipment
+     * @param          $currentShipmentNumber
      *
      * @return array
      */
-    private function getShipmentData($postnlShipment)
+    private function getShipmentData($postnlShipment, $currentShipmentNumber)
     {
         $shipment = $postnlShipment->getShipment();
         $postnlOrder = $postnlShipment->getPostNLOrder();
@@ -146,7 +148,7 @@ class Labelling extends AbstractEndpoint
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
 
-        $shipmentData = $this->shipmentData->get($postnlShipment, $address, $contact);
+        $shipmentData = $this->shipmentData->get($postnlShipment, $address, $contact, $currentShipmentNumber);
 
         return $shipmentData;
     }

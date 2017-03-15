@@ -31,8 +31,10 @@
  */
 namespace TIG\PostNL\Helper\Labelling;
 
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Model\ResourceModel\Shipment\CollectionFactory as ShipmentCollectionFactory;
+use TIG\PostNL\Model\ResourceModel\ShipmentLabel\Collection;
 use TIG\PostNL\Model\ResourceModel\ShipmentLabel\CollectionFactory as ShipmentLabelCollectionFactory;
 use TIG\PostNL\Model\ShipmentLabel;
 use TIG\PostNL\Model\ShipmentLabelFactory;
@@ -60,6 +62,11 @@ class SaveLabels
     private $shipmentLabelFactory;
 
     /**
+     * @var array
+     */
+    private $savedLabels = [];
+
+    /**
      * @param Data                           $postNLhelper
      * @param ShipmentCollectionFactory      $shipmentCollectionFactory
      * @param ShipmentLabelCollectionFactory $shipmentLabelCollectionFactory
@@ -84,10 +91,10 @@ class SaveLabels
      */
     public function save($labels)
     {
-        $shipmentIds = array_keys($labels);
+        $shipmentIds = $this->getShipmentIds($labels);
 
         $this->updateStatus($shipmentIds);
-        $savedLabels = $this->saveShipmentLabels($labels);
+        $savedLabels = $this->processShipmentLabels($labels);
 
         return $savedLabels;
     }
@@ -112,26 +119,54 @@ class SaveLabels
      * @return array
      * @throws \Exception
      */
-    private function saveShipmentLabels($labels)
+    private function processShipmentLabels($labels)
     {
-        /** @var \TIG\PostNL\Model\ResourceModel\ShipmentLabel\Collection $labelModelCollection */
+        /** @var Collection $labelModelCollection */
         $labelModelCollection = $this->shipmentLabelCollectionFactory->create();
         $labelModelCollection->load();
-        $savedLabels = [];
 
-        foreach ($labels as $shipmentId => $label) {
-            /** @var ShipmentLabel $labelModel */
-            $labelModel = $this->shipmentLabelFactory->create();
-            $labelModel->setParentId($shipmentId);
-            $labelModel->setLabel(base64_encode($label));
-            $labelModel->setType(ShipmentLabel::BARCODE_TYPE_LABEL);
-
-            $labelModelCollection->addItem($labelModel);
-            $savedLabels[] = $labelModel;
+        foreach ($labels as $data) {
+            $this->saveShipmentLabels($labelModelCollection, $data['shipment'], $data['labels']);
         }
 
         $labelModelCollection->save();
 
-        return $savedLabels;
+        return $this->savedLabels;
+    }
+
+    /**
+     * @param Collection        $labelModelCollection
+     * @param ShipmentInterface $shipment
+     * @param                   $labels
+     *
+     * @throws \Exception
+     */
+    private function saveShipmentLabels(Collection $labelModelCollection, ShipmentInterface $shipment, $labels)
+    {
+        foreach ($labels as $label) {
+            /** @var ShipmentLabel $labelModel */
+            $labelModel = $this->shipmentLabelFactory->create();
+            $labelModel->setParentId($shipment->getId());
+            $labelModel->setLabel(base64_encode($label));
+            $labelModel->setType(ShipmentLabel::BARCODE_TYPE_LABEL);
+
+            $this->savedLabels[] = $labelModel;
+            $labelModelCollection->addItem($labelModel);
+        }
+    }
+
+    /**
+     * @param $labels
+     *
+     * @return array
+     */
+    private function getShipmentIds($labels)
+    {
+        return array_map(function ($row) {
+            /** @var ShipmentInterface $shipment */
+            $shipment = $row['shipment'];
+
+            return $shipment->getId();
+        }, $labels);
     }
 }

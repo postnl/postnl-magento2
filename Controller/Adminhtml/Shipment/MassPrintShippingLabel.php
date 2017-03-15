@@ -118,6 +118,7 @@ class MassPrintShippingLabel extends LabelAbstract
 
         return $pdfFile;
     }
+
     /**
      * @param $shipmentId
      */
@@ -125,11 +126,7 @@ class MassPrintShippingLabel extends LabelAbstract
     {
         $labels = $this->getLabels->get($shipmentId);
 
-        /**
-         * @codingStandardsIgnoreLine
-         * TODO: add a proper warning notifying of a non-postnl shipment
-         */
-        if (count($labels) < 0) {
+        if (empty($labels)) {
             return;
         }
 
