@@ -60,7 +60,7 @@ class ShipmentTest extends TestCase
         ];
 
         $productCodeMock = $this->getFakeMock(ProductOptions::class, true);
-        $this->mockFunction($productCodeMock, 'getOptionsByCode', $functionResponse, $productCode);
+        $this->mockFunction($productCodeMock, 'getOptionsByCode', $functionResponse, [$productCode]);
 
         /** @var Shipment $instance */
         $instance = $this->getInstance(['productOptions' => $productCodeMock]);

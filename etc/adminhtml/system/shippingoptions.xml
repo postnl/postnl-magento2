@@ -115,6 +115,7 @@
             <config_path>tig_postnl/shippingoptions/eveningdelivery_active</config_path>
             <depends>
                 <field id="shippingoptions_active">1</field>
+                <field id="deliverydays_active">1</field>
             </depends>
         </field>
 
@@ -126,6 +127,7 @@
             <depends>
                 <field id="shippingoptions_active">1</field>
                 <field id="eveningdelivery_active">1</field>
+                <field id="deliverydays_active">1</field>
             </depends>
         </field>
 

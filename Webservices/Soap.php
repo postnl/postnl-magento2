@@ -123,12 +123,10 @@ class Soap
 
         try {
             $result = $soapClient->__call($method, [$requestParams]);
-            $this->log->request($soapClient);
             $this->response->set($result);
 
             return $this->response->get();
         } catch (\Exception $exception) {
-            $this->log->request($soapClient);
             $this->exceptionHandler->handle($exception, $soapClient);
 
             throw new WebapiException(
@@ -136,6 +134,8 @@ class Soap
                 0,
                 WebapiException::HTTP_INTERNAL_ERROR
             );
+        } finally {
+            $this->log->request($soapClient);
         }
     }
 

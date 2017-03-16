@@ -124,6 +124,8 @@ define([
                 });
             });
 
+            this.isDeliverdaysActive = window.checkoutConfig.shipping.postnl.is_deliverydays_active === true;
+
             return this;
         },
 
@@ -133,8 +135,12 @@ define([
          * @param address
          */
         getDeliverydays: function (address) {
-            State.deliveryOptionsAreLoading(true);
+            if (window.checkoutConfig.shipping.postnl.is_deliverydays_active === false) {
+                State.deliveryOptionsAreAvailable(true);
+                return;
+            }
 
+            State.deliveryOptionsAreLoading(true);
             $.ajax({
                 method: 'POST',
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_timeframes,

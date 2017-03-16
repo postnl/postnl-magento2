@@ -179,6 +179,9 @@
   font-size: 12px;
   display: block;
 }
+.postnl-deliveryoptions .delivery_options .delivery .days .wrapper-fullwidth ul {
+  width: 100% !important;
+}
 .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ul,
 .postnl-deliveryoptions .delivery_options .delivery .days .wrapper ol {
   float: right;
