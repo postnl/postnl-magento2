@@ -31,43 +31,47 @@
  */
 namespace TIG\PostNL\Service\Timeframe\Filters\Days;
 
-use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
 
-/**
- * Class SameDay
- * This will filter out days wich are the sameday as the order placementdate.
- * At this moment the extension does not support sameday delivery.
- *
- * @package TIG\PostNL\Service\Timeframe\Filters\Days
- */
-class SameDay implements DaysFilterInterface
+class Sunday implements DaysFilterInterface
 {
     /**
      * @var Data
      */
-    private $postNLhelper;
-
+    private $helper;
     /**
-     * @param Data $helper
+     * @var ShippingOptions
      */
+    private $shippingOptions;
+
     public function __construct(
-        Data $helper
+        Data $helper,
+        ShippingOptions $shippingOptions
     ) {
-        $this->postNLhelper = $helper;
+        $this->helper = $helper;
+        $this->shippingOptions = $shippingOptions;
     }
 
     /**
-     * @param array|object $days
+     * @param object|array $days
      *
-     * @return array|object
+     * @return array
      */
     public function filter($days)
     {
-        $filteredDays = array_filter($days, function ($value) {
-            return $this->postNLhelper->getDate() != $this->postNLhelper->getDate($value->Date);
+        if ($this->shippingOptions->isSundayDeliveryActive()) {
+            return $days;
+        }
+
+        $filtered = array_filter($days, function ($day) {
+            $date = $day->Date;
+            $dayOfWeek = $this->helper->getDayOrWeekNumber($date, 'w');
+
+            return $dayOfWeek !== 0;
         });
 
-        return array_values($filteredDays);
+        return array_values($filtered);
     }
 }

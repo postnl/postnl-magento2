@@ -31,43 +31,48 @@
  */
 namespace TIG\PostNL\Service\Timeframe\Filters\Days;
 
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
-use TIG\PostNL\Helper\Data;
 
-/**
- * Class SameDay
- * This will filter out days wich are the sameday as the order placementdate.
- * At this moment the extension does not support sameday delivery.
- *
- * @package TIG\PostNL\Service\Timeframe\Filters\Days
- */
-class SameDay implements DaysFilterInterface
+class CutOffTimes implements DaysFilterInterface
 {
     /**
-     * @var Data
+     * @var bool
      */
-    private $postNLhelper;
+    private $isPastCutOffTime;
 
     /**
-     * @param Data $helper
+     * @param Webshop           $webshop
+     * @param TimezoneInterface $currentDate
+     * @param TimezoneInterface $cutOffTime
      */
     public function __construct(
-        Data $helper
+        Webshop $webshop,
+        TimezoneInterface $currentDate,
+        TimezoneInterface $cutOffTime
     ) {
-        $this->postNLhelper = $helper;
+        $now = $currentDate->date();
+        $loadedCutOffTime = $cutOffTime->date('today ' . $webshop->getCutOffTime());
+
+        $diff = $loadedCutOffTime->diff($now);
+
+        $this->isPastCutOffTime = $diff->format('%R') == '+';
     }
 
     /**
-     * @param array|object $days
+     * @param object|array $days
      *
-     * @return array|object
+     * @return array
      */
     public function filter($days)
     {
-        $filteredDays = array_filter($days, function ($value) {
-            return $this->postNLhelper->getDate() != $this->postNLhelper->getDate($value->Date);
-        });
+        if (!$this->isPastCutOffTime) {
+            return $days;
+        }
 
-        return array_values($filteredDays);
+        array_shift($days);
+
+        return array_values($days);
     }
 }

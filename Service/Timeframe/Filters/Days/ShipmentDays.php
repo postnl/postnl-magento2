@@ -37,10 +37,7 @@ use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Helper\Data;
 
 /**
- * Class ShipmentDays
- * This filter compares the timeframes dates to the shipmentdays of the webshopconfiguration.
- *
- * @package TIG\PostNL\Service\Timeframe\Filters\Days
+ * This filter compares the time frames dates to the shipment days of the webshop configuration.
  */
 class ShipmentDays implements DaysFilterInterface
 {
@@ -60,6 +57,11 @@ class ShipmentDays implements DaysFilterInterface
     private $postNLHelper;
 
     /**
+     * @var array
+     */
+    private $availableDays;
+
+    /**
      * @param Webshop $webshop
      * @param ShippingOptions $shippingOptions
      * @param Data $data
@@ -72,6 +74,8 @@ class ShipmentDays implements DaysFilterInterface
         $this->webshopSettings = $webshop;
         $this->shippingOptions = $shippingOptions;
         $this->postNLHelper    = $data;
+
+        $this->availableDays = $this->getDeliveryDatesArray();
     }
 
     /**
@@ -81,82 +85,46 @@ class ShipmentDays implements DaysFilterInterface
      */
     public function filter($days)
     {
-        $filterdDays = array_filter($days, [$this, 'isAvailableWithShipmentdays']);
-        return array_values($filterdDays);
+        $filteredDays = array_filter($days, [$this, 'isAvailableWithShipmentDays']);
+
+        return array_values($filteredDays);
     }
 
     /**
-     * Finds the first posible shipment day and match it with day number of given day.
+     * Finds the first possible shipment day and match it with day number of given day.
      *
-     * @param object $value
+     * @param object $day
      *
      * @return bool
      */
-    public function isAvailableWithShipmentdays($value)
+    public function isAvailableWithShipmentDays($day)
     {
-        $numberOfDay   = $this->postNLHelper->getDayOrWeekNumber($value->Date);
-        $availableDays = $this->getDeliveryDatesArray();
+        $numberOfDay = $this->postNLHelper->getDayOrWeekNumber($day->Date);
 
-        if ($numberOfDay < $availableDays[0] && $this->isSameWeek($value->Date)) {
+        if (!in_array($numberOfDay, $this->availableDays)) {
             return false;
-        }
-
-        if ($numberOfDay == $this->postNLHelper->getDayOrWeekNumber(false)
-            && $this->isSameWeek($value->Date) && $this->isPassedCutoffTime()) {
-            return false;
-        }
-
-        if ($numberOfDay == '0') {
-            return false; //Sunday delivery is not implemented yet.
         }
 
         return true;
     }
 
     /**
-     * @param $date
-     *
-     * @return bool
-     */
-    private function isSameWeek($date)
-    {
-        $currentWeek = $this->postNLHelper->getDayOrWeekNumber(false, 'W');
-        $weekOfDate  = $this->postNLHelper->getDayOrWeekNumber($date, 'W');
-
-        return ($currentWeek == $weekOfDate);
-    }
-
-    /**
-     * This will format the shipmentdays to valid deliverydates.
+     * This will format the shipment days to valid delivery dates.
      * +1 is the delay of PostNL.
-     *
-     * @param array $daysAvailable
      *
      * @return array
      */
-    private function getDeliveryDatesArray($daysAvailable = [])
+    private function getDeliveryDatesArray()
     {
+        $daysAvailable = [];
         $shipmentDays  = explode(',', $this->webshopSettings->getShipmentDays());
         $deliveryDelay = $this->shippingOptions->getDeliveryDelay();
 
-        foreach ($shipmentDays as $shipday) {
-            $validDay = ($shipday + $deliveryDelay) % 7;
-            $daysAvailable[] = $validDay == '0' ? 1 : $validDay;
+        foreach ($shipmentDays as $shipDay) {
+            $validDay = ($shipDay + $deliveryDelay) % 7;
+            $daysAvailable[] = $validDay == '0' ? 7 : $validDay;
         }
 
         return $daysAvailable;
-    }
-
-    /**
-     * When an order is placed after this time, another day will be added to the shipping duration
-     *
-     * @return bool
-     */
-    private function isPassedCutoffTime()
-    {
-        $cutOffTime  = $this->webshopSettings->getCutOffTime();
-        $currentTime = $this->postNLHelper->getCurrentTimeStamp(true);
-
-        return ($currentTime > $cutOffTime);
     }
 }
