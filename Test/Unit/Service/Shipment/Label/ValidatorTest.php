@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Test\Unit\Service\Shipment\Label;
 
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Service\Shipment\Label\Validator;
 use TIG\PostNL\Test\TestCase;
 
@@ -43,47 +44,19 @@ class ValidatorTest extends TestCase
         return [
             [
                 'input' => [
-                    [
-                        'labels' => [
-                            [],
-                            'asdf1',
-                        ]
-                    ],
-                    [
-                        'labels' => [
-                            [],
-                        ]
-                    ],
-                    [
-                        'labels' => [
-                            'asdf2',
-                        ]
-                    ]
+                    $this->getLabelMock([]),
+                    $this->getLabelMock('asdf1'),
+                    $this->getLabelMock([]),
+                    $this->getLabelMock('asdf2'),
                 ],
-                'output' => [
-                    [
-                        'labels' => [
-                            'asdf1',
-                        ]
-                    ],
-                    [
-                        'labels' => [
-                            'asdf2',
-                        ]
-                    ],
-                ]
+                'output length' => 2
             ],
             [
                 'input' => [
-                    [
-                        'labels' => [
-                            [],
-                            'Invalid response',
-                        ]
-                    ],
+                    $this->getLabelMock([]),
+                    $this->getLabelMock('Invalid response'),
                 ],
-                'output' => [
-                ]
+                'output length' => 0
             ],
         ];
     }
@@ -100,6 +73,14 @@ class ValidatorTest extends TestCase
         $instance = $this->getInstance();
         $result = $instance->validate($input);
 
-        $this->assertEquals($expected, $result);
+        $this->assertCount($expected, $result);
+    }
+
+    private function getLabelMock($label)
+    {
+        $labelMock = $this->getMock(ShipmentLabelInterface::class);
+        $this->mockFunction($labelMock, 'getLabel', $label);
+
+        return $labelMock;
     }
 }

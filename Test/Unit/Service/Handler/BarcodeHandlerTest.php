@@ -73,7 +73,7 @@ class BarcodeHandlerTest extends TestCase
         $callExpects->willReturn($callReturnValue);
 
         $instance = $this->getInstance(['barcodeEndpoint' => $barcodeMock]);
-        $result = $instance->generate();
+        $result = $this->invoke('generate', $instance);
 
         if ($result instanceof Phrase) {
             $result = $result->render();

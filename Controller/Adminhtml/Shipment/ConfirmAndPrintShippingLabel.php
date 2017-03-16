@@ -36,10 +36,10 @@ use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\Order\ShipmentRepository;
 
-use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Helper\Labelling\SaveLabels;
+use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Helper\Pdf\Get as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Service\Handler\BarcodeHandler;
 
 class ConfirmAndPrintShippingLabel extends LabelAbstract
 {
@@ -54,30 +54,35 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     private $track;
 
     /**
+     * @var BarcodeHandler
+     */
+    private $barcodeHandler;
+
+    /**
      * @param Context            $context
      * @param GetLabels          $getLabels
-     * @param SaveLabels         $saveLabels
      * @param GetPdf             $getPdf
      * @param ShipmentRepository $shipmentRepository
      * @param Track              $track
+     * @param BarcodeHandler     $barcodeHandler
      */
     public function __construct(
         Context $context,
         GetLabels $getLabels,
-        SaveLabels $saveLabels,
         GetPdf $getPdf,
         ShipmentRepository $shipmentRepository,
-        Track $track
+        Track $track,
+        BarcodeHandler $barcodeHandler
     ) {
         parent::__construct(
             $context,
             $getLabels,
-            $saveLabels,
             $getPdf
         );
 
         $this->shipmentRepository = $shipmentRepository;
         $this->track              = $track;
+        $this->barcodeHandler     = $barcodeHandler;
     }
 
     /**
@@ -91,10 +96,10 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
             $this->track->set($shipment);
         }
 
-        $labels     = $this->getLabels->get($shipment->getId());
-        $labelModel = $this->saveLabels->save($labels);
+        $this->barcodeHandler->prepareShipment($shipment->getId());
+        $labels = $this->getLabels->get($shipment->getId());
 
-        return $this->getPdf->get($labelModel);
+        return $this->getPdf->get($labels);
     }
 
     /**

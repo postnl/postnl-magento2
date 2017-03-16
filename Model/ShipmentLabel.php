@@ -39,10 +39,8 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, Iden
 {
     const CACHE_TAG = 'tig_postnl_shipment_label';
 
-    const BARCODE_TYPE_LABEL = 'label';
-    const BARCODE_TYPE_RETURN   = 'return';
-
     const FIELD_PARENT_ID = 'parent_id';
+    const FIELD_NUMBER = 'number';
     const FIELD_LABEL = 'label';
     const FIELD_TYPE = 'type';
 
@@ -86,6 +84,24 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, Iden
     public function setParentId($value)
     {
         return $this->setData(static::FIELD_PARENT_ID, $value);
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setNumber($value)
+    {
+        return $this->setData(static::FIELD_NUMBER, $value);
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumber()
+    {
+        return $this->getData(static::FIELD_NUMBER);
     }
 
     /**
