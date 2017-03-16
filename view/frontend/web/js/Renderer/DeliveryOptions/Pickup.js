@@ -177,6 +177,10 @@ define([
                 }
                 State.pickupOptionsAreAvailable(true);
 
+                if (window.checkoutConfig.shipping.postnl.is_deliverydays_active === false) {
+                    data = [data.shift()];
+                }
+
                 data = ko.utils.arrayMap(data, function (data) {
                     return new Location(data);
                 });

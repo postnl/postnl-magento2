@@ -156,7 +156,10 @@ class Data extends AbstractHelper
      */
     public function getEndDate($startDate)
     {
-        $maximumNumberOfDeliveryDays = $this->shippingOptions->getMaxAmountOfDeliverydays();
+        /**
+         * Minus 1 as we only want the days in between.
+         */
+        $maximumNumberOfDeliveryDays = $this->shippingOptions->getMaxAmountOfDeliverydays() - 1;
 
         $endDate = $this->dateTime->date($startDate);
         // @codingStandardsIgnoreLine

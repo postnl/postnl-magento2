@@ -1,34 +1,50 @@
 <div class="days">
-    <div data-bind="foreach: deliverydays">
-        <div class="wrapper">
-            <strong>
-                <span class="deliverydays-day" data-bind="text: $data[0].day.substring(0, 2)"></span>
-                <span class="deliverydays-date" data-bind="text: $data[0].date"></span>
-            </strong>
+    <!-- ko if: isDeliverdaysActive -->
+        <div data-bind="foreach: deliverydays">
+            <div class="wrapper">
+                <strong>
+                    <span class="deliverydays-day" data-bind="text: $data[0].day.substring(0, 2)"></span>
+                    <span class="deliverydays-date" data-bind="text: $data[0].date"></span>
+                </strong>
 
-            <ul data-bind="foreach: $data">
-                <li data-bind="css: { 'selected-row': $parents[1].isRowSelected($data), 'odd': $parents[1].isOdd() }">
-                    <label>
-                        <input type="radio"
-                               data-bind="value: date, checked: $parents[1].selectedOption, checkedValue: $data"
-                               name="deliveryday"
-                               id="delivery-choice"
-                               class="tig-postnl-delivery-radio" />
+                <ul data-bind="foreach: $data">
+                    <li data-bind="css: { 'selected-row': $parents[1].isRowSelected($data), 'odd': $parents[1].isOdd() }">
+                        <label>
+                            <input type="radio"
+                                   data-bind="value: date, checked: $parents[1].selectedOption, checkedValue: $data"
+                                   name="deliveryday"
+                                   id="delivery-choice"
+                                   class="tig-postnl-delivery-radio" />
 
-                        <span class="tig-postnl-delivery-from" data-bind="text: from_friendly"></span>
-                        <span class="tig-postnl-delivery-dash"> - </span>
-                        <span class="tig-postnl-delivery-to" data-bind="text: to_friendly"></span>
+                            <span class="tig-postnl-delivery-from" data-bind="text: from_friendly"></span>
+                            <span class="tig-postnl-delivery-dash"> - </span>
+                            <span class="tig-postnl-delivery-to" data-bind="text: to_friendly"></span>
 
-                        <div class="tig-postnl-delivery-option">
-                            <!-- ko if: hasFee() -->
-                            <span class="tig-postnl-delivery-fee-container">(+ <span class="tig-postnl-delivery-fee" data-bind="text: getFeeFormatted()"></span>) </span>
-                            <!-- /ko -->
+                            <div class="tig-postnl-delivery-option">
+                                <!-- ko if: hasFee() -->
+                                <span class="tig-postnl-delivery-fee-container">(+ <span class="tig-postnl-delivery-fee" data-bind="text: getFeeFormatted()"></span>) </span>
+                                <!-- /ko -->
 
-                            <span data-bind="text: optionLabel"> </span>
-                        </div>
-                    </label>
-                </li>
-            </ul>
+                                <span data-bind="text: optionLabel"> </span>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+            </div>
         </div>
+    <!-- /ko -->
+
+    <!-- ko ifnot: isDeliverdaysActive -->
+    <div class="wrapper wrapper-fullwidth">
+        <ul>
+            <li class="selected-row">
+                <label>
+                    <input type="radio" name="deliveryday" class="tig-postnl-delivery-radio" />
+
+                    <span class="tig-postnl-delivery-from">Eerst volgende mogelijkheid</span>
+                </label>
+            </li>
+        </ul>
     </div>
+    <!-- /ko -->
 </div>
