@@ -213,7 +213,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $method = $instance->method($function);
 
         if ($with) {
-            $method->with($with);
+            $method->with(...$with);
         }
 
         $method->willReturn($response);
