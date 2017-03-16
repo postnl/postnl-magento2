@@ -38,15 +38,33 @@ use TIG\PostNL\Model\Shipment;
 class ShippingDate
 {
     /**
-     * @param TimezoneInterface          $timezoneInterface
+     * @var TimezoneInterface
+     */
+    private $todayDate;
+
+    /**
+     * @var TimezoneInterface
+     */
+    private $shipAtDate;
+
+    /**
+     * @var DateTimeFormatterInterface
+     */
+    private $dateTimeFormatterInterface;
+
+    /**
+     * @param TimezoneInterface          $todayDate
+     * @param TimezoneInterface          $shipAtDate
      * @param DateTimeFormatterInterface $dateTimeFormatterInterface
      */
     public function __construct(
-        TimezoneInterface $timezoneInterface,
+        TimezoneInterface $todayDate,
+        TimezoneInterface $shipAtDate,
         DateTimeFormatterInterface $dateTimeFormatterInterface
     ) {
-        $this->timezoneInterface = $timezoneInterface;
         $this->dateTimeFormatterInterface = $dateTimeFormatterInterface;
+        $this->todayDate = $todayDate;
+        $this->shipAtDate = $shipAtDate;
     }
 
     /**
@@ -85,8 +103,8 @@ class ShippingDate
      */
     private function formatShippingDate($shipAt)
     {
-        $now = $this->timezoneInterface->date();
-        $whenToShip = $this->timezoneInterface->date($shipAt);
+        $now = $this->todayDate->date('today', null, false);
+        $whenToShip = $this->shipAtDate->date($shipAt, null, false);
         $difference = $now->diff($whenToShip);
         $days = $difference->days;
 
