@@ -134,7 +134,7 @@ class Data extends AbstractHelper
         }
 
         if ($format === 'w') {
-            return $number %7;
+            return $number % 7;
         }
 
         return $number;
