@@ -31,6 +31,8 @@
  */
 namespace TIG\PostNL\Service\Shipment\Label;
 
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
+
 class Validator
 {
     /**
@@ -42,32 +44,19 @@ class Validator
      */
     public function validate($input)
     {
-        $input = array_map(function ($row) {
-            $row['labels'] = array_values(array_filter($row['labels'], [$this, 'getValidLabels']));
+        $filtered = array_filter($input, function (ShipmentLabelInterface $model) {
+            $label = $model->getLabel();
 
-            return $row;
-        }, $input);
+            if (!is_string($label) || empty($label)) {
+                return false;
+            }
 
-        $filtered = array_filter($input, function ($row) {
-            return !empty($row['labels']);
+            $start = substr($label, 0, strlen('invalid'));
+            $start = strtolower($start);
+
+            return $start != 'invalid';
         });
 
         return array_values($filtered);
-    }
-
-    /**
-     * @param mixed $label
-     * @return array
-     */
-    private function getValidLabels($label)
-    {
-        if (!is_string($label) || empty($label)) {
-            return false;
-        }
-
-        $start = substr($label, 0, strlen('invalid'));
-        $start = strtolower($start);
-
-        return $start != 'invalid';
     }
 }

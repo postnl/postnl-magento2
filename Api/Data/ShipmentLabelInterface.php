@@ -33,6 +33,9 @@ namespace TIG\PostNL\Api\Data;
 
 interface ShipmentLabelInterface
 {
+    const BARCODE_TYPE_LABEL = 'label';
+    const BARCODE_TYPE_RETURN   = 'return';
+
     /**
      * @return int
      */
@@ -48,6 +51,17 @@ interface ShipmentLabelInterface
      * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
      */
     public function setParentId($value);
+
+    /**
+     * @param int $value
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setNumber($value);
+
+    /**
+     * @return int
+     */
+    public function getNumber();
 
     /**
      * @return string

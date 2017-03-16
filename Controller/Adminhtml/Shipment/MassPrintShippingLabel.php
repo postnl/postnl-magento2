@@ -38,10 +38,10 @@ use Magento\Sales\Model\Order\Shipment;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 
-use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Helper\Labelling\SaveLabels;
+use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Helper\Pdf\Get as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Service\Handler\BarcodeHandler;
 
 class MassPrintShippingLabel extends LabelAbstract
 {
@@ -66,33 +66,38 @@ class MassPrintShippingLabel extends LabelAbstract
     private $track;
 
     /**
+     * @var BarcodeHandler
+     */
+    private $barcodeHandler;
+
+    /**
      * @param Context                   $context
      * @param Filter                    $filter
      * @param ShipmentCollectionFactory $collectionFactory
      * @param GetLabels                 $getLabels
-     * @param SaveLabels                $saveLabels
      * @param GetPdf                    $getPdf
      * @param Track                     $track
+     * @param BarcodeHandler            $barcodeHandler
      */
     public function __construct(
         Context $context,
         Filter $filter,
         ShipmentCollectionFactory $collectionFactory,
         GetLabels $getLabels,
-        SaveLabels $saveLabels,
         GetPdf $getPdf,
-        Track $track
+        Track $track,
+        BarcodeHandler $barcodeHandler
     ) {
         parent::__construct(
             $context,
             $getLabels,
-            $saveLabels,
             $getPdf
         );
 
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->track = $track;
+        $this->barcodeHandler = $barcodeHandler;
     }
 
     /**
@@ -108,15 +113,12 @@ class MassPrintShippingLabel extends LabelAbstract
 
         /** @var Shipment $shipment */
         foreach ($collection as $shipment) {
+            $this->barcodeHandler->prepareShipment($shipment->getId());
             $this->track->set($shipment);
             $this->setLabel($shipment->getId());
         }
 
-        $labelModels = $this->saveLabels->save($this->labels);
-
-        $pdfFile = $this->getPdf->get($labelModels);
-
-        return $pdfFile;
+        return $this->getPdf->get($this->labels);
     }
 
     /**

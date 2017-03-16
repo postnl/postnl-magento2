@@ -31,6 +31,8 @@
  */
 namespace TIG\PostNL\Service\Handler;
 
+use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Model\ShipmentBarcodeFactory;
 use TIG\PostNL\Webservices\Endpoints\Barcode as BarcodeEndpoint;
@@ -54,26 +56,81 @@ class BarcodeHandler
     private $shipmentBarcodeFactory;
 
     /**
-     * @param BarcodeEndpoint        $barcodeEndpoint
-     * @param ShipmentBarcodeFactory $shipmentBarcodeFactory
-     * @param CollectionFactory      $shipmentBarcodeCollectionFactory
+     * @var ShipmentRepositoryInterface
+     */
+    private $shipmentRepository;
+
+    /**
+     * @param BarcodeEndpoint             $barcodeEndpoint
+     * @param ShipmentRepositoryInterface $shipmentRepository
+     * @param ShipmentBarcodeFactory      $shipmentBarcodeFactory
+     * @param CollectionFactory           $shipmentBarcodeCollectionFactory
      */
     public function __construct(
         BarcodeEndpoint $barcodeEndpoint,
+        ShipmentRepositoryInterface $shipmentRepository,
         ShipmentBarcodeFactory $shipmentBarcodeFactory,
         CollectionFactory $shipmentBarcodeCollectionFactory
     ) {
         $this->barcodeEndpoint = $barcodeEndpoint;
         $this->shipmentBarcodeCollectionFactory = $shipmentBarcodeCollectionFactory;
         $this->shipmentBarcodeFactory = $shipmentBarcodeFactory;
+        $this->shipmentRepository = $shipmentRepository;
+    }
+
+    /**
+     * @param $magentoShipmentId
+     */
+    public function prepareShipment($magentoShipmentId)
+    {
+        $shipment = $this->shipmentRepository->getByShipmentId($magentoShipmentId);
+
+        if (!$shipment || $shipment->getConfirmedAt() !== null) {
+            return;
+        }
+
+        $mainBarcode = $this->generate();
+        $shipment->setMainBarcode($mainBarcode);
+        $this->shipmentRepository->save($shipment);
+
+        if ($shipment->getParcelCount() > 1) {
+            $this->addBarcodes($shipment, $mainBarcode);
+        }
+    }
+
+    /**
+     * Generate and save a new barcode for the just saved shipment
+     *
+     * @param ShipmentInterface $shipment
+     * @param                   $mainBarcode
+     *
+     * @throws \Exception
+     */
+    public function addBarcodes(ShipmentInterface $shipment, $mainBarcode)
+    {
+        /** @var \TIG\PostNL\Model\ResourceModel\ShipmentBarcode\Collection $barcodeModelCollection */
+        $barcodeModelCollection = $this->shipmentBarcodeCollectionFactory->create();
+        $barcodeModelCollection->load();
+
+        /**
+         * The first item is the main barcode
+         */
+        $barcodeModelCollection->addItem($this->createBarcode($shipment->getId(), 1, $mainBarcode));
+
+        $parcelCount = $shipment->getParcelCount();
+        for ($count = 2; $count <= $parcelCount; $count++) {
+            $barcodeModelCollection->addItem($this->createBarcode($shipment->getId(), $count, $this->generate()));
+        }
+
+        $barcodeModelCollection->save();
     }
 
     /**
      * CIF call to generate a new barcode
      *
-     * @return \Magento\Framework\Phrase
+     * @return \Magento\Framework\Phrase|string
      */
-    public function generate()
+    private function generate()
     {
         $response = $this->barcodeEndpoint->call();
 
@@ -85,30 +142,21 @@ class BarcodeHandler
     }
 
     /**
-     * Generate and save a new barcode for the just saved shipment
-     *
      * @param $shipmentId
-     * @param $parcelCount
+     * @param $count
+     * @param $barcode
+     *
+     * @return ShipmentBarcode
      */
-    public function saveShipment($shipmentId, $parcelCount)
+    private function createBarcode($shipmentId, $count, $barcode)
     {
-        /** @var \TIG\PostNL\Model\ResourceModel\ShipmentBarcode\Collection $barcodeModelCollection */
-        $barcodeModelCollection = $this->shipmentBarcodeCollectionFactory->create();
-        $barcodeModelCollection->load();
+        /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
+        $barcodeModel = $this->shipmentBarcodeFactory->create();
+        $barcodeModel->setParentId($shipmentId);
+        $barcodeModel->setType(ShipmentBarcode::BARCODE_TYPE_SHIPMENT);
+        $barcodeModel->setNumber($count);
+        $barcodeModel->setValue($barcode);
 
-        for ($count = 1; $count <= $parcelCount; $count++) {
-            $barcode = $this->generate();
-
-            /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
-            $barcodeModel = $this->shipmentBarcodeFactory->create();
-            $barcodeModel->setParentId($shipmentId);
-            $barcodeModel->setType(ShipmentBarcode::BARCODE_TYPE_SHIPMENT);
-            $barcodeModel->setNumber($count);
-            $barcodeModel->setValue($barcode);
-
-            $barcodeModelCollection->addItem($barcodeModel);
-        }
-
-        $barcodeModelCollection->save();
+        return $barcodeModel;
     }
 }
