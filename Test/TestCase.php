@@ -62,11 +62,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         /** Require functions.php to be able to use the translate function */
+        $path = __DIR__ . '/../../../../app/functions.php';
         if (strpos(__DIR__, 'vendor') === false) {
-            require_once __DIR__ . '/../../../../functions.php';
-        } else {
-            require_once __DIR__ . '/../../../../app/functions.php';
+            $path = __DIR__ . '/../../../../functions.php';
         }
+
+        require_once($path);
 
         ini_set('error_reporting', E_ALL);
         ini_set('display_errors', '1');

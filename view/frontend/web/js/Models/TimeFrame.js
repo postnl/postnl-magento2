@@ -42,18 +42,24 @@ define([
             this[key] = value;
         }.bind(this));
 
-        this.optionLabel = '';
 
         /**
          * Make sure the label is translated, and the translation is available.
          */
+        this.optionLabel = '';
         var option = this.option.toLowerCase();
-        if (option == 'daytime') {
-            this.optionLabel = $.mage.__('Daytime');
-        } else if (option == 'evening') {
-            this.optionLabel = $.mage.__('Evening');
-        } else if (option == 'sunday') {
-            this.optionLabel = $.mage.__('Sunday');
+        switch (option) {
+            case 'daytime':
+                this.optionLabel = $.mage.__('Daytime');
+                break;
+
+            case 'evening':
+                this.optionLabel = $.mage.__('Evening');
+                break;
+
+            case 'sunday':
+                this.optionLabel = $.mage.__('Sunday');
+                break;
         }
 
         /**
