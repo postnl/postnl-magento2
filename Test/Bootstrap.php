@@ -29,14 +29,16 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+/**
+ * From vendor/tig/postnl
+ */
+$path = __DIR__ . '/../../../../dev/tests/unit/framework/bootstrap.php';
+
 if (strpos(__DIR__, 'app/code') !== false) {
     /**
      * From app/code/TIG/PostNL
      */
-    require_once(__DIR__ . '/../../../../../dev/tests/unit/framework/bootstrap.php');
-} else {
-    /**
-     * From vendor/tig/postnl
-     */
-    require_once(__DIR__ . '/../../../../dev/tests/unit/framework/bootstrap.php');
+    $path = __DIR__ . '/../../../../../dev/tests/unit/framework/bootstrap.php';
 }
+
+require_once($path);

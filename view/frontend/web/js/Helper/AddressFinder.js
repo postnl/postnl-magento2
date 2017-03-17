@@ -28,7 +28,17 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote, $) {
+define([
+    'ko',
+    'Magento_Checkout/js/model/quote',
+    'jquery',
+    'Magento_Customer/js/model/customer'
+], function (
+    ko,
+    quote,
+    $,
+    customer
+) {
     'use strict';
 
     var address = {
@@ -72,6 +82,23 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
      */
     return ko.computed(function () {
         valueUpdateNotifier();
+
+        /**
+         * The street is not always available on the first run.
+         */
+        var shippingAddress = quote.shippingAddress();
+        if (customer.isLoggedIn() && shippingAddress && shippingAddress.street) {
+            address = {
+                street: shippingAddress.street,
+                postalCode: shippingAddress.postcode,
+                lastname: shippingAddress.lastname,
+                firstname: shippingAddress.firstname,
+                telephone: shippingAddress.telephone,
+                countryCode: shippingAddress.countryId
+            };
+
+            return address;
+        }
 
         allFieldsExists = true;
         $.each(fields, function () {
