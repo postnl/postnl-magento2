@@ -136,7 +136,7 @@ class View extends MagentoView
                 // @codingStandardsIgnoreLine
                 'label' => __($this->printLabel),
                 'class' => 'save primary',
-                'onclick' => 'setLocation(\'' .$this->getLabelUrl() .'\')'
+                'onclick' => 'download(\'' .$this->getLabelUrl() .'\')'
             ]
         );
     }
@@ -171,7 +171,8 @@ class View extends MagentoView
     {
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLShipment();
-        if (!empty($postNLShipment->getConfirmedAt())) {
+        $confirmedAt = $postNLShipment->getConfirmedAt();
+        if (!empty($confirmedAt)) {
             $this->printLabel = 'PostNL - Print label';
             $this->setPostNLChangeConfirmButton();
         }
