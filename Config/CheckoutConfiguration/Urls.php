@@ -33,7 +33,7 @@ namespace TIG\PostNL\Config\CheckoutConfiguration;
 
 use Magento\Framework\UrlInterface;
 
-class Urls extends AbstractCheckoutConfiguration
+class Urls implements CheckoutConfigurationInterface
 {
     /**
      * @var UrlInterface

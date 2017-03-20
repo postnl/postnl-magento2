@@ -71,7 +71,15 @@ define([
             ]);
 
             AddressFinder.subscribe(function (address, oldAddress) {
+                if (!window.checkoutConfig.shipping.postnl.shippingoptions_active) {
+                    return;
+                }
+
                 if (!address || JSON.stringify(address) == JSON.stringify(oldAddress)) {
+                    return;
+                }
+
+                if (address.countryCode != 'NL') {
                     return;
                 }
 

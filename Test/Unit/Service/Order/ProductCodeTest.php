@@ -63,9 +63,14 @@ class ProductCodeTest extends TestCase
         parent::setUp();
 
         $this->productOptionsMock = $this->getFakeMock(ProductOptions::class)->getMock();
+        $productOptionsFinder = $this->getObject(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
+
         $this->instance = $this->getInstance([
-            'productOptions' => $this->productOptionsMock,
+            'productOptionsConfiguration' => $this->productOptionsMock,
+            'productOptionsFinder' => $productOptionsFinder,
         ]);
+
+//        getEpsProductOptions
 
         $this->addProductOptionsMockFunction('getDefaultProductOption', static::PRODUCT_OPTION_DEFAULT);
         $this->addProductOptionsMockFunction('getDefaultEveningProductOption', static::PRODUCT_OPTION_EVENING);
@@ -80,27 +85,31 @@ class ProductCodeTest extends TestCase
     public function getShippingOptionProvider()
     {
         return [
-            'default options' => ['', '', static::PRODUCT_OPTION_DEFAULT],
-            'no option' => ['delivery', '', static::PRODUCT_OPTION_DEFAULT],
-            'default' => ['delivery', 'default', static::PRODUCT_OPTION_DEFAULT],
-            'evening' => ['delivery', 'evening', static::PRODUCT_OPTION_EVENING],
-            'sunday' => ['delivery', 'sunday', static::PRODUCT_OPTION_SUNDAY],
-            'default pg' => ['pickup', 'default', static::PRODUCT_OPTION_PAKJEGEMAK],
-            'pakjegemak' => ['pickup', '', static::PRODUCT_OPTION_PAKJEGEMAK],
-            'pakjegemak early morning' => ['pickup', 'PGE', static::PRODUCT_OPTION_PAKJEGEMAK_EARLY],
+            'default options' => ['', '', 'NL', static::PRODUCT_OPTION_DEFAULT],
+            'default options BE' => ['', '', 'BE', '4950'],
+            'default options DE' => ['', '', 'DE', '4950'],
+            'default options ES' => ['', '', 'ES', '4950'],
+            'no option' => ['delivery', '', 'NL', static::PRODUCT_OPTION_DEFAULT],
+            'default' => ['delivery', 'default', 'NL', static::PRODUCT_OPTION_DEFAULT],
+            'evening' => ['delivery', 'evening', 'NL', static::PRODUCT_OPTION_EVENING],
+            'sunday' => ['delivery', 'sunday', 'NL', static::PRODUCT_OPTION_SUNDAY],
+            'default pg' => ['pickup', 'default', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK],
+            'pakjegemak' => ['pickup', '', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK],
+            'pakjegemak early morning' => ['pickup', 'PGE', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK_EARLY],
         ];
     }
 
     /**
      * @param $type
      * @param $option
+     * @param $country
      * @param $expected
      *
      * @dataProvider getShippingOptionProvider
      */
-    public function testGetShippingOption($type, $option, $expected)
+    public function testGetShippingOption($type, $option, $country, $expected)
     {
-        $this->assertEquals($expected, $this->instance->get($type, $option));
+        $this->assertEquals($expected, $this->instance->get($type, $option, $country));
     }
 
     private function addProductOptionsMockFunction($function, $returnValue)

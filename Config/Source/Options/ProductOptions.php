@@ -256,4 +256,12 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     {
         return $this->getProductoptions(['isExtraCover' => true]);
     }
+
+    /**
+     * @return array
+     */
+    public function getEpsProductOptions()
+    {
+        return $this->getProductoptions(['group' => 'eu_options']);
+    }
 }

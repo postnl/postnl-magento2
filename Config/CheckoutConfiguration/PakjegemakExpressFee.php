@@ -33,12 +33,7 @@ namespace TIG\PostNL\Config\CheckoutConfiguration;
 
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
-/**
- * Class IsPakjegemakExpressActive
- *
- * @package TIG\PostNL\Config\CheckoutConfiguration
- */
-class PakjegemakExpressFee extends AbstractCheckoutConfiguration
+class PakjegemakExpressFee implements CheckoutConfigurationInterface
 {
     /**
      * @var ShippingOptions
