@@ -71,6 +71,7 @@ define([
             ]);
 
             AddressFinder.subscribe(function (address, oldAddress) {
+                State.deliveryOptionsAreAvailable(false);
                 if (!window.checkoutConfig.shipping.postnl.shippingoptions_active) {
                     return;
                 }
