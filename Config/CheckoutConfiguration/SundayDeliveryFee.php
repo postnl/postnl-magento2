@@ -33,7 +33,7 @@ namespace TIG\PostNL\Config\CheckoutConfiguration;
 
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
-class SundayDeliveryFee extends AbstractCheckoutConfiguration
+class SundayDeliveryFee implements CheckoutConfigurationInterface
 {
     /**
      * @var ShippingOptions

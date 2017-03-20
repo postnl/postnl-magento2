@@ -73,7 +73,11 @@ define([
              * Subscribe to address changes.
              */
             AddressFinder.subscribe(function (address) {
-                if (!address) {
+                if (!window.checkoutConfig.shipping.postnl.shippingoptions_active || !address) {
+                    return;
+                }
+
+                if (address.countryCode != 'NL') {
                     return;
                 }
 
@@ -192,10 +196,6 @@ define([
             }).always(function () {
                 State.pickupOptionsAreLoading(false);
             });
-        },
-
-        getFeeFormatted: function () {
-
         },
 
         /**

@@ -31,7 +31,10 @@
  */
 namespace TIG\PostNL\Config\CheckoutConfiguration;
 
-abstract class AbstractCheckoutConfiguration
+interface CheckoutConfigurationInterface
 {
-    abstract public function getValue();
+    /**
+     * @return bool|string
+     */
+    public function getValue();
 }

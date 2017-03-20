@@ -173,7 +173,7 @@ class Soap
             'soap_version'   => SOAP_1_2,
             'features'       => SOAP_SINGLE_ELEMENT_ARRAYS,
             'cache_wsdl'     => WSDL_CACHE_BOTH,
-            'stream_context' => $stream_context
+            'stream_context' => $stream_context,
         ];
     }
 
@@ -221,7 +221,8 @@ class Soap
     private function getApiKey()
     {
         if (empty($this->apikey)) {
-            throw new LocalizedException('Please enter your API key');
+            // @codingStandardsIgnoreLine
+            throw new LocalizedException(__('Please enter your API key'));
         }
 
         return $this->apikey;

@@ -6,7 +6,7 @@ Tomorrow,Morgen
 Live,Live
 Test,Test
 Off,Off
-"Always show deliveryoptions","Altijd verzendopties tonen"
+"Always show deliveryoptions","Altijd bezorgopties tonen"
 "Only for products that are in stock","Alleen voor producten die op voorraad zijn"
 "There are no available options","Er zijn geen beschikbare opties"
 label,label
@@ -95,8 +95,8 @@ Product options,Productopties
 "Default evening option","Standaard avondverzending optie"
 "Default post office delivery option","Standaard Pakjegemak optie"
 "Default sunday delivery option","Standaard zondagbezorging optie"
-Shipping options,Verzendopties
-"Activate shipping options","Activeer verzendopties"
+Shipping options,Bezorgopties
+"Activate shipping options","Activeer bezorgopties"
 Stock options,Voorraadopties
 "Activate delivery days","Activeer bezorgdagen"
 "Maximum number of delivery days","Maximaal aantal bezorgdagen"
@@ -145,7 +145,7 @@ Sunday,Zondag
 Extension version,Extensie versie
 "For an A4 example, <a href=""%1"" target=""_blank"">click here</a>.","Voor een A4 voorbeeld, <a href=""%1"" target=""_blank"">klik hier</a>."
 "For an A6 example, <a href=""%1"" target=""_blank"">click here</a>.","Voor een A6 voorbeeld, <a href=""%1"" target=""_blank"">klik hier</a>."
-"PostNL Shipping options","PostNL Verzendopties"
+"PostNL Shipping options","PostNL Bezorgopties"
 "Colli amount","Aantal pakketten"
 "Activate early delivery post office locations","Activeer extra vroeg ophalen"
 "Early delivery fee","Extra vroeg ophalen toeslag"

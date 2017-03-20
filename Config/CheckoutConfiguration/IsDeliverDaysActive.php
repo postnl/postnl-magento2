@@ -33,7 +33,7 @@ namespace TIG\PostNL\Config\CheckoutConfiguration;
 
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
-class IsDeliverDaysActive extends AbstractCheckoutConfiguration
+class IsDeliverDaysActive implements CheckoutConfigurationInterface
 {
     /**
      * @var ShippingOptions

@@ -31,7 +31,8 @@
  */
 namespace TIG\PostNL\Service\Order;
 
-use TIG\PostNL\Config\Provider\ProductOptions;
+use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
+use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 
 class ProductCode
 {
@@ -44,17 +45,25 @@ class ProductCode
     const OPTION_PGE = 'pge';
 
     /**
-     * @var ProductOptions
+     * @var ProductOptionsConfiguration
      */
-    private $productOptions;
+    private $productOptionsConfiguration;
 
     /**
-     * @param ProductOptions $productOptions
+     * @var ProductOptionsFinder
+     */
+    private $productOptionsFinder;
+
+    /**
+     * @param ProductOptionsConfiguration $productOptionsConfiguration
+     * @param ProductOptionsFinder        $productOptionsFinder
      */
     public function __construct(
-        ProductOptions $productOptions
+        ProductOptionsConfiguration $productOptionsConfiguration,
+        ProductOptionsFinder $productOptionsFinder
     ) {
-        $this->productOptions = $productOptions;
+        $this->productOptionsConfiguration = $productOptionsConfiguration;
+        $this->productOptionsFinder = $productOptionsFinder;
     }
 
     /**
@@ -62,10 +71,16 @@ class ProductCode
      *
      * @param string $type
      * @param string $option
+     * @param string $country
+     *
      * @return int
      */
-    public function get($type = '', $option = '')
+    public function get($type = '', $option = '', $country = 'NL')
     {
+        if (empty($type) && $country != 'NL') {
+            return $this->getEpsOption();
+        }
+
         $type = strtolower($type);
         $option = strtolower($option);
         if ($type == static::TYPE_PICKUP) {
@@ -84,14 +99,14 @@ class ProductCode
     private function getProductCode($option)
     {
         if ($option == static::OPTION_EVENING) {
-            return $this->productOptions->getDefaultEveningProductOption();
+            return $this->productOptionsConfiguration->getDefaultEveningProductOption();
         }
 
         if ($option == static::OPTION_SUNDAY) {
-            return $this->productOptions->getDefaultSundayProductOption();
+            return $this->productOptionsConfiguration->getDefaultSundayProductOption();
         }
 
-        return $this->productOptions->getDefaultProductOption();
+        return $this->productOptionsConfiguration->getDefaultProductOption();
     }
 
     /**
@@ -101,9 +116,17 @@ class ProductCode
     private function getPakjegemakProductOption($option)
     {
         if ($option == static::OPTION_PGE) {
-            return $this->productOptions->getDefaultPakjeGemakEarlyProductOption();
+            return $this->productOptionsConfiguration->getDefaultPakjeGemakEarlyProductOption();
         }
 
-        return $this->productOptions->getDefaultPakjeGemakProductOption();
+        return $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
+    }
+
+    private function getEpsOption()
+    {
+        $options = $this->productOptionsFinder->getEpsProductOptions();
+        $firstOption = array_shift($options);
+
+        return $firstOption['value'];
     }
 }
