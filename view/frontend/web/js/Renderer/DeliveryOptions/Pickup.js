@@ -73,6 +73,7 @@ define([
              * Subscribe to address changes.
              */
             AddressFinder.subscribe(function (address) {
+                State.deliveryOptionsAreAvailable(false);
                 if (!window.checkoutConfig.shipping.postnl.shippingoptions_active || !address) {
                     return;
                 }

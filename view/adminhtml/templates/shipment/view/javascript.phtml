@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,15 +28,11 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <body>
-        <referenceContainer name="content">
-            <block class="Magento\Framework\View\Element\Template" name="download_and_refresh" template="TIG_PostNL::shipment/view/javascript.phtml"/>
-        </referenceContainer>
-        <referenceContainer name="before.body.end">
-            <block class="TIG\PostNL\Block\Adminhtml\Shipment\Options\View" name="postnl.shipment.view.options" template="TIG_PostNL::shipment/view/options.phtml" />
-        </referenceContainer>
-    </body>
-</page>
+ */
+?>
+<script type="text/javascript">
+    function download(download_url) {
+        window.open(download_url, '_blank');
+        location.reload();
+    }
+</script>
