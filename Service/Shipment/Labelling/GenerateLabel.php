@@ -107,7 +107,7 @@ class GenerateLabel
     {
         try {
             $label = $this->callEndpoint($shipment, $currentShipmentNumber);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->debug($exception->getMessage());
             return null;
         }
