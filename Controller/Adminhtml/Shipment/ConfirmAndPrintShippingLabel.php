@@ -90,14 +90,16 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
      */
     public function execute()
     {
-        $shipment = $this->getShipment();
-        $this->barcodeHandler->prepareShipment($shipment->getId());
+        $labels = $this->getLabels();
 
-        if (!$shipment->getTracks()) {
-            $this->track->set($shipment);
+        if (empty($labels)) {
+            $this->messageManager->addErrorMessage(
+                // @codingStandardsIgnoreLine
+                __('[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information')
+            );
+
+            return $this->_redirect($this->_redirect->getRefererUrl());
         }
-
-        $labels = $this->getLabels->get($shipment->getId());
 
         return $this->getPdf->get($labels);
     }
@@ -111,5 +113,22 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     {
         $shipmentId = $this->getRequest()->getParam('shipment_id');
         return $this->shipmentRepository->get($shipmentId);
+    }
+
+    /**
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface[]
+     */
+    private function getLabels()
+    {
+        $shipment = $this->getShipment();
+        $this->barcodeHandler->prepareShipment($shipment->getId());
+
+        if (!$shipment->getTracks()) {
+            $this->track->set($shipment);
+        }
+
+        $labels = $this->getLabels->get($shipment->getId());
+
+        return $labels;
     }
 }
