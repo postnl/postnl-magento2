@@ -133,7 +133,7 @@ class Mail extends AbstractTracking
         ]);
         $transport->setTemplateVars([
            'order_id'      => $shipment->getIncrementId(),
-           'dateAndTime'   => $this->postNLHelperData->getDateYmd(),
+           'dateAndTime'   => $this->postNLHelperData->getDate(),
            'url'           => $url,
            'logo_url'      => $this->getLogoUrl()
         ]);

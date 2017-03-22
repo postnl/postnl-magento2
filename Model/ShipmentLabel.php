@@ -31,23 +31,24 @@
  */
 namespace TIG\PostNL\Model;
 
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use Magento\Framework\DataObject\IdentityInterface;
-use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Model\AbstractModel as MagentoModel;
 
-/**
- * @method $this setParentId(string $value)
- * @method null|string getParentId
- * @method $this setLabel(string $value)
- * @method null|string getLabel
- * @method $this setType(string $value)
- * @method null|string getType
- */
-class ShipmentLabel extends AbstractModel implements ShipmentLabelInterface, IdentityInterface
+class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, IdentityInterface
 {
     const CACHE_TAG = 'tig_postnl_shipment_label';
 
-    const BARCODE_TYPE_LABEL = 'label';
-    const BARCODE_TYPE_RETURN   = 'return';
+    const FIELD_PARENT_ID = 'parent_id';
+    const FIELD_NUMBER = 'number';
+    const FIELD_LABEL = 'label';
+    const FIELD_TYPE = 'type';
+
+    /**
+     * @var string
+     */
+    // @codingStandardsIgnoreLine
+    protected $_eventPrefix = 'tig_postnl_shipment_label';
 
     /**
      * Constructor
@@ -65,5 +66,77 @@ class ShipmentLabel extends AbstractModel implements ShipmentLabelInterface, Ide
     public function getIdentities()
     {
         return [self::CACHE_TAG . '_' . $this->getId()];
+    }
+
+    /**
+     * @return int
+     */
+    public function getParentId()
+    {
+        return $this->getData(static::FIELD_PARENT_ID);
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setParentId($value)
+    {
+        return $this->setData(static::FIELD_PARENT_ID, $value);
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setNumber($value)
+    {
+        return $this->setData(static::FIELD_NUMBER, $value);
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumber()
+    {
+        return $this->getData(static::FIELD_NUMBER);
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->getData(static::FIELD_LABEL);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setLabel($value)
+    {
+        return $this->setData(static::FIELD_LABEL, $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->getData(static::FIELD_TYPE);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setType($value)
+    {
+        return $this->setData(static::FIELD_TYPE, $value);
     }
 }

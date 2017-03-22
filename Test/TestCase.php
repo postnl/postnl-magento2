@@ -62,11 +62,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         /** Require functions.php to be able to use the translate function */
+        $path = __DIR__ . '/../../../../app/functions.php';
         if (strpos(__DIR__, 'vendor') === false) {
-            require_once __DIR__ . '/../../../../functions.php';
-        } else {
-            require_once __DIR__ . '/../../../../app/functions.php';
+            $path = __DIR__ . '/../../../../functions.php';
         }
+
+        require_once($path);
 
         ini_set('error_reporting', E_ALL);
         ini_set('display_errors', '1');
@@ -164,18 +165,30 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $class
+     * @param      $class
+     * @param bool $return Immediate call getMock.
      *
-     * @return \PHPUnit_Framework_MockObject_MockBuilder
+     * @return \PHPUnit_Framework_MockObject_MockBuilder|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getFakeMock($class)
+    protected function getFakeMock($class, $return = false)
     {
         $mock = $this->getMockBuilder($class);
         $mock->disableOriginalConstructor();
 
+        if ($return) {
+            return $mock->getMock();
+        }
+
         return $mock;
     }
 
+    /**
+     * @param       $class
+     * @param array $args
+     *
+     * @return object
+     * @throws \Exception
+     */
     protected function getObject($class, $args = [])
     {
         if ($this->objectManager === null) {
@@ -183,5 +196,27 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         }
 
         return $this->objectManager->getObject($class, $args);
+    }
+
+    /**
+     * Quickly mock a function.
+     *
+     * @param                                          $function
+     * @param                                          $response
+     * @param \PHPUnit_Framework_MockObject_MockObject $instance
+     */
+    protected function mockFunction(
+        \PHPUnit_Framework_MockObject_MockObject $instance,
+        $function,
+        $response,
+        $with = []
+    ) {
+        $method = $instance->method($function);
+
+        if ($with) {
+            $method->with(...$with);
+        }
+
+        $method->willReturn($response);
     }
 }

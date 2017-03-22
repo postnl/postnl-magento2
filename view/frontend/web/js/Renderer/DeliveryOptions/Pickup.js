@@ -73,7 +73,12 @@ define([
              * Subscribe to address changes.
              */
             AddressFinder.subscribe(function (address) {
-                if (!address) {
+                State.deliveryOptionsAreAvailable(false);
+                if (!window.checkoutConfig.shipping.postnl.shippingoptions_active || !address) {
+                    return;
+                }
+
+                if (address.countryCode != 'NL') {
                     return;
                 }
 
@@ -170,7 +175,16 @@ define([
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_locations,
                 data : {address: address}
             }).done(function (data) {
+                if (data.error) {
+                    Logger.error(data.error);
+                    State.pickupOptionsAreAvailable(false);
+                    return false;
+                }
                 State.pickupOptionsAreAvailable(true);
+
+                if (window.checkoutConfig.shipping.postnl.is_deliverydays_active === false) {
+                    data = [data.shift()];
+                }
 
                 data = ko.utils.arrayMap(data, function (data) {
                     return new Location(data);
@@ -183,10 +197,6 @@ define([
             }).always(function () {
                 State.pickupOptionsAreLoading(false);
             });
-        },
-
-        getFeeFormatted: function () {
-
         },
 
         /**

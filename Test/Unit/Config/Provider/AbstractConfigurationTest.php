@@ -35,6 +35,8 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
 use TIG\PostNL\Config\Provider\PostNLConfiguration;
+use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Test\TestCase;
 
 abstract class AbstractConfigurationTest extends TestCase
@@ -52,7 +54,7 @@ abstract class AbstractConfigurationTest extends TestCase
     /**
      * @param array $args
      *
-     * @return DefaultConfiguration|PostNLConfiguration
+     * @return DefaultConfiguration|PostNLConfiguration|ShippingOptions|ProductOptions
      */
     public function getInstance(array $args = [])
     {
@@ -83,5 +85,19 @@ abstract class AbstractConfigurationTest extends TestCase
             $storeId
         );
         $getValueExpects->willReturn($value);
+    }
+
+    /**
+     * @param array $xpaths
+     * @param array $returns
+     */
+    protected function setXpathConsecutive($xpaths = [], $returns = [])
+    {
+        $getValueExpects = $this->scopeConfigMock->expects($this->any());
+        $getValueExpects->method('getValue');
+        $getValueExpects->withConsecutive($this->onConsecutiveCalls($xpaths));
+        $getValueExpects->will(
+            new \PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls($returns)
+        );
     }
 }

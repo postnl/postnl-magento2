@@ -38,7 +38,7 @@ use TIG\PostNL\Model\ShipmentLabel;
 
 class Generate
 {
-    const TEMP_LABEL_FOLDER = 'log' . DIRECTORY_SEPARATOR . 'PostNL' . DIRECTORY_SEPARATOR . 'templabel';
+    const TEMP_LABEL_FOLDER = 'PostNL' . DIRECTORY_SEPARATOR . 'templabel';
     const TEMP_LABEL_FILENAME = 'TIG_PostNL_temp.pdf';
 
     /**

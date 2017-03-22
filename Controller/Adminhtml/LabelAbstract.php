@@ -32,11 +32,9 @@
 namespace TIG\PostNL\Controller\Adminhtml;
 
 use Magento\Backend\App\Action;
-use Magento\Framework\App\ResponseInterface;
 use Magento\Backend\App\Action\Context;
 
-use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Helper\Labelling\SaveLabels;
+use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Helper\Pdf\Get as GetPdf;
 
 abstract class LabelAbstract extends Action
@@ -48,12 +46,6 @@ abstract class LabelAbstract extends Action
     protected $getLabels;
 
     /**
-     * @var SaveLabels
-     */
-    //@codingStandardsIgnoreLine
-    protected $saveLabels;
-
-    /**
      * @var GetPdf
      */
     //@codingStandardsIgnoreLine
@@ -62,19 +54,16 @@ abstract class LabelAbstract extends Action
     /**
      * @param Context    $context
      * @param GetLabels  $getLabels
-     * @param SaveLabels $saveLabels
      * @param GetPdf     $getPdf
      */
     public function __construct(
         Context $context,
         GetLabels $getLabels,
-        SaveLabels $saveLabels,
         GetPdf $getPdf
     ) {
         parent::__construct($context);
 
         $this->getLabels  = $getLabels;
-        $this->saveLabels = $saveLabels;
         $this->getPdf     = $getPdf;
     }
 }
