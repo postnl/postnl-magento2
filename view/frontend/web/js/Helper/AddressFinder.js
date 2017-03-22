@@ -28,7 +28,17 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote, $) {
+define([
+    'ko',
+    'Magento_Checkout/js/model/quote',
+    'jquery',
+    'Magento_Customer/js/model/customer'
+], function (
+    ko,
+    quote,
+    $,
+    customer
+) {
     'use strict';
 
     var address = {
@@ -46,7 +56,6 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
 
     var fields = [
         "input[name*='street[0]']",
-        "input[name*='street[1]']",
         "input[name*='postcode']",
         "select[name*='country_id']"
     ];
@@ -74,6 +83,23 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
     return ko.computed(function () {
         valueUpdateNotifier();
 
+        /**
+         * The street is not always available on the first run.
+         */
+        var shippingAddress = quote.shippingAddress();
+        if (customer.isLoggedIn() && shippingAddress && shippingAddress.street) {
+            address = {
+                street: shippingAddress.street,
+                postalCode: shippingAddress.postcode,
+                lastname: shippingAddress.lastname,
+                firstname: shippingAddress.firstname,
+                telephone: shippingAddress.telephone,
+                countryCode: shippingAddress.countryId
+            };
+
+            return address;
+        }
+
         allFieldsExists = true;
         $.each(fields, function () {
             if (!$(this).length) {
@@ -89,31 +115,22 @@ define(['ko', 'Magento_Checkout/js/model/quote', 'jquery'], function (ko, quote,
         /**
          * Unfortunately Magento does not always fill all fields, so get them ourselves.
          */
-        if (!address.street) {
-            address.street = {
-                0 : $("input[name*='street[0]']").val(),
-                1 : $("input[name*='street[1]']").val()
-            };
-        }
+        address.street = {
+            0 : $("input[name*='street[0]']").val(),
+            1 : $("input[name*='street[1]']").val()
+        };
 
-        if (!address.postalCode) {
-            address.postalCode = $("input[name*='postcode']").val();
-        }
-
-        if (!address.firstname) {
-            address.firstname = $("input[name*='firstname']").val();
-        }
-
-        if (!address.lastname) {
-            address.lastname = $("input[name*='lastname']").val();
-        }
-
-        if (!address.telephone) {
-            address.telephone = $("input[name*='telephone']").val();
-        }
+        address.postalCode = $("input[name*='postcode']").val();
+        address.firstname  = $("input[name*='firstname']").val();
+        address.lastname   = $("input[name*='lastname']").val();
+        address.telephone  = $("input[name*='telephone']").val();
 
         if (!address.countryCode || address.countryCode !== countryCode) {
-            address.countryCode = countryCode;
+            address.countryCode = $("select[name*='country_id']").val();
+        }
+
+        if (!address.countryCode || !address.postalCode || !address.street) {
+            return false;
         }
 
         return address;

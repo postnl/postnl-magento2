@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Test\Unit\Config\Provider;
 
-use TIG\PostNL\Config\CheckoutConfiguration\AbstractCheckoutConfiguration;
+use TIG\PostNL\Config\CheckoutConfiguration\CheckoutConfigurationInterface;
 use TIG\PostNL\Test\TestCase;
 use \TIG\PostNL\Config\Provider\CheckoutConfiguration;
 
@@ -86,7 +86,7 @@ class CheckoutConfigurationTest extends TestCase
     {
         $shippingConfiguration = [];
         foreach ($shippingConfigurationInput as $key => $value) {
-            $mock = $this->getMockForAbstractClass(AbstractCheckoutConfiguration::class);
+            $mock = $this->getMock(CheckoutConfigurationInterface::class);
             $mock->expects($this->once())->method('getValue')->willReturn($value);
 
             $shippingConfiguration[$key] = $mock;

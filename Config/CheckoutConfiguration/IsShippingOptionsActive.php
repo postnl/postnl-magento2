@@ -35,7 +35,7 @@ use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Quote\CheckIfQuoteItemsAreInStock;
 
-class IsShippingOptionsActive extends AbstractCheckoutConfiguration
+class IsShippingOptionsActive implements CheckoutConfigurationInterface
 {
     /**
      * @var ShippingOptions

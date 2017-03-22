@@ -131,7 +131,7 @@ class Timeframes extends AbstractDeliveryOptions
 
         if (isset($address['error'])) {
             //@codingStandardsIgnoreLine
-            return __('%1 : %2', $address['error']['code'], $address['error']['message']);
+            return ['error' => __('%1 : %2', $address['error']['code'], $address['error']['message'])];
         }
 
         return $this->getPosibleDeliveryDays($address);

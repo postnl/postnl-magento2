@@ -48,10 +48,9 @@ class ShipmentLabelRepositoryTest extends TestCase
 
     public function testSave()
     {
-        $shipmentLabelFactoryMock = $this->getMock(
-            '\TIG\PostNL\Model\ShipmentLabelInterface',
-            ['getIdentities', 'save']
-        );
+        $shipmentLabelFactoryMock = $this->getFakeMock(\TIG\PostNL\Model\ShipmentLabel::class);
+        $shipmentLabelFactoryMock->setMethods(['getIdentities', 'save']);
+        $shipmentLabelFactoryMock = $shipmentLabelFactoryMock->getMock();
 
         $saveExpects = $shipmentLabelFactoryMock->expects($this->once());
         $saveExpects->method('save');
@@ -91,10 +90,9 @@ class ShipmentLabelRepositoryTest extends TestCase
 
     public function testDelete()
     {
-        $shipmentLabelFactoryMock = $this->getMock(
-            '\TIG\PostNL\Model\ShipmentLabelInterface',
-            ['getIdentities', 'delete']
-        );
+        $shipmentLabelFactoryMock = $this->getFakeMock(\TIG\PostNL\Model\ShipmentLabel::class);
+        $shipmentLabelFactoryMock->setMethods(['getIdentities', 'delete']);
+        $shipmentLabelFactoryMock = $shipmentLabelFactoryMock->getMock();
 
         $saveExpects = $shipmentLabelFactoryMock->expects($this->once());
         $saveExpects->method('delete');

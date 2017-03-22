@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Unit\Controller\Adminhtml\Shipment;
 
 use TIG\PostNL\Controller\Adminhtml\Shipment\MassPrintShippingLabel;
-use TIG\PostNL\Helper\Labelling\GetLabels;
+use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Test\TestCase;
 
 class MassPrintShippingLabelTest extends TestCase

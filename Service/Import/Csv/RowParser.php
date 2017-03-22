@@ -232,7 +232,7 @@ class RowParser
     {
         $result = false;
 
-        if (is_numeric($value) && $value > 0) {
+        if (is_numeric($value) && $value >= 0) {
             $result = (double)sprintf('%.4F', $value);
         }
 

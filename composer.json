@@ -4,7 +4,7 @@
     "version": "v1.1.0",
     "require": {
         "php": "~7.0.0",
-        "magento/framework": "100.*",
+        "magento/framework": "100.1.*",
         "setasign/fpdf": "1.8.1",
         "setasign/fpdi": "1.6.1"
     },

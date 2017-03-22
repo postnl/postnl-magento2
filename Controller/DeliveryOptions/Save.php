@@ -115,8 +115,8 @@ class Save extends AbstractDeliveryOptions
      */
     private function saveDeliveryOption($params)
     {
-        $params        = $this->addSessionDataToParams($params);
-        $params        = $this->orderParams->get($params);
+        $type          = $params['type'];
+        $params        = $this->orderParams->get($this->addSessionDataToParams($params));
         $postnlOrder   = $this->getPostNLOrderByQuoteId($params['quote_id']);
 
         foreach ($params as $key => $value) {
@@ -125,11 +125,11 @@ class Save extends AbstractDeliveryOptions
 
         $this->orderRepository->save($postnlOrder);
 
-        if ($params['type'] != 'pickup') {
+        if ($type != 'pickup') {
             $this->pickupAddress->remove();
         }
 
-        if ($params['type'] == 'pickup') {
+        if ($type == 'pickup') {
             $this->pickupAddress->set($params['pg_address']);
         }
 

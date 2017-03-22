@@ -52,7 +52,26 @@
                 <item name="sundaydelivery_fee" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\SundayDeliveryFee</item>
                 <item name="is_eveningdelivery_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsEveningDeliveryActive</item>
                 <item name="eveningdelivery_fee" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\EveningDeliveryFee</item>
+                <item name="is_deliverydays_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive</item>
             </argument>
         </arguments>
     </type>
+
+    <!-- This class is responsible for filtering the time frames received from PostNL. -->
+    <type name="TIG\PostNL\Service\Timeframe\Filter">
+        <arguments>
+            <argument name="dayFilters" xsi:type="array">
+                <item name="sunday" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\Sunday</item>
+                <item name="sameday" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\SameDay</item>
+                <item name="shipmentdays" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\ShipmentDays</item>
+                <!-- Order is important, cutoff times must be processed last -->
+                <item name="cutoff" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\CutOffTimes</item>
+            </argument>
+            <argument name="optionsFilters" xsi:type="array">
+                <item name="evening" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Options\Evening</item>
+                <item name="sunday" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Options\Sunday</item>
+            </argument>
+        </arguments>
+    </type>
+
 </config>

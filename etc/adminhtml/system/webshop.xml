@@ -62,7 +62,7 @@
 
             <field id="shipment_days" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Shipment days</label>
-                <comment><![CDATA[Select on which days of the week orders are shipped. You can read more about shipping and delivery days <a href="https://servicedesk.tig.nl/hc/nl/articles/115003398667" target="_blank" title="PostNL shipping days">here</a>]]></comment>
+                <comment><![CDATA[Select on which days of the week orders are shipped. You can read more about shipping and delivery days <a href="https://servicedesk.tig.nl/hc/nl/articles/115003398667" target="_blank" title="PostNL shipping days">here</a>.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Settings\DaysOfWeek</source_model>
                 <config_path>tig_postnl/webshop_shipping/shipment_days</config_path>
             </field>
@@ -70,6 +70,7 @@
 
         <group id="track_and_trace" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Track and Trace</label>
+            <comment><![CDATA[Automatically send Track and Trace email to customer. Read more about the <a href="https://servicedesk.tig.nl/hc/nl/articles/115004148927" target="_blank" title="track and trace">Track and Trace</a> e-mails within the extension.]]></comment>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
             <field id="email_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Send Track and Trace email</label>

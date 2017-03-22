@@ -33,6 +33,9 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template" name="download_and_refresh" template="TIG_PostNL::shipment/view/javascript.phtml"/>
+        </referenceContainer>
         <referenceContainer name="before.body.end">
             <block class="TIG\PostNL\Block\Adminhtml\Shipment\Options\View" name="postnl.shipment.view.options" template="TIG_PostNL::shipment/view/options.phtml" />
         </referenceContainer>

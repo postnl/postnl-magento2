@@ -153,6 +153,10 @@ class CreateShipments extends Action
             return false;
         }
 
+        if ($this->currentOrder->getShippingMethod() !== 'tig_postnl_regular') {
+            return false;
+        }
+
         return true;
     }
 

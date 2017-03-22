@@ -33,15 +33,16 @@ namespace TIG\PostNL\Webservices\Endpoints;
 
 use Magento\Sales\Model\Order\Address;
 use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Service\Shipment\Data as ShipmentData;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Customer;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Webservices\Soap;
 
+// @codingStandardsIgnoreFile
 class Labelling extends AbstractEndpoint
 {
-    // @codingStandardsIgnoreLine
-    const PREG_MATCH_STREET = '#\A(.*?)\s+(\d+[a-zA-Z]{0,1}\s{0,1}[-]{1}\s{0,1}\d*[a-zA-Z]{0,1}|\d+[a-zA-Z-]{0,1}\d*[a-zA-Z]{0,1})#';
+    const PREG_MATCH_STREET = '/([^\d]+)\s?(.+)/i';
 
     const PREG_MATCH_HOUSENR = '#^([\d]+)(.*)#s';
 
@@ -76,18 +77,26 @@ class Labelling extends AbstractEndpoint
     private $requestParams;
 
     /**
-     * @param Soap     $soap
-     * @param Customer $customer
-     * @param Message  $message
+     * @var ShipmentData
+     */
+    private $shipmentData;
+
+    /**
+     * @param Soap           $soap
+     * @param Customer       $customer
+     * @param Message        $message
+     * @param ShipmentData   $shipmentData
      */
     public function __construct(
         Soap $soap,
         Customer $customer,
-        Message $message
+        Message $message,
+        ShipmentData $shipmentData
     ) {
         $this->soap = $soap;
         $this->customer = $customer;
         $this->message = $message;
+        $this->shipmentData = $shipmentData;
     }
 
     /**
@@ -100,14 +109,15 @@ class Labelling extends AbstractEndpoint
 
     /**
      * @param Shipment $shipment
+     * @param int      $currentShipmentNumber
      */
-    public function setParameters($shipment)
+    public function setParameters($shipment, $currentShipmentNumber = 1)
     {
         $customer = $this->customer->get();
         $customer['Address'] = $this->customer->address();
         $customer['CollectionLocation'] = $this->customer->blsCode();
 
-        $shipmentData = $this->getShipmentData($shipment);
+        $shipmentData = $this->getShipmentData($shipment, $currentShipmentNumber);
 
         $barcode = $shipment->getMainBarcode();
         $printerType = ['Printertype' => 'GraphicFile|PDF'];
@@ -116,16 +126,17 @@ class Labelling extends AbstractEndpoint
         $this->requestParams = [
             'Message' => $message,
             'Customer' => $customer,
-            'Shipments' => ['Shipment' => $shipmentData]
+            'Shipments' => ['Shipment' => $shipmentData],
         ];
     }
 
     /**
      * @param Shipment $postnlShipment
+     * @param          $currentShipmentNumber
      *
      * @return array
      */
-    private function getShipmentData($postnlShipment)
+    private function getShipmentData($postnlShipment, $currentShipmentNumber)
     {
         $shipment = $postnlShipment->getShipment();
         $postnlOrder = $postnlShipment->getPostNLOrder();
@@ -137,32 +148,7 @@ class Labelling extends AbstractEndpoint
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
 
-        $shipmentData = $this->getShipmentDataArray($postnlShipment, $address, $contact);
-
-        return $shipmentData;
-    }
-
-    /**
-     * @param Shipment $postnlShipment
-     * @param          $address
-     * @param          $contact
-     *
-     * @return array
-     */
-    private function getShipmentDataArray($postnlShipment, $address, $contact)
-    {
-        $shipmentData = [
-            'Addresses'                => ['Address' => $address],
-            'Barcode'                  => $postnlShipment->getMainBarcode(),
-            'CollectionTimeStampEnd'   => '',
-            'CollectionTimeStampStart' => '',
-            'Contacts'                 => ['Contact' => $contact],
-            'Dimension'                => ['Weight'  => round($postnlShipment->getTotalWeight())],
-            'DeliveryDate'             => $postnlShipment->getDeliveryDateFormatted(),
-            'DownPartnerID'            => $postnlShipment->getPgRetailNetworkId(),
-            'DownPartnerLocation'      => $postnlShipment->getPgLocationCode(),
-            'ProductCodeDelivery'      => $postnlShipment->getProductCode(),
-        ];
+        $shipmentData = $this->shipmentData->get($postnlShipment, $address, $contact, $currentShipmentNumber);
 
         return $shipmentData;
     }
@@ -194,18 +180,16 @@ class Labelling extends AbstractEndpoint
      */
     private function getAddressData($shippingAddress, $addressType = '01')
     {
-        $fullStreet = implode(' ', $shippingAddress->getStreet());
-        $result = preg_match(self::PREG_MATCH_STREET, $fullStreet, $streetMatches);
-        $result = preg_match(self::PREG_MATCH_HOUSENR, $streetMatches[2], $houseNrMatches);
+        $streetData = $this->getStreet($shippingAddress);
 
         $addressArray = [
             'AddressType'      => $addressType,
             'FirstName'        => $shippingAddress->getFirstname(),
             'Name'             => $shippingAddress->getLastname(),
             'CompanyName'      => $shippingAddress->getCompany(),
-            'Street'           => $streetMatches[1],
-            'HouseNr'          => $houseNrMatches[1],
-            'HouseNrExt'       => $houseNrMatches[2],
+            'Street'           => $streetData['Street'],
+            'HouseNr'          => $streetData['HouseNr'],
+            'HouseNrExt'       => $streetData['HouseNrExt'],
             'Zipcode'          => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode())),
             'City'             => $shippingAddress->getCity(),
             'Region'           => $shippingAddress->getRegion(),
@@ -229,5 +213,33 @@ class Labelling extends AbstractEndpoint
     public function getLocation()
     {
         return $this->version . '/' . $this->endpoint;
+    }
+
+    /**
+     * @param Address $shippingAddress
+     *
+     * @return array
+     */
+    private function getStreet($shippingAddress)
+    {
+        $street = $shippingAddress->getStreet();
+        $fullStreet = implode(' ', $street);
+
+        if (empty($fullStreet)) {
+            return [
+                'Street'     => '',
+                'HouseNr'    => '',
+                'HouseNrExt' => '',
+            ];
+        }
+
+        preg_match(self::PREG_MATCH_STREET, $fullStreet, $streetMatches);
+        preg_match(self::PREG_MATCH_HOUSENR, $streetMatches[2], $houseNrMatches);
+
+        return [
+            'Street'     => trim($streetMatches[1]),
+            'HouseNr'    => trim($houseNrMatches[1]),
+            'HouseNrExt' => trim($houseNrMatches[2]),
+        ];
     }
 }

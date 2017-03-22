@@ -44,6 +44,17 @@ class DataProvider
     }
 
     /**
+     * @return array
+     */
+    public function enabledAndDisabled()
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
+    /**
      * @return string
      */
     public function liveStagingProvider()
