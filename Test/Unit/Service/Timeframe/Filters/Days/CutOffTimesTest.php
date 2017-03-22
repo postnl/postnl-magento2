@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Test\Unit\Service\Timeframe\Filters\Days;
 
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Service\Timeframe\Filters\Days\CutOffTimes;
 use TIG\PostNL\Test\TestCase;
 
@@ -62,14 +63,30 @@ class CutOffTimesTest extends TestCase
     }
 
     /**
+     * @dataProvider \TIG\PostNL\Test\Fixtures\Timeframes\Days\DataProvider::cutOffNextDayRemoved
+     *
+     * @param $input
+     * @param $output
+     */
+    public function testDoesFilterOnlyTheNextDay($input, $output)
+    {
+        $result = $this->loadInstance('10:00:00')->filter($input);
+        $this->assertEquals($output, $result);
+    }
+
+    /**
      * @param $cutOffTime
      *
      * @return CutOffTimes
      */
     private function loadInstance($cutOffTime)
     {
-        $currentDate = new \DateTime('19-11-2016 18:00:00');
-        $cutOffDateTime = new \DateTime('19-11-2016 ' . $cutOffTime);
+        $webshopMock = $this->getFakeMock(Webshop::class, true);
+        $this->mockFunction($webshopMock, 'getCutOffTime', '18:00:00');
+
+        $currentDate = new \DateTime('18-11-2016 18:00:00');
+        $cutOffDateTime = new \DateTime('18-11-2016 ' . $cutOffTime);
+        $todayDateTime = new \DateTime('18-11-2016');
 
         $currentDateMock = $this->getMock(TimezoneInterface::class);
         $this->mockFunction($currentDateMock, 'date', $currentDate);
@@ -77,9 +94,21 @@ class CutOffTimesTest extends TestCase
         $cutOffTimeMock = $this->getMock(TimezoneInterface::class);
         $this->mockFunction($cutOffTimeMock, 'date', $cutOffDateTime);
 
+        $todayMock = $this->getMock(TimezoneInterface::class);
+        $this->mockFunction($todayMock, 'date', $todayDateTime);
+
+        $dateLoaderMock = $this->getMock(TimezoneInterface::class);
+        $dateMethod = $dateLoaderMock->method('date');
+        $dateMethod->willReturnCallback(function ($date) {
+            return new \DateTime($date);
+        });
+
         return $this->getInstance([
+            'webshop' => $webshopMock,
             'cutOffTime' => $cutOffTimeMock,
             'currentDate' => $currentDateMock,
+            'dateLoader' => $dateLoaderMock,
+            'today' => $todayMock,
         ]);
     }
 }
