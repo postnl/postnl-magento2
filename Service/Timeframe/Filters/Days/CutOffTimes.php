@@ -43,21 +43,43 @@ class CutOffTimes implements DaysFilterInterface
     private $isPastCutOffTime;
 
     /**
+     * @var \DateTime
+     */
+    private $now;
+
+    /**
+     * @var TimezoneInterface
+     */
+    private $dateLoader;
+
+    /**
+     * @var string
+     */
+    private $cutOffTime;
+
+    /**
      * @param Webshop           $webshop
      * @param TimezoneInterface $currentDate
      * @param TimezoneInterface $cutOffTime
+     * @param TimezoneInterface $dateLoader
+     * @param TimezoneInterface $today
      */
     public function __construct(
         Webshop $webshop,
         TimezoneInterface $currentDate,
-        TimezoneInterface $cutOffTime
+        TimezoneInterface $cutOffTime,
+        TimezoneInterface $dateLoader,
+        TimezoneInterface $today
     ) {
-        $now = $currentDate->date();
+        $this->now = $currentDate->date();
         $loadedCutOffTime = $cutOffTime->date('today ' . $webshop->getCutOffTime());
-
-        $diff = $loadedCutOffTime->diff($now);
+        $diff = $loadedCutOffTime->diff($this->now);
 
         $this->isPastCutOffTime = $diff->format('%R') == '+';
+        $this->dateLoader = $dateLoader;
+
+        $this->today = $today->date('today', null, false);
+        $this->cutOffTime = $webshop->getCutOffTime();
     }
 
     /**
@@ -67,12 +89,29 @@ class CutOffTimes implements DaysFilterInterface
      */
     public function filter($days)
     {
-        if (!$this->isPastCutOffTime) {
+        if (!$this->isPastCutOffTime || !$this->isNextDay($days[0])) {
             return $days;
         }
 
         array_shift($days);
 
         return array_values($days);
+    }
+
+    /**
+     * @param $day
+     *
+     * @return bool
+     */
+    private function isNextDay($day)
+    {
+        $dayDateTime = $this->dateLoader->date($day->Date, null, false);
+        $diff = $dayDateTime->diff($this->today);
+
+        if ($diff->days == 1) {
+            return true;
+        }
+
+        return false;
     }
 }
