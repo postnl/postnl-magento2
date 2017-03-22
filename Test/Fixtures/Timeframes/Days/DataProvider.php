@@ -79,6 +79,19 @@ class DataProvider
         ];
     }
 
+    public function cutOffNextDayRemoved()
+    {
+        $expectedDates = $this->getDaysForTwoWeeks();
+        unset($expectedDates[0]);
+
+        return [
+            [
+                $this->getDaysForTwoWeeks(),
+                array_values($expectedDates),
+            ]
+        ];
+    }
+
     public function shipmentDays()
     {
         return [
