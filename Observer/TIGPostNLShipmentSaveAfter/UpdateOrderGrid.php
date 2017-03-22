@@ -83,6 +83,11 @@ class UpdateOrderGrid implements ObserverInterface
     {
         /** @var \TIG\PostNL\Model\Order $order */
         $order = $this->orderRepositoryInterface->getByFieldWithValue('order_id', $shipment->getOrderId());
+
+        if (!$order) {
+            return;
+        }
+
         $order->setData('ship_at', $shipment->getShipAt());
 
         $this->orderRepositoryInterface->save($order);

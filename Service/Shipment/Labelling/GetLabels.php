@@ -79,7 +79,7 @@ class GetLabels
     /**
      * @param int|string $shipmentId
      *
-     * @return array
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface[]
      */
     public function get($shipmentId)
     {
