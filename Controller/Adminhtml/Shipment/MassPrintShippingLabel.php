@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
+use Magento\Framework\Controller\ResultFactory;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Backend\App\Action\Context;
@@ -110,12 +111,15 @@ class MassPrintShippingLabel extends LabelAbstract
     {
         $collection = $this->collectionFactory->create();
         $collection = $this->filter->getCollection($collection);
+        $this->loadLabels($collection);
 
-        /** @var Shipment $shipment */
-        foreach ($collection as $shipment) {
-            $this->barcodeHandler->prepareShipment($shipment->getId());
-            $this->track->set($shipment);
-            $this->setLabel($shipment->getId());
+        if (empty($this->labels)) {
+            $this->messageManager->addErrorMessage(
+                // @codingStandardsIgnoreLine
+                __('[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information')
+            );
+
+            return $this->_redirect($this->_redirect->getRefererUrl());
         }
 
         return $this->getPdf->get($this->labels);
@@ -133,5 +137,18 @@ class MassPrintShippingLabel extends LabelAbstract
         }
 
         $this->labels = $this->labels + $labels;
+    }
+
+    /**
+     * @param $collection
+     */
+    private function loadLabels($collection)
+    {
+        /** @var Shipment $shipment */
+        foreach ($collection as $shipment) {
+            $this->barcodeHandler->prepareShipment($shipment->getId());
+            $this->track->set($shipment);
+            $this->setLabel($shipment->getId());
+        }
     }
 }
