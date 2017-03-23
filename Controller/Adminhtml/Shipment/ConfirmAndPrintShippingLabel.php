@@ -121,7 +121,8 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     private function getLabels()
     {
         $shipment = $this->getShipment();
-        $this->barcodeHandler->prepareShipment($shipment->getId());
+        $shippingAddress = $shipment->getShippingAddress();
+        $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
 
         if (!$shipment->getTracks()) {
             $this->track->set($shipment);
