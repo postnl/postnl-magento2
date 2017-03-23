@@ -31,7 +31,8 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
-use TIG\PostNL\Helper\BarcodeData;
+use TIG\PostNL\Exception as PostNLException;
+use TIG\PostNL\Service\Shipment\Barcode\Range as BarcodeRange;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Customer;
 use TIG\PostNL\Webservices\Api\Message;
@@ -55,9 +56,9 @@ class Barcode extends AbstractEndpoint
     private $endpoint = 'barcode';
 
     /**
-     * @var BarcodeData
+     * @var BarcodeRange
      */
-    private $barcodeData;
+    private $barcodeRange;
 
     /**
      * @var Customer
@@ -70,19 +71,24 @@ class Barcode extends AbstractEndpoint
     private $message;
 
     /**
-     * @param Soap        $soap
-     * @param BarcodeData $barcodeData
-     * @param Customer    $customer
-     * @param Message     $message
+     * @var string
+     */
+    private $countryId;
+
+    /**
+     * @param Soap         $soap
+     * @param BarcodeRange $barcodeRange
+     * @param Customer     $customer
+     * @param Message      $message
      */
     public function __construct(
         Soap $soap,
-        BarcodeData $barcodeData,
+        BarcodeRange $barcodeRange,
         Customer $customer,
         Message $message
     ) {
         $this->soap = $soap;
-        $this->barcodeData = $barcodeData;
+        $this->barcodeRange = $barcodeRange;
         $this->customer = $customer;
         $this->message = $message;
     }
@@ -92,7 +98,12 @@ class Barcode extends AbstractEndpoint
      */
     public function call()
     {
-        $barcode = $this->barcodeData->get('NL');
+        if (empty($this->countryId)) {
+            // @codingStandardsIgnoreLine
+            throw new PostNLException(__('Please provide the country id first by calling setCountryId'));
+        }
+
+        $barcode = $this->barcodeRange->getByCountryId($this->countryId);
 
         $parameters = [
             'Message'  => $this->message->get(''),
@@ -121,5 +132,15 @@ class Barcode extends AbstractEndpoint
     public function getLocation()
     {
         return $this->version . '/' . $this->endpoint;
+    }
+
+    /**
+     * @param string $countryId
+     *
+     * @return $this
+     */
+    public function setCountryId($countryId)
+    {
+        $this->countryId = $countryId;
     }
 }

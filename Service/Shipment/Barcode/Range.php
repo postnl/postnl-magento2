@@ -29,13 +29,13 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Helper;
+namespace TIG\PostNL\Service\Shipment\Barcode;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
 use TIG\PostNL\Exception as PostnlException;
 
-class BarcodeData
+class Range
 {
     /**
      * Possible barcodes series per barcode type.
@@ -45,6 +45,17 @@ class BarcodeData
     const EU_BARCODE_SERIE_LONG   = '00000000-99999999';
     const EU_BARCODE_SERIE_SHORT  = '0000000-9999999';
     const GLOBAL_BARCODE_SERIE    = '0000-9999';
+
+    /**
+     * Array of countries to which PostNL ships using EPS. Other EU countries are shipped to using GlobalPack
+     * http://www.postnl.nl/zakelijke-oplossingen/pakket-versturen/pakket-buitenland/binnen-de-eu/
+     *
+     * @var array
+     */
+    private $euCountries = [
+        'BE', 'BG', 'DK', 'DE', 'EE', 'FI', 'FR', 'GB', 'UK', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU',
+        'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'ES', 'CZ', 'SE', 'NL',
+    ];
 
     /**
      * @var AccountConfiguration
@@ -73,9 +84,7 @@ class BarcodeData
      * may be requested.
      *
      * @param string $barcodeType
-     *
      * @return array
-     *
      * @throws PostnlException
      */
     public function get($barcodeType)
@@ -87,6 +96,23 @@ class BarcodeData
         $this->validateBarcodeData($barcodeData);
 
         return $barcodeData;
+    }
+
+    /**
+     * @param $countryId
+     * @return array
+     */
+    public function getByCountryId($countryId)
+    {
+        if ($countryId == 'NL') {
+            return $this->get('NL');
+        }
+
+        if (in_array($countryId, $this->euCountries)) {
+            return $this->get('EU');
+        }
+
+        return $this->get('global');
     }
 
     /**
@@ -134,8 +160,8 @@ class BarcodeData
      */
     private function getGlobalBarcode()
     {
-        $type  = $this->getGlobalBarcodeType();
-        $range = $this->getGlobalBarcodeRange();
+        $type  = $this->defaultConfiguration->getBarcodeGlobalType();
+        $range = $this->defaultConfiguration->getBarcodeGlobalRange();
         $serie = static::GLOBAL_BARCODE_SERIE;
 
         return [
@@ -146,37 +172,15 @@ class BarcodeData
     }
 
     /**
-     * Gets the global barcode type from system/config
-     *
-     * @return string
-     */
-    private function getGlobalBarcodeType()
-    {
-        return $this->defaultConfiguration->getBarcodeGlobalType();
-    }
-
-    /**
-     * Gets the global barcode range from system/config
-     *
-     * @return string
-     */
-    private function getGlobalBarcodeRange()
-    {
-        return $this->defaultConfiguration->getBarcodeGlobalRange();
-    }
-
-    /**
      * @param $barcodeData
-     *
      * @throws PostnlException
      */
     private function validateBarcodeData($barcodeData)
     {
         if (!$barcodeData['type'] || !$barcodeData['range']) {
-            // @codingStandardsIgnoreLine
-            $error = __('Unable to retrieve barcode data.');
             throw new PostnlException(
-                $error,
+                // @codingStandardsIgnoreLine
+                __('Unable to retrieve barcode data.'),
                 'POSTNL-0111'
             );
         }
@@ -184,41 +188,34 @@ class BarcodeData
 
     /**
      * @param $barcodeType
-     *
      * @return array
      * @throws PostnlException
      */
     private function getBarcodeData($barcodeType)
     {
-        $barcodeData = null;
-        switch ($barcodeType) {
-            case 'NL':
-                $barcodeData = $this->getNlBarcode();
-                break;
-            case 'EU':
-                $barcodeData = $this->getEuBarcode();
-                break;
-            case 'GLOBAL':
-                $barcodeData = $this->getGlobalBarcode();
-                break;
+        if ($barcodeType == 'NL') {
+            return $this->getNlBarcode();
         }
 
-        if ($barcodeData === null) {
-            $this->noBarcodeDataError($barcodeType);
+        if ($barcodeType == 'EU') {
+            return $this->getEuBarcode();
         }
 
-        return $barcodeData;
+        if ($barcodeType == 'GLOBAL') {
+            return $this->getGlobalBarcode();
+        }
+
+        $this->noBarcodeDataError($barcodeType);
     }
 
     /**
      * @param $barcodeType
-     *
      * @throws PostnlException
      */
     private function noBarcodeDataError($barcodeType)
     {
         // @codingStandardsIgnoreLine
-        $error = __('Invalid barcodetype requested: %s', $barcodeType);
+        $error = __('Invalid barcodetype requested: %1', $barcodeType);
         throw new PostnlException(
             $error,
             'POSTNL-0061'
