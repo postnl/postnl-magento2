@@ -31,14 +31,14 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Shipment;
 
-use \Magento\Backend\Block\Widget\Context;
-use \Magento\Framework\Registry;
-use \Magento\Framework\Api\SearchCriteriaBuilder;
-use \Magento\Framework\Api\AbstractExtensibleObject;
 use TIG\PostNL\Config\Validator\ValidAddress;
-use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
-use \TIG\PostNL\Model\Shipment as PostNLShipment;
-use \Magento\Shipping\Block\Adminhtml\View as MagentoView;
+use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use TIG\PostNL\Model\Shipment as PostNLShipment;
+use Magento\Backend\Block\Widget\Context;
+use Magento\Framework\Registry;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\AbstractExtensibleObject;
+use Magento\Shipping\Block\Adminhtml\View as MagentoView;
 
 class View extends MagentoView
 {

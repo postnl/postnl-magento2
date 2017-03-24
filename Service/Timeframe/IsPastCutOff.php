@@ -29,38 +29,43 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Webservices\Endpoints;
+namespace TIG\PostNL\Service\Timeframe;
 
-use Magento\Sales\Model\Order\Address;
-use TIG\PostNL\Test\TestCase;
-use TIG\PostNL\Webservices\Endpoints\SentDate;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use TIG\PostNL\Config\Provider\Webshop;
 
-class SentDateTest extends TestCase
+class IsPastCutOff
 {
-    public $instanceClass = SentDate::class;
+    /**
+     * @var \DateTime
+     */
+    private $now;
 
-    public function theRightCountryIdIsReturnedProvider()
-    {
-        return [
-            ['NL', 'NL'],
-            ['BE', 'BE'],
-            ['DE', 'NL'],
-            ['UK', 'NL'],
-            ['ES', 'NL'],
-        ];
+    /**
+     * @var string
+     */
+    private $cutOffTime;
+
+    /**
+     * @param Webshop           $webshop
+     * @param TimezoneInterface $currentDate
+     */
+    public function __construct(
+        Webshop $webshop,
+        TimezoneInterface $currentDate
+    ) {
+        $this->now = $currentDate->date('now');
+        $this->cutOffTime = $webshop->getCutOffTime();
     }
 
     /**
-     * @dataProvider theRightCountryIdIsReturnedProvider
+     * @return bool
      */
-    public function testTheRightCountryIdIsReturned($shipTo, $expected)
+    public function calculate()
     {
-        /** @var Address $address */
-        $address = $this->getObject(Address::class);
-        $address->setCountryId($shipTo);
+        $nowTime = strtotime($this->now->format('H:i:s'));
+        $cutOffTime = strtotime($this->cutOffTime);
 
-        $result = $this->invokeArgs('getCountryId', [$address]);
-
-        $this->assertEquals($expected, $result);
+        return $nowTime > $cutOffTime;
     }
 }

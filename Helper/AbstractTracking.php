@@ -31,15 +31,15 @@
  */
 namespace TIG\PostNL\Helper;
 
-use \Magento\Framework\App\Helper\AbstractHelper;
-use \Magento\Framework\App\Helper\Context;
-use \Magento\Framework\Api\SearchCriteriaBuilder;
-use \Magento\Sales\Model\Order\ShipmentRepository;
-use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
-use \TIG\PostNL\Model\Shipment as PostNLShipment;
-use \Magento\Framework\Api\AbstractExtensibleObject;
-use \TIG\PostNL\Config\Provider\Webshop;
-use \TIG\PostNL\Logging\Log;
+use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use TIG\PostNL\Model\Shipment as PostNLShipment;
+use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Logging\Log;
+use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Sales\Model\Order\ShipmentRepository;
+use Magento\Framework\Api\AbstractExtensibleObject;
 
 abstract class AbstractTracking extends AbstractHelper
 {

@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Service\Wrapper;
 
-use \Magento\Checkout\Model\Session\Proxy as MagentoCheckoutSession;
+use Magento\Checkout\Model\Session\Proxy as MagentoCheckoutSession;
 
 class CheckoutSession implements CheckoutSessionInterface
 {

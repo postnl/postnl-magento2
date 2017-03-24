@@ -34,7 +34,7 @@ namespace TIG\PostNL\Webservices\Endpoints;
 use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\Order\Shipment;
 use TIG\PostNL\Helper\Data;
-use TIG\PostNL\Model\Order as PostNLOrder;
+use TIG\PostNL\Api\Data\OrderInterface as PostNLOrder;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Webservices\Soap;
@@ -131,7 +131,7 @@ class SentDate extends AbstractEndpoint
 
         $this->requestParams = [
             $this->type => [
-                'CountryCode'        => $this->getCountryId($address),
+                'CountryCode'        => $address->getCountryId(),
                 'PostalCode'         => str_replace(' ', '', $address->getPostcode()),
                 'HouseNr'            => '',
                 'HouseNrExt'         => '',
@@ -144,24 +144,5 @@ class SentDate extends AbstractEndpoint
             ],
             'Message' => $this->message
         ];
-    }
-
-    /**
-     * For shipments with a destination the deliver date cannot be calculated accuratly. Thats why we default to
-     * NL for these shipments.
-     *
-     * @param $address
-     *
-     * @return string
-     */
-    private function getCountryId(Address $address)
-    {
-        $countryId = $address->getCountryId();
-
-        if (!in_array($countryId, ['NL', 'BE'])) {
-            return 'NL';
-        }
-
-        return $countryId;
     }
 }

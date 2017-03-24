@@ -33,7 +33,7 @@ namespace TIG\PostNL\Unit\Block\Adminhtml\Renderer;
 
 use TIG\PostNL\Block\Adminhtml\Renderer\ShippingDate;
 use TIG\PostNL\Test\TestCase;
-use \Magento\Framework\Phrase;
+use Magento\Framework\Phrase;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
 class ShippingDateTest extends TestCase

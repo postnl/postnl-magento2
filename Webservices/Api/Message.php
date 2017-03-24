@@ -31,10 +31,10 @@
  */
 namespace TIG\PostNL\Webservices\Api;
 
+use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Config\Provider\AccountConfiguration;
 use Magento\Framework\HTTP\PhpEnvironment\ServerAddress;
 use Magento\Framework\Stdlib\DateTime\DateTime;
-use TIG\PostNL\Config\Provider\AccountConfiguration;
-use \TIG\PostNL\Helper\Data;
 
 class Message
 {
