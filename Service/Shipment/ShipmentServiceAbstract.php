@@ -31,12 +31,12 @@
  */
 namespace TIG\PostNL\Service\Shipment;
 
-use \TIG\PostNL\Logging\Log;
+use TIG\PostNL\Logging\Log;
+use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use TIG\PostNL\Model\Shipment as PostNLShipment;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Sales\Model\Order\ShipmentRepository;
 use Magento\Sales\Model\Order\Shipment;
-use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
-use TIG\PostNL\Model\Shipment as PostNLShipment;
 
 abstract class ShipmentServiceAbstract
 {

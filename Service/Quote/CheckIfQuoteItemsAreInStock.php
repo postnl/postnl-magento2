@@ -35,7 +35,7 @@ use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Checkout\Model\Session;
-use \Magento\Checkout\Model\Session\Proxy as CheckoutSession;
+use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 
 class CheckIfQuoteItemsAreInStock

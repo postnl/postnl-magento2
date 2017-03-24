@@ -33,7 +33,7 @@ namespace TIG\PostNL\Test\Unit\Webservices\Api;
 
 use TIG\PostNL\Test\TestCase;
 use TIG\PostNL\Webservices\Api\Message;
-use \TIG\PostNL\Helper\Data as postNLhelper;
+use TIG\PostNL\Helper\Data as postNLhelper;
 
 class MessageTest extends TestCase
 {

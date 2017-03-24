@@ -31,9 +31,9 @@
  */
 namespace TIG\PostNL\Helper\DeliveryOptions;
 
-use \Magento\Quote\Api\Data\AddressInterface;
-use \Magento\Checkout\Model\Session;
-use \Magento\Quote\Model\Quote\AddressFactory;
+use Magento\Quote\Api\Data\AddressInterface;
+use Magento\Checkout\Model\Session;
+use Magento\Quote\Model\Quote\AddressFactory;
 
 class PickupAddress
 {

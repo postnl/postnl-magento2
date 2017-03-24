@@ -31,14 +31,14 @@
  */
 namespace TIG\PostNL\Service\Shipment\Track;
 
-use \Magento\Sales\Model\Order\Shipment\Track;
 use TIG\PostNL\Service\Shipment\ShipmentServiceAbstract;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Exception as PostNLException;
+use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use Magento\Sales\Model\Order\Shipment\Track;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Sales\Model\Order\ShipmentRepository;
 use Magento\Sales\Model\Order\Shipment;
-use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 
 class DeleteTrack extends ShipmentServiceAbstract
 {

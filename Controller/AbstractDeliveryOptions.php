@@ -31,13 +31,13 @@
  */
 namespace TIG\PostNL\Controller;
 
+use TIG\PostNL\Model\OrderFactory;
+use TIG\PostNL\Model\OrderRepository;
+use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Json\Helper\Data;
-use TIG\PostNL\Model\OrderFactory;
-use TIG\PostNL\Model\OrderRepository;
-use \Magento\Checkout\Model\Session;
-use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
+use Magento\Checkout\Model\Session;
 
 abstract class AbstractDeliveryOptions extends Action
 {

@@ -31,17 +31,17 @@
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
-use Magento\Framework\App\Response\Http;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\Json\Helper\Data;
-use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Model\OrderRepository;
-use \Magento\Checkout\Model\Session;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
+use Magento\Framework\App\Response\Http;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Json\Helper\Data;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Checkout\Model\Session;
 
 class Timeframes extends AbstractDeliveryOptions
 {

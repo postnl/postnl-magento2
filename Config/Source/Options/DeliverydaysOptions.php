@@ -31,8 +31,8 @@
  */
 namespace TIG\PostNL\Config\Source\Options;
 
-use \Magento\Framework\Option\ArrayInterface;
 use TIG\PostNL\Config\Source\OptionsAbstract;
+use Magento\Framework\Option\ArrayInterface;
 
 class DeliverydaysOptions extends OptionsAbstract implements ArrayInterface
 {

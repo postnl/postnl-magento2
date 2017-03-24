@@ -31,8 +31,8 @@
  */
 namespace TIG\PostNL\Config\Source\Options;
 
-use \Magento\Framework\Option\ArrayInterface;
 use TIG\PostNL\Config\Source\OptionsAbstract;
+use Magento\Framework\Option\ArrayInterface;
 
 /**
  * As this class holds all the product options, it is too long for Code Sniffer to check.

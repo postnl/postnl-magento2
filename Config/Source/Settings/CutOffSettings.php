@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Config\Source\Settings;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Option\ArrayInterface;
 
 class CutOffSettings implements ArrayInterface
 {
