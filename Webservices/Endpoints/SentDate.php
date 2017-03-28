@@ -31,10 +31,11 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\Order\Shipment;
-use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Api\Data\OrderInterface as PostNLOrder;
+use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Webservices\Soap;
@@ -72,23 +73,30 @@ class SentDate extends AbstractEndpoint
     private $message;
 
     /**
-     * @var Data
+     * @var TimezoneInterface
      */
-    private $postNLhelper;
+    private $timezone;
+    /**
+     * @var Options
+     */
+    private $timeframeOptions;
 
     /**
-     * @param Soap    $soap
-     * @param Data    $postNLhelper
-     * @param Message $message
+     * @param Soap              $soap
+     * @param TimezoneInterface $timezone
+     * @param Options           $timeframeOptions
+     * @param Message           $message
      */
     public function __construct(
         Soap $soap,
-        Data $postNLhelper,
+        TimezoneInterface $timezone,
+        Options $timeframeOptions,
         Message $message
     ) {
         $this->soap = $soap;
         $this->message = $message->get('');
-        $this->postNLhelper = $postNLhelper;
+        $this->timezone = $timezone;
+        $this->timeframeOptions = $timeframeOptions;
     }
 
     /**
@@ -131,18 +139,79 @@ class SentDate extends AbstractEndpoint
 
         $this->requestParams = [
             $this->type => [
-                'CountryCode'        => $address->getCountryId(),
-                'PostalCode'         => str_replace(' ', '', $address->getPostcode()),
+                'CountryCode'        => $this->getCountryId(),
+                'PostalCode'         => $this->getPostcode($address),
                 'HouseNr'            => '',
                 'HouseNrExt'         => '',
                 'Street'             => '',
                 'City'               => $address->getCity(),
-                'DeliveryDate'       => $this->postNLhelper->getDate($postNLOrder->getDeliveryDate(), 'd-m-Y'),
+                'DeliveryDate'       => $this->getDeliveryDate($address, $postNLOrder),
                 'ShippingDuration'   => '1',
                 'AllowSundaySorting' => 'true',
-                'Options'            => $this->postNLhelper->getDeliveryTimeframesOptions()
+                'Options'            => $this->timeframeOptions->get(),
             ],
             'Message' => $this->message
         ];
+    }
+
+    /**
+     * This endpoint is only available for dutch addresses.
+     *
+     * @see getPostcode
+     * @return string
+     */
+    private function getCountryId()
+    {
+        return 'NL';
+    }
+
+    /**
+     * The sent date webservice can only work with NL addresses. That's why we default to the PostNL Pakketten office
+     * postcode for addresses outside the Netherlands.
+     *
+     * @param $address
+     *
+     * @return string
+     */
+    private function getPostcode(Address $address)
+    {
+        if ($address->getCountryId() != 'NL') {
+            return '2132WT';
+        }
+
+        $postcode = $address->getPostcode();
+        $postcode = str_replace(' ', '', $postcode);
+        $postcode = strtoupper($postcode);
+        $postcode = trim($postcode);
+
+        return $postcode;
+    }
+
+    /**
+     * @param Address     $address
+     * @param PostNLOrder $postNLOrder
+     *
+     * @return string
+     */
+    private function getDeliveryDate(Address $address, PostNLOrder $postNLOrder)
+    {
+        if ($address->getCountryId() == 'NL') {
+            $deliveryDate = $postNLOrder->getDeliveryDate();
+            return $this->formatDate($deliveryDate);
+        }
+
+        return $this->formatDate('next weekday');
+    }
+
+    /**
+     * @param $deliveryDate
+     *
+     * @return string
+     */
+    private function formatDate($deliveryDate)
+    {
+        $date = $this->timezone->date($deliveryDate);
+
+        return $date->format('d-m-Y');
     }
 }

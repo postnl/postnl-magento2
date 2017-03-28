@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Soap;
 use TIG\PostNL\Helper\Data;
@@ -64,7 +65,7 @@ class DeliveryDate extends AbstractEndpoint
     private $soap;
 
     /**
-     * @var Array
+     * @var array
      */
     private $requestParams;
 
@@ -84,21 +85,29 @@ class DeliveryDate extends AbstractEndpoint
     private $postNLhelper;
 
     /**
-     * @param Soap            $soap
-     * @param Data            $postNLhelper
-     * @param Message         $message
-     * @param CutoffTimes     $cutoffTimes
+     * @var Options
+     */
+    private $timeframeOptions;
+
+    /**
+     * @param Soap        $soap
+     * @param Data        $postNLhelper
+     * @param Message     $message
+     * @param CutoffTimes $cutoffTimes
+     * @param Options     $timeframeOptions
      */
     public function __construct(
         Soap $soap,
         Data $postNLhelper,
         Message $message,
-        CutoffTimes $cutoffTimes
+        CutoffTimes $cutoffTimes,
+        Options $timeframeOptions
     ) {
         $this->soap = $soap;
         $this->postNLhelper = $postNLhelper;
         $this->message = $message;
         $this->cutoffTimes = $cutoffTimes;
+        $this->timeframeOptions = $timeframeOptions;
     }
 
     /**
@@ -130,7 +139,7 @@ class DeliveryDate extends AbstractEndpoint
                 'ShippingDuration'   => '1',
                 'AllowSundaySorting' => 'false',
                 'CutOffTimes'        => $this->cutoffTimes->get(),
-                'Options'            => $this->postNLhelper->getDeliveryTimeframesOptions()
+                'Options'            => $this->timeframeOptions->get(),
             ],
             'Message' => $this->message->get('')
         ];
