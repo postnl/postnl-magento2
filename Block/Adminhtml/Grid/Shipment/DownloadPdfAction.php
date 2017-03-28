@@ -29,47 +29,24 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Logging;
+namespace TIG\PostNL\Block\Adminhtml\Grid\Shipment;
 
-use Monolog\Logger;
-use TIG\PostNL\Config\Provider\LoggingConfiguration;
+use Magento\Backend\Block\Template;
+use Magento\Framework\View\Element\BlockInterface;
 
-class Log extends Logger
+class DownloadPdfAction extends Template implements BlockInterface
 {
     /**
-     * @var LoggingConfiguration
+     * @var string
      */
-    private $logConfig;
+    // @codingStandardsIgnoreLine
+    protected $_template = 'TIG_PostNL::shipment/grid/DownloadPdfAction.phtml';
 
     /**
-     * @param string               $name
-     * @param array                $handlers
-     * @param array                $processors
-     * @param LoggingConfiguration $loggingConfiguration
+     * @return string
      */
-    public function __construct(
-        LoggingConfiguration $loggingConfiguration,
-        $name,
-        array $handlers = [],
-        array $processors = []
-    ) {
-        $this->logConfig = $loggingConfiguration;
-        parent::__construct($name, $handlers, $processors);
-    }
-
-    /**
-     * @param int    $level
-     * @param string $message
-     * @param array  $context
-     *
-     * @return bool
-     */
-    public function addRecord($level, $message, array $context = [])
+    public function getDownloadUrl()
     {
-        if (!$this->logConfig->canLog($level)) {
-            return false;
-        }
-
-        return parent::addRecord($level, $message, $context);
+        return $this->getUrl('postnl/shipment/massPrintShippingLabel');
     }
 }

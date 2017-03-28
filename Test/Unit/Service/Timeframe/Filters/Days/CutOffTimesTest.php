@@ -34,6 +34,7 @@ namespace TIG\PostNL\Test\Unit\Service\Timeframe\Filters\Days;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Service\Timeframe\Filters\Days\CutOffTimes;
+use TIG\PostNL\Service\Timeframe\IsPastCutOff;
 use TIG\PostNL\Test\TestCase;
 
 class CutOffTimesTest extends TestCase
@@ -48,7 +49,7 @@ class CutOffTimesTest extends TestCase
      */
     public function testDoesNotFilterWhenBeforeCutOff($input, $output)
     {
-        $this->assertEquals($output, $this->loadInstance('19:00:00')->filter($input));
+        $this->assertEquals($output, $this->loadInstance(false)->filter($input));
     }
 
     /**
@@ -59,7 +60,7 @@ class CutOffTimesTest extends TestCase
      */
     public function testDoesFilterAfterCutOff($input, $output)
     {
-        $this->assertEquals($output, $this->loadInstance('10:00:00')->filter($input));
+        $this->assertEquals($output, $this->loadInstance(true)->filter($input));
     }
 
     /**
@@ -70,30 +71,21 @@ class CutOffTimesTest extends TestCase
      */
     public function testDoesFilterOnlyTheNextDay($input, $output)
     {
-        $result = $this->loadInstance('10:00:00')->filter($input);
+        $result = $this->loadInstance(true)->filter($input);
         $this->assertEquals($output, $result);
     }
 
     /**
-     * @param $cutOffTime
+     * @param bool $isPastCutOff
      *
      * @return CutOffTimes
      */
-    private function loadInstance($cutOffTime)
+    private function loadInstance($isPastCutOff)
     {
-        $webshopMock = $this->getFakeMock(Webshop::class, true);
-        $this->mockFunction($webshopMock, 'getCutOffTime', '18:00:00');
+        $isPastCutOffMock = $this->getFakeMock(IsPastCutOff::class, true);
+        $this->mockFunction($isPastCutOffMock, 'calculate', $isPastCutOff);
 
-        $currentDate = new \DateTime('18-11-2016 18:00:00');
-        $cutOffDateTime = new \DateTime('18-11-2016 ' . $cutOffTime);
         $todayDateTime = new \DateTime('18-11-2016');
-
-        $currentDateMock = $this->getMock(TimezoneInterface::class);
-        $this->mockFunction($currentDateMock, 'date', $currentDate);
-
-        $cutOffTimeMock = $this->getMock(TimezoneInterface::class);
-        $this->mockFunction($cutOffTimeMock, 'date', $cutOffDateTime);
-
         $todayMock = $this->getMock(TimezoneInterface::class);
         $this->mockFunction($todayMock, 'date', $todayDateTime);
 
@@ -104,9 +96,7 @@ class CutOffTimesTest extends TestCase
         });
 
         return $this->getInstance([
-            'webshop' => $webshopMock,
-            'cutOffTime' => $cutOffTimeMock,
-            'currentDate' => $currentDateMock,
+            'isPastCutOff' => $isPastCutOffMock,
             'dateLoader' => $dateLoaderMock,
             'today' => $todayMock,
         ]);

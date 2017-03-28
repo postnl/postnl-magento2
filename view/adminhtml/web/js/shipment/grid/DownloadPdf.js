@@ -1,4 +1,3 @@
-<?php
 /**
  *
  *          ..::..
@@ -29,28 +28,15 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\Options;
+define(['mageUtils'], function (utils) {
+    return function (downloadUrl, data) {
+        utils.submit({ data: data }, {
+            target: '_blank',
+            action: downloadUrl
+        });
 
-use TIG\PostNL\Config\Source\OptionsAbstract;
-use Magento\Framework\Option\ArrayInterface;
-
-class DeliverydaysOptions extends OptionsAbstract implements ArrayInterface
-{
-    const MAXIMUM_DELIVERY_DAYS = 14;
-
-    /**
-     * @return array
-     */
-    public function toOptionArray()
-    {
-        $output = [];
-        for ($number = 1; $number <= static::MAXIMUM_DELIVERY_DAYS; $number++) {
-            $output[] = [
-                'value' => $number,
-                'label' => $number
-            ];
-        }
-
-        return $output;
-    }
-}
+        setTimeout(function () {
+            location.reload();
+        }, 500);
+    };
+});

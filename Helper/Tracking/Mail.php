@@ -31,20 +31,20 @@
  */
 namespace TIG\PostNL\Helper\Tracking;
 
-use \TIG\PostNL\Helper\AbstractTracking;
-use \Magento\Framework\App\Helper\Context;
-use \Magento\Framework\Mail\Template\TransportBuilder;
-use \Magento\Framework\Exception\LocalizedException;
-use \TIG\PostNL\Helper\Data as PostNLHelper;
-use \Magento\Framework\Api\SearchCriteriaBuilder;
-use \Magento\Sales\Model\Order\ShipmentRepository;
-use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
-use \Magento\Framework\Mail\TransportInterface;
-use \Magento\Framework\Exception\MailException;
-use \Magento\Sales\Model\Order\Shipment;
-use \TIG\PostNL\Config\Provider\Webshop;
-use \TIG\PostNL\Logging\Log;
-use \Magento\Framework\View\Asset\Repository as AssetRepository;
+use TIG\PostNL\Helper\AbstractTracking;
+use TIG\PostNL\Helper\Data as PostNLHelper;
+use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Logging\Log;
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Sales\Model\Order\ShipmentRepository;
+use Magento\Framework\Mail\TransportInterface;
+use Magento\Framework\Exception\MailException;
+use Magento\Sales\Model\Order\Shipment;
+use Magento\Framework\View\Asset\Repository as AssetRepository;
 
 class Mail extends AbstractTracking
 {

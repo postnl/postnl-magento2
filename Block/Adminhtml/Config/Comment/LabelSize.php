@@ -31,7 +31,6 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Config\Comment;
 
-use \Magento\Framework\View\Asset\Repository as AssetRepository;
 use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
 use Magento\Framework\View\Element\Template;
 

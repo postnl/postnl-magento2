@@ -29,47 +29,43 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Logging;
+namespace TIG\PostNL\Service\Timeframe;
 
-use Monolog\Logger;
-use TIG\PostNL\Config\Provider\LoggingConfiguration;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use TIG\PostNL\Config\Provider\Webshop;
 
-class Log extends Logger
+class IsPastCutOff
 {
     /**
-     * @var LoggingConfiguration
+     * @var \DateTime
      */
-    private $logConfig;
+    private $now;
 
     /**
-     * @param string               $name
-     * @param array                $handlers
-     * @param array                $processors
-     * @param LoggingConfiguration $loggingConfiguration
+     * @var string
+     */
+    private $cutOffTime;
+
+    /**
+     * @param Webshop           $webshop
+     * @param TimezoneInterface $currentDate
      */
     public function __construct(
-        LoggingConfiguration $loggingConfiguration,
-        $name,
-        array $handlers = [],
-        array $processors = []
+        Webshop $webshop,
+        TimezoneInterface $currentDate
     ) {
-        $this->logConfig = $loggingConfiguration;
-        parent::__construct($name, $handlers, $processors);
+        $this->now = $currentDate->date('now');
+        $this->cutOffTime = $webshop->getCutOffTime();
     }
 
     /**
-     * @param int    $level
-     * @param string $message
-     * @param array  $context
-     *
      * @return bool
      */
-    public function addRecord($level, $message, array $context = [])
+    public function calculate()
     {
-        if (!$this->logConfig->canLog($level)) {
-            return false;
-        }
+        $nowTime = strtotime($this->now->format('H:i:s'));
+        $cutOffTime = strtotime($this->cutOffTime);
 
-        return parent::addRecord($level, $message, $context);
+        return $nowTime > $cutOffTime;
     }
 }

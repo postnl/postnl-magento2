@@ -32,8 +32,8 @@
 namespace TIG\PostNL\Service\Timeframe\Filters\Days;
 
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
+use TIG\PostNL\Service\Timeframe\IsPastCutOff;
 
 class CutOffTimes implements DaysFilterInterface
 {
@@ -43,43 +43,23 @@ class CutOffTimes implements DaysFilterInterface
     private $isPastCutOffTime;
 
     /**
-     * @var \DateTime
-     */
-    private $now;
-
-    /**
      * @var TimezoneInterface
      */
     private $dateLoader;
 
     /**
-     * @var string
-     */
-    private $cutOffTime;
-
-    /**
-     * @param Webshop           $webshop
-     * @param TimezoneInterface $currentDate
-     * @param TimezoneInterface $cutOffTime
+     * @param IsPastCutOff      $isPastCutOff
      * @param TimezoneInterface $dateLoader
      * @param TimezoneInterface $today
      */
     public function __construct(
-        Webshop $webshop,
-        TimezoneInterface $currentDate,
-        TimezoneInterface $cutOffTime,
+        IsPastCutOff $isPastCutOff,
         TimezoneInterface $dateLoader,
         TimezoneInterface $today
     ) {
-        $this->now = $currentDate->date();
-        $loadedCutOffTime = $cutOffTime->date('today ' . $webshop->getCutOffTime());
-        $diff = $loadedCutOffTime->diff($this->now);
-
-        $this->isPastCutOffTime = $diff->format('%R') == '+';
         $this->dateLoader = $dateLoader;
-
         $this->today = $today->date('today', null, false);
-        $this->cutOffTime = $webshop->getCutOffTime();
+        $this->isPastCutOffTime = $isPastCutOff->calculate();
     }
 
     /**

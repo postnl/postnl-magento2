@@ -31,16 +31,16 @@
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
-use Magento\Framework\App\Response\Http;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\Json\Helper\Data;
-use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\DeliveryOptions\OrderParams;
-use \Magento\Checkout\Model\Session;
 use TIG\PostNL\Helper\DeliveryOptions\PickupAddress;
+use Magento\Framework\App\Response\Http;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Json\Helper\Data;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Checkout\Model\Session;
 
 class Save extends AbstractDeliveryOptions
 {

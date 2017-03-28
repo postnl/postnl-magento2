@@ -74,7 +74,10 @@ define([
              */
             AddressFinder.subscribe(function (address) {
                 State.deliveryOptionsAreAvailable(false);
-                if (!window.checkoutConfig.shipping.postnl.shippingoptions_active || !address) {
+                if (!window.checkoutConfig.shipping.postnl.shippingoptions_active ||
+                    window.checkoutConfig.shipping.postnl.pakjegemak_active == "0" ||
+                    !address
+                ) {
                     return;
                 }
 

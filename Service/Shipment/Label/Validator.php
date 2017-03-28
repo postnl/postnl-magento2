@@ -44,7 +44,11 @@ class Validator
      */
     public function validate($input)
     {
-        $filtered = array_filter($input, function (ShipmentLabelInterface $model) {
+        $filtered = array_filter($input, function (ShipmentLabelInterface $model = null) {
+            if ($model === null) {
+                return false;
+            }
+
             $label = $model->getLabel();
 
             if (!is_string($label) || empty($label)) {

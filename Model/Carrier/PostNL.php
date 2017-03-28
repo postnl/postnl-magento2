@@ -31,6 +31,10 @@
  */
 namespace TIG\PostNL\Model\Carrier;
 
+use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Config\Source\Carrier\RateType;
+use TIG\PostNL\Service\Shipping\CalculateTablerateShippingPrice;
+use TIG\PostNL\Service\Shipping\GetFreeBoxes;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory;
@@ -39,10 +43,6 @@ use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
 use Magento\Shipping\Model\Rate\ResultFactory;
 use Psr\Log\LoggerInterface;
-use \TIG\PostNL\Helper\Tracking\Track;
-use TIG\PostNL\Config\Source\Carrier\RateType;
-use TIG\PostNL\Service\Shipping\CalculateTablerateShippingPrice;
-use TIG\PostNL\Service\Shipping\GetFreeBoxes;
 
 class PostNL extends AbstractCarrier implements CarrierInterface
 {

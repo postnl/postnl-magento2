@@ -33,7 +33,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\CheckoutConfiguration\CheckoutConfigurationInterface;
 use TIG\PostNL\Test\TestCase;
-use \TIG\PostNL\Config\Provider\CheckoutConfiguration;
+use TIG\PostNL\Config\Provider\CheckoutConfiguration;
 
 class CheckoutConfigurationTest extends TestCase
 {

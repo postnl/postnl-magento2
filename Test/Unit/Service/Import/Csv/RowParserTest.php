@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Unit\Service\Import\Csv;
 
-use \TIG\PostNL\Exception;
+use TIG\PostNL\Exception;
 use TIG\PostNL\Service\Import\Csv\RowParser;
 use TIG\PostNL\Test\TestCase;
 
