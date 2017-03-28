@@ -76,15 +76,12 @@ class SentDateHandler
      */
     public function get(Shipment $shipment)
     {
-        $address = $shipment->getShippingAddress();
+        /** @var  Order $postnlOrder */
+        $postnlOrder = $this->getPostnlOrder($shipment);
 
-        if ($address->getCountryId() == 'NL') {
-            return $this->getFromApi($shipment);
-        }
+        $this->sentDate->setParameters($shipment, $postnlOrder);
 
-        $today = $this->timezone->date('today');
-
-        return $today->format(\DateTime::ISO8601);
+        return $this->sentDate->call();
     }
 
     /**
@@ -96,20 +93,5 @@ class SentDateHandler
     private function getPostnlOrder(Shipment $shipment)
     {
         return $this->orderRepository->getByFieldWithValue('order_id', $shipment->getOrderId());
-    }
-
-    /**
-     * @param Shipment $shipment
-     *
-     * @return mixed
-     */
-    private function getFromApi(Shipment $shipment)
-    {
-        /** @var  Order $postnlOrder */
-        $postnlOrder = $this->getPostnlOrder($shipment);
-
-        $this->sentDate->setParameters($shipment, $postnlOrder);
-
-        return $this->sentDate->call();
     }
 }
