@@ -35,6 +35,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
 use Magento\Framework\App\RequestInterface;
+use Magento\Sales\Model\Order\Shipment;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Model\Order as PostNLOrder;
@@ -103,8 +104,12 @@ class CreatePostNLShipment implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        /** @var \Magento\Sales\Model\Order\Shipment $shipment */
+        /** @var Shipment $shipment */
         $shipment = $observer->getData('data_object');
+
+        if (!$this->isPostNLShipment($shipment)) {
+            return;
+        }
 
         if ($this->shipmentRepository->getByShipmentId($shipment->getId())) {
             return;
@@ -130,7 +135,7 @@ class CreatePostNLShipment implements ObserverInterface
     }
 
     /**
-     * @param \Magento\Sales\Model\Order\Shipment $shipment
+     * @param Shipment $shipment
      *
      * @return array
      */
@@ -174,5 +179,13 @@ class CreatePostNLShipment implements ObserverInterface
         $order = $this->getOrder();
 
         return $order->getType();
+    }
+
+    private function isPostNLShipment(Shipment $shipment)
+    {
+        $order = $shipment->getOrder();
+        $shippingMethod = $order->getShippingMethod();
+
+        return $shippingMethod == 'tig_postnl_regular';
     }
 }
