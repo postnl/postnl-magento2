@@ -34,6 +34,7 @@ namespace TIG\PostNL\Test\Unit\Webservices\Endpoints;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Address;
 use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Service\Shipment\Data;
 use TIG\PostNL\Test\TestCase;
 use TIG\PostNL\Webservices\Endpoints\Labelling;
 
@@ -49,8 +50,15 @@ class LabellingTest extends TestCase
         $postnlOrderMock = $postnlOrderMock->getMock();
 
         $postnlShipmentMock = $this->getFakeMock(Shipment::class);
-        $postnlShipmentMock->setMethods(['getShipment', 'getPostNLOrder', 'getTotalWeight', 'getDeliveryDateFormatted']);
+        $postnlShipmentMock->setMethods([
+            'getShipment',
+            'getPostNLOrder',
+            'getTotalWeight',
+            'getDeliveryDateFormatted',
+            'isExtraCover',
+        ]);
         $postnlShipmentMock = $postnlShipmentMock->getMock();
+        $this->mockFunction($postnlShipmentMock, 'isExtraCover', false);
 
         $getShipmentExpects = $postnlShipmentMock->expects($this->atLeastOnce());
         $getShipmentExpects->method('getShipment');
@@ -60,7 +68,14 @@ class LabellingTest extends TestCase
         $getPostNLOrderExpects->method('getPostNLOrder');
         $getPostNLOrderExpects->willReturn($postnlOrderMock);
 
-        $instance = $this->getInstance();
+        $shipmentDataMock = $this->getFakeMock(Data::class, true);
+        $getExpects = $shipmentDataMock->expects($this->once());
+        $getExpects->method('get');
+        $getExpects->willReturn(['theShipmentData']);
+
+        $instance = $this->getInstance([
+            'shipmentData' => $shipmentDataMock,
+        ]);
         $instance->setParameters($postnlShipmentMock);
 
         $requestParams = $this->getProperty('requestParams', $instance);
@@ -71,8 +86,60 @@ class LabellingTest extends TestCase
 
         $requestParamsShipment = $requestParams['Shipments']['Shipment'];
         $this->assertInternalType('array', $requestParamsShipment);
-        $this->assertGreaterThanOrEqual(10, $requestParamsShipment);
-        $this->assertGreaterThanOrEqual(10, $requestParamsShipment['Addresses']['Address']);
+        $this->assertEquals(['theShipmentData'], $requestParamsShipment);
+    }
+
+    public function getAddressDataProvider()
+    {
+        return [
+            'normal' => [
+                'street' => 'Kabelweg 37',
+                'expected' => [
+                    'Street' => 'Kabelweg',
+                    'HouseNr' => '37',
+                    'HouseNrExt' => '',
+                ]
+            ],
+            'with ext' => [
+                'street' => 'Kabelweg 37 a',
+                'expected' => [
+                    'Street' => 'Kabelweg',
+                    'HouseNr' => '37',
+                    'HouseNrExt' => 'a',
+                ]
+            ],
+            'with empty address' => [
+                'street' => '',
+                'expected' => [
+                    'Street' => '',
+                    'HouseNr' => '',
+                    'HouseNrExt' => '',
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @param $street
+     * @param $expected
+     *
+     * @throws \Exception
+     *
+     * @dataProvider getAddressDataProvider
+     */
+    public function testGetAddressData($street, $expected)
+    {
+        /** @var Address $shippingAddress */
+        $shippingAddress = $this->getObject(Address::class);
+        $shippingAddress->setStreet($street);
+
+        $instance = $this->getInstance();
+
+        $result = $this->invokeArgs('getAddressData', [$shippingAddress], $instance);
+
+        $this->assertEquals($expected['Street'], $result['Street']);
+        $this->assertEquals($expected['HouseNr'], $result['HouseNr']);
+        $this->assertEquals($expected['HouseNrExt'], $result['HouseNrExt']);
     }
 
     /**

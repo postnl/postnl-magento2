@@ -48,10 +48,9 @@ class ShipmentBarcodeRepositoryTest extends TestCase
 
     public function testSave()
     {
-        $shipmentBarcodeFactoryMock = $this->getMock(
-            '\TIG\PostNL\Model\ShipmentBarcodeInterface',
-            ['getIdentities', 'save']
-        );
+        $shipmentBarcodeFactoryMock = $this->getFakeMock(\TIG\PostNL\Model\ShipmentBarcode::class);
+        $shipmentBarcodeFactoryMock->setMethods(['getIdentities', 'save']);
+        $shipmentBarcodeFactoryMock = $shipmentBarcodeFactoryMock->getMock();
 
         $saveExpects = $shipmentBarcodeFactoryMock->expects($this->once());
         $saveExpects->method('save');
@@ -91,10 +90,9 @@ class ShipmentBarcodeRepositoryTest extends TestCase
 
     public function testDelete()
     {
-        $shipmentBarcodeFactoryMock = $this->getMock(
-            '\TIG\PostNL\Model\ShipmentBarcodeInterface',
-            ['getIdentities', 'delete']
-        );
+        $shipmentBarcodeFactoryMock = $this->getFakeMock(\TIG\PostNL\Model\ShipmentBarcode::class);
+        $shipmentBarcodeFactoryMock->setMethods(['getIdentities', 'delete']);
+        $shipmentBarcodeFactoryMock = $shipmentBarcodeFactoryMock->getMock();
 
         $saveExpects = $shipmentBarcodeFactoryMock->expects($this->once());
         $saveExpects->method('delete');

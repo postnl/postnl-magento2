@@ -31,12 +31,9 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
-/**
- * @codingStandardsIgnoreLine
- * @todo : Waiting on PostNL to finish the API for DeliveryDate, so needs to be refactored when API is ready.
- */
+use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
-use TIG\PostNL\Webservices\SoapOld;
+use TIG\PostNL\Webservices\Soap;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Webservices\Api\CutoffTimes;
@@ -50,12 +47,12 @@ class DeliveryDate extends AbstractEndpoint
     /**
      * @var string
      */
-    private $version = '2_1';
+    private $version = 'v2_1';
 
     /**
      * @var string
      */
-    private $service = 'DeliveryDateWebService';
+    private $endpoint = 'calculate/date';
 
     /**
      * @var string
@@ -63,12 +60,12 @@ class DeliveryDate extends AbstractEndpoint
     private $type = 'GetDeliveryDate';
 
     /**
-     * @var SoapOld
+     * @var Soap
      */
     private $soap;
 
     /**
-     * @var Array
+     * @var array
      */
     private $requestParams;
 
@@ -88,21 +85,29 @@ class DeliveryDate extends AbstractEndpoint
     private $postNLhelper;
 
     /**
-     * @param SoapOld         $soap
-     * @param Data            $postNLhelper
-     * @param Message         $message
-     * @param CutoffTimes     $cutoffTimes
+     * @var Options
+     */
+    private $timeframeOptions;
+
+    /**
+     * @param Soap        $soap
+     * @param Data        $postNLhelper
+     * @param Message     $message
+     * @param CutoffTimes $cutoffTimes
+     * @param Options     $timeframeOptions
      */
     public function __construct(
-        SoapOld $soap,
+        Soap $soap,
         Data $postNLhelper,
         Message $message,
-        CutoffTimes $cutoffTimes
+        CutoffTimes $cutoffTimes,
+        Options $timeframeOptions
     ) {
         $this->soap = $soap;
         $this->postNLhelper = $postNLhelper;
         $this->message = $message;
         $this->cutoffTimes = $cutoffTimes;
+        $this->timeframeOptions = $timeframeOptions;
     }
 
     /**
@@ -111,7 +116,7 @@ class DeliveryDate extends AbstractEndpoint
      */
     public function call()
     {
-        return $this->soap->call($this->type, $this->getWsdlUrl(), $this->requestParams);
+        return $this->soap->call($this, $this->type, $this->requestParams);
     }
 
     /**
@@ -132,9 +137,9 @@ class DeliveryDate extends AbstractEndpoint
                 'PostalCode'         => str_replace(' ', '', $address['postcode']),
                 'ShippingDate'       => $this->postNLhelper->getCurrentTimeStamp(),
                 'ShippingDuration'   => '1',
-                'AllowSundaySorting' => 'true',
+                'AllowSundaySorting' => 'false',
                 'CutOffTimes'        => $this->cutoffTimes->get(),
-                'Options'            => $this->postNLhelper->getDeliveryTimeframesOptions()
+                'Options'            => $this->timeframeOptions->get(),
             ],
             'Message' => $this->message->get('')
         ];
@@ -145,7 +150,7 @@ class DeliveryDate extends AbstractEndpoint
      */
     public function getWsdlUrl()
     {
-        return $this->service .'/'. $this->version;
+        return 'DeliveryDateWebService/2_1/';
     }
 
     /**
@@ -153,6 +158,6 @@ class DeliveryDate extends AbstractEndpoint
      */
     public function getLocation()
     {
-        return 'calculate/date';
+        return $this->version .'/'. $this->endpoint;
     }
 }

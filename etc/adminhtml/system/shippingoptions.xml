@@ -34,18 +34,19 @@
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <!--Shippingoptions section-->
     <group id="shippingoptions" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Shippingoptions</label>
+        <label>Shipping options</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-section</fieldset_css>
 
         <field id="shippingoptions_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Activate shippingoptions</label>
+            <label>Activate shipping options</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/shippingoptions_active</config_path>
         </field>
 
         <field id="stockoptions" translate="label" type="radios" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Stockoptions</label>
+            <label>Stock options</label>
+            <comment><![CDATA[Select for which products PostNL delivery options should be available.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\StockOptions</source_model>
             <config_path>tig_postnl/shippingoptions/stockoptions</config_path>
             <depends>
@@ -54,7 +55,8 @@
         </field>
 
         <field id="deliverydays_active" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Activate deliverydays</label>
+            <label>Activate delivery days</label>
+            <comment><![CDATA[Delivery days allow customers to choose on which date they want their order delivered.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/deliverydays_active</config_path>
             <depends>
@@ -63,7 +65,7 @@
         </field>
 
         <field id="max_deliverydays" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Maximum number of deliverydays</label>
+            <label>Maximum number of delivery days</label>
             <comment><![CDATA[Submit how many days in the future after the first delivery moment your customers can choose to receive their orders.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\DeliverydaysOptions</source_model>
             <config_path>tig_postnl/shippingoptions/max_deliverydays</config_path>
@@ -74,7 +76,8 @@
         </field>
 
         <field id="pakjegemak_active" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Activate postofficelocations</label>
+            <label>Activate post office locations</label>
+            <comment><![CDATA[Whether or not customers may choose to have their order delivered to a nearby post office.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/pakjegemak_active</config_path>
             <depends>
@@ -83,7 +86,8 @@
         </field>
 
         <field id="pakjegemak_express_active" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Activate early delivery postoffice locations</label>
+            <label>Activate early delivery post office locations</label>
+            <comment><![CDATA[Activate early delivery locations for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004296048/" target="_blank" title="early delivery">early delivery</a>.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/pakjegemak_express_active</config_path>
             <depends>
@@ -94,7 +98,9 @@
 
         <field id="pakjegemak_express_fee" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Early delivery fee</label>
+            <comment><![CDATA[Additional costs for early delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
             <config_path>tig_postnl/shippingoptions/pakjegemak_express_fee</config_path>
+            <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
             <depends>
                 <field id="pakjegemak_active">1</field>
                 <field id="pakjegemak_express_active">1</field>
@@ -103,39 +109,48 @@
         </field>
 
         <field id="eveningdelivery_active" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Activate eveningdelivery</label>
+            <label>Activate evening delivery</label>
+            <comment><![CDATA[Activate evening delivery for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298488" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/shippingoptions/eveningdelivery_active</config_path>
             <depends>
                 <field id="shippingoptions_active">1</field>
+                <field id="deliverydays_active">1</field>
             </depends>
         </field>
 
         <field id="eveningdelivery_fee" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Eveningdelivery fee</label>
+            <comment><![CDATA[Additional costs for evening delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
             <config_path>tig_postnl/shippingoptions/eveningdelivery_fee</config_path>
+            <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
             <depends>
                 <field id="shippingoptions_active">1</field>
                 <field id="eveningdelivery_active">1</field>
+                <field id="deliverydays_active">1</field>
             </depends>
         </field>
 
-        <field id="sundaydelivery_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Activate sundaydelivery</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>tig_postnl/shippingoptions/sundaydelivery_active</config_path>
-            <depends>
-                <field id="shippingoptions_active">1</field>
-            </depends>
-        </field>
+        <!-- Disabled because needs further development -->
+        <!--<field id="sundaydelivery_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">-->
+            <!--<label>Activate sunday delivery</label>-->
+            <!--<comment><![CDATA[Activate sunday delivery for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298588" target="_blank" title="sunday delivery">sunday delivery</a>.]]></comment>-->
+            <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+            <!--<config_path>tig_postnl/shippingoptions/sundaydelivery_active</config_path>-->
+            <!--<depends>-->
+                <!--<field id="shippingoptions_active">1</field>-->
+            <!--</depends>-->
+        <!--</field>-->
 
-        <field id="sundaydelivery_fee" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Sundaydelivery fee</label>
-            <config_path>tig_postnl/shippingoptions/sundaydelivery_fee</config_path>
-            <depends>
-                <field id="shippingoptions_active">1</field>
-                <field id="sundaydelivery_active">1</field>
-            </depends>
-        </field>
+        <!--<field id="sundaydelivery_fee" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="0" showInStore="0">-->
+            <!--<label>Sunday delivery fee</label>-->
+            <!--<comment><![CDATA[Additional costs for sunday delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>-->
+            <!--<config_path>tig_postnl/shippingoptions/sundaydelivery_fee</config_path>-->
+            <!--<backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>-->
+            <!--<depends>-->
+                <!--<field id="shippingoptions_active">1</field>-->
+                <!--<field id="sundaydelivery_active">1</field>-->
+            <!--</depends>-->
+        <!--</field>-->
     </group>
 </include>

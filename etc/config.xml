@@ -40,16 +40,16 @@
                 <model>TIG\PostNL\Model\Carrier\PostNL</model>
                 <name>PostNL</name>
                 <price>5.00</price>
-                <title>PostNL</title>
+                <title>Verzenden via PostNL</title>
                 <type>I</type>
                 <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
             </tig_postnl>
         </carriers>
         <tig_postnl>
             <stability>alpha</stability>
-            <supported_magento_version>2.1.3</supported_magento_version>
+            <supported_magento_version>2.1.5</supported_magento_version>
             <generalconfiguration_extension_status>
-                <modus>2</modus>
+                <modus>0</modus>
                 <customer_number_test>11223344</customer_number_test>
                 <customer_code_test>TOTA</customer_code_test>
                 <api_key_test>qLNy5m86BYYjD67CPrGZ1BaYU2A6OFrl</api_key_test>
@@ -59,28 +59,34 @@
                 <types>300,400,500,550,600</types>
             </generalconfiguration_logging>
             <printer>
-                <label_size>A4</label_size>
+                <label_size>A6</label_size>
             </printer>
             <webshop_shipping>
                 <cutoff_time>18:00:00</cutoff_time>
                 <shipment_days>0,1,2,3,4,5,6</shipment_days>
+                <email_enabled>1</email_enabled>
             </webshop_shipping>
             <webshop_track_and_trace>
                 <template>tig_postnl_track_and_trace_template</template>
                 <service_url>https://postnl.nl/tracktrace/?</service_url>
             </webshop_track_and_trace>
             <productoptions>
+                <default_option>3085</default_option>
+                <default_evening_option>3089</default_evening_option>
+                <default_pakjegemak_option>3534</default_pakjegemak_option>
+                <default_pakjegemak_early_option>3544</default_pakjegemak_early_option>
                 <supported_options>3085,3189,3089,3389,3096,3090,3385,3534,3544,3533,3543,4950,4952,2928</supported_options>
             </productoptions>
             <shippingoptions>
                 <deliverydays_active>0</deliverydays_active>
                 <stockoptions>in_stock</stockoptions>
                 <pakjegemak_active>1</pakjegemak_active>
-                <sundaydelivery_active>1</sundaydelivery_active>
+                <sundaydelivery_active>0</sundaydelivery_active>
                 <eveningdelivery_active>1</eveningdelivery_active>
                 <max_deliverydays>7</max_deliverydays>
                 <eveningdelivery_fee>2</eveningdelivery_fee>
                 <sundaydelivery_fee>2</sundaydelivery_fee>
+                <delivery_delay>1</delivery_delay>
             </shippingoptions>
             <endpoints>
                 <cif_base_url>https://service.postnl.com/CIF/</cif_base_url>

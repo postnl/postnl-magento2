@@ -38,7 +38,7 @@ use TIG\PostNL\Config\Provider\ShippingOptions;
  *
  * @package TIG\PostNL\Config\CheckoutConfiguration
  */
-class IsPakjegemakExpressActive extends AbstractCheckoutConfiguration
+class IsPakjegemakExpressActive implements CheckoutConfigurationInterface
 {
     /**
      * @var ShippingOptions

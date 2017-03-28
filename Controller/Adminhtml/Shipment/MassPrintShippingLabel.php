@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
+use Magento\Framework\Controller\ResultFactory;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Backend\App\Action\Context;
@@ -38,10 +39,10 @@ use Magento\Sales\Model\Order\Shipment;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 
-use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Helper\Labelling\SaveLabels;
+use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Helper\Pdf\Get as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Service\Handler\BarcodeHandler;
 
 class MassPrintShippingLabel extends LabelAbstract
 {
@@ -66,33 +67,38 @@ class MassPrintShippingLabel extends LabelAbstract
     private $track;
 
     /**
+     * @var BarcodeHandler
+     */
+    private $barcodeHandler;
+
+    /**
      * @param Context                   $context
      * @param Filter                    $filter
      * @param ShipmentCollectionFactory $collectionFactory
      * @param GetLabels                 $getLabels
-     * @param SaveLabels                $saveLabels
      * @param GetPdf                    $getPdf
      * @param Track                     $track
+     * @param BarcodeHandler            $barcodeHandler
      */
     public function __construct(
         Context $context,
         Filter $filter,
         ShipmentCollectionFactory $collectionFactory,
         GetLabels $getLabels,
-        SaveLabels $saveLabels,
         GetPdf $getPdf,
-        Track $track
+        Track $track,
+        BarcodeHandler $barcodeHandler
     ) {
         parent::__construct(
             $context,
             $getLabels,
-            $saveLabels,
             $getPdf
         );
 
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->track = $track;
+        $this->barcodeHandler = $barcodeHandler;
     }
 
     /**
@@ -105,19 +111,20 @@ class MassPrintShippingLabel extends LabelAbstract
     {
         $collection = $this->collectionFactory->create();
         $collection = $this->filter->getCollection($collection);
+        $this->loadLabels($collection);
 
-        /** @var Shipment $shipment */
-        foreach ($collection as $shipment) {
-            $this->track->set($shipment);
-            $this->setLabel($shipment->getId());
+        if (empty($this->labels)) {
+            $this->messageManager->addErrorMessage(
+                // @codingStandardsIgnoreLine
+                __('[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information')
+            );
+
+            return $this->_redirect($this->_redirect->getRefererUrl());
         }
 
-        $labelModels = $this->saveLabels->save($this->labels);
-
-        $pdfFile = $this->getPdf->get($labelModels);
-
-        return $pdfFile;
+        return $this->getPdf->get($this->labels);
     }
+
     /**
      * @param $shipmentId
      */
@@ -125,14 +132,24 @@ class MassPrintShippingLabel extends LabelAbstract
     {
         $labels = $this->getLabels->get($shipmentId);
 
-        /**
-         * @codingStandardsIgnoreLine
-         * TODO: add a proper warning notifying of a non-postnl shipment
-         */
-        if (count($labels) < 0) {
+        if (empty($labels)) {
             return;
         }
 
         $this->labels = $this->labels + $labels;
+    }
+
+    /**
+     * @param $collection
+     */
+    private function loadLabels($collection)
+    {
+        /** @var Shipment $shipment */
+        foreach ($collection as $shipment) {
+            $address = $shipment->getShippingAddress();
+            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+            $this->track->set($shipment);
+            $this->setLabel($shipment->getId());
+        }
     }
 }

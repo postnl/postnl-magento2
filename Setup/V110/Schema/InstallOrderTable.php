@@ -59,7 +59,7 @@ class InstallOrderTable extends AbstractTableInstaller
         $this->addText('pg_location_code', 'PakjeGemak Location Code', 32);
         $this->addText('pg_retail_network_id', 'PakjeGemak Retail Netwerok ID', 32);
         $this->addInt('product_code', 'Product code', true);
-        $this->addDecimal('fee', 'The fee that is calculated', 15.4);
+        $this->addDecimal('fee', 'The fee that is calculated', '15,4');
 
         $this->addDate('ship_at', 'Ship at');
         $this->addTimestamp('confirmed_at', 'Confirmed at');

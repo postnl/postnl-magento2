@@ -31,7 +31,6 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Config\Comment;
 
-use \Magento\Framework\View\Asset\Repository as AssetRepository;
 use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
 use Magento\Framework\View\Element\Template;
 
@@ -39,26 +38,6 @@ class LabelSize extends Template implements RendererInterface
 {
     // @codingStandardsIgnoreLine
     protected $_template = 'TIG_PostNL::config/comment/labelSize.phtml';
-
-    /**
-     * @var AssetRepository
-     */
-    private $assetRepository;
-
-    /**
-     * @param Template\Context $context
-     * @param AssetRepository  $assetRepository
-     * @param array            $data
-     */
-    public function __construct(
-        Template\Context $context,
-        AssetRepository $assetRepository,
-        array $data = []
-    ) {
-        parent::__construct($context, $data);
-
-        $this->assetRepository = $assetRepository;
-    }
 
     /**
      * Render form element as HTML
@@ -80,7 +59,7 @@ class LabelSize extends Template implements RendererInterface
      */
     public function getA4ExampleUrl()
     {
-        return $this->assetRepository->getUrl('TIG_PostNL::pdf/A4Label.pdf');
+        return $this->_assetRepo->getUrl('TIG_PostNL::pdf/A4Label.pdf');
     }
 
     /**
@@ -88,6 +67,6 @@ class LabelSize extends Template implements RendererInterface
      */
     public function getA6ExampleUrl()
     {
-        return $this->assetRepository->getUrl('TIG_PostNL::pdf/A6Label.pdf');
+        return $this->_assetRepo->getUrl('TIG_PostNL::pdf/A6Label.pdf');
     }
 }

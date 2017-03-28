@@ -31,9 +31,10 @@
  */
 namespace TIG\PostNL\Model;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchResultsInterface;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
-use TIG\PostNL\Model\ShipmentLabelInterface;
-use TIG\PostNL\Model\ShipmentLabelFactory;
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Model\ResourceModel\ShipmentLabel\CollectionFactory;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
@@ -41,7 +42,9 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
+use Magento\Framework\Api\SortOrder;
 
+// @codingStandardsIgnoreFile
 class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
 {
     /**
@@ -55,18 +58,26 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
     private $collectionFactory;
 
     /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
      * @param ShipmentLabelFactory          $objectFactory
      * @param CollectionFactory             $collectionFactory
      * @param SearchResultsInterfaceFactory $searchResultsFactory
+     * @param SearchCriteriaBuilder         $searchCriteriaBuilder
      */
     public function __construct(
         ShipmentLabelFactory $objectFactory,
         CollectionFactory $collectionFactory,
-        SearchResultsInterfaceFactory $searchResultsFactory
+        SearchResultsInterfaceFactory $searchResultsFactory,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->shipmentLabelFactory = $objectFactory;
         $this->collectionFactory      = $collectionFactory;
         $this->searchResultsFactory   = $searchResultsFactory;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
@@ -127,7 +138,7 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
     /**
      * @param SearchCriteriaInterface $criteria
      *
-     * @return mixed
+     * @return SearchResultsInterface
      */
     public function getList(SearchCriteriaInterface $criteria)
     {
@@ -156,7 +167,7 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
      * @param $filterGroup
      * @param $collection
      */
-    public function handleFilterGroups($filterGroup, $collection)
+    private function handleFilterGroups($filterGroup, $collection)
     {
         $fields     = [];
         $conditions = [];
@@ -175,7 +186,7 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
      * @param SearchCriteriaInterface $criteria
      * @param                         $collection
      */
-    public function handleSortOrders(SearchCriteriaInterface $criteria, $collection)
+    private function handleSortOrders(SearchCriteriaInterface $criteria, $collection)
     {
         $sortOrders = $criteria->getSortOrders();
 
@@ -195,13 +206,47 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
     /**
      * @param SearchCriteriaInterface $criteria
      *
-     * @return mixed
+     * @return SearchResultsInterface
      */
-    public function getSearchResults(SearchCriteriaInterface $criteria)
+    private function getSearchResults(SearchCriteriaInterface $criteria)
     {
         $searchResults = $this->searchResultsFactory->create();
         $searchResults->setSearchCriteria($criteria);
 
         return $searchResults;
+    }
+
+    /**
+     * Create a PostNL Shipment Label.
+     *
+     * @api
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function create()
+    {
+        return $this->shipmentLabelFactory->create();
+    }
+
+    /**
+     * Return a label that belongs to a shipment.
+     *
+     * @param \TIG\PostNL\Api\Data\ShipmentInterface $shipment
+     * @param                                        $number
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface|null
+     */
+    public function getByShipment(\TIG\PostNL\Api\Data\ShipmentInterface $shipment, $number = 1)
+    {
+        $this->searchCriteriaBuilder->addFilter('parent_id', $shipment->getId());
+        $this->searchCriteriaBuilder->addFilter('number', $number);
+
+        $searchCriteria = $this->searchCriteriaBuilder->create();
+        $list = $this->getList($searchCriteria);
+
+        if (!$list->getTotalCount()) {
+            return null;
+        }
+
+        return $list->getItems()[0];
     }
 }

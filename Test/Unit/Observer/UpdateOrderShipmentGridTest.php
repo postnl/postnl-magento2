@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Test\Unit\Observer;
 
 use Magento\Framework\Event\Observer;
-use TIG\PostNL\Observer\UpdateOrderShipmentGrid;
+use TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\UpdateOrderShipmentGrid;
 use TIG\PostNL\Test\TestCase;
 
 class UpdateOrderShipmentGridTest extends TestCase

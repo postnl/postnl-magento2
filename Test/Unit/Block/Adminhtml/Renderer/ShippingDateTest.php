@@ -33,9 +33,8 @@ namespace TIG\PostNL\Unit\Block\Adminhtml\Renderer;
 
 use TIG\PostNL\Block\Adminhtml\Renderer\ShippingDate;
 use TIG\PostNL\Test\TestCase;
-use \Magento\Framework\Phrase;
+use Magento\Framework\Phrase;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use Magento\Framework\Stdlib\DateTime\DateTimeFormatterInterface;
 
 class ShippingDateTest extends TestCase
 {
@@ -44,40 +43,36 @@ class ShippingDateTest extends TestCase
     public function formatShippingDateProvider()
     {
         return [
-            [0, 'Today'],
-            [-10, '19 Nov. 2016'],
-            [10, 'In 10 days'],
-            [1, 'Tomorrow'],
+            ['19 november 2016', 'Today'],
+            ['20 november 2016', 'Tomorrow'],
+            ['21 november 2016', 'In 2 days'],
+            ['22 november 2016', 'In 3 days'],
+            ['29 november 2016', 'In 10 days'],
+            ['10 november 2016', '10 Nov. 2016'],
+            ['18 november 2016', '18 Nov. 2016'],
         ];
     }
     /**
-     * @param $daysToGo
+     * @param $shippingDate
      * @param $expected
      *
      * @dataProvider formatShippingDateProvider
      */
-    public function testFormatShippingDate($daysToGo, $expected)
+    public function testFormatShippingDate($shippingDate, $expected)
     {
-        $diff = new \stdClass();
-        $diff->days = $daysToGo;
-        $diff->invert = $daysToGo < 0;
-        $instance = $this->getInstance();
-        $timezoneInterface = $this->getMock(TimezoneInterface::class);
-        $this->setProperty('timezoneInterface', $timezoneInterface, $instance);
-        $dateMock = $this->getMock(\DateTime::class);
-        $diffMock = $dateMock->expects($this->once());
-        $diffMock->method('diff');
-        $diffMock->willReturn($diff);
-        $dateExpects = $timezoneInterface->expects($this->exactly(2));
-        $dateExpects->method('date');
-        $dateExpects->withConsecutive(
-            [null, null, true],
-            ['2016-11-19', null, true]
-        );
-        $dateExpects->willReturn($dateMock);
-        $formatExpects = $dateMock->expects($this->any());
-        $formatExpects->method('format');
-        $formatExpects->willReturn('19 Nov. 2016');
+        $todayDate = new \DateTime('19 november 2016');
+        $todayDateMock = $this->getMock(TimezoneInterface::class);
+        $this->mockFunction($todayDateMock, 'date', $todayDate, ['today', null, false]);
+
+        $shipAtDate = new \DateTime($shippingDate);
+        $shipAtDateMock = $this->getMock(TimezoneInterface::class);
+        $this->mockFunction($shipAtDateMock, 'date', $shipAtDate);
+
+        $instance = $this->getInstance([
+            'todayDate' => $todayDateMock,
+            'shipAtDate' => $shipAtDateMock,
+        ]);
+
         $result = $this->invokeArgs('formatShippingDate', ['2016-11-19'], $instance);
         if ($result instanceof Phrase) {
             $result = $result->render();

@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Webservices\Endpoints;
 
 use Magento\Framework\Exception\LocalizedException;
+use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Parser\TimeFrames;
 use TIG\PostNL\Webservices\Soap;
@@ -74,23 +75,30 @@ class TimeFrame extends AbstractEndpoint
      * @var TimeFrames
      */
     private $timerFramesParser;
+    /**
+     * @var Options
+     */
+    private $timeframeOptions;
 
     /**
      * @param Soap       $soap
      * @param Message    $message
      * @param TimeFrames $timerFramesParser
      * @param Data       $postNLhelper
+     * @param Options    $timeframeOptions
      */
     public function __construct(
         Soap $soap,
         Message $message,
         TimeFrames $timerFramesParser,
-        Data $postNLhelper
+        Data $postNLhelper,
+        Options $timeframeOptions
     ) {
         $this->soap = $soap;
         $this->message = $message->get('');
         $this->timerFramesParser = $timerFramesParser;
         $this->postNLhelper = $postNLhelper;
+        $this->timeframeOptions = $timeframeOptions;
     }
 
     /**
@@ -148,7 +156,7 @@ class TimeFrame extends AbstractEndpoint
                 'StartDate'          => $startDate,
                 'SundaySorting'      => 'true',
                 'EndDate'            => $this->postNLhelper->getEndDate($startDate),
-                'Options'            => $this->postNLhelper->getDeliveryTimeframesOptions()
+                'Options'            => $this->timeframeOptions->get(),
             ],
             'Message' => $this->message
         ];

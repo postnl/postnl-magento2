@@ -6,7 +6,7 @@ Tomorrow,Morgen
 Live,Live
 Test,Test
 Off,Off
-"Always show deliveryoptions","Altijd verzendopties tonen"
+"Always show deliveryoptions","Altijd bezorgopties tonen"
 "Only for products that are in stock","Alleen voor producten die op voorraad zijn"
 "There are no available options","Er zijn geen beschikbare opties"
 label,label
@@ -19,9 +19,9 @@ label,label
 "Invalid GetLocationsResult response: %1","Ongeldig GetLocationsResult response: %1"
 "No Type specified","No Type specified"
 ok,ok
-"Unable to extract the housenumber, because the street data could not be found","Het is niet mogelijk om het huisnummer op te halen. Er is geen adres gevonden"
-"Unable to extract the housenumber, could not find an number inside the street value","Er is geen huisnummer in het adres veld beschikbaar"
-"Invalid housenumber supplied: %1","Ongeldig huisnummer opgegeven: %1"
+"Unable to extract the house number, because the street data could not be found","Het is niet mogelijk om het huisnummer op te halen. Er is geen adres gevonden"
+"Unable to extract the house number, could not find an number inside the street value","Er is geen huisnummer in het adres veld beschikbaar"
+"Invalid house number supplied: %1","Ongeldig huisnummer opgegeven: %1"
 "Unable to retrieve barcode data.","Het is niet mogelijk om de barcode data op te halen."
 "Invalid barcodetype requested: %s","Ongeldig barcodetype opgevraagd: %s"
 "Missing required parameters: %1","Er ontbreken vereiste parameters: %1"
@@ -71,40 +71,40 @@ Title,Titel
 "General configuration and account information","Algemene configuratie en account informatie"
 "Extension status","Extensie status"
 Modus,Modus
-"Customernumber live mode","Klantnummer live modus"
-"Customercode live mode","Klantcode live modus"
+"Customer number live mode","Klantnummer live modus"
+"Customer code live mode","Klantcode live modus"
 "Api Key live mode","Api Key live modus"
 "Api Key test mode","Api Key test modus"
 "BLS location code live mode","BLS locatie code live modus"
-"Customernumber test mode","Klantnummer test modus"
-"Customercode test mode","Klantcode test modus"
+"Customer number test mode","Klantnummer test modus"
+"Customer code test mode","Klantcode test modus"
 "BLS location code test mode","BLS locatie code test modus"
-Shippingaddress,Verzendadres
-Firstname,Voornaam
-Lastname,Achternaam
+Shipping address,Verzendadres
+First name,Voornaam
+Last name,Achternaam
 Company,Bedrijf
-Streetname,Straatnaam
+Street name,Straatnaam
 Department,Afdelding
-Housenumber,Huisnummer
-"Housenumber addition","Huisnummer toevoeging"
+"House number","Huisnummer"
+"House number addition","Huisnummer toevoeging"
 Postcode,Postcode
 City,Plaats
-Productoptions,Productopties
+Product options,Productopties
 "Select the available options","Selecteer de beschikbare opties"
 "Default shipping option","Standaard verzend optie"
 "Default evening option","Standaard avondverzending optie"
-"Default postoffice delivery option","Standaard Pakjegemak optie"
-"Default sundaydelivery option","Standaard zondagbezorging optie"
-Shippingoptions,Verzendopties
-"Activate shippingoptions","Activeer verzendopties"
-Stockoptions,Voorraadopties
-"Activate deliverydays","Activeer bezorgdagen"
-"Maximum number of deliverydays","Maximaal aantal bezorgdagen"
-"Activate postofficelocations","Activeer Pakjegemak"
-"Activate eveningdelivery","Activeer avondbezorging"
-"Eveningdelivery fee","Avondbezorging toeslag"
-"Activate sundaydelivery","Activeer zondagbezorging"
-"Sundaydelivery fee","Zondagbezoging toeslag"
+"Default post office delivery option","Standaard ophalen bij PostNL locatie optie"
+"Default sunday delivery option","Standaard zondagbezorging optie"
+Shipping options,Bezorgopties
+"Activate shipping options","Activeer bezorgopties"
+Stock options,Voorraadopties
+"Activate delivery days","Activeer bezorgdagen"
+"Maximum number of delivery days","Maximaal aantal bezorgdagen"
+"Activate post office locations","Activeer ophalen bij PostNL locatie"
+"Activate evening delivery","Activeer avondbezorging"
+"Evening delivery fee","Avondbezorging toeslag"
+"Activate sunday delivery","Activeer zondagbezorging"
+"Sunday delivery fee","Zondagbezoging toeslag"
 "Send track and trace info","Verstuur track and trace info"
 "Version & Support","Versie & Support"
 Webshop,Webshop
@@ -145,9 +145,9 @@ Sunday,Zondag
 Extension version,Extensie versie
 "For an A4 example, <a href=""%1"" target=""_blank"">click here</a>.","Voor een A4 voorbeeld, <a href=""%1"" target=""_blank"">klik hier</a>."
 "For an A6 example, <a href=""%1"" target=""_blank"">click here</a>.","Voor een A6 voorbeeld, <a href=""%1"" target=""_blank"">klik hier</a>."
-"PostNL Shipping options","PostNL Verzendopties"
+"PostNL Shipping options","PostNL Bezorgopties"
 "Colli amount","Aantal pakketten"
-"Activate early delivery postoffice locations","Activeer extra vroeg ophalen"
+"Activate early delivery post office locations","Activeer extra vroeg ophalen"
 "Early delivery fee","Extra vroeg ophalen toeslag"
 "Early Delivery from 9:00","Ophalen vanaf 9:00"
 "Export CSV","Exporteer CSV"
@@ -171,3 +171,47 @@ Percent,Percentage
 "Export Rates","Export Rates"
 "Import Rates","Import Rates"
 "Post Office Location:","Postkantoor Adres:"
+"Test Mode","Test Modus"
+"Live Mode","Live Modus"
+"From 9:00","Vanaf 9:00"
+"From 15:00","Vanaf 15:00"
+"PostNL - Confirm And Print Shipment Label","PostNL - Voormelden en label printen"
+"Send Shipment Email","Verstuur verzending e-mail"
+"PostNL - Change Confirmation","PostNL - Voormelding wijzigen"
+"Are you sure that you wish to reset the confirmation status of this shipment? You will need to confirm this shipment with PostNL again before you can send it. This action will remove all barcodes and labels associated with this shipment. You can not undo this action.","Weet je zeker dat je de voormelding van deze verzending wilt wijzgen? De verzending zal opnieuw voorgemeld moeten worden voordat je deze alsnog kunt verzenden. Deze actie verwijdert alle barcodes en labels die bij deze verzending horen. Dit kan niet ongedaan worden gemaakt."
+"PostNL - Print label","PostNL - Print label"
+"Default postoffice early pickup option","Standaard ophalen bij PostNL locatie extra vroeg optie"
+"In order to use this extension you need to be a contract customer of PostNL. If you are not a customer of PostNL, you can <a href=""%1"" target=""_blank"" title=""register at PostNL"">register yourself here</a>.","Om deze extensie te kunnen gebruiken dient u een contract met PostNL af te sluiten. Indien u geen klant bent van PostNL dan kunt u zichzelf <a href=""%1"" target=""_blank"" title=""hier aanmelden"">hier aanmelden</a>."
+"You will then receive all necessary information in order to configure the extension. If you cannot find the email containing this information, please contact PostNL support at 058-2333343.","U ontvangt de benodigde informatie om deze extensie te configureren. Indien u deze e-mail met informatie niet heeft ontvangen, neem dan contact met PostNL support op 058-2333343."
+"If you want to test the extension, but do not have any test mode credentials you can use the account credentials found <a href=""%1"" target=""_blank"">here</a>.","Indien u deze extensie wilt uitproberen, maar geen testgegevens heeft, dan kunt u <a href=""%1"" target=""_blank"">hier</a> testgegevens vinden."
+"If you are unsure which options to select, ask your PostNL account manager. Read more about <a href=""https://servicedesk.tig.nl/hc/nl/articles/115004290928"" target=""_blank"" title=""product options"">PostNL product options</a>.","Indien u niet zeker weet welke opties voor uw webshop van toepassing zijn, dan kunt u dit vragen aan uw PostNL account manager. Lees meer over <a href=""https://servicedesk.tig.nl/hc/nl/articles/115004290928"" target=""_blank"" title=""productopties"">PostNL productopties</a>."
+"Select the PostNL product that you want to use for your shipments.","Selecteer de PostNL producten die u wilt gebruiken voor uw verzendingen. "
+"Select the default product option for domestic shipments.","Selecteer de standaard productoptie voor binnenlandse zendingen."
+"Select the default product option for evening delivery shipments.","Selecteer de standaard productoptie voor avondbezorging zendingen."
+"Select the default product option for postoffice delivery shipments.","Selecteer de standaard productoptie voor ophalen bij PostNL locatie zendingen."
+"Select the default product option for early pickup option.","Selecteer de standaars productoptie ophalen bij PostNL locatie extra vroeg optie"
+"Select the default product option for sunday delivery shipments.","Selecteer de standaard productoptie voor zondagbezorging zendingen."
+"Select for which products PostNL delivery options should be available.","Selecteer voor welke producten PostNL bezorgopties beschikbaar moeten zijn."
+"Delivery days allow customers to choose on which date they want their order delivered.","Bezorgdagen maken het mogelijk voor klanten om te kiezen op welke dag ze hun bestellingen willen laten bezorgen."
+"Submit how many days in the future after the first delivery moment your customers can choose to receive their orders.","Geef hier aan hoeveel dagen in te toekomst na het eerste bezorgmoment de klant de bestelling mag ontvangen."
+"Whether or not customers may choose to have their order delivered to a nearby post office.","Deze instelling bepaalt of klanten ervoor kunnen kiezen om hun bestelling te laten bezorgen op een postkantoor locatie."
+"Activate early delivery locations for your customers. Read more about <a href=""https://servicedesk.tig.nl/hc/nl/articles/115004296048/"" target=""_blank"" title=""early delivery"">early delivery</a>.","Activeer extra vroege bezorging voor uw klanten. Lees meer over <a href=""https://servicedesk.tig.nl/hc/nl/articles/115004296048/"" target=""_blank"" title=""early delivery"">extra vroege bezorging</a>."
+"Additional costs for early delivery in the store's base currency. This fee will be added to the shipping costs.","Additionele kosten voor het gebruik van extra vroege bezorging in de basis valuta van de storeview. Deze kosten zullen opgeteld worden bij de verzendkosten. "
+"Activate evening delivery for your customers. Read more about <a href=""https://servicedesk.tig.nl/hc/nl/articles/115004298488"" target=""_blank"" title=""evening delivery"">evening delivery</a>.","Activeer avondbezorging voor uw klanten. Lees meer over <a href=""https://servicedesk.tig.nl/hc/nl/articles/115004298488"" target=""_blank"" title=""avondbezorging"" >avondbezorging</a>."
+"Additional costs for evening delivery in the store's base currency. This fee will be added to the shipping costs.","Additionele kosten voor het gebruik van avondbezorging in de basis valuta van de storeview. Deze kosten zullen opgeteld worden bij de verzendkosten."
+"Activate sunday delivery for your customers. Read more about <a href=""https://servicedesk.tig.nl/hc/nl/articles/115004298588"" target=""_blank"" title=""sunday delivery"">sunday delivery</a>.","Activeer zondagbezorging voor uw klanten. Lees meer over <a href=""https://servicedesk.tig.nl/hc/nl/articles/115004298588"" target=""_blank"" title=""zondagbezorging"">zondagbezorging</a>."
+"Additional costs for sunday delivery in the store's base currency. This fee will be added to the shipping costs.","Additionele kosten voor het gebruik van zondagbezorging in de basis valuta van de storeview. Deze kosten zullen opgeteld worden bij de verzendkosten."
+"Track and Trace","Track & Trace"
+"Send Track and Trace email","Verstuur Track &amp; Trace e-mails"
+"Automatically send Track and Trace email to customer. Read more about the <a href=""https://servicedesk.tig.nl/hc/nl/articles/115004148927"" target=""_blank"" title=""track and trace"">Track and Trace</a> e-mails within the extension.","Stuur de Track &amp; Trace e-mail automatisch naar de klant. Lees meer over de <a href=""https://servicedesk.tig.nl/hc/nl/articles/115004148927"" target=""_blank"" title=""track en trace"">Track &amp; Trace</a> e-mails vanuit de extensie."
+"Select on which days of the week orders are shipped. You can read more about shipping and delivery days <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003398667"" target=""_blank"" title=""PostNL shipping days"">here</a>.","Selecteer op welke dagen u bestellingen verstuurt. U kunt <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003398667"" target=""_blank"" title=""PostNL verzenddagen"">hier</a> meer lezen over verzend- en bezorgdagen."
+"When an order is placed after this time, another day will be added to the shipping duration. Please enter this time in the Europe/Amsterdam time zone.","Indien een bestelling na dit tijdstip besteld wordt, zal er een dag bij de overkomstduur opgeteld worden. Vul deze tijd s.v.p. in in de Europe/Amsterdam tijdzone."
+"Log files will be created within the var/log/PostNL/ directory. You can find more information about the different kind of log files <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003513908"" target=""_blank"" title=""PostNL log files"">here</a>.","Log bestanden worden aangemaakt in de var/log/PostNL/ folder. U kunt meer vinden over de verschillende soorten log bestanden op <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003513908"" target=""_blank"" title=""PostNL logs"">deze pagina</a>."
+"Types of logging","Soorten logging"
+"Enter you PostNL customer number.","Voer uw PostNL klantnummer in."
+"Enter your PostNL customer code. It must contain between 3 and 4 letters.","Voer uw PostNL klantcode in, deze moet bestaan uit 3 tot 4 letters. "
+"Enter your PostNL API key. If you haven't got an API key, please contact PostNL support.","Voer uw PostNL API key in. Heeft u nog geen API key, neem dan contact op met PostNL support."
+"Enter your PostNL BLS location code.","Voer uw PostNL BLS locatie code in."
+"You can use the test account credentials found <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003510508"" target=""_blank"" title=""PostNL test account"">here</a>.","U kunt de test account gegevens gebruiken die <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003510508"" target=""_blank"" title=""PostNL testgegevens"">hier</a> genoemd worden."
+"Eveningdelivery fee","Avondbezorging toeslag"
+"[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information","[POSTNL-0252] - Er zijn geen valide labels gegenereerd. Bekijk de logs voor meer informatie."

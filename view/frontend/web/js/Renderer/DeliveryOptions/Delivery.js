@@ -71,7 +71,16 @@ define([
             ]);
 
             AddressFinder.subscribe(function (address, oldAddress) {
+                State.deliveryOptionsAreAvailable(false);
+                if (!window.checkoutConfig.shipping.postnl.shippingoptions_active) {
+                    return;
+                }
+
                 if (!address || JSON.stringify(address) == JSON.stringify(oldAddress)) {
+                    return;
+                }
+
+                if (address.countryCode != 'NL') {
                     return;
                 }
 
@@ -124,6 +133,8 @@ define([
                 });
             });
 
+            this.isDeliverdaysActive = window.checkoutConfig.shipping.postnl.is_deliverydays_active === true;
+
             return this;
         },
 
@@ -133,16 +144,23 @@ define([
          * @param address
          */
         getDeliverydays: function (address) {
-            State.deliveryOptionsAreLoading(true);
+            if (window.checkoutConfig.shipping.postnl.is_deliverydays_active === false) {
+                State.deliveryOptionsAreAvailable(true);
+                return;
+            }
 
+            State.deliveryOptionsAreLoading(true);
             $.ajax({
                 method: 'POST',
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_timeframes,
                 data : {address: address}
             }).done(function (data) {
+                if (data.error) {
+                    Logger.error(data.error);
+                    State.deliveryOptionsAreAvailable(false);
+                    return false;
+                }
                 State.deliveryOptionsAreAvailable(true);
-                Logger.info(data);
-
                 data = ko.utils.arrayMap(data, function (day) {
                     return ko.utils.arrayMap(day, function (timeFrame) {
                         return new TimeFrame(timeFrame);

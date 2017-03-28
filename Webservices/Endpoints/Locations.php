@@ -114,7 +114,6 @@ class Locations extends AbstractEndpoint
                 'Postalcode'         => str_replace(' ', '', $address['postcode']),
                 'Options'            => ['Daytime', 'Morning'],
                 'AllowSundaySorting' => 'true'
-
             ],
             'Countrycode' => $address['country'],
             'Message'     => $this->message->get('')

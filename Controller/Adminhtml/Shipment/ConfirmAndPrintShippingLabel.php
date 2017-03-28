@@ -36,10 +36,10 @@ use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\Order\ShipmentRepository;
 
-use TIG\PostNL\Helper\Labelling\GetLabels;
-use TIG\PostNL\Helper\Labelling\SaveLabels;
+use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Helper\Pdf\Get as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Service\Handler\BarcodeHandler;
 
 class ConfirmAndPrintShippingLabel extends LabelAbstract
 {
@@ -54,30 +54,35 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     private $track;
 
     /**
+     * @var BarcodeHandler
+     */
+    private $barcodeHandler;
+
+    /**
      * @param Context            $context
      * @param GetLabels          $getLabels
-     * @param SaveLabels         $saveLabels
      * @param GetPdf             $getPdf
      * @param ShipmentRepository $shipmentRepository
      * @param Track              $track
+     * @param BarcodeHandler     $barcodeHandler
      */
     public function __construct(
         Context $context,
         GetLabels $getLabels,
-        SaveLabels $saveLabels,
         GetPdf $getPdf,
         ShipmentRepository $shipmentRepository,
-        Track $track
+        Track $track,
+        BarcodeHandler $barcodeHandler
     ) {
         parent::__construct(
             $context,
             $getLabels,
-            $saveLabels,
             $getPdf
         );
 
         $this->shipmentRepository = $shipmentRepository;
         $this->track              = $track;
+        $this->barcodeHandler     = $barcodeHandler;
     }
 
     /**
@@ -85,16 +90,18 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
      */
     public function execute()
     {
-        $shipment = $this->getShipment();
+        $labels = $this->getLabels();
 
-        if (!$shipment->getTracks()) {
-            $this->track->set($shipment);
+        if (empty($labels)) {
+            $this->messageManager->addErrorMessage(
+                // @codingStandardsIgnoreLine
+                __('[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information')
+            );
+
+            return $this->_redirect($this->_redirect->getRefererUrl());
         }
 
-        $labels     = $this->getLabels->get($shipment->getId());
-        $labelModel = $this->saveLabels->save($labels);
-
-        return $this->getPdf->get($labelModel);
+        return $this->getPdf->get($labels);
     }
 
     /**
@@ -106,5 +113,23 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     {
         $shipmentId = $this->getRequest()->getParam('shipment_id');
         return $this->shipmentRepository->get($shipmentId);
+    }
+
+    /**
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface[]
+     */
+    private function getLabels()
+    {
+        $shipment = $this->getShipment();
+        $shippingAddress = $shipment->getShippingAddress();
+        $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
+
+        if (!$shipment->getTracks()) {
+            $this->track->set($shipment);
+        }
+
+        $labels = $this->getLabels->get($shipment->getId());
+
+        return $labels;
     }
 }

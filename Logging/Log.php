@@ -32,8 +32,7 @@
 namespace TIG\PostNL\Logging;
 
 use Monolog\Logger;
-
-use \TIG\PostNL\Config\Provider\LoggingConfiguration;
+use TIG\PostNL\Config\Provider\LoggingConfiguration;
 
 class Log extends Logger
 {

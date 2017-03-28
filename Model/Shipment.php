@@ -31,9 +31,10 @@
  */
 namespace TIG\PostNL\Model;
 
+use Magento\Framework\Stdlib\DateTime\DateTime;
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject\IdentityInterface;
-use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
@@ -42,39 +43,30 @@ use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\Order\AddressFactory;
 use Magento\Sales\Model\Order\Shipment as OrderShipment;
 use Magento\Sales\Model\Order\Shipment\Item;
+use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
+use TIG\PostNL\Config\Source\Options\ProductOptions;
 
+// @codingStandardsIgnoreFile
 /**
- * @method $this setShipmentId(string)
- * @method null|string getShipmentId
- * @method $this setOrderId(string)
- * @method null|string getOrderId
- * @method $this setMainBarcode(string)
- * @method null|string getMainBarcode
- * @method $this setProductCode(string)
- * @method null|string getProductCode
- * @method $this setShipmentType(string)
- * @method null|string getShipmentType
- * @method $this setDeliveryDate(string)
- * @method null|string getDeliveryDate
- * @method $this setIsPakjegemak(string)
- * @method null|string getIsPakjegemak
- * @method $this setPgLocationCode(string)
- * @method null|string getPgLocationCode
- * @method $this setPgRetailNetworkId(string)
- * @method null|string getPgRetailNetworkId
- * @method $this setParcelCount(string $value)
- * @method null|string getParcelCount
- * @method $this setShipAt(string)
- * @method null|string getShipAt
- * @method $this setConfirmedAt(string)
- * @method null|string getConfirmedAt
- * @method $this setCreatedAt(string)
- * @method null|string getCreatedAt
- * @method $this setUpdatedAt(string)
- * @method null|string getUpdatedAt
+ * Too much public methods, and too much code. We can't get this file to pass the (Object Calistenics) code inspection.
  */
 class Shipment extends AbstractModel implements ShipmentInterface, IdentityInterface
 {
+    const CACHE_TAG = 'tig_postnl_shipment';
+
+    const FIELD_SHIPMENT_ID = 'shipment_id';
+    const FIELD_ORDER_ID = 'order_id';
+    const FIELD_MAIN_BARCODE = 'main_barcode';
+    const FIELD_PRODUCT_CODE = 'product_code';
+    const FIELD_SHIPMENT_TYPE = 'shipment_type';
+    const FIELD_DELIVERY_DATE = 'delivery_date';
+    const FIELD_IS_PAKJEGEMAK = 'is_pakjegemak';
+    const FIELD_PG_LOCATION_CODE = 'pg_location_code';
+    const FIELD_PG_RETAIL_NETWORK_ID = 'pg_retail_network_id';
+    const FIELD_PARCEL_COUNT = 'parcel_count';
+    const FIELD_SHIP_AT = 'ship_at';
+    const FIELD_CONFIRMED_AT = 'confirmed_at';
+
     /**
      * @var string
      */
@@ -83,8 +75,6 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
 
     /** @var OrderShipment $orderShipment */
     private $orderShipment;
-
-    const CACHE_TAG = 'tig_postnl_shipment';
 
     /**
      * @var TimezoneInterface
@@ -102,15 +92,28 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     private $addressFactory;
 
     /**
-     * @param Context           $context
-     * @param Registry          $registry
-     * @param OrderShipment     $orderShipment
-     * @param OrderFactory      $orderFactory
-     * @param AddressFactory    $addressFactory
-     * @param TimezoneInterface $timezoneInterface
-     * @param AbstractResource  $resource
-     * @param AbstractDb        $resourceCollection
-     * @param array             $data
+     * @var ProductOptions
+     */
+    private $productOptions;
+
+    /**
+     * @var ShipmentBarcodeRepositoryInterface
+     */
+    private $barcodeRepository;
+
+    /**
+     * @param Context                            $context
+     * @param Registry                           $registry
+     * @param OrderShipment                      $orderShipment
+     * @param OrderFactory                       $orderFactory
+     * @param AddressFactory                     $addressFactory
+     * @param TimezoneInterface                  $timezoneInterface
+     * @param DateTime                           $dateTime
+     * @param ProductOptions                     $productOptions
+     * @param ShipmentBarcodeRepositoryInterface $barcodeRepository
+     * @param AbstractResource                   $resource
+     * @param AbstractDb                         $resourceCollection
+     * @param array                              $data
      */
     public function __construct(
         Context $context,
@@ -119,16 +122,21 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         OrderFactory $orderFactory,
         AddressFactory $addressFactory,
         TimezoneInterface $timezoneInterface,
+        DateTime $dateTime,
+        ProductOptions $productOptions,
+        ShipmentBarcodeRepositoryInterface $barcodeRepository,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+        parent::__construct($context, $registry, $dateTime, $resource, $resourceCollection, $data);
 
         $this->orderShipment = $orderShipment;
         $this->timezoneInterface = $timezoneInterface;
         $this->orderFactory = $orderFactory;
         $this->addressFactory = $addressFactory;
+        $this->productOptions = $productOptions;
+        $this->barcodeRepository = $barcodeRepository;
     }
 
     /**
@@ -172,11 +180,11 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
 
         $pgOrderAddressId = $postNLOrder->getPgOrderAddressId();
         $order = $shipment->getOrder();
-        $orderbillingid = $order->getBillingAddressId();
+        $orderBillingId = $order->getBillingAddressId();
 
         $pgAddressStreet = implode("\n", $this->getPakjegemakAddress()->getStreet());
 
-        $shippingAddress = $this->filterShippingAddress([$pgOrderAddressId, $orderbillingid], $pgAddressStreet);
+        $shippingAddress = $this->filterShippingAddress([$pgOrderAddressId, $orderBillingId], $pgAddressStreet);
 
         return $shippingAddress;
     }
@@ -260,5 +268,272 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         $deliveryDateFormatted = $deliveryDate->format($format);
 
         return $deliveryDateFormatted;
+    }
+
+    /**
+     * @param int
+     *
+     * @return $this
+     */
+    public function setShipmentId($value)
+    {
+        return $this->setData(static::FIELD_SHIPMENT_ID, $value);
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getShipmentId()
+    {
+        return $this->getData(static::FIELD_SHIPMENT_ID);
+    }
+
+    /**
+     * @param int
+     *
+     * @return $this
+     */
+    public function setOrderId($value)
+    {
+        return $this->setData(static::FIELD_ORDER_ID, $value);
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getOrderId()
+    {
+        return $this->getData(static::FIELD_ORDER_ID);
+    }
+
+    /**
+     * @param string
+     *
+     * @return $this
+     */
+    public function setMainBarcode($value)
+    {
+        return $this->setData(static::FIELD_MAIN_BARCODE, $value);
+    }
+
+    /**
+     * @param int $currentShipmentNumber
+     *
+     * @return string
+     */
+    public function getBarcode($currentShipmentNumber = 1)
+    {
+        if ($currentShipmentNumber == 1) {
+            return $this->getMainBarcode();
+        }
+
+        $barcode = $this->barcodeRepository->getForShipment($this, $currentShipmentNumber);
+
+        if (!$barcode) {
+            return null;
+        }
+
+        return $barcode->getValue();
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getMainBarcode()
+    {
+        return $this->getData(static::FIELD_MAIN_BARCODE);
+    }
+
+    /**
+     * @param string
+     *
+     * @return $this
+     */
+    public function setProductCode($value)
+    {
+        return $this->setData(static::FIELD_PRODUCT_CODE, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getProductCode()
+    {
+        return $this->getData(static::FIELD_PRODUCT_CODE);
+    }
+
+    /**
+     * @param string
+     *
+     * @return $this
+     */
+    public function setShipmentType($value)
+    {
+        return $this->setData(static::FIELD_SHIPMENT_TYPE, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getShipmentType()
+    {
+        return $this->getData(static::FIELD_SHIPMENT_TYPE);
+    }
+
+    /**
+     * @param string
+     *
+     * @return $this
+     */
+    public function setDeliveryDate($value)
+    {
+        return $this->setData(static::FIELD_DELIVERY_DATE, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getDeliveryDate()
+    {
+        return $this->getData(static::FIELD_DELIVERY_DATE);
+    }
+
+    /**
+     * @param string
+     *
+     * @return $this
+     */
+    public function setIsPakjegemak($value)
+    {
+        return $this->setData(static::FIELD_IS_PAKJEGEMAK, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getIsPakjegemak()
+    {
+        return $this->getData(static::FIELD_IS_PAKJEGEMAK);
+    }
+
+    /**
+     * @param string
+     *
+     * @return $this
+     */
+    public function setPgLocationCode($value)
+    {
+        return $this->setData(static::FIELD_PG_LOCATION_CODE, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getPgLocationCode()
+    {
+        return $this->getData(static::FIELD_PG_LOCATION_CODE);
+    }
+
+    /**
+     * @param string
+     *
+     * @return $this
+     */
+    public function setPgRetailNetworkId($value)
+    {
+        return $this->setData(static::FIELD_PG_RETAIL_NETWORK_ID, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getPgRetailNetworkId()
+    {
+        return $this->getData(static::FIELD_PG_RETAIL_NETWORK_ID);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setParcelCount($value)
+    {
+        return $this->setData(static::FIELD_PARCEL_COUNT, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getParcelCount()
+    {
+        return $this->getData(static::FIELD_PARCEL_COUNT);
+    }
+
+    /**
+     * @param string
+     *
+     * @return $this
+     */
+    public function setShipAt($value)
+    {
+        return $this->setData(static::FIELD_SHIP_AT, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getShipAt()
+    {
+        return $this->getData(static::FIELD_SHIP_AT);
+    }
+
+    /**
+     * @param string
+     *
+     * @return $this
+     */
+    public function setConfirmedAt($value)
+    {
+        return $this->setData(static::FIELD_CONFIRMED_AT, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getConfirmedAt()
+    {
+        return $this->getData(static::FIELD_CONFIRMED_AT);
+    }
+
+    /**
+     * Check if this shipment must be sent using Extra Cover.
+     *
+     * @return bool
+     */
+    public function isExtraCover()
+    {
+        $productCode = $this->getProductCode();
+        $productCodeOptions = $this->productOptions->getOptionsByCode($productCode);
+
+        if ($productCodeOptions === null) {
+            return false;
+        }
+
+        if (!array_key_exists('isExtraCover', $productCodeOptions)) {
+            return false;
+        }
+
+        return $productCodeOptions['isExtraCover'];
+    }
+
+    /**
+     * This is static for the time being.
+     *
+     * @return int
+     */
+    public function getExtraCoverAmount()
+    {
+        return 500;
     }
 }

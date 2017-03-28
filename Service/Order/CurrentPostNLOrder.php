@@ -31,10 +31,10 @@
  */
 namespace TIG\PostNL\Service\Order;
 
-use \Magento\Framework\Api\SearchCriteriaBuilder;
-use \TIG\PostNL\Model\OrderRepository as PostNLOrderRepository;
-use \TIG\PostNL\Model\Order as PostNLOrder;
+use TIG\PostNL\Model\OrderRepository as PostNLOrderRepository;
+use TIG\PostNL\Model\Order as PostNLOrder;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 
 class CurrentPostNLOrder
 {
