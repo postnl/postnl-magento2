@@ -29,47 +29,22 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Logging;
+namespace TIG\PostNL\Test\Unit\Webservices\Endpoints;
 
-use Monolog\Logger;
-use TIG\PostNL\Config\Provider\LoggingConfiguration;
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Webservices\Endpoints\Barcode;
 
-class Log extends Logger
+class BarcodeTest extends TestCase
 {
-    /**
-     * @var LoggingConfiguration
-     */
-    private $logConfig;
+    public $instanceClass = Barcode::class;
 
     /**
-     * @param string               $name
-     * @param array                $handlers
-     * @param array                $processors
-     * @param LoggingConfiguration $loggingConfiguration
+     * @expectedException \TIG\PostNL\Exception
+     * @expectedExceptionMessage Please provide the country id first by calling setCountryId
      */
-    public function __construct(
-        LoggingConfiguration $loggingConfiguration,
-        $name,
-        array $handlers = [],
-        array $processors = []
-    ) {
-        $this->logConfig = $loggingConfiguration;
-        parent::__construct($name, $handlers, $processors);
-    }
-
-    /**
-     * @param int    $level
-     * @param string $message
-     * @param array  $context
-     *
-     * @return bool
-     */
-    public function addRecord($level, $message, array $context = [])
+    public function testShouldThrowAnExceptionWhenNoCountryIdIsset()
     {
-        if (!$this->logConfig->canLog($level)) {
-            return false;
-        }
-
-        return parent::addRecord($level, $message, $context);
+        /** @var Barcode $instance */
+        $this->getInstance()->call();
     }
 }

@@ -39,7 +39,11 @@
                     <item name="config" xsi:type="array">
                         <item name="type" xsi:type="string">postnl_print_labels_and_confirm</item>
                         <item name="label" xsi:type="string" translate="true">PostNL - Print shipping labels &amp; confirm shipment</item>
-                        <item name="url" xsi:type="url" path="postnl/shipment/massPrintShippingLabel"/>
+                        <!-- This forces the massaction to not execute anything. We handle the action in js/shipment/grid/DownloadPdf.js -->
+                        <item name="callback" xsi:type="array">
+                            <item name="provider" xsi:type="string">fake.data.provider</item>
+                            <item name="target" xsi:type="string">fakeFunction</item>
+                        </item>
                     </item>
                 </argument>
             </action>

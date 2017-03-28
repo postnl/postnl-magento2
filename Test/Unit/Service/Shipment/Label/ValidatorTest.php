@@ -58,6 +58,12 @@ class ValidatorTest extends TestCase
                 ],
                 'output length' => 0
             ],
+            [
+                'input' => [
+                    null,
+                ],
+                'output length' => 0
+            ],
         ];
     }
 

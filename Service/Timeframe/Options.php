@@ -29,47 +29,45 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Logging;
+namespace TIG\PostNL\Service\Timeframe;
 
-use Monolog\Logger;
-use TIG\PostNL\Config\Provider\LoggingConfiguration;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
-class Log extends Logger
+class Options
 {
-    /**
-     * @var LoggingConfiguration
-     */
-    private $logConfig;
+    const DAYTIME_DELIVERY_OPTION = 'Daytime';
+    const EVENING_DELIVERY_OPTION = 'Evening';
+    const SUNDAY_DELIVERY_OPTION  = 'Sunday';
 
     /**
-     * @param string               $name
-     * @param array                $handlers
-     * @param array                $processors
-     * @param LoggingConfiguration $loggingConfiguration
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
+
+    /**
+     * @param ShippingOptions $shippingOptions
      */
     public function __construct(
-        LoggingConfiguration $loggingConfiguration,
-        $name,
-        array $handlers = [],
-        array $processors = []
+        ShippingOptions $shippingOptions
     ) {
-        $this->logConfig = $loggingConfiguration;
-        parent::__construct($name, $handlers, $processors);
+        $this->shippingOptions = $shippingOptions;
     }
 
     /**
-     * @param int    $level
-     * @param string $message
-     * @param array  $context
-     *
-     * @return bool
+     * @return array
      */
-    public function addRecord($level, $message, array $context = [])
+    public function get()
     {
-        if (!$this->logConfig->canLog($level)) {
-            return false;
+        $deliveryTimeframesOptions = [self::DAYTIME_DELIVERY_OPTION];
+
+        if ($this->shippingOptions->isEveningDeliveryActive()) {
+            $deliveryTimeframesOptions[] = self::EVENING_DELIVERY_OPTION;
         }
 
-        return parent::addRecord($level, $message, $context);
+        if ($this->shippingOptions->isSundayDeliveryActive()) {
+            $deliveryTimeframesOptions[] = self::SUNDAY_DELIVERY_OPTION;
+        }
+
+        return $deliveryTimeframesOptions;
     }
 }

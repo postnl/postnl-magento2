@@ -31,8 +31,8 @@
  */
 namespace TIG\PostNL\Test\Unit\Config\Provider;
 
-use \TIG\PostNL\Config\Provider\ShippingOptions;
-use \Magento\Store\Model\ScopeInterface;
+use TIG\PostNL\Config\Provider\ShippingOptions;
+use Magento\Store\Model\ScopeInterface;
 
 class ShippingOptionsTest extends AbstractConfigurationTest
 {

@@ -31,10 +31,11 @@
  */
 namespace TIG\PostNL\Service\Handler;
 
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Sales\Model\Order\Shipment;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Webservices\Endpoints\SentDate;
-use \TIG\PostNL\Model\Order;
+use TIG\PostNL\Model\Order;
 
 class SentDateHandler
 {
@@ -49,15 +50,23 @@ class SentDateHandler
     private $sentDate;
 
     /**
-     * @param SentDate        $sentDate
-     * @param OrderRepository $orderRepository
+     * @var TimezoneInterface
+     */
+    private $timezone;
+
+    /**
+     * @param SentDate          $sentDate
+     * @param OrderRepository   $orderRepository
+     * @param TimezoneInterface $timezone
      */
     public function __construct(
         SentDate $sentDate,
-        OrderRepository $orderRepository
+        OrderRepository $orderRepository,
+        TimezoneInterface $timezone
     ) {
         $this->sentDate = $sentDate;
         $this->orderRepository = $orderRepository;
+        $this->timezone = $timezone;
     }
 
     /**
@@ -71,6 +80,7 @@ class SentDateHandler
         $postnlOrder = $this->getPostnlOrder($shipment);
 
         $this->sentDate->setParameters($shipment, $postnlOrder);
+
         return $this->sentDate->call();
     }
 

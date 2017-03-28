@@ -41,14 +41,12 @@ use TIG\PostNL\Config\Provider\ShippingOptions;
  * @todo : Split this helper to service classes. Now the code is ignored because of the 11 methods.
  *       1 .All the date methods should be placed within a date service
  *       2. Remove the codingStandardsIgnore line an if posible the whole class.
+ * @codingStandardsIgnoreEnd
  */
 class Data extends AbstractHelper
 {
     const PAKJEGEMAK_DELIVERY_OPTION         = 'PG';
     const PAKJEGEMAK_EXPRESS_DELIVERY_OPTION = 'PGE';
-    const DAYTIME_DELIVERY_OPTION            = 'Daytime';
-    const EVENING_DELIVERY_OPTION            = 'Evening';
-    const SUNDAY_DELIVERY_OPTION             = 'Sunday';
 
     /**
      * @var TimezoneInterface
@@ -60,6 +58,9 @@ class Data extends AbstractHelper
      */
     private $shippingOptions;
 
+    /**
+     * @var null
+     */
     private $currentDate = null;
 
     /**
@@ -103,7 +104,7 @@ class Data extends AbstractHelper
     /**
      * @param \DateTime|bool|object $date
      * @param $format
-     * @return \DateTime
+     * @return string
      */
     public function getDate($date = false, $format = 'Y-m-d')
     {
@@ -186,24 +187,6 @@ class Data extends AbstractHelper
     }
 
     /**
-     * @return array
-     */
-    public function getDeliveryTimeframesOptions()
-    {
-        $deliveryTimeframesOptions = [self::DAYTIME_DELIVERY_OPTION];
-
-        if ($this->shippingOptions->isEveningDeliveryActive()) {
-            $deliveryTimeframesOptions[] = self::EVENING_DELIVERY_OPTION;
-        }
-
-        if ($this->shippingOptions->isSundayDeliveryActive()) {
-            $deliveryTimeframesOptions[] = self::SUNDAY_DELIVERY_OPTION;
-        }
-
-        return $deliveryTimeframesOptions;
-    }
-
-    /**
      * @param $xml
      *
      * @return string
@@ -234,6 +217,3 @@ class Data extends AbstractHelper
         return $this->currentDate;
     }
 }
-/**
- * @codingStandardsIgnoreEnd
- */

@@ -31,18 +31,17 @@
  */
 namespace TIG\PostNL\Helper\Tracking;
 
-use \TIG\PostNL\Helper\AbstractTracking;
-use \Magento\Sales\Model\Order\Shipment\TrackFactory;
-use \Magento\Shipping\Model\Tracking\Result\StatusFactory;
-use \TIG\PostNL\Config\Provider\Webshop;
-use \Magento\Sales\Model\Order\Shipment;
-use \Magento\Framework\App\Helper\Context;
-use \Magento\Framework\Api\SearchCriteriaBuilder;
-use \Magento\Sales\Model\Order\ShipmentRepository;
-use \TIG\PostNL\Helper\Tracking\Mail;
-use \TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
-use \TIG\PostNL\Logging\Log;
-use \TIG\PostNL\Model\Shipment as PostNLShipment;
+use TIG\PostNL\Helper\AbstractTracking;
+use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use TIG\PostNL\Logging\Log;
+use TIG\PostNL\Model\Shipment as PostNLShipment;
+use Magento\Sales\Model\Order\Shipment\TrackFactory;
+use Magento\Shipping\Model\Tracking\Result\StatusFactory;
+use Magento\Sales\Model\Order\Shipment;
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Sales\Model\Order\ShipmentRepository;
 
 class Track extends AbstractTracking
 {

@@ -31,10 +31,10 @@
  */
 namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Grid\Shipment;
 
-use \Magento\Framework\Phrase;
-use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use TIG\PostNL\Block\Adminhtml\Grid\Shipment\ShippingDate;
 use TIG\PostNL\Test\TestCase;
+use Magento\Framework\Phrase;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
 
 class ShippingDateTest extends TestCase
 {

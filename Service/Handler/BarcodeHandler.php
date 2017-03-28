@@ -61,6 +61,11 @@ class BarcodeHandler
     private $shipmentRepository;
 
     /**
+     * @var string
+     */
+    private $countryId;
+
+    /**
      * @param BarcodeEndpoint             $barcodeEndpoint
      * @param ShipmentRepositoryInterface $shipmentRepository
      * @param ShipmentBarcodeFactory      $shipmentBarcodeFactory
@@ -80,9 +85,11 @@ class BarcodeHandler
 
     /**
      * @param $magentoShipmentId
+     * @param $countryId
      */
-    public function prepareShipment($magentoShipmentId)
+    public function prepareShipment($magentoShipmentId, $countryId)
     {
+        $this->countryId = $countryId;
         $shipment = $this->shipmentRepository->getByShipmentId($magentoShipmentId);
 
         if (!$shipment || $shipment->getConfirmedAt() !== null) {
@@ -132,6 +139,7 @@ class BarcodeHandler
      */
     private function generate()
     {
+        $this->barcodeEndpoint->setCountryId($this->countryId);
         $response = $this->barcodeEndpoint->call();
 
         if (!is_object($response) || !isset($response->Barcode)) {

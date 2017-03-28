@@ -31,8 +31,8 @@
  */
 namespace TIG\PostNL\Service\Timeframe;
 
-use \TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
-use \TIG\PostNL\Service\Timeframe\Filters\OptionsFilterInterface;
+use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
+use TIG\PostNL\Service\Timeframe\Filters\OptionsFilterInterface;
 
 class Filter
 {

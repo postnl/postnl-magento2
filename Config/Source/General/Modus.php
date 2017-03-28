@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Config\Source\General;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Option\ArrayInterface;
 
 class Modus implements ArrayInterface
 {
