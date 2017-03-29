@@ -33,6 +33,8 @@ namespace TIG\PostNL\Helper\Pdf;
 
 use TIG\PostNL\Config\Provider\Webshop;
 
+// @codingStandardsIgnoreFile
+// @todo: Needs refactoring in 2 seprate classes: 1 for A4 labels and 1 for A6 labels.
 class Fpdf extends \FPDI
 {
     const MAX_LABELS_PER_PAGE = 4;
@@ -76,33 +78,28 @@ class Fpdf extends \FPDI
     /**
      * @param string $labelFileName
      * @param string $labelType
+     * @param        $shipmentType
      */
-    public function addLabel($labelFileName, $labelType)
+    public function addLabel($labelFileName, $labelType, $shipmentType)
     {
-        $this->updatePage();
-
-        $pdfPageWidth = $this->GetPageWidth();
-        $pdfPageHeight = $this->GetPageHeight();
-        $position = $this->positions
-            ->getForPosition($pdfPageWidth, $pdfPageHeight, $this->getLabelCounter(), $labelType);
-
+        $this->updatePage($shipmentType);
         $this->setSourceFile($labelFileName);
-        $templateIndex = $this->importPage(1);
-        $this->useTemplate($templateIndex, $position['x'], $position['y'], $position['w']);
+        $this->mergePage($labelType, $shipmentType);
     }
 
     /**
      * Create a new page when necessary
+     *
+     * @param $shipmentType
      */
-    public function updatePage()
+    public function updatePage($shipmentType)
     {
         $this->increaseLabelCounter();
 
         $labelSize = $this->webshop->getLabelSize();
 
         if ($labelSize == 'A6') {
-            $this->setLabelCounter(3);
-            $this->AddPage('L', self::PAGE_SIZE_A6);
+            $this->addA6Page($shipmentType);
         }
 
         if ($this->getLabelCounter() > self::MAX_LABELS_PER_PAGE) {
@@ -134,8 +131,87 @@ class Fpdf extends \FPDI
         $this->labelCounter++;
     }
 
+    /**
+     *
+     */
     public function resetLabelCounter()
     {
         $this->labelCounter = 1;
+    }
+
+    /**
+     * @param $shipmentType
+     */
+    private function addA6Page($shipmentType)
+    {
+        $this->setLabelCounter(3);
+
+        if ($shipmentType == 'EPS') {
+            $this->AddPage('P', self::PAGE_SIZE_A6);
+            return;
+        }
+
+        $this->AddPage('L', self::PAGE_SIZE_A6);
+    }
+
+    /**
+     * @param $labelType
+     * @param $shipmentType
+     */
+    private function mergePage($labelType, $shipmentType)
+    {
+        $labelSize = $this->webshop->getLabelSize();
+        $templateIndex = $this->importPage(1);
+
+        if ($labelSize == 'A6') {
+            $this->mergePageA6($templateIndex, $labelType, $shipmentType);
+        }
+
+        if ($labelSize == 'A4') {
+            $this->mergePageA4($templateIndex, $labelType);
+        }
+    }
+
+    /**
+     * @param $templateIndex
+     */
+    private function mergePageA6($templateIndex, $labelType, $shipmentType)
+    {
+        if ($shipmentType == 'EPS') {
+            $sizes  = static::PAGE_SIZE_A6;
+            $width  = $sizes[0];
+            $height = $sizes[1];
+            $this->useTemplate($templateIndex, 1, 0, $width, $height);
+            return;
+        }
+
+        $pdfPageWidth = $this->GetPageWidth();
+        $pdfPageHeight = $this->GetPageHeight();
+        $position = $this->positions->getForPosition(
+            $pdfPageWidth,
+            $pdfPageHeight,
+            $this->getLabelCounter(),
+            $labelType
+        );
+
+        $this->useTemplate($templateIndex, $position['x'], $position['y'], $position['w']);
+    }
+
+    /**
+     * @param $templateIndex
+     * @param $labelType
+     */
+    private function mergePageA4($templateIndex, $labelType)
+    {
+        $pdfPageWidth = $this->GetPageWidth();
+        $pdfPageHeight = $this->GetPageHeight();
+        $position = $this->positions->getForPosition(
+            $pdfPageWidth,
+            $pdfPageHeight,
+            $this->getLabelCounter(),
+            $labelType
+        );
+
+        $this->useTemplate($templateIndex, $position['x'], $position['y'], $position['w']);
     }
 }

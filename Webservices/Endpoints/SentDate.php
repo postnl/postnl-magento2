@@ -210,7 +210,7 @@ class SentDate extends AbstractEndpoint
      */
     private function formatDate($deliveryDate)
     {
-        $date = $this->timezone->date($deliveryDate);
+        $date = $this->timezone->date(strtotime($deliveryDate));
 
         return $date->format('d-m-Y');
     }
