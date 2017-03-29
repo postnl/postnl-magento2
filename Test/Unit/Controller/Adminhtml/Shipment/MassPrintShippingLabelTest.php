@@ -89,6 +89,6 @@ class MassPrintShippingLabelTest extends TestCase
         }
 
         $labelsProperty = $this->getProperty('labels', $instance);
-        $this->assertEquals($expectedResult, $labelsProperty);
+        $this->assertEquals($expectedResult, $labelsProperty, '', 0.0, 10, true);
     }
 }

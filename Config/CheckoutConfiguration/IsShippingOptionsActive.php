@@ -89,6 +89,9 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
         return true;
     }
 
+    /**
+     * @return bool
+     */
     private function hasValidApiSettings()
     {
         if (!$this->accountConfiguration->getCustomerCode()) {
