@@ -33,9 +33,14 @@ namespace TIG\PostNL\Helper\Pdf;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Io\File;
+use Magento\Sales\Api\OrderAddressRepositoryInterface;
+use Magento\Sales\Api\ShipmentRepositoryInterface as MagentoShipmentRepositoryInterface;
 use Magento\Shipping\Model\Shipping\LabelGenerator;
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
+use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Model\ShipmentLabel;
 
+// @codingStandardsIgnoreFile
 class Generate
 {
     const TEMP_LABEL_FOLDER = 'PostNL' . DIRECTORY_SEPARATOR . 'templabel';
@@ -55,27 +60,52 @@ class Generate
      * @var LabelGenerator
      */
     private $labelGenerator;
+
     /**
      * @var \FPDI
      */
     private $Fpdf;
 
     /**
-     * @param File           $ioFile
-     * @param DirectoryList  $directoryList
-     * @param LabelGenerator $labelGenerator
-     * @param Fpdf          $Fpdf
+     * @var ShipmentRepositoryInterface
+     */
+    private $shipmentRepository;
+
+    /**
+     * @var MagentoShipmentRepositoryInterface
+     */
+    private $magentoShipmentRepository;
+
+    /**
+     * @var OrderAddressRepositoryInterface
+     */
+    private $orderAddressRepositoryInterface;
+
+    /**
+     * @param File                               $ioFile
+     * @param DirectoryList                      $directoryList
+     * @param LabelGenerator                     $labelGenerator
+     * @param Fpdf                               $Fpdf
+     * @param ShipmentRepositoryInterface        $shipmentRepository
+     * @param MagentoShipmentRepositoryInterface $magentoShipmentRepository
+     * @param OrderAddressRepositoryInterface    $orderAddressRepositoryInterface
      */
     public function __construct(
         File $ioFile,
         DirectoryList $directoryList,
         LabelGenerator $labelGenerator,
-        Fpdf $Fpdf
+        Fpdf $Fpdf,
+        ShipmentRepositoryInterface $shipmentRepository,
+        MagentoShipmentRepositoryInterface $magentoShipmentRepository,
+        OrderAddressRepositoryInterface $orderAddressRepositoryInterface
     ) {
         $this->ioFile = $ioFile;
         $this->directoryList = $directoryList;
         $this->labelGenerator = $labelGenerator;
         $this->Fpdf = $Fpdf;
+        $this->shipmentRepository = $shipmentRepository;
+        $this->magentoShipmentRepository = $magentoShipmentRepository;
+        $this->orderAddressRepositoryInterface = $orderAddressRepositoryInterface;
     }
 
     /**
@@ -139,7 +169,7 @@ class Generate
             // @codingStandardsIgnoreLine
             $tempLabelFile = $this->saveTempLabel(base64_decode($label->getLabel()));
 
-            $this->Fpdf->addLabel($tempLabelFile, $label->getType());
+            $this->Fpdf->addLabel($tempLabelFile, $label->getType(), $this->isEps($label));
 
             // @codingStandardsIgnoreLine
             $this->ioFile->rm($tempLabelFile);
@@ -163,5 +193,23 @@ class Generate
         $this->ioFile->write($tempFile, $label);
 
         return $tempFile;
+    }
+
+    /**
+     * @param ShipmentLabelInterface $label
+     *
+     * @return bool
+     */
+    private function isEps(ShipmentLabelInterface $label)
+    {
+        /**
+         * This is not the best approach, but for some reason Magento would always return the same address while using
+         * $magentoShipment->getShippingAddress(), even though it was a new shipment.
+         */
+        $postNLShipment = $this->shipmentRepository->getById($label->getParentId());
+        $magentoShipment = $this->magentoShipmentRepository->get($postNLShipment->getShipmentId());
+        $address = $this->orderAddressRepositoryInterface->get($magentoShipment->getShippingAddressId());
+
+        return $address->getCountryId() != 'NL';
     }
 }

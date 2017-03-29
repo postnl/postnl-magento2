@@ -189,6 +189,7 @@ define([
                     data = [data.shift()];
                 }
 
+                data = data.slice(0, 5);
                 data = ko.utils.arrayMap(data, function (data) {
                     return new Location(data);
                 });

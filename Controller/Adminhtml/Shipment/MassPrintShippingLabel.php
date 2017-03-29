@@ -136,7 +136,7 @@ class MassPrintShippingLabel extends LabelAbstract
             return;
         }
 
-        $this->labels = $this->labels + $labels;
+        $this->labels = array_merge($this->labels, $labels);
     }
 
     /**
