@@ -66,6 +66,7 @@ class PdfDownload
      * @throws \Exception
      * @throws \Zend_Pdf_Exception
      */
+    // @codingStandardsIgnoreLine
     public function get($labels)
     {
         $pdfLabel = $this->labelGenerator->run($labels);
