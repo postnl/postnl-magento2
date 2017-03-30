@@ -29,41 +29,56 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Controller\Adminhtml;
+namespace TIG\PostNL\Service\Shipment\Label\Merge;
 
-use Magento\Backend\App\Action;
-use Magento\Backend\App\Action\Context;
+use TIG\PostNL\Service\Shipment\Label\File;
+use TIG\PostNL\Service\Pdf\Fpdi;
+use TIG\PostNL\Service\Pdf\FpdiFactory;
 
-use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
-use TIG\PostNL\Controller\AdminHtml\PdfDownload as GetPdf;
-
-abstract class LabelAbstract extends Action
+class A6Merger implements MergeInterface
 {
     /**
-     * @var GetLabels
+     * @var Fpdi
      */
-    //@codingStandardsIgnoreLine
-    protected $getLabels;
+    private $pdf;
 
     /**
-     * @var GetPdf
+     * @var File
      */
-    //@codingStandardsIgnoreLine
-    protected $getPdf;
+    private $file;
 
     /**
-     * @param Context    $context
-     * @param GetLabels  $getLabels
-     * @param GetPdf     $getPdf
+     * @param FpdiFactory $pdf
+     * @param File $file
      */
     public function __construct(
-        Context $context,
-        GetLabels $getLabels,
-        GetPdf $getPdf
+        FpdiFactory $pdf,
+        File $file
     ) {
-        parent::__construct($context);
+        $this->pdf = $pdf->create();
+        $this->file = $file;
+    }
 
-        $this->getLabels  = $getLabels;
-        $this->getPdf     = $getPdf;
+    /**
+     * @param Fpdi[] $labels
+     *
+     * @return Fpdi
+     */
+    public function files(array $labels)
+    {
+        foreach ($labels as $label) {
+            // @codingStandardsIgnoreLine
+            $filename = $this->file->save($label->Output('S'));
+
+            $this->pdf->addPage('L', Fpdi::PAGE_SIZE_A6);
+            $this->pdf->setSourceFile($filename);
+
+            $pageId = $this->pdf->importPage(1);
+            $this->pdf->useTemplate($pageId, 0, 0);
+        }
+
+        $this->file->cleanup();
+
+        return $this->pdf;
     }
 }

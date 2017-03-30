@@ -31,10 +31,16 @@
  */
 namespace TIG\PostNL\Model;
 
+use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel as MagentoModel;
+use TIG\PostNL\Api\ShipmentRepositoryInterface;
 
+// @codingStandardsIgnoreFile
 class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, IdentityInterface
 {
     const CACHE_TAG = 'tig_postnl_shipment_label';
@@ -51,9 +57,26 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, Iden
     protected $_eventPrefix = 'tig_postnl_shipment_label';
 
     /**
+     * @var ShipmentRepositoryInterface
+     */
+    private $shipmentRepository;
+
+    public function __construct(
+        Context $context,
+        Registry $registry,
+        ShipmentRepositoryInterface $shipmentRepository,
+        AbstractResource $resource = null,
+        AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
+        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+
+        $this->shipmentRepository = $shipmentRepository;
+    }
+
+    /**
      * Constructor
      */
-    // @codingStandardsIgnoreLine
     protected function _construct()
     {
         // @codingStandardsIgnoreLine
@@ -138,5 +161,13 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, Iden
     public function setType($value)
     {
         return $this->setData(static::FIELD_TYPE, $value);
+    }
+
+    /**
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function getShipment()
+    {
+        return $this->shipmentRepository->getById($this->getParentId());
     }
 }
