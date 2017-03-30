@@ -29,27 +29,47 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Helper\Pdf;
+namespace TIG\PostNL\Service\Shipment;
 
-use TIG\PostNL\Helper\Pdf\Generate;
-use TIG\PostNL\Helper\Pdf\Get;
-use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Api\Data\ShipmentInterface;
+use Magento\Sales\Model\Order\Shipment as MagentoShipment;
 
-class GetTest extends TestCase
+class Type
 {
-    protected $instanceClass = Get::class;
-
-    public function testGet()
+    /**
+     * @param ShipmentInterface $postNLShipment
+     *
+     * @return null|string
+     */
+    public function get(ShipmentInterface $postNLShipment)
     {
-        $generatePdfMock = $this->getFakeMock(Generate::class);
-        $generatePdfMock->setMethods(['get']);
-        $generatePdfMock = $generatePdfMock->getMock();
+        $shipmentType = $postNLShipment->getShipmentType();
+        if ($shipmentType !== null) {
+            return $shipmentType;
+        }
 
-        $getExpects = $generatePdfMock->expects($this->once());
-        $getExpects->method('get');
+        $magentoShipment = $postNLShipment->getShipment();
+        $address = $magentoShipment->getShippingAddress();
+        $countryId = $address->getCountryId();
 
+        return $this->getTypeForCountry($countryId);
+    }
 
-        $instance = $this->getInstance(['generatePdf' => $generatePdfMock]);
-        $instance->get(array('label1', 'label2'));
+    /**
+     * @param string $countryId
+     *
+     * @return string
+     */
+    private function getTypeForCountry($countryId)
+    {
+        if ($countryId == 'NL') {
+            return 'Daytime';
+        }
+
+        if (in_array($countryId, EpsCountries::ALL)) {
+            return 'EPS';
+        }
+
+        return 'GLOBALPACK';
     }
 }

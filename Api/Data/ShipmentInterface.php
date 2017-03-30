@@ -229,4 +229,9 @@ interface ShipmentInterface
      * @return float
      */
     public function getExtraCoverAmount();
+
+    /**
+     * @return \Magento\Sales\Api\Data\ShipmentInterface
+     */
+    public function getShipment();
 }
