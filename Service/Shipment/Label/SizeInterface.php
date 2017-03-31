@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,21 +28,13 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="\Magento\Shipping\Block\Adminhtml\View" type="\TIG\PostNL\Block\Adminhtml\Shipment\View" />
+ */
+namespace TIG\PostNL\Service\Shipment\Label;
 
-    <type name="TIG\PostNL\Service\Shipment\Label\Prepare">
-        <arguments>
-            <argument name="types" xsi:type="array">
-                <item name="eps" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\EPS</item>
-                <item name="domestic" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\Domestic</item>
-            </argument>
-        </arguments>
-    </type>
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
+use TIG\PostNL\Service\Shipment\Label\Fpdf;
 
-    <type name="\Magento\Ui\Component\MassAction">
-        <plugin name="TIG_PostNL_Remove_MassAction_When_Disabled" type="\TIG\PostNL\Plugin\Admin\Ui\Component\MassAction" />
-    </type>
-</config>
+interface SizeInterface
+{
+    public function addLabel(Fpdf $pdf, ShipmentLabelInterface $label);
+}

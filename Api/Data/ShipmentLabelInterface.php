@@ -84,4 +84,9 @@ interface ShipmentLabelInterface
      * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
      */
     public function setType($value);
+
+    /**
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function getShipment();
 }

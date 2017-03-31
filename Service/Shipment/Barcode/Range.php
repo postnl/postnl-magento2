@@ -34,6 +34,7 @@ namespace TIG\PostNL\Service\Shipment\Barcode;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
 use TIG\PostNL\Exception as PostnlException;
+use TIG\PostNL\Service\Shipment\EpsCountries;
 
 class Range
 {
@@ -45,17 +46,6 @@ class Range
     const EU_BARCODE_SERIE_LONG   = '00000000-99999999';
     const EU_BARCODE_SERIE_SHORT  = '0000000-9999999';
     const GLOBAL_BARCODE_SERIE    = '0000-9999';
-
-    /**
-     * Array of countries to which PostNL ships using EPS. Other EU countries are shipped to using GlobalPack
-     * http://www.postnl.nl/zakelijke-oplossingen/pakket-versturen/pakket-buitenland/binnen-de-eu/
-     *
-     * @var array
-     */
-    private $euCountries = [
-        'BE', 'BG', 'DK', 'DE', 'EE', 'FI', 'FR', 'GB', 'UK', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU',
-        'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'ES', 'CZ', 'SE', 'NL',
-    ];
 
     /**
      * @var AccountConfiguration
@@ -108,7 +98,7 @@ class Range
             return $this->get('NL');
         }
 
-        if (in_array($countryId, $this->euCountries)) {
+        if (in_array($countryId, EpsCountries::ALL)) {
             return $this->get('EU');
         }
 

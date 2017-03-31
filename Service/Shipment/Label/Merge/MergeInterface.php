@@ -29,51 +29,16 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Helper\Pdf;
+namespace TIG\PostNL\Service\Shipment\Label\Merge;
 
-use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\App\Response\Http\FileFactory;
+use TIG\PostNL\Service\Shipment\Label\FPDI;
 
-class Get
+interface MergeInterface
 {
     /**
-     * @var FileFactory
-     */
-    private $fileFactory;
-
-    /**
-     * @var Generate
-     */
-    private $generatePdf;
-
-    /**
-     * @param FileFactory    $fileFactory
-     * @param Generate       $generatePdf
-     */
-    public function __construct(
-        FileFactory $fileFactory,
-        Generate $generatePdf
-    ) {
-        $this->fileFactory = $fileFactory;
-        $this->generatePdf = $generatePdf;
-    }
-
-    /**
-     * @param $labels
+     * @param FPDI[] $labels
      *
-     * @return \Magento\Framework\App\ResponseInterface
-     * @throws \Exception
-     * @throws \Zend_Pdf_Exception
+     * @return FPDI
      */
-    public function get($labels)
-    {
-        $pdfLabel = $this->generatePdf->get($labels);
-
-        return $this->fileFactory->create(
-            'ShippingLabels.pdf',
-            $pdfLabel,
-            DirectoryList::VAR_DIR,
-            'application/pdf'
-        );
-    }
+    public function files(array $labels);
 }

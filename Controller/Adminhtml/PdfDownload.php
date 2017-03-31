@@ -31,39 +31,51 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml;
 
-use Magento\Backend\App\Action;
-use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\App\Response\Http\FileFactory;
+use TIG\PostNL\Service\Shipment\Label\Generate;
 
-use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
-use TIG\PostNL\Controller\AdminHtml\PdfDownload as GetPdf;
-
-abstract class LabelAbstract extends Action
+class PdfDownload
 {
     /**
-     * @var GetLabels
+     * @var FileFactory
      */
-    //@codingStandardsIgnoreLine
-    protected $getLabels;
+    private $fileFactory;
 
     /**
-     * @var GetPdf
+     * @var Generate
      */
-    //@codingStandardsIgnoreLine
-    protected $getPdf;
+    private $labelGenerator;
 
     /**
-     * @param Context    $context
-     * @param GetLabels  $getLabels
-     * @param GetPdf     $getPdf
+     * @param FileFactory $fileFactory
+     * @param Generate    $labelGenerator
      */
     public function __construct(
-        Context $context,
-        GetLabels $getLabels,
-        GetPdf $getPdf
+        FileFactory $fileFactory,
+        Generate $labelGenerator
     ) {
-        parent::__construct($context);
+        $this->fileFactory = $fileFactory;
+        $this->labelGenerator = $labelGenerator;
+    }
 
-        $this->getLabels  = $getLabels;
-        $this->getPdf     = $getPdf;
+    /**
+     * @param $labels
+     *
+     * @return \Magento\Framework\App\ResponseInterface
+     * @throws \Exception
+     * @throws \Zend_Pdf_Exception
+     */
+    // @codingStandardsIgnoreLine
+    public function get($labels)
+    {
+        $pdfLabel = $this->labelGenerator->run($labels);
+
+        return $this->fileFactory->create(
+            'ShippingLabels.pdf',
+            $pdfLabel,
+            DirectoryList::VAR_DIR,
+            'application/pdf'
+        );
     }
 }

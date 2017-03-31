@@ -40,7 +40,7 @@ use Magento\Ui\Component\MassAction\Filter;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
-use TIG\PostNL\Helper\Pdf\Get as GetPdf;
+use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
 
