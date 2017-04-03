@@ -58,6 +58,10 @@ class FpdiFactory
     public function create()
     {
         // @codingStandardsIgnoreLine
-        return $this->objectManager->create(Fpdi::class);
+        return $this->objectManager->create(Fpdi::class, [
+            'orientation' => 'P',
+            'unit' => 'mm',
+            'size' => 'A4'
+        ]);
     }
 }
