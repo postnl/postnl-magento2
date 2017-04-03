@@ -36,6 +36,13 @@ use TIG\PostNL\Service\Pdf\Fpdi;
 
 class EPS extends Domestic
 {
+    const COMBI_LABEL_REGEX = '~ Page size: ([0-9\.]+) x ([0-9\.]+) pts ~';
+
+    /**
+     * @var bool
+     */
+    private $templateInserted = false;
+
     /**
      * @param ShipmentLabelInterface $label
      *
@@ -48,12 +55,51 @@ class EPS extends Domestic
         $this->pdf->AddPage('L', Fpdi::PAGE_SIZE_A6);
         $this->pdf->setSourceFile($filename);
 
+        if ($this->isRotated()) {
+            $this->insertRotated();
+        }
+
+        if (!$this->templateInserted) {
+            $this->insertRegular();
+        }
+
+        return $this->pdf;
+    }
+
+    /**
+     * This is a label that is standing, so rotate is before pasting.
+     */
+    private function insertRotated()
+    {
+        $this->templateInserted = true;
         $this->pdf->Rotate(-90);
         $pageId = $this->pdf->importPage(1);
         $this->pdf->useTemplate($pageId, 0, -125, Fpdi::PAGE_SIZE_A6_WIDTH, Fpdi::PAGE_SIZE_A6_HEIGHT);
-
         $this->pdf->Rotate(0);
+    }
 
-        return $this->pdf;
+    /**
+     * This is a default label, it does not need any modification.
+     */
+    private function insertRegular()
+    {
+        $this->templateInserted = true;
+        $pageId = $this->pdf->importPage(1);
+        $this->pdf->useTemplate($pageId, -2, 0);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRotated()
+    {
+        $pageId = $this->pdf->importPage(1);
+        $sizes = $this->pdf->getTemplateSize($pageId);
+
+        if (isset($sizes['w']) && isset($sizes['h']) && $sizes['w'] < $sizes['h']) {
+            return true;
+        }
+
+        return false;
     }
 }

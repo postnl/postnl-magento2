@@ -57,7 +57,12 @@ define([
         },
 
         canUseDeliveryOptions: ko.computed(function () {
-            return State.deliveryOptionsAreAvailable() && AddressFinder() !== false;
+            var address = AddressFinder();
+
+            return State.deliveryOptionsAreAvailable() &&
+                address &&
+                address !== false &&
+                address.countryCode == 'NL';
         }),
 
         canUsePickupLocations: ko.computed(function () {
