@@ -29,39 +29,38 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Pdf;
+namespace TIG\PostNL\Test\Unit\Service\Shipment;
 
-use Magento\Framework\ObjectManager\ObjectManager;
+use TIG\PostNL\Service\Shipment\Multicolli;
+use TIG\PostNL\Test\TestCase;
 
-/**
- * As Magento does auto generate the Fpdi class when using FpdiFactory we are doing this ourself.
- */
-class FpdiFactory
+class MulticolliTest extends TestCase
 {
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
+    public $instanceClass = Multicolli::class;
 
-    /**
-     * @param ObjectManager $objectManager
-     */
-    public function __construct(
-        ObjectManager $objectManager
-    ) {
-        $this->objectManager = $objectManager;
+    public function ifTheRightCountryIsAllowedToUseMulticolliProvider()
+    {
+        return [
+            ['NL', true],
+            ['BE', false],
+            ['DE', false],
+            ['FR', false],
+            ['US', false],
+            ['CN', false],
+        ];
     }
 
     /**
-     * @return mixed
+     * @dataProvider ifTheRightCountryIsAllowedToUseMulticolliProvider
+     *
+     * @param $country
+     * @param $expected
      */
-    public function create()
+    public function testIfTheRightCountryIsAllowedToUseMulticolli($country, $expected)
     {
-        // @codingStandardsIgnoreLine
-        return $this->objectManager->create(Fpdi::class, [
-            'orientation' => 'P',
-            'unit' => 'mm',
-            'size' => 'A4'
-        ]);
+        $result = $this->getInstance()->get($country);
+
+        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 }

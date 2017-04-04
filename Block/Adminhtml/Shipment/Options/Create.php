@@ -38,11 +38,12 @@ use TIG\PostNL\Api\OrderRepositoryInterface as PostNLOrderRepository;
 use TIG\PostNL\Block\Adminhtml\Shipment\OptionsAbstract;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
+use TIG\PostNL\Service\Shipment\Multicolli;
 
 class Create extends OptionsAbstract
 {
     /**
-     * @var OrderRepositoryInterface
+     * @var PostNLOrderRepository
      */
     private $postnlOrderRepository;
 
@@ -52,11 +53,17 @@ class Create extends OptionsAbstract
     private $productCode = null;
 
     /**
+     * @var Multicolli
+     */
+    private $isMulticolliAllowed;
+
+    /**
      * @param Context               $context
      * @param ProductOptions        $productOptions
      * @param ProductOptionSource   $productOptionsSource
      * @param OrderRepository       $orderRepository
      * @param PostNLOrderRepository $postnlOrderRepository
+     * @param Multicolli            $isMulticolliAllowed
      * @param Registry              $registry
      * @param array                 $data
      */
@@ -66,6 +73,7 @@ class Create extends OptionsAbstract
         ProductOptionSource $productOptionsSource,
         OrderRepository $orderRepository,
         PostNLOrderRepository $postnlOrderRepository,
+        Multicolli $isMulticolliAllowed,
         Registry $registry,
         array $data = []
     ) {
@@ -77,6 +85,8 @@ class Create extends OptionsAbstract
             $registry,
             $data
         );
+
+        $this->isMulticolliAllowed = $isMulticolliAllowed;
         $this->postnlOrderRepository = $postnlOrderRepository;
     }
 
@@ -92,5 +102,15 @@ class Create extends OptionsAbstract
         }
 
         return $this->productCode;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMultiColliAllowed()
+    {
+        $address = $this->order->getShippingAddress();
+
+        return $this->isMulticolliAllowed->get($address->getCountryId());
     }
 }

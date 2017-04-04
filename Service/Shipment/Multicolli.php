@@ -29,39 +29,20 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Pdf;
+namespace TIG\PostNL\Service\Shipment;
 
-use Magento\Framework\ObjectManager\ObjectManager;
-
-/**
- * As Magento does auto generate the Fpdi class when using FpdiFactory we are doing this ourself.
- */
-class FpdiFactory
+class Multicolli
 {
     /**
-     * @var ObjectManager
+     * @param $country
+     *
+     * @return bool
      */
-    private $objectManager;
-
-    /**
-     * @param ObjectManager $objectManager
-     */
-    public function __construct(
-        ObjectManager $objectManager
-    ) {
-        $this->objectManager = $objectManager;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function create()
+    public function get($country)
     {
-        // @codingStandardsIgnoreLine
-        return $this->objectManager->create(Fpdi::class, [
-            'orientation' => 'P',
-            'unit' => 'mm',
-            'size' => 'A4'
-        ]);
+        /**
+         * For now, only domestic shipments are allowed to send multicolli. In the future this may change.
+         */
+        return $country == 'NL';
     }
 }
