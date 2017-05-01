@@ -42,7 +42,7 @@ define([
     return Component.extend({
         defaults: {
             template: 'TIG_PostNL/DeliveryOptions/Main',
-            shipmentType: 'delivery'
+            shipmentType: State.currentOpenPane
         },
 
         initObservable: function () {
@@ -50,7 +50,6 @@ define([
                 'shipmentType'
             ]);
 
-            this.shipmentType = State.currentOpenPane;
             this.isLoading = State.isLoading;
 
             return this;
@@ -58,11 +57,10 @@ define([
 
         canUseDeliveryOptions: ko.computed(function () {
             var address = AddressFinder();
+            var deliveryOptionsAreAvailable = State.deliveryOptionsAreAvailable();
+            var isNL = (address && address !== false && address.countryCode == 'NL');
 
-            return State.deliveryOptionsAreAvailable() &&
-                address &&
-                address !== false &&
-                address.countryCode == 'NL';
+            return deliveryOptionsAreAvailable && isNL;
         }),
 
         canUsePickupLocations: ko.computed(function () {
