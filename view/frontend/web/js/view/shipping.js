@@ -43,7 +43,11 @@ define([
         PostNLFee: State.fee,
 
         canUseDeliveryOption: function () {
-            return window.checkoutConfig.shipping.postnl.shippingoptions_active == 1;
+            var deliveryOptionsActive = window.checkoutConfig.shipping.postnl.shippingoptions_active == 1;
+            var deliveryDaysActive = window.checkoutConfig.shipping.postnl.is_deliverydays_active;
+            var pakjegemakActive = window.checkoutConfig.shipping.postnl.pakjegemak_active == '1';
+
+            return deliveryOptionsActive && (deliveryDaysActive || pakjegemakActive);
         },
 
         isPostNLDeliveryMethod: function (method) {
