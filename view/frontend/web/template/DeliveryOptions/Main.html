@@ -1,4 +1,4 @@
-<div class="delivery_options" data-bind="visible: canUseDeliveryOptions()">
+<div class="delivery_options" data-bind="visible: canUseDeliveryOptions() || canUsePickupLocations()">
     <div class="btn-group" role="group">
         <!-- ko if: canUseDeliveryOptions() -->
         <button type="button" class="btn btn-default" data-bind="i18n: 'Delivery', click: setDelivery, css: { 'button-active': shipmentType() == 'delivery' }"></button>
