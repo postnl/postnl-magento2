@@ -40,7 +40,8 @@ define([
     var deliveryOptionsAreLoading = ko.observable(false),
         pickupOptionsAreLoading = ko.observable(false),
         fee = ko.observable(null),
-        currentSelectedShipmentType = ko.observable(null);
+        currentSelectedShipmentType = ko.observable(null),
+        config = window.checkoutConfig.shipping.postnl;
 
     var isLoading = ko.computed(function () {
         return deliveryOptionsAreLoading() || pickupOptionsAreLoading();
@@ -61,7 +62,7 @@ define([
         pickupOptionsAreAvailable: ko.observable(true),
         pickupOptionsAreLoading: pickupOptionsAreLoading,
         currentSelectedShipmentType: currentSelectedShipmentType,
-        currentOpenPane: ko.observable('delivery'),
+        currentOpenPane: ko.observable(config.is_deliverydays_active ? 'delivery' : 'pickup'),
         pickupAddress: ko.observable(null),
         isLoading: isLoading,
         method: ko.observable(null),
