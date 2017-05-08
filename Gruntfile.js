@@ -38,7 +38,7 @@ module.exports = function (grunt) {
         phpunitXmlPath = '/tmp/magento2/vendor/tig/postnl/phpunit.xml.dist';
     }
 
-    var phpcsCommand = 'php -ddisplay_errors=1 ~/.composer/vendor/bin/phpcs -p ' +
+    var phpcsCommand = 'php -ddisplay_errors=1 vendor/bin/phpcs -p ' +
         '--runtime-set installed_paths ' +
         'vendor/squizlabs/php_codesniffer/CodeSniffer/Standards,' +
         'vendor/magento/marketplace-eqp,' +
@@ -93,8 +93,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-
-
+    
     /**
      * Register the available tasks
      */

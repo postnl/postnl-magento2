@@ -87,7 +87,7 @@ abstract class AbstractColumnsInstaller implements InstallSchemaInterface
         $this->connection = $setup->getConnection();
         $this->table = $setup->getTable(static::TABLE_NAME);
 
-        if (!$setup->tableExists(static::TABLE_NAME)) {
+        if (!$setup->tableExists($this->table)) {
             throw new LocalizedException(__('Table %1 does not exists', static::TABLE_NAME));
         }
 
@@ -136,7 +136,7 @@ abstract class AbstractColumnsInstaller implements InstallSchemaInterface
     protected function columnExists($columnName)
     {
         if ($this->columnsList === null) {
-            $this->columnsList = $this->connection->describeTable(static::TABLE_NAME);
+            $this->columnsList = $this->connection->describeTable($this->table);
         }
 
         return array_key_exists($columnName, $this->columnsList);
