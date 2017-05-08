@@ -40,8 +40,6 @@
         <referenceContainer name="content">
             <referenceBlock name="checkout.root">
                 <arguments>
-
-
                     <argument name="jsLayout" xsi:type="array">
                         <item name="components" xsi:type="array">
                             <item name="checkout" xsi:type="array">

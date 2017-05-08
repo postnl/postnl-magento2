@@ -77,10 +77,10 @@ Place this code in a working Magento 2 installation in the folder app/code/TIG/P
 - Paste the following xml within the ``<testsuites>`` tag of **dev/tests/integration/phpunit.xml**:
 ~~~~
 <testsuite name="TIG PostNL Integration Tests">
-<directory>../../../app/code/TIG/PostNL/Test/Integrationdirectory>
-<directory>../../../vendor/tig/postnl/Test/Integrationdirectory>
-<exclude>../../../app/code/Magentoexclude>
-testsuite>
+    <directory>../../../app/code/TIG/PostNL/Test/Integration</directory>
+    <directory>../../../vendor/tig/postnl/Test/Integration</directory>
+    <exclude>../../../app/code/Magento</exclude>
+</testsuite>
 ~~~~
 
 Run:
