@@ -33,6 +33,9 @@ namespace TIG\PostNL\Model\Product\Attribute\Source;
 
 class Type extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
+    const POSTNL_PRODUCT_TYPE        = 'postnl_product_type';
+    const PRODUCT_TYPE_EXTRA_AT_HOME = '1';
+
     /**
      * @return array
      */

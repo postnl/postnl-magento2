@@ -39,6 +39,7 @@ use Magento\Sales\Api\Data\ShipmentItemInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\FilterGroup;
+use TIG\PostNL\Model\Product\Attribute\Source\Type as PostNLType;
 
 class ParcelCount
 {
@@ -62,9 +63,8 @@ class ParcelCount
      */
     private $filterGroup;
 
-    const POSTNL_PRODUCT_TYPE        = 'postnl_product_type';
     const ATTRIBUTE_PARCEL_COUNT     = 'postnl_parcel_count';
-    const PRODUCT_TYPE_EXTRA_AT_HOME = '1';
+
     const WEIGHT_PER_PARCEL          = 20000;
 
     /**
@@ -143,9 +143,9 @@ class ParcelCount
         $products = $this->productRepository->getList($this->searchCriteriaBuilder->create());
 
         return array_filter($products->getItems(), function (ProductInterface $product) {
-            $attribute = $product->getCustomAttribute(self::POSTNL_PRODUCT_TYPE);
+            $attribute = $product->getCustomAttribute(PostNLType::POSTNL_PRODUCT_TYPE);
             $value = $attribute !== null ? $attribute->getValue() : false;
-            return $value == self::PRODUCT_TYPE_EXTRA_AT_HOME;
+            return $value == PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME;
         });
 
     }
