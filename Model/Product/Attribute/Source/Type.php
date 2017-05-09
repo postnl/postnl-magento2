@@ -39,8 +39,8 @@ class Type extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
     public function getAllOptions()
     {
         $_options = [
-            ['value' => '0', 'label' => __('Reqular')],
-            ['value' => '1', 'label' => __('Extra@Home')],
+            ['value' => 'regular', 'label' => __('Regular')],
+            ['value' => 'extra_at_home', 'label' => __('Extra@Home')],
         ];
         return $_options;
     }

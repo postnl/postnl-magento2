@@ -91,7 +91,7 @@ class CustomProductAttributes extends AbstractDataInstaller
             'postnl_product_type',
             [
                 'group' => 'PostNL',
-                'type' => 'int',
+                'type' => 'string',
                 'backend' => '',
                 'frontend' => '',
                 'label' => 'Product type',
@@ -102,7 +102,7 @@ class CustomProductAttributes extends AbstractDataInstaller
                 'visible' => true,
                 'required' => false,
                 'user_defined' => false,
-                'default' => 0,
+                'default' => 'regular',
                 'searchable' => false,
                 'filterable' => false,
                 'comparable' => false,
