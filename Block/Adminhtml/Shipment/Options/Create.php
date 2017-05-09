@@ -39,6 +39,7 @@ use TIG\PostNL\Block\Adminhtml\Shipment\OptionsAbstract;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 use TIG\PostNL\Service\Shipment\Multicolli;
+use TIG\PostNL\Service\Shipment\ParcelCount;
 
 class Create extends OptionsAbstract
 {
@@ -58,12 +59,18 @@ class Create extends OptionsAbstract
     private $isMulticolliAllowed;
 
     /**
+     * @var ParcelCount
+     */
+    private $parcelCount;
+
+    /**
      * @param Context               $context
      * @param ProductOptions        $productOptions
      * @param ProductOptionSource   $productOptionsSource
      * @param OrderRepository       $orderRepository
      * @param PostNLOrderRepository $postnlOrderRepository
      * @param Multicolli            $isMulticolliAllowed
+     * @param ParcelCount           $parcelCount
      * @param Registry              $registry
      * @param array                 $data
      */
@@ -74,6 +81,7 @@ class Create extends OptionsAbstract
         OrderRepository $orderRepository,
         PostNLOrderRepository $postnlOrderRepository,
         Multicolli $isMulticolliAllowed,
+        ParcelCount $parcelCount,
         Registry $registry,
         array $data = []
     ) {
@@ -88,6 +96,7 @@ class Create extends OptionsAbstract
 
         $this->isMulticolliAllowed = $isMulticolliAllowed;
         $this->postnlOrderRepository = $postnlOrderRepository;
+        $this->parcelCount = $parcelCount;
     }
 
     /**
@@ -112,5 +121,13 @@ class Create extends OptionsAbstract
         $address = $this->order->getShippingAddress();
 
         return $this->isMulticolliAllowed->get($address->getCountryId());
+    }
+
+    /**
+     * @return int|\Magento\Framework\Api\AttributeInterface|null
+     */
+    public function getParcelCount()
+    {
+        return $this->parcelCount->get($this->getShipment());
     }
 }
