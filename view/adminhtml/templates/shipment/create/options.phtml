@@ -44,7 +44,7 @@
         </label>
         <input id="tig_postnl_colli"
                name="shipment[tig_postnl_colli_amount]"
-               value="1"
+               value="<?php echo $this->getParcelCount(); ?>"
                class="admin__control-text"/>
     </div>
     <?php endif; ?>
