@@ -40,7 +40,6 @@ use Magento\Catalog\Model\ResourceModel\Eav\Attribute as EavAttribute;
 use Magento\Catalog\Model\Product;
 use TIG\PostNL\Setup\AbstractDataInstaller;
 
-
 class CustomProductAttributes extends AbstractDataInstaller
 {
     /**
