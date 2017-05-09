@@ -40,7 +40,6 @@ use Magento\Catalog\Model\ResourceModel\Eav\Attribute as EavAttribute;
 use Magento\Catalog\Model\Product;
 use TIG\PostNL\Setup\AbstractDataInstaller;
 
-
 class CustomProductAttributes extends AbstractDataInstaller
 {
     /**
@@ -91,7 +90,7 @@ class CustomProductAttributes extends AbstractDataInstaller
             'postnl_product_type',
             [
                 'group' => 'PostNL',
-                'type' => 'int',
+                'type' => 'string',
                 'backend' => '',
                 'frontend' => '',
                 'label' => 'Product type',
@@ -102,14 +101,14 @@ class CustomProductAttributes extends AbstractDataInstaller
                 'visible' => true,
                 'required' => false,
                 'user_defined' => false,
-                'default' => 0,
+                'default' => 'regular',
                 'searchable' => false,
                 'filterable' => false,
                 'comparable' => false,
                 'visible_on_front' => false,
                 'used_in_product_listing' => true,
                 'unique' => false,
-                'apply_to' => ''
+                'apply_to' => 'simple'
             ]
         );
 
@@ -140,7 +139,7 @@ class CustomProductAttributes extends AbstractDataInstaller
                 'visible_on_front' => false,
                 'used_in_product_listing' => true,
                 'unique' => false,
-                'apply_to' => ''
+                'apply_to' => 'simple'
             ]
         );
     }

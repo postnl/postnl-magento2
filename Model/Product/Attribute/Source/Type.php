@@ -29,6 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Model\Product\Attribute\Source;
 
 class Type extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
@@ -42,9 +43,12 @@ class Type extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
     public function getAllOptions()
     {
         $_options = [
-            ['value' => '0', 'label' => __('Reqular')],
-            ['value' => '1', 'label' => __('Extra@Home')],
+            // @codingStandardsIgnoreLine
+            ['value' => 'regular', 'label' => __('Regular')],
+            // @codingStandardsIgnoreLine
+            ['value' => 'extra_at_home', 'label' => __('Extra@Home')],
         ];
+
         return $_options;
     }
 }
