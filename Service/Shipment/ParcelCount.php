@@ -147,7 +147,6 @@ class ParcelCount
             $value = $attribute !== null ? $attribute->getValue() : false;
             return $value == PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME;
         });
-
     }
 
     /**
