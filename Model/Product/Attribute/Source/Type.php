@@ -35,7 +35,8 @@ namespace TIG\PostNL\Model\Product\Attribute\Source;
 class Type extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
     const POSTNL_PRODUCT_TYPE        = 'postnl_product_type';
-    const PRODUCT_TYPE_EXTRA_AT_HOME = '1';
+    const PRODUCT_TYPE_EXTRA_AT_HOME = 'extra_at_home';
+    const PRODUCT_TYPE_REQULAR       = 'regular';
 
     /**
      * @return array
@@ -44,9 +45,9 @@ class Type extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
     {
         $_options = [
             // @codingStandardsIgnoreLine
-            ['value' => 'regular', 'label' => __('Regular')],
+            ['value' => self::PRODUCT_TYPE_REQULAR, 'label' => __('Regular')],
             // @codingStandardsIgnoreLine
-            ['value' => 'extra_at_home', 'label' => __('Extra@Home')],
+            ['value' => self::PRODUCT_TYPE_EXTRA_AT_HOME, 'label' => __('Extra@Home')],
         ];
 
         return $_options;
