@@ -29,46 +29,39 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Setup;
 
-use Magento\Framework\Setup\InstallDataInterface;
+use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
-class InstallData implements InstallDataInterface
+class UpgradeData implements UpgradeDataInterface
 {
     /**
      * @var array
      */
-    private $installDataObjects;
+    private $upgradeDataObjects;
 
     /**
-     * @param array $installDataObjects
+     * @param array $upgradeDataObjects
      */
     public function __construct(
-        $installDataObjects = []
+        $upgradeDataObjects = []
     ) {
-        $this->installDataObjects = $installDataObjects;
+        $this->upgradeDataObjects = $upgradeDataObjects;
     }
 
-    /**
-     * Installs data for a module
-     *
-     * @param ModuleDataSetupInterface $setup
-     * @param ModuleContextInterface   $context
-     *
-     * @return void
-     */
-    public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
+    public function upgrade(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
 
         if (version_compare($context->getVersion(), '1.1.0', '<')) {
-            $this->installData($this->installDataObjects['v1.1.0'], $setup, $context);
+            $this->upgradeData($this->upgradeDataObjects['v1.1.0'], $setup, $context);
         }
 
         if (version_compare($context->getVersion(), '1.2.0', '<')) {
-            $this->installData($this->installDataObjects['v1.2.0'], $setup, $context);
+            $this->upgradeData($this->upgradeDataObjects['v1.2.0'], $setup, $context);
         }
 
         $setup->endSetup();
@@ -79,7 +72,7 @@ class InstallData implements InstallDataInterface
      * @param ModuleDataSetupInterface                  $setup
      * @param ModuleContextInterface                    $context
      */
-    private function installData(
+    private function upgradeData(
         array $installSchemaObjects,
         ModuleDataSetupInterface $setup,
         ModuleContextInterface $context
