@@ -155,6 +155,7 @@ class ParcelCount
     private function setFilterGroups($skus)
     {
         $this->filterGroup->setFilters([
+            // @codingStandardsIgnoreLine
             $this->filterBuilder
                 ->setField(ProductInterface::SKU)
                 ->setConditionType('in')
