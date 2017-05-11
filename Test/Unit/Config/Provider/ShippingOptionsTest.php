@@ -266,11 +266,10 @@ class ShippingOptionsTest extends AbstractConfigurationTest
      */
     public function testIsExtraAtHomeActive($value)
     {
+        $instance = $this->getInstance();
         $this->setXpath(ShippingOptions::XPATH_SHIPPING_OPTION_EXTRAATHOME_ACTIVE, $value);
 
-        $instance = $this->getInstance();
         $result = $instance->isExtraAtHomeActive();
-
         $this->assertEquals($value, $result);
     }
 
