@@ -142,11 +142,11 @@ class ShippingOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isExtraAtHomeActive()
     {
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EXTRAATHOME_ACTIVE);
+        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EXTRAATHOME_ACTIVE);
     }
 
     /**
