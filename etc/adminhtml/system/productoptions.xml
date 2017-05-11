@@ -63,7 +63,17 @@
             </depends>
         </field>
 
-        <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+        <field id="default_extraathome_option" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default Extra@Home option</label>
+            <comment><![CDATA[Select the default product option for Extra@Home shipments.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getExtraAtHomeOptions</source_model>
+            <config_path>tig_postnl/productoptions/default_extraathome_option</config_path>
+            <depends>
+                <field id="tig_postnl/shippingoptions/extraathome_active">1</field>
+            </depends>
+        </field>
+
+        <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default post office delivery option</label>
             <comment><![CDATA[Select the default product option for postoffice delivery shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakOptions</source_model>
@@ -73,7 +83,7 @@
             </depends>
         </field>
 
-        <field id="default_pakjegemak_early_option" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+        <field id="default_pakjegemak_early_option" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default postoffice early pickup option</label>
             <comment><![CDATA[Select the default product option for early pickup option.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakEarlyDeliveryOptions</source_model>

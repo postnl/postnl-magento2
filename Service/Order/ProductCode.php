@@ -36,13 +36,14 @@ use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 
 class ProductCode
 {
-    const TYPE_PICKUP = 'pickup';
-    const TYPE_DELIVERY = 'delivery';
-    const OPTION_DAYTIME = 'daytime';
-    const OPTION_EVENING = 'evening';
-    const OPTION_SUNDAY = 'sunday';
-    const OPTION_PG = 'pg';
-    const OPTION_PGE = 'pge';
+    const TYPE_PICKUP        = 'pickup';
+    const TYPE_DELIVERY      = 'delivery';
+    const OPTION_DAYTIME     = 'daytime';
+    const OPTION_EVENING     = 'evening';
+    const OPTION_EXTRAATHOME = 'extraathome';
+    const OPTION_SUNDAY      = 'sunday';
+    const OPTION_PG          = 'pg';
+    const OPTION_PGE         = 'pge';
 
     /**
      * @var ProductOptionsConfiguration
@@ -104,6 +105,10 @@ class ProductCode
 
         if ($option == static::OPTION_SUNDAY) {
             return $this->productOptionsConfiguration->getDefaultSundayProductOption();
+        }
+
+        if ($option == static::OPTION_EXTRAATHOME) {
+            return $this->productOptionsConfiguration->getDefaultExtraAtHomeProductOption();
         }
 
         return $this->productOptionsConfiguration->getDefaultProductOption();
