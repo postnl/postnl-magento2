@@ -42,6 +42,7 @@ class ProductCodeTest extends TestCase
 {
     const PRODUCT_OPTION_DEFAULT = 'default_product_option';
     const PRODUCT_OPTION_EVENING = 'evening_product_option';
+    const PRODUCT_OPTION_EXTRAATHOME = 'extraathome_product_option';
     const PRODUCT_OPTION_PAKJEGEMAK = 'pakjegemak_product_option';
     const PRODUCT_OPTION_PAKJEGEMAK_EARLY = 'pakjegemak_early_product_option';
     const PRODUCT_OPTION_SUNDAY = 'sunday_product_option';
@@ -74,6 +75,7 @@ class ProductCodeTest extends TestCase
 
         $this->addProductOptionsMockFunction('getDefaultProductOption', static::PRODUCT_OPTION_DEFAULT);
         $this->addProductOptionsMockFunction('getDefaultEveningProductOption', static::PRODUCT_OPTION_EVENING);
+        $this->addProductOptionsMockFunction('getDefaultExtraAtHomeProductOption', static::PRODUCT_OPTION_EXTRAATHOME);
         $this->addProductOptionsMockFunction('getDefaultPakjeGemakProductOption', static::PRODUCT_OPTION_PAKJEGEMAK);
         $this->addProductOptionsMockFunction('getDefaultSundayProductOption', static::PRODUCT_OPTION_SUNDAY);
         $this->addProductOptionsMockFunction(
@@ -92,6 +94,7 @@ class ProductCodeTest extends TestCase
             'no option' => ['delivery', '', 'NL', static::PRODUCT_OPTION_DEFAULT],
             'default' => ['delivery', 'default', 'NL', static::PRODUCT_OPTION_DEFAULT],
             'evening' => ['delivery', 'evening', 'NL', static::PRODUCT_OPTION_EVENING],
+            'extra at home' => ['delivery', 'extraathome', 'NL', static::PRODUCT_OPTION_EXTRAATHOME],
             'sunday' => ['delivery', 'sunday', 'NL', static::PRODUCT_OPTION_SUNDAY],
             'default pg' => ['pickup', 'default', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK],
             'pakjegemak' => ['pickup', '', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK],

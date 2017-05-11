@@ -75,6 +75,37 @@ class ProductOptionsTest extends AbstractConfigurationTest
         $this->assertEquals($value, $instance->getDefaultEveningProductOption());
     }
 
+    /**
+     * @return array
+     */
+    public function getDefaultExtraAtHomeProductOptionProvider()
+    {
+        return [
+            'Extra@Home Top service 2 person delivery NL'     => ['3628'],
+            'Extra@Home Top service Btl 2 person delivery'    => ['3629'],
+            'Extra@Home Top service 1 person delivery NL'     => ['3653'],
+            'Extra@Home Top service Btl 1 person delivery'    => ['3783'],
+            'Extra@Home Drempelservice 1 person delivery NL'  => ['3790'],
+            'Extra@Home Drempelservice 2 person delivery NL'  => ['3791'],
+            'Extra@Home Drempelservice Btl 1 person delivery' => ['3792'],
+            'Extra@Home Drempelservice Btl 2 person delivery' => ['3793'],
+        ];
+    }
+
+    /**
+     * @param $value
+     *
+     * @dataProvider getDefaultExtraAtHomeProductOptionProvider
+     */
+    public function testGetDefaultExtraAtHomeProductOption($value)
+    {
+        $instance = $this->getInstance();
+        $this->setXpath(ProductOptions::XPATH_DEFAULT_EXTRAATHOME_PRODUCT_OPTION, $value);
+
+        $result = $instance->getDefaultExtraAtHomeProductOption();
+        $this->assertEquals($value, $result);
+    }
+
     public function pakjegemakOptionsProvider()
     {
         return [
