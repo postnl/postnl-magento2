@@ -260,6 +260,21 @@ class ShippingOptionsTest extends AbstractConfigurationTest
     }
 
     /**
+     * @param $value
+     *
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
+     */
+    public function testIsExtraAtHomeActive($value)
+    {
+        $this->setXpath(ShippingOptions::XPATH_SHIPPING_OPTION_EXTRAATHOME_ACTIVE, $value);
+
+        $instance = $this->getInstance();
+        $result = $instance->isExtraAtHomeActive();
+
+        $this->assertEquals($value, $result);
+    }
+
+    /**
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
      * @param $value
      */
