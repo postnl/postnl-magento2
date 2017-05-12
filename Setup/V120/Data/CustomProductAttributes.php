@@ -31,39 +31,23 @@
  */
 namespace TIG\PostNL\Setup\V120\Data;
 
-use Magento\Config\Model\ResourceModel\Config;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute as EavAttribute;
 use Magento\Catalog\Model\Product;
+use Magento\Eav\Setup\EavSetup;
 use TIG\PostNL\Setup\AbstractDataInstaller;
 
 class CustomProductAttributes extends AbstractDataInstaller
 {
     /**
-     * @var Config
-     */
-    private $resourceConfig;
-
-    /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
-
-    /**
      * @var EavSetupFactory
      */
     private $eavSetupFactory;
 
-    public function __construct(
-        Config $resourceConfig,
-        ScopeConfigInterface $scopeConfig,
-        EavSetupFactory $eavSetupFactory
-    ) {
-        $this->scopeConfig = $scopeConfig;
-        $this->resourceConfig = $resourceConfig;
+    public function __construct(EavSetupFactory $eavSetupFactory)
+    {
         $this->eavSetupFactory = $eavSetupFactory;
     }
 
@@ -84,13 +68,12 @@ class CustomProductAttributes extends AbstractDataInstaller
         /**
          * Product type
          */
-
         $eavSetup->addAttribute(
             Product::ENTITY,
             'postnl_product_type',
             [
                 'group' => 'PostNL',
-                'type' => 'string',
+                'type' => 'text',
                 'backend' => '',
                 'frontend' => '',
                 'label' => 'Product type',
