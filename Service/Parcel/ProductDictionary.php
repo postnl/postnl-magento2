@@ -88,7 +88,7 @@ class ProductDictionary
      *
      * @return ProductInterface[]
      */
-    public function get($items , $postNLType)
+    public function get($items, $postNLType)
     {
         $skus = array_map(function ($item) {
             /** @var ShipmentItemInterface|OrderItemInterface|QuoteItem $item */
@@ -111,7 +111,7 @@ class ProductDictionary
     /**
      * @param array $skus
      */
-    protected function setFilterGroups($skus)
+    private function setFilterGroups($skus)
     {
         $this->filterGroup->setFilters([
             // @codingStandardsIgnoreLine

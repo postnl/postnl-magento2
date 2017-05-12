@@ -37,6 +37,7 @@ class UpgradeOrderTable extends AbstractColumnsInstaller
 {
     const TABLE_NAME = 'tig_postnl_order';
 
+    // @codingStandardsIgnoreLine
     protected $columns = [
         'parcel_count',
         'is_extra_at_home'
@@ -67,5 +68,4 @@ class UpgradeOrderTable extends AbstractColumnsInstaller
             'after' => 'parcel_count',
         ];
     }
-
 }

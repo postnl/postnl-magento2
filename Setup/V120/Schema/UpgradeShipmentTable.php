@@ -37,6 +37,7 @@ class UpgradeShipmentTable extends AbstractColumnsInstaller
 {
     const TABLE_NAME = 'tig_postnl_shipment';
 
+    // @codingStandardsIgnoreLine
     protected $columns = [
         'is_extra_at_home'
     ];
@@ -53,5 +54,4 @@ class UpgradeShipmentTable extends AbstractColumnsInstaller
             'after' => 'parcel_count',
         ];
     }
-
 }

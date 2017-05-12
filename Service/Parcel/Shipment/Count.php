@@ -33,18 +33,9 @@ namespace TIG\PostNL\Service\Parcel\Shipment;
 
 use \TIG\PostNL\Service\Parcel\CountAbstract;
 use Magento\Sales\Api\Data\ShipmentInterface;
-use \TIG\PostNL\Service\Parcel\ProductDictionary;
 
 class Count extends CountAbstract
 {
-    /**
-     * @param ProductDictionary $productDictionary
-     */
-    public function __construct(ProductDictionary $productDictionary)
-    {
-        parent::__construct($productDictionary);
-    }
-
     /**
      * @param ShipmentInterface $shipment
      *
@@ -52,7 +43,8 @@ class Count extends CountAbstract
      */
     public function get(ShipmentInterface $shipment)
     {
+        $items = $shipment->getItems();
         /** @noinspection PhpUndefinedMethodInspection */
-        return $this->calculate($shipment->getTotalWeight(), $shipment->getItems()->getItems());
+        return $this->calculate($shipment->getTotalWeight(), $items->getItems());
     }
 }

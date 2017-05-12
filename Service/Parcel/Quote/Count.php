@@ -32,19 +32,10 @@
 namespace TIG\PostNL\Service\Parcel\Quote;
 
 use \TIG\PostNL\Service\Parcel\CountAbstract;
-use \TIG\PostNL\Service\Parcel\ProductDictionary;
 use \Magento\Quote\Model\Quote;
 
 class Count extends CountAbstract
 {
-    /**
-     * @param ProductDictionary $productDictionary
-     */
-    public function __construct(ProductDictionary $productDictionary)
-    {
-        parent::__construct($productDictionary);
-    }
-
     /**
      * @param Quote $quote
      *

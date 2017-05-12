@@ -32,19 +32,10 @@
 namespace TIG\PostNL\Service\Parcel\Order;
 
 use \TIG\PostNL\Service\Parcel\CountAbstract;
-use \TIG\PostNL\Service\Parcel\ProductDictionary;
 use \Magento\Sales\Api\Data\OrderInterface;
 
 class Count extends CountAbstract
 {
-    /**
-     * @param ProductDictionary $productDictionary
-     */
-    public function __construct(ProductDictionary $productDictionary)
-    {
-        parent::__construct($productDictionary);
-    }
-
     /**
      * @param OrderInterface $order
      *
