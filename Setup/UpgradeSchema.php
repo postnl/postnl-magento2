@@ -29,42 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Setup;
 
-use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
+use Magento\Framework\Setup\UpgradeSchemaInterface;
 
-class InstallSchema implements InstallSchemaInterface
+class UpgradeSchema implements UpgradeSchemaInterface
 {
-    /**
-     * @var array
-     */
-    private $installSchemaObjects;
+    private $upgradeSchemaObjects;
 
-    /**
-     * @param array $installSchemaObjects
-     */
     public function __construct(
-        $installSchemaObjects = []
+        $upgradeSchemaObjects = []
     ) {
-        $this->installSchemaObjects = $installSchemaObjects;
+        $this->upgradeSchemaObjects = $upgradeSchemaObjects;
     }
 
-    /**
-     * Installs DB schema for a module
-     *
-     * @param SchemaSetupInterface   $setup
-     * @param ModuleContextInterface $context
-     *
-     * @return void
-     */
-    public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
+    public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
 
         if (version_compare($context->getVersion(), '1.2.0', '<')) {
-            $this->installSchemas($this->installSchemaObjects['v1.2.0'], $setup, $context);
+            $this->upgradeSchemas($this->upgradeSchemaObjects['v1.2.0'], $setup, $context);
         }
 
         $setup->endSetup();
@@ -75,9 +62,9 @@ class InstallSchema implements InstallSchemaInterface
      * @param $setup
      * @param $context
      */
-    private function installSchemas($schemaObjects, $setup, $context)
+    private function upgradeSchemas($schemaObjects, $setup, $context)
     {
-        /** @var AbstractTableInstaller|AbstractColumnsInstaller $schema */
+        /** @var AbstractColumnsInstaller $schema */
         foreach ($schemaObjects as $schema) {
             $schema->install($setup, $context);
         }

@@ -39,7 +39,7 @@ use TIG\PostNL\Block\Adminhtml\Shipment\OptionsAbstract;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 use TIG\PostNL\Service\Shipment\Multicolli;
-use TIG\PostNL\Service\Shipment\ParcelCount;
+use \TIG\PostNL\Service\Parcel\Shipment\Count as ParcelCount;
 
 class Create extends OptionsAbstract
 {
@@ -128,6 +128,7 @@ class Create extends OptionsAbstract
      */
     public function getParcelCount()
     {
+        /** @todo first check if shipment-> PostNLOrder doesn't contain parcel_count value */
         return $this->parcelCount->get($this->getShipment());
     }
 }

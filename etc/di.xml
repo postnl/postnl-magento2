@@ -69,6 +69,17 @@
         </arguments>
     </type>
 
+    <type name="TIG\PostNL\Setup\UpgradeSchema">
+        <arguments>
+            <argument name="upgradeSchemaObjects" xsi:type="array">
+                <item name="v1.2.0" xsi:type="array">
+                    <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V120\Schema\UpgradeOrderTable</item>
+                    <item name="UpgradeShipmentTable" xsi:type="object">TIG\PostNL\Setup\V120\Schema\UpgradeShipmentTable</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
     <type name="TIG\PostNL\Setup\InstallData">
         <arguments>
             <argument name="installDataObjects" xsi:type="array">
