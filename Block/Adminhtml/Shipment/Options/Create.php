@@ -105,8 +105,7 @@ class Create extends OptionsAbstract
     public function getProductCode()
     {
         if ($this->productCode === null) {
-            $postnlOrder = $this->postnlOrderRepository->getByFieldWithValue('order_id', $this->order->getId());
-
+            $postnlOrder = $this->postnlOrderRepository->getByOrderId($this->order->getId());
             $this->productCode = $postnlOrder->getProductCode();
         }
 
@@ -128,7 +127,7 @@ class Create extends OptionsAbstract
      */
     public function getParcelCount()
     {
-        $postnlOrder = $this->postnlOrderRepository->getByFieldWithValue('order_id', $this->order->getId());
+        $postnlOrder = $this->postnlOrderRepository->getByOrderId($this->order->getId());
         if ($postnlOrder->getParcelCount()) {
             return $postnlOrder->getParcelCount();
         }

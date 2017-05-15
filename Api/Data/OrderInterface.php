@@ -206,7 +206,7 @@ interface OrderInterface
     /**
      * @param $value
      *
-     * @return mixed
+     * @return \TIG\PostNL\Api\Data\OrderInterface
      */
     public function setParcelCount($value);
 
