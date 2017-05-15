@@ -68,7 +68,7 @@ class ApiKeyConfiguration extends AbstractDataInstaller
     /**
      * The api key is normally encrypted before it gets saved in the database. But for testing purposes we want to add
      * a default API key in the test configuration. If we put this in the config.xml the system will try to decrypt
-     * an plain text value, resulting in an invalid api key. That's why whe read the default value, encrypt it, and
+     * an plain text value, resulting in an invalid api key. That's why we read the default value, encrypt it, and
      * save it to the database.
      *
      * @param ModuleDataSetupInterface $setup

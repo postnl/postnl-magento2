@@ -38,6 +38,7 @@ use TIG\PostNL\Service\Order\ProductCode;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
+use TIG\PostNL\Service\Parcel\Order\Count as ParcelCount;
 
 class CreatePostNLOrder implements ObserverInterface
 {
@@ -45,7 +46,10 @@ class CreatePostNLOrder implements ObserverInterface
      * @var OrderRepository
      */
     private $orderRepository;
-
+    /**
+     * @var ParcelCount
+     */
+    private $parcelCount;
     /**
      * @var Data
      */
@@ -57,15 +61,18 @@ class CreatePostNLOrder implements ObserverInterface
 
     /**
      * @param OrderRepository $orderRepository
+     * @param ParcelCount     $count
      * @param ProductCode     $productCode
      * @param Data            $helper
      */
     public function __construct(
         OrderRepository $orderRepository,
+        ParcelCount $count,
         ProductCode $productCode,
         Data $helper
     ) {
         $this->orderRepository = $orderRepository;
+        $this->parcelCount = $count;
         $this->helper = $helper;
         $this->productCode = $productCode;
     }
@@ -92,6 +99,7 @@ class CreatePostNLOrder implements ObserverInterface
         $this->setProductCode($postnlOrder, $magentoOrder);
         $postnlOrder->setData('order_id', $magentoOrder->getId());
         $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
+        $postnlOrder->setData('parcel_count', $this->parcelCount->get($magentoOrder));
 
         $this->orderRepository->save($postnlOrder);
     }
