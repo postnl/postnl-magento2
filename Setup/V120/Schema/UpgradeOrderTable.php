@@ -39,8 +39,7 @@ class UpgradeOrderTable extends AbstractColumnsInstaller
 
     // @codingStandardsIgnoreLine
     protected $columns = [
-        'parcel_count',
-        'is_extra_at_home'
+        'parcel_count'
     ];
 
     public function installParcelCountColumn()
@@ -53,19 +52,6 @@ class UpgradeOrderTable extends AbstractColumnsInstaller
             'default' => null,
             'comment' => 'Parcel Count',
             'after' => 'product_code',
-        ];
-    }
-
-    public function installIsExtraAtHomeColumn()
-    {
-        return [
-            // @codingStandardsIgnoreLine
-            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            'length' => 1,
-            'nullable' => true,
-            'default' => null,
-            'comment' => 'Is Extra@Home',
-            'after' => 'parcel_count',
         ];
     }
 }

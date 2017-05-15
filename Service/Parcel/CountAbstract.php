@@ -62,21 +62,20 @@ abstract class CountAbstract
     // @codingStandardsIgnoreLine
     protected function calculate($weight, $items)
     {
-        $parcelCount = 0;
         $products    = $this->getProducts($items);
         if (empty($products)) {
             $remainingParcelCount = ceil($weight / self::WEIGHT_PER_PARCEL);
-            $remainingParcelCount = $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
-            return $parcelCount + $remainingParcelCount;
+            return $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
         }
 
+        $parcelCount = 0;
         foreach ($items as $item) {
             $product = $products[$item->getProductId()];
             $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
-            $parcelCount += ($productParcelCount->getValue() * $item->getQty());
+            $parcelCount += ($productParcelCount->getValue() * $this->getQty($item));
         }
 
-        return $parcelCount;
+        return $parcelCount < 1 ? 1 : $parcelCount;
     }
 
     /**
@@ -106,5 +105,16 @@ abstract class CountAbstract
         }
 
         return $weight;
+    }
+
+    /**
+     * @param ShipmentItemInterface|OrderItemInterface|QuoteItem $item
+     *
+     * @return mixed
+     */
+    // @codingStandardsIgnoreLine
+    protected function getQty($item)
+    {
+        return $item->getQty() !== null ? $item->getQty() : $item->getQtyOrdered();
     }
 }
