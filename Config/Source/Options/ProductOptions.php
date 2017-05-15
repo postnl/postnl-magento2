@@ -194,6 +194,14 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     ];
 
     /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->availableOptions;
+    }
+
+    /**
      * Returns option array
      * @return array
      */
