@@ -42,7 +42,7 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION           = 'tig_postnl/productoptions/default_sunday_option';
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getSupportedProductOptions()
     {
@@ -50,7 +50,7 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return string|int
      */
     public function getDefaultProductOption()
     {
@@ -58,7 +58,7 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return string|int
      */
     public function getDefaultEveningProductOption()
     {
@@ -66,7 +66,7 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return string|int
      */
     public function getDefaultExtraAtHomeProductOption()
     {
@@ -74,7 +74,7 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return string|int
      */
     public function getDefaultPakjeGemakProductOption()
     {
@@ -82,7 +82,7 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return string|int
      */
     public function getDefaultPakjeGemakEarlyProductOption()
     {
@@ -90,7 +90,7 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return string|int
      */
     public function getDefaultSundayProductOption()
     {

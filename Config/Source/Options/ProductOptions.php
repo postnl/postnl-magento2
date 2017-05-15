@@ -256,7 +256,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         'pakjegemak_options'    => 'Post Office options',
         'eu_options'            => 'EU options',
         'buspakje_options'      => 'Letter Box Parcel options',
-        'extra_at_home_options' => 'Extra@Home Options',
+        'extra_at_home_options' => 'Extra@Home options',
     ];
 
     /**
