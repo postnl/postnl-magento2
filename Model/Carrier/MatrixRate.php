@@ -35,6 +35,7 @@ namespace TIG\PostNL\Model\Carrier;
 use Magento\Framework\Model\AbstractModel;
 use TIG\PostNL\Api\Data\MatrixRateInterface;
 
+// @codingStandardsIgnoreFile
 class MatrixRate extends AbstractModel implements MatrixRateInterface
 {
     /** @var string */

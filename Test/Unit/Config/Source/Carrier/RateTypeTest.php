@@ -43,11 +43,26 @@ class RateTypeTest extends TestCase
         $instance = $this->getInstance();
         $options  = $instance->toOptionArray();
 
-        $this->assertCount(2, $options);
+        $this->assertCount(3, $options);
 
         foreach ($options as $option) {
             $this->assertArrayHasKey('label', $option);
             $this->assertArrayHasKey('value', $option);
         }
+    }
+
+    public function testHasMatrixRate()
+    {
+        $instance = $this->getInstance();
+        $options  = $instance->toOptionArray();
+
+        $hasOption = false;
+        foreach ($options as $option) {
+            if ($option['value'] == $instance::CARRIER_RATE_TYPE_MATRIX) {
+                $hasOption = true;
+            }
+        }
+
+        $this->assertTrue($hasOption);
     }
 }

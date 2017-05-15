@@ -32,6 +32,7 @@
 
 namespace TIG\PostNL\Api\Data;
 
+// @codingStandardsIgnoreFile
 interface MatrixRateInterface
 {
     /**
