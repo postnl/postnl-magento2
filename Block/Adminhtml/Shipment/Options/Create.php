@@ -128,8 +128,11 @@ class Create extends OptionsAbstract
      */
     public function getParcelCount()
     {
-        // @codingStandardsIgnoreLine
-        /** @todo first check if shipment-> PostNLOrder doesn't contain parcel_count value */
+        $postnlOrder = $this->postnlOrderRepository->getByFieldWithValue('order_id', $this->order->getId());
+        if ($postnlOrder->getParcelCount()) {
+            return $postnlOrder->getParcelCount();
+        }
+
         return $this->parcelCount->get($this->getShipment());
     }
 }
