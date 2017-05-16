@@ -34,22 +34,32 @@ namespace TIG\PostNL\Block\Adminhtml\Grid\Shipment;
 use TIG\PostNL\Block\Adminhtml\Grid\AbstractGrid;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
+use TIG\PostNL\Block\Adminhtml\Renderer\ProductCode as Renderer;
 
 class ProductCode extends AbstractGrid
 {
     /**
+     * @var Renderer
+     */
+    private $codeRenderer;
+
+    /**
      * @param ContextInterface   $context
      * @param UiComponentFactory $uiComponentFactory
+     * @param Renderer           $codeRenderer,
      * @param array              $components
      * @param array              $data
      */
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
+        Renderer $codeRenderer,
         array $components = [],
         array $data = []
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
+
+        $this->codeRenderer = $codeRenderer;
     }
 
     /**
@@ -60,6 +70,6 @@ class ProductCode extends AbstractGrid
     // @codingStandardsIgnoreLine
     protected function getCellContents($item)
     {
-        return $item['tig_postnl_product_code'];
+        return $this->codeRenderer->render($item['tig_postnl_product_code']);
     }
 }
