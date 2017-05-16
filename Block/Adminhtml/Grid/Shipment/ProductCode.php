@@ -63,7 +63,7 @@ class ProductCode extends AbstractGrid
     }
 
     /**
-     * @param object $item
+     * @param array $item
      *
      * @return string
      */
