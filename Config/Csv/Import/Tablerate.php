@@ -29,7 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Csv;
+namespace TIG\PostNL\Config\Csv\Import;
 
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -43,7 +43,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use TIG\PostNL\Model\ResourceModel\TablerateFactory;
 use TIG\PostNL\Service\Import\Csv;
 
-class Import extends Value
+class Tablerate extends Value
 {
     /**
      * @var TablerateFactory

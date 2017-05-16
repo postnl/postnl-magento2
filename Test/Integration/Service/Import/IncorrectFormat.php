@@ -29,44 +29,12 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Import\Csv;
 
-class ParserErrors
+namespace TIG\PostNL\Test\Integration\Service\Import;
+
+use TIG\PostNL\Exception;
+
+class IncorrectFormat extends Exception
 {
-    /**
-     * @var array
-     */
-    private $errors = [];
 
-    /**
-     * @return int
-     */
-    public function getErrorCount()
-    {
-        return count($this->errors);
-    }
-
-    /**
-     * @return array
-     */
-    public function getErrors()
-    {
-        return $this->errors;
-    }
-
-    /**
-     * @param string $message
-     */
-    public function addError($message)
-    {
-        $this->errors[] = $message;
-    }
-
-    /**
-     * Reset the errors array
-     */
-    public function resetErrors()
-    {
-        $this->errors = [];
-    }
 }

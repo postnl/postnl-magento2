@@ -71,20 +71,20 @@
             </field>
             <field id="tablerate_import" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Import" sortOrder="80" showInDefault="0" showInWebsite="1" showInStore="0">
                 <label>Import Table Rates</label>
-                <backend_model>TIG\PostNL\Config\Csv\Import</backend_model>
+                <backend_model>TIG\PostNL\Config\Csv\Import\Tablerate</backend_model>
                 <depends>
                     <field id="rate_type">table</field>
                 </depends>
             </field>
-            <field id="matrixrate_export" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Carrier\Matrixrate\Export" sortOrder="90" showInDefault="0" showInWebsite="1" showInStore="0">
+            <field id="matrixrate_export" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Carrier\Matrixrate\Export" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Export Matrix Rates</label>
                 <depends>
                     <field id="rate_type">matrix</field>
                 </depends>
             </field>
-            <field id="matrixrate_import" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Carrier\Matrixrate\Import" sortOrder="100" showInDefault="0" showInWebsite="1" showInStore="0">
+            <field id="matrixrate_import" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Carrier\Matrixrate\Import" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Import Matrix Rates</label>
-                <backend_model>TIG\PostNL\Config\Csv\Import</backend_model>
+                <backend_model>TIG\PostNL\Config\Csv\Import\Matrixrate</backend_model>
                 <depends>
                     <field id="rate_type">matrix</field>
                 </depends>

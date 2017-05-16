@@ -29,44 +29,43 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Import\Csv;
+namespace TIG\PostNL\Block\Adminhtml\Config\Carrier\Matrixrate;
 
-class ParserErrors
+use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\Data\Form\Element\CollectionFactory;
+use Magento\Framework\Data\Form\Element\Factory;
+use Magento\Framework\Escaper;
+use TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Renderer\Import as ImportBlock;
+
+class Import extends AbstractElement
 {
     /**
-     * @var array
+     * @var ImportBlock
      */
-    private $errors = [];
+    private $importBlock;
 
-    /**
-     * @return int
-     */
-    public function getErrorCount()
-    {
-        return count($this->errors);
+    public function __construct(
+        Factory $factoryElement,
+        CollectionFactory $factoryCollection,
+        Escaper $escaper,
+        ImportBlock $importBlock,
+        array $data = []
+    ) {
+        parent::__construct($factoryElement, $factoryCollection, $escaper, $data);
+        $this->importBlock = $importBlock;
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getErrors()
+    public function getElementHtml()
     {
-        return $this->errors;
-    }
+        $this->setType('file');
+        $this->importBlock->setTimeConditionName($this->getName());
 
-    /**
-     * @param string $message
-     */
-    public function addError($message)
-    {
-        $this->errors[] = $message;
-    }
+        $html = $this->importBlock->toHtml();
+        $html .= parent::getElementHtml();
 
-    /**
-     * Reset the errors array
-     */
-    public function resetErrors()
-    {
-        $this->errors = [];
+        return $html;
     }
 }
