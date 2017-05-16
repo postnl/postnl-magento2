@@ -80,7 +80,7 @@ class ProductCode extends AbstractGrid
     protected function getCellContents($item)
     {
         $output = '';
-        $order  = $this->orderRepository->getByFieldWithValue('order_id', $item['entity_id']);
+        $order  = $this->orderRepository->getByOrderId($item['entity_id']);
         if (!$order) {
             return $output;
         }
