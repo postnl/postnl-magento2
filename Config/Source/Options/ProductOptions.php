@@ -194,11 +194,17 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     ];
 
     /**
-     * @return array
+     * @param $code
+     *
+     * @return mixed
      */
-    public function getOptions()
+    public function getOptionLabel($code)
     {
-        return $this->availableOptions;
+        if (!array_key_exists($code, $this->availableOptions)) {
+            return $code;
+        }
+
+        return str_replace('_options', ' ', $this->availableOptions[$code]['group']);
     }
 
     /**

@@ -56,13 +56,7 @@ class ProductCode
      */
     public function render($code)
     {
-        $options = $this->productOptions->getOptions();
-        if (!array_key_exists($code, $options)) {
-            return $code;
-        }
-
-        $label = str_replace('_options', ' ', $options[$code]['group']);
-        // @codingStandardsIgnoreLine
+        $label = $this->productOptions->getOptionLabel($code);
         return  ucfirst(__($label)) . " (". $code .")";
     }
 }
