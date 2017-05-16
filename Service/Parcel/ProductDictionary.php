@@ -84,11 +84,11 @@ class ProductDictionary
 
     /**
      * @param ShipmentItemInterface[]|OrderItemInterface[]|QuoteItem[] $items
-     * @param string $postNLType
+     * @param array $postNLTypes
      *
      * @return ProductInterface[]
      */
-    public function get($items, $postNLType)
+    public function get($items, array $postNLTypes)
     {
         $skus = array_map(function ($item) {
             /** @var ShipmentItemInterface|OrderItemInterface|QuoteItem $item */
@@ -101,10 +101,10 @@ class ProductDictionary
         /** @var \Magento\Catalog\Api\Data\ProductSearchResultsInterface $products */
         $products = $this->productRepository->getList($this->searchCriteriaBuilder->create());
 
-        return array_filter($products->getItems(), function (ProductInterface $product) use ($postNLType) {
+        return array_filter($products->getItems(), function (ProductInterface $product) use ($postNLTypes) {
             $attribute = $product->getCustomAttribute(PostNLType::POSTNL_PRODUCT_TYPE);
             $value = $attribute !== null ? $attribute->getValue() : false;
-            return $value == $postNLType;
+            return in_array($value, $postNLTypes);
         });
     }
 

@@ -62,7 +62,7 @@ abstract class CountAbstract
     // @codingStandardsIgnoreLine
     protected function calculate($weight, $items)
     {
-        $products    = $this->getProducts($items);
+        $products = $this->getProducts($items);
         if (empty($products)) {
             $remainingParcelCount = ceil($weight / self::WEIGHT_PER_PARCEL);
             return $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
@@ -86,7 +86,7 @@ abstract class CountAbstract
     // @codingStandardsIgnoreLine
     protected function getProducts($items)
     {
-        return $this->productDictionary->get($items, PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME);
+        return $this->productDictionary->get($items, [PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME]);
     }
 
     /**
@@ -115,6 +115,6 @@ abstract class CountAbstract
     // @codingStandardsIgnoreLine
     protected function getQty($item)
     {
-        return $item->getQty() !== null ? $item->getQty() : $item->getQtyOrdered();
+        return $item->getQty() ?: $item->getQtyOrdered();
     }
 }
