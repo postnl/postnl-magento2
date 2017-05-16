@@ -199,6 +199,18 @@ interface OrderInterface
     public function getShipAt();
 
     /**
+     * @return mixed
+     */
+    public function getParcelCount();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setParcelCount($value);
+
+    /**
      * @param $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface

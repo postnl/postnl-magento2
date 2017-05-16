@@ -152,6 +152,16 @@ class OrderRepository implements OrderRepositoryInterface
     }
 
     /**
+     * @param int $orderId
+     *
+     * @return null|Order
+     */
+    public function getByOrderId($orderId)
+    {
+        return $this->getByFieldWithValue('order_id', $orderId);
+    }
+
+    /**
      * @param OrderInterface $order
      *
      * @return bool
