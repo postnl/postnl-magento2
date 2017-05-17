@@ -29,7 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Order;
+namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Grid\Order;
 
 use TIG\PostNL\Block\Adminhtml\Grid\Order\ShippingDate;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
