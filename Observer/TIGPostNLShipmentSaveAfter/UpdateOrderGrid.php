@@ -88,7 +88,14 @@ class UpdateOrderGrid implements ObserverInterface
             return;
         }
 
-        $order->setData('ship_at', $shipment->getShipAt());
+        $productCode = $shipment->getProductCode() ?: $order->getProductCode();
+
+        $data = [
+            'ship_at' => $shipment->getShipAt(),
+            'product_code' => $productCode
+        ];
+
+        $order->setData($data);
 
         $this->orderRepositoryInterface->save($order);
     }

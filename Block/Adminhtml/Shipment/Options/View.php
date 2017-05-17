@@ -32,7 +32,6 @@
 namespace TIG\PostNL\Block\Adminhtml\Shipment\Options;
 
 use Magento\Backend\Block\Template\Context;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\OrderRepository;
 use TIG\PostNL\Block\Adminhtml\Shipment\OptionsAbstract;
@@ -41,6 +40,7 @@ use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
 use Magento\Framework\Api\AbstractExtensibleObject;
+use TIG\PostNL\Block\Adminhtml\Renderer\ProductCode;
 
 class View extends OptionsAbstract
 {
@@ -50,9 +50,9 @@ class View extends OptionsAbstract
     private $postNLShipmentRepository;
 
     /**
-     * @var SearchCriteriaBuilder
+     * @var ProductCode
      */
-    private $searchCriteriaBuilder;
+    private $productCodeRenderer;
 
     /**
      * @param Context                  $context
@@ -60,8 +60,8 @@ class View extends OptionsAbstract
      * @param ProductOptionSource      $productOptionsSource
      * @param OrderRepository          $orderRepository
      * @param Registry                 $registry
-     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      * @param PostNLShipmentRepository $shipmentRepository
+     * @param ProductCode              $productCode
      * @param array                    $data
      */
     public function __construct(
@@ -70,8 +70,8 @@ class View extends OptionsAbstract
         ProductOptionSource $productOptionsSource,
         OrderRepository $orderRepository,
         Registry $registry,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
         PostNLShipmentRepository $shipmentRepository,
+        ProductCode $productCode,
         array $data = []
     ) {
         parent::__construct(
@@ -83,8 +83,8 @@ class View extends OptionsAbstract
             $data
         );
 
-        $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
         $this->postNLShipmentRepository = $shipmentRepository;
+        $this->productCodeRenderer      = $productCode;
     }
 
     /**
@@ -92,35 +92,16 @@ class View extends OptionsAbstract
      */
     public function getProductOptionValue()
     {
-        $productOption = $this->getProductOption();
-        $group = str_replace('_', ' ', $productOption['group']);
-
-        return ucfirst($group) . '(' . $productOption['value'] . ')';
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getProductOption()
-    {
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLShipment();
-        return $this->productSource->getOptionsByCode($postNLShipment->getProductCode());
+        return $this->productCodeRenderer->render($postNLShipment->getProductCode());
     }
 
     /**
-     * @return AbstractExtensibleObject
+     * @return null|\TIG\PostNL\Api\Data\ShipmentInterface
      */
     public function getPostNLShipment()
     {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('shipment_id', $this->getShipment()->getId());
-        $searchCriteria->setPageSize(1);
-        /** @var \Magento\Framework\Api\SearchResults $list */
-        $list = $this->postNLShipmentRepository->getList($searchCriteria->create());
-        if ($list->getTotalCount() != 0) {
-            return $list->getItems()[0];
-        }
-
-        return false;
+        return $this->postNLShipmentRepository->getByFieldWithValue('shipment_id', $this->getShipment()->getId());
     }
 }

@@ -104,7 +104,13 @@ class UpdateOrderGridTest extends TestCase
 
         $setDataExpects = $orderMock->expects($this->once());
         $setDataExpects->method('setData');
-        $setDataExpects->with('ship_at', '2016-11-19');
+
+        $data = [
+            'ship_at' => '2016-11-19',
+            'product_code' => null
+        ];
+
+        $setDataExpects->with($data);
 
         return $orderMock;
     }
