@@ -51,12 +51,13 @@ class ProductCode
 
     /**
      * @param $code
+     * @param $small
      *
      * @return string
      */
-    public function render($code)
+    public function render($code, $small)
     {
-        $label = $this->productOptions->getOptionLabel($code);
+        $label = $this->productOptions->getOptionLabel($code, $small);
         return  ucfirst(__($label)) . " (". $code .")";
     }
 }

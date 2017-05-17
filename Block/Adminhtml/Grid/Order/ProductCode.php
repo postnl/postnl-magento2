@@ -86,7 +86,7 @@ class ProductCode extends AbstractGrid
         }
 
         if ($order->getProductCode()) {
-            $output = $this->codeRenderer->render($order->getProductCode());
+            $output = $this->codeRenderer->render($order->getProductCode(), true);
         }
 
         return $output;

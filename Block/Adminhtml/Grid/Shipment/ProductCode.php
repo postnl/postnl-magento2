@@ -70,6 +70,6 @@ class ProductCode extends AbstractGrid
     // @codingStandardsIgnoreLine
     protected function getCellContents($item)
     {
-        return $this->codeRenderer->render($item['tig_postnl_product_code']);
+        return $this->codeRenderer->render($item['tig_postnl_product_code'], true);
     }
 }

@@ -38,7 +38,7 @@ use TIG\PostNL\Test\TestCase;
 
 class ProductCodeTest extends TestCase
 {
-    public $instanceClass = ProductCode::class;
+    protected $instanceClass = ProductCode::class;
 
     public function getInstance(array $args = [])
     {
@@ -74,7 +74,7 @@ class ProductCodeTest extends TestCase
         $rendererMock = $this->getFakeMock(Renderer::class)->getMock();
         $rendererExpects = $rendererMock->expects($this->once());
         $rendererExpects->method('render');
-        $rendererExpects->with($productCode);
+        $rendererExpects->with($productCode, true);
         $rendererExpects->willReturn($expects);
 
         $instance = $this->getInstance([
