@@ -271,6 +271,48 @@ class IsShippingOptionsActiveTest extends TestCase
     }
 
     /**
+     * @return array
+     */
+    public function getValueExtraAtHomeProvider()
+    {
+        return [
+            'Extra@Home enabled' => [
+                true,
+                false
+            ],
+            'Extra@Home disabled' => [
+                false,
+                true
+            ],
+        ];
+    }
+
+    /**
+     * @param $extraAtHomeActive
+     * @param $expected
+     *
+     * @dataProvider getValueExtraAtHomeProvider
+     */
+    public function testGetValueExtraAtHome($extraAtHomeActive, $expected)
+    {
+        $instance = $this->getInstance([
+            'shippingOptions' => $this->shippingOptions,
+            'accountConfiguration' => $this->accountConfiguration,
+        ]);
+
+        $this->mockShippingOptionsMethod('isShippingoptionsActive', true);
+        $this->mockShippingOptionsMethod('getShippingStockoptions', 'in_stock');
+        $this->mockShippingOptionsMethod('isExtraAtHomeActive', $extraAtHomeActive);
+
+        $this->mockAccountConfigurationMethod('getCustomerCode', true);
+        $this->mockAccountConfigurationMethod('getCustomerNumber', true);
+        $this->mockAccountConfigurationMethod('getApiKey', true);
+
+        $result = $instance->getValue();
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
      * @param $value
      */
     private function mockShippingOptionsMethod($method, $value)

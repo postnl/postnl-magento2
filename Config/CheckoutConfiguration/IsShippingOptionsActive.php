@@ -86,6 +86,10 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
             return false;
         }
 
+        if ($this->shippingOptions->isExtraAtHomeActive()) {
+            return false;
+        }
+
         return true;
     }
 

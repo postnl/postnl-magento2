@@ -85,6 +85,7 @@
                 <eveningdelivery_active>1</eveningdelivery_active>
                 <max_deliverydays>7</max_deliverydays>
                 <eveningdelivery_fee>2</eveningdelivery_fee>
+                <extraathome_active>0</extraathome_active>
                 <sundaydelivery_fee>2</sundaydelivery_fee>
                 <delivery_delay>1</delivery_delay>
             </shippingoptions>
