@@ -60,6 +60,9 @@ class CreatePostNLOrder implements ObserverInterface
      */
     private $productCode;
 
+    /**
+     * @var ItemsToOption
+     */
     private $itemsToOption;
 
     /**

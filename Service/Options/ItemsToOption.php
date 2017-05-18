@@ -42,7 +42,7 @@ class ItemsToOption
 
     private $typeToOption = [
         Type::PRODUCT_TYPE_EXTRA_AT_HOME => ProductCode::OPTION_EXTRAATHOME,
-        Type::PRODUCT_TYPE_REQULAR       => ''
+        Type::PRODUCT_TYPE_REGULAR       => ''
     ];
 
     /**
@@ -51,13 +51,13 @@ class ItemsToOption
      */
     private $priority = [
         Type::PRODUCT_TYPE_EXTRA_AT_HOME => 1,
-        Type::PRODUCT_TYPE_REQULAR       => 2
+        Type::PRODUCT_TYPE_REGULAR       => 2
     ];
 
     /**
      * @var string
      */
-    private $currentType = Type::PRODUCT_TYPE_REQULAR;
+    private $currentType = Type::PRODUCT_TYPE_REGULAR;
 
     /**
      * @var ProductDictionary
