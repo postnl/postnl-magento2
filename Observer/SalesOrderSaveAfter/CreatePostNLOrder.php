@@ -39,6 +39,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
 use TIG\PostNL\Service\Parcel\Order\Count as ParcelCount;
+use \TIG\PostNL\Service\Options\ItemsToOption;
 
 class CreatePostNLOrder implements ObserverInterface
 {
@@ -59,20 +60,25 @@ class CreatePostNLOrder implements ObserverInterface
      */
     private $productCode;
 
+    private $itemsToOption;
+
     /**
-     * @param OrderRepository $orderRepository
-     * @param ParcelCount     $count
-     * @param ProductCode     $productCode
-     * @param Data            $helper
+     * @param OrderRepository   $orderRepository
+     * @param ParcelCount       $count
+     * @param ItemsToOption     $itemsToOption
+     * @param ProductCode       $productCode
+     * @param Data              $helper
      */
     public function __construct(
         OrderRepository $orderRepository,
         ParcelCount $count,
+        ItemsToOption $itemsToOption,
         ProductCode $productCode,
         Data $helper
     ) {
         $this->orderRepository = $orderRepository;
         $this->parcelCount = $count;
+        $this->itemsToOption = $itemsToOption;
         $this->helper = $helper;
         $this->productCode = $productCode;
     }
@@ -115,9 +121,10 @@ class CreatePostNLOrder implements ObserverInterface
          * set because the deliveryoptions are disabled or this is an EPS shipment.
          */
         if (!$postnlOrder->getProductCode()) {
+            $option = $this->itemsToOption->get($magentoOrder->getItems());
             $shippingAddress = $magentoOrder->getShippingAddress();
             $country         = $shippingAddress->getCountryId();
-            $postnlOrder->setProductCode($this->productCode->get('', '', $country));
+            $postnlOrder->setProductCode($this->productCode->get('', $option, $country));
         }
     }
 }

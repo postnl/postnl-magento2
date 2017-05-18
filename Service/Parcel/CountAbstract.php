@@ -36,6 +36,7 @@ use Magento\Sales\Api\Data\ShipmentItemInterface;
 use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use TIG\PostNL\Model\Product\Attribute\Source\Type as PostNLType;
+use TIG\PostNL\Service\Options\ProductDictionary;
 
 abstract class CountAbstract
 {

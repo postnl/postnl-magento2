@@ -52,4 +52,15 @@ class Type extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 
         return $_options;
     }
+
+    /**
+     * @return array
+     */
+    public function getAllTypes()
+    {
+        return [
+            self::PRODUCT_TYPE_EXTRA_AT_HOME,
+            self::PRODUCT_TYPE_REQULAR
+        ];
+    }
 }
