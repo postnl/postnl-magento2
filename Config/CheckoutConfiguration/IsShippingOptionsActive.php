@@ -34,6 +34,10 @@ namespace TIG\PostNL\Config\CheckoutConfiguration;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Quote\CheckIfQuoteItemsAreInStock;
+use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
+use Magento\Checkout\Model\Session;
+use TIG\PostNL\Service\Options\ItemsToOption;
+use TIG\PostNL\Service\Order\ProductCode;
 
 class IsShippingOptionsActive implements CheckoutConfigurationInterface
 {
@@ -53,18 +57,34 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
     private $accountConfiguration;
 
     /**
+     * @var Session
+     */
+    private $checkoutSession;
+
+    /**
+     * @var ItemsToOption
+     */
+    private $itemsToOption;
+
+    /**
      * @param ShippingOptions             $shippingOptions
      * @param AccountConfiguration        $accountConfiguration
      * @param CheckIfQuoteItemsAreInStock $quoteItemsAreInStock
+     * @param CheckoutSession             $checkoutSession
+     * @param ItemsToOption               $itemsToOption
      */
     public function __construct(
         ShippingOptions $shippingOptions,
         AccountConfiguration $accountConfiguration,
-        CheckIfQuoteItemsAreInStock $quoteItemsAreInStock
+        CheckIfQuoteItemsAreInStock $quoteItemsAreInStock,
+        CheckoutSession $checkoutSession,
+        ItemsToOption $itemsToOption
     ) {
         $this->shippingOptions = $shippingOptions;
         $this->quoteItemsAreInStock = $quoteItemsAreInStock;
         $this->accountConfiguration = $accountConfiguration;
+        $this->checkoutSession = $checkoutSession;
+        $this->itemsToOption = $itemsToOption;
     }
 
     /**
@@ -80,17 +100,32 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
             return false;
         }
 
+        if ($this->quoteIsExtraAtHome()) {
+            return false;
+        }
+
         if ($this->shippingOptions->getShippingStockoptions() == 'backordered' &&
             !$this->quoteItemsAreInStock->getValue()
         ) {
             return false;
         }
 
-        if ($this->shippingOptions->isExtraAtHomeActive()) {
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function quoteIsExtraAtHome()
+    {
+        $quote = $this->checkoutSession->getQuote();
+        if (!$quote) {
             return false;
         }
 
-        return true;
+        $option = $this->itemsToOption->get($quote->getAllItems());
+
+        return $option == ProductCode::OPTION_EXTRAATHOME;
     }
 
     /**

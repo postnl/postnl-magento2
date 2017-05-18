@@ -275,7 +275,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             return $this->getShortLabel($code);
         }
 
-        return $this->availableOptions[$code]['label'];
+        return $this->availableOptions[$code]['label'] . " (". $code .")";
     }
 
     /**

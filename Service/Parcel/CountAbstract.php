@@ -71,12 +71,29 @@ abstract class CountAbstract
 
         $parcelCount = 0;
         foreach ($items as $item) {
-            $product = $products[$item->getProductId()];
-            $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
-            $parcelCount += ($productParcelCount->getValue() * $this->getQty($item));
+            $parcelCount += $this->getParcelCount($products, $item);
         }
 
         return $parcelCount < 1 ? 1 : $parcelCount;
+    }
+
+    /**
+     * @param $products
+     * @param ShipmentItemInterface|OrderItemInterface|QuoteItem $item
+     *
+     * @return mixed
+     */
+    // @codingStandardsIgnoreLine
+    protected function getParcelCount($products, $item)
+    {
+        if (!isset($products[$item->getProductId()])) {
+            return 1;
+        }
+
+        /** @var ProductInterface $product */
+        $product = $products[$item->getProductId()];
+        $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
+        return ($productParcelCount->getValue() * $this->getQty($item));
     }
 
     /**
