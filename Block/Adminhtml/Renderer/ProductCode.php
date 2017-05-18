@@ -57,12 +57,6 @@ class ProductCode
      */
     public function render($code, $small)
     {
-        $label = $this->productOptions->getOptionLabel($code, $small);
-
-        if (trim($label) == 'extra_at_home') {
-            $label = 'extra@Home';
-        }
-
-        return  ucfirst(__($label)) . " (". $code .")";
+        return $this->productOptions->getOptionLabel($code, $small);
     }
 }

@@ -99,8 +99,6 @@ class ItemsToOption
     /**
      * @param $products
      * @param $type
-     *
-     * @return int|string
      */
     private function setCurrentType($products, $type)
     {

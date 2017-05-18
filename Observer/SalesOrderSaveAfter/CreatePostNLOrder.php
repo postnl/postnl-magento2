@@ -124,7 +124,7 @@ class CreatePostNLOrder implements ObserverInterface
          * set because the deliveryoptions are disabled or this is an EPS shipment.
          */
         if (!$postnlOrder->getProductCode()) {
-            $option = $this->itemsToOption->get($magentoOrder->getItems());
+            $option          = $this->itemsToOption->get($magentoOrder->getItems());
             $shippingAddress = $magentoOrder->getShippingAddress();
             $country         = $shippingAddress->getCountryId();
             $postnlOrder->setProductCode($this->productCode->get('', $option, $country));
