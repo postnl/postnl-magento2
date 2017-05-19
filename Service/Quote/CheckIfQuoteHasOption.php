@@ -51,6 +51,7 @@ class CheckIfQuoteHasOption
      * @param ItemsToOption $itemsToOption
      */
     public function __construct(
+        // @codingStandardsIgnoreLine
         CheckoutSession $checkoutSession,
         ItemsToOption $itemsToOption
     ) {
