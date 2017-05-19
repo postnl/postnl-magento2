@@ -34,9 +34,7 @@ namespace TIG\PostNL\Config\CheckoutConfiguration;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Quote\CheckIfQuoteItemsAreInStock;
-use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
-use Magento\Checkout\Model\Session;
-use TIG\PostNL\Service\Options\ItemsToOption;
+use \TIG\PostNL\Service\Quote\CheckIfQuoteHasOption;
 use TIG\PostNL\Service\Order\ProductCode;
 
 class IsShippingOptionsActive implements CheckoutConfigurationInterface
@@ -57,34 +55,27 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
     private $accountConfiguration;
 
     /**
-     * @var Session
+     * @var CheckIfQuoteHasOption
      */
-    private $checkoutSession;
+    private $quoteHasOption;
 
-    /**
-     * @var ItemsToOption
-     */
-    private $itemsToOption;
 
     /**
      * @param ShippingOptions             $shippingOptions
      * @param AccountConfiguration        $accountConfiguration
      * @param CheckIfQuoteItemsAreInStock $quoteItemsAreInStock
-     * @param CheckoutSession             $checkoutSession
-     * @param ItemsToOption               $itemsToOption
+     * @param CheckIfQuoteHasOption   $quoteHasOption
      */
     public function __construct(
         ShippingOptions $shippingOptions,
         AccountConfiguration $accountConfiguration,
         CheckIfQuoteItemsAreInStock $quoteItemsAreInStock,
-        CheckoutSession $checkoutSession,
-        ItemsToOption $itemsToOption
+        CheckIfQuoteHasOption $quoteHasOption
     ) {
         $this->shippingOptions = $shippingOptions;
         $this->quoteItemsAreInStock = $quoteItemsAreInStock;
         $this->accountConfiguration = $accountConfiguration;
-        $this->checkoutSession = $checkoutSession;
-        $this->itemsToOption = $itemsToOption;
+        $this->quoteHasOption = $quoteHasOption;
     }
 
     /**
@@ -100,7 +91,7 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
             return false;
         }
 
-        if ($this->quoteIsExtraAtHome()) {
+        if ($this->quoteHasOption->get(ProductCode::OPTION_EXTRAATHOME)) {
             return false;
         }
 
@@ -111,21 +102,6 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
         }
 
         return true;
-    }
-
-    /**
-     * @return bool
-     */
-    private function quoteIsExtraAtHome()
-    {
-        $quote = $this->checkoutSession->getQuote();
-        if (!$quote) {
-            return false;
-        }
-
-        $option = $this->itemsToOption->get($quote->getAllItems());
-
-        return $option == ProductCode::OPTION_EXTRAATHOME;
     }
 
     /**
