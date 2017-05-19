@@ -34,7 +34,6 @@ namespace TIG\PostNL\Service\Quote;
 use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
 use Magento\Checkout\Model\Session;
 use TIG\PostNL\Service\Options\ItemsToOption;
-use TIG\PostNL\Service\Order\ProductCode;
 
 class CheckIfQuoteHasOption
 {

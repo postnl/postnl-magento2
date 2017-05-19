@@ -97,6 +97,8 @@ abstract class CountAbstract
     }
 
     /**
+     * Parcel count is only needed if a specific product type is found within the items.
+     *
      * @param $items
      *
      * @return ProductInterface[]
@@ -104,6 +106,11 @@ abstract class CountAbstract
     // @codingStandardsIgnoreLine
     protected function getProducts($items)
     {
+        /**
+         * @codingStandardsIgnoreLine
+         * @todo : In future maybe more product types are requiring the parce_count attribute.
+         *         So build within the de backend configuration an multiselect and read it out when using this method.
+         */
         return $this->productDictionary->get($items, [PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME]);
     }
 
