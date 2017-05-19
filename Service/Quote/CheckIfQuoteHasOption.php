@@ -29,34 +29,50 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Renderer;
+namespace TIG\PostNL\Service\Quote;
 
-use TIG\PostNL\Config\Source\Options\ProductOptions;
+use Magento\Checkout\Model\Session as CheckoutSession;
+use TIG\PostNL\Service\Options\ItemsToOption;
 
-class ProductCode
+class CheckIfQuoteHasOption
 {
     /**
-     * @var ProductOptions
+     * @var CheckoutSession
      */
-    private $productOptions;
+    private $checkoutSession;
 
     /**
-     * @param ProductOptions $productOptions
+     * @var ItemsToOption
+     */
+    private $itemsToOption;
+
+    /**
+     * @param CheckoutSession $checkoutSession
+     * @param ItemsToOption $itemsToOption
      */
     public function __construct(
-        ProductOptions $productOptions
+        // @codingStandardsIgnoreLine
+        CheckoutSession $checkoutSession,
+        ItemsToOption $itemsToOption
     ) {
-        $this->productOptions = $productOptions;
+        $this->checkoutSession = $checkoutSession;
+        $this->itemsToOption = $itemsToOption;
     }
 
     /**
-     * @param $code
-     * @param $small
+     * @param string $productCode
      *
-     * @return string
+     * @return bool
      */
-    public function render($code, $small)
+    public function get($productCode)
     {
-        return $this->productOptions->getOptionLabel($code, $small);
+        $quote = $this->checkoutSession->getQuote();
+        if (!$quote) {
+            return false;
+        }
+
+        $option = $this->itemsToOption->get($quote->getAllItems());
+
+        return $option == $productCode;
     }
 }

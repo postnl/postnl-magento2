@@ -36,6 +36,7 @@ use Magento\Sales\Api\Data\ShipmentItemInterface;
 use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use TIG\PostNL\Model\Product\Attribute\Source\Type as PostNLType;
+use TIG\PostNL\Service\Options\ProductDictionary;
 
 abstract class CountAbstract
 {
@@ -70,15 +71,34 @@ abstract class CountAbstract
 
         $parcelCount = 0;
         foreach ($items as $item) {
-            $product = $products[$item->getProductId()];
-            $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
-            $parcelCount += ($productParcelCount->getValue() * $this->getQty($item));
+            $parcelCount += $this->getParcelCount($products, $item);
         }
 
         return $parcelCount < 1 ? 1 : $parcelCount;
     }
 
     /**
+     * @param $products
+     * @param ShipmentItemInterface|OrderItemInterface|QuoteItem $item
+     *
+     * @return mixed
+     */
+    // @codingStandardsIgnoreLine
+    protected function getParcelCount($products, $item)
+    {
+        if (!isset($products[$item->getProductId()])) {
+            return 0;
+        }
+
+        /** @var ProductInterface $product */
+        $product = $products[$item->getProductId()];
+        $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
+        return ($productParcelCount->getValue() * $this->getQty($item));
+    }
+
+    /**
+     * Parcel count is only needed if a specific product type is found within the items.
+     *
      * @param $items
      *
      * @return ProductInterface[]
@@ -86,6 +106,11 @@ abstract class CountAbstract
     // @codingStandardsIgnoreLine
     protected function getProducts($items)
     {
+        /**
+         * @codingStandardsIgnoreLine
+         * @todo : In future maybe more product types are requiring the parce_count attribute.
+         *         So build within the de backend configuration an multiselect and read it out when using this method.
+         */
         return $this->productDictionary->get($items, [PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME]);
     }
 

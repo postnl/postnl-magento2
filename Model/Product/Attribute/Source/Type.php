@@ -36,7 +36,7 @@ class Type extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
     const POSTNL_PRODUCT_TYPE        = 'postnl_product_type';
     const PRODUCT_TYPE_EXTRA_AT_HOME = 'extra_at_home';
-    const PRODUCT_TYPE_REQULAR       = 'regular';
+    const PRODUCT_TYPE_REGULAR       = 'regular';
 
     /**
      * @return array
@@ -45,11 +45,22 @@ class Type extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
     {
         $_options = [
             // @codingStandardsIgnoreLine
-            ['value' => self::PRODUCT_TYPE_REQULAR, 'label' => __('Regular')],
+            ['value' => self::PRODUCT_TYPE_REGULAR, 'label' => __('Regular')],
             // @codingStandardsIgnoreLine
             ['value' => self::PRODUCT_TYPE_EXTRA_AT_HOME, 'label' => __('Extra@Home')],
         ];
 
         return $_options;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllTypes()
+    {
+        return [
+            self::PRODUCT_TYPE_EXTRA_AT_HOME,
+            self::PRODUCT_TYPE_REGULAR
+        ];
     }
 }

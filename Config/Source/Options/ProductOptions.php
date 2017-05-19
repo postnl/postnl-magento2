@@ -272,10 +272,25 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         }
 
         if ($short) {
-            return str_replace('_options', ' ', $this->availableOptions[$code]['group']);
+            return $this->getShortLabel($code);
         }
 
-        return $this->availableOptions[$code]['label'];
+        return $this->availableOptions[$code]['label'] . " (". $code .")";
+    }
+
+    /**
+     * @param $code
+     *
+     * @return string
+     */
+    public function getShortLabel($code)
+    {
+        $label = str_replace('_options', '', $this->availableOptions[$code]['group']);
+        if (trim($label) == 'extra_at_home') {
+            $label = 'extra@Home';
+        }
+
+        return  ucfirst(__($label)) . " (". $code .")";
     }
 
     /**

@@ -42,28 +42,27 @@ class ProductCodeTest extends TestCase
     public function getDataProvider()
     {
         return [
-            'standard full'    => ['3085', true, 'Standard shipment', 'Standard shipment (3085)'],
-            'standard small'   => ['3085', false, 'standard', 'Standard (3085)'],
-            'pakjegemak full'  => ['3534', true, 'Post Office + Extra Cover', 'Post Office + Extra Cover (3534)'],
-            'pakjegemak small' => ['3534', false, 'pakjegemak', 'Pakjegemak (3534)']
+            'standard full'    => ['3085', true, 'Standard shipment (3085)'],
+            'standard small'   => ['3085', false, 'Standard (3085)'],
+            'pakjegemak full'  => ['3534', true, 'Post Office + Extra Cover (3534)'],
+            'pakjegemak small' => ['3534', false, 'Pakjegemak (3534)']
         ];
     }
 
     /**
      * @param $code
      * @param $small
-     * @param $label
      * @param $expect
      *
      * @dataProvider getDataProvider
      */
-    public function testRender($code, $small, $label, $expect)
+    public function testRender($code, $small, $expect)
     {
         $optionsMock = $this->getFakeMock(ProductOptions::class)->getMock();
         $optionsExpects = $optionsMock->expects($this->once());
         $optionsExpects->method('getOptionLabel');
         $optionsExpects->with($code, $small);
-        $optionsExpects->willReturn($label);
+        $optionsExpects->willReturn($expect);
 
         $instance = $this->getInstance([
             'productOptions' => $optionsMock
