@@ -31,14 +31,13 @@
  */
 namespace TIG\PostNL\Service\Quote;
 
-use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
-use Magento\Checkout\Model\Session;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use TIG\PostNL\Service\Options\ItemsToOption;
 
 class CheckIfQuoteHasOption
 {
     /**
-     * @var Session
+     * @var CheckoutSession
      */
     private $checkoutSession;
 
@@ -48,7 +47,7 @@ class CheckIfQuoteHasOption
     private $itemsToOption;
 
     /**
-     * @param Session\Proxy $checkoutSession
+     * @param CheckoutSession $checkoutSession
      * @param ItemsToOption $itemsToOption
      */
     public function __construct(

@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Test\Unit\Service\Quote;
 
 use TIG\PostNL\Service\Quote\CheckIfQuoteHasOption;
-use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use TIG\PostNL\Service\Options\ItemsToOption;
 use TIG\PostNL\Service\Order\ProductCode;
 use TIG\PostNL\Test\TestCase;
