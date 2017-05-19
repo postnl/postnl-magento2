@@ -87,7 +87,7 @@ abstract class CountAbstract
     protected function getParcelCount($products, $item)
     {
         if (!isset($products[$item->getProductId()])) {
-            return 1;
+            return 0;
         }
 
         /** @var ProductInterface $product */

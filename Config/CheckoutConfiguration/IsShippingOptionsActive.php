@@ -59,7 +59,6 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
      */
     private $quoteHasOption;
 
-
     /**
      * @param ShippingOptions             $shippingOptions
      * @param AccountConfiguration        $accountConfiguration
