@@ -29,49 +29,35 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment\Labelling;
+namespace TIG\PostNL\Webservices\Parser\Label;
 
-use \TIG\PostNL\Service\Shipment\Labelling\Generate\WithoutConfirm;
-use \TIG\PostNL\Service\Shipment\Labelling\Generate\WithConfirm;
-use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Webservices\Api\Customer as CustomerApi;
 
-class GenerateLabel
+class Customer
 {
     /**
-     * @var WithoutConfirm
+     * @var CustomerApi
      */
-    private $withoutConfirm;
+    private $customer;
 
     /**
-     * @var WithConfirm
-     */
-    private $withConfirm;
-
-    /**
-     * @param WithConfirm    $withConfirm
-     * @param WithoutConfirm $withoutConfirm
+     * @param CustomerApi $customer
      */
     public function __construct(
-        WithConfirm $withConfirm,
-        WithoutConfirm $withoutConfirm
+        CustomerApi $customer
     ) {
-        $this->withConfirm    = $withConfirm;
-        $this->withoutConfirm = $withoutConfirm;
+        $this->customer = $customer;
     }
 
     /**
-     * @param ShipmentInterface $shipment
-     * @param                   $currentShipmentNumber
-     * @param bool              $confirm
-     *
-     * @return \Magento\Framework\Phrase|string
+     * @return array
      */
-    public function get(ShipmentInterface $shipment, $currentShipmentNumber, $confirm)
+    public function get()
     {
-        if ($confirm) {
-            return $this->withConfirm->get($shipment, $currentShipmentNumber);
-        }
+        $customer                       = $this->customer->get();
+        $customer['Address']            = $this->customer->address();
+        $customer['CollectionLocation'] = $this->customer->blsCode();
 
-        return $this->withoutConfirm->get($shipment, $currentShipmentNumber);
+        return $customer;
     }
 }

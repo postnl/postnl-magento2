@@ -29,49 +29,46 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment\Labelling;
+namespace TIG\PostNL\Service\Shipment\Labelling\Generate;
 
-use \TIG\PostNL\Service\Shipment\Labelling\Generate\WithoutConfirm;
-use \TIG\PostNL\Service\Shipment\Labelling\Generate\WithConfirm;
+use TIG\PostNL\Service\Shipment\Labelling\GenerateAbstract;
+use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Logging\Log;
+use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
+use TIG\PostNL\Api\ShipmentRepositoryInterface;
+use TIG\PostNL\Model\ShipmentLabelFactory;
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Webservices\Endpoints\LabellingWithoutConfirm;
 
-class GenerateLabel
+class WithoutConfirm extends GenerateAbstract
 {
-    /**
-     * @var WithoutConfirm
-     */
-    private $withoutConfirm;
-
-    /**
-     * @var WithConfirm
-     */
-    private $withConfirm;
-
-    /**
-     * @param WithConfirm    $withConfirm
-     * @param WithoutConfirm $withoutConfirm
-     */
     public function __construct(
-        WithConfirm $withConfirm,
-        WithoutConfirm $withoutConfirm
+        Data $helper,
+        ShipmentLabelFactory $shipmentLabelFactory,
+        ShipmentLabelRepositoryInterface $shipmentLabelRepository,
+        ShipmentRepositoryInterface $shipmentRepository,
+        Log $logger,
+        LabellingWithoutConfirm $labelling
     ) {
-        $this->withConfirm    = $withConfirm;
-        $this->withoutConfirm = $withoutConfirm;
+        parent::__construct(
+            $helper,
+            $shipmentLabelFactory,
+            $shipmentLabelRepository,
+            $shipmentRepository,
+            $logger
+        );
+
+        $this->labelService = $labelling;
     }
 
     /**
      * @param ShipmentInterface $shipment
-     * @param                   $currentShipmentNumber
-     * @param bool              $confirm
+     * @param                   $currentNumber
      *
-     * @return \Magento\Framework\Phrase|string
+     * @return null|\TIG\PostNL\Api\Data\ShipmentLabelInterface
      */
-    public function get(ShipmentInterface $shipment, $currentShipmentNumber, $confirm)
+    public function get(ShipmentInterface $shipment, $currentNumber)
     {
-        if ($confirm) {
-            return $this->withConfirm->get($shipment, $currentShipmentNumber);
-        }
-
-        return $this->withoutConfirm->get($shipment, $currentShipmentNumber);
+        return parent::get($shipment, $currentNumber, false);
     }
 }

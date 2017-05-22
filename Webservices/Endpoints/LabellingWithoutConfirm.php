@@ -39,7 +39,7 @@ use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Webservices\Soap;
 
 // @codingStandardsIgnoreFile
-class Labelling extends AbstractEndpoint
+class LabellingWithoutConfirm extends AbstractEndpoint
 {
     /**
      * @var Soap
@@ -99,7 +99,7 @@ class Labelling extends AbstractEndpoint
      */
     public function call()
     {
-        return $this->soap->call($this, 'GenerateLabel', $this->requestParams);
+        return $this->soap->call($this, 'GenerateLabelWithoutConfirm', $this->requestParams);
     }
 
     /**
