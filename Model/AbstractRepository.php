@@ -55,8 +55,15 @@ abstract class AbstractRepository
     /**
      * @var SearchCriteriaBuilder
      */
+    // @codingStandardsIgnoreLine
     protected $searchCriteriaBuilder;
 
+    /**
+     * AbstractRepository constructor.
+     *
+     * @param SearchResultsInterfaceFactory $searchResultsFactory
+     * @param SearchCriteriaBuilder         $searchCriteriaBuilder
+     */
     public function __construct(
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder
@@ -99,6 +106,7 @@ abstract class AbstractRepository
      *
      * @return SearchResultsInterface
      */
+    // @codingStandardsIgnoreLine
     protected function getSearchResults(SearchCriteriaInterface $criteria)
     {
         $searchResults = $this->searchResultsFactory->create();
@@ -131,6 +139,7 @@ abstract class AbstractRepository
      * @param SearchCriteriaInterface $criteria
      * @param                         $collection
      */
+    // @codingStandardsIgnoreLine
     protected function handleSortOrders(SearchCriteriaInterface $criteria, $collection)
     {
         $sortOrders = $criteria->getSortOrders();

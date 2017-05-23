@@ -36,7 +36,7 @@ use Magento\Framework\Model\AbstractModel;
 use TIG\PostNL\Api\Data\MatrixRateInterface;
 
 // @codingStandardsIgnoreFile
-class MatrixRate extends AbstractModel implements MatrixRateInterface
+class Matrixrate extends AbstractModel implements MatrixRateInterface
 {
     /** @var string */
     // @codingStandardsIgnoreLine
@@ -59,7 +59,7 @@ class MatrixRate extends AbstractModel implements MatrixRateInterface
     protected function _construct()
     {
         // @codingStandardsIgnoreLine
-        $this->_init('TIG\PostNL\Model\Carrier\ResourceModel\MatrixRate');
+        $this->_init('TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate');
     }
 
     /**

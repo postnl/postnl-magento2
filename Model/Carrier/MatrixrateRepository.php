@@ -40,7 +40,7 @@ use TIG\PostNL\Api\Data\MatrixRateInterface;
 use TIG\PostNL\Api\MatrixrateRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Model\AbstractRepository;
-use TIG\PostNL\Model\Carrier\ResourceModel\MatrixRate\CollectionFactory;
+use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\CollectionFactory;
 
 class MatrixrateRepository extends AbstractRepository implements MatrixrateRepositoryInterface
 {
@@ -52,6 +52,7 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
     /**
      * @var CollectionFactory
      */
+    // @codingStandardsIgnoreLine
     protected $collectionFactory;
 
     /**

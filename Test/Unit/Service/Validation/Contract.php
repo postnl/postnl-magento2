@@ -30,19 +30,15 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\PostNL\Model\Carrier\ResourceModel\MatrixRate;
+namespace TIG\PostNL\Test\Unit\Service\Validation;
 
-use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use TIG\PostNL\Service\Validation\Contract as ContractInterface;
+use TIG\PostNL\Test\TestCase;
 
-class Collection extends AbstractCollection
+class Contract extends TestCase
 {
-    // @codingStandardsIgnoreLine
-    protected function _construct()
+    public function testClassImplementsTheContract()
     {
-        // @codingStandardsIgnoreLine
-        $this->_init(
-            'TIG\PostNL\Model\Carrier\MatrixRate',
-            'TIG\PostNL\Model\Carrier\ResourceModel\MatrixRate'
-        );
+        $this->assertArrayHasKey(ContractInterface::class, class_implements($this->instanceClass));
     }
 }

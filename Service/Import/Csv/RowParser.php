@@ -199,7 +199,6 @@ class RowParser
 
         if ($formatedPrice === false) {
             $message = __('Invalid Shipping Price "%1" supplied in row #%2', $price, $rowCount);
-
             throw new PostnlException($message, 'POSTNL-249');
         }
 

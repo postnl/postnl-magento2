@@ -50,9 +50,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      * @param array $args
      *
      * @return object
+     * @throws \Exception
      */
     public function getInstance(array $args = [])
     {
+        if (empty($this->instanceClass)) {
+            throw new \Exception('The instanceClass property is not set.');
+        }
+
         return $this->getObject($this->instanceClass, $args);
     }
 

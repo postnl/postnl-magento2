@@ -32,38 +32,68 @@
 
 namespace TIG\PostNL\Service\Import\Matrixrate;
 
-use Magento\Framework\DB\Transaction;
-use Magento\Framework\DB\TransactionFactory;
 use Magento\Framework\Filesystem\File\ReadInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use TIG\PostNL\Model\Carrier\MatrixrateFactory;
 use TIG\PostNL\Model\Carrier\MatrixrateRepository;
+use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate;
 use TIG\PostNL\Test\Integration\Service\Import\IncorrectFormat;
 
 class Data
 {
     /**
-     * @var \TIG\PostNL\Model\Carrier\ResourceModel\MatrixRate
+     * @var Matrixrate
      */
     private $matrixrateResource;
 
     /**
-     * @var \TIG\PostNL\Model\Carrier\MatrixRateFactory
+     * @var MatrixrateFactory
      */
     private $matrixrateFactory;
+
     /**
      * @var MatrixrateRepository
      */
     private $matrixrateRepository;
 
+    /**
+     * @var int
+     */
+    private $websiteId;
+
+    /**
+     * @var Matrixrate\Collection
+     */
+    private $matrixrateCollection;
+
+    /**
+     * @param StoreManagerInterface $storeManager
+     * @param MatrixrateFactory     $matrixrateFactory
+     * @param MatrixrateRepository  $matrixrateRepository
+     * @param Matrixrate            $matrixrateResource
+     * @param Matrixrate\Collection $matrixrateCollection
+     */
     public function __construct(
-        \TIG\PostNL\Model\Carrier\MatrixRateFactory $matrixrateFactory,
-        \TIG\PostNL\Model\Carrier\MatrixrateRepository $matrixrateRepository,
-        \TIG\PostNL\Model\Carrier\ResourceModel\MatrixRate $matrixrateResource
+        StoreManagerInterface $storeManager,
+        MatrixrateFactory $matrixrateFactory,
+        MatrixrateRepository $matrixrateRepository,
+        Matrixrate $matrixrateResource,
+        Matrixrate\Collection $matrixrateCollection
     ) {
-        $this->matrixrateResource = $matrixrateResource;
         $this->matrixrateFactory = $matrixrateFactory;
+        $this->matrixrateResource = $matrixrateResource;
         $this->matrixrateRepository = $matrixrateRepository;
+        $this->matrixrateCollection = $matrixrateCollection;
+
+        $store           = $storeManager->getStore();
+        $this->websiteId = $store->getWebsiteId();
     }
 
+    /**
+     * @param ReadInterface $file
+     *
+     * @throws \Exception
+     */
     public function import(ReadInterface $file)
     {
         $this->validateHeaders($file->readCsv());
@@ -72,6 +102,7 @@ class Data
         $connection->beginTransaction();
 
         try {
+            $this->deleteData();
             $this->importData($file);
             $connection->commit();
         } catch (\Exception $exception) {
@@ -80,14 +111,20 @@ class Data
         }
     }
 
+    /**
+     * @param ReadInterface $file
+     */
     private function importData(ReadInterface $file)
     {
         /** @var \Magento\Framework\Filesystem\File\Read $line */
-        while(($line = $file->readCsv()) !== false) {
+        while (($line = $file->readCsv()) !== false) {
             $this->parseRow($line);
         }
     }
 
+    /**
+     * @param $line
+     */
     private function parseRow($line)
     {
         if (empty($line)) {
@@ -97,20 +134,47 @@ class Data
         $this->importRow($line);
     }
 
+    /**
+     * @param $line
+     */
     private function importRow($line)
     {
-        /** @var \TIG\PostNL\Model\Carrier\MatrixRate $model */
+        /** @var \TIG\PostNL\Model\Carrier\Matrixrate $model */
         $model = $this->matrixrateFactory->create();
 
-        $model->setDestinyCountryId($model[0]);
+        $model->setWebsiteId($this->websiteId);
+        $model->setDestinyCountryId($line[0]);
+        $model->setDestinyRegionId($line[1]);
+        $model->setDestinyZipCode($line[2]);
+        $model->setWeight($line[3]);
+        $model->setPrice($line[4]);
+        $model->setQuantity($line[5]);
+        $model->setParcelType($line[6]);
+        $model->setPrice($line[7]);
 
         $this->matrixrateRepository->save($model);
     }
 
+    /**
+     * @param $header
+     *
+     * @throws IncorrectFormat
+     */
     private function validateHeaders($header)
     {
         if ($header === false || count($header) < 8) {
+            // @codingStandardsIgnoreLine
             throw new IncorrectFormat(__('Invalid PostNL Matrix Rates File Format'), 'POSTNL-0194');
         }
+    }
+
+    /**
+     * Delete all the data for the current website id
+     */
+    private function deleteData()
+    {
+        $this->matrixrateCollection->addFieldToFilter('website_id', $this->websiteId);
+        $this->matrixrateCollection->clear();
+        $this->matrixrateCollection->walk('delete');
     }
 }

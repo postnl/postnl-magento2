@@ -33,7 +33,7 @@
 namespace TIG\PostNL\Test\Integration\Service\Import\Matrixrate;
 
 use Magento\Framework\Filesystem;
-use TIG\PostNL\Model\Carrier\ResourceModel\MatrixRate\Collection as MatrixrateCollection;
+use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection as MatrixrateCollection;
 use TIG\PostNL\Service\Import\Matrixrate\Data;
 use TIG\PostNL\Test\Integration\Service\Import\IncorrectFormat;
 use TIG\PostNL\Test\Integration\TestCase;
@@ -56,6 +56,21 @@ class DataTest extends TestCase
         $this->directory = $filesystem->getDirectoryRead(\Magento\Framework\App\Filesystem\DirectoryList::ROOT);
     }
 
+    /**
+     * @param $filename
+     *
+     * @return Filesystem\File\ReadInterface
+     */
+    private function loadFile($filename): Filesystem\File\ReadInterface
+    {
+        $path = realpath(__DIR__ . '/../../../../Fixtures/Matrixrate/'. $filename);
+
+        $path = $this->directory->getRelativePath($path);
+        $file = $this->directory->openFile($path);
+
+        return $file;
+    }
+
     public function importCsvFilesProvider()
     {
         $output       = [];
@@ -70,9 +85,11 @@ class DataTest extends TestCase
             $filePath = $fixturesPath . '/' . $file;
 
             $contents = file_get_contents($filePath);
+            $contents = trim($contents);
             $lines = explode("\n", $contents);
 
-            $output[] = [$filePath, count($lines)];
+            // -1 for the header
+            $output[] = [$file, count($lines) - 1];
         }
 
         return $output;
@@ -82,13 +99,13 @@ class DataTest extends TestCase
      * @dataProvider importCsvFilesProvider
      *
      * @param $filePath
-     * @param $count
+     * @param $expected
+     *
      * @return Filesystem\File\ReadInterface
      */
-    public function testImportCsvFiles($filePath, $count)
+    public function testImportCsvFiles($filePath, $expected)
     {
-        $path = $this->directory->getRelativePath($filePath);
-        $file = $this->directory->openFile($path);
+        $file = $this->loadFile('Types/' . $filePath);
 
         /** @var Data $instance */
         $instance = $this->getInstance();
@@ -98,16 +115,12 @@ class DataTest extends TestCase
         /** @var MatrixrateCollection $collection */
         $collection = $this->getObject(MatrixrateCollection::class);
 
-        $result = $collection->getSize();
-        $this->assertEquals($count, $result);
+        $this->assertEquals($expected, $collection->count());
     }
 
     public function testAnImportWithoutHeaders()
     {
-        $path = realpath(__DIR__ . '/../../../../Fixtures/Matrixrate/incorrectformat.csv');
-
-        $path = $this->directory->getRelativePath($path);
-        $file = $this->directory->openFile($path);
+        $file = $this->loadFile('incorrectformat.csv');
 
         /** @var Data $instance */
         $instance = $this->getInstance();
@@ -121,5 +134,36 @@ class DataTest extends TestCase
         }
 
         $this->fail('We expected an IncorrectFormat exception but got none.');
+    }
+
+    public function testPreviousDataGetsDeleted()
+    {
+        $file = $this->loadFile('Types/regular.csv');
+
+        /** @var Data $instance */
+        $instance = $this->getInstance();
+
+        $instance->import($file);
+        $file->close();
+
+        $firstSize = $this->getCollectionSize();
+
+        $file = $this->loadFile('Types/regular.csv');
+        $instance->import($file);
+        $file->close();
+
+        $secondSize = $this->getCollectionSize();
+
+        $this->assertEquals($firstSize, $secondSize);
+    }
+
+    /**
+     * @return int
+     */
+    private function getCollectionSize(): int
+    {
+        $collection = $this->getObject(\TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection::class);
+
+        return $collection->getSize();
     }
 }

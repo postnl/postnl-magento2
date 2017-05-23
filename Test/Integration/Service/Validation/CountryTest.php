@@ -30,20 +30,26 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\PostNL\Model\Carrier\ResourceModel;
+namespace TIG\PostNL\Test\Integration\Service\Validation;
 
-use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+use TIG\PostNL\Test\Integration\TestCase;
 
-class MatrixRate extends AbstractDb
+class CountryTest extends TestCase
 {
-    /**
-     * Resource initialization
-     *
-     * @return void
-     */
-    // @codingStandardsIgnoreLine
-    protected function _construct()
+    public $instanceClass = \TIG\PostNL\Service\Validation\Country::class;
+
+    public function testInvalidCountry()
     {
-        $this->_init('tig_postnl_matrixrate', 'entity_id');
+        $instance = $this->getInstance();
+
+        $this->assertFalse($instance->validate('AA'));
+    }
+
+    public function testReturnsIso2WhenPassedIso3()
+    {
+        $instance = $this->getInstance();
+
+        $this->assertEquals('NL', $instance->validate('NLD'));
+        $this->assertEquals('DE', $instance->validate('DEU'));
     }
 }

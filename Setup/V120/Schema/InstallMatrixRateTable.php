@@ -32,7 +32,7 @@
 
 namespace TIG\PostNL\Setup\V120\Schema;
 
-use TIG\PostNL\Model\Carrier\MatrixRate;
+use TIG\PostNL\Model\Carrier\Matrixrate;
 use TIG\PostNL\Setup\AbstractTableInstaller;
 
 class InstallMatrixRateTable extends AbstractTableInstaller
@@ -47,25 +47,25 @@ class InstallMatrixRateTable extends AbstractTableInstaller
     {
         $this->addEntityId();
 
-        $this->addInt(MatrixRate::FIELD_WEBSITE_ID, 'Website ID', true, true, 0);
-        $this->addText(MatrixRate::FIELD_DESTINY_COUNTRY_ID, 'Destination country ID ISO/2', 2, false, '');
-        $this->addInt(MatrixRate::FIELD_DESTINY_REGION_ID, 'Destiny Region ID', false, false, '0');
-        $this->addText(MatrixRate::FIELD_DESTINY_ZIP_CODE, 'Destiny ZIP Code', 255, false, '*');
-        $this->addDecimal(MatrixRate::FIELD_WEIGHT, 'Minimum Order Weight', '12,4', false, '0.0000');
-        $this->addDecimal(MatrixRate::FIELD_SUBTOTAL, 'Minimum Order Amount', '12,4', false, '0.0000');
-        $this->addInt(MatrixRate::FIELD_QUANTITY, 'Minimum Quantity', 10, false, 0);
-        $this->addText(MatrixRate::FIELD_PARCEL_TYPE, 'Parcel Type', 255, false, '*');
-        $this->addDecimal(MatrixRate::FIELD_PRICE, 'Price', '12,4', false, '0.0000');
+        $this->addInt(Matrixrate::FIELD_WEBSITE_ID, 'Website ID', true, true, 0);
+        $this->addText(Matrixrate::FIELD_DESTINY_COUNTRY_ID, 'Destination country ID ISO/2', 2, false, '');
+        $this->addInt(Matrixrate::FIELD_DESTINY_REGION_ID, 'Destiny Region ID', false, false, '0');
+        $this->addText(Matrixrate::FIELD_DESTINY_ZIP_CODE, 'Destiny ZIP Code', 255, false, '*');
+        $this->addDecimal(Matrixrate::FIELD_WEIGHT, 'Minimum Order Weight', '12,4', false, '0.0000');
+        $this->addDecimal(Matrixrate::FIELD_SUBTOTAL, 'Minimum Order Amount', '12,4', false, '0.0000');
+        $this->addInt(Matrixrate::FIELD_QUANTITY, 'Minimum Quantity', 10, false, 0);
+        $this->addText(Matrixrate::FIELD_PARCEL_TYPE, 'Parcel Type', 255, false, '*');
+        $this->addDecimal(Matrixrate::FIELD_PRICE, 'Price', '12,4', false, '0.0000');
 
         $this->addIndex([
-            MatrixRate::FIELD_WEBSITE_ID,
-            MatrixRate::FIELD_DESTINY_COUNTRY_ID,
-            MatrixRate::FIELD_DESTINY_REGION_ID,
-            MatrixRate::FIELD_DESTINY_ZIP_CODE,
-            MatrixRate::FIELD_WEIGHT,
-            MatrixRate::FIELD_SUBTOTAL,
-            MatrixRate::FIELD_QUANTITY,
-            MatrixRate::FIELD_PARCEL_TYPE,
+            Matrixrate::FIELD_WEBSITE_ID,
+            Matrixrate::FIELD_DESTINY_COUNTRY_ID,
+            Matrixrate::FIELD_DESTINY_REGION_ID,
+            Matrixrate::FIELD_DESTINY_ZIP_CODE,
+            Matrixrate::FIELD_WEIGHT,
+            Matrixrate::FIELD_SUBTOTAL,
+            Matrixrate::FIELD_QUANTITY,
+            Matrixrate::FIELD_PARCEL_TYPE,
         ]);
     }
 }
