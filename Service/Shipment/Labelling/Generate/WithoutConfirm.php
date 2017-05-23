@@ -69,6 +69,6 @@ class WithoutConfirm extends GenerateAbstract
      */
     public function get(ShipmentInterface $shipment, $currentNumber)
     {
-        return parent::get($shipment, $currentNumber, false);
+        return $this->getLabel($shipment, $currentNumber, false);
     }
 }

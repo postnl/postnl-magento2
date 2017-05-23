@@ -124,10 +124,6 @@ class PrintShippingLabel extends LabelAbstract
         $shippingAddress = $shipment->getShippingAddress();
         $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
 
-        if (!$shipment->getTracks()) {
-            $this->track->set($shipment);
-        }
-
         $labels = $this->getLabels->get($shipment->getId(), false);
 
         return $labels;

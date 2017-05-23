@@ -69,6 +69,6 @@ class WithConfirm extends GenerateAbstract
      */
     public function get(ShipmentInterface $shipment, $currentNumber)
     {
-        return parent::get($shipment, $currentNumber, true);
+        return $this->getLabel($shipment, $currentNumber, true);
     }
 }

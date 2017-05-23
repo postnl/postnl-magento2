@@ -94,7 +94,7 @@ class View extends OptionsAbstract
     {
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLShipment();
-        return $this->productCodeRenderer->render($postNLShipment->getProductCode());
+        return $this->productCodeRenderer->render($postNLShipment->getProductCode(), false);
     }
 
     /**

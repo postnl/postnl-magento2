@@ -31,8 +31,8 @@
  */
 namespace TIG\PostNL\Service\Shipment\Labelling;
 
-use \TIG\PostNL\Service\Shipment\Labelling\Generate\WithoutConfirm;
-use \TIG\PostNL\Service\Shipment\Labelling\Generate\WithConfirm;
+use TIG\PostNL\Service\Shipment\Labelling\Generate\WithoutConfirm;
+use TIG\PostNL\Service\Shipment\Labelling\Generate\WithConfirm;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 
 class GenerateLabel

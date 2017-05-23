@@ -107,7 +107,7 @@ abstract class GenerateAbstract
      *
      * @return null|ShipmentLabelInterface
      */
-    public function get(ShipmentInterface $shipment, $currentShipmentNumber, $confirm)
+    public function getLabel(ShipmentInterface $shipment, $currentShipmentNumber, $confirm)
     {
         try {
             $label = $this->callEndpoint($shipment, $currentShipmentNumber);
