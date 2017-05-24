@@ -31,7 +31,6 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
-use Magento\Framework\Controller\ResultFactory;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Backend\App\Action\Context;

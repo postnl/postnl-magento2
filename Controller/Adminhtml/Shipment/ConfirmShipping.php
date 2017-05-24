@@ -94,10 +94,10 @@ class ConfirmShipping extends Action
 
         try {
             $this->confirming->call();
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $this->messageManager->addErrorMessage(
             // @codingStandardsIgnoreLine
-                __('Could not confirm shipment : %1', $e->getLogMessage())
+                __('Could not confirm shipment : %1', $exception->getLogMessage())
             );
             return $this->_redirect($this->_redirect->getRefererUrl());
         }
@@ -106,10 +106,8 @@ class ConfirmShipping extends Action
         // @codingStandardsIgnoreLine
             __('Shipment successfully confirmed')
         );
-
         $resultDirect = $this->resultRedirectFactory->create();
         return $resultDirect->setPath('sales/shipment/view', ['shipment_id' => $shipmentId]);
-
     }
 
     /**

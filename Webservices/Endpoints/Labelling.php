@@ -113,8 +113,8 @@ class Labelling extends AbstractEndpoint
         $message = $this->message->get($barcode, $printerType);
 
         $this->requestParams = [
-            'Message' => $message,
-            'Customer' => $this->customer->get(),
+            'Message'   => $message,
+            'Customer'  => $this->customer->get(),
             'Shipments' => ['Shipment' => $this->shipmentData->get($shipment, $currentShipmentNumber)],
         ];
     }

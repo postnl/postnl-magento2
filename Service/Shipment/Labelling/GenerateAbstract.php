@@ -47,6 +47,7 @@ abstract class GenerateAbstract
     /**
      * @var Labelling|LabellingWithoutConfirm
      */
+    // @codingStandardsIgnoreLine
     protected $labelService;
 
     /**
