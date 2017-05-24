@@ -29,29 +29,57 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+namespace TIG\PostNL\Service\Import;
 
-namespace TIG\PostNL\Service\Validation;
+use Magento\Framework\Phrase;
 
-class Decimal implements ContractInterface
+class ParseErrors
 {
     /**
-     * Validate the data. Returns false when the
-     *
-     * @param $line
-     *
-     * @return bool|mixed
+     * @var array
      */
-    public function validate($line)
+    private $errors = [];
+
+    /**
+     * @return int
+     */
+    public function getErrorCount()
     {
-        if (!is_numeric($line)) {
-            return false;
+        return count($this->errors);
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @param string $message
+     */
+    public function addError($message)
+    {
+        if ($message instanceof Phrase) {
+            $message = $message->render();
         }
 
-        $line = (float)sprintf('%.4F', $line);
-        if ($line < 0.0000) {
-            return false;
-        }
+        $this->errors[] = $message;
+    }
 
-        return $line;
+    /**
+     * Reset the errors array
+     */
+    public function resetErrors()
+    {
+        $this->errors = [];
+    }
+
+    public function addErrors($errors)
+    {
+        foreach ($errors as $error) {
+            $this->addError($error);
+        }
     }
 }

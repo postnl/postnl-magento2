@@ -35,7 +35,7 @@ namespace TIG\PostNL\Service\Validation;
 use Magento\Directory\Api\CountryInformationAcquirerInterface;
 use Magento\Directory\Api\Data\CountryInformationInterface;
 
-class Country implements Contract
+class Country implements ContractInterface
 {
     /**
      * @var CountryInformationAcquirerInterface
@@ -59,23 +59,23 @@ class Country implements Contract
     /**
      * Validate the data. Returns false when the
      *
-     * @param $value
+     * @param $line
      *
      * @return bool|mixed
      */
-    public function validate($value)
+    public function validate($line)
     {
-        if ($value == '*') {
+        if ($line == '*') {
             return 0;
         }
 
         $countries = $this->getCountryList();
 
-        if (!array_key_exists($value, $countries)) {
+        if (!array_key_exists($line, $countries)) {
             return false;
         }
 
-        return $countries[$value]['id'];
+        return $countries[$line]['id'];
     }
 
     /**

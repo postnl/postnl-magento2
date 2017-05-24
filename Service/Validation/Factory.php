@@ -37,14 +37,14 @@ use TIG\PostNL\Exception as PostNLException;
 class Factory
 {
     /**
-     * @var Contract[]
+     * @var ContractInterface[]
      */
     private $validators;
 
     /**
      * Factory constructor.
      *
-     * @param Contract[] $validators
+     * @param ContractInterface[] $validators
      */
     public function __construct(
         $validators = []
@@ -65,8 +65,8 @@ class Factory
     {
         $implementations = class_implements($validator);
 
-        if (!array_key_exists(Contract::class, $implementations)) {
-            throw new PostNLException(__('Class is not an implementation of ' . Contract::class));
+        if (!array_key_exists(ContractInterface::class, $implementations)) {
+            throw new PostNLException(__('Class is not an implementation of ' . ContractInterface::class));
         }
     }
 
@@ -77,6 +77,7 @@ class Factory
      * @return bool|mixed
      * @throws PostNLException
      */
+    // @codingStandardsIgnoreStart
     public function validate($type, $value)
     {
         switch ($type) {
@@ -94,8 +95,12 @@ class Factory
 
             case 'region':
                 return $this->validators['region']->validate($value);
+
+            case 'duplicate-import':
+                return $this->validators['duplicateImport']->validate($value);
         }
 
         throw new PostNLException(__('There is no implementation found for the "' . $type . '" validator'));
     }
+    // @codingStandardsIgnoreEnd
 }

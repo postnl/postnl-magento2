@@ -1,7 +1,0 @@
-Land,Provincie/staat,Postcode,Gewicht (en hoger),Bedrag (en hoger),Hoeveelheid (en hoger),pakkettype,prijs,Instructies
-NLD,*,*,0,0,1,food,1,*
-NLD,*,*,0,0,2,voedsel,2,*
-NLD,*,*,0,0,3,eten,3,*
-NLD,*,*,0,0,4,coolfood,4,*
-NLD,*,*,0,0,5,cooledfood,5,*
-NLD,*,*,0,0,6,gekoeld,6,*

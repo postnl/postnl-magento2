@@ -33,10 +33,8 @@
 namespace TIG\PostNL\Service\Import\Matrixrate;
 
 use Magento\Framework\Filesystem\File\ReadInterface;
-use Magento\Store\Model\StoreManagerInterface;
-use TIG\PostNL\Model\Carrier\MatrixrateFactory;
-use TIG\PostNL\Model\Carrier\MatrixrateRepository;
 use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate;
+use TIG\PostNL\Service\Import\ParseErrors;
 use TIG\PostNL\Test\Integration\Service\Import\IncorrectFormat;
 
 class Data
@@ -47,14 +45,19 @@ class Data
     private $matrixrateResource;
 
     /**
-     * @var MatrixrateFactory
+     * @var Matrixrate\Collection
      */
-    private $matrixrateFactory;
+    private $matrixrateCollection;
 
     /**
-     * @var MatrixrateRepository
+     * @var Row
      */
-    private $matrixrateRepository;
+    private $rowFactory;
+
+    /**
+     * @var \Magento\Framework\DB\Adapter\AdapterInterface
+     */
+    private $connection;
 
     /**
      * @var int
@@ -62,31 +65,36 @@ class Data
     private $websiteId;
 
     /**
-     * @var Matrixrate\Collection
+     * @var ParseErrors
      */
-    private $matrixrateCollection;
+    private $parseErrors;
 
     /**
-     * @param StoreManagerInterface $storeManager
-     * @param MatrixrateFactory     $matrixrateFactory
-     * @param MatrixrateRepository  $matrixrateRepository
+     * @var array
+     */
+    private $importData = [];
+
+    /**
+     * @var int
+     */
+    private $importedRows = 0;
+
+    /**
      * @param Matrixrate            $matrixrateResource
      * @param Matrixrate\Collection $matrixrateCollection
+     * @param ParseErrors           $parseErrors
+     * @param RowFactory            $rowFactory
      */
     public function __construct(
-        StoreManagerInterface $storeManager,
-        MatrixrateFactory $matrixrateFactory,
-        MatrixrateRepository $matrixrateRepository,
         Matrixrate $matrixrateResource,
-        Matrixrate\Collection $matrixrateCollection
+        Matrixrate\Collection $matrixrateCollection,
+        ParseErrors $parseErrors,
+        RowFactory $rowFactory
     ) {
-        $this->matrixrateFactory = $matrixrateFactory;
-        $this->matrixrateResource = $matrixrateResource;
-        $this->matrixrateRepository = $matrixrateRepository;
         $this->matrixrateCollection = $matrixrateCollection;
-
-        $store           = $storeManager->getStore();
-        $this->websiteId = $store->getWebsiteId();
+        $this->matrixrateResource   = $matrixrateResource;
+        $this->parseErrors          = $parseErrors;
+        $this->rowFactory           = $rowFactory;
     }
 
     /**
@@ -98,15 +106,17 @@ class Data
     {
         $this->validateHeaders($file->readCsv());
 
-        $connection = $this->matrixrateResource->getConnection();
-        $connection->beginTransaction();
+        $this->connection = $this->matrixrateResource->getConnection();
+        $this->connection->beginTransaction();
 
         try {
             $this->deleteData();
-            $this->importData($file);
-            $connection->commit();
+            $this->collectData($file);
+            $this->saveData();
+            $this->checkErrors();
+            $this->connection->commit();
         } catch (\Exception $exception) {
-            $connection->rollBack();
+            $this->connection->rollBack();
             throw $exception;
         }
     }
@@ -114,45 +124,37 @@ class Data
     /**
      * @param ReadInterface $file
      */
-    private function importData(ReadInterface $file)
+    private function collectData(ReadInterface $file)
     {
+        $row = 0;
         /** @var \Magento\Framework\Filesystem\File\Read $line */
         while (($line = $file->readCsv()) !== false) {
-            $this->parseRow($line);
+            $this->parseRow(++$row, $line);
+
+            $this->saveData();
         }
     }
 
     /**
-     * @param $line
+     * @param int   $rowNumber
+     * @param array $line
      */
-    private function parseRow($line)
+    private function parseRow($rowNumber, $line)
     {
         if (empty($line)) {
             return;
         }
 
-        $this->importRow($line);
-    }
+        /** @var Row $row */
+        $row = $this->rowFactory->create(['errorParser' => $this->parseErrors]);
+        $data = $row->process($rowNumber, $line);
 
-    /**
-     * @param $line
-     */
-    private function importRow($line)
-    {
-        /** @var \TIG\PostNL\Model\Carrier\Matrixrate $model */
-        $model = $this->matrixrateFactory->create();
+        if ($row->hasErrors()) {
+            $this->parseErrors->addErrors($row->getErrors());
+            return;
+        }
 
-        $model->setWebsiteId($this->websiteId);
-        $model->setDestinyCountryId($line[0]);
-        $model->setDestinyRegionId($line[1]);
-        $model->setDestinyZipCode($line[2]);
-        $model->setWeight($line[3]);
-        $model->setPrice($line[4]);
-        $model->setQuantity($line[5]);
-        $model->setParcelType($line[6]);
-        $model->setPrice($line[7]);
-
-        $this->matrixrateRepository->save($model);
+        $this->importData[] = $data;
     }
 
     /**
@@ -176,5 +178,35 @@ class Data
         $this->matrixrateCollection->addFieldToFilter('website_id', $this->websiteId);
         $this->matrixrateCollection->clear();
         $this->matrixrateCollection->walk('delete');
+    }
+
+    /**
+     * Import the data every 5000th row.
+     */
+    private function saveData()
+    {
+        $count = count($this->importData);
+        if ($count < 5000) {
+            return;
+        }
+
+        $table = $this->matrixrateResource->getMainTable();
+        $this->connection->insertMultiple($table, $this->importData);
+        $this->importedRows += $count;
+        $this->importData = [];
+    }
+
+    private function checkErrors()
+    {
+        if ($this->parseErrors->getErrorCount()) {
+            throw new \TIG\PostNL\Service\Import\Exception(
+                // @codingStandardsIgnoreLine
+                __(
+                    'File has not been imported. See the following list of errors: %1',
+                    implode(', ' . PHP_EOL, $this->parseErrors->getErrors())
+                ),
+                'POSTNL-0196'
+            );
+        }
     }
 }

@@ -65,7 +65,7 @@ class FactoryTest extends TestCase
                 ]
             ]);
         } catch (\TIG\PostNL\Exception $exception) {
-            $message = 'Class is not an implementation of ' . Validation\Contract::class;
+            $message = 'Class is not an implementation of ' . Validation\ContractInterface::class;
             $this->assertEquals($message, $exception->getMessage());
             return;
         }
@@ -109,5 +109,12 @@ class FactoryTest extends TestCase
     public function testParcelTypeValidator()
     {
         $this->assertSame('regular', $this->instance->validate('parcel-type', 'regular'));
+    }
+
+    public function testDuplicateImportValidator()
+    {
+        $elements = ['a row', 'with', 'enough', 'elements', 'with a', 'length of', '7'];
+        $this->assertTrue('regular', $this->instance->validate('duplicate-import', $elements));
+        $this->assertFalse('regular', $this->instance->validate('duplicate-import', $elements));
     }
 }

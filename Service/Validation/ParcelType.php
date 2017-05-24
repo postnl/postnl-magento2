@@ -32,19 +32,19 @@
 
 namespace TIG\PostNL\Service\Validation;
 
-class ParcelType implements Contract
+class ParcelType implements ContractInterface
 {
     /**
      * Validate the data. Returns false when the
      *
-     * @param $value
+     * @param $line
      *
      * @return bool|mixed
      */
-    public function validate($value)
+    public function validate($line)
     {
-        $value = strtolower($value);
-        switch ($value) {
+        $line = strtolower($line);
+        switch ($line) {
             case '':
             case '0':
             case '*':

@@ -30,28 +30,36 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\PostNL\Service\Validation;
+namespace TIG\PostNL\Service\Wrapper;
 
-class Decimal implements ContractInterface
+use Magento\Store\Model\StoreManagerInterface;
+
+class Store implements StoreInterface
 {
     /**
-     * Validate the data. Returns false when the
-     *
-     * @param $line
-     *
-     * @return bool|mixed
+     * @var StoreManagerInterface
      */
-    public function validate($line)
+    private $storeManager;
+
+    public function __construct(
+        StoreManagerInterface $storeManager
+    ) {
+        $this->storeManager = $storeManager;
+    }
+
+    /**
+     * @return \Magento\Store\Api\Data\StoreInterface
+     */
+    public function getStore()
     {
-        if (!is_numeric($line)) {
-            return false;
-        }
+        return $this->storeManager->getStore();
+    }
 
-        $line = (float)sprintf('%.4F', $line);
-        if ($line < 0.0000) {
-            return false;
-        }
-
-        return $line;
+    /**
+     * @return int
+     */
+    public function getWebsiteId()
+    {
+        return $this->getStore()->getWebsiteId();
     }
 }

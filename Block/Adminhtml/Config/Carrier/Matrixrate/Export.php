@@ -37,7 +37,6 @@ use Magento\Framework\Data\Form\Element\CollectionFactory;
 use Magento\Framework\Data\Form\Element\Factory;
 use Magento\Framework\Escaper;
 
-// @todo This is copy of the tablerate, it needs to be adjusted.
 class Export extends AbstractElement
 {
     /**

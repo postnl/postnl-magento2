@@ -112,10 +112,7 @@ class DataTest extends TestCase
 
         $instance->import($file);
 
-        /** @var MatrixrateCollection $collection */
-        $collection = $this->getObject(MatrixrateCollection::class);
-
-        $this->assertEquals($expected, $collection->count());
+        $this->assertEquals($expected, $this->getCollectionSize());
     }
 
     public function testAnImportWithoutHeaders()
@@ -156,6 +153,16 @@ class DataTest extends TestCase
 
         $this->assertEquals($firstSize, $secondSize);
     }
+
+//    public function testCanImportTheDefaultMatrixRates()
+//    {
+//        $file = $this->loadFile('default_rates.csv');
+//
+//        $this->getInstance()->import($file);
+//        $file->close();
+//
+//        $this->assertEquals(1115, $this->getCollectionSize());
+//    }
 
     /**
      * @return int

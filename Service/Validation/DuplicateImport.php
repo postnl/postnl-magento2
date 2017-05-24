@@ -29,44 +29,53 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Import\Csv;
 
-class ParserErrors
+namespace TIG\PostNL\Service\Validation;
+
+use TIG\PostNL\Service\Import\Exception as ImportException;
+
+class DuplicateImport implements ContractInterface
 {
     /**
      * @var array
      */
-    private $errors = [];
+    private $hashes = [];
 
     /**
-     * @return int
+     * Validate the data. Returns false when the
+     *
+     * @param $line
+     *
+     * @return bool|mixed
+     * @throws ImportException
      */
-    public function getErrorCount()
+    public function validate($line)
     {
-        return count($this->errors);
+        if ($count = count($line) < 7) {
+            // @codingStandardsIgnoreLine
+            $message = __('The array to validate is expected to have 7 elements, you only have %1', $count);
+            throw new ImportException($message);
+        }
+
+        return $this->validateHash($line);
     }
 
     /**
-     * @return array
+     * @param $line
+     *
+     * @return bool
      */
-    public function getErrors()
+    private function validateHash($line)
     {
-        return $this->errors;
-    }
+        $hash = '%s-%d-%s-%F-%F-%d-%s';
+        $hash = sprintf($hash, $line[0], $line[1], $line[2], $line[3], $line[4], $line[5], $line[6]);
 
-    /**
-     * @param string $message
-     */
-    public function addError($message)
-    {
-        $this->errors[] = $message;
-    }
+        if (in_array($hash, $this->hashes)) {
+            return false;
+        }
 
-    /**
-     * Reset the errors array
-     */
-    public function resetErrors()
-    {
-        $this->errors = [];
+        $this->hashes[] = $hash;
+
+        return true;
     }
 }

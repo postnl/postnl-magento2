@@ -32,7 +32,7 @@
 
 namespace TIG\PostNL\Test\Unit\Service\Validation;
 
-use TIG\PostNL\Service\Validation\Contract as ContractInterface;
+use TIG\PostNL\Service\Validation\ContractInterface as ContractInterface;
 use TIG\PostNL\Test\TestCase;
 
 class Contract extends TestCase

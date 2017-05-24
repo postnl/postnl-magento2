@@ -32,7 +32,7 @@
 
 namespace TIG\PostNL\Service\Validation;
 
-class Region implements Contract
+class Region implements ContractInterface
 {
     /**
      * @var Country
@@ -51,14 +51,14 @@ class Region implements Contract
     /**
      * Validate the data. Returns false when the
      *
-     * @param array $value
+     * @param array $line
      *
      * @return bool|mixed
      */
-    public function validate($value)
+    public function validate($line)
     {
-        $country = $value['country'];
-        $regionName = $value['region'];
+        $country = $line['country'];
+        $regionName = $line['region'];
         if ($regionName == '*') {
             return 0;
         }

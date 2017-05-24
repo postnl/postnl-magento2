@@ -30,16 +30,39 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\PostNL\Service\Validation;
+namespace TIG\PostNL\Test\Unit\Service\Import\Matrixrate;
 
-interface Contract
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Service\Import\Matrixrate\Row;
+
+class RowTest extends TestCase
 {
+    public $instanceClass = Row::class;
+
     /**
-     * Validate the data. Returns false when the
-     *
-     * @param $value
-     *
-     * @return bool|mixed
+     * @var Row
      */
-    public function validate($value);
+    private $instance;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $store = $this->getMock(\TIG\PostNL\Service\Wrapper\StoreInterface::class);
+
+        $getWebsiteID = $store->method('getWebsiteId');
+        $getWebsiteID->willReturn(999);
+
+        $this->instance = $this->getInstance([
+            'store' => $store,
+        ]);
+    }
+
+    public function testThatTheRowIsEmpty()
+    {
+        $this->instance->process(1, []);
+
+        $this->assertTrue($this->instance->hasErrors());
+        $this->assertTrue(in_array('Invalid PostNL matrix rates format in row #%s', $this->instance->getErrors()));
+    }
 }

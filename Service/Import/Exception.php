@@ -30,28 +30,12 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\PostNL\Service\Validation;
+namespace TIG\PostNL\Service\Import;
 
-class Decimal implements ContractInterface
+use TIG\PostNL\Exception as PostNLException;
+
+// @codingStandardsIgnoreFile
+class Exception extends PostNLException
 {
-    /**
-     * Validate the data. Returns false when the
-     *
-     * @param $line
-     *
-     * @return bool|mixed
-     */
-    public function validate($line)
-    {
-        if (!is_numeric($line)) {
-            return false;
-        }
 
-        $line = (float)sprintf('%.4F', $line);
-        if ($line < 0.0000) {
-            return false;
-        }
-
-        return $line;
-    }
 }
