@@ -32,9 +32,16 @@
 
 namespace TIG\PostNL\Config\Csv\Import;
 
+use Magento\Framework\App\Cache\TypeListInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Value;
+use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\DirectoryList;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
+use TIG\PostNL\Service\Import\Matrixrate\Data;
 
 class Matrixrate extends Value
 {
@@ -42,20 +49,26 @@ class Matrixrate extends Value
      * @var Filesystem
      */
     private $filesystem;
+    /**
+     * @var Data
+     */
+    private $matrixrateData;
 
     public function __construct(
-        \Magento\Framework\Model\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\App\Config\ScopeConfigInterface $config,
-        \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
+        Context $context,
+        Registry $registry,
+        ScopeConfigInterface $config,
+        TypeListInterface $cacheTypeList,
         Filesystem $filesystem,
-        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        Data $matrixrateData,
+        AbstractResource $resource = null,
+        AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct($context, $registry, $config, $cacheTypeList, $resource, $resourceCollection, $data);
 
         $this->filesystem = $filesystem;
+        $this->matrixrateData = $matrixrateData;
     }
 
     public function afterSave()
@@ -63,7 +76,9 @@ class Matrixrate extends Value
         // @codingStandardsIgnoreLine
         $fileName = $_FILES['groups']['tmp_name']['tig_postnl']['fields']['matrixrate_import']['value'];
 
-        $contents = $this->getCsvFile($fileName);
+        $file = $this->getCsvFile($fileName);
+        $this->matrixrateData->import($file);
+        $file->close();
 
         return parent::afterSave();
     }

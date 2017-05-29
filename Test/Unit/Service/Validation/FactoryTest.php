@@ -52,6 +52,7 @@ class FactoryTest extends TestCase
             'validators' => [
                 'decimal' => $this->getObject(Validation\Decimal::class),
                 'parcelType' => $this->getObject(Validation\ParcelType::class),
+                'duplicateImport' => $this->getObject(Validation\DuplicateImport::class),
             ]
         ]);
     }
@@ -114,7 +115,7 @@ class FactoryTest extends TestCase
     public function testDuplicateImportValidator()
     {
         $elements = ['a row', 'with', 'enough', 'elements', 'with a', 'length of', '7'];
-        $this->assertTrue('regular', $this->instance->validate('duplicate-import', $elements));
-        $this->assertFalse('regular', $this->instance->validate('duplicate-import', $elements));
+        $this->assertTrue($this->instance->validate('duplicate-import', $elements));
+        $this->assertFalse($this->instance->validate('duplicate-import', $elements));
     }
 }

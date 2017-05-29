@@ -67,7 +67,7 @@ class DuplicateImport implements ContractInterface
      */
     private function validateHash($line)
     {
-        $hash = '%s-%d-%s-%F-%F-%d-%s';
+        $hash = '%s-%s-%s-%F-%F-%d-%s';
         $hash = sprintf($hash, $line[0], $line[1], $line[2], $line[3], $line[4], $line[5], $line[6]);
 
         if (in_array($hash, $this->hashes)) {

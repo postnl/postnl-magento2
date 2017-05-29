@@ -49,6 +49,8 @@ class TestCase extends BaseTestCase
     }
 
     /**
+     * Create a new object of type $class. It will use new to create an object.
+     *
      * @param       $class
      * @param array $args
      *
@@ -57,5 +59,18 @@ class TestCase extends BaseTestCase
     public function getObject($class, $args = [])
     {
         return $this->objectManager->create($class, $args);
+    }
+
+    /**
+     * Load an object using the object manager. If it not instantiated yet it will create a new object. If it is
+     * already instantiated by the object manager it will return that object.
+     *
+     * @param $class
+     *
+     * @return mixed
+     */
+    public function loadObject($class)
+    {
+        return $this->objectManager->get($class);
     }
 }

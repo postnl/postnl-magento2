@@ -33,7 +33,6 @@
 namespace TIG\PostNL\Test\Integration\Service\Import\Matrixrate;
 
 use Magento\Framework\Filesystem;
-use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection as MatrixrateCollection;
 use TIG\PostNL\Service\Import\Matrixrate\Data;
 use TIG\PostNL\Test\Integration\Service\Import\IncorrectFormat;
 use TIG\PostNL\Test\Integration\TestCase;
@@ -54,6 +53,8 @@ class DataTest extends TestCase
         /** @var Filesystem $filesystem */
         $filesystem   = $this->getObject(Filesystem::class);
         $this->directory = $filesystem->getDirectoryRead(\Magento\Framework\App\Filesystem\DirectoryList::ROOT);
+
+        $this->resetDuplicateImport();
     }
 
     /**
@@ -145,6 +146,8 @@ class DataTest extends TestCase
 
         $firstSize = $this->getCollectionSize();
 
+        $this->resetDuplicateImport();
+
         $file = $this->loadFile('Types/regular.csv');
         $instance->import($file);
         $file->close();
@@ -154,15 +157,15 @@ class DataTest extends TestCase
         $this->assertEquals($firstSize, $secondSize);
     }
 
-//    public function testCanImportTheDefaultMatrixRates()
-//    {
-//        $file = $this->loadFile('default_rates.csv');
-//
-//        $this->getInstance()->import($file);
-//        $file->close();
-//
-//        $this->assertEquals(1115, $this->getCollectionSize());
-//    }
+    public function testCanImportTheDefaultMatrixRates()
+    {
+        $file = $this->loadFile('default_rates.csv');
+
+        $this->getInstance()->import($file);
+        $file->close();
+
+        $this->assertEquals(1112, $this->getCollectionSize());
+    }
 
     /**
      * @return int
@@ -172,5 +175,11 @@ class DataTest extends TestCase
         $collection = $this->getObject(\TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection::class);
 
         return $collection->getSize();
+    }
+
+    private function resetDuplicateImport()
+    {
+        $duplicateImport = $this->loadObject(\TIG\PostNL\Service\Validation\DuplicateImport::class);
+        $this->setProperty('hashes', [], $duplicateImport);
     }
 }

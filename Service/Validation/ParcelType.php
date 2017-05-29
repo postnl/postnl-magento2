@@ -44,23 +44,65 @@ class ParcelType implements ContractInterface
     public function validate($line)
     {
         $line = strtolower($line);
-        switch ($line) {
-            case '':
-            case '0':
-            case '*':
-                return '*';
 
-            case 'regular':
-                return 'regular';
+        if ($this->isWildcard($line)) {
+            return '*';
+        }
 
-            case 'extra@home':
-            case 'extra @ home':
-            case 'extra_@_home':
-            case 'extraathome':
-            case 'extra_at_home':
-                return 'extra@home';
+        if ($this->isRegular($line)) {
+            return 'regular';
+        }
+
+        if ($this->isExtraAtHome($line)) {
+            return 'extra@home';
+        }
+
+        if ($this->isPakjegemak($line)) {
+            return 'pakjegemak';
         }
 
         return false;
+    }
+
+    /**
+     * @param $line
+     *
+     * @return bool
+     */
+    private function isWildcard($line)
+    {
+        return in_array($line, ['', '0', '*']);
+    }
+
+    /**
+     * @param $line
+     *
+     * @return bool
+     */
+    private function isRegular($line)
+    {
+        return in_array($line, ['pakket', 'regular']);
+    }
+
+    /**
+     * @param $line
+     *
+     * @return bool
+     */
+    private function isExtraAtHome($line)
+    {
+        return in_array($line, ['extra@home', 'extra @ home', 'extra_@_home', 'extraathome', 'extra_at_home']);
+    }
+
+    /**
+     * @param $line
+     *
+     * @return bool
+     */
+    private function isPakjegemak($line)
+    {
+        $options = ['pakjegemak', 'pakje_gemak', 'pakje gemak', 'PakjeGemak', 'postkantoor', 'post office'];
+
+        return in_array($line, $options);
     }
 }

@@ -65,6 +65,20 @@ class Country implements ContractInterface
      */
     public function validate($line)
     {
+        if (strpos($line, ',') !== false) {
+            return $this->validateArray($line);
+        }
+
+        return $this->validateSingle($line);
+    }
+
+    /**
+     * @param $line
+     *
+     * @return bool|string
+     */
+    private function validateSingle($line)
+    {
         if ($line == '*') {
             return 0;
         }
@@ -76,6 +90,26 @@ class Country implements ContractInterface
         }
 
         return $countries[$line]['id'];
+    }
+
+    /**
+     * @param $line
+     *
+     * @return bool|string
+     */
+    private function validateArray($line)
+    {
+        $parts = explode(',', $line);
+
+        $pieces = array_map(function ($part) {
+            return $this->validateSingle($part);
+        }, $parts);
+
+        if (in_array(false, $pieces, true)) {
+            return false;
+        }
+
+        return implode(',', $pieces);
     }
 
     /**

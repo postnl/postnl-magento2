@@ -81,32 +81,32 @@ class Row
             return false;
         }
 
-        if (!$country = $this->validation->validate('country', $line[0]) !== false) {
+        if (($country = $this->validation->validate('country', $line[0])) === false) {
             $this->errors[] = __('Invalid country "%1" in row #%2.', $line[0], $row);
             return false;
         }
 
-        if (!$region = $this->validation->validate('region', ['country' => $line[0], 'region' => $line[1]]) !== false) {
+        if (($region = $this->validation->validate('region', ['country' => $line[0], 'region' => $line[1]])) === false) {
             $this->errors[] = __('Invalid region/state "%1" in row #%2.', $line[1], $row);
             return false;
         }
 
-        if (!$weight = $this->validation->validate('weight', $line[3]) !== false) {
+        if (($weight = $this->validation->validate('weight', $line[3])) === false) {
             $this->errors[] = __('Invalid weight "%1" in row #%2.', $line[3], $row);
             return false;
         }
 
-        if (!$subtotal = $this->validation->validate('subtotal', $line[4]) !== false) {
+        if (($subtotal = $this->validation->validate('subtotal', $line[4])) === false) {
             $this->errors[] = __('Invalid subtotal "%1" in row #%2.', $line[4], $row);
             return false;
         }
 
-        if (!$quantity = $this->validation->validate('quantity', $line[5]) !== false) {
+        if (($quantity = $this->validation->validate('quantity', $line[5])) === false) {
             $this->errors[] = __('Invalid quantity "%1" in row #%2.', $line[5], $row);
             return false;
         }
 
-        if (!$parcelType = $this->validation->validate('parcel-type', $line[6]) !== false) {
+        if (($parcelType = $this->validation->validate('parcel-type', $line[6])) === false) {
             $this->errors[] = __(
                 'Invalid parcel type "%1" in row #%2. Valid values are: "%3".',
                 $line[6],
@@ -116,12 +116,12 @@ class Row
             return false;
         }
 
-        if (!$price = $this->validation->validate('price', $line[7]) !== false) {
+        if (($price = $this->validation->validate('price', $line[7])) === false) {
             $this->errors[] = __('Invalid shipping price "%1" in row #%2.', $line[7], $row);
             return false;
         }
 
-        if (!$this->validation->validate('duplicate-import', $line) !== false) {
+        if ($this->validation->validate('duplicate-import', $line) === false) {
             $this->errors[] = __('Duplicate row #%1 (country "%2", region/state "%3", zip "%4", weight "%5", ' .
                 'subtotal "%6", quantity "%7" and parcel type "%8").',
                 $row,

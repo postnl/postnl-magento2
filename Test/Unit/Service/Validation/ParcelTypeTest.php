@@ -46,6 +46,12 @@ class ParcelTypeTest extends Contract
             'extra@home with underscores'           => ['extra_@_home', 'extra@home'],
             'extra@home with an at'                 => ['extraathome', 'extra@home'],
             'extra@home with an at and underscores' => ['extra_at_home', 'extra@home'],
+            'pakjegemak variation 1'                => ['pakjegemak', 'pakjegemak'],
+            'pakjegemak variation 2'                => ['pakje_gemak', 'pakjegemak'],
+            'pakjegemak variation 3'                => ['pakje gemak', 'pakjegemak'],
+            'pakjegemak variation 4'                => ['PakjeGemak', 'pakjegemak'],
+            'pakjegemak variation 5'                => ['postkantoor', 'pakjegemak'],
+            'pakjegemak variation 6'                => ['post office', 'pakjegemak'],
         ];
     }
 

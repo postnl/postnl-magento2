@@ -35,6 +35,7 @@ namespace TIG\PostNL\Service\Import\Matrixrate;
 use Magento\Framework\Filesystem\File\ReadInterface;
 use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate;
 use TIG\PostNL\Service\Import\ParseErrors;
+use TIG\PostNL\Service\Wrapper\Store;
 use TIG\PostNL\Test\Integration\Service\Import\IncorrectFormat;
 
 class Data
@@ -80,12 +81,14 @@ class Data
     private $importedRows = 0;
 
     /**
+     * @param Store                 $store
      * @param Matrixrate            $matrixrateResource
      * @param Matrixrate\Collection $matrixrateCollection
      * @param ParseErrors           $parseErrors
      * @param RowFactory            $rowFactory
      */
     public function __construct(
+        Store $store,
         Matrixrate $matrixrateResource,
         Matrixrate\Collection $matrixrateCollection,
         ParseErrors $parseErrors,
@@ -95,6 +98,8 @@ class Data
         $this->matrixrateResource   = $matrixrateResource;
         $this->parseErrors          = $parseErrors;
         $this->rowFactory           = $rowFactory;
+
+        $this->websiteId            = $store->getWebsiteId();
     }
 
     /**
@@ -112,7 +117,7 @@ class Data
         try {
             $this->deleteData();
             $this->collectData($file);
-            $this->saveData();
+            $this->saveToDatabase();
             $this->checkErrors();
             $this->connection->commit();
         } catch (\Exception $exception) {
@@ -178,6 +183,7 @@ class Data
         $this->matrixrateCollection->addFieldToFilter('website_id', $this->websiteId);
         $this->matrixrateCollection->clear();
         $this->matrixrateCollection->walk('delete');
+        $this->importData = [];
     }
 
     /**
@@ -190,12 +196,24 @@ class Data
             return;
         }
 
+        $this->saveToDatabase();
+    }
+
+    /**
+     * Actually save the data to the database.
+     */
+    public function saveToDatabase()
+    {
+        $count = count($this->importData);
         $table = $this->matrixrateResource->getMainTable();
         $this->connection->insertMultiple($table, $this->importData);
         $this->importedRows += $count;
         $this->importData = [];
     }
 
+    /**
+     * @throws \TIG\PostNL\Service\Import\Exception
+     */
     private function checkErrors()
     {
         if ($this->parseErrors->getErrorCount()) {
