@@ -215,3 +215,5 @@ Percent,Percent
 "Activate Extra@Home","Activate Extra@Home"
 "Extra@Home can be used to ship large and heavy Products. Please consult your PostNL account manager for more information about activating this service for your account.","Extra@Home can be used to ship large and heavy Products. Please consult your PostNL account manager for more information about activating this service for your account."
 "standard","standard"
+"Shipment successfully confirmed","Shipment successfully confirmed"
+"Could not confirm shipment : %1","Could not confirm shipment : %1"

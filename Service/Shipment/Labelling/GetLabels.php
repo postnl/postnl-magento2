@@ -84,7 +84,7 @@ class GetLabels
      */
     public function get($shipmentId, $confirm = true)
     {
-        $shipment = $this->shipmentRepository->getByFieldWithValue('shipment_id', $shipmentId);
+        $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
 
         if (!$shipment) {
             return [];

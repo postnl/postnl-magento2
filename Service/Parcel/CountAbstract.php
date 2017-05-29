@@ -69,7 +69,7 @@ abstract class CountAbstract
             return $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
         }
 
-        $parcelCount = 0;
+        $parcelCount = count($items) == 1 ? 0 : 1;
         foreach ($items as $item) {
             $parcelCount += $this->getParcelCount($products, $item);
         }
@@ -108,7 +108,7 @@ abstract class CountAbstract
     {
         /**
          * @codingStandardsIgnoreLine
-         * @todo : In future maybe more product types are requiring the parce_count attribute.
+         * @todo : In future maybe more product types are requiring the parcel_count attribute.
          *         So build within the de backend configuration an multiselect and read it out when using this method.
          */
         return $this->productDictionary->get($items, [PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME]);
