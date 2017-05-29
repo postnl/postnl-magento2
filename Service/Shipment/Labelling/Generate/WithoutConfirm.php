@@ -58,6 +58,8 @@ class WithoutConfirm extends GenerateAbstract
             $logger,
             $labelling
         );
+
+        $this->labelService = $labelling;
     }
 
     /**

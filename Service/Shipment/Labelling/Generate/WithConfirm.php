@@ -58,6 +58,8 @@ class WithConfirm extends GenerateAbstract
             $logger,
             $labelling
         );
+
+        $this->labelService = $labelling;
     }
 
     /**
