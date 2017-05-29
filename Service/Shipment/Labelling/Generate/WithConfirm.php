@@ -55,10 +55,9 @@ class WithConfirm extends GenerateAbstract
             $shipmentLabelFactory,
             $shipmentLabelRepository,
             $shipmentRepository,
-            $logger
+            $logger,
+            $labelling
         );
-
-        $this->labelService = $labelling;
     }
 
     /**

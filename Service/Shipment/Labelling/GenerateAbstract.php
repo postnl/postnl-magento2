@@ -81,24 +81,27 @@ abstract class GenerateAbstract
     protected $date;
 
     /**
-     * @param Data                             $helper
-     * @param ShipmentLabelFactory             $shipmentLabelFactory
-     * @param ShipmentLabelRepositoryInterface $shipmentLabelRepository
-     * @param ShipmentRepositoryInterface      $shipmentRepository
-     * @param Log                              $logger
+     * @param Data                              $helper
+     * @param ShipmentLabelFactory              $shipmentLabelFactory
+     * @param ShipmentLabelRepositoryInterface  $shipmentLabelRepository
+     * @param ShipmentRepositoryInterface       $shipmentRepository
+     * @param Log                               $logger
+     * @param Labelling|LabellingWithoutConfirm $labelling
      */
     public function __construct(
         Data $helper,
         ShipmentLabelFactory $shipmentLabelFactory,
         ShipmentLabelRepositoryInterface $shipmentLabelRepository,
         ShipmentRepositoryInterface $shipmentRepository,
-        Log $logger
+        Log $logger,
+        $labelling = null
     ) {
         $this->logger = $logger;
         $this->date = $helper->getDate();
         $this->shipmentRepository = $shipmentRepository;
         $this->shipmentLabelFactory = $shipmentLabelFactory;
         $this->shipmentLabelRepository = $shipmentLabelRepository;
+        $this->labelService = $labelling;
     }
 
     /**

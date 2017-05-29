@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Webservices\Endpoints;
 
 use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Webservices\Parser\Label\Shipments as ShipmentData;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Parser\Label\Customer;
@@ -103,8 +104,8 @@ class Labelling extends AbstractEndpoint
     }
 
     /**
-     * @param Shipment $shipment
-     * @param int      $currentShipmentNumber
+     * @param Shipment|ShipmentInterface $shipment
+     * @param int                        $currentShipmentNumber
      */
     public function setParameters($shipment, $currentShipmentNumber = 1)
     {
