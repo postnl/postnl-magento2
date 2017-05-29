@@ -49,6 +49,11 @@ class Customer
     private $addressConfiguration;
 
     /**
+     * @var null|int
+     */
+    private $storeId = null;
+
+    /**
      * @param AccountConfiguration $accountConfiguration
      * @param AddressConfiguration $addressConfiguration
      */
@@ -66,8 +71,8 @@ class Customer
     public function get()
     {
         $customer = [
-            'CustomerCode'   => $this->accountConfiguration->getCustomerCode(),
-            'CustomerNumber' => $this->accountConfiguration->getCustomerNumber(),
+            'CustomerCode'   => $this->accountConfiguration->getCustomerCode($this->storeId),
+            'CustomerNumber' => $this->accountConfiguration->getCustomerNumber($this->storeId),
         ];
 
         return $customer;
@@ -78,7 +83,7 @@ class Customer
      */
     public function blsCode()
     {
-        return $this->accountConfiguration->getBlsCode();
+        return $this->accountConfiguration->getBlsCode($this->storeId);
     }
 
     /**
@@ -88,18 +93,25 @@ class Customer
     {
         $addressArray = [
             'AddressType' => self::ADDRESS_TYPE_SENDER,
-            'FirstName'   => $this->addressConfiguration->getFirstname(),
-            'Name'        => $this->addressConfiguration->getLastname(),
-            'CompanyName' => $this->addressConfiguration->getCompany(),
-            'Street'      => $this->addressConfiguration->getStreetname(),
-            'HouseNr'     => $this->addressConfiguration->getHousenumber(),
-            'HouseNrExt'  => $this->addressConfiguration->getHousenumberAddition(),
-            'Zipcode'     => strtoupper(str_replace(' ', '', $this->addressConfiguration->getPostcode())),
-            'City'        => $this->addressConfiguration->getCity(),
+            'FirstName'   => $this->addressConfiguration->getFirstname($this->storeId),
+            'Name'        => $this->addressConfiguration->getLastname($this->storeId),
+            'CompanyName' => $this->addressConfiguration->getCompany($this->storeId),
+            'Street'      => $this->addressConfiguration->getStreetname($this->storeId),
+            'HouseNr'     => $this->addressConfiguration->getHousenumber($this->storeId),
+            'HouseNrExt'  => $this->addressConfiguration->getHousenumberAddition($this->storeId),
+            'Zipcode'     => strtoupper(str_replace(' ', '', $this->addressConfiguration->getPostcode($this->storeId))),
+            'City'        => $this->addressConfiguration->getCity($this->storeId),
             'Countrycode' => 'NL',
-            'Department'  => $this->addressConfiguration->getDepartment(),
+            'Department'  => $this->addressConfiguration->getDepartment($this->storeId),
         ];
 
         return $addressArray;
+    }
+
+    /**
+     * @param $storeId
+     */
+    public function setStoreId($storeId){
+        $this->storeId = $storeId;
     }
 }

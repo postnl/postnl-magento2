@@ -71,6 +71,11 @@ class Barcode extends AbstractEndpoint
     private $message;
 
     /**
+     * @var null|int
+     */
+    private $storeId = null;
+
+    /**
      * @var string
      */
     private $countryId;
@@ -101,6 +106,11 @@ class Barcode extends AbstractEndpoint
         if (empty($this->countryId)) {
             // @codingStandardsIgnoreLine
             throw new PostNLException(__('Please provide the country id first by calling setCountryId'));
+        }
+
+        if (empty($this->storeId)) {
+            // @codingStandardsIgnoreLine
+            throw new PostNLException(__('Please provide the country id first by calling setStoreId'));
         }
 
         $barcode = $this->barcodeRange->getByCountryId($this->countryId);
@@ -142,5 +152,14 @@ class Barcode extends AbstractEndpoint
     public function setCountryId($countryId)
     {
         $this->countryId = $countryId;
+    }
+
+    /**
+     * @param int $storeId
+     */
+    public function setStoreId($storeId)
+    {
+        $this->storeId = $storeId;
+        $this->customer->setStoreId($storeId);
     }
 }

@@ -45,6 +45,11 @@ class Soap
     private $apikey;
 
     /**
+     * @var null|int
+     */
+    private $storeId = null;
+
+    /**
      * @var string
      */
     private $location;
@@ -78,6 +83,10 @@ class Soap
      * @var Api\Log
      */
     private $log;
+    /**
+     * @var AccountConfiguration
+     */
+    private $accountConfiguration;
 
     /**
      * @param AccountConfiguration $accountConfiguration
@@ -103,9 +112,10 @@ class Soap
         $this->exceptionHandler = $exceptionHandler;
         $this->response = $response;
         $this->soapClient = $soapClient;
-
-        $this->apikey = $accountConfiguration->getApiKey();
         $this->log = $log;
+        $this->accountConfiguration = $accountConfiguration;
+
+        $this->setApiKey();
     }
 
     /**
@@ -121,12 +131,14 @@ class Soap
         $this->parseEndpoint($endpoint);
         $soapClient = $this->getClient();
 
+        $result = null;
         try {
             $result = $soapClient->__call($method, [$requestParams]);
             $this->response->set($result);
 
             return $this->response->get();
-        } catch (\Exception $exception) {
+        }
+        catch (\Exception $exception) {
             $this->exceptionHandler->handle($exception, $soapClient);
 
             throw new WebapiException(
@@ -165,7 +177,12 @@ class Soap
         $stream_context = stream_context_create([
             'http' => [
                 'header' => 'apikey:' . $this->getApiKey()
-            ]
+            ],  'ssl' => [
+        'verify_peer' => false,
+        'verify_peer_name'=>false,
+        'allow_self_signed' => true,
+        'cafile' => '/Users/thomashondema/Desktop/Charles Proxy CA (23 May 2017, Antares.local).cer'
+    ],
         ]);
 
         return [
@@ -174,6 +191,8 @@ class Soap
             'features'       => SOAP_SINGLE_ELEMENT_ARRAYS,
             'cache_wsdl'     => WSDL_CACHE_BOTH,
             'stream_context' => $stream_context,
+            "proxy_host" => "localhost",
+            "proxy_port" => 8889,
         ];
     }
 
@@ -235,5 +254,23 @@ class Soap
     {
         $this->location = $endpoint->getLocation();
         $this->wsdlUrl  = $endpoint->getWsdlUrl();
+    }
+
+    /**
+     * @return null
+     */
+    private function setApiKey()
+    {
+        $this->apikey = $this->accountConfiguration->getApiKey($this->storeId);
+    }
+
+    /**
+     * @param int $storeId
+     * @return null
+     */
+    public function setStoreId($storeId)
+    {
+        $this->storeId = $storeId;
+        $this->setApiKey();
     }
 }

@@ -66,6 +66,11 @@ class BarcodeHandler
     private $countryId;
 
     /**
+     * $var null|int
+     */
+    private $storeId;
+
+    /**
      * @param BarcodeEndpoint             $barcodeEndpoint
      * @param ShipmentRepositoryInterface $shipmentRepository
      * @param ShipmentBarcodeFactory      $shipmentBarcodeFactory
@@ -95,6 +100,8 @@ class BarcodeHandler
         if (!$shipment || $shipment->getConfirmedAt() !== null) {
             return;
         }
+
+        $this->storeId = $shipment->getShipment()->getStoreId();
 
         $mainBarcode = $this->generate();
         $shipment->setMainBarcode($mainBarcode);
@@ -140,6 +147,7 @@ class BarcodeHandler
     private function generate()
     {
         $this->barcodeEndpoint->setCountryId($this->countryId);
+        $this->barcodeEndpoint->setStoreId($this->storeId);
         $response = $this->barcodeEndpoint->call();
 
         if (!is_object($response) || !isset($response->Barcode)) {
