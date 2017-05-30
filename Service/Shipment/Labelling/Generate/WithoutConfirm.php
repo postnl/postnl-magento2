@@ -55,8 +55,7 @@ class WithoutConfirm extends GenerateAbstract
             $shipmentLabelFactory,
             $shipmentLabelRepository,
             $shipmentRepository,
-            $logger,
-            $labelling
+            $logger
         );
 
         $this->labelService = $labelling;

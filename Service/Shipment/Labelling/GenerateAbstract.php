@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Shipment\Labelling;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
@@ -158,9 +159,9 @@ abstract class GenerateAbstract
     }
 
     /**
-     * @param ShipmentInterface $shipment
-     * @param int               $number
-     * @param string            $label
+     * @param ShipmentInterface|Shipment $shipment
+     * @param int                        $number
+     * @param string                     $label
      *
      * @return ShipmentLabelInterface
      */
