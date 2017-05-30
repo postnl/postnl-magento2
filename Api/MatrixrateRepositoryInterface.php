@@ -75,4 +75,11 @@ interface MatrixrateRepositoryInterface
      * @return \TIG\PostNL\Api\Data\MatrixRateInterface
      */
     public function getByFieldWithValue($field, $value);
+
+    /**
+     * @param int $websiteId
+     *
+     * @return \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection
+     */
+    public function getByWebsiteId($websiteId);
 }

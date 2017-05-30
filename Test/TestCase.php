@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Test;
 
-use Magento\TestFramework\ObjectManager;
+use Magento\Framework\Filesystem;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase
@@ -223,5 +223,25 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         }
 
         $method->willReturn($response);
+    }
+
+    /**
+     * @param $filename
+     *
+     * @return Filesystem\File\ReadInterface
+     */
+    protected function loadFile($filename): Filesystem\File\ReadInterface
+    {
+        /** @var Filesystem $filesystem */
+        $filesystem   = $this->getObject(Filesystem::class);
+        $directory = $filesystem->getDirectoryRead(\Magento\Framework\App\Filesystem\DirectoryList::ROOT);
+
+        $path = __DIR__ . '/' . $filename;
+        $path = realpath($path);
+
+        $path = $directory->getRelativePath($path);
+        $file = $directory->openFile($path);
+
+        return $file;
     }
 }

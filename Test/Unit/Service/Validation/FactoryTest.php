@@ -33,7 +33,7 @@
 namespace TIG\PostNL\Test\Unit\Service\Validation;
 
 use TIG\PostNL\Test\TestCase;
-use \TIG\PostNL\Service\Validation;
+use TIG\PostNL\Service\Validation;
 
 class FactoryTest extends TestCase
 {
@@ -55,6 +55,39 @@ class FactoryTest extends TestCase
                 'duplicateImport' => $this->getObject(Validation\DuplicateImport::class),
             ]
         ]);
+    }
+
+    public function testResetCallsTheResetMethodOfTheValidorIfAvailable()
+    {
+        $validatorInstance = $this->getFakeMock(\TIG\PostNL\Service\Validation\ContractInterface::class);
+        $validatorInstance->setMethods(['validate', 'resetData']);
+        $validatorInstance = $validatorInstance->getMock();
+
+        $reset = $validatorInstance->expects($this->once());
+        $reset->method('resetData');
+
+        /** @var Validation\Factory $instance */
+        $instance = $this->getInstance([
+            'validators' => [
+                'mockValidator' => $validatorInstance,
+            ]
+        ]);
+
+        $instance->resetData();
+    }
+
+    public function testResetIsNotCalledWhenItDoesNotExists()
+    {
+        $validatorInstance = $this->getMock(\TIG\PostNL\Service\Validation\ContractInterface::class);
+
+        /** @var Validation\Factory $instance */
+        $instance = $this->getInstance([
+            'validators' => [
+                'mockValidator' => $validatorInstance,
+            ]
+        ]);
+
+        $instance->resetData();
     }
 
     public function testIncorrectClassThrowsAnException()

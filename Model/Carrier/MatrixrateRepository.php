@@ -32,22 +32,22 @@
 
 namespace TIG\PostNL\Model\Carrier;
 
-use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use TIG\PostNL\Api\Data\MatrixRateInterface;
 use TIG\PostNL\Api\MatrixrateRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Model\AbstractRepository;
+use TIG\PostNL\Model\Carrier\MatrixrateFactory;
+use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection;
 use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\CollectionFactory;
 
 class MatrixrateRepository extends AbstractRepository implements MatrixrateRepositoryInterface
 {
     /**
-     * @var MatrixRateFactory
+     * @var MatrixrateFactory
      */
-    private $matrixRateFactory;
+    private $matrixrateFactory;
 
     /**
      * @var CollectionFactory
@@ -56,18 +56,18 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
     protected $collectionFactory;
 
     /**
-     * @param MatrixRateFactory     $matrixRateFactory
+     * @param MatrixrateFactory     $matrixrateFactory
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param CollectionFactory     $collectionFactory
      */
     public function __construct(
-        MatrixRateFactory $matrixRateFactory,
+        MatrixrateFactory $matrixrateFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         CollectionFactory $collectionFactory
     ) {
-        $this->matrixRateFactory = $matrixRateFactory;
+        $this->matrixrateFactory     = $matrixrateFactory;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->collectionFactory = $collectionFactory;
+        $this->collectionFactory     = $collectionFactory;
     }
 
     /**
@@ -120,7 +120,7 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
      */
     public function create(array $data = [])
     {
-        return $this->matrixRateFactory->create($data);
+        return $this->matrixrateFactory->create($data);
     }
 
     /**
@@ -142,5 +142,20 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
         }
 
         return null;
+    }
+
+    /**
+     * @param $websiteId
+     *
+     * @return Collection
+     */
+    public function getByWebsiteId($websiteId)
+    {
+        /** @var Collection $collection */
+        $collection = $this->collectionFactory->create();
+
+        $collection->addFieldToFilter('website_id', $websiteId);
+
+        return $collection;
     }
 }

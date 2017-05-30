@@ -103,4 +103,24 @@ class Factory
         throw new PostNLException(__('There is no implementation found for the "' . $type . '" validator'));
     }
     // @codingStandardsIgnoreEnd
+
+    /**
+     * Check if the reset method is available and if so calls them.
+     */
+    public function resetData()
+    {
+        foreach ($this->validators as $validator) {
+            $this->callResetData($validator);
+        }
+    }
+
+    /**
+     * @param $validator
+     */
+    private function callResetData($validator)
+    {
+        if (method_exists($validator, 'resetData')) {
+            $validator->resetData();
+        }
+    }
 }
