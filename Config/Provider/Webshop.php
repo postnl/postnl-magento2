@@ -91,9 +91,13 @@ class Webshop extends AbstractConfigProvider
         return $this->getConfigFromXpath(self::XPATH_TRACK_AND_TRACE_MAIL_TEMPLATE, $storeId);
     }
 
+    /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
     public function getTrackAndTraceBccEmail($storeId = null)
     {
-        return $this->getConfigFromXpath( self::XPATH_TRACK_AND_TRACE_BCC_EMAIL, $storeId);
+        return $this->getConfigFromXpath(self::XPATH_TRACK_AND_TRACE_BCC_EMAIL, $storeId);
     }
-
 }
