@@ -48,7 +48,7 @@ class CreatePostNLShipmentTest extends TestCase
     public function testPostNLShipmentIsCreated()
     {
         $this->markTestSkipped('Should be fixed');
-        
+
         $shipment = $this->getShipment();
         $this->createOrder($shipment);
 

@@ -147,8 +147,8 @@ class Shipments
 
         return [
             'Street'     => trim($streetMatches[1]),
-            'HouseNr'    => trim($houseNrMatches[1]),
-            'HouseNrExt' => trim($houseNrMatches[2]),
+            'HouseNr'    => isset($houseNrMatches[1]) ? trim($houseNrMatches[1]) : '',
+            'HouseNrExt' => isset($houseNrMatches[2]) ? trim($houseNrMatches[2]) : '',
         ];
     }
 }
