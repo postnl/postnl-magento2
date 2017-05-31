@@ -77,6 +77,14 @@
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <config_path>tig_postnl/webshop_track_and_trace/email_enabled</config_path>
             </field>
+            <field id="email_bcc" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>BCC Email</label>
+                <comment><![CDATA[This e-mail address will be added as BCC to the track and trace template]]></comment>
+                <config_path>tig_postnl/webshop_track_and_trace/email_bcc</config_path>
+                <depends>
+                    <field id="email_enabled">1</field>
+                </depends>
+            </field>
         </group>
 
     </group>

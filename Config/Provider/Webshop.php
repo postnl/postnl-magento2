@@ -38,6 +38,7 @@ class Webshop extends AbstractConfigProvider
     const XPATH_WEBSHOP_SHIPMENTDAYS  = 'tig_postnl/webshop_shipping/shipment_days';
 
     const XPATH_TRACK_AND_TRACE_ENABLED       = 'tig_postnl/webshop_track_and_trace/email_enabled';
+    const XPATH_TRACK_AND_TRACE_BCC_EMAIL     = 'tig_postnl/webshop_track_and_trace/email_bcc';
     const XPATH_TRACK_AND_TRACE_SERVICE_URL   = 'tig_postnl/webshop_track_and_trace/service_url';
     const XPATH_TRACK_AND_TRACE_MAIL_TEMPLATE = 'tig_postnl/webshop_track_and_trace/template';
 
@@ -89,4 +90,10 @@ class Webshop extends AbstractConfigProvider
     {
         return $this->getConfigFromXpath(self::XPATH_TRACK_AND_TRACE_MAIL_TEMPLATE, $storeId);
     }
+
+    public function getTrackAndTraceBccEmail($storeId = null)
+    {
+        return $this->getConfigFromXpath( self::XPATH_TRACK_AND_TRACE_BCC_EMAIL, $storeId);
+    }
+
 }
