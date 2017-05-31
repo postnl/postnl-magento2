@@ -50,12 +50,6 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
     private $matrixRateFactory;
 
     /**
-     * @var CollectionFactory
-     */
-    // @codingStandardsIgnoreLine
-    protected $collectionFactory;
-
-    /**
      * @param MatrixRateFactory     $matrixRateFactory
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param CollectionFactory     $collectionFactory
@@ -111,8 +105,6 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
 
     /**
      * Create a Matrixrate rule.
-     *
-     * @api
      *
      * @param array $data
      *

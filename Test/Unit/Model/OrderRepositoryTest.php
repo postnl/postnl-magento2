@@ -104,56 +104,6 @@ class OrderRepositoryTest extends TestCase
         $this->assertEquals($orderFactoryMock, $result);
     }
 
-    /**
-     * @param string $field
-     * @param int    $value
-     */
-    public function testGetFieldWithValue($field = 'order_id', $value = 10)
-    {
-
-        $builder = $this->getFakeMock(SearchCriteriaBuilder::class)->getMock();
-
-        $filterExpects = $builder->expects($this->once());
-        $filterExpects->method('addFilter');
-        $filterExpects->with($field, $value);
-        $filterExpects->willReturnSelf();
-
-        $pageSizeExpects = $builder->expects($this->once());
-        $pageSizeExpects->method('setPageSize');
-        $pageSizeExpects->with(1);
-        $pageSizeExpects->willReturnSelf();
-
-        $listResults = $this->getList($field, $value, true);
-
-        $createExpects = $builder->expects($this->once());
-        $createExpects->method('create');
-        $createExpects->willReturn($listResults['searchCreteria']);
-
-        $instance = $this->getInstance([
-            'collectionFactory'     => $listResults['collectionFactory'],
-            'searchResultsFactory'  => $listResults['searchResult'],
-            'searchCriteriaBuilder' => $builder
-        ]);
-
-        $result = $instance->getByFieldWithValue($field, $value);
-
-        $this->assertEquals($listResults['searchResult'], $result);
-
-    }
-
-    public function testGetList()
-    {
-        $listData = $this->getList('order_id', 10);
-        $instance = $this->getInstance([
-            'collectionFactory'    => $listData['collectionFactory'],
-            'searchResultsFactory' => $listData['searchResult']
-        ]);
-
-        $result = $instance->getList($listData['searchCreteria']);
-
-        $this->assertEquals($listData['searchResult'], $result);
-    }
-
     public function testGetSearchResults()
     {
         $searchResults = $this->getSearchResults();

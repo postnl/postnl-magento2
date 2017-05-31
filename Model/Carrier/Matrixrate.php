@@ -83,7 +83,7 @@ class Matrixrate extends AbstractModel implements MatrixRateInterface
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getDestinyCountryId()
     {

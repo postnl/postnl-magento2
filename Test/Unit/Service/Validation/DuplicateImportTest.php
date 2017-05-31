@@ -59,7 +59,7 @@ class DuplicateImportTest extends TestCase
         $this->fail('We expected an exception to be thrown, but we got none');
     }
 
-    public function testItShouldThrowAnExceptionWhenTheRowIsAlreadyImported()
+    public function testTheReturnValueForDuplicateImports()
     {
         $instance = $this->getInstance();
         $elements = ['a row', 'with', 'enough', 'elements', 'with a', 'length of', '7'];

@@ -35,7 +35,7 @@ namespace TIG\PostNL\Service\Validation;
 interface ContractInterface
 {
     /**
-     * Validate the data. Returns false when the
+     * Validate the data. Returns false when the validation fails.
      *
      * @param $line
      *

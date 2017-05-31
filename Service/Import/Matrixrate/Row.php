@@ -32,6 +32,7 @@
 
 namespace TIG\PostNL\Service\Import\Matrixrate;
 
+use TIG\PostNL\Service\Validation\Factory;
 use TIG\PostNL\Service\Wrapper\StoreInterface;
 
 class Row
@@ -47,17 +48,17 @@ class Row
     private $errors = [];
 
     /**
-     * @var \TIG\PostNL\Service\Validation\Factory
+     * @var Factory
      */
     private $validation;
 
     /**
-     * @param StoreInterface                         $store
-     * @param \TIG\PostNL\Service\Validation\Factory $validation
+     * @param StoreInterface $store
+     * @param Factory        $validation
      */
     public function __construct(
         StoreInterface $store,
-        \TIG\PostNL\Service\Validation\Factory $validation
+        Factory $validation
     ) {
         $this->websiteId = $store->getWebsiteId();
         $this->validation = $validation;

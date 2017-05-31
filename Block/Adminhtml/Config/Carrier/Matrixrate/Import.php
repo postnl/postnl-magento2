@@ -44,6 +44,15 @@ class Import extends AbstractElement
      */
     private $importBlock;
 
+    /**
+     * Import constructor.
+     *
+     * @param Factory           $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper           $escaper
+     * @param ImportBlock       $importBlock
+     * @param array             $data
+     */
     public function __construct(
         Factory $factoryElement,
         CollectionFactory $factoryCollection,

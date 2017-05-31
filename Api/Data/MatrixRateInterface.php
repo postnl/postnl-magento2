@@ -53,7 +53,7 @@ interface MatrixRateInterface
     public function setWebsiteId($value);
 
     /**
-     * @return int
+     * @return string
      */
     public function getDestinyCountryId();
 

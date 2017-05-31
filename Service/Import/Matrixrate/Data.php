@@ -141,12 +141,17 @@ class Data
     }
 
     /**
-     * @param int   $rowNumber
-     * @param array $line
+     * @param int                 $rowNumber
+     * @param ReadInterface|array $line
      */
     private function parseRow($rowNumber, $line)
     {
-        if (empty($line)) {
+        /**
+         * If the row is empty, the readCsv of ReadInterface will provide us with this array:
+         *
+         * $line = [0 => null];
+         */
+        if (empty($line) || (count($line) == 1 && $line[0] === null)) {
             return;
         }
 

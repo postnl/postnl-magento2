@@ -91,12 +91,7 @@ abstract class AbstractRepository
 
         $collection->setCurPage($criteria->getCurrentPage());
         $collection->setPageSize($criteria->getPageSize());
-        $models = [];
-        foreach ($collection as $model) {
-            $models[] = $model;
-        }
-
-        $searchResults->setItems($models);
+        $searchResults->setItems($collection->getItems());
 
         return $searchResults;
     }

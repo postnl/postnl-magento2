@@ -167,6 +167,16 @@ class DataTest extends TestCase
         $this->assertEquals(1112, $this->getCollectionSize());
     }
 
+    public function testAnEmptyRowGetsSkipped()
+    {
+        $file = $this->loadFile('empty_row.csv');
+
+        $this->getInstance()->import($file);
+        $file->close();
+
+        $this->assertEquals(2, $this->getCollectionSize());
+    }
+
     /**
      * @return int
      */

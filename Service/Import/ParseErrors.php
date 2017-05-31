@@ -76,6 +76,9 @@ class ParseErrors
         $this->errors = [];
     }
 
+    /**
+     * @param $errors
+     */
     public function addErrors($errors)
     {
         foreach ($errors as $error) {

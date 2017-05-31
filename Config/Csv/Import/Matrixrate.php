@@ -49,11 +49,25 @@ class Matrixrate extends Value
      * @var Filesystem
      */
     private $filesystem;
+
     /**
      * @var Data
      */
     private $matrixrateData;
 
+    /**
+     * Matrixrate constructor.
+     *
+     * @param Context               $context
+     * @param Registry              $registry
+     * @param ScopeConfigInterface  $config
+     * @param TypeListInterface     $cacheTypeList
+     * @param Filesystem            $filesystem
+     * @param Data                  $matrixrateData
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null       $resourceCollection
+     * @param array                 $data
+     */
     public function __construct(
         Context $context,
         Registry $registry,
@@ -71,6 +85,9 @@ class Matrixrate extends Value
         $this->matrixrateData = $matrixrateData;
     }
 
+    /**
+     * @return $this
+     */
     public function afterSave()
     {
         // @codingStandardsIgnoreLine
