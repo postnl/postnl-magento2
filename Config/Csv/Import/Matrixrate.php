@@ -91,7 +91,16 @@ class Matrixrate extends Value
     public function afterSave()
     {
         // @codingStandardsIgnoreLine
+        if (!array_key_exists('matrixrate_import', $_FILES['groups']['tmp_name']['tig_postnl'])) {
+            return parent::afterSave();
+        }
+
+        // @codingStandardsIgnoreLine
         $fileName = $_FILES['groups']['tmp_name']['tig_postnl']['fields']['matrixrate_import']['value'];
+
+        if (empty($fileName)) {
+            return parent::afterSave();
+        }
 
         $file = $this->getCsvFile($fileName);
         $this->matrixrateData->import($file);

@@ -167,7 +167,8 @@ abstract class AbstractRepository
         $list = $this->getList($searchCriteria->create());
 
         if ($list->getTotalCount()) {
-            return $list->getItems()[0];
+            $items = $list->getItems();
+            return array_shift($items);
         }
 
         return null;
