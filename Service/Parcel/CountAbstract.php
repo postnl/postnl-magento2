@@ -69,6 +69,10 @@ abstract class CountAbstract
             return $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
         }
 
+        /**
+         * If there are more items the count start with one for the items without parcel_count
+         * If there is one item it should start with zero parcels because only the parcel_count should be added.
+         */
         $parcelCount = count($items) == 1 ? 0 : 1;
         foreach ($items as $item) {
             $parcelCount += $this->getParcelCount($products, $item);
