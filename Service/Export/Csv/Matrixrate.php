@@ -32,7 +32,8 @@
 
 namespace TIG\PostNL\Service\Export\Csv;
 
-use TIG\PostNL\Api\Data\MatrixRateInterface;
+use TIG\PostNL\Api\Data\MatrixrateInterface;
+use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection;
 use TIG\PostNL\Service\Converter\IdToRegion;
 use TIG\PostNL\Service\Converter\ZeroToStar;
 
@@ -68,11 +69,11 @@ class Matrixrate
     }
 
     /**
-     * @param \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection $collection
+     * @param Collection $collection
      *
      * @return bool|string
      */
-    public function build(\TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection $collection)
+    public function build(Collection $collection)
     {
         $this->output = tmpfile();
 
@@ -113,7 +114,7 @@ class Matrixrate
         ]);
     }
 
-    private function addRow(MatrixRateInterface $model)
+    private function addRow(MatrixrateInterface $model)
     {
         $this->output([
             $this->zeroToStar->convert($model->getDestinyCountryId()),

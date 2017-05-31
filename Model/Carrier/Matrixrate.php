@@ -33,10 +33,10 @@
 namespace TIG\PostNL\Model\Carrier;
 
 use Magento\Framework\Model\AbstractModel;
-use TIG\PostNL\Api\Data\MatrixRateInterface;
+use TIG\PostNL\Api\Data\MatrixrateInterface;
 
 // @codingStandardsIgnoreFile
-class Matrixrate extends AbstractModel implements MatrixRateInterface
+class Matrixrate extends AbstractModel implements MatrixrateInterface
 {
     /** @var string */
     // @codingStandardsIgnoreLine
@@ -73,7 +73,7 @@ class Matrixrate extends AbstractModel implements MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setWebsiteId($value)
     {
@@ -83,7 +83,7 @@ class Matrixrate extends AbstractModel implements MatrixRateInterface
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getDestinyCountryId()
     {
@@ -93,7 +93,7 @@ class Matrixrate extends AbstractModel implements MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setDestinyCountryId($value)
     {
@@ -113,7 +113,7 @@ class Matrixrate extends AbstractModel implements MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setDestinyRegionId($value)
     {
@@ -133,7 +133,7 @@ class Matrixrate extends AbstractModel implements MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setDestinyZipCode($value)
     {
@@ -153,7 +153,7 @@ class Matrixrate extends AbstractModel implements MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setWeight($value)
     {
@@ -173,7 +173,7 @@ class Matrixrate extends AbstractModel implements MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setSubtotal($value)
     {
@@ -193,7 +193,7 @@ class Matrixrate extends AbstractModel implements MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setQuantity($value)
     {
@@ -213,7 +213,7 @@ class Matrixrate extends AbstractModel implements MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setParcelType($value)
     {
@@ -233,7 +233,7 @@ class Matrixrate extends AbstractModel implements MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setPrice($value)
     {

@@ -34,7 +34,7 @@ namespace TIG\PostNL\Model\Carrier;
 
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
-use TIG\PostNL\Api\Data\MatrixRateInterface;
+use TIG\PostNL\Api\Data\MatrixrateInterface;
 use TIG\PostNL\Api\MatrixrateRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Model\AbstractRepository;
@@ -73,12 +73,12 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
     /**
      * Save a Matrixrate rule
      *
-     * @param MatrixRateInterface $matrixrate
+     * @param MatrixrateInterface $matrixrate
      *
-     * @return MatrixRateInterface
+     * @return MatrixrateInterface
      * @throws CouldNotSaveException
      */
-    public function save(MatrixRateInterface $matrixrate)
+    public function save(MatrixrateInterface $matrixrate)
     {
         try {
             $matrixrate->save();
@@ -93,11 +93,12 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
     /**
      * Delete a specific Matrixrate.
      *
-     * @param MatrixRateInterface $matrixrate
+     * @param MatrixrateInterface $matrixrate
+     *
      * @return bool
      * @throws CouldNotDeleteException
      */
-    public function delete(MatrixRateInterface $matrixrate)
+    public function delete(MatrixrateInterface $matrixrate)
     {
         try {
             $matrixrate->delete();
@@ -116,7 +117,7 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
      *
      * @param array $data
      *
-     * @return MatrixRateInterface
+     * @return MatrixrateInterface
      */
     public function create(array $data = [])
     {
@@ -127,7 +128,7 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
      * @param string $field
      * @param string $value
      *
-     * @return MatrixRateInterface
+     * @return MatrixrateInterface
      */
     public function getByFieldWithValue($field, $value)
     {
