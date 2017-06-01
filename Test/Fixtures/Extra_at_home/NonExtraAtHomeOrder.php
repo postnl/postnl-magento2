@@ -40,7 +40,7 @@ use \Magento\Catalog\Model\Product;
 use \Magento\Catalog\Model\Product\Type;
 
 require __DIR__.'/../default_rollback.php';
-require __DIR__.'/Products.php';
+require __DIR__.'/RegularProduct.php';
 
 $address = include __DIR__.'/Address.php';
 
