@@ -29,38 +29,40 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\Carrier;
 
-use Magento\Framework\Option\ArrayInterface;
+namespace TIG\PostNL\Test\Integration\Service\Validation;
 
-class RateType implements ArrayInterface
+use TIG\PostNL\Test\Integration\TestCase;
+use \TIG\PostNL\Service\Validation;
+
+class FactoryTest extends TestCase
 {
-    const CARRIER_RATE_TYPE_FLAT = 'flat';
-    const CARRIER_RATE_TYPE_TABLE = 'table';
-    const CARRIER_RATE_TYPE_MATRIX = 'matrix';
+    public $instanceClass = Validation\Factory::class;
 
     /**
-     * @return array
+     * @var Validation\Factory
      */
-    public function toOptionArray()
-    {
-        // @codingStandardsIgnoreStart
-        $options = [
-            [
-                'value' => self::CARRIER_RATE_TYPE_FLAT,
-                'label' => __('Flat'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_TABLE,
-                'label' => __('Table'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_MATRIX,
-                'label' => __('Matrix'),
-            ],
-        ];
-        // @codingStandardsIgnoreEnd
+    public $instance;
 
-        return $options;
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->instance = $this->getInstance([
+            'validators' => [
+                'country' => $this->getObject(Validation\Country::class),
+                'region' => $this->getObject(Validation\Region::class),
+            ]
+        ]);
+    }
+
+    public function testCountryValidator()
+    {
+        $this->assertSame('NL', $this->instance->validate('country', 'NLD'));
+    }
+
+    public function testRegionValidator()
+    {
+        $this->assertSame(12, $this->instance->validate('region', ['country' => 'US', 'region' => 'California']));
     }
 }

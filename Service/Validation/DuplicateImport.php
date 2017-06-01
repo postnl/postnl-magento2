@@ -29,48 +29,53 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Integration;
 
-use Magento\TestFramework\ObjectManager;
-use TIG\PostNL\Test\TestCase as BaseTestCase;
+namespace TIG\PostNL\Service\Validation;
 
-class TestCase extends BaseTestCase
+use TIG\PostNL\Service\Import\Exception as ImportException;
+
+class DuplicateImport implements ContractInterface
 {
     /**
-     * @var \Magento\Framework\App\ObjectManager
+     * @var array
      */
-    protected $objectManager;
+    private $hashes = [];
 
-    public function setUp()
+    /**
+     * Validate the data. Returns false when the
+     *
+     * @param $line
+     *
+     * @return bool|mixed
+     * @throws ImportException
+     */
+    public function validate($line)
     {
-        parent::setUp();
+        if ($count = count($line) < 7) {
+            // @codingStandardsIgnoreLine
+            $message = __('The array to validate is expected to have 7 elements, you only have %1', $count);
+            throw new ImportException($message);
+        }
 
-        $this->objectManager = ObjectManager::getInstance();
+        return $this->validateHash($line);
     }
 
     /**
-     * Create a new object of type $class. It will use new to create an object.
+     * @param $line
      *
-     * @param       $class
-     * @param array $args
-     *
-     * @return mixed
+     * @return bool
      */
-    public function getObject($class, $args = [])
+    private function validateHash($line)
     {
-        return $this->objectManager->create($class, $args);
-    }
+        $hash = '%s-%s-%s-%F-%F-%d-%s';
+        $hash = sprintf($hash, $line[0], $line[1], $line[2], $line[3], $line[4], $line[5], $line[6]);
 
-    /**
-     * Load an object using the object manager. If it not instantiated yet it will create a new object. If it is
-     * already instantiated by the object manager it will return that object.
-     *
-     * @param $class
-     *
-     * @return mixed
-     */
-    public function loadObject($class)
-    {
-        return $this->objectManager->get($class);
+        if (in_array($hash, $this->hashes)) {
+            return false;
+        }
+
+        $this->hashes[] = $hash;
+
+        return true;
     }
 }

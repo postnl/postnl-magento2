@@ -29,41 +29,40 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Import\Csv;
 
-class ParserErrors
+namespace TIG\PostNL\Test\Unit\Service\Import\Matrixrate;
+
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Service\Import\Matrixrate\Row;
+
+class RowTest extends TestCase
 {
-    /**
-     * @var array
-     */
-    private $errors = [];
+    public $instanceClass = Row::class;
 
     /**
-     * @return int
+     * @var Row
      */
-    public function getErrorCount()
+    private $instance;
+
+    public function setUp()
     {
-        return count($this->errors);
+        parent::setUp();
+
+        $store = $this->getMock(\TIG\PostNL\Service\Wrapper\StoreInterface::class);
+
+        $getWebsiteID = $store->method('getWebsiteId');
+        $getWebsiteID->willReturn(999);
+
+        $this->instance = $this->getInstance([
+            'store' => $store,
+        ]);
     }
 
-    /**
-     * @return array
-     */
-    public function getErrors()
+    public function testThatTheRowIsEmpty()
     {
-        return $this->errors;
-    }
+        $this->instance->process(1, []);
 
-    /**
-     * @param string $message
-     */
-    public function addError($message)
-    {
-        $this->errors[] = $message;
-    }
-
-    public function resetErrors()
-    {
-        $this->errors = [];
+        $this->assertTrue($this->instance->hasErrors());
+        $this->assertTrue(in_array('Invalid PostNL matrix rates format in row #%s', $this->instance->getErrors()));
     }
 }

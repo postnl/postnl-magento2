@@ -29,38 +29,16 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\Carrier;
 
-use Magento\Framework\Option\ArrayInterface;
+namespace TIG\PostNL\Test\Unit\Service\Validation;
 
-class RateType implements ArrayInterface
+use TIG\PostNL\Service\Validation\ContractInterface as ContractInterface;
+use TIG\PostNL\Test\TestCase;
+
+class Contract extends TestCase
 {
-    const CARRIER_RATE_TYPE_FLAT = 'flat';
-    const CARRIER_RATE_TYPE_TABLE = 'table';
-    const CARRIER_RATE_TYPE_MATRIX = 'matrix';
-
-    /**
-     * @return array
-     */
-    public function toOptionArray()
+    public function testClassImplementsTheContract()
     {
-        // @codingStandardsIgnoreStart
-        $options = [
-            [
-                'value' => self::CARRIER_RATE_TYPE_FLAT,
-                'label' => __('Flat'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_TABLE,
-                'label' => __('Table'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_MATRIX,
-                'label' => __('Matrix'),
-            ],
-        ];
-        // @codingStandardsIgnoreEnd
-
-        return $options;
+        $this->assertArrayHasKey(ContractInterface::class, class_implements($this->instanceClass));
     }
 }

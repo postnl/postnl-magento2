@@ -63,15 +63,15 @@
                     <field id="rate_type">table</field>
                 </depends>
             </field>
-            <field id="export" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Export" sortOrder="70" showInDefault="0" showInWebsite="1" showInStore="0">
-                <label>Export Rates</label>
+            <field id="tablerate_export" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Export" sortOrder="70" showInDefault="0" showInWebsite="1" showInStore="0">
+                <label>Export Table Rates</label>
                 <depends>
                     <field id="rate_type">table</field>
                 </depends>
             </field>
-            <field id="import" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Import" sortOrder="80" showInDefault="0" showInWebsite="1" showInStore="0">
-                <label>Import Rates</label>
-                <backend_model>TIG\PostNL\Config\Csv\Import</backend_model>
+            <field id="tablerate_import" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Carrier\Tablerate\Import" sortOrder="80" showInDefault="0" showInWebsite="1" showInStore="0">
+                <label>Import Table Rates</label>
+                <backend_model>TIG\PostNL\Config\Csv\Import\Tablerate</backend_model>
                 <depends>
                     <field id="rate_type">table</field>
                 </depends>
@@ -83,42 +83,55 @@
                     <field id="rate_type">table</field>
                 </depends>
             </field>
-            <field id="include_virtual_price" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+            <field id="matrixrate_export" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Carrier\Matrixrate\Export" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>Export Matrix Rates</label>
+                <depends>
+                    <field id="rate_type">matrix</field>
+                </depends>
+            </field>
+            <field id="matrixrate_import" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Carrier\Matrixrate\Import" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>Import Matrix Rates</label>
+                <backend_model>TIG\PostNL\Config\Csv\Import\Matrixrate</backend_model>
+                <depends>
+                    <field id="rate_type">matrix</field>
+                </depends>
+            </field>
+            <field id="include_virtual_price" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Include Virtual Products in Price Calculation</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <depends>
                     <field id="rate_type">table</field>
                 </depends>
             </field>
-            <field id="handling_type" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+            <field id="handling_type" translate="label" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Calculate Handling Fee</label>
                 <source_model>Magento\Shipping\Model\Source\HandlingType</source_model>
             </field>
-            <field id="handling_fee" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="0">
+            <field id="handling_fee" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Handling Fee</label>
                 <validate>validate-number validate-zero-or-greater</validate>
             </field>
-            <field id="sallowspecific" translate="label" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">
+            <field id="sallowspecific" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Ship to Applicable Countries</label>
                 <frontend_class>shipping-applicable-country</frontend_class>
                 <source_model>Magento\Shipping\Model\Config\Source\Allspecificcountries</source_model>
             </field>
-            <field id="specificcountry" translate="label" type="multiselect" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <field id="specificcountry" translate="label" type="multiselect" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                 <label>Ship to Specific Countries</label>
                 <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
                 <can_be_empty>1</can_be_empty>
             </field>
-            <field id="showmethod" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <field id="showmethod" translate="label" type="select" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                 <label>Show Method if Not Applicable</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <field id="specificerrmsg" translate="label" type="textarea" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <field id="specificerrmsg" translate="label" type="textarea" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Displayed Error Message</label>
                 <depends>
                     <field id="showmethod">1</field>
                 </depends>
             </field>
-            <field id="sort_order" translate="label" type="text" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="0">
+            <field id="sort_order" translate="label" type="text" sortOrder="190" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Sort Order</label>
             </field>
         </group>

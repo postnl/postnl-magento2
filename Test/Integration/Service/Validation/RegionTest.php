@@ -29,38 +29,27 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\Carrier;
 
-use Magento\Framework\Option\ArrayInterface;
+namespace TIG\PostNL\Test\Integration\Service\Validation;
 
-class RateType implements ArrayInterface
+use TIG\PostNL\Test\Integration\TestCase;
+
+class RegionTest extends TestCase
 {
-    const CARRIER_RATE_TYPE_FLAT = 'flat';
-    const CARRIER_RATE_TYPE_TABLE = 'table';
-    const CARRIER_RATE_TYPE_MATRIX = 'matrix';
+    public $instanceClass = \TIG\PostNL\Service\Validation\Region::class;
 
-    /**
-     * @return array
-     */
-    public function toOptionArray()
+    public function testInvalidRegion()
     {
-        // @codingStandardsIgnoreStart
-        $options = [
-            [
-                'value' => self::CARRIER_RATE_TYPE_FLAT,
-                'label' => __('Flat'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_TABLE,
-                'label' => __('Table'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_MATRIX,
-                'label' => __('Matrix'),
-            ],
-        ];
-        // @codingStandardsIgnoreEnd
+        $instance = $this->getInstance();
 
-        return $options;
+        $this->assertFalse($instance->validate(['country' => 'NL', 'region' => 'non existing province']));
+    }
+
+    public function testValidRegion()
+    {
+        $instance = $this->getInstance();
+
+        $this->assertEquals(12, $instance->validate(['country' => 'US', 'region' => 'CA']));
+        $this->assertEquals(12, $instance->validate(['country' => 'US', 'region' => 'California']));
     }
 }

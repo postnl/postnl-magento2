@@ -29,14 +29,14 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Service\Import\Csv;
+namespace TIG\PostNL\Unit\Service\Import;
 
-use TIG\PostNL\Service\Import\Csv\ParserErrors;
 use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Service\Import\ParseErrors;
 
-class ParserErrorsTest extends TestCase
+class ParseErrorsTest extends TestCase
 {
-    protected $instanceClass = ParserErrors::class;
+    protected $instanceClass = ParseErrors::class;
 
     /**
      * @return array
@@ -120,5 +120,19 @@ class ParserErrorsTest extends TestCase
         $instance->resetErrors();
         $errorCountAfterReset = $instance->getErrorCount();
         $this->assertEquals(0, $errorCountAfterReset);
+    }
+
+    public function testAddErrors()
+    {
+        $errors = [
+            'error 1',
+            'error 2',
+        ];
+
+        /** @var ParseErrors $instance */
+        $instance = $this->getInstance();
+        $instance->addErrors($errors);
+
+        $this->assertEquals(2, $instance->getErrorCount());
     }
 }

@@ -33,15 +33,15 @@ namespace TIG\PostNL\Test\Unit\Config\Csv;
 
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use TIG\PostNL\Config\Csv\Import;
+use TIG\PostNL\Config\Csv\Import\Tablerate;
 use TIG\PostNL\Model\ResourceModel\Tablerate as TablerateResource;
 use TIG\PostNL\Model\ResourceModel\TablerateFactory;
 use TIG\PostNL\Service\Import\Csv;
 use TIG\PostNL\Test\TestCase;
 
-class ImportTest extends TestCase
+class TablerateTest extends TestCase
 {
-    protected $instanceClass = Import::class;
+    protected $instanceClass = Tablerate::class;
 
     public function testAfterSave()
     {
@@ -58,7 +58,7 @@ class ImportTest extends TestCase
         $instance = $this->getInstance(['tablerateFactory' => $tablerateFactoryMock]);
         $result = $instance->afterSave();
 
-        $this->assertInstanceOf(Import::class, $result);
+        $this->assertInstanceOf(Tablerate::class, $result);
     }
 
     /**

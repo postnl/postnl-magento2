@@ -29,38 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\Carrier;
 
-use Magento\Framework\Option\ArrayInterface;
+namespace TIG\PostNL\Service\Validation;
 
-class RateType implements ArrayInterface
+class Decimal implements ContractInterface
 {
-    const CARRIER_RATE_TYPE_FLAT = 'flat';
-    const CARRIER_RATE_TYPE_TABLE = 'table';
-    const CARRIER_RATE_TYPE_MATRIX = 'matrix';
-
     /**
-     * @return array
+     * Validate the data. Returns false when the
+     *
+     * @param $line
+     *
+     * @return bool|mixed
      */
-    public function toOptionArray()
+    public function validate($line)
     {
-        // @codingStandardsIgnoreStart
-        $options = [
-            [
-                'value' => self::CARRIER_RATE_TYPE_FLAT,
-                'label' => __('Flat'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_TABLE,
-                'label' => __('Table'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_MATRIX,
-                'label' => __('Matrix'),
-            ],
-        ];
-        // @codingStandardsIgnoreEnd
+        if (!is_numeric($line)) {
+            return false;
+        }
 
-        return $options;
+        $line = (float)sprintf('%.4F', $line);
+        if ($line < 0.0000) {
+            return false;
+        }
+
+        return $line;
     }
 }

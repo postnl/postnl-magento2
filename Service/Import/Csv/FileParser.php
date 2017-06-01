@@ -31,10 +31,11 @@
  */
 namespace TIG\PostNL\Service\Import\Csv;
 
+use TIG\PostNL\Exception as PostnlException;
+use TIG\PostNL\Service\Import\ParseErrors;
+
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem\File\ReadInterface;
-
-use TIG\PostNL\Exception as PostnlException;
 
 class FileParser
 {
@@ -46,20 +47,20 @@ class FileParser
     private $rowParser;
 
     /**
-     * @var ParserErrors
+     * @var ParseErrors
      */
-    private $parserErrors;
+    private $parseErrors;
 
     /**
-     * @param RowParser    $rowParser
-     * @param ParserErrors $parserErrors
+     * @param RowParser   $rowParser
+     * @param ParseErrors $parserErrors
      */
     public function __construct(
         RowParser $rowParser,
-        ParserErrors $parserErrors
+        ParseErrors $parserErrors
     ) {
-        $this->rowParser = $rowParser;
-        $this->parserErrors = $parserErrors;
+        $this->rowParser   = $rowParser;
+        $this->parseErrors = $parserErrors;
     }
 
     /**
@@ -67,7 +68,7 @@ class FileParser
      */
     public function hasErrors()
     {
-        return (bool)$this->parserErrors->getErrorCount();
+        return (bool)$this->parseErrors->getErrorCount();
     }
 
     /**
@@ -75,7 +76,7 @@ class FileParser
      */
     public function getErrors()
     {
-        return $this->parserErrors->getErrors();
+        return $this->parseErrors->getErrors();
     }
 
     /**
@@ -144,7 +145,7 @@ class FileParser
 
             $this->validateDuplicates($rowData, $currentRowCount);
         } catch (PostnlException $exception) {
-            $this->parserErrors->addError($exception->getMessage());
+            $this->parseErrors->addError($exception->getMessage());
         }
 
         return $rowData;
@@ -184,7 +185,7 @@ class FileParser
 
             $this->validateHeaderFormat($headers);
         } catch (PostnlException $exception) {
-            $this->parserErrors->addError($exception->getMessage());
+            $this->parseErrors->addError($exception->getMessage());
         }
     }
 

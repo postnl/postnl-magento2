@@ -29,38 +29,49 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\Carrier;
 
-use Magento\Framework\Option\ArrayInterface;
+namespace TIG\PostNL\Service\Validation;
 
-class RateType implements ArrayInterface
+class Region implements ContractInterface
 {
-    const CARRIER_RATE_TYPE_FLAT = 'flat';
-    const CARRIER_RATE_TYPE_TABLE = 'table';
-    const CARRIER_RATE_TYPE_MATRIX = 'matrix';
+    /**
+     * @var Country
+     */
+    private $countryValidator;
 
     /**
-     * @return array
+     * @param Country $countryValidator
      */
-    public function toOptionArray()
-    {
-        // @codingStandardsIgnoreStart
-        $options = [
-            [
-                'value' => self::CARRIER_RATE_TYPE_FLAT,
-                'label' => __('Flat'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_TABLE,
-                'label' => __('Table'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_MATRIX,
-                'label' => __('Matrix'),
-            ],
-        ];
-        // @codingStandardsIgnoreEnd
+    public function __construct(
+        Country $countryValidator
+    ) {
+        $this->countryValidator = $countryValidator;
+    }
 
-        return $options;
+    /**
+     * Validate the data. Returns false when the
+     *
+     * @param array $line
+     *
+     * @return bool|mixed
+     */
+    public function validate($line)
+    {
+        $country = $line['country'];
+        $regionName = $line['region'];
+        if ($regionName == '*') {
+            return 0;
+        }
+
+        $countries = $this->countryValidator->getCountryList();
+        if (!array_key_exists($country, $countries)) {
+            return false;
+        }
+
+        if (!array_key_exists($regionName, $countries[$country]['regions'])) {
+            return false;
+        }
+
+        return $countries[$country]['regions'][$regionName];
     }
 }

@@ -37,6 +37,7 @@
     <preference for="TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface" type="TIG\PostNL\Model\ShipmentBarcodeRepository" />
     <preference for="TIG\PostNL\Api\ShipmentLabelRepositoryInterface" type="TIG\PostNL\Model\ShipmentLabelRepository" />
     <preference for="TIG\PostNL\Service\Wrapper\QuoteInterface" type="TIG\PostNL\Service\Wrapper\Quote" />
+    <preference for="\TIG\PostNL\Service\Wrapper\StoreInterface" type="TIG\PostNL\Service\Wrapper\Store" />
     <preference for="TIG\PostNL\Service\Wrapper\CheckoutSessionInterface" type="TIG\PostNL\Service\Wrapper\CheckoutSession" />
 
     <type name="\Magento\Sales\Model\Order">
@@ -76,6 +77,7 @@
                     <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V120\Schema\SalesShipmentGridColumns</item>
                     <item name="SalesOrderGridColumns" xsi:type="object">TIG\PostNL\Setup\V120\Schema\SalesOrderGridColumns</item>
                     <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V120\Schema\UpgradeOrderTable</item>
+                    <item name="InstallMatrixRateTable" xsi:type="object">TIG\PostNL\Setup\V120\Schema\InstallMatrixRateTable</item>
                 </item>
             </argument>
         </arguments>
@@ -168,5 +170,17 @@
     <!-- Add the PostNL fee to the shipping total -->
     <type name="\Magento\Quote\Model\Quote\Address\Total\Shipping">
         <plugin name="TIG_PostNL_QuoteAddressTotalShipping" type="\TIG\PostNL\Plugin\Quote\Address\Total\Shipping" sortOrder="1"/>
+    </type>
+
+    <type name="TIG\PostNL\Service\Validation\Factory">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="decimal" xsi:type="object">\TIG\PostNL\Service\Validation\Decimal</item>
+                <item name="parcelType" xsi:type="object">\TIG\PostNL\Service\Validation\ParcelType</item>
+                <item name="country" xsi:type="object">\TIG\PostNL\Service\Validation\Country</item>
+                <item name="region" xsi:type="object">\TIG\PostNL\Service\Validation\Region</item>
+                <item name="duplicateImport" xsi:type="object">\TIG\PostNL\Service\Validation\DuplicateImport</item>
+            </argument>
+        </arguments>
     </type>
 </config>

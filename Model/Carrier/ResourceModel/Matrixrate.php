@@ -29,38 +29,21 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\Carrier;
 
-use Magento\Framework\Option\ArrayInterface;
+namespace TIG\PostNL\Model\Carrier\ResourceModel;
 
-class RateType implements ArrayInterface
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+
+class Matrixrate extends AbstractDb
 {
-    const CARRIER_RATE_TYPE_FLAT = 'flat';
-    const CARRIER_RATE_TYPE_TABLE = 'table';
-    const CARRIER_RATE_TYPE_MATRIX = 'matrix';
-
     /**
-     * @return array
+     * Resource initialization
+     *
+     * @return void
      */
-    public function toOptionArray()
+    // @codingStandardsIgnoreLine
+    protected function _construct()
     {
-        // @codingStandardsIgnoreStart
-        $options = [
-            [
-                'value' => self::CARRIER_RATE_TYPE_FLAT,
-                'label' => __('Flat'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_TABLE,
-                'label' => __('Table'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_MATRIX,
-                'label' => __('Matrix'),
-            ],
-        ];
-        // @codingStandardsIgnoreEnd
-
-        return $options;
+        $this->_init('tig_postnl_matrixrate', 'entity_id');
     }
 }

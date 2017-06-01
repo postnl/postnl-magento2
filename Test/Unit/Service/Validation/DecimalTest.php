@@ -29,38 +29,25 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\Carrier;
 
-use Magento\Framework\Option\ArrayInterface;
+namespace TIG\PostNL\Test\Unit\Service\Validation;
 
-class RateType implements ArrayInterface
+class DecimalTest extends Contract
 {
-    const CARRIER_RATE_TYPE_FLAT = 'flat';
-    const CARRIER_RATE_TYPE_TABLE = 'table';
-    const CARRIER_RATE_TYPE_MATRIX = 'matrix';
+    public $instanceClass = \TIG\PostNL\Service\Validation\Decimal::class;
 
-    /**
-     * @return array
-     */
-    public function toOptionArray()
+    public function testInvalidDecimal()
     {
-        // @codingStandardsIgnoreStart
-        $options = [
-            [
-                'value' => self::CARRIER_RATE_TYPE_FLAT,
-                'label' => __('Flat'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_TABLE,
-                'label' => __('Table'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_MATRIX,
-                'label' => __('Matrix'),
-            ],
-        ];
-        // @codingStandardsIgnoreEnd
+        $this->assertFalse($this->getInstance()->validate('string'));
+    }
 
-        return $options;
+    public function testNegativeNumber()
+    {
+        $this->assertFalse($this->getInstance()->validate('-100'));
+    }
+
+    public function testValidNumber()
+    {
+        $this->assertEquals(1, $this->getInstance()->validate('1'));
     }
 }

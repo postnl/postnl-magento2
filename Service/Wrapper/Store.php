@@ -29,38 +29,37 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\Carrier;
 
-use Magento\Framework\Option\ArrayInterface;
+namespace TIG\PostNL\Service\Wrapper;
 
-class RateType implements ArrayInterface
+use Magento\Store\Model\StoreManagerInterface;
+
+class Store implements StoreInterface
 {
-    const CARRIER_RATE_TYPE_FLAT = 'flat';
-    const CARRIER_RATE_TYPE_TABLE = 'table';
-    const CARRIER_RATE_TYPE_MATRIX = 'matrix';
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    public function __construct(
+        StoreManagerInterface $storeManager
+    ) {
+        $this->storeManager = $storeManager;
+    }
 
     /**
-     * @return array
+     * @return \Magento\Store\Api\Data\StoreInterface
      */
-    public function toOptionArray()
+    public function getStore()
     {
-        // @codingStandardsIgnoreStart
-        $options = [
-            [
-                'value' => self::CARRIER_RATE_TYPE_FLAT,
-                'label' => __('Flat'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_TABLE,
-                'label' => __('Table'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_MATRIX,
-                'label' => __('Matrix'),
-            ],
-        ];
-        // @codingStandardsIgnoreEnd
+        return $this->storeManager->getStore();
+    }
 
-        return $options;
+    /**
+     * @return int
+     */
+    public function getWebsiteId()
+    {
+        return $this->getStore()->getWebsiteId();
     }
 }

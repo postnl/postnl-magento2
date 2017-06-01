@@ -29,38 +29,60 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\Carrier;
+namespace TIG\PostNL\Service\Import;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Phrase;
 
-class RateType implements ArrayInterface
+class ParseErrors
 {
-    const CARRIER_RATE_TYPE_FLAT = 'flat';
-    const CARRIER_RATE_TYPE_TABLE = 'table';
-    const CARRIER_RATE_TYPE_MATRIX = 'matrix';
+    /**
+     * @var array
+     */
+    private $errors = [];
+
+    /**
+     * @return int
+     */
+    public function getErrorCount()
+    {
+        return count($this->errors);
+    }
 
     /**
      * @return array
      */
-    public function toOptionArray()
+    public function getErrors()
     {
-        // @codingStandardsIgnoreStart
-        $options = [
-            [
-                'value' => self::CARRIER_RATE_TYPE_FLAT,
-                'label' => __('Flat'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_TABLE,
-                'label' => __('Table'),
-            ],
-            [
-                'value' => self::CARRIER_RATE_TYPE_MATRIX,
-                'label' => __('Matrix'),
-            ],
-        ];
-        // @codingStandardsIgnoreEnd
+        return $this->errors;
+    }
 
-        return $options;
+    /**
+     * @param string $message
+     */
+    public function addError($message)
+    {
+        if ($message instanceof Phrase) {
+            $message = $message->render();
+        }
+
+        $this->errors[] = $message;
+    }
+
+    /**
+     * Reset the errors array
+     */
+    public function resetErrors()
+    {
+        $this->errors = [];
+    }
+
+    /**
+     * @param $errors
+     */
+    public function addErrors($errors)
+    {
+        foreach ($errors as $error) {
+            $this->addError($error);
+        }
     }
 }

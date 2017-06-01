@@ -199,7 +199,6 @@ class RowParser
 
         if ($formatedPrice === false) {
             $message = __('Invalid Shipping Price "%1" supplied in row #%2', $price, $rowCount);
-
             throw new PostnlException($message, 'POSTNL-249');
         }
 
@@ -217,7 +216,8 @@ class RowParser
     private function getColumnValue($column, $row, $rowCount)
     {
         if (!array_key_exists($column, $row)) { // @codingStandardsIgnoreLine
-            throw new PostnlException(__('Invalid PostNL Table Rates File Format in Row #%1', $rowCount), 'POSTNL-0247');
+            $message = __('Invalid PostNL Table Rates File Format in Row #%1', $rowCount);
+            throw new PostnlException($message, 'POSTNL-0247');
         }
 
         return trim($row[$column]);
