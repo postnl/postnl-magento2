@@ -146,6 +146,7 @@ Extension version,Extension version
 "Rate Type","Rate Type"
 Flat,Flat
 Table,Table
+Matrix,Matrix
 Condition,Condition
 "Include Virtual Products in Price Calculation","Include Virtual Products in Price Calculation"
 "Weight vs. Destination","Weight vs. Destination"
@@ -203,3 +204,16 @@ Percent,Percent
 "You can use the test account credentials found <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003510508"" target=""_blank"" title=""PostNL test account"">here</a>.","You can use the test account credentials found <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003510508"" target=""_blank"" title=""PostNL test account"">here</a>."
 "Eveningdelivery fee","Eveningdelivery fee"
 "[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information","[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information"
+"Invalid PostNL Matrix Rates File Format","Invalid PostNL Matrix Rates File Format"
+"File has not been imported. See the following list of errors: %1","File has not been imported. See the following list of errors: %1"
+"Invalid PostNL matrix rates format in row #%s","Invalid PostNL matrix rates format in row #%s"
+"Invalid country ""%1"" in row #%2.","Invalid country ""%1"" in row #%2."
+"Invalid region/state ""%1"" in row #%2.","Invalid region/state ""%1"" in row #%2."
+"Invalid weight ""%1"" in row #%2.","Invalid weight ""%1"" in row #%2."
+"Invalid subtotal ""%1"" in row #%2.","Invalid subtotal ""%1"" in row #%2."
+"Invalid quantity ""%1"" in row #%2.","Invalid quantity ""%1"" in row #%2."
+"Invalid parcel type ""%1"" in row #%2. Valid values are: ""%3"".","Invalid parcel type ""%1"" in row #%2. Valid values are: ""%3""."
+"Invalid shipping price ""%1"" in row #%2.","Invalid shipping price ""%1"" in row #%2."
+"Duplicate row #%1 (country ""%2"", region/state ""%3"", zip ""%4"", weight ""%5"", subtotal ""%6"", quantity ""%7"" and parcel type ""%8"","Duplicate row #%1 (country ""%2"", region/state ""%3"", zip ""%4"", weight ""%5"", subtotal ""%6"", quantity ""%7"" and parcel type ""%8""
+"The array to validate is expected to have 7 elements, you only have %1","The array to validate is expected to have 7 elements, you only have %1"
+"""%1"" is not a valid region","""%1"" is not a valid region"

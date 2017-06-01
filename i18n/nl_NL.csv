@@ -160,6 +160,7 @@ Extension version,Extensie versie
 "Rate Type","Rate Type"
 Flat,Plat
 Table,Tabel
+Matrix,Matrix
 Condition,Conditie
 "Include Virtual Products in Price Calculation","Gebruik Virtuele Producten in de prijs calculatie"
 "Weight vs. Destination","Gewicht vs. Bestemming"
@@ -217,3 +218,16 @@ Percent,Percentage
 "You can use the test account credentials found <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003510508"" target=""_blank"" title=""PostNL test account"">here</a>.","U kunt de test account gegevens gebruiken die <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003510508"" target=""_blank"" title=""PostNL testgegevens"">hier</a> genoemd worden."
 "Eveningdelivery fee","Avondbezorging toeslag"
 "[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information","[POSTNL-0252] - Er zijn geen valide labels gegenereerd. Bekijk de logs voor meer informatie."
+"Invalid PostNL Matrix Rates File Format","Ongeldig PostNL Matrix Rates bestand formaat"
+"File has not been imported. See the following list of errors: %1","Het bestand is niet geimporteerd. Dit is de lijst met errors: %1"
+"Invalid PostNL matrix rates format in row #%s","Ongeldig PostNL matrix rates formaat op rij #%s"
+"Invalid country ""%1"" in row #%2.","Ongeldig land ""%1"" op rij #%2."
+"Invalid region/state ""%1"" in row #%2.","Ongeldige regio/staat ""%1"" op rij #%2."
+"Invalid weight ""%1"" in row #%2.","Ongeldig gewicht ""%1"" op rij #%2."
+"Invalid subtotal ""%1"" in row #%2.","Ongeldig subtotaal ""%1"" op rij #%2."
+"Invalid quantity ""%1"" in row #%2.","Ongeldige hoeveelheid ""%1"" op rij #%2."
+"Invalid parcel type ""%1"" in row #%2. Valid values are: ""%3"".","Ongeldig parcel type ""%1"" op rij #%2. Valide waardes zijn: ""%3""."
+"Invalid shipping price ""%1"" in row #%2.","Ongeldig prijs ""%1"" op rij #%2."
+"Duplicate row #%1 (country ""%2"", region/state ""%3"", zip ""%4"", weight ""%5"", subtotal ""%6"", quantity ""%7"" and parcel type ""%8""","Dubbele rij #%1 (land ""%2"", regio/staat ""%3"", postcode ""%4"", gewicht ""%5"", subtotaal ""%6"", hoeveelheid ""%7"" and verzend type ""%8""
+"The array to validate is expected to have 7 elements, you only have %1","De array wordt verwacht om 7 elementen te hebben, deze heeft er maar %1"
+"""%1"" is not a valid region","""%1"" is not a valide regio"
