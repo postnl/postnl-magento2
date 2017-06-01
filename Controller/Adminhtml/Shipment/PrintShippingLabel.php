@@ -32,33 +32,21 @@
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
-use Magento\Framework\App\ResponseInterface;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\Shipment;
-use Magento\Ui\Component\MassAction\Filter;
-use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
+use Magento\Sales\Model\Order\ShipmentRepository;
 
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
 
-class MassPrintShippingLabel extends LabelAbstract
+class PrintShippingLabel extends LabelAbstract
 {
     /**
-     * @var array
+     * @var ShipmentRepository
      */
-    private $labels = [];
-
-    /**
-     * @var Filter
-     */
-    private $filter;
-
-    /**
-     * @var ShipmentCollectionFactory
-     */
-    private $collectionFactory;
+    private $shipmentRepository;
 
     /**
      * @var Track
@@ -71,20 +59,18 @@ class MassPrintShippingLabel extends LabelAbstract
     private $barcodeHandler;
 
     /**
-     * @param Context                   $context
-     * @param Filter                    $filter
-     * @param ShipmentCollectionFactory $collectionFactory
-     * @param GetLabels                 $getLabels
-     * @param GetPdf                    $getPdf
-     * @param Track                     $track
-     * @param BarcodeHandler            $barcodeHandler
+     * @param Context            $context
+     * @param GetLabels          $getLabels
+     * @param GetPdf             $getPdf
+     * @param ShipmentRepository $shipmentRepository
+     * @param Track              $track
+     * @param BarcodeHandler     $barcodeHandler
      */
     public function __construct(
         Context $context,
-        Filter $filter,
-        ShipmentCollectionFactory $collectionFactory,
         GetLabels $getLabels,
         GetPdf $getPdf,
+        ShipmentRepository $shipmentRepository,
         Track $track,
         BarcodeHandler $barcodeHandler
     ) {
@@ -94,61 +80,52 @@ class MassPrintShippingLabel extends LabelAbstract
             $getPdf
         );
 
-        $this->filter = $filter;
-        $this->collectionFactory = $collectionFactory;
-        $this->track = $track;
-        $this->barcodeHandler = $barcodeHandler;
+        $this->shipmentRepository = $shipmentRepository;
+        $this->track              = $track;
+        $this->barcodeHandler     = $barcodeHandler;
     }
 
     /**
-     * Dispatch request
-     *
-     * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
-     * @throws \Magento\Framework\Exception\NotFoundException
+     * @return \Magento\Framework\App\ResponseInterface
      */
     public function execute()
     {
-        $collection = $this->collectionFactory->create();
-        $collection = $this->filter->getCollection($collection);
-        $this->loadLabels($collection);
+        $labels = $this->getLabels();
 
-        if (empty($this->labels)) {
+        if (empty($labels)) {
             $this->messageManager->addErrorMessage(
-                // @codingStandardsIgnoreLine
+            // @codingStandardsIgnoreLine
                 __('[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information')
             );
 
             return $this->_redirect($this->_redirect->getRefererUrl());
         }
 
-        return $this->getPdf->get($this->labels);
+        return $this->getPdf->get($labels);
     }
 
     /**
-     * @param $shipmentId
+     * Retrieve shipment model instance
+     *
+     * @return Shipment
      */
-    private function setLabel($shipmentId)
+    private function getShipment()
     {
-        $labels = $this->getLabels->get($shipmentId);
-
-        if (empty($labels)) {
-            return;
-        }
-
-        $this->labels = array_merge($this->labels, $labels);
+        $shipmentId = $this->getRequest()->getParam('shipment_id');
+        return $this->shipmentRepository->get($shipmentId);
     }
 
     /**
-     * @param $collection
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface[]
      */
-    private function loadLabels($collection)
+    private function getLabels()
     {
-        /** @var Shipment $shipment */
-        foreach ($collection as $shipment) {
-            $address = $shipment->getShippingAddress();
-            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
-            $this->track->set($shipment);
-            $this->setLabel($shipment->getId());
-        }
+        $shipment = $this->getShipment();
+        $shippingAddress = $shipment->getShippingAddress();
+        $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
+
+        $labels = $this->getLabels->get($shipment->getId(), false);
+
+        return $labels;
     }
 }

@@ -42,7 +42,7 @@ use TIG\PostNL\Test\Integration\TestCase;
 /**
  * @magentoDbIsolation enabled
  */
-class TestCreatePostNLShipment extends TestCase
+class SalesOrderSaveAfterEventTest extends TestCase
 {
     protected $instanceClass = CreatePostNLOrder::class;
 

@@ -33,14 +33,14 @@ namespace TIG\PostNL\Webservices\Endpoints;
 
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Api\Data\ShipmentInterface;
-use TIG\PostNL\Webservices\Parser\Label\Shipments as ShipmentData;
 use TIG\PostNL\Webservices\AbstractEndpoint;
-use TIG\PostNL\Webservices\Parser\Label\Customer;
-use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Webservices\Soap;
+use TIG\PostNL\Webservices\Api\Message;
+use TIG\PostNL\Webservices\Parser\Label\Customer;
+use TIG\PostNL\Webservices\Parser\Label\Shipments as ShipmentData;
 
 // @codingStandardsIgnoreFile
-class Labelling extends AbstractEndpoint
+class Confirming extends AbstractEndpoint
 {
     /**
      * @var Soap
@@ -60,12 +60,12 @@ class Labelling extends AbstractEndpoint
     /**
      * @var string
      */
-    private $version = 'v2_0';
+    private $version = 'v1_10';
 
     /**
      * @var string
      */
-    private $endpoint = 'label';
+    private $endpoint = 'confirm';
 
     /**
      * @var array
@@ -76,6 +76,7 @@ class Labelling extends AbstractEndpoint
      * @var ShipmentData
      */
     private $shipmentData;
+
 
     /**
      * @param Soap           $soap
@@ -100,24 +101,21 @@ class Labelling extends AbstractEndpoint
      */
     public function call()
     {
-        return $this->soap->call($this, 'GenerateLabel', $this->requestParams);
+        return $this->soap->call($this, 'Confirming', $this->requestParams);
     }
 
     /**
      * @param Shipment|ShipmentInterface $shipment
-     * @param int                        $currentShipmentNumber
+     * @param int      $currentShipmentNumber
      */
     public function setParameters($shipment, $currentShipmentNumber = 1)
     {
-        $barcode = $shipment->getMainBarcode();
-        $printerType = ['Printertype' => 'GraphicFile|PDF'];
-        $message = $this->message->get($barcode, $printerType);
-
         $this->requestParams = [
-            'Message'   => $message,
+            'Message'   => $this->message->get($shipment->getMainBarcode()),
             'Customer'  => $this->customer->get(),
             'Shipments' => ['Shipment' => $this->shipmentData->get($shipment, $currentShipmentNumber)],
         ];
+
     }
 
     /**
@@ -125,7 +123,7 @@ class Labelling extends AbstractEndpoint
      */
     public function getWsdlUrl()
     {
-        return 'LabellingWebService/2_1/';
+        return 'ConfirmingWebService/1_10/';
     }
 
     /**

@@ -40,6 +40,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\AbstractExtensibleObject;
 use Magento\Shipping\Block\Adminhtml\View as MagentoView;
 
+// @codingStandardsIgnoreFile
 class View extends MagentoView
 {
     /**
@@ -123,6 +124,7 @@ class View extends MagentoView
         $this->buttonList->update('save', 'label', __('Send Shipment Email'));
         $this->setPostNLPrintLabelButtonData();
         $this->setPostNLPrintLabelButton();
+        $this->setPostNLPrintLabelWithoutConfirmButton();
     }
 
     /**
@@ -164,6 +166,32 @@ class View extends MagentoView
         /** @codingStandardsIgnoreEnd */
     }
 
+    private function setPostNLPrintLabelWithoutConfirmButton()
+    {
+        $this->buttonList->add(
+            'postnl_print_without_confirm',
+            [
+                // @codingStandardsIgnoreLine
+                'label' => __('PostNL - Print Label'),
+                'class' => 'save primary',
+                'onclick' => 'download(\'' .$this->getLabelWithoutConfirmUrl() .'\')'
+            ]
+        );
+    }
+
+    private function setPostNLConfirmButton()
+    {
+        $this->buttonList->add(
+            'postnl_confirm_shipment',
+            [
+                // @codingStandardsIgnoreLine
+                'label' => __('PostNL - Confirm'),
+                'class' => 'save primary',
+                'onclick' => 'setLocation(\'' . $this->getConfirmUrl() . '\')',
+            ]
+        );
+    }
+
     /**
      * Set the correct text.
      */
@@ -173,8 +201,12 @@ class View extends MagentoView
         $postNLShipment = $this->getPostNLShipment();
         $confirmedAt = $postNLShipment->getConfirmedAt();
         if (!empty($confirmedAt)) {
-            $this->printLabel = 'PostNL - Print label';
+            $this->buttonList->remove('postnl_print');
             $this->setPostNLChangeConfirmButton();
+        }
+
+        if (empty($confirmedAt) && $postNLShipment->getMainBarcode()) {
+            $this->setPostNLConfirmButton();
         }
     }
 
@@ -184,6 +216,28 @@ class View extends MagentoView
     private function getLabelUrl()
     {
         return $this->getUrl($this->printRoute, ['shipment_id' => $this->getShipment()->getId()]);
+    }
+
+    /**
+     * @return string
+     */
+    private function getLabelWithoutConfirmUrl()
+    {
+        return $this->getUrl(
+            'postnl/shipment/PrintShippingLabel',
+            ['shipment_id' => $this->getShipment()->getId()]
+        );
+    }
+
+    /**
+     * @return string
+     */
+    private function getConfirmUrl()
+    {
+        return $this->getUrl(
+            'postnl/shipment/ConfirmShipping',
+            ['shipment_id' => $this->getShipment()->getId()]
+        );
     }
 
     /**

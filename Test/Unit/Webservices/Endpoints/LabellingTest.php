@@ -31,12 +31,13 @@
  */
 namespace TIG\PostNL\Test\Unit\Webservices\Endpoints;
 
-use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Address;
+
 use TIG\PostNL\Model\Shipment;
-use TIG\PostNL\Service\Shipment\Data;
+use TIG\PostNL\Webservices\Parser\Label\Shipments as Data;
 use TIG\PostNL\Test\TestCase;
 use TIG\PostNL\Webservices\Endpoints\Labelling;
+use TIG\PostNL\Webservices\Api\Message;
+use TIG\PostNL\Webservices\Parser\Label\Customer;
 
 class LabellingTest extends TestCase
 {
@@ -44,38 +45,31 @@ class LabellingTest extends TestCase
 
     public function testSetParameters()
     {
-        $shipmentMock = $this->getShipmentMock();
+        $postnlShipmentMock = $this->getFakeMock(Shipment::class)->getMock();
+        $postnlShipmentExpect = $postnlShipmentMock->method('getMainBarcode');
+        $postnlShipmentExpect->willReturn('theBarcode');
 
-        $postnlOrderMock = $this->getFakeMock(\TIG\PostNL\Model\Order::class);
-        $postnlOrderMock = $postnlOrderMock->getMock();
-
-        $postnlShipmentMock = $this->getFakeMock(Shipment::class);
-        $postnlShipmentMock->setMethods([
-            'getShipment',
-            'getPostNLOrder',
-            'getTotalWeight',
-            'getDeliveryDateFormatted',
-            'isExtraCover',
+        $messageMock = $this->getFakeMock(Message::class)->getMock();
+        $messageExpect = $messageMock->method('get');
+        $messageExpect->with('theBarcode');
+        $messageExpect->willReturn([
+            'MessagaeId' => md5('theBarcode'),
+            'MessageTimeStamp' => date('d-m-Y H:i:s')
         ]);
-        $postnlShipmentMock = $postnlShipmentMock->getMock();
-        $this->mockFunction($postnlShipmentMock, 'isExtraCover', false);
 
-        $getShipmentExpects = $postnlShipmentMock->expects($this->atLeastOnce());
-        $getShipmentExpects->method('getShipment');
-        $getShipmentExpects->willReturn($shipmentMock);
-
-        $getPostNLOrderExpects = $postnlShipmentMock->expects($this->atLeastOnce());
-        $getPostNLOrderExpects->method('getPostNLOrder');
-        $getPostNLOrderExpects->willReturn($postnlOrderMock);
+        $customerMock = $this->getFakeMock(Customer::class)->getMock();
+        $customerExpect = $customerMock->method('get');
+        $customerExpect->willReturn(['CustomerData']);
 
         $shipmentDataMock = $this->getFakeMock(Data::class, true);
-        $getExpects = $shipmentDataMock->expects($this->once());
-        $getExpects->method('get');
-        $getExpects->willReturn(['theShipmentData']);
+        $shipmentDataExpect = $shipmentDataMock->expects($this->once());
+        $shipmentDataExpect->method('get');
+        $shipmentDataExpect->willReturn(['theShipmentData']);
 
         $instance = $this->getInstance([
             'shipmentData' => $shipmentDataMock,
         ]);
+
         $instance->setParameters($postnlShipmentMock);
 
         $requestParams = $this->getProperty('requestParams', $instance);
@@ -87,99 +81,5 @@ class LabellingTest extends TestCase
         $requestParamsShipment = $requestParams['Shipments']['Shipment'];
         $this->assertInternalType('array', $requestParamsShipment);
         $this->assertEquals(['theShipmentData'], $requestParamsShipment);
-    }
-
-    public function getAddressDataProvider()
-    {
-        return [
-            'normal' => [
-                'street' => 'Kabelweg 37',
-                'expected' => [
-                    'Street' => 'Kabelweg',
-                    'HouseNr' => '37',
-                    'HouseNrExt' => '',
-                ]
-            ],
-            'with ext' => [
-                'street' => 'Kabelweg 37 a',
-                'expected' => [
-                    'Street' => 'Kabelweg',
-                    'HouseNr' => '37',
-                    'HouseNrExt' => 'a',
-                ]
-            ],
-            'with empty address' => [
-                'street' => '',
-                'expected' => [
-                    'Street' => '',
-                    'HouseNr' => '',
-                    'HouseNrExt' => '',
-                ]
-            ],
-        ];
-    }
-
-    /**
-     * @param $street
-     * @param $expected
-     *
-     * @throws \Exception
-     *
-     * @dataProvider getAddressDataProvider
-     */
-    public function testGetAddressData($street, $expected)
-    {
-        /** @var Address $shippingAddress */
-        $shippingAddress = $this->getObject(Address::class);
-        $shippingAddress->setStreet($street);
-
-        $instance = $this->getInstance();
-
-        $result = $this->invokeArgs('getAddressData', [$shippingAddress], $instance);
-
-        $this->assertEquals($expected['Street'], $result['Street']);
-        $this->assertEquals($expected['HouseNr'], $result['HouseNr']);
-        $this->assertEquals($expected['HouseNrExt'], $result['HouseNrExt']);
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    private function getShipmentMock()
-    {
-        $addressMock = $this->getAddressMock();
-
-        $orderMock = $this->getFakeMock(Order::class);
-        $orderMock = $orderMock->getMock();
-
-        $shipmentMock = $this->getFakeMock(\Magento\Sales\Model\Order\Shipment::class);
-        $shipmentMock->setMethods(['getShippingAddress', 'getOrder']);
-        $shipmentMock = $shipmentMock->getMock();
-
-        $getOrderExpects = $shipmentMock->expects($this->once());
-        $getOrderExpects->method('getOrder');
-        $getOrderExpects->willReturn($orderMock);
-
-        $getShippingAddressExpects = $shipmentMock->expects($this->atLeastOnce());
-        $getShippingAddressExpects->method('getShippingAddress');
-        $getShippingAddressExpects->willReturn($addressMock);
-
-        return $shipmentMock;
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    private function getAddressMock()
-    {
-        $addressMock = $this->getFakeMock(Address::class);
-        $addressMock->setMethods(['getStreet']);
-        $addressMock = $addressMock->getMock();
-
-        $getStreetExpects = $addressMock->expects($this->once());
-        $getStreetExpects->method('getStreet');
-        $getStreetExpects->willReturn(['Kabelweg', '37']);
-
-        return $addressMock;
     }
 }

@@ -254,3 +254,5 @@ Percent,Percentage
 "Parcel type","pakkettype"
 "price","prijs"
 "Instructions","Instructies"
+"Shipment successfully confirmed","Zending succesvol voorgemeld"
+"Could not confirm shipment : %1","Zending is niet voorgemeld : %1"

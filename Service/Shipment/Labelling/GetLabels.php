@@ -78,18 +78,19 @@ class GetLabels
 
     /**
      * @param int|string $shipmentId
+     * @param bool $confirm
      *
      * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface[]
      */
-    public function get($shipmentId)
+    public function get($shipmentId, $confirm = true)
     {
-        $shipment = $this->shipmentRepository->getByFieldWithValue('shipment_id', $shipmentId);
+        $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
 
         if (!$shipment) {
             return [];
         }
 
-        $labels = $this->getLabels($shipment);
+        $labels = $this->getLabels($shipment, $confirm);
         $labels = $this->labelValidator->validate($labels);
 
         return $labels;
@@ -97,15 +98,16 @@ class GetLabels
 
     /**
      * @param ShipmentInterface $shipment
+     * @param bool $confirm
      *
      * @return array
      */
-    private function getLabels(ShipmentInterface $shipment)
+    private function getLabels(ShipmentInterface $shipment, $confirm)
     {
         $labels = [];
         $parcelCount = $shipment->getParcelCount();
         for ($number = 1; $number <= $parcelCount; $number++) {
-            $labels[] = $this->getLabel($shipment, $number);
+            $labels[] = $this->getLabel($shipment, $number, $confirm);
         }
 
         return $labels;
@@ -114,10 +116,11 @@ class GetLabels
     /**
      * @param ShipmentInterface $shipment
      * @param                   $number
+     * @param bool              $confirm
      *
      * @return \Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
      */
-    private function getLabel(ShipmentInterface $shipment, $number)
+    private function getLabel(ShipmentInterface $shipment, $number, $confirm)
     {
         $label = $this->shipmentLabelRepository->getByShipment($shipment, $number);
 
@@ -125,6 +128,6 @@ class GetLabels
             return $label;
         }
 
-        return $this->generateLabel->get($shipment, $number);
+        return $this->generateLabel->get($shipment, $number, $confirm);
     }
 }
