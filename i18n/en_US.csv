@@ -146,6 +146,7 @@ Extension version,Extension version
 "Rate Type","Rate Type"
 Flat,Flat
 Table,Table
+Matrix,Matrix
 Condition,Condition
 "Include Virtual Products in Price Calculation","Include Virtual Products in Price Calculation"
 "Weight vs. Destination","Weight vs. Destination"
@@ -217,3 +218,25 @@ Percent,Percent
 "Activate Extra@Home","Activate Extra@Home"
 "Extra@Home can be used to ship large and heavy Products. Please consult your PostNL account manager for more information about activating this service for your account.","Extra@Home can be used to ship large and heavy Products. Please consult your PostNL account manager for more information about activating this service for your account."
 "standard","standard"
+"Invalid PostNL Matrix Rates File Format","Invalid PostNL Matrix Rates File Format"
+"File has not been imported. See the following list of errors: %1","File has not been imported. See the following list of errors: %1"
+"Invalid PostNL matrix rates format in row #%s","Invalid PostNL matrix rates format in row #%s"
+"Invalid country ""%1"" in row #%2.","Invalid country ""%1"" in row #%2."
+"Invalid region/state ""%1"" in row #%2.","Invalid region/state ""%1"" in row #%2."
+"Invalid weight ""%1"" in row #%2.","Invalid weight ""%1"" in row #%2."
+"Invalid subtotal ""%1"" in row #%2.","Invalid subtotal ""%1"" in row #%2."
+"Invalid quantity ""%1"" in row #%2.","Invalid quantity ""%1"" in row #%2."
+"Invalid parcel type ""%1"" in row #%2. Valid values are: ""%3"".","Invalid parcel type ""%1"" in row #%2. Valid values are: ""%3""."
+"Invalid shipping price ""%1"" in row #%2.","Invalid shipping price ""%1"" in row #%2."
+"Duplicate row #%1 (country ""%2"", region/state ""%3"", zip ""%4"", weight ""%5"", subtotal ""%6"", quantity ""%7"" and parcel type ""%8"","Duplicate row #%1 (country ""%2"", region/state ""%3"", zip ""%4"", weight ""%5"", subtotal ""%6"", quantity ""%7"" and parcel type ""%8""
+"The array to validate is expected to have 7 elements, you only have %1","The array to validate is expected to have 7 elements, you only have %1"
+"""%1"" is not a valid region","""%1"" is not a valid region"
+"Country","Country"
+"Province/state","Province/state"
+"Zipcode","Zipcode"
+"Weight (and higher)","Weight (and higher)"
+"Shipping price (and higher)","Shipping price (and higher)"
+"Amount (and higher)","Amount (and higher)"
+"Parcel type","Parcel type"
+"price","price"
+"Instructions","Instructions"

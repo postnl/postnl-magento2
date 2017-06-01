@@ -35,6 +35,7 @@ namespace TIG\PostNL\Config\Csv\Import;
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Value;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\DirectoryList;
@@ -56,6 +57,11 @@ class Matrixrate extends Value
     private $matrixrateData;
 
     /**
+     * @var RequestInterface
+     */
+    private $request;
+
+    /**
      * Matrixrate constructor.
      *
      * @param Context               $context
@@ -64,6 +70,7 @@ class Matrixrate extends Value
      * @param TypeListInterface     $cacheTypeList
      * @param Filesystem            $filesystem
      * @param Data                  $matrixrateData
+     * @param RequestInterface      $request
      * @param AbstractResource|null $resource
      * @param AbstractDb|null       $resourceCollection
      * @param array                 $data
@@ -75,6 +82,7 @@ class Matrixrate extends Value
         TypeListInterface $cacheTypeList,
         Filesystem $filesystem,
         Data $matrixrateData,
+        RequestInterface $request,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -83,6 +91,7 @@ class Matrixrate extends Value
 
         $this->filesystem = $filesystem;
         $this->matrixrateData = $matrixrateData;
+        $this->request = $request;
     }
 
     /**
@@ -90,13 +99,15 @@ class Matrixrate extends Value
      */
     public function afterSave()
     {
-        // @codingStandardsIgnoreLine
-        if (!array_key_exists('matrixrate_import', $_FILES['groups']['tmp_name']['tig_postnl'])) {
-            return parent::afterSave();
+        /** @var \Zend\Stdlib\Parameters $requestFiles */
+        $requestFiles = $this->request->getFiles();
+        $files = $requestFiles->offsetGet('groups');
+
+        if (!isset($files['tig_postnl']) || !isset($files['tig_postnl']['fields']['matrixrate_import'])) {
+            return parent::beforeSave();
         }
 
-        // @codingStandardsIgnoreLine
-        $fileName = $_FILES['groups']['tmp_name']['tig_postnl']['fields']['matrixrate_import']['value'];
+        $fileName = $files['tig_postnl']['fields']['matrixrate_import']['value']['tmp_name'];
 
         if (empty($fileName)) {
             return parent::afterSave();

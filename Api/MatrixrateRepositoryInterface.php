@@ -37,10 +37,12 @@ interface MatrixrateRepositoryInterface
      * Save a Matrixrate rule
      *
      * @api
-     * @param \TIG\PostNL\Api\Data\MatrixRateInterface $matrixrate
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     *
+     * @param \TIG\PostNL\Api\Data\MatrixrateInterface $matrixrate
+     *
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
-    public function save(\TIG\PostNL\Api\Data\MatrixRateInterface $matrixrate);
+    public function save(\TIG\PostNL\Api\Data\MatrixrateInterface $matrixrate);
 
     /**
      * Retrieve a list of Matrixrates.
@@ -55,16 +57,18 @@ interface MatrixrateRepositoryInterface
      * Delete a specific Matrixrate.
      *
      * @api
-     * @param \TIG\PostNL\Api\Data\MatrixRateInterface $matrixrate
+     *
+     * @param \TIG\PostNL\Api\Data\MatrixrateInterface $matrixrate
+     *
      * @return bool
      */
-    public function delete(\TIG\PostNL\Api\Data\MatrixRateInterface $matrixrate);
+    public function delete(\TIG\PostNL\Api\Data\MatrixrateInterface $matrixrate);
 
     /**
      * Create a Matrixrate rule.
      *
      * @api
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function create();
 
@@ -72,7 +76,14 @@ interface MatrixrateRepositoryInterface
      * @param string $field
      * @param string $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function getByFieldWithValue($field, $value);
+
+    /**
+     * @param int $websiteId
+     *
+     * @return \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection
+     */
+    public function getByWebsiteId($websiteId);
 }

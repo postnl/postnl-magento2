@@ -39,6 +39,7 @@ class Row
 {
     const ALLOWED_PARCEL_TYPES = [
         'regular',
+        'pakjegemak',
         'extra@home',
     ];
 
@@ -60,6 +61,8 @@ class Row
         StoreInterface $store,
         Factory $validation
     ) {
+        $validation->resetData();
+
         $this->websiteId = $store->getWebsiteId();
         $this->validation = $validation;
     }

@@ -66,7 +66,7 @@ class Factory
         $implementations = class_implements($validator);
 
         if (!array_key_exists(ContractInterface::class, $implementations)) {
-            throw new PostNLException(__('Class is not an implementation of ' . ContractInterface::class));
+            throw new PostNLException(__('Class is not an implementation of %1', ContractInterface::class));
         }
     }
 
@@ -100,7 +100,27 @@ class Factory
                 return $this->validators['duplicateImport']->validate($value);
         }
 
-        throw new PostNLException(__('There is no implementation found for the "' . $type . '" validator'));
+        throw new PostNLException(__('There is no implementation found for the "%1" validator', $type));
     }
     // @codingStandardsIgnoreEnd
+
+    /**
+     * Check if the reset method is available and if so calls them.
+     */
+    public function resetData()
+    {
+        foreach ($this->validators as $validator) {
+            $this->callResetData($validator);
+        }
+    }
+
+    /**
+     * @param $validator
+     */
+    private function callResetData($validator)
+    {
+        if (method_exists($validator, 'resetData')) {
+            $validator->resetData();
+        }
+    }
 }

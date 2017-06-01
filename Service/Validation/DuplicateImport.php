@@ -61,6 +61,14 @@ class DuplicateImport implements ContractInterface
     }
 
     /**
+     * Delete all know hashes and start over.
+     */
+    public function resetData()
+    {
+        $this->hashes = [];
+    }
+
+    /**
      * @param $line
      *
      * @return bool

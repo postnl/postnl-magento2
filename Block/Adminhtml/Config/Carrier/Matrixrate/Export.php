@@ -76,11 +76,10 @@ class Export extends AbstractElement
         $buttonBlockRequest = $buttonBlock->getRequest();
 
         $params = ['website' => $buttonBlockRequest->getParam('website')];
-        $url = $this->backendUrl->getUrl("postnl/carrier_tablerate/export", $params);
+        $url = $this->backendUrl->getUrl("postnl/carrier_matrixrate/export", $params);
         $data = [
             'label' => __('Export CSV'),
-            'onclick' => "setLocation('" . $url
-                . "conditionName/' + $('carriers_tig_postnl_condition_name').value + '/tablerates.csv' )",
+            'onclick' => "setLocation('" . $url . "' )",
             'class' => '',
         ];
         $buttonBlock->setData($data);

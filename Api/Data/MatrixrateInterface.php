@@ -33,7 +33,7 @@
 namespace TIG\PostNL\Api\Data;
 
 // @codingStandardsIgnoreFile
-interface MatrixRateInterface
+interface MatrixrateInterface
 {
     /**
      * @return int
@@ -48,7 +48,7 @@ interface MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setWebsiteId($value);
 
@@ -60,7 +60,7 @@ interface MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setDestinyCountryId($value);
 
@@ -72,7 +72,7 @@ interface MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setDestinyRegionId($value);
 
@@ -84,7 +84,7 @@ interface MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setDestinyZipCode($value);
 
@@ -96,7 +96,7 @@ interface MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setWeight($value);
 
@@ -108,7 +108,7 @@ interface MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setSubtotal($value);
 
@@ -120,7 +120,7 @@ interface MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setQuantity($value);
 
@@ -132,7 +132,7 @@ interface MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setParcelType($value);
 
@@ -144,7 +144,7 @@ interface MatrixRateInterface
     /**
      * @param $value
      *
-     * @return \TIG\PostNL\Api\Data\MatrixRateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function setPrice($value);
 }

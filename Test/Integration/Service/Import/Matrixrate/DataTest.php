@@ -53,23 +53,6 @@ class DataTest extends TestCase
         /** @var Filesystem $filesystem */
         $filesystem   = $this->getObject(Filesystem::class);
         $this->directory = $filesystem->getDirectoryRead(\Magento\Framework\App\Filesystem\DirectoryList::ROOT);
-
-        $this->resetDuplicateImport();
-    }
-
-    /**
-     * @param $filename
-     *
-     * @return Filesystem\File\ReadInterface
-     */
-    private function loadFile($filename): Filesystem\File\ReadInterface
-    {
-        $path = realpath(__DIR__ . '/../../../../Fixtures/Matrixrate/'. $filename);
-
-        $path = $this->directory->getRelativePath($path);
-        $file = $this->directory->openFile($path);
-
-        return $file;
     }
 
     public function importCsvFilesProvider()
@@ -106,7 +89,7 @@ class DataTest extends TestCase
      */
     public function testImportCsvFiles($filePath, $expected)
     {
-        $file = $this->loadFile('Types/' . $filePath);
+        $file = $this->loadFile('Fixtures/Matrixrate/Types/' . $filePath);
 
         /** @var Data $instance */
         $instance = $this->getInstance();
@@ -118,7 +101,7 @@ class DataTest extends TestCase
 
     public function testAnImportWithoutHeaders()
     {
-        $file = $this->loadFile('incorrectformat.csv');
+        $file = $this->loadFile('Fixtures/Matrixrate/incorrectformat.csv');
 
         /** @var Data $instance */
         $instance = $this->getInstance();
@@ -136,7 +119,7 @@ class DataTest extends TestCase
 
     public function testPreviousDataGetsDeleted()
     {
-        $file = $this->loadFile('Types/regular.csv');
+        $file = $this->loadFile('Fixtures/Matrixrate/Types/regular.csv');
 
         /** @var Data $instance */
         $instance = $this->getInstance();
@@ -146,9 +129,7 @@ class DataTest extends TestCase
 
         $firstSize = $this->getCollectionSize();
 
-        $this->resetDuplicateImport();
-
-        $file = $this->loadFile('Types/regular.csv');
+        $file = $this->loadFile('Fixtures/Matrixrate/Types/regular.csv');
         $instance->import($file);
         $file->close();
 
@@ -159,7 +140,7 @@ class DataTest extends TestCase
 
     public function testCanImportTheDefaultMatrixRates()
     {
-        $file = $this->loadFile('default_rates.csv');
+        $file = $this->loadFile('Fixtures/Matrixrate/default_rates.csv');
 
         $this->getInstance()->import($file);
         $file->close();
@@ -169,7 +150,7 @@ class DataTest extends TestCase
 
     public function testAnEmptyRowGetsSkipped()
     {
-        $file = $this->loadFile('empty_row.csv');
+        $file = $this->loadFile('Fixtures/Matrixrate/empty_row.csv');
 
         $this->getInstance()->import($file);
         $file->close();
@@ -185,11 +166,5 @@ class DataTest extends TestCase
         $collection = $this->getObject(\TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection::class);
 
         return $collection->getSize();
-    }
-
-    private function resetDuplicateImport()
-    {
-        $duplicateImport = $this->loadObject(\TIG\PostNL\Service\Validation\DuplicateImport::class);
-        $this->setProperty('hashes', [], $duplicateImport);
     }
 }
