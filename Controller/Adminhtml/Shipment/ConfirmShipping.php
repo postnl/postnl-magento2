@@ -35,7 +35,6 @@ use Magento\Backend\App\Action\Context;
 use Magento\Backend\App\Action;
 use TIG\PostNL\Exception;
 use TIG\PostNL\Webservices\Endpoints\Confirming;
-use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\Order\ShipmentRepository;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Helper\Tracking\Track;
@@ -113,7 +112,6 @@ class ConfirmShipping extends Action
     /**
      * @param int $shipmentId
      *
-     * @return bool
      */
     private function setRequestData($shipmentId)
     {
