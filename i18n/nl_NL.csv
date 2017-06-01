@@ -215,4 +215,4 @@ Percent,Percentage
 "You can use the test account credentials found <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003510508"" target=""_blank"" title=""PostNL test account"">here</a>.","U kunt de test account gegevens gebruiken die <a href=""https://servicedesk.tig.nl/hc/nl/articles/115003510508"" target=""_blank"" title=""PostNL testgegevens"">hier</a> genoemd worden."
 "Eveningdelivery fee","Avondbezorging toeslag"
 "[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information","[POSTNL-0252] - Er zijn geen valide labels gegenereerd. Bekijk de logs voor meer informatie."
-"This e-mail address will be added as BCC to the track and trace template","Dit e-mailadres zal als bcc toegevoegd worden aan het track and trace email"
+"This e-mail address will be added as BCC to the Track And Trace template","Dit e-mailadres zal als bcc toegevoegd worden aan het Track And Trace template"
