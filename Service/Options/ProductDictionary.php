@@ -33,7 +33,6 @@ namespace TIG\PostNL\Service\Options;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ProductRepository;
-use Magento\Catalog\Model\Product\Type;
 use Magento\Sales\Api\Data\ShipmentItemInterface;
 use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\OrderItemInterface;

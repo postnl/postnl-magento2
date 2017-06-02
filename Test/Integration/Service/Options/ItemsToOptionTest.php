@@ -29,26 +29,37 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+namespace TIG\PostNL\Test\Integration\Service\Options;
 
-namespace TIG\PostNL\Test\Integration\Service\Parcel\Order;
-
-use TIG\PostNL\Service\Parcel\Order\Count;
 use TIG\PostNL\Test\Integration\TestCase;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
+use TIG\PostNL\Service\Options\ItemsToOption;
+use TIG\PostNL\Service\Order\ProductCode;
 
-class CountTest extends TestCase
+class ItemsToOptionTest extends TestCase
 {
-    public $instanceClass = Count::class;
+    public $instanceClass = ItemsToOption::class;
 
     public function testGetWithExtraAtHomeOrder()
     {
-        require __DIR__.'/../../../../Fixtures/Extra_at_home/ExtraAtHomeOrder.php';
+        require __DIR__.'/../../../Fixtures/Extra_at_home/ExtraAtHomeOrder.php';
 
         /** @var \Magento\Sales\Model\Order $order */
         $order  = $this->getOrder();
-        $result = $this->getInstance()->get($order);
+        $result = $this->getInstance()->get($order->getItems());
 
-        $this->assertEquals(2, $result);
+        $this->assertEquals(ProductCode::OPTION_EXTRAATHOME, $result);
+    }
+
+    public function testReqularOrder()
+    {
+        require __DIR__.'/../../../Fixtures/Extra_at_home/NonExtraAtHomeOrder.php';
+
+        /** @var \Magento\Sales\Model\Order $order */
+        $order  = $this->getOrder();
+        $result = $this->getInstance()->get($order->getItems());
+
+        $this->assertEquals('', $result);
     }
 
     /**
