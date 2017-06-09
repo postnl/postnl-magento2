@@ -118,7 +118,7 @@ abstract class OptionsAbstract
 
     /**
      * Check by supported configuration options.
-     * @return array
+     * @return void
      */
     public function setOptionsBySupportedType()
     {
@@ -128,7 +128,7 @@ abstract class OptionsAbstract
         }
 
         if (!$supportedTypes) {
-            return [];
+            return;
         }
 
         $supportedOptions = array_filter($supportedTypes, function ($type) {
@@ -146,11 +146,13 @@ abstract class OptionsAbstract
     public function getOptionArrayUsableForConfiguration()
     {
         if (count($this->filterdOptions) == 0) {
+            // @codingStandardsIgnoreLine
             return [['value' => 0, 'label' => __('There are no available options')]];
         }
 
         $options = [];
         foreach ($this->filterdOptions as $key => $option) {
+            // @codingStandardsIgnoreLine
             $options[] = ['value' => $option['value'], 'label' => __($option['label'])];
         }
 
