@@ -257,18 +257,10 @@ class View extends MagentoView
         );
     }
     /**
-     * @return AbstractExtensibleObject
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface|null
      */
     private function getPostNLShipment()
     {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('shipment_id', $this->getShipment()->getId());
-        $searchCriteria->setPageSize(1);
-        /** @var \Magento\Framework\Api\SearchResults $list */
-        $list = $this->postNLShipmentRepository->getList($searchCriteria->create());
-        if ($list->getTotalCount() != 0) {
-            return $list->getItems()[0];
-        }
-
-        return false;
+        return $this->postNLShipmentRepository->getByShipmentId($this->getShipment()->getId());
     }
 }

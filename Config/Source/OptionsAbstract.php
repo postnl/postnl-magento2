@@ -64,7 +64,7 @@ abstract class OptionsAbstract
     }
 
     /**
-     * @param bool|Array $flags
+     * @param bool|array $flags
      * @param bool       $checkAvailable
      *
      * @return array $availableOptions
@@ -145,11 +145,11 @@ abstract class OptionsAbstract
      */
     public function getOptionArrayUsableForConfiguration()
     {
-        $options = [];
         if (count($this->filterdOptions) == 0) {
             return [['value' => 0, 'label' => __('There are no available options')]];
         }
 
+        $options = [];
         foreach ($this->filterdOptions as $key => $option) {
             $options[] = ['value' => $option['value'], 'label' => __($option['label'])];
         }

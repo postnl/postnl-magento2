@@ -80,14 +80,14 @@ class CurrentPostNLOrder
         $list = $this->postNLOrderRepository->getList($searchCriteria->create());
 
         if ($list->getTotalCount()) {
-            return $list->getItems()[0];
+            return array_values($list->getItems())[0];
         }
 
         return null;
     }
 
     /**
-     * @return \Magento\Quote\Model\Quote
+     * @return int
      */
     private function getQuoteId()
     {

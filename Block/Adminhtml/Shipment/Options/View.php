@@ -39,7 +39,6 @@ use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
-use Magento\Framework\Api\AbstractExtensibleObject;
 use TIG\PostNL\Block\Adminhtml\Renderer\ProductCode;
 
 class View extends OptionsAbstract

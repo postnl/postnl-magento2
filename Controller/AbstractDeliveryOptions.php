@@ -100,6 +100,7 @@ abstract class AbstractDeliveryOptions extends Action
      * Create json response
      *
      * @param string $data
+     * @param int    $code
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
