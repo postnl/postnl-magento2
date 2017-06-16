@@ -177,12 +177,7 @@ class Soap
         $stream_context = stream_context_create([
             'http' => [
                 'header' => 'apikey:' . $this->getApiKey()
-            ],  'ssl' => [
-        'verify_peer' => false,
-        'verify_peer_name'=>false,
-        'allow_self_signed' => true,
-        'cafile' => '/Users/thomashondema/Desktop/Charles Proxy CA (23 May 2017, Antares.local).cer'
-    ],
+            ]
         ]);
 
         return [
@@ -191,8 +186,6 @@ class Soap
             'features'       => SOAP_SINGLE_ELEMENT_ARRAYS,
             'cache_wsdl'     => WSDL_CACHE_BOTH,
             'stream_context' => $stream_context,
-            "proxy_host" => "localhost",
-            "proxy_port" => 8889,
         ];
     }
 
