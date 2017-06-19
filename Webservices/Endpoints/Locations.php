@@ -149,4 +149,12 @@ class Locations extends AbstractEndpoint
 
         return $this->postNLhelper->getTommorowsDate();
     }
+
+    /**
+     * @param int $storeId
+     */
+    public function setStoreId($storeId)
+    {
+        $this->soap->setStoreId($storeId);
+    }
 }

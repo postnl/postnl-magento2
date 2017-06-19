@@ -151,6 +151,8 @@ abstract class AbstractDeliveryOptions extends Action
             return $this->checkoutSession->getPostNLDeliveryDate();
         }
 
+        $storeId = $this->checkoutSession->getQuote()->getStoreId();
+        $this->deliveryEndpoint->setStoreId($storeId);
         $this->deliveryEndpoint->setParameters($address);
         $response = $this->deliveryEndpoint->call();
 

@@ -187,4 +187,12 @@ class TimeFrame extends AbstractEndpoint
 
         return $timeframes->Timeframe;
     }
+
+    /**
+     * @param int $storeId
+     */
+    public function setStoreId($storeId)
+    {
+        $this->soap->setStoreId($storeId);
+    }
 }

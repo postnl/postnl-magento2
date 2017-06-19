@@ -110,7 +110,7 @@ class Barcode extends AbstractEndpoint
 
         if (empty($this->storeId)) {
             // @codingStandardsIgnoreLine
-            throw new PostNLException(__('Please provide the country id first by calling setStoreId'));
+            throw new PostNLException(__('Please provide the store id first by calling setStoreId'));
         }
 
         $barcode = $this->barcodeRange->getByCountryId($this->countryId);

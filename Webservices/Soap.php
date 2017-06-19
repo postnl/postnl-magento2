@@ -137,8 +137,7 @@ class Soap
             $this->response->set($result);
 
             return $this->response->get();
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             $this->exceptionHandler->handle($exception, $soapClient);
 
             throw new WebapiException(

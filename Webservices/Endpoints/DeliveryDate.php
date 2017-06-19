@@ -160,4 +160,12 @@ class DeliveryDate extends AbstractEndpoint
     {
         return $this->version .'/'. $this->endpoint;
     }
+
+    /**
+     * @param int $storeId
+     */
+    public function setStoreId($storeId)
+    {
+        $this->soap->setStoreId($storeId);
+    }
 }

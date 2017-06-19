@@ -146,6 +146,8 @@ class Timeframes extends AbstractDeliveryOptions
      */
     private function getTimeFrames($address, $startDate)
     {
+        $storeId = $this->checkoutSession->getQuote()->getStoreId();
+        $this->timeFrameEndpoint->setStoreId($storeId);
         $this->timeFrameEndpoint->setParameters($address, $startDate);
 
         return $this->timeFrameEndpoint->call();
