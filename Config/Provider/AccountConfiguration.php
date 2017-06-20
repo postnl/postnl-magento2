@@ -72,7 +72,9 @@ class AccountConfiguration extends AbstractConfigProvider
      */
     public function getCustomerNumber($store = null)
     {
-        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERNUMBER),$store);
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERNUMBER, $store);
+
+        return $this->getConfigFromXpath($modusXpath, $store);
     }
 
     /**
@@ -82,7 +84,9 @@ class AccountConfiguration extends AbstractConfigProvider
      */
     public function getCustomerCode($store = null)
     {
-        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERCODE),$store);
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERCODE, $store);
+
+        return $this->getConfigFromXpath($modusXpath, $store);
     }
 
     /**
@@ -93,7 +97,8 @@ class AccountConfiguration extends AbstractConfigProvider
      */
     public function getApiKey($store = null)
     {
-        $value = $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY),$store);
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY, $store);
+        $value = $this->getConfigFromXpath($modusXpath, $store);
 
         return $this->crypt->decrypt($value);
     }
@@ -104,7 +109,9 @@ class AccountConfiguration extends AbstractConfigProvider
      */
     public function getBlsCode($store = null)
     {
-        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_BLSCODE),$store);
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_BLSCODE, $store);
+
+        return $this->getConfigFromXpath($modusXpath, $store);
     }
 
     /**
@@ -118,7 +125,7 @@ class AccountConfiguration extends AbstractConfigProvider
      */
     public function getModus($store = null)
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_STATUS_MODUS,$store);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_STATUS_MODUS, $store);
     }
 
     /**
@@ -165,12 +172,13 @@ class AccountConfiguration extends AbstractConfigProvider
 
     /**
      * @param $xpath
+     * @param null|int $store
      *
      * @return string
      */
-    private function getModusXpath($xpath)
+    private function getModusXpath($xpath, $store = null)
     {
-        if ($this->isModusTest()) {
+        if ($this->isModusTest($store)) {
             $xpath .= '_test';
         }
 

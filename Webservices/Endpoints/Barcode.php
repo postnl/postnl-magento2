@@ -160,6 +160,7 @@ class Barcode extends AbstractEndpoint
     public function setStoreId($storeId)
     {
         $this->storeId = $storeId;
+        $this->soap->setStoreId($storeId);
         $this->customer->setStoreId($storeId);
     }
 }
