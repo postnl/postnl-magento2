@@ -101,7 +101,8 @@ class BarcodeHandler
             return;
         }
 
-        $this->storeId = $shipment->getShipment()->getStoreId();
+        $magentoShipment = $shipment->getShipment();
+        $this->storeId = $magentoShipment->getStoreId();
 
         $mainBarcode = $this->generate();
         $shipment->setMainBarcode($mainBarcode);

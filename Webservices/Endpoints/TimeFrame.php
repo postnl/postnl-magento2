@@ -193,6 +193,6 @@ class TimeFrame extends AbstractEndpoint
      */
     public function setStoreId($storeId)
     {
-        $this->soap->setStoreId($storeId);
+        $this->soap->updateApiKey($storeId);
     }
 }

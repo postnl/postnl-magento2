@@ -45,11 +45,6 @@ class Soap
     private $apikey;
 
     /**
-     * @var null|int
-     */
-    private $storeId = null;
-
-    /**
      * @var string
      */
     private $location;
@@ -65,11 +60,6 @@ class Soap
     private $defaultConfiguration;
 
     /**
-     * @var Response
-     */
-    private $response;
-
-    /**
      * @var ExceptionHandler
      */
     private $exceptionHandler;
@@ -83,6 +73,7 @@ class Soap
      * @var Api\Log
      */
     private $log;
+
     /**
      * @var AccountConfiguration
      */
@@ -92,17 +83,13 @@ class Soap
      * @param AccountConfiguration $accountConfiguration
      * @param DefaultConfiguration $defaultConfiguration
      * @param ExceptionHandler     $exceptionHandler
-     * @param Response             $response
      * @param ZendSoapClient       $soapClient
      * @param Api\Log              $log
-     *
-     * @throws WebapiException
      */
     public function __construct(
         AccountConfiguration $accountConfiguration,
         DefaultConfiguration $defaultConfiguration,
         ExceptionHandler $exceptionHandler,
-        Response $response,
         ZendSoapClient $soapClient,
         Api\Log $log
     ) {
@@ -110,12 +97,11 @@ class Soap
 
         $this->defaultConfiguration = $defaultConfiguration;
         $this->exceptionHandler = $exceptionHandler;
-        $this->response = $response;
         $this->soapClient = $soapClient;
         $this->log = $log;
         $this->accountConfiguration = $accountConfiguration;
 
-        $this->setApiKey();
+        $this->updateApiKey();
     }
 
     /**
@@ -123,7 +109,7 @@ class Soap
      * @param                  $method
      * @param                  $requestParams
      *
-     * @return Response
+     * @return mixed
      * @throws WebapiException
      */
     public function call(AbstractEndpoint $endpoint, $method, $requestParams)
@@ -134,9 +120,8 @@ class Soap
         $result = null;
         try {
             $result = $soapClient->__call($method, [$requestParams]);
-            $this->response->set($result);
 
-            return $this->response->get();
+            return $result;
         } catch (\Exception $exception) {
             $this->exceptionHandler->handle($exception, $soapClient);
 
@@ -165,13 +150,11 @@ class Soap
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws LocalizedException
      */
     private function getOptionsArray()
     {
-        /**
-         * Unable to find an alternative, so ignore the coding standards.
-         */
+        /** Unable to find an alternative, so ignore the coding standards. */
         // @codingStandardsIgnoreLine
         $stream_context = stream_context_create([
             'http' => [
@@ -249,20 +232,10 @@ class Soap
     }
 
     /**
-     * @return null
+     * @param null|int $storeId
      */
-    private function setApiKey()
+    public function updateApiKey($storeId = null)
     {
-        $this->apikey = $this->accountConfiguration->getApiKey($this->storeId);
-    }
-
-    /**
-     * @param int $storeId
-     * @return null
-     */
-    public function setStoreId($storeId)
-    {
-        $this->storeId = $storeId;
-        $this->setApiKey();
+        $this->apikey = $this->accountConfiguration->getApiKey($storeId);
     }
 }

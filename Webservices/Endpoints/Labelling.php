@@ -114,7 +114,7 @@ class Labelling extends AbstractEndpoint
     public function setParameters($shipment, $currentShipmentNumber = 1)
     {
         $storeId = $shipment->getShipment()->getStoreId();
-        $this->soap->setStoreId($storeId);
+        $this->soap->updateApiKey($storeId);
         $this->customer->setStoreId($storeId);
 
         $customer = $this->customer->get();

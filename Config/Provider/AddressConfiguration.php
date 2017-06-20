@@ -73,7 +73,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getFirstname($store = null)
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_FIRSTNAME);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_FIRSTNAME, $store);
     }
 
     /**
@@ -83,7 +83,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getLastname($store = null)
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_LASTNAME);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_LASTNAME, $store);
     }
 
     /**
@@ -93,7 +93,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getCompany($store = null)
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERALS_COMPANY);
+        return $this->getConfigFromXpath(self::XPATH_GENERALS_COMPANY, $store);
     }
 
     /**
@@ -103,7 +103,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getStreetname($store = null)
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_STREETNAME);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_STREETNAME, $store);
     }
 
     /**
@@ -113,7 +113,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getDepartment($store = null)
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_DEPARTMENT);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_DEPARTMENT, $store);
     }
 
     /**
@@ -123,7 +123,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getHousenumber($store = null)
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_HOUSENUMBER);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_HOUSENUMBER, $store);
     }
 
     /**
@@ -133,7 +133,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getHousenumberAddition($store = null)
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_HOUSENUMBER_ADDITION);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_HOUSENUMBER_ADDITION, $store);
     }
 
     /**
@@ -143,7 +143,7 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getPostcode($store = null)
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_POSTCODE);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_POSTCODE, $store);
     }
 
     /**
@@ -153,6 +153,6 @@ class AddressConfiguration extends AbstractConfigProvider
      */
     public function getCity($store = null)
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_CITY);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_CITY, $store);
     }
 }

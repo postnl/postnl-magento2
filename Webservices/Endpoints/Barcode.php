@@ -103,15 +103,7 @@ class Barcode extends AbstractEndpoint
      */
     public function call()
     {
-        if (empty($this->countryId)) {
-            // @codingStandardsIgnoreLine
-            throw new PostNLException(__('Please provide the country id first by calling setCountryId'));
-        }
-
-        if (empty($this->storeId)) {
-            // @codingStandardsIgnoreLine
-            throw new PostNLException(__('Please provide the store id first by calling setStoreId'));
-        }
+        $this->validateRequiredValues();
 
         $barcode = $this->barcodeRange->getByCountryId($this->countryId);
 
@@ -160,7 +152,23 @@ class Barcode extends AbstractEndpoint
     public function setStoreId($storeId)
     {
         $this->storeId = $storeId;
-        $this->soap->setStoreId($storeId);
+        $this->soap->updateApiKey($storeId);
         $this->customer->setStoreId($storeId);
+    }
+
+    /**
+     * @throws PostNLException
+     */
+    private function validateRequiredValues()
+    {
+        if (empty($this->countryId)) {
+            // @codingStandardsIgnoreLine
+            throw new PostNLException(__('Please provide the country id first by calling setCountryId'));
+        }
+
+        if (empty($this->storeId)) {
+            // @codingStandardsIgnoreLine
+            throw new PostNLException(__('Please provide the store id first by calling setStoreId'));
+        }
     }
 }
