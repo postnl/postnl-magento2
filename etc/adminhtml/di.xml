@@ -37,8 +37,8 @@
     <type name="TIG\PostNL\Service\Shipment\Label\Prepare">
         <arguments>
             <argument name="types" xsi:type="array">
-                <item name="eps" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\EPS</item>
-                <item name="domestic" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\Domestic</item>
+                <item name="eps" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\EPSFactory</item>
+                <item name="domestic" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\DomesticFactory</item>
             </argument>
         </arguments>
     </type>
