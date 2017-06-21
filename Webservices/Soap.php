@@ -85,6 +85,8 @@ class Soap
      * @param ExceptionHandler     $exceptionHandler
      * @param ZendSoapClient       $soapClient
      * @param Api\Log              $log
+     *
+     * @throws WebapiException
      */
     public function __construct(
         AccountConfiguration $accountConfiguration,
@@ -109,7 +111,7 @@ class Soap
      * @param                  $method
      * @param                  $requestParams
      *
-     * @return mixed
+     * @return \stdClass
      * @throws WebapiException
      */
     public function call(AbstractEndpoint $endpoint, $method, $requestParams)
