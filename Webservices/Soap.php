@@ -74,9 +74,7 @@ class Soap
      */
     private $log;
 
-    /**
-     * @var AccountConfiguration
-     */
+    /** @var AccountConfiguration */
     private $accountConfiguration;
 
     /**
