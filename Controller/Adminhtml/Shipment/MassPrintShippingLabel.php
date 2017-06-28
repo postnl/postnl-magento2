@@ -148,7 +148,11 @@ class MassPrintShippingLabel extends LabelAbstract
         foreach ($collection as $shipment) {
             $address = $shipment->getShippingAddress();
             $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
-            $this->track->set($shipment);
+
+            if (!$shipment->getTracks()) {
+                $this->track->set($shipment);
+            }
+
             $this->setLabel($shipment->getId());
         }
     }
