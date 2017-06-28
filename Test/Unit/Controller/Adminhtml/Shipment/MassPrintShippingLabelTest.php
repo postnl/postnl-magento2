@@ -31,7 +31,9 @@
  */
 namespace TIG\PostNL\Unit\Controller\Adminhtml\Shipment;
 
+use Magento\Sales\Model\ResourceModel\Order\Shipment\Collection;
 use TIG\PostNL\Controller\Adminhtml\Shipment\MassPrintShippingLabel;
+use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Test\TestCase;
 
@@ -90,5 +92,40 @@ class MassPrintShippingLabelTest extends TestCase
 
         $labelsProperty = $this->getProperty('labels', $instance);
         $this->assertEquals($expectedResult, $labelsProperty, '', 0.0, 10, true);
+    }
+
+    /**
+     * @return array
+     */
+    public function sendTrackAndTraceProvider()
+    {
+        return [
+            'no items' => [
+                []
+            ],
+            'single item' => [
+                ['a item']
+            ],
+            'multiple items' => [
+                ['a item', 'another item', 'more items']
+            ],
+        ];
+    }
+
+    /**
+     * @param $items
+     *
+     * @dataProvider sendTrackAndTraceProvider
+     */
+    public function testSendTrackAndTrace($items)
+    {
+        $trackMock = $this->getFakeMock(Track::class)->setMethods(['send'])->getMock();
+        $trackMock->expects($this->exactly(count($items)))->method('send');
+
+        $collectionMock = $this->getFakeMock(Collection::class)->setMethods(['getIterator'])->getMock();
+        $collectionMock->expects($this->once())->method('getIterator')->willReturn(new \ArrayIterator($items));
+
+        $instance = $this->getInstance(['track' => $trackMock]);
+        $this->invokeArgs('sendTrackAndTrace', [$collectionMock], $instance);
     }
 }
