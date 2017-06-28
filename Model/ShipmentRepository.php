@@ -172,6 +172,9 @@ class ShipmentRepository implements ShipmentRepositoryInterface
         $fields     = [];
         $conditions = [];
         foreach ($filterGroup->getFilters() as $filter) {
+            if (is_array($filter->getValue()) && !count($filter->getValue())) {
+                continue;
+            }
             $condition    = $filter->getConditionType() ? $filter->getConditionType() : 'eq';
             $fields[]     = $filter->getField();
             $conditions[] = [$condition => $filter->getValue()];
