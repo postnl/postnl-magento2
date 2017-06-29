@@ -140,6 +140,16 @@ class MassPrintShippingLabel extends LabelAbstract
     }
 
     /**
+     * @param Shipment $shipment
+     */
+    private function setTracks($shipment)
+    {
+        if (!$shipment->getTracks()) {
+            $this->track->set($shipment);
+        }
+    }
+
+    /**
      * @param $collection
      */
     private function loadLabels($collection)
@@ -148,11 +158,7 @@ class MassPrintShippingLabel extends LabelAbstract
         foreach ($collection as $shipment) {
             $address = $shipment->getShippingAddress();
             $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
-
-            if (!$shipment->getTracks()) {
-                $this->track->set($shipment);
-            }
-
+            $this->setTracks($shipment);
             $this->setLabel($shipment->getId());
         }
     }
