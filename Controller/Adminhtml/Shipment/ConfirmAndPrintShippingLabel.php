@@ -101,8 +101,6 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
             return $this->_redirect($this->_redirect->getRefererUrl());
         }
 
-        $this->sendTrackAndTrace();
-
         return $this->getPdf->get($labels);
     }
 
@@ -133,11 +131,5 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
         $labels = $this->getLabels->get($shipment->getId());
 
         return $labels;
-    }
-
-    private function sendTrackAndTrace()
-    {
-        $shipment = $this->getShipment();
-        $this->track->send($shipment);
     }
 }

@@ -122,8 +122,6 @@ class MassPrintShippingLabel extends LabelAbstract
             return $this->_redirect($this->_redirect->getRefererUrl());
         }
 
-        $this->sendTrackAndTrace($collection);
-
         return $this->getPdf->get($this->labels);
     }
 
@@ -152,17 +150,6 @@ class MassPrintShippingLabel extends LabelAbstract
             $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
             $this->track->set($shipment);
             $this->setLabel($shipment->getId());
-        }
-    }
-
-    /**
-     * @param $collection
-     */
-    private function sendTrackAndTrace($collection)
-    {
-        /** @var Shipment $shipment */
-        foreach ($collection as $shipment) {
-            $this->track->send($shipment);
         }
     }
 }
