@@ -32,8 +32,9 @@
 namespace TIG\PostNL\Controller;
 
 use TIG\PostNL\Model\OrderFactory;
-use TIG\PostNL\Model\OrderRepository;
+use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
+use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Json\Helper\Data;
@@ -54,12 +55,6 @@ abstract class AbstractDeliveryOptions extends Action
     protected $orderFactory;
 
     /**
-     * @var OrderRepository
-     */
-    //@codingStandardsIgnoreLine
-    protected $orderRepository;
-
-    /**
      * @var Session
      */
     //@codingStandardsIgnoreLine
@@ -72,26 +67,31 @@ abstract class AbstractDeliveryOptions extends Action
     protected $deliveryEndpoint;
 
     /**
-     * @param Context         $context
-     * @param Data            $jsonHelper
-     * @param OrderFactory    $orderFactory
-     * @param OrderRepository $orderRepository
-     * @param Session         $checkoutSession
-     * @param DeliveryDate    $deliveryDate
+     * @var QuoteToRateRequest
+     */
+    private $quoteToRateRequest;
+
+    /**
+     * @param Context            $context
+     * @param Data               $jsonHelper
+     * @param OrderFactory       $orderFactory
+     * @param Session            $checkoutSession
+     * @param QuoteToRateRequest $quoteToRateRequest
+     * @param DeliveryDate       $deliveryDate
      */
     public function __construct(
         Context $context,
         Data $jsonHelper,
         OrderFactory $orderFactory,
-        OrderRepository $orderRepository,
         Session $checkoutSession,
+        QuoteToRateRequest $quoteToRateRequest,
         DeliveryDate $deliveryDate = null
     ) {
-        $this->jsonHelper       = $jsonHelper;
-        $this->orderFactory     = $orderFactory;
-        $this->orderRepository  = $orderRepository;
-        $this->checkoutSession  = $checkoutSession;
-        $this->deliveryEndpoint = $deliveryDate;
+        $this->jsonHelper         = $jsonHelper;
+        $this->orderFactory       = $orderFactory;
+        $this->checkoutSession    = $checkoutSession;
+        $this->deliveryEndpoint   = $deliveryDate;
+        $this->quoteToRateRequest = $quoteToRateRequest;
 
         parent::__construct($context);
     }
@@ -161,5 +161,22 @@ abstract class AbstractDeliveryOptions extends Action
 
         $this->checkoutSession->setPostNLDeliveryDate($response->DeliveryDate);
         return $response->DeliveryDate;
+    }
+
+    /**
+     * @return RateRequest
+     */
+    // @codingStandardsIgnoreLine
+    protected function getRateRequest()
+    {
+        $request = $this->getRequest();
+        $address = $request->getParam('address');
+
+        /** @var RateRequest $request */
+        $request = $this->quoteToRateRequest->get();
+        $request->setDestCountryId($address['country']);
+        $request->setDestPostcode($address['postcode']);
+
+        return $request;
     }
 }

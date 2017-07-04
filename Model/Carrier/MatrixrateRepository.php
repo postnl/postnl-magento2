@@ -32,6 +32,7 @@
 
 namespace TIG\PostNL\Model\Carrier;
 
+use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use TIG\PostNL\Api\Data\MatrixrateInterface;
@@ -50,18 +51,23 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
     private $matrixrateFactory;
 
     /**
-     * @param MatrixRateFactory     $matrixRateFactory
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param CollectionFactory     $collectionFactory
+     * MatrixrateRepository constructor.
+     *
+     * @param SearchResultsInterfaceFactory               $searchResultsFactory
+     * @param SearchCriteriaBuilder                       $searchCriteriaBuilder
+     * @param \TIG\PostNL\Model\Carrier\MatrixrateFactory $matrixrateFactory
+     * @param CollectionFactory                           $collectionFactory
      */
     public function __construct(
-        MatrixrateFactory $matrixrateFactory,
+        SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
+        MatrixrateFactory $matrixrateFactory,
         CollectionFactory $collectionFactory
     ) {
-        $this->matrixrateFactory     = $matrixrateFactory;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->collectionFactory     = $collectionFactory;
+        parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
+
+        $this->matrixrateFactory = $matrixrateFactory;
+        $this->collectionFactory = $collectionFactory;
     }
 
     /**

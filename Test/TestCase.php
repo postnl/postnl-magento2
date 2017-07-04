@@ -244,4 +244,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         return $file;
     }
+
+    protected function getMagentoVersion()
+    {
+        /** @var \Magento\Framework\App\ProductMetadataInterface $productMetaData */
+        $productMetaData = $this->getObject(\Magento\Framework\App\ProductMetadataInterface::class);
+
+        return $productMetaData->getVersion();
+    }
 }

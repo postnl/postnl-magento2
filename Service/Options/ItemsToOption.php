@@ -36,13 +36,13 @@ use TIG\PostNL\Service\Order\ProductCode;
 use Magento\Sales\Api\Data\ShipmentItemInterface;
 use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
+use TIG\PostNL\Service\Wrapper\QuoteInterface;
 
 class ItemsToOption
 {
-
     private $typeToOption = [
         Type::PRODUCT_TYPE_EXTRA_AT_HOME => ProductCode::OPTION_EXTRAATHOME,
-        Type::PRODUCT_TYPE_REGULAR       => ''
+        Type::PRODUCT_TYPE_REGULAR       => '',
     ];
 
     /**
@@ -51,7 +51,7 @@ class ItemsToOption
      */
     private $priority = [
         Type::PRODUCT_TYPE_EXTRA_AT_HOME => 1,
-        Type::PRODUCT_TYPE_REGULAR       => 2
+        Type::PRODUCT_TYPE_REGULAR       => 2,
     ];
 
     /**
@@ -70,15 +70,23 @@ class ItemsToOption
     private $productTypes;
 
     /**
+     * @var QuoteInterface
+     */
+    private $quote;
+
+    /**
+     * @param QuoteInterface    $quote
      * @param ProductDictionary $productDictionary
      * @param Type              $type
      */
     public function __construct(
+        QuoteInterface $quote,
         ProductDictionary $productDictionary,
         Type $type
     ) {
         $this->productDictionary = $productDictionary;
         $this->productTypes = $type;
+        $this->quote = $quote;
     }
 
     /**
@@ -112,5 +120,13 @@ class ItemsToOption
         if ($newPriority <= $currentPriority) {
             $this->currentType = $type;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getFromQuote()
+    {
+        return $this->get($this->quote->getAllItems());
     }
 }

@@ -30,18 +30,12 @@
  */
 define([
     'Magento_Checkout/js/view/shipping',
-    'TIG_PostNL/js/Helper/State',
-    'Magento_Checkout/js/model/quote',
-    'Magento_Catalog/js/price-utils'
+    'TIG_PostNL/js/Helper/State'
 ], function (
     Shipping,
-    State,
-    quote,
-    priceUtils
+    State
 ) {
     return Shipping.extend({
-        PostNLFee: State.fee,
-
         canUseDeliveryOption: function () {
             var deliveryOptionsActive = window.checkoutConfig.shipping.postnl.shippingoptions_active == 1;
             var deliveryDaysActive = window.checkoutConfig.shipping.postnl.is_deliverydays_active;
@@ -66,10 +60,6 @@ define([
             }
 
             return result;
-        },
-
-        formatPrice: function (price) {
-            return priceUtils.formatPrice(price, quote.getPriceFormat());
         }
     });
 });

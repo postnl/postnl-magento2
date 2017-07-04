@@ -126,6 +126,7 @@ define([
                     fee = dataObject.getFee();
                 }
                 State.fee(fee);
+                State.pickupFee(fee);
 
                 State.pickupAddress({
                     company: dataObject.Name,
@@ -189,7 +190,9 @@ define([
                     data = [data.shift()];
                 }
 
-                data = data.slice(0, 5);
+                State.pickupPrice(data.price);
+
+                data = data.locations.slice(0, 5);
                 data = ko.utils.arrayMap(data, function (data) {
                     return new Location(data);
                 });
