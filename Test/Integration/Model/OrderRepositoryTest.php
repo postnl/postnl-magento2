@@ -40,7 +40,7 @@ use TIG\PostNL\Test\Integration\TestCase;
 
 class OrderRepositoryTest extends TestCase
 {
-    public function testEmptyFilterValuesAreFiltered()
+    public function testThatAnEmptyFilterDoesNotThrowAnException()
     {
         /** @var OrderRepository $repository */
         $repository = $this->getObject(OrderRepository::class);
