@@ -29,33 +29,34 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Controller\Adminhtml\Shipment;
+namespace TIG\PostNL\Test\Unit\Observer\TIGPostNLSetConfirmedAtBefore;
 
+use Magento\Framework\Event\Observer;
 use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\Order\ShipmentRepository;
-use TIG\PostNL\Controller\Adminhtml\Shipment\ConfirmAndPrintShippingLabel;
 use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Model\Shipment as PostNLShipment;
+use TIG\PostNL\Observer\TIGPostNLSetConfirmedAtBefore\SendTrackAndTraceEmail;
 use TIG\PostNL\Test\TestCase;
 
-class ConfirmAndPrintShippingLabelTest extends TestCase
+class SendTrackAndTraceEmailTest extends TestCase
 {
-    protected $instanceClass = ConfirmAndPrintShippingLabel::class;
+    protected $instanceClass = SendTrackAndTraceEmail::class;
 
-    public function testSendTrackAndTrace()
+    public function testExecute()
     {
         $shipmentMock = $this->getFakeMock(Shipment::class, true);
 
-        $shipmentRepositoryMock = $this->getFakeMock(ShipmentRepository::class)->setMethods(['get'])->getMock();
-        $shipmentRepositoryMock->expects($this->once())->method('get')->willReturn($shipmentMock);
+        $postnlShipmentMock = $this->getFakeMock(PostNLShipment::class)->setMethods(['getShipment'])->getMock();
+        $postnlShipmentMock->expects($this->once())->method('getShipment')->willReturn($shipmentMock);
 
         $trackMock = $this->getFakeMock(Track::class)->setMethods(['send'])->getMock();
         $trackMock->expects($this->once())->method('send')->with($shipmentMock);
 
-        $instance = $this->getInstance([
-            'shipmentRepository' => $shipmentRepositoryMock,
-            'track' => $trackMock
-        ]);
+        /** @var Observer $observer */
+        $observer = $this->getObject(Observer::class);
+        $observer->setData('shipment', $postnlShipmentMock);
 
-        $this->invoke('sendTrackAndTrace', $instance);
+        $instance = $this->getInstance(['track' => $trackMock]);
+        $instance->execute($observer);
     }
 }
