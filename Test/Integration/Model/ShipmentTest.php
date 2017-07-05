@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Test\Integration\Model;
 
 use Magento\Framework\App\State;
-use Magento\Framework\Event\ConfigInterface;
+use Magento\Framework\Event\Config;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Model\ShipmentFactory;
@@ -62,15 +62,13 @@ class ShipmentTest extends TestCase
 
     public function testSetConfirmedAtBeforeObserverIsOnlyAvailableInAdmin()
     {
-        $config = $this->objectManager->get(ConfigInterface::class);
-
-        $this->objectManager->get(State::class)->setAreaCode('frontend');
-        $frontedResult = $config->getObservers('tig_postnl_set_confirmed_at_before');
-        $this->assertCount(0, $frontedResult);
+        $config = $this->objectManager->get(Config::class);
 
         $this->objectManager->get(State::class)->setAreaCode('adminhtml');
-        $adminResult = $config->getObservers('tig_postnl_set_confirmed_at_before');
-        $this->assertGreaterThanOrEqual(1, $adminResult);
+
+        $result = $config->getObservers('tig_postnl_set_confirmed_at_before');
+
+        $this->assertGreaterThanOrEqual(1, $result);
     }
 
     /**
