@@ -46,19 +46,20 @@ class AccountConfiguration extends AbstractConfigProvider
 
     /**
      * Returns an array with all the account information needed for CIF connection
+     * @param null|int $store
      * @return array
      */
-    public function getAccountInfo()
+    public function getAccountInfo($store = null)
     {
-        if ($this->isModusOff()) {
+        if ($this->isModusOff($store)) {
             return [];
         }
 
         $accountInfo = [
-            'customernumber' => $this->getCustomerNumber(),
-            'customercode'   => $this->getCustomerCode(),
-            'api_key'        => $this->getApiKey(),
-            'bls_code'       => $this->getBlsCode()
+            'customernumber' => $this->getCustomerNumber($store),
+            'customercode'   => $this->getCustomerCode($store),
+            'api_key'        => $this->getApiKey($store),
+            'bls_code'       => $this->getBlsCode($store)
         ];
 
         return $accountInfo;
@@ -66,43 +67,55 @@ class AccountConfiguration extends AbstractConfigProvider
 
     /**
      * Returns the customerNumber for live or test.
+     * @param null|int $store
      * @return mixed
      */
-    public function getCustomerNumber()
+    public function getCustomerNumber($store = null)
     {
-        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERNUMBER));
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERNUMBER, $store);
+
+        return $this->getConfigFromXpath($modusXpath, $store);
     }
 
     /**
      * Returns the customerCode for live or test.
+     * @param null|int $store
      * @return mixed
      */
-    public function getCustomerCode()
+    public function getCustomerCode($store = null)
     {
-        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERCODE));
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERCODE, $store);
+
+        return $this->getConfigFromXpath($modusXpath, $store);
     }
 
     /**
      * Returns the API Key which is decrypted automaticly in the _afterload method
      * Magento\Config\Model\Config\Backend\Encrypted R:74
+     * @param null|int $store
      * @return string
      */
-    public function getApiKey()
+    public function getApiKey($store = null)
     {
-        $value = $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY));
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY, $store);
+        $value = $this->getConfigFromXpath($modusXpath, $store);
 
         return $this->crypt->decrypt($value);
     }
 
     /**
+     * @param null|int $store
      * @return mixed
      */
-    public function getBlsCode()
+    public function getBlsCode($store = null)
     {
-        return $this->getConfigFromXpath($this->getModusXpath(self::XPATH_GENERAL_STATUS_BLSCODE));
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_BLSCODE, $store);
+
+        return $this->getConfigFromXpath($modusXpath, $store);
     }
 
     /**
+     * @param null|int $store
      * Should return on of these values
      *  '1' => live ||
      *  '2' => test ||
@@ -110,18 +123,19 @@ class AccountConfiguration extends AbstractConfigProvider
      *
      * @return mixed
      */
-    public function getModus()
+    public function getModus($store = null)
     {
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_STATUS_MODUS);
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_STATUS_MODUS, $store);
     }
 
     /**
      * Checks if the extension is on status live
+     * @param null|int $store
      * @return bool
      */
-    public function isModusLive()
+    public function isModusLive($store = null)
     {
-        if ($this->getModus() == '1') {
+        if ($this->getModus($store) == '1') {
             return true;
         }
 
@@ -130,11 +144,12 @@ class AccountConfiguration extends AbstractConfigProvider
 
     /**
      * Checks if the extension is on status test
+     * @param null|int $store
      * @return bool
      */
-    public function isModusTest()
+    public function isModusTest($store = null)
     {
-        if ($this->getModus() == '2') {
+        if ($this->getModus($store) == '2') {
             return true;
         }
 
@@ -143,11 +158,12 @@ class AccountConfiguration extends AbstractConfigProvider
 
     /**
      * Checks if the extension is on status off.
+     * @param null|int $store
      * @return bool
      */
-    public function isModusOff()
+    public function isModusOff($store = null)
     {
-        if ($this->getModus() == '0' || false == $this->getModus()) {
+        if ($this->getModus($store) == '0' || false == $this->getModus()) {
             return true;
         }
 
@@ -156,12 +172,13 @@ class AccountConfiguration extends AbstractConfigProvider
 
     /**
      * @param $xpath
+     * @param null|int $store
      *
      * @return string
      */
-    private function getModusXpath($xpath)
+    private function getModusXpath($xpath, $store = null)
     {
-        if ($this->isModusTest()) {
+        if ($this->isModusTest($store)) {
             $xpath .= '_test';
         }
 
