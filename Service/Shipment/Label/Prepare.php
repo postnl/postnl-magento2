@@ -35,11 +35,12 @@ use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Exception as PostNLException;
 use TIG\PostNL\Service\Shipment\Type;
 use TIG\PostNL\Service\Shipment\Label\Type\TypeInterface;
+use TIG\PostNL\Service\Shipment\Label\Type\TypeInterfaceFactory;
 
 class Prepare
 {
     /**
-     * @var TypeInterface[]
+     * @var TypeInterfaceFactory[]
      */
     private $types;
     /**
@@ -60,8 +61,8 @@ class Prepare
         $this->typeConverter = $typeConverter;
         $this->types = $types;
 
-        foreach ($types as $name => $instance) {
-            $this->validateType($name, $instance);
+        foreach ($types as $name => $instanceFactory) {
+            $this->validateType($name, $instanceFactory);
         }
     }
 
@@ -76,10 +77,13 @@ class Prepare
         $shipment = $label->getShipment();
         $normalizedShipment = strtolower($this->typeConverter->get($shipment));
 
-        $instance = $this->types['domestic'];
+        $instanceFactory = $this->types['domestic'];
         if (array_key_exists($normalizedShipment, $this->types)) {
-            $instance = $this->types[$normalizedShipment];
+            $instanceFactory = $this->types[$normalizedShipment];
         }
+
+        /** @var TypeInterface $instance */
+        $instance = $instanceFactory->create();
 
         $result = $instance->process($label);
         $instance->cleanup();
@@ -89,12 +93,14 @@ class Prepare
 
     /**
      * @param $name
-     * @param $instance
+     * @param $instanceFactory
      *
      * @throws PostNLException
      */
-    private function validateType($name, $instance)
+    private function validateType($name, $instanceFactory)
     {
+        $instance = $instanceFactory->create();
+
         if (!$instance instanceof TypeInterface) {
             throw new PostNLException(
                 // @codingStandardsIgnoreLine
