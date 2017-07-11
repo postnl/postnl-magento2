@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Unit\Controller\Adminhtml\Shipment;
 
 use Magento\Sales\Model\Order\Shipment;
+use Magento\Sales\Model\ResourceModel\Order\Shipment\Collection;
 use TIG\PostNL\Controller\Adminhtml\Shipment\MassPrintShippingLabel;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;

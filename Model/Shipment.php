@@ -495,6 +495,10 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      */
     public function setConfirmedAt($value)
     {
+        if ($value !== null) {
+            $this->_eventManager->dispatch('tig_postnl_set_confirmed_at_before', ['shipment' => $this]);
+        }
+
         return $this->setData(static::FIELD_CONFIRMED_AT, $value);
     }
 

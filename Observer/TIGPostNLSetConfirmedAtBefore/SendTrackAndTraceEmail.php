@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,14 +28,36 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="sales_order_shipment_save_after">
-        <observer name="tig_postnl_sales_order_shipment_save_after" instance="TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\CreatePostNLShipment" />
-    </event>
+ */
+namespace TIG\PostNL\Observer\TIGPostNLSetConfirmedAtBefore;
 
-    <event name="tig_postnl_set_confirmed_at_before">
-        <observer name="tig_postnl_send_track_and_trace_email" instance="TIG\PostNL\Observer\TIGPostNLSetConfirmedAtBefore\SendTrackAndTraceEmail" />
-    </event>
-</config>
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Model\Shipment;
+
+class SendTrackAndTraceEmail implements ObserverInterface
+{
+    /** @var  Track */
+    private $track;
+
+    /**
+     * @param Track $track
+     */
+    public function __construct(Track $track)
+    {
+        $this->track = $track;
+    }
+
+    /**
+     * @param Observer $observer
+     */
+    public function execute(Observer $observer)
+    {
+        /** @var Shipment $shipment */
+        $shipment = $observer->getData('shipment');
+        $magentoShipment = $shipment->getShipment();
+
+        $this->track->send($magentoShipment);
+    }
+}
