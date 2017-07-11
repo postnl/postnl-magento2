@@ -136,6 +136,7 @@ class SentDate extends AbstractEndpoint
     public function setParameters(Shipment $shipment, PostNLOrder $postNLOrder)
     {
         $address = $shipment->getShippingAddress();
+        $this->soap->updateApiKey($shipment->getStoreId());
 
         $this->requestParams = [
             $this->type => [

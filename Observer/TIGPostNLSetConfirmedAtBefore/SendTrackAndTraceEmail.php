@@ -29,28 +29,35 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Webservices;
+namespace TIG\PostNL\Observer\TIGPostNLSetConfirmedAtBefore;
 
-class Response
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Model\Shipment;
+
+class SendTrackAndTraceEmail implements ObserverInterface
 {
-    /**
-     * @var \stdClass
-     */
-    private $response;
+    /** @var  Track */
+    private $track;
 
     /**
-     * @param \stdClass $response
+     * @param Track $track
      */
-    public function set(\stdClass $response)
+    public function __construct(Track $track)
     {
-        $this->response = $response;
+        $this->track = $track;
     }
 
     /**
-     * @return \stdClass
+     * @param Observer $observer
      */
-    public function get()
+    public function execute(Observer $observer)
     {
-        return $this->response;
+        /** @var Shipment $shipment */
+        $shipment = $observer->getData('shipment');
+        $magentoShipment = $shipment->getShipment();
+
+        $this->track->send($magentoShipment);
     }
 }

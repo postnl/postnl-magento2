@@ -122,6 +122,9 @@ class Locations extends AbstractDeliveryOptions
             $deliveryDate = $this->getDeliveryDay($address);
         }
 
+        $quote = $this->checkoutSession->getQuote();
+        $storeId = $quote->getStoreId();
+        $this->locationsEndpoint->setStoreId($storeId);
         $this->locationsEndpoint->setParameters($address, $deliveryDate);
         $response = $this->locationsEndpoint->call();
         //@codingStandardsIgnoreLine

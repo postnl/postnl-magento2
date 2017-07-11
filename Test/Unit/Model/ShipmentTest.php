@@ -31,6 +31,8 @@
  */
 namespace TIG\PostNL\Test\Unit\Model;
 
+use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Model\Context;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Test\TestCase;
@@ -69,5 +71,45 @@ class ShipmentTest extends TestCase
         $result = $instance->isExtraCover();
 
         $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @return array
+     */
+    public function setConfirmedAtProvider()
+    {
+        return [
+            'null value' => [
+                null,
+                0
+            ],
+            'string date value' => [
+                '01-01-1970',
+                1
+            ]
+        ];
+    }
+
+    /**
+     * @param $value
+     * @param $dispatchCalls
+     *
+     * @dataProvider setConfirmedAtProvider
+     */
+    public function testSetConfirmedAt($value, $dispatchCalls)
+    {
+        $eventManagerMock = $this->getFakeMock(ManagerInterface::class)->setMethods(['dispatch'])->getMock();
+
+        $contextMock = $this->getFakeMock(Context::class)->setMethods(['getEventDispatcher'])->getMock();
+        $contextMock->expects($this->once())->method('getEventDispatcher')->willReturn($eventManagerMock);
+
+        $instance = $this->getInstance(['context' => $contextMock]);
+
+        $eventManagerMock->expects($this->exactly($dispatchCalls))
+            ->method('dispatch')
+            ->with('tig_postnl_set_confirmed_at_before', ['shipment' => $instance]);
+
+        $result = $instance->setConfirmedAt($value);
+        $this->assertInstanceOf(Shipment::class, $result);
     }
 }
