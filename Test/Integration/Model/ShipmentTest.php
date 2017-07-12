@@ -33,6 +33,7 @@ namespace TIG\PostNL\Test\Integration\Model;
 
 use Magento\Framework\App\State;
 use Magento\Framework\Event\Config;
+use Magento\Sales\Model\Order\ShipmentRepository;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Model\ShipmentFactory;
@@ -44,18 +45,20 @@ class ShipmentTest extends TestCase
     {
         $this->objectManager->get(State::class)->setAreaCode('adminhtml');
 
-        $trackMock = $this->getFakeMock(Track::class)->setMethods(['send'])->getMock();
+        $trackMock = $this->getFakeMock(Track::class)->getMock();
+        $shipmentRepositorykMock = $this->getFakeMock(ShipmentRepository::class)->getMock();
 
         $this->objectManager->configure([
             'preferences' => [
                 Track::class => get_class($trackMock),
+                ShipmentRepository::class => get_class($shipmentRepositorykMock),
             ],
         ]);
 
         $model = $this->getNewModel();
 
         $newTrackMock = $this->objectManager->get(Track::class);
-        $newTrackMock->method('send')->with($model->getShipment());
+        $newTrackMock->method('send');
 
         $model->setConfirmedAt('01-01-1970');
     }
