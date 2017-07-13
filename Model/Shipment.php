@@ -73,7 +73,9 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     // @codingStandardsIgnoreLine
     protected $_eventPrefix = 'tig_postnl_shipment';
 
-    /** @var OrderShipmentRepository $orderShipmentRepository */
+    /**
+     * @var OrderShipmentRepository $orderShipmentRepository
+     */
     private $orderShipmentRepository;
 
     /**
