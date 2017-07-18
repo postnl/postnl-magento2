@@ -31,18 +31,18 @@
  */
 namespace TIG\PostNL\Service\Options;
 
-use TIG\PostNL\Model\Product\Attribute\Source\Type;
+use TIG\PostNL\Config\Provider\ProductType;
 use TIG\PostNL\Service\Order\ProductCode;
+use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use Magento\Sales\Api\Data\ShipmentItemInterface;
 use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
-use TIG\PostNL\Service\Wrapper\QuoteInterface;
 
 class ItemsToOption
 {
     private $typeToOption = [
-        Type::PRODUCT_TYPE_EXTRA_AT_HOME => ProductCode::OPTION_EXTRAATHOME,
-        Type::PRODUCT_TYPE_REGULAR       => '',
+        ProductType::PRODUCT_TYPE_EXTRA_AT_HOME => ProductCode::OPTION_EXTRAATHOME,
+        ProductType::PRODUCT_TYPE_REGULAR       => '',
     ];
 
     /**
@@ -50,14 +50,14 @@ class ItemsToOption
      * @var array
      */
     private $priority = [
-        Type::PRODUCT_TYPE_EXTRA_AT_HOME => 1,
-        Type::PRODUCT_TYPE_REGULAR       => 2,
+        ProductType::PRODUCT_TYPE_EXTRA_AT_HOME => 1,
+        ProductType::PRODUCT_TYPE_REGULAR       => 2,
     ];
 
     /**
      * @var string
      */
-    private $currentType = Type::PRODUCT_TYPE_REGULAR;
+    private $currentType = ProductType::PRODUCT_TYPE_REGULAR;
 
     /**
      * @var ProductDictionary
@@ -65,7 +65,7 @@ class ItemsToOption
     private $productDictionary;
 
     /**
-     * @var Type
+     * @var ProductType
      */
     private $productTypes;
 
@@ -77,12 +77,12 @@ class ItemsToOption
     /**
      * @param QuoteInterface    $quote
      * @param ProductDictionary $productDictionary
-     * @param Type              $type
+     * @param ProductType       $type
      */
     public function __construct(
         QuoteInterface $quote,
         ProductDictionary $productDictionary,
-        Type $type
+        ProductType $type
     ) {
         $this->productDictionary = $productDictionary;
         $this->productTypes = $type;

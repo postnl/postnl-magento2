@@ -275,7 +275,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             return $this->getShortLabel($code);
         }
 
-        return $this->availableOptions[$code]['label'] . " (". $code .")";
+        return $this->availableOptions[$code]['label'];
     }
 
     /**
@@ -290,7 +290,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             $label = 'extra@Home';
         }
 
-        return  ucfirst(__($label)) . " (". $code .")";
+        return  ucfirst(__($label));
     }
 
     /**

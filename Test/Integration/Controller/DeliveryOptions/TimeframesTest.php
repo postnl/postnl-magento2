@@ -34,7 +34,7 @@ namespace TIG\PostNL\Test\Integration\Controller\DeliveryOptions;
 
 class TimeframesTest extends TestBase
 {
-    public function test response json contains the correct keys()
+    public function testResponseJsonContainsTheCorrectKeys()
     {
         $this->dispatch('postnl/deliveryoptions/timeframes');
 
@@ -47,7 +47,7 @@ class TimeframesTest extends TestBase
         $this->assertArrayHasKey('price', $json);
     }
 
-    public function test the response contains the correct price()
+    public function testTheResponseContainsTheCorrectPrice()
     {
         $calculator = $this->getMockBuilder(\TIG\PostNL\Service\Carrier\Price\Calculator::class);
         $calculator->disableOriginalConstructor();

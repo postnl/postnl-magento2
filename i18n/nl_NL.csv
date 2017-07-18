@@ -256,3 +256,8 @@ Percent,Percentage
 "Instructions","Instructies"
 "Shipment successfully confirmed","Zending succesvol voorgemeld"
 "Could not confirm shipment : %1","Zending is niet voorgemeld : %1"
+"Parcel count", "Pakket aantal"
+"Type", "Type"
+"Regular", "Regulier"
+"test note","test note translated"
+"When sending Extra@Home types, this value is used to calculate the coli amount. When using other types this value will be ignored.", "Wanneer u producten verstuurd via Extra@Home dan wordt deze waarde gebruikt om het aantal coli te berekenen. Bij andere opties wordt deze waarde genegeerd."

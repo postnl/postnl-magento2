@@ -36,7 +36,7 @@ use Magento\Quote\Model\Quote\Address\RateRequest;
 
 class LocationsTest extends TestBase
 {
-    public function test the resulting array contains the price key()
+    public function testTheResultingArrayContainsThePriceKey()
     {
         $this->dispatch('postnl/deliveryoptions/locations');
 
@@ -49,7 +49,7 @@ class LocationsTest extends TestBase
         $this->assertArrayHasKey('price', $json);
     }
 
-    public function test that the price key contains the right price()
+    public function testThatThePriceKeyContainsTheRightPrice()
     {
         $calculator = $this->getMockBuilder(\TIG\PostNL\Service\Carrier\Price\Calculator::class);
         $calculator->disableOriginalConstructor();

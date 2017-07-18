@@ -37,6 +37,7 @@ use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute as EavAttribute;
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Setup\EavSetup;
+use TIG\PostNL\Config\Provider\ProductType;
 use TIG\PostNL\Setup\AbstractDataInstaller;
 
 class CustomProductAttributes extends AbstractDataInstaller
@@ -72,57 +73,58 @@ class CustomProductAttributes extends AbstractDataInstaller
             Product::ENTITY,
             'postnl_product_type',
             [
-                'group' => 'PostNL',
-                'type' => 'text',
-                'backend' => '',
-                'frontend' => '',
-                'label' => 'Product type',
-                'input' => 'select',
-                'class' => '',
-                'source' => 'TIG\PostNL\Model\Product\Attribute\Source\Type',
-                'global' => EavAttribute::SCOPE_GLOBAL,
-                'visible' => true,
-                'required' => false,
-                'user_defined' => false,
-                'default' => 'regular',
-                'searchable' => false,
-                'filterable' => false,
-                'comparable' => false,
-                'visible_on_front' => false,
+                'group'                   => 'PostNL',
+                'type'                    => 'text',
+                'backend'                 => '',
+                'frontend'                => '',
+                'label'                   => 'Type',
+                'input'                   => 'select',
+                'class'                   => '',
+                'source'                  => ProductType::class,
+                'global'                  => EavAttribute::SCOPE_GLOBAL,
+                'visible'                 => true,
+                'required'                => false,
+                'user_defined'            => false,
+                'default'                 => 'regular',
+                'searchable'              => false,
+                'filterable'              => false,
+                'comparable'              => false,
+                'visible_on_front'        => false,
                 'used_in_product_listing' => true,
-                'unique' => false,
-                'apply_to' => 'simple'
+                'unique'                  => false,
+                'apply_to'                => 'simple',
             ]
         );
 
         /**
          * Parcel count
          */
-
         $eavSetup->addAttribute(
             Product::ENTITY,
             'postnl_parcel_count',
             [
-                'group' => 'PostNL',
-                'type' => 'int',
-                'backend' => '',
-                'frontend' => '',
-                'label' => 'Product parcel count',
-                'input' => 'text',
-                'class' => 'validate-greater-than-zero',
-                'source' => '',
-                'global' => EavAttribute::SCOPE_GLOBAL,
-                'visible' => true,
-                'required' => false,
-                'user_defined' => false,
-                'default' => 1,
-                'searchable' => false,
-                'filterable' => false,
-                'comparable' => false,
-                'visible_on_front' => false,
+                'group'                   => 'PostNL',
+                'type'                    => 'int',
+                'backend'                 => '',
+                'frontend'                => '',
+                'label'                   => 'Parcel count',
+                'input'                   => 'text',
+                'class'                   => 'validate-greater-than-zero',
+                'source'                  => '',
+                'global'                  => EavAttribute::SCOPE_GLOBAL,
+                'visible'                 => true,
+                'required'                => false,
+                'user_defined'            => false,
+                'default'                 => 1,
+                'searchable'              => false,
+                'filterable'              => false,
+                'comparable'              => false,
+                'visible_on_front'        => false,
                 'used_in_product_listing' => true,
-                'unique' => false,
-                'apply_to' => 'simple'
+                'unique'                  => false,
+                'apply_to'                => 'simple',
+                'note'                    => 'When sending Extra@Home types, this value is used to calculate the ' .
+                                             'coli amount. When using other types this value will be ignored.',
             ]
         );
     }

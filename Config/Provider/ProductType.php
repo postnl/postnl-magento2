@@ -30,27 +30,45 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\PostNL\Model\Product\Attribute\Source;
+namespace TIG\PostNL\Config\Provider;
 
-class Type extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
+use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
+
+class ProductType extends AbstractSource
 {
     const POSTNL_PRODUCT_TYPE        = 'postnl_product_type';
     const PRODUCT_TYPE_EXTRA_AT_HOME = 'extra_at_home';
     const PRODUCT_TYPE_REGULAR       = 'regular';
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
+
+    /**
+     * @param ShippingOptions $shippingOptions
+     */
+    public function __construct(
+        ShippingOptions $shippingOptions
+    ) {
+        $this->shippingOptions = $shippingOptions;
+    }
 
     /**
      * @return array
      */
     public function getAllOptions()
     {
-        $_options = [
+        $options = [
             // @codingStandardsIgnoreLine
             ['value' => self::PRODUCT_TYPE_REGULAR, 'label' => __('Regular')],
             // @codingStandardsIgnoreLine
-            ['value' => self::PRODUCT_TYPE_EXTRA_AT_HOME, 'label' => __('Extra@Home')],
         ];
 
-        return $_options;
+        if ($this->shippingOptions->isExtraAtHomeActive()) {
+            $options[] = ['value' => self::PRODUCT_TYPE_EXTRA_AT_HOME, 'label' => __('Extra@Home')];
+        }
+
+        return $options;
     }
 
     /**

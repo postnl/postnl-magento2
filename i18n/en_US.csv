@@ -242,3 +242,7 @@ Percent,Percent
 "Instructions","Instructions"
 "Shipment successfully confirmed","Shipment successfully confirmed"
 "Could not confirm shipment : %1","Could not confirm shipment : %1"
+"Parcel count", "Parcel count"
+"Type", "Type"
+"Regular", "Regular"
+"When sending Extra@Home types, this value is used to calculate the coli amount. When using other types this value will be ignored.", "When sending Extra@Home types, this value is used to calculate the coli amount. When using other types this value will be ignored."

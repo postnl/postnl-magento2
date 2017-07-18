@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Service\Options;
 
+use TIG\PostNL\Config\Provider\ProductType as PostNLType;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Sales\Api\Data\ShipmentItemInterface;
@@ -39,7 +40,6 @@ use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\FilterGroup;
-use TIG\PostNL\Model\Product\Attribute\Source\Type as PostNLType;
 
 class ProductDictionary
 {
