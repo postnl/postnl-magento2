@@ -41,7 +41,7 @@ use Magento\Framework\Registry;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\Order\AddressFactory;
-use Magento\Sales\Model\Order\Shipment as OrderShipment;
+use Magento\Sales\Model\Order\ShipmentRepository as OrderShipmentRepository;
 use Magento\Sales\Model\Order\Shipment\Item;
 use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
@@ -73,8 +73,10 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     // @codingStandardsIgnoreLine
     protected $_eventPrefix = 'tig_postnl_shipment';
 
-    /** @var OrderShipment $orderShipment */
-    private $orderShipment;
+    /**
+     * @var OrderShipmentRepository $orderShipmentRepository
+     */
+    private $orderShipmentRepository;
 
     /**
      * @var TimezoneInterface
@@ -104,7 +106,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     /**
      * @param Context                            $context
      * @param Registry                           $registry
-     * @param OrderShipment                      $orderShipment
+     * @param OrderShipmentRepository            $orderShipmentRepository
      * @param OrderFactory                       $orderFactory
      * @param AddressFactory                     $addressFactory
      * @param TimezoneInterface                  $timezoneInterface
@@ -118,7 +120,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function __construct(
         Context $context,
         Registry $registry,
-        OrderShipment $orderShipment,
+        OrderShipmentRepository $orderShipmentRepository,
         OrderFactory $orderFactory,
         AddressFactory $addressFactory,
         TimezoneInterface $timezoneInterface,
@@ -131,7 +133,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     ) {
         parent::__construct($context, $registry, $dateTime, $resource, $resourceCollection, $data);
 
-        $this->orderShipment = $orderShipment;
+        $this->orderShipmentRepository = $orderShipmentRepository;
         $this->timezoneInterface = $timezoneInterface;
         $this->orderFactory = $orderFactory;
         $this->addressFactory = $addressFactory;
@@ -158,11 +160,11 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     }
 
     /**
-     * @return OrderShipment
+     * @return OrderShipmentRepository
      */
     public function getShipment()
     {
-        return $this->orderShipment->load($this->getShipmentId());
+        return $this->orderShipmentRepository->get($this->getShipmentId());
     }
 
     /**
