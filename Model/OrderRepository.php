@@ -34,11 +34,13 @@ namespace TIG\PostNL\Model;
 use TIG\PostNL\Api\OrderRepositoryInterface;
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Model\ResourceModel\Order\CollectionFactory;
+use Magento\Framework\Api\SearchResultsInterface;
+use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotDeleteException;
-use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchResultsInterfaceFactory;
 
 class OrderRepository extends AbstractRepository implements OrderRepositoryInterface
 {

@@ -140,6 +140,7 @@ class Mail extends AbstractTracking
         $transport->setFrom('general');
         $address = $shipment->getShippingAddress();
         $transport->addTo($address->getEmail(), $address->getFirstname() . ' '. $address->getLastname());
+        $transport = $this->addBccEmail($transport);
         $this->logging->addInfo('Track And Trace email build for :'. $address->getEmail());
         $this->trackAndTraceEmail = $transport->getTransport();
     }
@@ -160,5 +161,19 @@ class Mail extends AbstractTracking
             $this->logging->critical($exception->getLogMessage(), $exception->getTrace());
             return 'https://www.postnl.nl/img/logo.png';
         }
+    }
+
+    /**
+     * @param \Magento\Framework\Mail\Template\TransportBuilder $transport
+     *
+     * @return \Magento\Framework\Mail\Template\TransportBuilder
+     */
+    private function addBccEmail($transport)
+    {
+        if ($this->webshopConfig->getTrackAndTraceBccEmail()) {
+            $transport->addBcc($this->webshopConfig->getTrackAndTraceBccEmail());
+        }
+
+        return $transport;
     }
 }

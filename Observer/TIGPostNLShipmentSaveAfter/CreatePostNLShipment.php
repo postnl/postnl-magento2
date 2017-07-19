@@ -174,7 +174,7 @@ class CreatePostNLShipment implements ObserverInterface
      */
     private function getOrder()
     {
-        if ($this->order === null) {
+        if ($this->order === null || $this->order->getOrderId() != $this->shipmentOrderId) {
             $this->order = $this->orderRepository->getByFieldWithValue('order_id', $this->shipmentOrderId);
         }
 

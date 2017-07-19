@@ -35,4 +35,8 @@
     <event name="sales_order_shipment_save_after">
         <observer name="tig_postnl_sales_order_shipment_save_after" instance="TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\CreatePostNLShipment" />
     </event>
+
+    <event name="tig_postnl_set_confirmed_at_before">
+        <observer name="tig_postnl_send_track_and_trace_email" instance="TIG\PostNL\Observer\TIGPostNLSetConfirmedAtBefore\SendTrackAndTraceEmail" />
+    </event>
 </config>

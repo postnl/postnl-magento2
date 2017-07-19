@@ -99,16 +99,14 @@ class Track extends AbstractTracking
 
     /**
      * @param Shipment|ShipmentInterface $shipment
-     *
-     * @return $this
      */
     public function set($shipment)
     {
         $trackingNumbers = [];
         $postnlShipments = $this->getPostNLshipments($shipment->getId());
+
         foreach ($postnlShipments as $postnlShipment) {
             $trackingNumbers[] = $postnlShipment->getMainBarcode();
-            $this->sendTrackAndTraceEmail($shipment, $postnlShipment);
         }
 
         $this->addTrackingNumbersToShipment($shipment, $trackingNumbers);
@@ -132,6 +130,18 @@ class Track extends AbstractTracking
         $trackingStatus->setUrl($this->getTrackAndTraceUrl($tracking));
 
         return $trackingStatus;
+    }
+
+    /**
+     * @param Shipment $shipment
+     */
+    public function send($shipment)
+    {
+        $postnlShipments = $this->getPostNLshipments($shipment->getId());
+
+        foreach ($postnlShipments as $postnlShipment) {
+            $this->sendTrackAndTraceEmail($shipment, $postnlShipment);
+        }
     }
 
     /**

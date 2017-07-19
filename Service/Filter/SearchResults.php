@@ -29,69 +29,42 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+namespace TIG\PostNL\Service\Filter;
 
-namespace TIG\PostNL\Model;
-
-use Magento\Cms\Model\ResourceModel\AbstractCollection;
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\Search\FilterGroup;
-use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchResultsInterface;
-use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Api\SortOrder;
-use TIG\PostNL\Model\ResourceModel\Order\CollectionFactory;
+use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
-abstract class AbstractRepository
+class SearchResults
 {
-    /**
-     * @var CollectionFactory
-     */
-    // @codingStandardsIgnoreLine
-    protected $collectionFactory;
-
     /**
      * @var SearchResultsInterfaceFactory
      */
-    // @codingStandardsIgnoreLine
-    protected $searchResultsFactory;
+    private $searchResultsFactory;
 
     /**
-     * @var SearchCriteriaBuilder
-     */
-    // @codingStandardsIgnoreLine
-    protected $searchCriteriaBuilder;
-
-    /**
-     * @var SearchResultsInterface
-     */
-    // @codingStandardsIgnoreLine
-    protected $searchResults;
-
-    /**
-     * AbstractRepository constructor.
-     *
      * @param SearchResultsInterfaceFactory $searchResultsFactory
-     * @param SearchCriteriaBuilder         $searchCriteriaBuilder
      */
     public function __construct(
-        SearchResultsInterfaceFactory $searchResultsFactory,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchResultsInterfaceFactory $searchResultsFactory
     ) {
-        $this->searchResultsFactory  = $searchResultsFactory;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->searchResultsFactory = $searchResultsFactory;
     }
 
     /**
-     * Retrieve a list of Matrixrates.
-     *
      * @param SearchCriteriaInterface $criteria
+     * @param AbstractCollection      $collection
+     *
      * @return SearchResultsInterface
      */
-    public function getList(SearchCriteriaInterface $criteria)
+    public function getCollectionItems(SearchCriteriaInterface $criteria, AbstractCollection $collection)
     {
         $searchResults = $this->getSearchResults($criteria);
-        $collection = $this->collectionFactory->create();
+
         foreach ($criteria->getFilterGroups() as $filterGroup) {
             $this->handleFilterGroups($filterGroup, $collection);
         }
@@ -101,7 +74,12 @@ abstract class AbstractRepository
 
         $collection->setCurPage($criteria->getCurrentPage());
         $collection->setPageSize($criteria->getPageSize());
-        $searchResults->setItems($collection->getItems());
+        $objects = [];
+        foreach ($collection as $objectModel) {
+            $objects[] = $objectModel;
+        }
+
+        $searchResults->setItems($objects);
 
         return $searchResults;
     }
@@ -111,27 +89,25 @@ abstract class AbstractRepository
      *
      * @return SearchResultsInterface
      */
-    // @codingStandardsIgnoreLine
-    protected function getSearchResults(SearchCriteriaInterface $criteria)
+    private function getSearchResults(SearchCriteriaInterface $criteria)
     {
-        $this->searchResults = $this->searchResultsFactory->create();
-        $this->searchResults->setSearchCriteria($criteria);
+        $searchResults = $this->searchResultsFactory->create();
+        $searchResults->setSearchCriteria($criteria);
 
-        return $this->searchResults;
+        return $searchResults;
     }
 
     /**
      * @param FilterGroup        $filterGroup
      * @param AbstractCollection $collection
      */
-    // @codingStandardsIgnoreLine
-    protected function handleFilterGroups($filterGroup, $collection)
+    private function handleFilterGroups($filterGroup, $collection)
     {
         $fields     = [];
         $conditions = [];
 
         /** @var Filter[] $filters */
-        $filters = array_filter($filterGroup->getFilters(), function (Filter $filter) {
+        $filters = array_filter($filterGroup->getFilters(), function ($filter) {
             return !empty($filter->getValue());
         });
 
@@ -148,10 +124,9 @@ abstract class AbstractRepository
 
     /**
      * @param SearchCriteriaInterface $criteria
-     * @param                         $collection
+     * @param AbstractCollection      $collection
      */
-    // @codingStandardsIgnoreLine
-    protected function handleSortOrders(SearchCriteriaInterface $criteria, $collection)
+    private function handleSortOrders(SearchCriteriaInterface $criteria, $collection)
     {
         $sortOrders = $criteria->getSortOrders();
 
@@ -166,27 +141,5 @@ abstract class AbstractRepository
                 ($sortOrder->getDirection() == SortOrder::SORT_ASC) ? 'ASC' : 'DESC'
             );
         }
-    }
-
-    /**
-     * @param $field
-     * @param $value
-     *
-     * @return AbstractModel|null
-     */
-    public function getByFieldWithValue($field, $value)
-    {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter($field, $value);
-        $searchCriteria->setPageSize(1);
-
-        /** @var \Magento\Framework\Api\SearchResults $list */
-        $list = $this->getList($searchCriteria->create());
-
-        if ($list->getTotalCount()) {
-            $items = $list->getItems();
-            return array_shift($items);
-        }
-
-        return null;
     }
 }

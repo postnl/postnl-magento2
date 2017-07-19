@@ -98,7 +98,7 @@ class A4Merger implements MergeInterface
         $this->labelCounter++;
 
         if ($this->labelCounter > 4) {
-            $this->labelCounter = 0;
+            $this->labelCounter = 1;
             $this->pdf->addPage('L', 'A4');
         }
     }

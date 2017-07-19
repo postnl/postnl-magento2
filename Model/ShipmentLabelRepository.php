@@ -31,20 +31,18 @@
  */
 namespace TIG\PostNL\Model;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Api\SearchResultsInterface;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Model\ResourceModel\ShipmentLabel\CollectionFactory;
+use TIG\PostNL\Service\Filter\SearchResults;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotDeleteException;
-use Magento\Framework\Api\SearchResultsInterfaceFactory;
-use Magento\Framework\Api\SortOrder;
 
-// @codingStandardsIgnoreFile
 class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
 {
     /**
@@ -63,20 +61,25 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
     private $searchCriteriaBuilder;
 
     /**
-     * @param ShipmentLabelFactory          $objectFactory
-     * @param CollectionFactory             $collectionFactory
-     * @param SearchResultsInterfaceFactory $searchResultsFactory
-     * @param SearchCriteriaBuilder         $searchCriteriaBuilder
+     * @var SearchResults
+     */
+    private $searchResults;
+
+    /**
+     * @param ShipmentLabelFactory  $objectFactory
+     * @param CollectionFactory     $collectionFactory
+     * @param SearchResults         $searchResults
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
         ShipmentLabelFactory $objectFactory,
         CollectionFactory $collectionFactory,
-        SearchResultsInterfaceFactory $searchResultsFactory,
+        SearchResults $searchResults,
         SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
-        $this->shipmentLabelFactory = $objectFactory;
-        $this->collectionFactory      = $collectionFactory;
-        $this->searchResultsFactory   = $searchResultsFactory;
+        $this->shipmentLabelFactory  = $objectFactory;
+        $this->collectionFactory     = $collectionFactory;
+        $this->searchResults         = $searchResults;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
@@ -142,76 +145,8 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
      */
     public function getList(SearchCriteriaInterface $criteria)
     {
-        $searchResults = $this->getSearchResults($criteria);
         $collection = $this->collectionFactory->create();
-        foreach ($criteria->getFilterGroups() as $filterGroup) {
-            $this->handleFilterGroups($filterGroup, $collection);
-        }
-
-        $searchResults->setTotalCount($collection->getSize());
-        $this->handleSortOrders($criteria, $collection);
-
-        $collection->setCurPage($criteria->getCurrentPage());
-        $collection->setPageSize($criteria->getPageSize());
-        $objects = [];
-        foreach ($collection as $objectModel) {
-            $objects[] = $objectModel;
-        }
-
-        $searchResults->setItems($objects);
-
-        return $searchResults;
-    }
-
-    /**
-     * @param $filterGroup
-     * @param $collection
-     */
-    private function handleFilterGroups($filterGroup, $collection)
-    {
-        $fields     = [];
-        $conditions = [];
-        foreach ($filterGroup->getFilters() as $filter) {
-            $condition    = $filter->getConditionType() ? $filter->getConditionType() : 'eq';
-            $fields[]     = $filter->getField();
-            $conditions[] = [$condition => $filter->getValue()];
-        }
-
-        if ($fields) {
-            $collection->addFieldToFilter($fields, $conditions);
-        }
-    }
-
-    /**
-     * @param SearchCriteriaInterface $criteria
-     * @param                         $collection
-     */
-    private function handleSortOrders(SearchCriteriaInterface $criteria, $collection)
-    {
-        $sortOrders = $criteria->getSortOrders();
-
-        if (!$sortOrders) {
-            return;
-        }
-
-        /** @var SortOrder $sortOrder */
-        foreach ($sortOrders as $sortOrder) {
-            $collection->addOrder(
-                $sortOrder->getField(),
-                ($sortOrder->getDirection() == SortOrder::SORT_ASC) ? 'ASC' : 'DESC'
-            );
-        }
-    }
-
-    /**
-     * @param SearchCriteriaInterface $criteria
-     *
-     * @return SearchResultsInterface
-     */
-    private function getSearchResults(SearchCriteriaInterface $criteria)
-    {
-        $searchResults = $this->searchResultsFactory->create();
-        $searchResults->setSearchCriteria($criteria);
+        $searchResults = $this->searchResults->getCollectionItems($criteria, $collection);
 
         return $searchResults;
     }

@@ -109,6 +109,16 @@ class Labelling extends AbstractEndpoint
      */
     public function setParameters($shipment, $currentShipmentNumber = 1)
     {
+        $storeId = $shipment->getShipment()->getStoreId();
+        $this->soap->updateApiKey($storeId);
+        $this->customer->setStoreId($storeId);
+
+        $customer = $this->customer->get();
+        $customer['Address'] = $this->customer->address();
+        $customer['CollectionLocation'] = $this->customer->blsCode();
+
+//        $shipmentData = $this->getShipmentData($shipment, $currentShipmentNumber);
+
         $barcode = $shipment->getMainBarcode();
         $printerType = ['Printertype' => 'GraphicFile|PDF'];
         $message = $this->message->get($barcode, $printerType);
