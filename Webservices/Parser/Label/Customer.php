@@ -60,4 +60,12 @@ class Customer
 
         return $customer;
     }
+
+    /**
+     * @param $storeId
+     */
+    public function setStoreId($storeId)
+    {
+        $this->customer->setStoreId($storeId);
+    }
 }
