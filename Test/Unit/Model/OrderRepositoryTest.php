@@ -37,7 +37,6 @@ use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Model\Order;
 use TIG\PostNL\Model\ResourceModel\Order\CollectionFactory;
 use TIG\PostNL\Model\OrderFactory;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
@@ -139,8 +138,8 @@ class OrderRepositoryTest extends TestCase
         return [
             'searchResultFactory' => $searchResultFactory,
             'searchResult'        => $searchResult,
-            'searchCreteria'      => $searchCriteria,
-            'collectionFactory'   => $orderCollectionFactory
+            'searchCriteria'      => $searchCriteria,
+            'collectionFactory'   => $orderCollectionFactory,
         ];
     }
 
