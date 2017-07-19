@@ -160,7 +160,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     }
 
     /**
-     * @return OrderShipmentRepository
+     * @return \Magento\Sales\Model\Order\Shipment
      */
     public function getShipment()
     {
