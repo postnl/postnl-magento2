@@ -76,6 +76,9 @@ class ShipmentTest extends TestCase
     }
 
     /**
+     * Test if the correct Magento Shipment and Order are loaded from the PostNL Shipment,
+     * rather than an existing one from Magento's singleton.
+     *
      * @magentoDbIsolation enabled
      */
     public function testMagentoShipmentAndOrderAreLoadedCorrectly()

@@ -78,18 +78,18 @@ $order = $objectManager->create(Order::class);
 $processingStatus = $order->getConfig()->getStateDefaultStatus(Order::STATE_PROCESSING);
 $storeId = $objectManager->get(StoreManagerInterface::class)->getStore()->getId();
 
-$order->setState(Order::STATE_PROCESSING)
-    ->setStatus($processingStatus)
-    ->setSubtotal(100)
-    ->setGrandTotal(100)
-    ->setBaseSubtotal(100)
-    ->setBaseGrandTotal(100)
-    ->setCustomerIsGuest(true)
-    ->setCustomerEmail('order@tig.nl')
-    ->setBillingAddress($billingAddress)
-    ->setShippingAddress($shippingAddress)
-    ->setStoreId($storeId)
-    ->addItem($orderItem)
-    ->setPayment($payment);
+$order->setState(Order::STATE_PROCESSING);
+$order->setStatus($processingStatus);
+$order->setSubtotal(100);
+$order->setGrandTotal(100);
+$order->setBaseSubtotal(100);
+$order->setBaseGrandTotal(100);
+$order->setCustomerIsGuest(true);
+$order->setCustomerEmail('order@tig.nl');
+$order->setBillingAddress($billingAddress);
+$order->setShippingAddress($shippingAddress);
+$order->setStoreId($storeId);
+$order->addItem($orderItem);
+$order->setPayment($payment);
 
 $order->save();
