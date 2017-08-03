@@ -41,12 +41,20 @@ class Data
     private $productOptions;
 
     /**
+     * @var ContentDescription
+     */
+    private $contentDescription;
+
+    /**
      * @param ProductOptions $productOptions
+     * @param ContentDescription $contentDescription
      */
     public function __construct(
-        ProductOptions $productOptions
+        ProductOptions $productOptions,
+        ContentDescription $contentDescription
     ) {
         $this->productOptions = $productOptions;
+        $this->contentDescription = $contentDescription;
     }
 
     /**
@@ -60,19 +68,7 @@ class Data
     public function get(ShipmentInterface $shipment, $address, $contact, $currentShipmentNumber = 0)
     {
         $shipmentData = $this->getDefaultShipmentData($shipment, $address, $contact, $currentShipmentNumber);
-
-        $productOptions = $this->productOptions->get($shipment);
-        if ($productOptions) {
-            $shipmentData['ProductOptions'] = $productOptions;
-        }
-
-        if ($shipment->isExtraCover()) {
-            $shipmentData['Amounts'] = $this->getAmount($shipment);
-        }
-
-        if ($shipment->getParcelCount() > 1) {
-            $shipmentData['Group'] = $this->getGroupData($shipment, $currentShipmentNumber);
-        }
+        $shipmentData = $this->setMandatoryShipmentData($shipment, $currentShipmentNumber, $shipmentData);
 
         return $shipmentData;
     }
@@ -103,6 +99,36 @@ class Data
 
     /**
      * @param ShipmentInterface $shipment
+     * @param int               $currentShipmentNumber
+     * @param array             $shipmentData
+     *
+     * @return array
+     */
+    private function setMandatoryShipmentData(ShipmentInterface $shipment, $currentShipmentNumber, array $shipmentData)
+    {
+        if ($shipment->isExtraAtHome()) {
+            $shipmentData['Content'] = $this->contentDescription->get($shipment);
+            $shipmentData['Dimension']['Volume'] = ''; //@todo Needs to be in CM3
+        }
+
+        if ($shipment->isExtraCover()) {
+            $shipmentData['Amounts'] = $this->getAmount($shipment);
+        }
+
+        if ($shipment->getParcelCount() > 1) {
+            $shipmentData['Groups'] = $this->getGroupData($shipment, $currentShipmentNumber);
+        }
+
+        $productOptions = $this->productOptions->get($shipment);
+        if ($productOptions) {
+            $shipmentData['ProductOptions'] = $productOptions;
+        }
+
+        return $shipmentData;
+    }
+
+    /**
+     * @param ShipmentInterface $shipment
      *
      * @return array
      */
@@ -125,13 +151,21 @@ class Data
         return $amounts;
     }
 
+    /**
+     * @param ShipmentInterface $shipment
+     * @param                   $currentShipmentNumber
+     *
+     * @return array
+     */
     private function getGroupData(ShipmentInterface $shipment, $currentShipmentNumber)
     {
         return [
-            'GroupCount'    => $shipment->getParcelCount(),
-            'GroupSequence' => $currentShipmentNumber,
-            'GroupType'     => '03',
-            'MainBarcode'   => $shipment->getMainBarcode(),
+            'Group' => [
+                'GroupCount'    => $shipment->getParcelCount(),
+                'GroupSequence' => $currentShipmentNumber,
+                'GroupType'     => '03',
+                'MainBarcode'   => $shipment->getMainBarcode(),
+            ]
         ];
     }
 }

@@ -519,8 +519,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      */
     public function isExtraCover()
     {
-        $productCode = $this->getProductCode();
-        $productCodeOptions = $this->productOptions->getOptionsByCode($productCode);
+        $productCodeOptions = $this->getProductCodeOptions();
 
         if ($productCodeOptions === null) {
             return false;
@@ -534,6 +533,20 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     }
 
     /**
+     * @return bool
+     */
+    public function isExtraAtHome()
+    {
+        $productCodeOptions = $this->getProductCodeOptions();
+
+        if ($productCodeOptions === null) {
+            return false;
+        }
+
+        return $productCodeOptions['group'] == 'extra_at_home_options';
+    }
+
+    /**
      * This is static for the time being.
      *
      * @return int
@@ -541,5 +554,14 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function getExtraCoverAmount()
     {
         return 500;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getProductCodeOptions()
+    {
+        $productCode = $this->getProductCode();
+        return $this->productOptions->getOptionsByCode($productCode);
     }
 }

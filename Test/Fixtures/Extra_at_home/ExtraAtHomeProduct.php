@@ -52,7 +52,7 @@ $product->setTypeId(Type::TYPE_SIMPLE)
     ->setName('Extra@Home Product')
     ->setSku('simple_eah')
     ->setPrice(10)
-    ->setWeight(1)
+    ->setWeight(60000)
     ->setShortDescription("Product for Extra@Home")
     ->setTaxClassId(0)
     ->setTierPrice(
