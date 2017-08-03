@@ -156,7 +156,7 @@ define([
                         customerData : AddressFinder()
                     }
                 }).done(function (response) {
-                    $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response})
+                    $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
                 });
 
             }.bind(this));

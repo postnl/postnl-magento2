@@ -132,7 +132,7 @@ define([
                         to     : value.to
                     }
                 }).done(function (response) {
-                    $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response})
+                    $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
                 });
             });
 
