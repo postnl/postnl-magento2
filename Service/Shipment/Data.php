@@ -108,7 +108,7 @@ class Data
     {
         if ($shipment->isExtraAtHome()) {
             $shipmentData['Content'] = $this->contentDescription->get($shipment);
-            $shipmentData['Dimension']['Volume'] = ''; //@todo Needs to be in CM3
+            $shipmentData['Dimension']['Volume'] = ''; // Needs to be in CM3
         }
 
         if ($shipment->isExtraCover()) {
