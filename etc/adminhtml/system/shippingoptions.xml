@@ -135,7 +135,7 @@
             <label>Activate evening delivery for Belgium</label>
             <comment><![CDATA[Activate evening delivery to Belgium for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298488" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>tig_postnl/shippingoptions/eveningdelivery_active</config_path>
+            <config_path>tig_postnl/shippingoptions/eveningdelivery_be_active</config_path>
             <depends>
                 <field id="shippingoptions_active">1</field>
                 <field id="deliverydays_active">1</field>
@@ -145,7 +145,7 @@
         <field id="eveningdelivery_be_fee" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Eveningdelivery for Belgium fee</label>
             <comment><![CDATA[Additional costs for evening delivery to Belgium in the store's base currency. This fee will be added to the shipping costs.]]></comment>
-            <config_path>tig_postnl/shippingoptions/eveningdelivery_fee</config_path>
+            <config_path>tig_postnl/shippingoptions/eveningdelivery_be_fee</config_path>
             <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
             <depends>
                 <field id="shippingoptions_active">1</field>

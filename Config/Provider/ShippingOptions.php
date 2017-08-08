@@ -44,7 +44,9 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_ACTIVE = 'tig_postnl/shippingoptions/pakjegemak_express_active';
     const XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_FEE    = 'tig_postnl/shippingoptions/pakjegemak_express_fee';
     const XPATH_SHIPPING_OPTION_EVENING_ACTIVE            = 'tig_postnl/shippingoptions/eveningdelivery_active';
+    const XPATH_SHIPPING_OPTION_EVENING_BE_ACTIVE         = 'tig_postnl/shippingoptions/eveningdelivery_be_active';
     const XPATH_SHIPPING_OPTION_EVENING_FEE               = 'tig_postnl/shippingoptions/eveningdelivery_fee';
+    const XPATH_SHIPPING_OPTION_EVENING_BE_FEE            = 'tig_postnl/shippingoptions/eveningdelivery_be_fee';
     const XPATH_SHIPPING_OPTION_SUNDAY_ACTIVE             = 'tig_postnl/shippingoptions/sundaydelivery_active';
     const XPATH_SHIPPING_OPTION_SUNDAY_FEE                = 'tig_postnl/shippingoptions/sundaydelivery_fee';
     const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE        = 'tig_postnl/shippingoptions/send_track_and_trace_email';
@@ -121,23 +123,41 @@ class ShippingOptions extends AbstractConfigProvider
     }
 
     /**
+     * @param string $country
      * @return mixed
      */
-    public function isEveningDeliveryActive()
+    public function isEveningDeliveryActive($country = 'NL')
     {
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EVENING_ACTIVE);
+        if ('NL' === $country) {
+            return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EVENING_ACTIVE);
+        }
+
+        if ('BE' === $country){
+            return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EVENING_BE_ACTIVE);
+        }
+
+        return false;
     }
 
     /**
+     * @param string $country
      * @return bool|mixed
      */
-    public function getEveningDeliveryFee()
+    public function getEveningDeliveryFee($country = 'NL')
     {
-        if (!$this->isEveningDeliveryActive()) {
+        if (!$this->isEveningDeliveryActive($country)) {
             return '0';
         }
 
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EVENING_FEE);
+        if ('NL' === $country) {
+            return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EVENING_FEE);
+        }
+
+        if ('BE' === $country){
+            return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EVENING_BE_FEE);
+        }
+
+        return 0;
     }
 
     /**
