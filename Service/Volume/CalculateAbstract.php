@@ -89,6 +89,7 @@ abstract class CalculateAbstract
      *
      * @return int
      */
+    // @codingStandardsIgnoreLine
     protected function getVolume($products, $item)
     {
         if (!isset($products[$item->getProductId()])) {

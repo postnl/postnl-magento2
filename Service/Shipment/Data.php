@@ -113,6 +113,7 @@ class Data
      *
      * @return array
      */
+    // @codingStandardsIgnoreStart
     private function setMandatoryShipmentData(ShipmentInterface $shipment, $currentShipmentNumber, array $shipmentData)
     {
         $magentoShipment = $shipment->getShipment();
@@ -136,6 +137,7 @@ class Data
 
         return $shipmentData;
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * @param ShipmentInterface $shipment
