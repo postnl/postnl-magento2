@@ -57,10 +57,20 @@ define([
 
         canUseDeliveryOptions: ko.computed(function () {
             var address = AddressFinder();
-            var deliveryOptionsAreAvailable = State.deliveryOptionsAreAvailable();
-            var isNL = (address && address !== false && address.countryCode == 'NL');
 
-            return deliveryOptionsAreAvailable && isNL;
+            if (address === null || address === false) {
+                return false;
+            }
+
+            if (address.countryCode === 'NL') {
+                return State.deliveryOptionsAreAvailable();
+            }
+
+            if (address.countryCode === 'BE') {
+                return State.deliveryOptionsAreAvailable();
+            }
+
+            return false;
         }),
 
         canUsePickupLocations: ko.computed(function () {

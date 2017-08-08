@@ -80,7 +80,7 @@ define([
                     return;
                 }
 
-                if (address.countryCode != 'NL') {
+                if (address.countryCode != 'NL' && address.countryCode != 'BE') {
                     return;
                 }
 

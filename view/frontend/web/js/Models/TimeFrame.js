@@ -77,7 +77,7 @@ define([
             var option = this.option.toLowerCase();
 
             if (option == 'evening') {
-                return window.checkoutConfig.shipping.postnl.eveningdelivery_fee;
+                return this.getEveningFee();
             }
 
             if (option == 'sunday') {
@@ -86,6 +86,17 @@ define([
 
             return 0;
         };
+
+        /**
+         * Calculate the evening fee for the country
+         */
+        this.getEveningFee = function () {
+            if (this.country == 'BE') {
+                return window.checkoutConfig.shipping.postnl.eveningdelivery_be_fee;
+            }
+
+            return window.checkoutConfig.shipping.postnl.eveningdelivery_fee;
+        }
 
         /**
          * Format the fee
