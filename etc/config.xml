@@ -75,7 +75,7 @@
                 <default_evening_option>3089</default_evening_option>
                 <default_pakjegemak_option>3534</default_pakjegemak_option>
                 <default_pakjegemak_early_option>3544</default_pakjegemak_early_option>
-                <supported_options>3085,3189,3089,3389,3096,3090,3385,3534,3544,3533,3543,4950,4952,2928</supported_options>
+                <supported_options>2928,3085,3089,3090,3096,3189,3385,3389,3533,3534,3543,3544,4938,4941,4950,4952</supported_options>
             </productoptions>
             <shippingoptions>
                 <deliverydays_active>0</deliverydays_active>
@@ -83,8 +83,10 @@
                 <pakjegemak_active>1</pakjegemak_active>
                 <sundaydelivery_active>0</sundaydelivery_active>
                 <eveningdelivery_active>1</eveningdelivery_active>
+                <eveningdelivery_be_active>0</eveningdelivery_be_active>
                 <max_deliverydays>7</max_deliverydays>
                 <eveningdelivery_fee>2</eveningdelivery_fee>
+                <eveningdelivery_be_fee>2</eveningdelivery_be_fee>
                 <sundaydelivery_fee>2</sundaydelivery_fee>
                 <delivery_delay>1</delivery_delay>
             </shippingoptions>
