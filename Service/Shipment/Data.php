@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Shipment;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Service\Volume\Items\Calculate;
 
 class Data
 {
@@ -46,15 +47,23 @@ class Data
     private $contentDescription;
 
     /**
+     * @var Calculate
+     */
+    private $shipmentVolume;
+
+    /**
      * @param ProductOptions $productOptions
      * @param ContentDescription $contentDescription
+     * @param Calculate $calculate
      */
     public function __construct(
         ProductOptions $productOptions,
-        ContentDescription $contentDescription
+        ContentDescription $contentDescription,
+        Calculate $calculate
     ) {
         $this->productOptions = $productOptions;
         $this->contentDescription = $contentDescription;
+        $this->shipmentVolume = $calculate;
     }
 
     /**
@@ -106,9 +115,10 @@ class Data
      */
     private function setMandatoryShipmentData(ShipmentInterface $shipment, $currentShipmentNumber, array $shipmentData)
     {
+        $magentoShipment = $shipment->getShipment();
         if ($shipment->isExtraAtHome()) {
             $shipmentData['Content'] = $this->contentDescription->get($shipment);
-            $shipmentData['Dimension']['Volume'] = ''; // Needs to be in CM3
+            $shipmentData['Dimension']['Volume'] = $this->shipmentVolume->get($magentoShipment->getItems());
         }
 
         if ($shipment->isExtraCover()) {

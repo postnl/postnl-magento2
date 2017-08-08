@@ -127,5 +127,37 @@ class CustomProductAttributes extends AbstractDataInstaller
                                              'coli amount. When using other types this value will be ignored.',
             ]
         );
+
+        /**
+         * Volume CM3
+         */
+        $eavSetup->addAttribute(
+            Product::ENTITY,
+            'postnl_volume',
+            [
+                'group'                   => 'PostNL',
+                'type'                    => 'int',
+                'backend'                 => '',
+                'frontend'                => '',
+                'label'                   => 'Volume',
+                'input'                   => 'text',
+                'class'                   => 'validate-greater-than-zero',
+                'source'                  => '',
+                'global'                  => EavAttribute::SCOPE_GLOBAL,
+                'visible'                 => true,
+                'required'                => false,
+                'user_defined'            => false,
+                'default'                 => 1,
+                'searchable'              => false,
+                'filterable'              => false,
+                'comparable'              => false,
+                'visible_on_front'        => false,
+                'used_in_product_listing' => true,
+                'unique'                  => false,
+                'apply_to'                => 'simple',
+                'note'                    => 'When sending Extra@Home types, this field is mandatory. '.
+                                             'Enter as cubic centimeters like 30000.',
+            ]
+        );
     }
 }
