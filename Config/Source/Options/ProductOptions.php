@@ -175,6 +175,24 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             'countryLimitation' => false,
             'group'             => 'eu_options',
         ],
+        '4938' => [
+            'value'             => '4938',
+            'label'             => 'EU Pack Special evening',
+            'isEvening'         => true,
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => 'BE',
+            'group'             => 'eu_options',
+        ],
+        '4941' => [
+            'value'             => '4941',
+            'label'             => 'EU Pack Standard evening',
+            'isEvening'         => true,
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => 'BE',
+            'group'             => 'eu_options',
+        ],
         // Brievenbuspakje Options
         '2928' => [
             'value'             => '2928',
@@ -219,7 +237,16 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getIsEveningOptions()
     {
-        return $this->getProductoptions(['isEvening' => true]);
+        return $this->getProductoptions(['isEvening' => true, 'countryLimitation' => 'NL']);
+    }
+
+    /**
+     * Returns options if evening is true
+     * @return array
+     */
+    public function getIsEveningOptionsBe()
+    {
+        return $this->getProductoptions(['isEvening' => true, 'countryLimitation' => 'BE']);
     }
 
     /**

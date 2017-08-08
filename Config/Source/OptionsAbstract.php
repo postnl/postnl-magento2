@@ -111,7 +111,7 @@ abstract class OptionsAbstract
             return isset($option[$key]) && $option[$key] == $value;
         }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
-        if (!empty($filterFlags)) {
+        if (count($filterFlags) == count($flags)) {
             $this->filterdOptions[$productCode] = $this->availableOptions[$productCode];
         }
     }
