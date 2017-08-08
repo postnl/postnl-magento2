@@ -74,8 +74,20 @@ define([
         }),
 
         canUsePickupLocations: ko.computed(function () {
-            var isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
-            return isActive == 1 && State.pickupOptionsAreAvailable() && AddressFinder() !== false;
+            var address = AddressFinder();
+
+            if (address === null) {
+                return false;
+            }
+            
+            if (address.country === 'NL') {
+                var isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
+                var pickupOptionsAreAvailable = State.pickupOptionsAreAvailable();
+                
+                return isActive && pickupOptionsAreAvailable;
+            }
+
+            return false;
         }),
 
         setDelivery: function () {
