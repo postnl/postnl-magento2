@@ -40,7 +40,7 @@ class ProductCode
     const TYPE_DELIVERY      = 'delivery';
     const OPTION_DAYTIME     = 'daytime';
     const OPTION_EVENING     = 'evening';
-    const OPTION_EXTRAATHOME = 'extraathome';
+    const OPTION_EXTRAATHOME = 'extra@home';
     const OPTION_SUNDAY      = 'sunday';
     const OPTION_PG          = 'pg';
     const OPTION_PGE         = 'pge';

@@ -94,7 +94,7 @@ class ProductCodeTest extends TestCase
             'no option' => ['delivery', '', 'NL', static::PRODUCT_OPTION_DEFAULT],
             'default' => ['delivery', 'default', 'NL', static::PRODUCT_OPTION_DEFAULT],
             'evening' => ['delivery', 'evening', 'NL', static::PRODUCT_OPTION_EVENING],
-            'extra at home' => ['delivery', 'extraathome', 'NL', static::PRODUCT_OPTION_EXTRAATHOME],
+            'extra at home' => ['delivery', 'extra@home', 'NL', static::PRODUCT_OPTION_EXTRAATHOME],
             'sunday' => ['delivery', 'sunday', 'NL', static::PRODUCT_OPTION_SUNDAY],
             'default pg' => ['pickup', 'default', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK],
             'pakjegemak' => ['pickup', '', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK],
