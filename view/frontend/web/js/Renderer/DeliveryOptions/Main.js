@@ -57,15 +57,37 @@ define([
 
         canUseDeliveryOptions: ko.computed(function () {
             var address = AddressFinder();
-            var deliveryOptionsAreAvailable = State.deliveryOptionsAreAvailable();
-            var isNL = (address && address !== false && address.countryCode == 'NL');
 
-            return deliveryOptionsAreAvailable && isNL;
+            if (address === null || address === false) {
+                return false;
+            }
+
+            if (address.countryCode === 'NL') {
+                return State.deliveryOptionsAreAvailable();
+            }
+
+            if (address.countryCode === 'BE') {
+                return State.deliveryOptionsAreAvailable();
+            }
+
+            return false;
         }),
 
         canUsePickupLocations: ko.computed(function () {
-            var isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
-            return isActive == 1 && State.pickupOptionsAreAvailable() && AddressFinder() !== false;
+            var address = AddressFinder();
+
+            if (address === null) {
+                return false;
+            }
+            
+            if (address.country === 'NL') {
+                var isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
+                var pickupOptionsAreAvailable = State.pickupOptionsAreAvailable();
+                
+                return isActive && pickupOptionsAreAvailable;
+            }
+
+            return false;
         }),
 
         setDelivery: function () {
