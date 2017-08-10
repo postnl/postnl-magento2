@@ -87,19 +87,20 @@ class ProductCode
             return $this->getPakjegemakProductOption($option);
         }
 
-        return $this->getProductCode($option);
+        return $this->getProductCode($option, $country);
     }
 
     /**
      * Get the product code for the delivery options.
      *
      * @param string $option
+     * @param $country
      * @return int
      */
-    private function getProductCode($option)
+    private function getProductCode($option, $country)
     {
         if ($option == static::OPTION_EVENING) {
-            return $this->productOptionsConfiguration->getDefaultEveningProductOption();
+            return $this->getDefaultEveningProductOption($country);
         }
 
         if ($option == static::OPTION_SUNDAY) {
@@ -128,5 +129,18 @@ class ProductCode
         $firstOption = array_shift($options);
 
         return $firstOption['value'];
+    }
+
+    /**
+     * @param $country
+     * @return int
+     */
+    private function getDefaultEveningProductOption($country)
+    {
+        if ($country === 'BE') {
+            return $this->productOptionsConfiguration->getDefaultEveningBeProductOption();
+        }
+
+        return $this->productOptionsConfiguration->getDefaultEveningProductOption();
     }
 }

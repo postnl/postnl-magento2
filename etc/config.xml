@@ -73,6 +73,7 @@
             <productoptions>
                 <default_option>3085</default_option>
                 <default_evening_option>3089</default_evening_option>
+                <default_evening_be_option>4938</default_evening_be_option>
                 <default_pakjegemak_option>3534</default_pakjegemak_option>
                 <default_pakjegemak_early_option>3544</default_pakjegemak_early_option>
                 <supported_options>2928,3085,3089,3090,3096,3189,3385,3389,3533,3534,3543,3544,4938,4941,4950,4952</supported_options>
