@@ -91,7 +91,7 @@ define([
          * Calculate the evening fee for the country
          */
         this.getEveningFee = function () {
-            if (this.country == 'BE') {
+            if (this.address.country === 'BE') {
                 return window.checkoutConfig.shipping.postnl.eveningdelivery_be_fee;
             }
 

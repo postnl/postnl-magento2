@@ -166,6 +166,7 @@ define([
                 State.deliveryOptionsAreAvailable(true);
                 data = ko.utils.arrayMap(data, function (day) {
                     return ko.utils.arrayMap(day, function (timeFrame) {
+                        timeFrame['address'] = address;
                         return new TimeFrame(timeFrame);
                     });
                 });
