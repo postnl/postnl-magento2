@@ -173,7 +173,9 @@ class OrderParams
             'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : '',
             'fee'                          => $this->feeCalculator->get($params),
             'product_code'                 => $this->productCode->get(
-                $params['type'], $params['option'], $params['country']
+                $params['type'],
+                $params['option'],
+                $params['country']
             ),
         ];
     }
