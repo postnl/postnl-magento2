@@ -129,7 +129,8 @@ define([
                         date   : value.date,
                         option : value.option,
                         from   : value.from,
-                        to     : value.to
+                        to     : value.to,
+                        country: value.address.country
                     }
                 }).done(function (response) {
                     $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});

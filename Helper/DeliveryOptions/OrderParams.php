@@ -151,7 +151,7 @@ class OrderParams
     }
 
     /**
-     * If you whant to store the param inside the tig_postnl_order table,
+     * If you want to store the param inside the tig_postnl_order table,
      * you need to give the keys the same name as the column names.
      *
      * @param $params
@@ -172,7 +172,7 @@ class OrderParams
             'pg_address'                   => $this->addExtraToAddress($params),
             'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : '',
             'fee'                          => $this->feeCalculator->get($params),
-            'product_code'                 => $this->productCode->get($params['type'], $params['option']),
+            'product_code'                 => $this->productCode->get($params['type'], $params['option'], $params['country']),
         ];
     }
 
