@@ -96,7 +96,7 @@ define([
             }
 
             return window.checkoutConfig.shipping.postnl.eveningdelivery_fee;
-        }
+        };
 
         /**
          * Format the fee
