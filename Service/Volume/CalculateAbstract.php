@@ -42,7 +42,7 @@ use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 
 abstract class CalculateAbstract
 {
-    const ATTRIBUTE_VOLUME = 'postnl_volume';
+    const ATTRIBUTE_VOLUME = 'postnl_parcel_volume';
 
     // @codingStandardsIgnoreLine
     protected $productDictionary;
@@ -98,7 +98,7 @@ abstract class CalculateAbstract
 
         /** @var ProductInterface $product */
         $product = $products[$item->getProductId()];
-        $productVolume = $product->getCustomAttribute(self::ATTRIBUTE_VOLUME);
+        $productVolume = $product->getCustomAttribute(static::ATTRIBUTE_VOLUME);
         return ($productVolume->getValue() * $this->getQty($item));
     }
 

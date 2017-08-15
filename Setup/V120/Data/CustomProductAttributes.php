@@ -133,7 +133,7 @@ class CustomProductAttributes extends AbstractDataInstaller
          */
         $eavSetup->addAttribute(
             Product::ENTITY,
-            'postnl_volume',
+            'postnl_parcel_volume',
             [
                 'group'                   => 'PostNL',
                 'type'                    => 'int',
