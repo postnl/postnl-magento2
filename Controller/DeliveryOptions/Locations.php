@@ -40,7 +40,6 @@ use TIG\PostNL\Webservices\Endpoints\Locations as LocationsEndpoint;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Json\Helper\Data;
 use Magento\Checkout\Model\Session;
 
 class Locations extends AbstractDeliveryOptions
@@ -63,7 +62,6 @@ class Locations extends AbstractDeliveryOptions
     /**
      * @param Context            $context
      * @param OrderFactory       $orderFactory
-     * @param Data               $jsonHelper
      * @param Session            $checkoutSession
      * @param QuoteToRateRequest $quoteToRateRequest
      * @param AddressEnhancer    $addressEnhancer
@@ -74,7 +72,6 @@ class Locations extends AbstractDeliveryOptions
     public function __construct(
         Context $context,
         OrderFactory $orderFactory,
-        Data $jsonHelper,
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
         AddressEnhancer $addressEnhancer,
@@ -88,7 +85,6 @@ class Locations extends AbstractDeliveryOptions
 
         parent::__construct(
             $context,
-            $jsonHelper,
             $orderFactory,
             $checkoutSession,
             $quoteToRateRequest,

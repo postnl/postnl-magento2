@@ -63,7 +63,6 @@ class Timeframes extends AbstractDeliveryOptions
     /**
      * @param Context            $context
      * @param OrderFactory       $orderFactory
-     * @param Data               $jsonHelper
      * @param Session            $checkoutSession
      * @param QuoteToRateRequest $quoteToRateRequest
      * @param AddressEnhancer    $addressEnhancer
@@ -74,7 +73,6 @@ class Timeframes extends AbstractDeliveryOptions
     public function __construct(
         Context $context,
         OrderFactory $orderFactory,
-        Data $jsonHelper,
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
         AddressEnhancer $addressEnhancer,
@@ -88,7 +86,6 @@ class Timeframes extends AbstractDeliveryOptions
 
         parent::__construct(
             $context,
-            $jsonHelper,
             $orderFactory,
             $checkoutSession,
             $quoteToRateRequest,
