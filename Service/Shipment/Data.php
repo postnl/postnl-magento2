@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Shipment;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Service\Volume\Items\Calculate;
 
 class Data
 {
@@ -41,12 +42,28 @@ class Data
     private $productOptions;
 
     /**
+     * @var ContentDescription
+     */
+    private $contentDescription;
+
+    /**
+     * @var Calculate
+     */
+    private $shipmentVolume;
+
+    /**
      * @param ProductOptions $productOptions
+     * @param ContentDescription $contentDescription
+     * @param Calculate $calculate
      */
     public function __construct(
-        ProductOptions $productOptions
+        ProductOptions $productOptions,
+        ContentDescription $contentDescription,
+        Calculate $calculate
     ) {
         $this->productOptions = $productOptions;
+        $this->contentDescription = $contentDescription;
+        $this->shipmentVolume = $calculate;
     }
 
     /**
@@ -60,19 +77,7 @@ class Data
     public function get(ShipmentInterface $shipment, $address, $contact, $currentShipmentNumber = 0)
     {
         $shipmentData = $this->getDefaultShipmentData($shipment, $address, $contact, $currentShipmentNumber);
-
-        $productOptions = $this->productOptions->get($shipment);
-        if ($productOptions) {
-            $shipmentData['ProductOptions'] = $productOptions;
-        }
-
-        if ($shipment->isExtraCover()) {
-            $shipmentData['Amounts'] = $this->getAmount($shipment);
-        }
-
-        if ($shipment->getParcelCount() > 1) {
-            $shipmentData['Group'] = $this->getGroupData($shipment, $currentShipmentNumber);
-        }
+        $shipmentData = $this->setMandatoryShipmentData($shipment, $currentShipmentNumber, $shipmentData);
 
         return $shipmentData;
     }
@@ -103,6 +108,39 @@ class Data
 
     /**
      * @param ShipmentInterface $shipment
+     * @param int               $currentShipmentNumber
+     * @param array             $shipmentData
+     *
+     * @return array
+     */
+    // @codingStandardsIgnoreStart
+    private function setMandatoryShipmentData(ShipmentInterface $shipment, $currentShipmentNumber, array $shipmentData)
+    {
+        $magentoShipment = $shipment->getShipment();
+        if ($shipment->isExtraAtHome()) {
+            $shipmentData['Content'] = $this->contentDescription->get($shipment);
+            $shipmentData['Dimension']['Volume'] = $this->shipmentVolume->get($magentoShipment->getItems());
+        }
+
+        if ($shipment->isExtraCover()) {
+            $shipmentData['Amounts'] = $this->getAmount($shipment);
+        }
+
+        if ($shipment->getParcelCount() > 1) {
+            $shipmentData['Groups'] = $this->getGroupData($shipment, $currentShipmentNumber);
+        }
+
+        $productOptions = $this->productOptions->get($shipment);
+        if ($productOptions) {
+            $shipmentData['ProductOptions'] = $productOptions;
+        }
+
+        return $shipmentData;
+    }
+    // @codingStandardsIgnoreEnd
+
+    /**
+     * @param ShipmentInterface $shipment
      *
      * @return array
      */
@@ -125,13 +163,21 @@ class Data
         return $amounts;
     }
 
+    /**
+     * @param ShipmentInterface $shipment
+     * @param                   $currentShipmentNumber
+     *
+     * @return array
+     */
     private function getGroupData(ShipmentInterface $shipment, $currentShipmentNumber)
     {
         return [
-            'GroupCount'    => $shipment->getParcelCount(),
-            'GroupSequence' => $currentShipmentNumber,
-            'GroupType'     => '03',
-            'MainBarcode'   => $shipment->getMainBarcode(),
+            'Group' => [
+                'GroupCount'    => $shipment->getParcelCount(),
+                'GroupSequence' => $currentShipmentNumber,
+                'GroupType'     => '03',
+                'MainBarcode'   => $shipment->getMainBarcode(),
+            ]
         ];
     }
 }

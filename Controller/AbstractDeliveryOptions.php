@@ -37,17 +37,10 @@ use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\Action;
-use Magento\Framework\Json\Helper\Data;
 use Magento\Checkout\Model\Session;
 
 abstract class AbstractDeliveryOptions extends Action
 {
-    /**
-     * @var Data
-     */
-    //@codingStandardsIgnoreLine
-    protected $jsonHelper;
-
     /**
      * @var OrderFactory
      */
@@ -73,7 +66,6 @@ abstract class AbstractDeliveryOptions extends Action
 
     /**
      * @param Context            $context
-     * @param Data               $jsonHelper
      * @param OrderFactory       $orderFactory
      * @param Session            $checkoutSession
      * @param QuoteToRateRequest $quoteToRateRequest
@@ -81,13 +73,11 @@ abstract class AbstractDeliveryOptions extends Action
      */
     public function __construct(
         Context $context,
-        Data $jsonHelper,
         OrderFactory $orderFactory,
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
         DeliveryDate $deliveryDate = null
     ) {
-        $this->jsonHelper         = $jsonHelper;
         $this->orderFactory       = $orderFactory;
         $this->checkoutSession    = $checkoutSession;
         $this->deliveryEndpoint   = $deliveryDate;
@@ -114,7 +104,7 @@ abstract class AbstractDeliveryOptions extends Action
         }
 
         return $response->representJson(
-            $this->jsonHelper->jsonEncode($data)
+            \Zend_Json::encode($data)
         );
     }
 

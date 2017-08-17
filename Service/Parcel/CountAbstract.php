@@ -37,6 +37,7 @@ use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use TIG\PostNL\Config\Provider\ProductType as PostNLType;
 use TIG\PostNL\Service\Options\ProductDictionary;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
 abstract class CountAbstract
 {
@@ -46,12 +47,19 @@ abstract class CountAbstract
     // @codingStandardsIgnoreLine
     protected $productDictionary;
 
+    // @codingStandardsIgnoreLine
+    protected $shippingOptions;
+
     /**
      * @param ProductDictionary $productDictionary
+     * @param ShippingOptions $shippingOptions
      */
-    public function __construct(ProductDictionary $productDictionary)
-    {
+    public function __construct(
+        ProductDictionary $productDictionary,
+        ShippingOptions $shippingOptions
+    ) {
         $this->productDictionary = $productDictionary;
+        $this->shippingOptions   = $shippingOptions;
     }
 
     /**
@@ -64,7 +72,7 @@ abstract class CountAbstract
     protected function calculate($weight, $items)
     {
         $products = $this->getProducts($items);
-        if (empty($products)) {
+        if (empty($products) || !$this->shippingOptions->isExtraAtHomeActive()) {
             $remainingParcelCount = ceil($weight / self::WEIGHT_PER_PARCEL);
             return $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
         }

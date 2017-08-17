@@ -38,7 +38,6 @@ use TIG\PostNL\Helper\DeliveryOptions\OrderParams;
 use TIG\PostNL\Helper\DeliveryOptions\PickupAddress;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Json\Helper\Data;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Checkout\Model\Session;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
@@ -64,7 +63,6 @@ class Save extends AbstractDeliveryOptions
      * @param Context            $context
      * @param OrderFactory       $orderFactory
      * @param OrderRepository    $orderRepository
-     * @param Data               $jsonHelper
      * @param QuoteToRateRequest $quoteToRateRequest
      * @param OrderParams        $orderParams
      * @param Session            $checkoutSession
@@ -74,7 +72,6 @@ class Save extends AbstractDeliveryOptions
         Context $context,
         OrderFactory $orderFactory,
         OrderRepository $orderRepository,
-        Data $jsonHelper,
         QuoteToRateRequest $quoteToRateRequest,
         OrderParams $orderParams,
         Session $checkoutSession,
@@ -82,7 +79,6 @@ class Save extends AbstractDeliveryOptions
     ) {
         parent::__construct(
             $context,
-            $jsonHelper,
             $orderFactory,
             $checkoutSession,
             $quoteToRateRequest
