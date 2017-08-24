@@ -29,19 +29,23 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Model;
+namespace TIG\PostNL\Test\Integration\Model;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Api\SearchResultsInterface;
 use TIG\PostNL\Model\Order;
 use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Test\Integration\TestCase;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
+use TIG\PostNL\Webservices\Endpoints\SentDate;
 
 class OrderRepositoryTest extends TestCase
 {
     public function testThatAnEmptyFilterDoesNotThrowAnException()
     {
+        $this->disableEndpoint(DeliveryDate::class);
+        $this->disableEndpoint(SentDate::class);
+
         /** @var OrderRepository $repository */
         $repository = $this->getObject(OrderRepository::class);
 

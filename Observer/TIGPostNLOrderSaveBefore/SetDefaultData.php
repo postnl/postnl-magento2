@@ -31,10 +31,11 @@
  */
 namespace TIG\PostNL\Observer\TIGPostNLOrderSaveBefore;
 
+use TIG\PostNL\Service\Order\ShipAt;
+use TIG\PostNL\Service\Order\ProductCode;
+use TIG\PostNL\Service\Order\FirstDeliveryDate;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Stdlib\DateTime\DateTime;
-use TIG\PostNL\Service\Order\ProductCode;
 
 class SetDefaultData implements ObserverInterface
 {
@@ -44,20 +45,30 @@ class SetDefaultData implements ObserverInterface
     private $productCode;
 
     /**
-     * @var DateTime
+     * @var FirstDeliveryDate
      */
-    private $dateTime;
+    private $firstDeliveryDate;
 
     /**
-     * @param ProductCode $productCode
-     * @param DateTime    $dateTime
+     * @var ShipAt
+     */
+    private $shipAt;
+
+    /**
+     * SetDefaultData constructor.
+     *
+     * @param ProductCode       $productCode
+     * @param FirstDeliveryDate $firstDeliveryDate
+     * @param ShipAt            $shipAt
      */
     public function __construct(
         ProductCode $productCode,
-        DateTime $dateTime
+        FirstDeliveryDate $firstDeliveryDate,
+        ShipAt $shipAt
     ) {
         $this->productCode = $productCode;
-        $this->dateTime = $dateTime;
+        $this->firstDeliveryDate = $firstDeliveryDate;
+        $this->shipAt = $shipAt;
     }
 
     /**
@@ -72,6 +83,14 @@ class SetDefaultData implements ObserverInterface
 
         if (!$order->getProductCode()) {
             $order->setProductCode($this->productCode->get());
+        }
+
+        if (!$order->getDeliveryDate()) {
+            $this->firstDeliveryDate->set($order);
+        }
+
+        if (!$order->getShipAt()) {
+            $this->shipAt->set($order);
         }
     }
 }

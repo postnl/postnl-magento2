@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Grid\Order;
 
+use TIG\PostNL\Api\OrderRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Block\Adminhtml\Grid\AbstractGrid;
@@ -56,6 +57,16 @@ class ShippingDate extends AbstractGrid
     private $shipments = [];
 
     /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
+
+    /**
+     * @var $orders
+     */
+    private $orders;
+
+    /**
      * @var ShippingDateRenderer
      */
     private $shippingDateRenderer;
@@ -63,7 +74,7 @@ class ShippingDate extends AbstractGrid
     /**
      * @param ContextInterface            $context
      * @param UiComponentFactory          $uiComponentFactory
-     * @param ShipmentRepositoryInterface $orderRepository
+     * @param ShipmentRepositoryInterface $shipmentRepository
      * @param SearchCriteriaBuilder       $searchCriteriaBuilder
      * @param ShippingDateRenderer        $shippingDateRenderer
      * @param array                       $components
@@ -72,7 +83,8 @@ class ShippingDate extends AbstractGrid
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
-        ShipmentRepositoryInterface $orderRepository,
+        ShipmentRepositoryInterface $shipmentRepository,
+        OrderRepositoryInterface $orderRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         ShippingDateRenderer $shippingDateRenderer,
         array $components = [],
@@ -81,7 +93,8 @@ class ShippingDate extends AbstractGrid
         parent::__construct($context, $uiComponentFactory, $components, $data);
 
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->shipmentRepository = $orderRepository;
+        $this->shipmentRepository = $shipmentRepository;
+        $this->orderRepository = $orderRepository;
         $this->shippingDateRenderer = $shippingDateRenderer;
     }
 
@@ -92,10 +105,16 @@ class ShippingDate extends AbstractGrid
     protected function prepareData()
     {
         $orderIds = $this->collectIds();
-        $models = $this->loadModels($orderIds);
+        $searchCriteria = $this->createIdInSearchCriteria($orderIds);
 
+        $models = $this->loadShipments($searchCriteria);
         foreach ($models as $model) {
             $this->shipments[$model->getOrderId()][] = $model;
+        }
+
+        $models = $this->loadOrders($searchCriteria);
+        foreach ($models as $model) {
+            $this->orders[$model->getOrderId()] = $model;
         }
     }
 
@@ -108,14 +127,19 @@ class ShippingDate extends AbstractGrid
     protected function getCellContents($item)
     {
         $entityId = $item['entity_id'];
-        if (!array_key_exists($entityId, $this->shipments)) {
-            return null;
+        $output = '';
+
+        if (array_key_exists($entityId, $this->shipments)) {
+            /** @var \TIG\PostNL\Model\Shipment $model */
+            foreach ($this->shipments[$entityId] as $model) {
+                $output .= $this->shippingDateRenderer->render($model) . '<br>';
+            }
+            return $output;
         }
 
-        $output = '';
-        /** @var \TIG\PostNL\Model\Shipment $model */
-        foreach ($this->shipments[$entityId] as $model) {
-            $output .= $this->shippingDateRenderer->render($model) . '<br>';
+        if (isset($this->orders[$entityId])) {
+            $postnlOrder = $this->orders[$entityId];
+            return $this->shippingDateRenderer->render($postnlOrder->getShipAt());
         }
 
         return $output;
@@ -136,17 +160,38 @@ class ShippingDate extends AbstractGrid
     }
 
     /**
-     * @param array $orderIds
+     * @param \Magento\Framework\Api\SearchCriteria
      *
      * @return \TIG\PostNL\Model\Shipment[]
      */
-    private function loadModels($orderIds = [])
+    private function loadShipments($searchCriteria)
     {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('order_id', $orderIds, 'IN');
-
         /** @var \Magento\Framework\Api\SearchResults $list */
-        $list = $this->shipmentRepository->getList($searchCriteria->create());
+        $list = $this->shipmentRepository->getList($searchCriteria);
 
         return $list->getItems();
+    }
+
+    /**
+     * @param \Magento\Framework\Api\SearchCriteria
+     *
+     * @return \TIG\PostNL\Model\Order[]
+     */
+    private function loadOrders($searchCriteria)
+    {
+        /** @var \Magento\Framework\Api\SearchResults $list */
+        $list = $this->orderRepository->getList($searchCriteria);
+
+        return $list->getItems();
+    }
+
+    /**
+     * @param $orderIds
+     * @return \Magento\Framework\Api\SearchCriteria
+     */
+    private function createIdInSearchCriteria($orderIds = [])
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('order_id', $orderIds, 'IN');
+        return $searchCriteria->create();
     }
 }

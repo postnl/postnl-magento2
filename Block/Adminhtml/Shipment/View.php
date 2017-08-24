@@ -122,8 +122,8 @@ class View extends MagentoView
         $this->buttonList->remove('print');
         //@codingStandardsIgnoreLine
         $this->buttonList->update('save', 'label', __('Send Shipment Email'));
-        $this->setPostNLPrintLabelButtonData();
         $this->setPostNLPrintLabelButton();
+        $this->setPostNLPrintLabelButtonData();
         $this->setPostNLPrintLabelWithoutConfirmButton();
     }
 

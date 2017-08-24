@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Model\Carrier;
 
 use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Service\Carrier\Price\Calculator;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
@@ -68,6 +69,11 @@ class PostNL extends AbstractCarrier implements CarrierInterface
     private $calculator;
 
     /**
+     * @var AccountConfiguration $accountConfiguration
+     */
+    private $accountConfiguration;
+
+    /**
      * @param ScopeConfigInterface $scopeConfig
      * @param ErrorFactory         $rateErrorFactory
      * @param LoggerInterface      $logger
@@ -85,12 +91,14 @@ class PostNL extends AbstractCarrier implements CarrierInterface
         MethodFactory $rateMethodFactory,
         Track $track,
         Calculator $calculator,
+        AccountConfiguration $accountConfiguration,
         array $data = []
     ) {
         $this->rateResultFactory      = $rateResultFactory;
         $this->rateMethodFactory      = $rateMethodFactory;
         $this->track                  = $track;
         $this->calculator             = $calculator;
+        $this->accountConfiguration   = $accountConfiguration;
 
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
@@ -116,6 +124,10 @@ class PostNL extends AbstractCarrier implements CarrierInterface
      */
     public function collectRates(RateRequest $request)
     {
+        if ($this->accountConfiguration->isModusOff()) {
+            return false;
+        }
+
         if (!$this->getConfigFlag('active')) {
             return false;
         }

@@ -66,4 +66,9 @@ interface QuoteInterface
      * @return array
      */
     public function getAllItems();
+
+    /**
+     * @return int
+     */
+    public function getStoreId();
 }

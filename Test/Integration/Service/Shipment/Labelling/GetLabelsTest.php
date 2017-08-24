@@ -38,6 +38,7 @@ use TIG\PostNL\Test\Integration\TestCase;
 use TIG\PostNL\Service\Shipment\Labelling\Generate\WithConfirm;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Model\ShipmentLabelFactory;
+use TIG\PostNL\Service\Shipment\ConfirmLabel;
 
 class GetLabelsTest extends TestCase
 {
@@ -73,6 +74,7 @@ class GetLabelsTest extends TestCase
     {
         $shipment      = $this->getPostNLShipment();
         $labellingMock = $this->getLabelWithConfirmMock($shipment, $this->once());
+        $confirmMock   = $this->getConfirmLabelMock($this->once());
 
         $generateLabel = $this->getObject(GenerateLabel::class, [
             'withConfirm' => $labellingMock,
@@ -81,6 +83,7 @@ class GetLabelsTest extends TestCase
         /** @var GetLabels $instance */
         $instance = $this->getInstance([
             'generateLabel' => $generateLabel,
+            'confirmLabel'  => $confirmMock
         ]);
 
         $result = $instance->get($shipment->getShipmentId());
@@ -137,6 +140,15 @@ class GetLabelsTest extends TestCase
         $callExpects->willReturn($this->getLabel($shipment));
 
         return $labelMock;
+    }
+
+    private function getConfirmLabelMock($times)
+    {
+        $confirmMock = $this->getFakeMock(ConfirmLabel::class)->getMock();
+        $callExpects = $confirmMock->expects($times);
+        $callExpects->method('confirm');
+
+        return $confirmMock;
     }
 
     /**

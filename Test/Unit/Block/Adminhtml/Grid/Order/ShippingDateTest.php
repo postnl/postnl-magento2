@@ -69,10 +69,12 @@ class ShippingDateTest extends TestCase
         $searchCriteria = $this->getSearchCriteria();
         $criteriaBuilder = $this->getCriteriaBuilder($searchCriteria, [2, 4, 6]);
         $shipmentRepository = $this->getShipmentRepository($searchCriteria, $items);
+        $orderRepository = $this->getOrderRepository($searchCriteria);
 
         $instance = $this->getInstance([
             'searchCriteriaBuilder' => $criteriaBuilder,
-            'orderRepository' => $shipmentRepository,
+            'shipmentRepository' => $shipmentRepository,
+            'orderRepository' => $orderRepository,
         ]);
 
         $items = [
@@ -126,19 +128,28 @@ class ShippingDateTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testLoadModels()
+    public function testLoadShipments()
     {
         $searchCriteria = $this->getSearchCriteria();
-        $criteriaBuilder = $this->getCriteriaBuilder($searchCriteria);
         $shipmentRepository = $this->getShipmentRepository($searchCriteria);
 
-        $items = [1, 2, 3];
         $instance = $this->getInstance([
-            'searchCriteriaBuilder' => $criteriaBuilder,
-            'orderRepository' => $shipmentRepository,
+            'shipmentRepository' => $shipmentRepository,
         ]);
-        $this->invokeArgs('loadModels', [$items], $instance);
+        $this->invokeArgs('loadShipments', [$searchCriteria], $instance);
     }
+
+    public function testLoadOrder()
+    {
+        $searchCriteria = $this->getSearchCriteria();
+        $orderRepository = $this->getOrderRepository($searchCriteria);
+
+        $instance = $this->getInstance([
+            'orderRepository' => $orderRepository,
+        ]);
+        $this->invokeArgs('loadOrders', [$searchCriteria], $instance);
+    }
+
 
     private function getModelMock($orderId)
     {
@@ -177,6 +188,18 @@ class ShippingDateTest extends TestCase
         $getListExpects->willReturn($this->getSearchResults($getItemsReturn));
 
         return $shipmentRepository;
+    }
+
+    private function getOrderRepository($searchCriteria, $getItemsReturn = [])
+    {
+        $orderRepository = $this->getFakeMock(\TIG\PostNL\Api\OrderRepositoryInterface::class)->getMock();
+
+        $getListExpects = $orderRepository->expects($this->once());
+        $getListExpects->method('getList');
+        $getListExpects->with($searchCriteria);
+        $getListExpects->willReturn($this->getSearchResults($getItemsReturn));
+
+        return $orderRepository;
     }
 
     private function getSearchCriteria()

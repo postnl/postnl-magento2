@@ -79,6 +79,19 @@ class PostNLTest extends TestCase
 
     public function getInstance(array $args = [])
     {
+        $accountConfig = $this->getMockBuilder(\TIG\PostNL\Config\Provider\AccountConfiguration::class);
+        $accountConfig->disableOriginalConstructor();
+        $accountConfig = $accountConfig->getMock();
+
+        $this->objectManager->configure([
+            'preferences' => [
+                \TIG\PostNL\Config\Provider\AccountConfiguration::class => get_class($accountConfig)
+            ]
+        ]);
+
+        $accountConfig = $this->objectManager->get(\TIG\PostNL\Config\Provider\AccountConfiguration::class);
+        $accountConfig->method('isModusOff')->willReturn(false);
+
         $args['scopeConfig'] = $this->config;
         $args['calculator'] = $this->calculator;
         return parent::getInstance($args);

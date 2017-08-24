@@ -93,7 +93,7 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
         $instance = $this->getInstance([
             'timezone' => $timezoneMock,
         ]);
-        $instance->setParameters($shipmentMock, $orderMock);
+        $instance->setParameters($address, 1, $orderMock);
 
         $result = $this->getProperty('requestParams', $instance);
 

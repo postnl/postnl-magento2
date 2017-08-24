@@ -187,7 +187,7 @@ define([
                 State.pickupOptionsAreAvailable(true);
 
                 if (window.checkoutConfig.shipping.postnl.is_deliverydays_active === false) {
-                    data = [data.shift()];
+                    data.locations = [data.locations.shift()];
                 }
 
                 State.pickupPrice(data.price);

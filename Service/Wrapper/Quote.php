@@ -113,4 +113,12 @@ class Quote implements QuoteInterface
     {
         return $this->getQuote()->getAllItems();
     }
+
+    /**
+     * @return int
+     */
+    public function getStoreId()
+    {
+        return $this->getQuote()->getStoreId();
+    }
 }

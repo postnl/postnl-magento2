@@ -35,6 +35,7 @@ use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Service\Shipment\Label\Validator;
+use TIG\PostNL\Service\Shipment\ConfirmLabel;
 
 class GetLabels
 {
@@ -59,21 +60,29 @@ class GetLabels
     private $generateLabel;
 
     /**
+     * @var ConfirmLabel
+     */
+    private $confirmLabel;
+
+    /**
      * @param ShipmentLabelRepositoryInterface $shipmentLabelRepository
      * @param ShipmentRepositoryInterface      $shipmentRepository
      * @param GenerateLabel                    $generateLabel
      * @param Validator                        $labelValidator
+     * @param ConfirmLabel                     $confirmLabel
      */
     public function __construct(
         ShipmentLabelRepositoryInterface $shipmentLabelRepository,
         ShipmentRepositoryInterface $shipmentRepository,
         GenerateLabel $generateLabel,
-        Validator $labelValidator
+        Validator $labelValidator,
+        ConfirmLabel $confirmLabel
     ) {
         $this->shipmentRepository      = $shipmentRepository;
         $this->labelValidator          = $labelValidator;
         $this->shipmentLabelRepository = $shipmentLabelRepository;
         $this->generateLabel           = $generateLabel;
+        $this->confirmLabel            = $confirmLabel;
     }
 
     /**
@@ -123,6 +132,11 @@ class GetLabels
     private function getLabel(ShipmentInterface $shipment, $number, $confirm)
     {
         $label = $this->shipmentLabelRepository->getByShipment($shipment, $number);
+
+        if ($label && $confirm) {
+            $this->confirmLabel->confirm($shipment, $number);
+            return $label;
+        }
 
         if ($label) {
             return $label;

@@ -4,7 +4,7 @@
         <button type="button" class="btn btn-default" data-bind="click: setDelivery, css: { 'button-active': shipmentType() == 'delivery' }">
             <span class="label" data-bind="i18n:'Delivery'"></span>
 
-            <div class="data">
+            <div class="data" data-bind="visible: !isLoading()">
                 <span data-bind="text: formatPrice(deliveryPrice())"></span>
 
                 <!-- ko if: shipmentType() == 'delivery' && deliveryFee() -->
@@ -21,7 +21,7 @@
         <button type="button" class="btn btn-default" data-bind="click: setPickup, css: { 'button-active': shipmentType() == 'pickup' }">
             <span class="label" data-bind="i18n:'Pickup'"></span>
 
-            <div class="data">
+            <div class="data" data-bind="visible: !isLoading()">
                 <span data-bind="text: formatPrice(pickupPrice())"></span>
 
                 <!-- ko if: shipmentType() == 'pickup' && pickupFee() -->

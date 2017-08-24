@@ -31,9 +31,11 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use Magento\Sales\Model\Order\Address;
-use Magento\Sales\Model\Order\Shipment;
+use Magento\Sales\Model\EntityInterface;
+use Magento\Customer\Model\Address\AbstractAddress as Address;
+use Magento\Sales\Model\Order;
 use TIG\PostNL\Api\Data\OrderInterface as PostNLOrder;
 use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
@@ -127,16 +129,15 @@ class SentDate extends AbstractEndpoint
     }
 
     /**
-     * @param Shipment    $shipment
-     *
+     * @param $address
+     * @param $storeId
      * @param PostNLOrder $postNLOrder
-     *
      * @return array
+     *
      */
-    public function setParameters(Shipment $shipment, PostNLOrder $postNLOrder)
+    public function setParameters($address, $storeId, PostNLOrder $postNLOrder)
     {
-        $address = $shipment->getShippingAddress();
-        $this->soap->updateApiKey($shipment->getStoreId());
+        $this->soap->updateApiKey($storeId);
 
         $this->requestParams = [
             $this->type => [
@@ -174,7 +175,7 @@ class SentDate extends AbstractEndpoint
      *
      * @return string
      */
-    private function getPostcode(Address $address)
+    private function getPostcode($address)
     {
         if ($address->getCountryId() != 'NL') {
             return '2132WT';
@@ -194,7 +195,7 @@ class SentDate extends AbstractEndpoint
      *
      * @return string
      */
-    private function getDeliveryDate(Address $address, PostNLOrder $postNLOrder)
+    private function getDeliveryDate($address, PostNLOrder $postNLOrder)
     {
         if ($address->getCountryId() == 'NL') {
             $deliveryDate = $postNLOrder->getDeliveryDate();

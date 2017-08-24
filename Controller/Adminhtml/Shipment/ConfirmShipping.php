@@ -34,6 +34,7 @@ namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 use Magento\Backend\App\Action\Context;
 use Magento\Backend\App\Action;
 use TIG\PostNL\Exception;
+use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Webservices\Endpoints\Confirming;
 use Magento\Sales\Model\Order\ShipmentRepository;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
@@ -62,18 +63,25 @@ class ConfirmShipping extends Action
     private $postnlShipmentRepository;
 
     /**
-     * @param Context                     $context
-     * @param ShipmentRepository          $shipmentRepository
-     * @param Track                       $track
-     * @param Confirming                  $confirming
+     * @var Data
+     */
+    private $helper;
+
+    /**
+     * @param Context $context
+     * @param ShipmentRepository $shipmentRepository
+     * @param Track $track
+     * @param Confirming $confirming
      * @param ShipmentRepositoryInterface $repositoryInterface
+     * @param Data $helper
      */
     public function __construct(
         Context $context,
         ShipmentRepository $shipmentRepository,
         Track $track,
         Confirming $confirming,
-        ShipmentRepositoryInterface $repositoryInterface
+        ShipmentRepositoryInterface $repositoryInterface,
+        Data $helper
     ) {
         parent::__construct($context);
 
@@ -81,32 +89,44 @@ class ConfirmShipping extends Action
         $this->track = $track;
         $this->confirming = $confirming;
         $this->postnlShipmentRepository = $repositoryInterface;
+        $this->helper = $helper;
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface
+     * @return \Magento\Framework\Controller\Result\Redirect
      */
     public function execute()
     {
         $shipmentId = $this->getRequest()->getParam('shipment_id');
-        $this->setRequestData($shipmentId);
 
+        $this->setRequestData($shipmentId);
+        $this->confirm();
+        $this->setConfirmedAt($shipmentId);
+        $this->setTrack($shipmentId);
+
+        $this->messageManager->addComplexSuccessMessage(
+        // @codingStandardsIgnoreLine
+            __('Shipment successfully confirmed')->getText()
+        );
+
+        $resultDirect = $this->resultRedirectFactory->create();
+        return $resultDirect->setPath('sales/shipment/view', ['shipment_id' => $shipmentId]);
+    }
+
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|mixed|\stdClass
+     */
+    private function confirm()
+    {
         try {
-            $this->confirming->call();
+            return $this->confirming->call();
         } catch (Exception $exception) {
             $this->messageManager->addErrorMessage(
             // @codingStandardsIgnoreLine
-                __('Could not confirm shipment : %1', $exception->getLogMessage())
+                __('Could not confirm shipment : %1', $exception->getLogMessage())->getText()
             );
             return $this->_redirect($this->_redirect->getRefererUrl());
         }
-        $this->setTrack($shipmentId);
-        $this->messageManager->addComplexSuccessMessage(
-        // @codingStandardsIgnoreLine
-            __('Shipment successfully confirmed')
-        );
-        $resultDirect = $this->resultRedirectFactory->create();
-        return $resultDirect->setPath('sales/shipment/view', ['shipment_id' => $shipmentId]);
     }
 
     /**
@@ -117,6 +137,16 @@ class ConfirmShipping extends Action
     {
         $postNLShipment = $this->postnlShipmentRepository->getByShipmentId($shipmentId);
         $this->confirming->setParameters($postNLShipment);
+    }
+
+    /**
+     * @param $shipmentId
+     */
+    private function setConfirmedAt($shipmentId)
+    {
+        $postNLShipment = $this->postnlShipmentRepository->getByShipmentId($shipmentId);
+        $postNLShipment->setConfirmedAt($this->helper->getDate());
+        $this->postnlShipmentRepository->save($postNLShipment);
     }
 
     /**

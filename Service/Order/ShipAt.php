@@ -30,20 +30,44 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\PostNL\Test\Fake\Webservices\Endpoints;
+namespace TIG\PostNL\Service\Order;
 
-class TimeFrame extends \TIG\PostNL\Webservices\Endpoints\TimeFrame
+use TIG\PostNL\Api\Data\OrderInterface;
+use TIG\PostNL\Service\Wrapper\QuoteInterface;
+use TIG\PostNL\Webservices\Endpoints\SentDate;
+
+class ShipAt
 {
-    private $response = 'default response';
+    /**
+     * @var QuoteInterface
+     */
+    private $quote;
 
-    public function setResponse($response)
-    {
-        $this->response = $response;
+    /**
+     * @var SentDate
+     */
+    private $sentDate;
+
+    public function __construct(
+        QuoteInterface $quote,
+        SentDate $endpoint
+    ) {
+        $this->quote = $quote;
+        $this->sentDate = $endpoint;
     }
 
-    public function call($parseTimeFrames = true)
+    public function set(OrderInterface $order)
     {
-        return $this->response;
-    }
+        $address = $this->quote->getShippingAddress();
 
+        if (!$address) {
+            return null;
+        }
+
+        $storeId = $this->quote->getStoreId();
+        $this->sentDate->setParameters($address, $storeId, $order);
+        $order->setShipAt($this->sentDate->call());
+
+        return $order;
+    }
 }

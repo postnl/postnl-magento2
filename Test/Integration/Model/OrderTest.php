@@ -31,10 +31,12 @@
  */
 namespace TIG\PostNL\Test\Integration\Model;
 
-use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Model\Order;
 use TIG\PostNL\Model\OrderFactory;
+use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Test\Integration\TestCase;
+use TIG\PostNL\Webservices\Endpoints\SentDate;
+use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 
 class OrderTest extends TestCase
 {
@@ -56,6 +58,9 @@ class OrderTest extends TestCase
      */
     public function testTheFeeIsSavedCorrectly($input, $output)
     {
+        $this->disableEndpoint(DeliveryDate::class);
+        $this->disableEndpoint(SentDate::class);
+
         $model = $this->getNewModel();
         $model->setFee($input);
         $repository = $this->saveModel($model);
@@ -85,17 +90,15 @@ class OrderTest extends TestCase
     }
 
     /**
-     * @return Order|OrderFactory
+     * @return Order
      */
     private function getNewModel()
     {
-        /** @var OrderFactory $model */
+        /** @var OrderFactory $factory */
         $factory = $this->getObject(OrderFactory::class);
 
         /** @var Order $model */
-        $model = $factory->create();
-
-        return $model;
+        return $factory->create();
     }
 
     /**

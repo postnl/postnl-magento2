@@ -70,16 +70,22 @@ define([
         },
 
         canUseDeliveryOptions: ko.computed(function () {
-            var address = AddressFinder();
             var deliveryOptionsAreAvailable = State.deliveryOptionsAreAvailable();
-            var isNL = (address && address !== false && address.countryCode == 'NL');
+
+            var address = AddressFinder();
+            var isNL = (address !== null && address !== false && address.countryCode === 'NL');
 
             return deliveryOptionsAreAvailable && isNL;
         }),
 
         canUsePickupLocations: ko.computed(function () {
             var isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
-            return isActive == 1 && State.pickupOptionsAreAvailable() && AddressFinder() !== false;
+            var pickupOptionsAreAvailable = State.pickupOptionsAreAvailable();
+
+            var address = AddressFinder();
+            var isNL = (address !== null && address !== false && address.countryCode === 'NL');
+
+            return isActive === 1 && isNL && pickupOptionsAreAvailable;
         }),
 
         setDelivery: function () {

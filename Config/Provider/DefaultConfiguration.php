@@ -33,6 +33,7 @@ namespace TIG\PostNL\Config\Provider;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Encryption\Encryptor;
+use Magento\Framework\Module\Manager;
 
 class DefaultConfiguration extends AbstractConfigProvider
 {
@@ -52,14 +53,17 @@ class DefaultConfiguration extends AbstractConfigProvider
 
     /**
      * @param ScopeConfigInterface $scopeConfig
+     * @param Encryptor $crypt
      * @param AccountConfiguration $accountConfiguration
+     * @param Manager $moduleManager
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         Encryptor $crypt,
-        AccountConfiguration $accountConfiguration
+        AccountConfiguration $accountConfiguration,
+        Manager $moduleManager
     ) {
-        parent::__construct($scopeConfig, $crypt);
+        parent::__construct($scopeConfig, $moduleManager, $crypt);
         $this->accountConfiguration = $accountConfiguration;
     }
 
