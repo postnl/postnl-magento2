@@ -89,10 +89,11 @@ class ProductDictionary
      */
     public function get($items, array $postNLTypes)
     {
-        $skus = array_map(function ($item) {
-            /** @var ShipmentItemInterface|OrderItemInterface|QuoteItem $item */
-            return $item->getSku();
-        }, $items);
+        $skus = [];
+        /** @var ShipmentItemInterface|OrderItemInterface|QuoteItem $item */
+        foreach ($items as $item) {
+            $skus = $item->getSku();
+        }
 
         $this->setFilterGroups($skus);
 

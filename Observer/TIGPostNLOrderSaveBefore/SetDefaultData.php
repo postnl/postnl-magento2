@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Observer\TIGPostNLOrderSaveBefore;
 
+use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Service\Order\ShipAt;
 use TIG\PostNL\Service\Order\ProductCode;
 use TIG\PostNL\Service\Order\FirstDeliveryDate;
@@ -55,20 +56,28 @@ class SetDefaultData implements ObserverInterface
     private $shipAt;
 
     /**
+     * @var Log
+     */
+    private $log;
+
+    /**
      * SetDefaultData constructor.
      *
      * @param ProductCode       $productCode
      * @param FirstDeliveryDate $firstDeliveryDate
      * @param ShipAt            $shipAt
+     * @param Log               $log
      */
     public function __construct(
         ProductCode $productCode,
         FirstDeliveryDate $firstDeliveryDate,
-        ShipAt $shipAt
+        ShipAt $shipAt,
+        Log $log
     ) {
         $this->productCode = $productCode;
         $this->firstDeliveryDate = $firstDeliveryDate;
         $this->shipAt = $shipAt;
+        $this->log = $log;
     }
 
     /**
@@ -81,16 +90,20 @@ class SetDefaultData implements ObserverInterface
         /** @var \TIG\PostNL\Api\Data\OrderInterface $order */
         $order = $observer->getData('data_object');
 
-        if (!$order->getProductCode()) {
-            $order->setProductCode($this->productCode->get());
-        }
+        try {
+            if (!$order->getProductCode()) {
+                $order->setProductCode($this->productCode->get());
+            }
 
-        if (!$order->getDeliveryDate()) {
-            $this->firstDeliveryDate->set($order);
-        }
+            if (!$order->getDeliveryDate()) {
+                $this->firstDeliveryDate->set($order);
+            }
 
-        if (!$order->getShipAt()) {
-            $this->shipAt->set($order);
+            if (!$order->getShipAt()) {
+                $this->shipAt->set($order);
+            }
+        } catch (\Exception $exception) {
+            $this->log->critical($exception->getTraceAsString());
         }
     }
 }
