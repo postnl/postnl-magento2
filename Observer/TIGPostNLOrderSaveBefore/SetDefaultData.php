@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Observer\TIGPostNLOrderSaveBefore;
 
+use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Service\Order\ShipAt;
 use TIG\PostNL\Service\Order\ProductCode;
@@ -87,23 +88,31 @@ class SetDefaultData implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        /** @var \TIG\PostNL\Api\Data\OrderInterface $order */
+        /** @var OrderInterface $order */
         $order = $observer->getData('data_object');
 
         try {
-            if (!$order->getProductCode()) {
-                $order->setProductCode($this->productCode->get());
-            }
-
-            if (!$order->getDeliveryDate()) {
-                $this->firstDeliveryDate->set($order);
-            }
-
-            if (!$order->getShipAt()) {
-                $this->shipAt->set($order);
-            }
+            $this->setData($order);
         } catch (\Exception $exception) {
             $this->log->critical($exception->getTraceAsString());
+        }
+    }
+
+    /**
+     * @param $order
+     */
+    private function setData(OrderInterface $order)
+    {
+        if (!$order->getProductCode()) {
+            $order->setProductCode($this->productCode->get());
+        }
+
+        if (!$order->getDeliveryDate()) {
+            $this->firstDeliveryDate->set($order);
+        }
+
+        if (!$order->getShipAt()) {
+            $this->shipAt->set($order);
         }
     }
 }
