@@ -92,7 +92,7 @@ class ProductDictionary
         $skus = [];
         /** @var ShipmentItemInterface|OrderItemInterface|QuoteItem $item */
         foreach ($items as $item) {
-            $skus = $item->getSku();
+            $skus[] = $item->getSku();
         }
 
         $this->setFilterGroups($skus);
