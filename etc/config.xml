@@ -52,7 +52,7 @@
                 <modus>0</modus>
                 <customer_number_test>11223344</customer_number_test>
                 <customer_code_test>TOTA</customer_code_test>
-                <api_key_test>qLNy5m86BYYjD67CPrGZ1BaYU2A6OFrl</api_key_test>
+                <api_key_test>wrKwVQG9xpFM4uJVBVwyBzRrV7J3abWO</api_key_test>
                 <bls_code_test>103861</bls_code_test>
             </generalconfiguration_extension_status>
             <generalconfiguration_logging>
@@ -94,7 +94,7 @@
                 <cif_base_url>https://service.postnl.com/CIF/</cif_base_url>
                 <test_cif_base_url>https://testservice.postnl.com/CIF_SB/</test_cif_base_url>
                 <api_base_url>https://api.postnl.nl/shipment/</api_base_url>
-                <test_api_base_url>https://api-acc.postnl.nl/shipment/</test_api_base_url>
+                <test_api_base_url>https://api-sandbox.postnl.nl/shipment/</test_api_base_url>
             </endpoints>
             <barcode>
                 <global_type>CD</global_type>
