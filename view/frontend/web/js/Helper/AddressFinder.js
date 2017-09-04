@@ -56,6 +56,7 @@ define([
 
     var fields = [
         "input[name*='street[0]']",
+        "input[name*='street[1]']",
         "input[name*='postcode']",
         "select[name*='country_id']"
     ];
