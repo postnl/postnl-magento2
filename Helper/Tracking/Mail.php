@@ -121,7 +121,6 @@ class Mail extends AbstractTracking
      * @param Shipment $shipment
      * @param string $url
      *
-     * @return void
      */
     // @codingStandardsIgnoreStart
     public function set($shipment, $url)
