@@ -60,23 +60,20 @@ class Range
     private $defaultConfiguration;
 
     /**
-     * @var StoreManagerInterface
+     * @var int
      */
-    private $storeManager;
+    private $storeId;
 
     /**
      * @param AccountConfiguration  $accountConfiguration
      * @param DefaultConfiguration  $defaultConfiguration
-     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         AccountConfiguration $accountConfiguration,
-        DefaultConfiguration $defaultConfiguration,
-        StoreManagerInterface $storeManager
+        DefaultConfiguration $defaultConfiguration
     ) {
         $this->accountConfiguration = $accountConfiguration;
         $this->defaultConfiguration = $defaultConfiguration;
-        $this->storeManager         = $storeManager;
     }
 
     /**
@@ -100,10 +97,14 @@ class Range
 
     /**
      * @param $countryId
+     * @param $storeId
+     *
      * @return array
      */
-    public function getByCountryId($countryId)
+    public function getByCountryId($countryId, $storeId = null)
     {
+        $this->storeId = $storeId;
+
         if ($countryId == 'NL') {
             return $this->get('NL');
         }
@@ -121,7 +122,7 @@ class Range
     private function getNlBarcode()
     {
         $type  = '3S';
-        $range = $this->accountConfiguration->getCustomerCode($this->getStoreId());
+        $range = $this->accountConfiguration->getCustomerCode($this->storeId);
         $serie = static::NL_BARCODE_SERIE_LONG;
 
         if (strlen($range) > 3) {
@@ -141,7 +142,7 @@ class Range
     private function getEuBarcode()
     {
         $type  = '3S';
-        $range = $this->accountConfiguration->getCustomerCode($this->getStoreId());
+        $range = $this->accountConfiguration->getCustomerCode($this->storeId);
         $serie = static::EU_BARCODE_SERIE_LONG;
 
         if (strlen($range) > 3) {
@@ -220,14 +221,5 @@ class Range
             $error,
             'POSTNL-0061'
         );
-    }
-
-    /**
-     * @return int
-     */
-    private function getStoreId()
-    {
-        $store = $this->storeManager->getStore();
-        return $store->getId();
     }
 }
