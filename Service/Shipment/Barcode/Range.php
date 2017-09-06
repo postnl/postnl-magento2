@@ -33,7 +33,6 @@ namespace TIG\PostNL\Service\Shipment\Barcode;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
-use \Magento\Store\Model\StoreManagerInterface;
 
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Service\Shipment\EpsCountries;
