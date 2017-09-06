@@ -70,8 +70,8 @@ class Range
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
-        AccountConfiguration  $accountConfiguration,
-        DefaultConfiguration  $defaultConfiguration,
+        AccountConfiguration $accountConfiguration,
+        DefaultConfiguration $defaultConfiguration,
         StoreManagerInterface $storeManager
     ) {
         $this->accountConfiguration = $accountConfiguration;
