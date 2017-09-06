@@ -33,6 +33,8 @@ namespace TIG\PostNL\Test\Unit\Service\Shipment\Barcode;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
+use \Magento\Store\Model\StoreManagerInterface;
+use \Magento\Store\Api\Data\StoreInterface;
 use TIG\PostNL\Service\Shipment\Barcode\Range;
 use TIG\PostNL\Test\TestCase;
 
@@ -122,9 +124,16 @@ class RangeTest extends TestCase
         $this->mockFunction($defaultConfigurationMock, 'getBarcodeGlobalType', 'CD');
         $this->mockFunction($defaultConfigurationMock, 'getBarcodeGlobalRange', '1660');
 
+        $storeInterfaceMock = $this->getFakeMock(StoreInterface::class, true);
+        $this->mockFunction($storeInterfaceMock, 'getId', 0);
+
+        $storeManagerMock = $this->getFakeMock(StoreManagerInterface::class, true);
+        $this->mockFunction($storeManagerMock, 'getStore', $storeInterfaceMock);
+
         $instance = parent::getInstance($args + [
             'accountConfiguration' => $accountConfigurationMock,
             'defaultConfiguration' => $defaultConfigurationMock,
+            'storeManager'         => $storeManagerMock
         ]);
 
         return $instance;

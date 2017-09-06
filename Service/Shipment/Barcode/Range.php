@@ -33,6 +33,8 @@ namespace TIG\PostNL\Service\Shipment\Barcode;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
+use \Magento\Store\Model\StoreManagerInterface;
+
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 
@@ -58,15 +60,23 @@ class Range
     private $defaultConfiguration;
 
     /**
-     * @param AccountConfiguration $accountConfiguration
-     * @param DefaultConfiguration $defaultConfiguration
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * @param AccountConfiguration  $accountConfiguration
+     * @param DefaultConfiguration  $defaultConfiguration
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
-        AccountConfiguration $accountConfiguration,
-        DefaultConfiguration $defaultConfiguration
+        AccountConfiguration  $accountConfiguration,
+        DefaultConfiguration  $defaultConfiguration,
+        StoreManagerInterface $storeManager
     ) {
         $this->accountConfiguration = $accountConfiguration;
         $this->defaultConfiguration = $defaultConfiguration;
+        $this->storeManager         = $storeManager;
     }
 
     /**
@@ -111,7 +121,7 @@ class Range
     private function getNlBarcode()
     {
         $type  = '3S';
-        $range = $this->accountConfiguration->getCustomerCode();
+        $range = $this->accountConfiguration->getCustomerCode($this->getStoreId());
         $serie = static::NL_BARCODE_SERIE_LONG;
 
         if (strlen($range) > 3) {
@@ -131,7 +141,7 @@ class Range
     private function getEuBarcode()
     {
         $type  = '3S';
-        $range = $this->accountConfiguration->getCustomerCode();
+        $range = $this->accountConfiguration->getCustomerCode($this->getStoreId());
         $serie = static::EU_BARCODE_SERIE_LONG;
 
         if (strlen($range) > 3) {
@@ -210,5 +220,14 @@ class Range
             $error,
             'POSTNL-0061'
         );
+    }
+
+    /**
+     * @return int
+     */
+    private function getStoreId()
+    {
+        $store = $this->storeManager->getStore();
+        return $store->getId();
     }
 }
