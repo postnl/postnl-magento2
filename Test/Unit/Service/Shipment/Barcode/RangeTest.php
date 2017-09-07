@@ -47,7 +47,7 @@ class RangeTest extends TestCase
         $result = $instance->get('NL');
 
         $expected = [
-            'type' => '3S',
+            'type'  => '3S',
             'range' => '123456',
             'serie' => '000000000-999999999',
         ];
@@ -62,7 +62,7 @@ class RangeTest extends TestCase
         $result = $instance->get('EU');
 
         $expected = [
-            'type' => '3S',
+            'type'  => '3S',
             'range' => '123456',
             'serie' => '0000000-9999999',
         ];
@@ -77,7 +77,7 @@ class RangeTest extends TestCase
         $result = $instance->get('global');
 
         $expected = [
-            'type' => 'CD',
+            'type'  => 'CD',
             'range' => '1660',
             'serie' => '0000-9999',
         ];
@@ -122,9 +122,10 @@ class RangeTest extends TestCase
         $this->mockFunction($defaultConfigurationMock, 'getBarcodeGlobalType', 'CD');
         $this->mockFunction($defaultConfigurationMock, 'getBarcodeGlobalRange', '1660');
 
+
         $instance = parent::getInstance($args + [
             'accountConfiguration' => $accountConfigurationMock,
-            'defaultConfiguration' => $defaultConfigurationMock,
+            'defaultConfiguration' => $defaultConfigurationMock
         ]);
 
         return $instance;
