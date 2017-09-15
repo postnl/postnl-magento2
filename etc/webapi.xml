@@ -39,6 +39,12 @@
             <resource ref="Magento_Sales::sales"/>
         </resources>
     </route>
+    <route url="/V1/postnl/getByMagentoOrderId/:id" method="GET">
+        <service class="TIG\PostNL\Api\OrderRepositoryInterface" method="getByOrderId"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
     <route url="/V1/postnl/orders/search" method="GET">
         <service class="TIG\PostNL\Api\OrderRepositoryInterface" method="getList"/>
         <resources>

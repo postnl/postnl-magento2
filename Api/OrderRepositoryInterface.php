@@ -95,9 +95,10 @@ interface OrderRepositoryInterface
     public function getByFieldWithValue($field, $value);
 
     /**
-     * @param int $identifier
+     * @param int $id
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
-    public function getByOrderId($identifier);
+    // @codingStandardsIgnoreLine
+    public function getByOrderId($id);
 }
