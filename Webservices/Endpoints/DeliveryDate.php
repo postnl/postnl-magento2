@@ -47,7 +47,7 @@ class DeliveryDate extends AbstractEndpoint
     /**
      * @var string
      */
-    private $version = 'v2_1';
+    private $version = 'v2_2';
 
     /**
      * @var string
@@ -150,7 +150,7 @@ class DeliveryDate extends AbstractEndpoint
      */
     public function getWsdlUrl()
     {
-        return 'DeliveryDateWebService/2_1/';
+        return 'DeliveryDateWebService/2_2/';
     }
 
     /**

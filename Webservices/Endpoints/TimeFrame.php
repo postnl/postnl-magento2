@@ -44,7 +44,7 @@ class TimeFrame extends AbstractEndpoint
     /**
      * @var string
      */
-    private $version = 'v2_0';
+    private $version = 'v2_1';
 
     /**
      * @var string
@@ -124,7 +124,7 @@ class TimeFrame extends AbstractEndpoint
      */
     public function getWsdlUrl()
     {
-        return 'TimeframeWebService/2_0/';
+        return 'TimeframeWebService/2_1/';
     }
 
     /**
