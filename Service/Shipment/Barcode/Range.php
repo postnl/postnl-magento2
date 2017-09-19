@@ -33,6 +33,7 @@ namespace TIG\PostNL\Service\Shipment\Barcode;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
+
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 
@@ -58,8 +59,13 @@ class Range
     private $defaultConfiguration;
 
     /**
-     * @param AccountConfiguration $accountConfiguration
-     * @param DefaultConfiguration $defaultConfiguration
+     * @var int
+     */
+    private $storeId;
+
+    /**
+     * @param AccountConfiguration  $accountConfiguration
+     * @param DefaultConfiguration  $defaultConfiguration
      */
     public function __construct(
         AccountConfiguration $accountConfiguration,
@@ -90,10 +96,14 @@ class Range
 
     /**
      * @param $countryId
+     * @param $storeId
+     *
      * @return array
      */
-    public function getByCountryId($countryId)
+    public function getByCountryId($countryId, $storeId = null)
     {
+        $this->storeId = $storeId;
+
         if ($countryId == 'NL') {
             return $this->get('NL');
         }
@@ -111,7 +121,7 @@ class Range
     private function getNlBarcode()
     {
         $type  = '3S';
-        $range = $this->accountConfiguration->getCustomerCode();
+        $range = $this->accountConfiguration->getCustomerCode($this->storeId);
         $serie = static::NL_BARCODE_SERIE_LONG;
 
         if (strlen($range) > 3) {
@@ -131,7 +141,7 @@ class Range
     private function getEuBarcode()
     {
         $type  = '3S';
-        $range = $this->accountConfiguration->getCustomerCode();
+        $range = $this->accountConfiguration->getCustomerCode($this->storeId);
         $serie = static::EU_BARCODE_SERIE_LONG;
 
         if (strlen($range) > 3) {
