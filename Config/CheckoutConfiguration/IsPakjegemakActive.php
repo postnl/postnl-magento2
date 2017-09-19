@@ -50,10 +50,10 @@ class IsPakjegemakActive implements CheckoutConfigurationInterface
     }
 
     /**
-     * @return bool
+     * @return int
      */
     public function getValue()
     {
-        return $this->shippingOptions->isPakjegemakActive();
+        return (int) $this->shippingOptions->isPakjegemakActive();
     }
 }
