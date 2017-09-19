@@ -218,7 +218,7 @@ interface ShipmentInterface
      *
      * @return string
      */
-    public function getDeliveryDateFormatted($format = 'd-m-Y H:i:s');
+    public function getDeliveryDateFormatted($format = 'd-m-Y');
 
     /**
      * @return bool

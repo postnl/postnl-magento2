@@ -142,6 +142,7 @@ define([
                     telephone: ''
                 });
 
+                // this trigger makes the extension compatible with onestep checkout.
                 $(document).trigger('compatible_postnl_deliveryoptions_save_before');
                 $.ajax({
                     method: 'POST',
