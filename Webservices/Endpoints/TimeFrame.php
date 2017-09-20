@@ -57,7 +57,7 @@ class TimeFrame extends AbstractEndpoint
     private $soap;
 
     /**
-     * @var array
+     * Array
      */
     private $requestParams;
 

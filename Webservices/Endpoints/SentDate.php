@@ -57,7 +57,7 @@ class SentDate extends AbstractEndpoint
     private $type = 'GetSentDate';
 
     /**
-     * @var array
+     * Array
      */
     private $requestParams;
 
@@ -75,6 +75,7 @@ class SentDate extends AbstractEndpoint
      * @var TimezoneInterface
      */
     private $timezone;
+
     /**
      * @var Options
      */
