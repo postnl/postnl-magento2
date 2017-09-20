@@ -34,38 +34,34 @@ namespace TIG\PostNL\Service\Order;
 
 use Magento\Quote\Model\Quote\Address;
 use TIG\PostNL\Api\Data\OrderInterface;
+use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use \Magento\Sales\Api\OrderRepositoryInterface;
 
 class FirstDeliveryDate
 {
     /**
-     * @var \Magento\Sales\Model\Order
-     */
-    private $magentoOrder;
-
-    /**
      * @var DeliveryDate
      */
     private $endpoint;
 
     /**
-     * @var OrderRepositoryInterface
+     * @var QuoteInterface
      */
-    private $orderRepository;
+    private $quote;
 
     /**
      * FirstDeliveryDate constructor.
      *
      * @param DeliveryDate             $endpoint
-     * @param OrderRepositoryInterface $orderRepository
+     * @param QuoteInterface           $quote
      */
     public function __construct(
         DeliveryDate $endpoint,
-        OrderRepositoryInterface $orderRepository
+        QuoteInterface $quote
     ) {
         $this->endpoint = $endpoint;
-        $this->orderRepository = $orderRepository;
+        $this->quote = $quote;
     }
 
     /**
@@ -75,10 +71,7 @@ class FirstDeliveryDate
      */
     public function set(OrderInterface $order)
     {
-        $orderId = $order->getOrigData('order_id');
-        $this->magentoOrder = $this->orderRepository->get($orderId);
-
-        $address = $this->magentoOrder->getShippingAddress();
+        $address = $this->quote->getShippingAddress();
         if (!$address) {
             return null;
         }
@@ -94,7 +87,7 @@ class FirstDeliveryDate
     private function getDeliveryDate(Address $address)
     {
         try {
-            $this->endpoint->setStoreId($this->magentoOrder->getStoreId());
+            $this->endpoint->setStoreId($this->quote->getStoreId());
             $this->endpoint->setParameters([
                 'country'  => $address->getCountryId(),
                 'postcode' => $address->getPostcode(),

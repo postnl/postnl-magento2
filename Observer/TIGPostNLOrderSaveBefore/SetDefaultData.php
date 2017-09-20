@@ -107,8 +107,7 @@ class SetDefaultData implements ObserverInterface
             $order->setProductCode($this->productCode->get());
         }
 
-        // delivery date is not in the Data array if the observer is trickerd from the backend.
-        if (!$order->getOrigData('delivery_date')) {
+        if (!$order->getDeliveryDate()) {
             $this->firstDeliveryDate->set($order);
         }
 
