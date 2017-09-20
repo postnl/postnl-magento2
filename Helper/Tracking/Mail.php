@@ -129,7 +129,7 @@ class Mail extends AbstractTracking
         $transport = $this->transportBuilder->setTemplateIdentifier($template);
         $transport->setTemplateOptions([
             'area'  => \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE,
-            'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID
+            'store' => $shipment->getStoreId()
         ]);
 
         /** @var \Magento\Sales\Model\Order $order */
