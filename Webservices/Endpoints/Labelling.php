@@ -127,14 +127,6 @@ class Labelling extends AbstractEndpoint
     /**
      * {@inheritdoc}
      */
-    public function getWsdlUrl()
-    {
-        return 'LabellingWebService/2_1/';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getLocation()
     {
         return $this->version . '/' . $this->endpoint;

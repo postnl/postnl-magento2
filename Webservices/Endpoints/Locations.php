@@ -55,7 +55,7 @@ class Locations extends AbstractEndpoint
     private $soap;
 
     /**
-     * @var Array
+     * @var array
      */
     private $requestParams;
 
@@ -118,14 +118,6 @@ class Locations extends AbstractEndpoint
             'Countrycode' => $address['country'],
             'Message'     => $this->message->get('')
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getWsdlUrl()
-    {
-        return 'LocationWebService/2_1/';
     }
 
     /**

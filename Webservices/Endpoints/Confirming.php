@@ -121,14 +121,6 @@ class Confirming extends AbstractEndpoint
     /**
      * {@inheritdoc}
      */
-    public function getWsdlUrl()
-    {
-        return 'ConfirmingWebService/1_10/';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getLocation()
     {
         return $this->version . '/' . $this->endpoint;

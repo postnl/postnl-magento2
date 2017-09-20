@@ -74,7 +74,9 @@ class Soap
      */
     private $log;
 
-    /** @var AccountConfiguration */
+    /**
+     * @var AccountConfiguration
+     */
     private $accountConfiguration;
 
     /**
@@ -226,7 +228,7 @@ class Soap
     private function parseEndpoint(AbstractEndpoint $endpoint)
     {
         $this->location = $endpoint->getLocation();
-        $this->wsdlUrl  = $endpoint->getWsdlUrl();
+        $this->wsdlUrl  = $this->getWsdlUrl();
     }
 
     /**

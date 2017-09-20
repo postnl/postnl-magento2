@@ -127,7 +127,6 @@ class DeliveryDate extends AbstractEndpoint
      * @codingStandardsIgnoreEnd
      * @param $address
      *
-     * @return array
      */
     public function setParameters($address)
     {
@@ -143,14 +142,6 @@ class DeliveryDate extends AbstractEndpoint
             ],
             'Message' => $this->message->get('')
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getWsdlUrl()
-    {
-        return 'DeliveryDateWebService/2_2/';
     }
 
     /**
