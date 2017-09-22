@@ -31,7 +31,6 @@
  */
 namespace TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter;
 
-use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\ResourceModel\GridInterface;

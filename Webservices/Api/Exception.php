@@ -154,7 +154,7 @@ class Exception extends PostNLException
 
         $this->message .= PHP_EOL . PHP_EOL;
         $this->message .= '<<<< ' . $message . ' >>>>' . PHP_EOL;
-        $this->message .= $this->requestXml;
+        $this->message .= $xml;
     }
 
     /**

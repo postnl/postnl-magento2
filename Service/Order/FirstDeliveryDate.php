@@ -36,7 +36,6 @@ use Magento\Quote\Model\Quote\Address;
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
-use \Magento\Sales\Api\OrderRepositoryInterface;
 
 class FirstDeliveryDate
 {
@@ -53,8 +52,8 @@ class FirstDeliveryDate
     /**
      * FirstDeliveryDate constructor.
      *
-     * @param DeliveryDate             $endpoint
-     * @param QuoteInterface           $quote
+     * @param DeliveryDate   $endpoint
+     * @param QuoteInterface $quote
      */
     public function __construct(
         DeliveryDate $endpoint,
