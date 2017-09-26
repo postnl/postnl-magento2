@@ -40,26 +40,27 @@ use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 class FirstDeliveryDate
 {
     /**
-     * @var QuoteInterface
-     */
-    private $quote;
-    /**
      * @var DeliveryDate
      */
     private $endpoint;
 
     /**
+     * @var QuoteInterface
+     */
+    private $quote;
+
+    /**
      * FirstDeliveryDate constructor.
      *
-     * @param QuoteInterface $quote
      * @param DeliveryDate   $endpoint
+     * @param QuoteInterface $quote
      */
     public function __construct(
-        QuoteInterface $quote,
-        DeliveryDate $endpoint
+        DeliveryDate $endpoint,
+        QuoteInterface $quote
     ) {
-        $this->quote = $quote;
         $this->endpoint = $endpoint;
+        $this->quote = $quote;
     }
 
     /**

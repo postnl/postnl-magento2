@@ -121,6 +121,7 @@ define([
                 State.fee(fee);
                 State.deliveryFee(fee);
 
+                $(document).trigger('compatible_postnl_deliveryoptions_save_before');
                 $.ajax({
                     method : 'POST',
                     url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
@@ -131,6 +132,8 @@ define([
                         from   : value.from,
                         to     : value.to
                     }
+                }).done(function (response) {
+                    $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
                 });
             });
 

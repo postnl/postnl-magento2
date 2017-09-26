@@ -105,7 +105,7 @@ class Barcode extends AbstractEndpoint
     {
         $this->validateRequiredValues();
 
-        $barcode = $this->barcodeRange->getByCountryId($this->countryId);
+        $barcode = $this->barcodeRange->getByCountryId($this->countryId, $this->storeId);
 
         $parameters = [
             'Message'  => $this->message->get(''),
@@ -118,14 +118,6 @@ class Barcode extends AbstractEndpoint
         ];
 
         return $this->soap->call($this, 'GenerateBarcode', $parameters);
-    }
-
-    /**
-     * @return string
-     */
-    public function getWsdlUrl()
-    {
-        return 'BarcodeWebService/1_1/';
     }
 
     /**

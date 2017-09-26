@@ -37,9 +37,6 @@ use Magento\Framework\Module\Manager;
 
 class DefaultConfiguration extends AbstractConfigProvider
 {
-    const XPATH_ENDPOINTS_CIF_BASE_URL = 'tig_postnl/endpoints/cif_base_url';
-    const XPATH_ENDPOINTS_TEST_CIF_BASE_URL = 'tig_postnl/endpoints/test_cif_base_url';
-
     const XPATH_ENDPOINTS_API_BASE_URL = 'tig_postnl/endpoints/api_base_url';
     const XPATH_ENDPOINTS_TEST_API_BASE_URL = 'tig_postnl/endpoints/test_api_base_url';
 
@@ -65,34 +62,6 @@ class DefaultConfiguration extends AbstractConfigProvider
     ) {
         parent::__construct($scopeConfig, $moduleManager, $crypt);
         $this->accountConfiguration = $accountConfiguration;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCifBaseUrl()
-    {
-        return $this->getConfigFromXpath(static::XPATH_ENDPOINTS_CIF_BASE_URL);
-    }
-
-    /**
-     * @return string
-     */
-    public function getTestCifBaseUrl()
-    {
-        return $this->getConfigFromXpath(static::XPATH_ENDPOINTS_TEST_CIF_BASE_URL);
-    }
-
-    /**
-     * @return string
-     */
-    public function getModusCifBaseUrl()
-    {
-        if ($this->accountConfiguration->isModusLive()) {
-            return $this->getCifBaseUrl();
-        }
-
-        return $this->getTestCifBaseUrl();
     }
 
     /**

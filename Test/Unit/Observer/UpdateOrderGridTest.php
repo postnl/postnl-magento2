@@ -102,6 +102,9 @@ class UpdateOrderGridTest extends TestCase
     {
         $orderMock = $this->getFakeMock(\TIG\PostNL\Model\Order::class)->getMock();
 
+        $getDataExpects = $orderMock->expects($this->once());
+        $getDataExpects->method('getData');
+
         $setDataExpects = $orderMock->expects($this->once());
         $setDataExpects->method('setData');
 

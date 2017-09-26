@@ -29,18 +29,14 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Webservices;
 
-abstract class AbstractEndpoint
-{
-    /**
-     * @throws \Magento\Framework\Webapi\Exception
-     * @return mixed
-     */
-    abstract public function call();
-
-    /**
-     * @return string
-     */
-    abstract public function getLocation();
-}
+return [
+    'postcode' => '1014 BA',
+    'lastname' => 'Support',
+    'firstname' => 'TIG',
+    'street' => 'Kabelweg 37',
+    'city' => 'Amsterdam',
+    'email' => 'customer@tig.nl',
+    'telephone' => '0201234567',
+    'country_id' => 'NL'
+];

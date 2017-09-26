@@ -121,8 +121,8 @@ class Mail extends AbstractTracking
      * @param Shipment $shipment
      * @param string $url
      *
-     * @return $this
      */
+    // @codingStandardsIgnoreStart
     public function set($shipment, $url)
     {
         $template  = $this->webshopConfig->getTrackAndTraceEmailTemplate($shipment->getStoreId());
@@ -131,12 +131,16 @@ class Mail extends AbstractTracking
             'area'  => \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE,
             'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID
         ]);
+
+        /** @var \Magento\Sales\Model\Order $order */
+        $order = $shipment->getOrder();
         $transport->setTemplateVars([
-           'order_id'      => $shipment->getIncrementId(),
+           'order_id'      => $order->getIncrementId(),
            'dateAndTime'   => $this->postNLHelperData->getDate(),
            'url'           => $url,
            'logo_url'      => $this->getLogoUrl()
         ]);
+
         $transport->setFrom('general');
         $address = $shipment->getShippingAddress();
         $transport->addTo($address->getEmail(), $address->getFirstname() . ' '. $address->getLastname());
@@ -144,6 +148,7 @@ class Mail extends AbstractTracking
         $this->logging->addInfo('Track And Trace email build for :'. $address->getEmail());
         $this->trackAndTraceEmail = $transport->getTransport();
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Get the url to the logo

@@ -29,18 +29,21 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Webservices;
 
-abstract class AbstractEndpoint
-{
-    /**
-     * @throws \Magento\Framework\Webapi\Exception
-     * @return mixed
-     */
-    abstract public function call();
+use Magento\Framework\ObjectManagerInterface;
+use Magento\Sales\Model\Order\Shipment as MagentoShipment;
+use TIG\PostNL\Model\Shipment;
 
-    /**
-     * @return string
-     */
-    abstract public function getLocation();
-}
+require __DIR__ . '/Shipment.php';
+/** @var ObjectManagerInterface $objectManager */
+/** @var MagentoShipment $shipment */
+
+/** @var Shipment $postnlShipment */
+$postnlShipment = $objectManager->create(Shipment::class);
+
+$postnlShipment->setShipmentId($shipment->getId());
+$postnlShipment->setOrderId($shipment->getOrderId());
+$postnlShipment->setProductCode('3085');
+$postnlShipment->setShipmentType('DayTime');
+
+$postnlShipment->save();

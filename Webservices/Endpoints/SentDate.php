@@ -31,11 +31,8 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
-use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use Magento\Sales\Model\EntityInterface;
 use Magento\Customer\Model\Address\AbstractAddress as Address;
-use Magento\Sales\Model\Order;
 use TIG\PostNL\Api\Data\OrderInterface as PostNLOrder;
 use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
@@ -60,7 +57,7 @@ class SentDate extends AbstractEndpoint
     private $type = 'GetSentDate';
 
     /**
-     * @var Array
+     * Array
      */
     private $requestParams;
 
@@ -78,6 +75,7 @@ class SentDate extends AbstractEndpoint
      * @var TimezoneInterface
      */
     private $timezone;
+
     /**
      * @var Options
      */
@@ -115,24 +113,15 @@ class SentDate extends AbstractEndpoint
     /**
      * @return string
      */
-    public function getWsdlUrl()
-    {
-        return 'DeliveryDateWebService/2_1/';
-    }
-
-    /**
-     * @return string
-     */
     public function getLocation()
     {
         return $this->version .'/'. $this->endpoint;
     }
 
     /**
-     * @param $address
+     * @param Address $address
      * @param $storeId
      * @param PostNLOrder $postNLOrder
-     * @return array
      *
      */
     public function setParameters($address, $storeId, PostNLOrder $postNLOrder)
@@ -171,7 +160,7 @@ class SentDate extends AbstractEndpoint
      * The sent date webservice can only work with NL addresses. That's why we default to the PostNL Pakketten office
      * postcode for addresses outside the Netherlands.
      *
-     * @param $address
+     * @param Address $address
      *
      * @return string
      */

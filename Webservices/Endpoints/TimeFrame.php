@@ -44,7 +44,7 @@ class TimeFrame extends AbstractEndpoint
     /**
      * @var string
      */
-    private $version = 'v2_0';
+    private $version = 'v2_1';
 
     /**
      * @var string
@@ -57,7 +57,7 @@ class TimeFrame extends AbstractEndpoint
     private $soap;
 
     /**
-     * @var Array
+     * Array
      */
     private $requestParams;
 
@@ -122,14 +122,6 @@ class TimeFrame extends AbstractEndpoint
     /**
      * @return string
      */
-    public function getWsdlUrl()
-    {
-        return 'TimeframeWebService/2_0/';
-    }
-
-    /**
-     * @return string
-     */
     public function getLocation()
     {
         return $this->version . '/' . $this->endpoint;
@@ -144,7 +136,6 @@ class TimeFrame extends AbstractEndpoint
      * @param $address
      * @param $startDate
      *
-     * @return array
      */
     public function setParameters($address, $startDate)
     {

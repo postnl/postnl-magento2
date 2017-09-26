@@ -128,7 +128,7 @@ class Shipping
      */
     private function processTotal(Quote $quote, Quote\Address\Total $total, $rate, $address)
     {
-        $fee = $this->getFee();
+        $fee         = $this->getFee();
         $store       = $quote->getStore();
         $amountPrice = $this->priceCurrency->convert(
             $rate->getPrice() + $fee,
@@ -136,9 +136,9 @@ class Shipping
         );
 
         $total->setTotalAmount($this->subject->getCode(), $amountPrice);
-        $total->setBaseTotalAmount($this->subject->getCode(), $rate->getPrice());
+        $total->setBaseTotalAmount($this->subject->getCode(), $rate->getPrice() + $fee);
         $address->setShippingDescription($rate->getCarrierTitle());
-        $total->setBaseShippingAmount($rate->getPrice());
+        $total->setBaseShippingAmount($rate->getPrice() + $fee);
         $total->setShippingAmount($amountPrice);
         $total->setShippingDescription($address->getShippingDescription());
     }

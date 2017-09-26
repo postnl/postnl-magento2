@@ -74,7 +74,9 @@ class Soap
      */
     private $log;
 
-    /** @var AccountConfiguration */
+    /**
+     * @var AccountConfiguration
+     */
     private $accountConfiguration;
 
     /**
@@ -191,9 +193,7 @@ class Soap
      */
     private function getWsdlUrl()
     {
-        $prefix = $this->defaultConfiguration->getModusCifBaseUrl();
-        $wsdlUrl = $prefix . $this->wsdlUrl . '?wsdl';
-
+        $wsdlUrl = $this->getLocation() . '/soap.wsdl';
         return $wsdlUrl;
     }
 
@@ -228,7 +228,7 @@ class Soap
     private function parseEndpoint(AbstractEndpoint $endpoint)
     {
         $this->location = $endpoint->getLocation();
-        $this->wsdlUrl  = $endpoint->getWsdlUrl();
+        $this->wsdlUrl  = $this->getWsdlUrl();
     }
 
     /**

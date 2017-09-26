@@ -31,7 +31,6 @@
  */
 namespace TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter;
 
-use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\ResourceModel\GridInterface;
@@ -90,10 +89,9 @@ class UpdateOrderGrid implements ObserverInterface
 
         $productCode = $shipment->getProductCode() ?: $order->getProductCode();
 
-        $data = [
-            'ship_at' => $shipment->getShipAt(),
-            'product_code' => $productCode
-        ];
+        $data = $order->getData();
+        $data['ship_at']      = $shipment->getShipAt();
+        $data['product_code'] = $productCode;
 
         $order->setData($data);
 
