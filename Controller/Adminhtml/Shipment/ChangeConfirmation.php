@@ -40,7 +40,7 @@ use TIG\PostNL\Service\Shipment\Label\DeleteLabel;
 use TIG\PostNL\Service\Shipment\Barcode\DeleteBarcode;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
 
-class ChangeConfrimation extends Action
+class ChangeConfirmation extends Action
 {
     /**
      * @var ShipmentService
@@ -99,14 +99,14 @@ class ChangeConfrimation extends Action
      * all the associated elements in question will be removed from the shipment.
      * After that, new information like the shipping address can be set, before re-confirming the consignment.
      *
-     * @return $this
+     * @return \Magento\Framework\Controller\Result\Redirect
      */
     public function execute()
     {
         $this->postNLShipmentId = $this->getRequest()->getParam('postnl_shipment_id');
         $this->shipmentId       = $this->getRequest()->getParam('shipment_id');
 
-        $this->resetConfirmedAt();
+        $this->resetShipment();
         $this->barcodeDeleteHandler->deleteAllByShipmentId($this->postNLShipmentId);
         $this->labelDeleteHandler->deleteAllByParentId($this->postNLShipmentId);
         $this->trackDeleteHandler->deleteAllByShipmentId($this->shipmentId);
@@ -123,11 +123,12 @@ class ChangeConfrimation extends Action
      *
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    private function resetConfirmedAt()
+    private function resetShipment()
     {
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->shipmentService->getPostNLShipment($this->postNLShipmentId);
         $postNLShipment->setConfirmedAt(null);
+        $postNLShipment->setMainBarcode(null);
         $this->shipmentService->save($postNLShipment);
     }
 }
