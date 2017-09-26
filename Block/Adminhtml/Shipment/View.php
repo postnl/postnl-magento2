@@ -249,10 +249,10 @@ class View extends MagentoView
         $postNLShipment = $this->getPostNLShipment();
 
         return $this->getUrl(
-            'postnl/shipment/ChangeConfrimation',
+            'postnl/shipment/ChangeConfirmation',
             [
                 'postnl_shipment_id' => $postNLShipment->getId(),
-                'shipment_id'        => $this->getShipment()->getId()
+                'shipment_id'        => $this->getShipment()->getId(),
             ]
         );
     }

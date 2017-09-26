@@ -30,14 +30,14 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\PostNL\Test\Integration\Controller\DeliveryOptions;
+namespace TIG\PostNL\Test\Integration\Controller;
 
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\Locations;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
 use Magento\TestFramework\TestCase\AbstractController;
 
-class TestBase extends AbstractController
+class TestCase extends AbstractController
 {
     protected function setUp()
     {
