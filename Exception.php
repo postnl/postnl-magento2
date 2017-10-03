@@ -103,7 +103,7 @@ class Exception extends LocalizedException
     private function getMessageString($message)
     {
         if ($message instanceof Phrase) {
-            return $message->getText();
+            return $message->render();
         }
 
         return $message;
