@@ -57,6 +57,7 @@
     <!-- Code coverage filters -->
     <filter>
         <whitelist>
+            <directory suffix=".php">../../../vendor/tig/postnl</directory>
             <directory suffix=".php">../../../app/code/TIG/PostNL</directory>
             <exclude>
                 <directory>../../../app/code/*/*/Test</directory>
