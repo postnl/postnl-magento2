@@ -56,7 +56,7 @@
     </testsuites>
     <!-- Code coverage filters -->
     <filter>
-        <whitelist>
+        <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">../../../vendor/tig/postnl</directory>
             <directory suffix=".php">../../../app/code/TIG/PostNL</directory>
             <exclude>
