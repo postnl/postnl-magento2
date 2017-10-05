@@ -46,7 +46,7 @@
     </php>
 
     <filter>
-        <whitelist addUncoveredFilesFromWhiteList="true">
+        <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">.</directory>
             <exclude>
                 <directory suffix=".php">Test</directory>
