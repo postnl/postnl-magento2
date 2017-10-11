@@ -40,7 +40,9 @@ before_script:
   - bash Test/Script/Setup.sh
 
 script:
-  - grunt
+  - grunt phpcs
+  - grunt lint
+  - grunt exec:ciTests
   - if [ "$CODE_COVERAGE" = "false" ]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
 
 after_success:

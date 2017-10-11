@@ -57,6 +57,10 @@ module.exports = function (grunt) {
                 'cd ' + magento2path + 'dev/tests/integration &&' +
                 'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit --testsuite "TIG PostNL Integration Tests"',
 
+            ciTests:
+                'cd ' + magento2path + 'dev/tests/integration &&' +
+                'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit --testsuite',
+
             phplint: 'if find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l | grep -v "No syntax errors detected"; then exit 1; fi',
 
             codeCoverage:
@@ -106,6 +110,11 @@ module.exports = function (grunt) {
         'phpcs',
         'lint',
         'runTests'
+    ]);
+    grunt.registerTask('ci', 'This task is to be meant for running in CI only', [
+        'phpcs',
+        'lint',
+        'exec:ciTests'
     ]);
 
     grunt.registerTask('default', 'Run the default task (test)', ['test']);
