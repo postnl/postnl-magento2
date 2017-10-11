@@ -59,7 +59,7 @@ module.exports = function (grunt) {
 
             ciTests:
                 'cd ' + magento2path + 'dev/tests/integration &&' +
-                'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit --testsuite',
+                'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit',
 
             phplint: 'if find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l | grep -v "No syntax errors detected"; then exit 1; fi',
 
