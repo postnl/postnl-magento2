@@ -51,6 +51,8 @@
             <directory suffix=".php">../../../vendor/tig/postnl</directory>
             <directory suffix=".php">../../../app/code/TIG/PostNL</directory>
             <exclude>
+                <directory>../../../vendor/tig/postnl/Test</directory>
+                <directory>../../../app/code/TIG/PostNL/Test</directory>
                 <directory>../../../app/code/*/*/Test</directory>
                 <directory>../../../app/code/*/*/vendor</directory>
             </exclude>
