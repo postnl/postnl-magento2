@@ -105,7 +105,7 @@ class Barcode extends AbstractEndpoint
     {
         $this->validateRequiredValues();
 
-        $barcode = $this->barcodeRange->getByCountryId($this->countryId);
+        $barcode = $this->barcodeRange->getByCountryId($this->countryId, $this->storeId);
 
         $parameters = [
             'Message'  => $this->message->get(''),

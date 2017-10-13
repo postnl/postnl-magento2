@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,30 +28,32 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
-         colors="true"
-         bootstrap="Test/Bootstrap.php"
-        >
-    <testsuite name="unit">
-        <directory suffix="Test.php">./Test/Unit</directory>
-    </testsuite>
+ */
 
-    <php>
-        <ini name="date.timezone" value="America/Los_Angeles"/>
-        <ini name="xdebug.max_nesting_level" value="200"/>
-    </php>
+use Magento\Framework\ObjectManagerInterface;
+use Magento\Payment\Helper\Data;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Item;
+use Magento\Sales\Model\Order\Shipment;
+use Magento\Sales\Model\Order\Shipment\Item as ShipmentItem;
 
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">.</directory>
-            <exclude>
-                <directory suffix=".php">Test</directory>
-                <directory suffix=".php">vendor</directory>
-                <file>registration.php</file>
-            </exclude>
-        </whitelist>
-    </filter>
-</phpunit>
+require __DIR__ . '/Order.php';
+/** @var ObjectManagerInterface $objectManager */
+/** @var Order $order */
+/** @var Item $orderItem */
+
+$payment = $order->getPayment();
+$paymentInfoBlock = $objectManager->get(Data::class)
+    ->getInfoBlock($payment);
+$payment->setBlockMock($paymentInfoBlock);
+
+/** @var Shipment $shipment */
+$shipment = $objectManager->create(Shipment::class);
+$shipment->setOrder($order);
+
+$shipmentItem = $objectManager->create(ShipmentItem::class);
+$shipmentItem->setOrderItem($orderItem);
+$shipment->addItem($shipmentItem);
+$shipment->setShipmentStatus(Shipment::STATUS_NEW);
+
+$shipment->save();

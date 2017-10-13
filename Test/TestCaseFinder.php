@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,30 +28,15 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
-         colors="true"
-         bootstrap="Test/Bootstrap.php"
-        >
-    <testsuite name="unit">
-        <directory suffix="Test.php">./Test/Unit</directory>
-    </testsuite>
+ */
 
-    <php>
-        <ini name="date.timezone" value="America/Los_Angeles"/>
-        <ini name="xdebug.max_nesting_level" value="200"/>
-    </php>
+/**
+ * Magento 2.1 and lower uses PHPUnit 4.8, which has PHPUnit_Framework_TestCase has base class. Magento 2.2 and higher
+ * have an updated version of PHPUnit, which uses \PHPUnit\Framework\Testcase as base class
+ */
+if (class_exists('PHPUnit_Framework_TestCase')) {
+    require 'TestCaseFinder/PHPUnit4.php';
+    return;
+}
 
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">.</directory>
-            <exclude>
-                <directory suffix=".php">Test</directory>
-                <directory suffix=".php">vendor</directory>
-                <file>registration.php</file>
-            </exclude>
-        </whitelist>
-    </filter>
-</phpunit>
+require 'TestCaseFinder/PHPUnit6.php';

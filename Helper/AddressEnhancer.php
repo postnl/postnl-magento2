@@ -92,16 +92,13 @@ class AddressEnhancer
     // @codingStandardsIgnoreLine
     protected function extractHousenumber($address)
     {
-        if (isset($address['street'][1]) && is_numeric($address['street'][1])) {
-            return $this->addHousenumberValues($address, $address['street'][1]);
-        }
-
-        $matched = preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER, $address['street'][0], $result);
+        $street = implode(' ', $address['street']);
+        $matched = preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER, $street, $result);
         if (!$matched) {
-            return ['error' => [
-                        'code'    => 'POSTNL-0124',
-                        'message' =>
-                            'Unable to extract the house number, could not find an number inside the street value'
+            return [
+                'error' => [
+                    'code'    => 'POSTNL-0124',
+                    'message' => 'Unable to extract the house number, could not find an number inside the street value'
                 ]
             ];
         }
@@ -129,8 +126,8 @@ class AddressEnhancer
     {
         $houseNumberData = $this->splitHousenumber($houseNumber);
 
-        $address['housenumber']          = $houseNumberData['number'];
-        $address['housenumberExtension'] = $houseNumberData['extension'];
+        $address['housenumber']          = trim($houseNumberData['number']);
+        $address['housenumberExtension'] = trim($houseNumberData['extension']);
 
         return $address;
     }
