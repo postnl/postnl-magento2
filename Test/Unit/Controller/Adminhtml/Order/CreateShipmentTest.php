@@ -118,10 +118,6 @@ class CreateShipmentTest extends TestCase
         $canShipExpects->method('canShip');
         $canShipExpects->willReturn($canShip);
 
-        $getShippingMethodExpects = $order->expects($this->any());
-        $getShippingMethodExpects->method('getShippingMethod');
-        $getShippingMethodExpects->willReturn($isPostNL ? 'tig_postnl_regular' : 'random_random');
-
         $result = $this->invoke('isValidOrder', $instance);
 
         $this->assertEquals($expected, $result);

@@ -39,26 +39,20 @@
     <!-- Test suites definition -->
     <testsuites>
         <!-- Memory tests run first to prevent influence of other tests on accuracy of memory measurements -->
-        <testsuite name="Memory Usage Tests">
-            <file>testsuite/Magento/MemoryUsageTest.php</file>
-        </testsuite>
-        <testsuite name="Magento Integration Tests">
-            <directory suffix="Test.php">testsuite</directory>
-            <directory suffix="Test.php">../../../update/dev/tests/integration/testsuite</directory>
-            <exclude>testsuite/Magento/Test/Integrity</exclude>
-            <exclude>testsuite/Magento/MemoryUsageTest.php</exclude>
-        </testsuite>
-        <testsuite name="TIG PostNL Integration Tests">
-            <directory>../../../app/code/TIG/PostNL/Test/Integration</directory>
-            <directory>../../../vendor/tig/postnl/Test/Integration</directory>
+        <testsuite name="TIG PostNL Tests">
+            <directory>../../../app/code/TIG/PostNL/Test</directory>
+            <directory>../../../vendor/tig/postnl/Test</directory>
             <exclude>../../../app/code/Magento</exclude>
         </testsuite>
     </testsuites>
     <!-- Code coverage filters -->
     <filter>
-        <whitelist>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../../../vendor/tig/postnl</directory>
             <directory suffix=".php">../../../app/code/TIG/PostNL</directory>
             <exclude>
+                <directory>../../../vendor/tig/postnl/Test</directory>
+                <directory>../../../app/code/TIG/PostNL/Test</directory>
                 <directory>../../../app/code/*/*/Test</directory>
                 <directory>../../../app/code/*/*/vendor</directory>
             </exclude>
@@ -106,6 +100,6 @@
         <listener class="Magento\TestFramework\ErrorLog\Listener"/>
     </listeners>
     <logging>
-        <log type="coverage-clover" target="build/logs/clover-integration.xml"/>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
 </phpunit>

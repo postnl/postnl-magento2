@@ -44,19 +44,6 @@ class SearchResultsTest extends TestCase
 {
     protected $instanceClass = SearchResults::class;
 
-    public function testGetCollectionItems()
-    {
-        $listData = $this->getList('order_id', 10);
-
-        $instance = $this->getInstance([
-            'searchResultsFactory' => $listData['searchResult']
-        ]);
-
-        $result = $instance->getCollectionItems($listData['searchCreteria'], $listData['collectionFactory']);
-
-        $this->assertEquals($listData['searchResult'], $result);
-    }
-
     public function testGetSearchResults()
     {
         $searchResults = $this->getSearchResults();
@@ -68,64 +55,6 @@ class SearchResultsTest extends TestCase
         $result = $this->invokeArgs('getSearchResults', [$this->getSearchCriteria()], $instance);
 
         $this->assertEquals($searchResults, $result);
-    }
-
-    /**
-     * @param      $field
-     * @param      $value
-     * @param bool $isFieldWithValue
-     *
-     * @return array
-     */
-    private function getList($field, $value, $isFieldWithValue = false)
-    {
-        $filterGroup    = $this->getMock(FilterGroup::class, [], [], '', false);
-        $filter         = $this->getMock(Filter::class, [], [], '', false);
-        $searchCriteria = $this->getMock(SearchCriteria::class, [], [], '', false);
-
-        $searchCriteria->expects($this->once())->method('getFilterGroups')->willReturn([$filterGroup]);
-        $filterGroup->expects($this->once())->method('getFilters')->willReturn([$filter]);
-        $filter->expects($this->exactly(2))->method('getConditionType')->willReturn('eq');
-        $filter->expects($this->atLeastOnce())->method('getField')->willReturn($field);
-        $filter->expects($this->atLeastOnce())->method('getValue')->willReturn($value);
-
-        $orderCollection = $this->getMock(
-            AbstractCollection::class,
-            ['create', 'addFieldToFilter', 'getSize', 'setCurPage', 'setPageSize', 'load'],
-            [],
-            '',
-            false
-        );
-
-        $orderCollection->expects($this->atLeastOnce())->method('load')->willReturnSelf();
-        $orderCollection->expects($this->once())->method('setCurPage')->with(1);
-        $searchCriteria->expects($this->once())->method('getCurrentPage')->willReturn(1);
-        $orderCollection->expects($this->once())->method('setPageSize')->with(1);
-        $searchCriteria->expects($this->once())->method('getPageSize')->willReturn(1);
-        $orderCollection->expects($this->once())->method('addFieldToFilter')->withAnyParameters();
-        $orderCollection->expects($this->once())->method('getSize')->willReturn(1);
-
-        $objects = [];
-
-        foreach ($orderCollection as $objectModel) {
-            $objects[] = $objectModel;
-        }
-
-        $searchResultFactory = $this->getSearchResults($searchCriteria);
-        $searchResultFactory->expects($this->once())->method('setTotalCount')->with(1);
-
-        if ($isFieldWithValue) {
-            $searchResultFactory->expects($this->once())->method('getTotalCount')->willReturn(1);
-            $searchResultFactory->expects($this->once())->method('getItems')->willReturn([$searchResultFactory]);
-        }
-
-        $searchResultFactory->expects($this->once())->method('setItems')->with($objects)->willReturnSelf();
-
-        return [
-            'searchResult'      => $searchResultFactory,
-            'searchCreteria'    => $searchCriteria,
-            'collectionFactory' => $orderCollection
-        ];
     }
 
     /**
