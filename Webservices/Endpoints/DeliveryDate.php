@@ -148,14 +148,6 @@ class DeliveryDate extends AbstractEndpoint
     /**
      * @return string
      */
-    public function getWsdlUrl()
-    {
-        return 'DeliveryDateWebService/2_1/';
-    }
-
-    /**
-     * @return string
-     */
     public function getLocation()
     {
         return $this->version .'/'. $this->endpoint;
