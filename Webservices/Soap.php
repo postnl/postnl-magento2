@@ -225,7 +225,6 @@ class Soap
     private function parseEndpoint(AbstractEndpoint $endpoint)
     {
         $this->location = $endpoint->getLocation();
-        $this->wsdlUrl  = $endpoint->getWsdlUrl();
     }
 
     /**
