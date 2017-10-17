@@ -30,7 +30,7 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\PostNL\Test\Unit\Service\Import\Matrixrate;
+namespace TIG\PostNL\Test\Integration\Service\Import\Matrixrate;
 
 use TIG\PostNL\Test\Integration\TestCase;
 use TIG\PostNL\Service\Import\Matrixrate\Row;
