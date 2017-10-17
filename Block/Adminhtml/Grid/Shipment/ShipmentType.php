@@ -29,66 +29,65 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid\Order;
+namespace TIG\PostNL\Block\Adminhtml\Grid\Shipment;
 
 use TIG\PostNL\Block\Adminhtml\Grid\AbstractGrid;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
-use TIG\PostNL\Api\OrderRepositoryInterface;
-use TIG\PostNL\Block\Adminhtml\Renderer\ProductCode as Renderer;
+use TIG\PostNL\Block\Adminhtml\Renderer\ShipmentType as Renderer;
+use TIG\PostNL\Model\ShipmentRepository;
 
-class ProductCode extends AbstractGrid
+class ShipmentType extends AbstractGrid
 {
-    /**
-     * @var OrderRepositoryInterface
-     */
-    private $orderRepository;
-
     /**
      * @var Renderer
      */
     private $codeRenderer;
 
     /**
-     * @param ContextInterface         $context
-     * @param UiComponentFactory       $uiComponentFactory
-     * @param OrderRepositoryInterface $orderRepository
-     * @param Renderer              $codeRenderer
-     * @param array                    $components
-     * @param array                    $data
+     * @var ShipmentRepository
+     */
+    private $shipmentRepository;
+
+    /**
+     * @param ContextInterface   $context
+     * @param UiComponentFactory $uiComponentFactory
+     * @param Renderer           $codeRenderer ,
+     * @param ShipmentRepository $shipmentRepository
+     * @param array              $components
+     * @param array              $data
      */
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
-        OrderRepositoryInterface $orderRepository,
         Renderer $codeRenderer,
+        ShipmentRepository $shipmentRepository,
         array $components = [],
         array $data = []
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
 
-        $this->orderRepository = $orderRepository;
-        $this->codeRenderer    = $codeRenderer;
+        $this->codeRenderer = $codeRenderer;
+        $this->shipmentRepository = $shipmentRepository;
     }
 
     /**
-     * @param object $item
+     * @param array $item
      *
      * @return string
      */
     // @codingStandardsIgnoreLine
     protected function getCellContents($item)
     {
-        $output = '';
-        $order  = $this->orderRepository->getByOrderId($item['entity_id']);
-        if (!$order) {
-            return $output;
+        $shipment = $this->shipmentRepository->getByShipmentId($item['entity_id']);
+        if (!$shipment) {
+            return '';
         }
 
-        if ($order->getProductCode()) {
-            $output = $this->codeRenderer->render($order->getProductCode(), true);
+        if ($shipment->getShipmentType()) {
+            return $this->codeRenderer->render($shipment->getShipmentType());
         }
 
-        return $output;
+        return '';
     }
 }

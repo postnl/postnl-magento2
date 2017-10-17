@@ -183,7 +183,7 @@ abstract class OptionsAbstract
     /**
      * @param $code
      *
-     * @return mixed
+     * @return array|null
      */
     public function getOptionsByCode($code)
     {

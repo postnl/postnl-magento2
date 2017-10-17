@@ -33,7 +33,7 @@ namespace TIG\PostNL\Block\Adminhtml\Renderer;
 
 use TIG\PostNL\Config\Source\Options\ProductOptions;
 
-class ProductCode
+class ShipmentType
 {
     /**
      * @var ProductOptions
@@ -41,6 +41,8 @@ class ProductCode
     private $productOptions;
 
     /**
+     * ShipmentType constructor.
+     *
      * @param ProductOptions $productOptions
      */
     public function __construct(
@@ -50,13 +52,58 @@ class ProductCode
     }
 
     /**
-     * @param $code
-     * @param $small
+     * @param $type
+     *
+     * @return array
+     */
+    private function getLabel($type)
+    {
+        $label = '';
+        $comment = '';
+
+        switch ($type) {
+            case 'Daytime':
+                $label = __('Domestic');
+                break;
+            case 'Evening':
+                $label = __('Domestic');
+                $comment = __('Evening');
+                break;
+            case 'ExtraAtHome':
+                $label = __('Extra@Home');
+                break;
+            case 'Sunday':
+                $label = __('Sunday');
+                break;
+            case 'PG':
+                $label = __('Post office');
+                break;
+            case 'PGE':
+                $label = __('Post office');
+                $comment = __('Early morning pickup');
+                break;
+        }
+
+        return [
+            'label' => $label,
+            'comment' => $comment,
+        ];
+    }
+
+    /**
+     * @param $type
      *
      * @return string
      */
-    public function render($code, $small)
+    public function render($type)
     {
-        return $this->productOptions->getOptionLabel($code, $small);
+        $type = $this->getLabel($type);
+        $output = (string)$type['label'];
+
+        if ($type['comment']) {
+            $output .= '<br><em>' . $type['comment'] . '</em>';
+        }
+
+        return $output;
     }
 }

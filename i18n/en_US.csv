@@ -130,6 +130,10 @@ Thursday,Thursday
 Friday,Friday
 Saturday,Saturday
 Sunday,Sunday
+Domestic,Domestic
+"Extra@Home","Extra@Home"
+"Post office","Post office"
+"Early morning pickup","Early morning pickup"
 Extension version,Extension version
 "For an A4 example, <a href=""%1"" target=""_blank"">click here</a>.","For an A4 example, <a href=""%1"" target=""_blank"">click here</a>."
 "For an A6 example, <a href=""%1"" target=""_blank"">click here</a>.","For an A6 example, <a href=""%1"" target=""_blank"">click here</a>."
@@ -250,3 +254,4 @@ Percent,Percent
 "This e-mail address will be added as BCC to the Track And Trace template","This e-mail address will be added as BCC to the Track And Trace template"
 "Track & Trace information","Track & Trace information"
 "Click here to track your order","Click here to track your order"
+"Shipment Type","Shipment Type"

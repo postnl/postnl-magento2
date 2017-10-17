@@ -142,6 +142,10 @@ Thursday,Donderdag
 Friday,Vrijdag
 Saturday,Zaterdag
 Sunday,Zondag
+Domestic,Binnenland
+"Extra@Home","Extra@Home"
+"Post office","Pakjegemak"
+"Early morning pickup","Extra vroeg ophalen"
 Extension version,Extensie versie
 "For an A4 example, <a href=""%1"" target=""_blank"">click here</a>.","Voor een A4 voorbeeld, <a href=""%1"" target=""_blank"">klik hier</a>."
 "For an A6 example, <a href=""%1"" target=""_blank"">click here</a>.","Voor een A6 voorbeeld, <a href=""%1"" target=""_blank"">klik hier</a>."
@@ -265,3 +269,4 @@ Percent,Percentage
 "This e-mail address will be added as BCC to the Track And Trace template","Dit e-mailadres zal als bcc toegevoegd worden aan het Track And Trace template"
 "Track & Trace information","Track & Trace informatie"
 "Click here to track your order","Klik hier om uw order te volgen"
+"Shipment Type","Zending Type"

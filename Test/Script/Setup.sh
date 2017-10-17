@@ -83,30 +83,10 @@ fi
 ( cd "${BUILD_DIR}/" && composer require tig/postnl --ignore-platform-reqs )
 
 mysql -u${MAGENTO_DB_USER} ${MYSQLPASS} -h${MAGENTO_DB_HOST} -P${MAGENTO_DB_PORT} -e "DROP DATABASE IF EXISTS \`${MAGENTO_DB_NAME}\`; CREATE DATABASE \`${MAGENTO_DB_NAME}\`;"
+mysql -u${MAGENTO_DB_USER} ${MYSQLPASS} -h${MAGENTO_DB_HOST} -P${MAGENTO_DB_PORT} ${MAGENTO_DB_NAME} < Test/Fixtures/tig-postnl-fixture.sql
 
 chmod 777 "${BUILD_DIR}/var/"
 chmod 777 "${BUILD_DIR}/pub/"
 chmod 777 "${BUILD_DIR}/vendor/phpunit/phpunit/phpunit"
-
-( cd ${BUILD_DIR} && php -d memory_limit=2048M bin/magento setup:install \
-    --admin-firstname=TIG \
-    --admin-lastname=support \
-    --admin-email=sd@tig.nl \
-    --admin-user=TIGsupport \
-    --admin-password=asdfasdf1 \
-    --base-url="http://magento.local/" \
-    --backend-frontname=admin \
-    --db-host="${MAGENTO_DB_HOST}" \
-    --db-name="${MAGENTO_DB_NAME}" \
-    --db-user="${MAGENTO_DB_USER}" \
-    --db-password="${MAGENTO_DB_PASS}" \
-    --language=nl_NL \
-    --currency=EUR \
-    --timezone=Europe/Amsterdam \
-    --use-rewrites=1 \
-    --session-save=db )
-
-# Integration tests require to have no base url as they will fail otherwise.
-mysql magento -e 'delete from core_config_data where path = "web/secure/base_url"'
 
 ( cd ${BUILD_DIR} && php -d memory_limit=2048M bin/magento setup:upgrade )

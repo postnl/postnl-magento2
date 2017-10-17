@@ -227,4 +227,28 @@ class ProductOptionsTest extends TestCase
 
         $this->assertEquals($resultValues, $expectedValues, '', 0.0, 10, true);
     }
+
+    public function testReturnsTheCorrectCode()
+    {
+        $instance = $this->getInstance();
+
+        $options = $instance->getOptionsByCode(3085);
+
+        $this->assertEquals(3085, $options['value']);
+        $this->assertEquals('Standard shipment', $options['label']);
+        $this->assertEquals(false, $options['isExtraCover']);
+        $this->assertEquals(false, $options['isEvening']);
+        $this->assertEquals(false, $options['isSunday']);
+        $this->assertEquals('NL', $options['countryLimitation']);
+        $this->assertEquals('standard_options', $options['group']);
+    }
+
+    public function testReturnsNullWhenCodeDoesNotExists()
+    {
+        $instance = $this->getInstance();
+
+        $options = $instance->getOptionsByCode(-999999999);
+
+        $this->assertNull($options);
+    }
 }
