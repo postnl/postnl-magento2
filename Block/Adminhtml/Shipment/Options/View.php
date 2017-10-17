@@ -39,7 +39,7 @@ use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
-use TIG\PostNL\Block\Adminhtml\Renderer\ProductCode;
+use TIG\PostNL\Block\Adminhtml\Renderer\ShipmentType;
 
 class View extends OptionsAbstract
 {
@@ -49,7 +49,7 @@ class View extends OptionsAbstract
     private $postNLShipmentRepository;
 
     /**
-     * @var ProductCode
+     * @var ShipmentType
      */
     private $productCodeRenderer;
 
@@ -60,7 +60,7 @@ class View extends OptionsAbstract
      * @param OrderRepository          $orderRepository
      * @param Registry                 $registry
      * @param PostNLShipmentRepository $shipmentRepository
-     * @param ProductCode              $productCode
+     * @param ShipmentType             $shipmentType
      * @param array                    $data
      */
     public function __construct(
@@ -70,7 +70,7 @@ class View extends OptionsAbstract
         OrderRepository $orderRepository,
         Registry $registry,
         PostNLShipmentRepository $shipmentRepository,
-        ProductCode $productCode,
+        ShipmentType $shipmentType,
         array $data = []
     ) {
         parent::__construct(
@@ -83,7 +83,7 @@ class View extends OptionsAbstract
         );
 
         $this->postNLShipmentRepository = $shipmentRepository;
-        $this->productCodeRenderer      = $productCode;
+        $this->productCodeRenderer      = $shipmentType;
     }
 
     /**
