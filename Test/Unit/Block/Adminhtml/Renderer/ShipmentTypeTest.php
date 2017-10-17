@@ -64,7 +64,10 @@ class ShipmentTypeTest extends TestCase
         $instance = $this->getInstance();
         $result = $instance->render($shipmentType);
 
-        $this->assertEquals($expectedType, $result['label']);
-        $this->assertEquals($expectedComment, $result['comment']);
+        $this->assertContains($expectedType, $result);
+
+        if ($expectedComment) {
+            $this->assertContains($expectedComment, $result);
+        }
     }
 }

@@ -56,6 +56,7 @@ class ShipmentType
      *
      * @return array
      */
+    // @codingStandardsIgnoreStart
     private function getLabel($type)
     {
         $label = '';
@@ -89,6 +90,7 @@ class ShipmentType
             'comment' => $comment,
         ];
     }
+    // @codingStandardsIgnoreStop
 
     /**
      * @param $type
