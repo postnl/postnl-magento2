@@ -193,8 +193,7 @@ class Soap
      */
     private function getWsdlUrl()
     {
-        $wsdlUrl = $this->getLocation() . '/soap.wsdl';
-        return $wsdlUrl;
+        return $this->getLocation() . '/soap.wsdl';
     }
 
     /**

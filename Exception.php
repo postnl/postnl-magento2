@@ -39,12 +39,14 @@ class Exception extends LocalizedException
     private $exceptionMessage;
 
     /**
-     * @param $message
-     * @param int                       $code
-     * @param null                      $previous
+     * @param Phrase|string $message
+     * @param int           $code
+     * @param null          $previous
      */
     public function __construct($message, $code = 0, $previous = null)
     {
+        $message = $this->getMessageString($message);
+
         // @codingStandardsIgnoreLine
         $this->exceptionMessage = __($message);
 
@@ -91,5 +93,19 @@ class Exception extends LocalizedException
             . $this->getTraceAsString();
 
         return $string;
+    }
+
+    /**
+     * @param $message
+     *
+     * @return string
+     */
+    private function getMessageString($message)
+    {
+        if ($message instanceof Phrase) {
+            return $message->render();
+        }
+
+        return $message;
     }
 }

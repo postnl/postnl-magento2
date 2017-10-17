@@ -144,6 +144,7 @@ define([
 
                 // this trigger makes the extension compatible with onestep checkout.
                 $(document).trigger('compatible_postnl_deliveryoptions_save_before');
+
                 $.ajax({
                     method: 'POST',
                     url: window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,

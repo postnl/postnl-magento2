@@ -60,7 +60,7 @@ class Labelling extends AbstractEndpoint
     /**
      * @var string
      */
-    private $version = 'v2_0';
+    private $version = 'v2_1';
 
     /**
      * @var string

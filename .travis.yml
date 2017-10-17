@@ -23,10 +23,15 @@ env:
     # - MAGENTO_VERSION=2.1.4 # Skipping 2.1.4 as 2.1.5 = 2.1.4 + copyright updates
     - MAGENTO_VERSION=2.1.5
     - MAGENTO_VERSION=2.1.6
+    - MAGENTO_VERSION=2.1.7
+    - MAGENTO_VERSION=2.1.8
+    - MAGENTO_VERSION=2.1.9
+    - MAGENTO_VERSION=2.2.0
 
 matrix:
   include:
-    env: MAGENTO_VERSION=2.1.7 CODE_COVERAGE=true
+    - php: 7.1
+      env: MAGENTO_VERSION=2.2.0 CODE_COVERAGE=true
 
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
@@ -35,7 +40,9 @@ before_script:
   - bash Test/Script/Setup.sh
 
 script:
-  - grunt
+  - grunt phpcs
+  - grunt lint
+  - grunt exec:ciTests
   - if [ "$CODE_COVERAGE" = "false" ]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
 
 after_success:

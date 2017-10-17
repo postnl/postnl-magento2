@@ -34,7 +34,7 @@ namespace TIG\PostNL\Test;
 use Magento\Framework\Filesystem;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends TestCaseFinder
 {
     /**
      * @var null|string
