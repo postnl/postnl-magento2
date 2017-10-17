@@ -123,14 +123,6 @@ class Locations extends AbstractEndpoint
     /**
      * @return string
      */
-    public function getWsdlUrl()
-    {
-        return 'LocationWebService/2_1/';
-    }
-
-    /**
-     * @return string
-     */
     public function getLocation()
     {
         return $this->version .'/'. $this->endpoint;

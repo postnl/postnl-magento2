@@ -42,10 +42,5 @@ abstract class AbstractEndpoint
     /**
      * @return string
      */
-    abstract public function getWsdlUrl();
-
-    /**
-     * @return string
-     */
     abstract public function getLocation();
 }

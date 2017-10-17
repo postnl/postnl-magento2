@@ -64,7 +64,7 @@ class Labelling extends AbstractEndpoint
     /**
      * @var string
      */
-    private $version = 'v2_0';
+    private $version = 'v2_1';
 
     /**
      * @var string
@@ -201,14 +201,6 @@ class Labelling extends AbstractEndpoint
         ];
 
         return $addressArray;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getWsdlUrl()
-    {
-        return 'LabellingWebService/2_1/';
     }
 
     /**

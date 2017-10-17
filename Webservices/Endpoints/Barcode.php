@@ -123,14 +123,6 @@ class Barcode extends AbstractEndpoint
     /**
      * @return string
      */
-    public function getWsdlUrl()
-    {
-        return 'BarcodeWebService/1_1/';
-    }
-
-    /**
-     * @return string
-     */
     public function getLocation()
     {
         return $this->version . '/' . $this->endpoint;
