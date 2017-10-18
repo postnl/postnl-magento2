@@ -35,7 +35,7 @@ use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Quote\CheckIfQuoteItemsAreInStock;
 use \TIG\PostNL\Service\Quote\CheckIfQuoteHasOption;
-use TIG\PostNL\Service\Order\ProductCode;
+use TIG\PostNL\Service\Order\ProductCodeAndType;
 
 class IsShippingOptionsActive implements CheckoutConfigurationInterface
 {
@@ -90,7 +90,7 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
             return false;
         }
 
-        if ($this->quoteHasOption->get(ProductCode::OPTION_EXTRAATHOME)) {
+        if ($this->quoteHasOption->get(ProductCodeAndType::OPTION_EXTRAATHOME)) {
             return false;
         }
 

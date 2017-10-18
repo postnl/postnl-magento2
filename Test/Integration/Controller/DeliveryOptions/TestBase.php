@@ -41,7 +41,9 @@ class TestBase extends AbstractController
 {
     protected function setUp()
     {
-        $this->markTestSkipped('Fails on Travis');
+        if (getenv('TRAVIS') !== false) {
+            $this->markTestSkipped('Fails on Travis');
+        }
 
         parent::setUp();
 

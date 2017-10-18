@@ -71,6 +71,7 @@ class ShipmentType
                 $comment = __('Evening');
                 break;
             case 'ExtraAtHome':
+            case 'Extra@Home':
                 $label = __('Extra@Home');
                 break;
             case 'Sunday':

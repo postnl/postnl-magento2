@@ -34,7 +34,7 @@ namespace TIG\PostNL\Observer\SalesOrderSaveAfter;
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Model\OrderRepository;
-use TIG\PostNL\Service\Order\ProductCode;
+use TIG\PostNL\Service\Order\ProductCodeAndType;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
@@ -56,7 +56,7 @@ class CreatePostNLOrder implements ObserverInterface
      */
     private $helper;
     /**
-     * @var ProductCode
+     * @var ProductCodeAndType
      */
     private $productCode;
 
@@ -66,17 +66,17 @@ class CreatePostNLOrder implements ObserverInterface
     private $itemsToOption;
 
     /**
-     * @param OrderRepository   $orderRepository
-     * @param ParcelCount       $count
-     * @param ItemsToOption     $itemsToOption
-     * @param ProductCode       $productCode
-     * @param Data              $helper
+     * @param OrderRepository    $orderRepository
+     * @param ParcelCount        $count
+     * @param ItemsToOption      $itemsToOption
+     * @param ProductCodeAndType $productCode
+     * @param Data               $helper
      */
     public function __construct(
         OrderRepository $orderRepository,
         ParcelCount $count,
         ItemsToOption $itemsToOption,
-        ProductCode $productCode,
+        ProductCodeAndType $productCode,
         Data $helper
     ) {
         $this->orderRepository = $orderRepository;
@@ -127,7 +127,9 @@ class CreatePostNLOrder implements ObserverInterface
             $option          = $this->itemsToOption->get($magentoOrder->getItems());
             $shippingAddress = $magentoOrder->getShippingAddress();
             $country         = $shippingAddress->getCountryId();
-            $postnlOrder->setProductCode($this->productCode->get('', $option, $country));
+            $productInfo     = $this->productCode->get('', $option, $country);
+            $postnlOrder->setProductCode($productInfo['code']);
+            $postnlOrder->setType($productInfo['type']);
         }
     }
 }
