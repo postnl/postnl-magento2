@@ -41,7 +41,9 @@ class ChangeConfirmationTest extends AbstractBackendController
 {
     public function testResetsTheMainBarcode()
     {
-        $this->markTestIncomplete('Fails in Travis.');
+        if (getenv('TRAVIS') !== false) {
+            $this->markTestSkipped('Fails on Travis');
+        }
 
         /** @var ShipmentRepository $repository */
         $repository = $this->_objectManager->get(ShipmentRepository::class);

@@ -34,7 +34,7 @@ namespace TIG\PostNL\Observer\TIGPostNLOrderSaveBefore;
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Service\Order\ShipAt;
-use TIG\PostNL\Service\Order\ProductCode;
+use TIG\PostNL\Service\Order\ProductCodeAndType;
 use TIG\PostNL\Service\Order\FirstDeliveryDate;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -42,9 +42,9 @@ use Magento\Framework\Event\ObserverInterface;
 class SetDefaultData implements ObserverInterface
 {
     /**
-     * @var ProductCode
+     * @var ProductCodeAndType
      */
-    private $productCode;
+    private $productCodeAndType;
 
     /**
      * @var FirstDeliveryDate
@@ -64,21 +64,21 @@ class SetDefaultData implements ObserverInterface
     /**
      * SetDefaultData constructor.
      *
-     * @param ProductCode       $productCode
-     * @param FirstDeliveryDate $firstDeliveryDate
-     * @param ShipAt            $shipAt
-     * @param Log               $log
+     * @param ProductCodeAndType $productCodeAndType
+     * @param FirstDeliveryDate  $firstDeliveryDate
+     * @param ShipAt             $shipAt
+     * @param Log                $log
      */
     public function __construct(
-        ProductCode $productCode,
+        ProductCodeAndType $productCodeAndType,
         FirstDeliveryDate $firstDeliveryDate,
         ShipAt $shipAt,
         Log $log
     ) {
-        $this->productCode = $productCode;
-        $this->firstDeliveryDate = $firstDeliveryDate;
-        $this->shipAt = $shipAt;
-        $this->log = $log;
+        $this->productCodeAndType = $productCodeAndType;
+        $this->firstDeliveryDate  = $firstDeliveryDate;
+        $this->shipAt             = $shipAt;
+        $this->log                = $log;
     }
 
     /**
@@ -103,8 +103,13 @@ class SetDefaultData implements ObserverInterface
      */
     private function setData(OrderInterface $order)
     {
+        $productInfo = $this->productCodeAndType->get();
         if (!$order->getProductCode()) {
-            $order->setProductCode($this->productCode->get());
+            $order->setProductCode($productInfo['code']);
+        }
+
+        if (!$order->getType()) {
+            $order->setType($productInfo['type']);
         }
 
         if (!$order->getDeliveryDate()) {

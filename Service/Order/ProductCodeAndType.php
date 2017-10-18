@@ -34,16 +34,33 @@ namespace TIG\PostNL\Service\Order;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 
-class ProductCode
+class ProductCodeAndType
 {
-    const TYPE_PICKUP        = 'pickup';
-    const TYPE_DELIVERY      = 'delivery';
-    const OPTION_DAYTIME     = 'daytime';
-    const OPTION_EVENING     = 'evening';
+    /**
+     * @var int
+     */
+    private $code = null;
+
+    /**
+     * @var string
+     */
+    private $type = null;
+
+    const TYPE_PICKUP = 'pickup';
+    const TYPE_DELIVERY = 'delivery';
+    const OPTION_PG = 'pg';
+    const OPTION_PGE = 'pge';
+    const OPTION_SUNDAY = 'sunday';
+    const OPTION_DAYTIME = 'daytime';
+    const OPTION_EVENING = 'evening';
     const OPTION_EXTRAATHOME = 'extra@home';
-    const OPTION_SUNDAY      = 'sunday';
-    const OPTION_PG          = 'pg';
-    const OPTION_PGE         = 'pge';
+    const SHIPMENT_TYPE_PG = 'PG';
+    const SHIPMENT_TYPE_PGE = 'PGE';
+    const SHIPMENT_TYPE_EPS = 'EPS';
+    const SHIPMENT_TYPE_SUNDAY = 'Sunday';
+    const SHIPMENT_TYPE_EVENING = 'Evening';
+    const SHIPMENT_TYPE_DAYTIME = 'Daytime';
+    const SHIPMENT_TYPE_EXTRAATHOME = 'Extra@Home';
 
     /**
      * @var ProductOptionsConfiguration
@@ -74,64 +91,91 @@ class ProductCode
      * @param string $option
      * @param string $country
      *
-     * @return int
+     * @return array
      */
     public function get($type = '', $option = '', $country = 'NL')
     {
         if (empty($type) && $country != 'NL') {
-            return $this->getEpsOption();
+            $this->getEpsOption();
+            return $this->response();
         }
 
         $type = strtolower($type);
         $option = strtolower($option);
         if ($type == static::TYPE_PICKUP) {
-            return $this->getPakjegemakProductOption($option);
+            $this->getPakjegemakProductOption($option);
+            return $this->response();
         }
 
-        return $this->getProductCode($option);
+        $this->getProductCode($option);
+        return $this->response();
     }
 
     /**
      * Get the product code for the delivery options.
      *
      * @param string $option
-     * @return int
      */
+    // @codingStandardsIgnoreStart
     private function getProductCode($option)
     {
         if ($option == static::OPTION_EVENING) {
-            return $this->productOptionsConfiguration->getDefaultEveningProductOption();
+            $this->code = $this->productOptionsConfiguration->getDefaultEveningProductOption();
+            $this->type = static::SHIPMENT_TYPE_EVENING;
+            return;
         }
 
         if ($option == static::OPTION_SUNDAY) {
-            return $this->productOptionsConfiguration->getDefaultSundayProductOption();
+            $this->code = $this->productOptionsConfiguration->getDefaultSundayProductOption();
+            $this->type = static::SHIPMENT_TYPE_SUNDAY;
+            return;
         }
 
         if ($option == static::OPTION_EXTRAATHOME) {
-            return $this->productOptionsConfiguration->getDefaultExtraAtHomeProductOption();
+            $this->code = $this->productOptionsConfiguration->getDefaultExtraAtHomeProductOption();
+            $this->type = static::SHIPMENT_TYPE_EXTRAATHOME;
+            return;
         }
 
-        return $this->productOptionsConfiguration->getDefaultProductOption();
+        $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
+        $this->type = static::SHIPMENT_TYPE_DAYTIME;
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * @param string $option
-     * @return int
      */
     private function getPakjegemakProductOption($option)
     {
         if ($option == static::OPTION_PGE) {
-            return $this->productOptionsConfiguration->getDefaultPakjeGemakEarlyProductOption();
+            $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakEarlyProductOption();
+            $this->type = static::SHIPMENT_TYPE_PGE;
+            return;
         }
 
-        return $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
+        $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
+        $this->type = static::SHIPMENT_TYPE_PG;
     }
 
+    /**
+     */
     private function getEpsOption()
     {
         $options = $this->productOptionsFinder->getEpsProductOptions();
         $firstOption = array_shift($options);
 
-        return $firstOption['value'];
+        $this->code = $firstOption['value'];
+        $this->type = static::SHIPMENT_TYPE_EPS;
+    }
+
+    /**
+     * @return array
+     */
+    private function response()
+    {
+        return [
+            'code' => $this->code,
+            'type' => $this->type,
+        ];
     }
 }

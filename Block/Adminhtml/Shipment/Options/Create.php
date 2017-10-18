@@ -105,7 +105,7 @@ class Create extends OptionsAbstract
     public function getProductCode()
     {
         if ($this->productCode === null) {
-            $postnlOrder = $this->postnlOrderRepository->getByOrderId($this->order->getId());
+            $postnlOrder = $this->postnlOrderRepository->getByOrderId($this->getOrder()->getId());
             $this->productCode = $postnlOrder->getProductCode();
         }
 
@@ -117,7 +117,7 @@ class Create extends OptionsAbstract
      */
     public function isMultiColliAllowed()
     {
-        $address = $this->order->getShippingAddress();
+        $address = $this->getOrder()->getShippingAddress();
 
         return $this->isMulticolliAllowed->get($address->getCountryId());
     }
@@ -127,7 +127,7 @@ class Create extends OptionsAbstract
      */
     public function getParcelCount()
     {
-        $postnlOrder = $this->postnlOrderRepository->getByOrderId($this->order->getId());
+        $postnlOrder = $this->postnlOrderRepository->getByOrderId($this->getOrder()->getId());
         if ($postnlOrder->getParcelCount()) {
             return $postnlOrder->getParcelCount();
         }

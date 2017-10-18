@@ -95,8 +95,6 @@ class Soap
         ZendSoapClient $soapClient,
         Api\Log $log
     ) {
-        $this->checkSoapExtensionIsLoaded();
-
         $this->defaultConfiguration = $defaultConfiguration;
         $this->exceptionHandler = $exceptionHandler;
         $this->soapClient = $soapClient;
@@ -116,6 +114,7 @@ class Soap
      */
     public function call(AbstractEndpoint $endpoint, $method, $requestParams)
     {
+        $this->checkSoapExtensionIsLoaded();
         $this->parseEndpoint($endpoint);
         $soapClient = $this->getClient();
 
@@ -126,12 +125,6 @@ class Soap
             return $result;
         } catch (\Exception $exception) {
             $this->exceptionHandler->handle($exception, $soapClient);
-
-            throw new WebapiException(
-                __('Failed on soap call : %1', $exception->getMessage()),
-                0,
-                WebapiException::HTTP_INTERNAL_ERROR
-            );
         } finally {
             $this->log->request($soapClient);
         }

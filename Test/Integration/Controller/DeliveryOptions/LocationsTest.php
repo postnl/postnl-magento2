@@ -38,8 +38,6 @@ class LocationsTest extends TestBase
 {
     public function testTheResultingArrayContainsThePriceKey()
     {
-        $this->markTestSkipped('Causes an segmentation fault for unknown reason');
-
         $this->dispatch('postnl/deliveryoptions/locations');
 
         $response = $this->getResponse()->getBody();
@@ -53,8 +51,6 @@ class LocationsTest extends TestBase
 
     public function testThatThePriceKeyContainsTheRightPrice()
     {
-        $this->markTestSkipped('Fails on Travis');
-
         $calculator = $this->getMockBuilder(\TIG\PostNL\Service\Carrier\Price\Calculator::class);
         $calculator->disableOriginalConstructor();
         $calculator = $calculator->getMock();

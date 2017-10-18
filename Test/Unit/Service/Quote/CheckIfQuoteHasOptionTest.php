@@ -34,7 +34,7 @@ namespace TIG\PostNL\Test\Unit\Service\Quote;
 use TIG\PostNL\Service\Quote\CheckIfQuoteHasOption;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use TIG\PostNL\Service\Options\ItemsToOption;
-use TIG\PostNL\Service\Order\ProductCode;
+use TIG\PostNL\Service\Order\ProductCodeAndType;
 use TIG\PostNL\Test\TestCase;
 
 class CheckIfQuoteHasOptionTest extends TestCase
@@ -47,8 +47,8 @@ class CheckIfQuoteHasOptionTest extends TestCase
     public function getDataProvider()
     {
         return [
-            'Extra@Home with quote' => [ProductCode::OPTION_EXTRAATHOME, true, true],
-            'Extra@Home no quote'   => [ProductCode::OPTION_EXTRAATHOME, false, false]
+            'Extra@Home with quote' => [ProductCodeAndType::OPTION_EXTRAATHOME, true, true],
+            'Extra@Home no quote'   => [ProductCodeAndType::OPTION_EXTRAATHOME, false, false]
         ];
     }
 
