@@ -34,6 +34,14 @@ namespace TIG\PostNL;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
 
+/**
+ * We are getting code sniffer warnings that we cannot execute code in the constructor. This makes sense for objects
+ * that are used in dependency injection. As this is a Exception, this is not the case. So that's why we are disabling
+ * the code sniffer for this file.
+ *
+ * @package TIG\PostNL
+ */
+// @codingStandardsIgnoreFile
 class Exception extends LocalizedException
 {
     private $exceptionMessage;

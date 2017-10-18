@@ -116,6 +116,7 @@ class ProductCodeAndType
      *
      * @param string $option
      */
+    // @codingStandardsIgnoreStart
     private function getProductCode($option)
     {
         if ($option == static::OPTION_EVENING) {
@@ -139,6 +140,7 @@ class ProductCodeAndType
         $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
         $this->type = static::SHIPMENT_TYPE_DAYTIME;
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * @param string $option
