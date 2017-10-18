@@ -171,10 +171,10 @@ class OrderParams
             'pg_location_code'             => isset($params['LocationCode']) ? $params['LocationCode'] : '',
             'pg_retail_network_id'         => isset($params['RetailNetworkID']) ? $params['RetailNetworkID'] : '',
             'pg_address'                   => $this->addExtraToAddress($params),
+            'type'                         => $params['option'],
             'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : '',
             'fee'                          => $this->feeCalculator->get($params),
             'product_code'                 => $productInfo['code'],
-            'type'                         => $params['option'],
         ];
     }
 

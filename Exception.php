@@ -41,7 +41,6 @@ use Magento\Framework\Phrase;
  *
  * @package TIG\PostNL
  */
-// @codingStandardsIgnoreFile
 class Exception extends LocalizedException
 {
     private $exceptionMessage;
@@ -51,6 +50,7 @@ class Exception extends LocalizedException
      * @param int           $code
      * @param null          $previous
      */
+    // @codingStandardsIgnoreStart
     public function __construct($message, $code = 0, $previous = null)
     {
         $message = $this->getMessageString($message);
@@ -72,36 +72,7 @@ class Exception extends LocalizedException
 
         parent::__construct($message, $previous);
     }
-
-    /**
-     * Custom __toString method that includes the error code, if present.
-     *
-     * @return string
-     *
-     * @see Exception::__toString()
-     *
-     * @link http://www.php.net/manual/en/exception.tostring.php
-     */
-    public function __toString()
-    {
-        $string = "exception '" . __CLASS__ . "' with message '" . $this->exceptionMessage . "'";
-
-        $code = $this->getCode();
-        if ($code !== 0 && !empty($code)) {
-            $string .= " and code '" . $this->getCode() . "'";
-        }
-
-        $string .= " in "
-            . $this->getFile()
-            . ':'
-            . $this->getLine()
-            . PHP_EOL
-            . 'Stack trace:'
-            . PHP_EOL
-            . $this->getTraceAsString();
-
-        return $string;
-    }
+    // @codingStandardsIgnoreEnd
 
     /**
      * @param $message
