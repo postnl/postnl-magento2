@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,16 +28,29 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="1.1.6" stability="alpha">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Directory"/>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Quote"/>
-            <module name="Magento_Checkout"/>
-        </sequence>
-    </module>
-</config>
+ */
+namespace TIG\PostNL\Plugin\Quote\Address;
+
+class RateRequestPlugin
+{
+    /**
+     * When a customer is logged-in and try's to checkout the error is thrown saying 'Please select a shippingmethod'
+     * This is because of the limitCarrier that is set with 'tig' as value. Later on in the process of the checkout the
+     * carrier config is requested. Magento will request this like carrier/[carrier_code].
+     *
+     * @param $subject
+     * @param $key
+     * @param $value
+     *
+     * @return array
+     */
+    // @codingStandardsIgnoreLine
+    public function beforeSetData($subject, $key, $value)
+    {
+        if ($key == 'limit_carrier' && $value == 'tig') {
+            return [$key, 'tig_postnl'];
+        }
+
+        return [$key, $value];
+    }
+}
