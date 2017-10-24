@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *          ..::..
@@ -29,28 +30,43 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Plugin\Quote\Address;
+namespace TIG\PostNL\Test\Unit\Plugin\Quote\Address;
 
-class RateRequestPlugin
+use TIG\PostNL\Plugin\Quote\Address\RateRequestPlugin;
+use TIG\PostNL\Test\TestCase;
+
+class RateRequestPluginTest extends TestCase
 {
+    public $instanceClass = RateRequestPlugin::class;
+
+    public function dataProvider()
+    {
+        return [
+            'TIG PostNL Limit Carrier' => [
+                'limit_carrier',
+                'tig',
+                ['limit_carrier','tig_postnl']
+            ],
+            'FlatRate Limit Carrier' => [
+                'limit_carrier',
+                'flatrate',
+                ['limit_carrier','flatrate']
+            ],
+        ];
+    }
+
     /**
-     * When a customer is logged-in and try's to checkout the error is thrown saying 'Please select a shippingmethod'
-     * This is because of the limitCarrier that is set with 'tig' as value. Later on in the process of the checkout the
-     * carrier config is requested. Magento will request this like carrier/[carrier_code].
-     *
-     * @param $subject
      * @param $key
      * @param $value
+     * @param $expected
      *
-     * @return array
+     * @dataProvider dataProvider
      */
-    // @codingStandardsIgnoreLine
-    public function beforeSetData($subject, $key, $value)
+    public function testBeforeSetData($key, $value, $expected)
     {
-        if ($key == 'limit_carrier' && $value == 'tig') {
-            return [$key, 'tig_postnl'];
-        }
+        $instance = $this->getInstance();
+        $result = $instance->beforeSetData(null, $key, $value);
 
-        return [$key, $value];
+        $this->assertEquals($expected, $result);
     }
 }
