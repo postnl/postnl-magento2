@@ -160,6 +160,7 @@ abstract class CountAbstract
      *
      * @return int
      */
+    //@codingStandardsIgnoreLine
     protected function getStartCount($items)
     {
         /** In most situations */
@@ -179,6 +180,7 @@ abstract class CountAbstract
      *
      * @return int;
      */
+    //@codingStandardsIgnoreLine
     protected function getStartCountBasedOnType($item, $startCount)
     {
         if ($item->getProductType() !== 'simple') {

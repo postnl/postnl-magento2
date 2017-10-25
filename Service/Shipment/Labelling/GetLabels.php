@@ -109,39 +109,20 @@ class GetLabels
      * @param ShipmentInterface $shipment
      * @param bool $confirm
      *
-     * @return array
+     * @return \Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface[]
      */
     private function getLabels(ShipmentInterface $shipment, $confirm)
     {
-        $labels = [];
-        $parcelCount = $shipment->getParcelCount();
-        for ($number = 1; $number <= $parcelCount; $number++) {
-            $labels[] = $this->getLabel($shipment, $number, $confirm);
+        $labels = $this->shipmentLabelRepository->getByShipment($shipment);
+        if ($labels && $confirm) {
+            $this->confirmLabel->confirm($shipment);
+            return $labels;
         }
 
-        return $labels;
-    }
-
-    /**
-     * @param ShipmentInterface $shipment
-     * @param                   $number
-     * @param bool              $confirm
-     *
-     * @return \Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
-     */
-    private function getLabel(ShipmentInterface $shipment, $number, $confirm)
-    {
-        $label = $this->shipmentLabelRepository->getByShipment($shipment, $number);
-
-        if ($label && $confirm) {
-            $this->confirmLabel->confirm($shipment, $number);
-            return $label;
+        if ($labels) {
+            return $labels;
         }
 
-        if ($label) {
-            return $label;
-        }
-
-        return $this->generateLabel->get($shipment, $number, $confirm);
+        return $this->generateLabel->get($shipment, 1, $confirm);
     }
 }

@@ -120,6 +120,7 @@ class Data
         if ($shipment->isExtraAtHome()) {
             $shipmentData['Content'] = $this->contentDescription->get($shipment);
             $shipmentData['Dimension']['Volume'] = $this->shipmentVolume->get($magentoShipment->getItems());
+            $shipmentData['Reference'] = $magentoShipment->getIncrementId();
         }
 
         if ($shipment->isExtraCover()) {

@@ -137,7 +137,7 @@ class GetLabelsTest extends TestCase
         $labelMock = $this->getFakeMock(WithConfirm::class)->getMock();
         $callExpects = $labelMock->expects($times);
         $callExpects->method('get');
-        $callExpects->willReturn($this->getLabel($shipment));
+        $callExpects->willReturn([$this->getLabel($shipment)]);
 
         return $labelMock;
     }

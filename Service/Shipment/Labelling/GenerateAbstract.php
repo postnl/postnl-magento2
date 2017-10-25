@@ -107,26 +107,25 @@ abstract class GenerateAbstract
      * @param                   $currentShipmentNumber
      * @param                   $confirm
      *
-     * @return null|ShipmentLabelInterface
+     * @return null|ShipmentLabelInterface[]
      */
     public function getLabel(ShipmentInterface $shipment, $currentShipmentNumber, $confirm)
     {
         try {
-            $label = $this->callEndpoint($shipment, $currentShipmentNumber);
+            $responseShipments = $this->callEndpoint($shipment, $currentShipmentNumber);
         } catch (\Exception $exception) {
             $this->logger->debug($exception->getMessage());
             return null;
         }
 
-        $labelModel = $this->save($shipment, $currentShipmentNumber, $label);
-        $this->shipmentLabelRepository->save($labelModel);
+        $labelModels = $this->handleLabels($shipment, $responseShipments, $currentShipmentNumber);
 
         if ($confirm) {
             $shipment->setConfirmedAt($this->date);
             $this->shipmentRepository->save($shipment);
         }
 
-        return $labelModel;
+        return $labelModels;
     }
 
     /**
@@ -151,12 +150,30 @@ abstract class GenerateAbstract
             throw new PostNLException(sprintf('Invalid generateLabel response: %1', var_export($response, true)));
         }
 
-        /**
-         * @codingStandardsIgnoreLine
-         * TODO: GenerateLabel call usually returns one label, but update so multiple labels are taking in account
-         */
-        return $responseShipments->ResponseShipment[0]->Labels->Label[0]->Content;
+        return $responseShipments->ResponseShipment;
     }
+
+    /**
+     * @param $shipment
+     * @param $responsShipments
+     * @param $currentShipmentNumber
+     *
+     * @return ShipmentLabelInterface[]
+     */
+    //@codingStandardsIgnoreStart
+    protected function handleLabels($shipment, $responsShipments, $currentShipmentNumber)
+    {
+        $labelModels = [];
+        foreach ($responsShipments as $labelItem) {
+            $labelModel    = $this->save($shipment, $currentShipmentNumber, $labelItem->Labels->Label[0]->Content);
+            $labelModels[] = $labelModel;
+            $this->shipmentLabelRepository->save($labelModel);
+            $currentShipmentNumber++;
+        }
+
+        return $labelModels;
+    }
+    //@codingStandardsIgnoreEnd
 
     /**
      * @param ShipmentInterface|Shipment $shipment

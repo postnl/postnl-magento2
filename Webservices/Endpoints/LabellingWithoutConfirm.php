@@ -116,7 +116,7 @@ class LabellingWithoutConfirm extends AbstractEndpoint
         $this->requestParams = [
             'Message'   => $message,
             'Customer'  => $this->customer->get(),
-            'Shipments' => ['Shipment' => $this->shipmentData->get($shipment, $currentShipmentNumber)],
+            'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
     }
 
@@ -126,5 +126,21 @@ class LabellingWithoutConfirm extends AbstractEndpoint
     public function getLocation()
     {
         return $this->version . '/' . $this->endpoint;
+    }
+
+    /**
+     * @param Shipment|ShipmentInterface $shipment
+     * @param $currentShipmentNumber
+     *
+     * @return array
+     */
+    private function getShipments($shipment, $currentShipmentNumber)
+    {
+        $shipments = [];
+        for ($number = $currentShipmentNumber; $number <= $shipment->getParcelCount(); $number++) {
+            $shipments[] = $this->shipmentData->get($shipment, $number);
+        }
+
+        return ['Shipment' => $shipments];
     }
 }

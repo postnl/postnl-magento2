@@ -75,7 +75,7 @@ class ConfirmLabel
      * @param ShipmentInterface $shipment
      * @param                   $number
      */
-    public function confirm(ShipmentInterface $shipment, $number)
+    public function confirm(ShipmentInterface $shipment, $number = 1)
     {
         $this->confirming->setParameters($shipment, $number);
         $this->confirming->call();

@@ -65,7 +65,7 @@ class WithConfirm extends GenerateAbstract
      * @param ShipmentInterface $shipment
      * @param                   $currentNumber
      *
-     * @return null|\TIG\PostNL\Api\Data\ShipmentLabelInterface
+     * @return null|\TIG\PostNL\Api\Data\ShipmentLabelInterface[]
      */
     public function get(ShipmentInterface $shipment, $currentNumber)
     {

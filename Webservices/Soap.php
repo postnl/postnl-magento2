@@ -135,9 +135,7 @@ class Soap
      */
     public function getClient()
     {
-        $wsdlUrl = $this->getWsdlUrl();
-
-        $this->soapClient->setWSDL($wsdlUrl);
+        $this->soapClient->setWSDL($this->getWsdlUrl());
         $this->soapClient->setOptions($this->getOptionsArray());
 
         return $this->soapClient;
@@ -220,7 +218,6 @@ class Soap
     private function parseEndpoint(AbstractEndpoint $endpoint)
     {
         $this->location = $endpoint->getLocation();
-        $this->wsdlUrl  = $this->getWsdlUrl();
     }
 
     /**

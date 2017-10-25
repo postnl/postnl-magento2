@@ -113,9 +113,8 @@ class Confirming extends AbstractEndpoint
         $this->requestParams = [
             'Message'   => $this->message->get($shipment->getMainBarcode()),
             'Customer'  => $this->customer->get(),
-            'Shipments' => ['Shipment' => $this->shipmentData->get($shipment, $currentShipmentNumber)],
+            'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
-
     }
 
     /**
@@ -124,5 +123,21 @@ class Confirming extends AbstractEndpoint
     public function getLocation()
     {
         return $this->version . '/' . $this->endpoint;
+    }
+
+    /**
+     * @param Shipment|ShipmentInterface $shipment
+     * @param $currentShipmentNumber
+     *
+     * @return array
+     */
+    private function getShipments($shipment, $currentShipmentNumber)
+    {
+        $shipments = [];
+        for ($number = $currentShipmentNumber; $number <= $shipment->getParcelCount(); $number++) {
+            $shipments[] = $this->shipmentData->get($shipment, $number);
+        }
+
+        return ['Shipment' => $shipments];
     }
 }
