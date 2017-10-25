@@ -49,10 +49,6 @@ class Factory
     public function __construct(
         $validators = []
     ) {
-        foreach ($validators as $validator) {
-            $this->checkImplementation($validator);
-        }
-
         $this->validators = $validators;
     }
 
@@ -77,8 +73,27 @@ class Factory
      * @return bool|mixed
      * @throws PostNLException
      */
-    // @codingStandardsIgnoreStart
     public function validate($type, $value)
+    {
+        foreach ($this->validators as $validator) {
+            $this->checkImplementation($validator);
+        }
+
+        $result = $this->callValidator($type, $value);
+        if ($result !== null) {
+            return $result;
+        }
+
+        throw new PostNLException(__('There is no implementation found for the "%1" validator', $type));
+    }
+
+    /**
+     * @param $type
+     * @param $value
+     *
+     * @return bool
+     */
+    private function callValidator($type, $value)
     {
         switch ($type) {
             case 'price':
@@ -99,10 +114,7 @@ class Factory
             case 'duplicate-import':
                 return $this->validators['duplicateImport']->validate($value);
         }
-
-        throw new PostNLException(__('There is no implementation found for the "%1" validator', $type));
     }
-    // @codingStandardsIgnoreEnd
 
     /**
      * Check if the reset method is available and if so calls them.

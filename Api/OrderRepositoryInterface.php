@@ -101,4 +101,11 @@ interface OrderRepositoryInterface
      */
     // @codingStandardsIgnoreLine
     public function getByOrderId($id);
+
+    /**
+     * @param $quoteId
+     *
+     * @return null|\TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function getByQuoteId($quoteId = null);
 }

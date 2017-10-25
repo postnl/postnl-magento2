@@ -32,10 +32,10 @@
 
 namespace TIG\PostNL\Service\Carrier\Price;
 
-use Magento\Store\Model\ScopeInterface;
-use TIG\PostNL\Service\Options\ItemsToOption;
+use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
 use TIG\PostNL\Config\Source\Carrier\RateType;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 
@@ -57,16 +57,6 @@ class Calculator
     private $matrixratePrice;
 
     /**
-     * @var ItemsToOption
-     */
-    private $itemsToOption;
-
-    /**
-     * @var string
-     */
-    private $parcelType;
-
-    /**
      * @var Tablerate
      */
     private $tablerateShippingPrice;
@@ -77,27 +67,31 @@ class Calculator
     private $store;
 
     /**
+     * @var ParcelTypeFinder
+     */
+    private $parcelTypeFinder;
+
+    /**
      * Calculator constructor.
      *
      * @param ScopeConfigInterface $scopeConfig
      * @param GetFreeBoxes         $getFreeBoxes
      * @param Matrixrate           $matrixratePrice
      * @param Tablerate            $tablerateShippingPrice
-     * @param ItemsToOption        $itemsToOption
+     * @param ParcelTypeFinder     $parcelTypeFinder
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         GetFreeBoxes $getFreeBoxes,
         Matrixrate $matrixratePrice,
         Tablerate $tablerateShippingPrice,
-        ItemsToOption $itemsToOption
+        ParcelTypeFinder $parcelTypeFinder
     ) {
-        $this->parcelType             = $itemsToOption->getFromQuote() ?: 'regular';
         $this->scopeConfig            = $scopeConfig;
         $this->getFreeBoxes           = $getFreeBoxes;
-        $this->itemsToOption          = $itemsToOption;
         $this->matrixratePrice        = $matrixratePrice;
         $this->tablerateShippingPrice = $tablerateShippingPrice;
+        $this->parcelTypeFinder       = $parcelTypeFinder;
     }
 
     /**
@@ -122,8 +116,8 @@ class Calculator
             return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
         }
 
-        if ($this->getConfigData('rate_type') == RateType::CARRIER_RATE_TYPE_MATRIX &&
-            ($ratePrice = $this->matrixratePrice->getRate($request, $parcelType ?: $this->parcelType)) !== false) {
+        $ratePrice = $this->matrixratePrice->getRate($request, $parcelType ?: $this->parcelTypeFinder->get());
+        if ($this->getConfigData('rate_type') == RateType::CARRIER_RATE_TYPE_MATRIX && $ratePrice !== false) {
             return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
         }
 

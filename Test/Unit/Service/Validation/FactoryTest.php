@@ -92,19 +92,21 @@ class FactoryTest extends TestCase
 
     public function testIncorrectClassThrowsAnException()
     {
+        $instance = $this->getInstance([
+            'validators' => [
+                'class' => static::class,
+            ]
+        ]);
+
         try {
-            $this->getInstance([
-                'validators' => [
-                    'class' => static::class,
-                ]
-            ]);
+            $instance->validate('type', 'value');
         } catch (\TIG\PostNL\Exception $exception) {
             $message = 'Class is not an implementation of ' . Validation\ContractInterface::class;
             $this->assertEquals($message, $exception->getMessage());
             return;
         }
 
-        $this->fail('We added an invalid class an expected an Exception, but got none.');
+        $this->fail('We added an invalid class and expected an Exception, but got none.');
     }
 
     public function testANonExistingValidatorThrowsAnExceptions()

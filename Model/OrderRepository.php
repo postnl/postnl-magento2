@@ -39,6 +39,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
+use TIG\PostNL\Service\Wrapper\QuoteInterface;
 
 class OrderRepository extends AbstractRepository implements OrderRepositoryInterface
 {
@@ -46,6 +47,11 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      * @var OrderFactory
      */
     private $orderFactory;
+
+    /**
+     * @var QuoteInterface
+     */
+    private $quoteWrapper;
 
     /**
      * OrderRepository constructor.
@@ -59,8 +65,10 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         OrderFactory $orderFactory,
-        CollectionFactory $collectionFactory
+        CollectionFactory $collectionFactory,
+        QuoteInterface $quote
     ) {
+        $this->quoteWrapper      = $quote;
         $this->orderFactory      = $orderFactory;
         $this->collectionFactory = $collectionFactory;
 
@@ -153,5 +161,19 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         $order = $this->getById($identifier);
 
         return $this->delete($order);
+    }
+
+    /**
+     * @param null $quoteId
+     *
+     * @return null|AbstractModel
+     */
+    public function getByQuoteId($quoteId = null)
+    {
+        if ($quoteId === null) {
+            $quoteId = $this->quoteWrapper->getQuoteId();
+        }
+
+        return $this->getByFieldWithValue('quote_id', $quoteId);
     }
 }
