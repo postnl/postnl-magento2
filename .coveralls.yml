@@ -1,4 +1,3 @@
 service_name: travis-pro
 coverage_clover:
-  - build/logs/clover-unit.xml
-  - build/logs/clover-integration.xml
+  - build/logs/clover.xml

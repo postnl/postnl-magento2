@@ -48,8 +48,8 @@ class Log extends Logger
      * @param LoggingConfiguration $loggingConfiguration
      */
     public function __construct(
-        LoggingConfiguration $loggingConfiguration,
         $name,
+        LoggingConfiguration $loggingConfiguration,
         array $handlers = [],
         array $processors = []
     ) {

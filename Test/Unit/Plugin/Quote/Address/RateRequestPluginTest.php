@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *          ..::..
@@ -29,21 +30,43 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+namespace TIG\PostNL\Test\Unit\Plugin\Quote\Address;
 
-if (function_exists('setCustomErrorHandler')) {
-    return;
-}
+use TIG\PostNL\Plugin\Quote\Address\RateRequestPlugin;
+use TIG\PostNL\Test\TestCase;
 
-/**
- * From vendor/tig/postnl
- */
-$path = __DIR__ . '/../../../../dev/tests/unit/framework/bootstrap.php';
+class RateRequestPluginTest extends TestCase
+{
+    public $instanceClass = RateRequestPlugin::class;
 
-if (strpos(__DIR__, 'app/code') !== false) {
+    public function dataProvider()
+    {
+        return [
+            'TIG PostNL Limit Carrier' => [
+                'limit_carrier',
+                'tig',
+                ['limit_carrier','tig_postnl']
+            ],
+            'FlatRate Limit Carrier' => [
+                'limit_carrier',
+                'flatrate',
+                ['limit_carrier','flatrate']
+            ],
+        ];
+    }
+
     /**
-     * From app/code/TIG/PostNL
+     * @param $key
+     * @param $value
+     * @param $expected
+     *
+     * @dataProvider dataProvider
      */
-    $path = __DIR__ . '/../../../../../dev/tests/unit/framework/bootstrap.php';
-}
+    public function testBeforeSetData($key, $value, $expected)
+    {
+        $instance = $this->getInstance();
+        $result = $instance->beforeSetData(null, $key, $value);
 
-require_once($path);
+        $this->assertEquals($expected, $result);
+    }
+}

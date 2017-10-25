@@ -4,3 +4,4 @@ Controller/Test/
 Controller/Adminhtml/Test/
 Build/
 build
+composer.lock

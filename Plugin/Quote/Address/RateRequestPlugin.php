@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,30 +28,29 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
-         colors="true"
-         bootstrap="Test/Bootstrap.php"
-        >
-    <testsuite name="unit">
-        <directory suffix="Test.php">./Test/Unit</directory>
-    </testsuite>
+ */
+namespace TIG\PostNL\Plugin\Quote\Address;
 
-    <php>
-        <ini name="date.timezone" value="America/Los_Angeles"/>
-        <ini name="xdebug.max_nesting_level" value="200"/>
-    </php>
+class RateRequestPlugin
+{
+    /**
+     * When a customer is logged-in and try's to checkout the error is thrown saying 'Please select a shippingmethod'
+     * This is because of the limitCarrier that is set with 'tig' as value. Later on in the process of the checkout the
+     * carrier config is requested. Magento will request this like carrier/[carrier_code].
+     *
+     * @param $subject
+     * @param $key
+     * @param $value
+     *
+     * @return array
+     */
+    // @codingStandardsIgnoreLine
+    public function beforeSetData($subject, $key, $value)
+    {
+        if ($key == 'limit_carrier' && $value == 'tig') {
+            return [$key, 'tig_postnl'];
+        }
 
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">.</directory>
-            <exclude>
-                <directory suffix=".php">Test</directory>
-                <directory suffix=".php">vendor</directory>
-                <file>registration.php</file>
-            </exclude>
-        </whitelist>
-    </filter>
-</phpunit>
+        return [$key, $value];
+    }
+}

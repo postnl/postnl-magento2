@@ -42,28 +42,6 @@ use TIG\PostNL\Test\Integration\TestCase;
 
 class ShipmentTest extends TestCase
 {
-    public function testSetConfirmedAtBeforeObserverIsCalled()
-    {
-        $this->objectManager->get(State::class)->setAreaCode('adminhtml');
-
-        $trackMock = $this->getFakeMock(Track::class)->getMock();
-        $shipmentRepositorykMock = $this->getFakeMock(ShipmentRepository::class)->getMock();
-
-        $this->objectManager->configure([
-            'preferences' => [
-                Track::class => get_class($trackMock),
-                ShipmentRepository::class => get_class($shipmentRepositorykMock),
-            ],
-        ]);
-
-        $model = $this->getNewModel();
-
-        $newTrackMock = $this->objectManager->get(Track::class);
-        $newTrackMock->method('send');
-
-        $model->setConfirmedAt('01-01-1970');
-    }
-
     public function testSetConfirmedAtBeforeObserverIsOnlyAvailableInAdmin()
     {
         $config = $this->objectManager->get(Config::class);

@@ -40,43 +40,72 @@ class AddressEnhancerTest extends TestCase
 
     public function addressProvider()
     {
-        $addressGiven = [
-            'postcode' => '1014AB',
-            'country'  => 'NL',
-            'street'   => [
-                'Kabelweg 37', ''
-            ]
-        ];
-
-        $expected = [
-            'postcode' => '1014AB',
-            'country'  => 'NL',
-            'street'   => [
-                'Kabelweg', ''
-            ],
-            'housenumber' => '37',
-            'housenumberExtension' => ''
-        ];
-
         return [
-            [$addressGiven, $expected]
+            'regular address' => [
+                ['Kabelweg 37', ''],
+                ['housenumber' => '37', 'housenumberExtension' => '']
+            ],
+            'address with extension' => [
+                ['Kabelweg 37B', ''],
+                ['housenumber' => '37', 'housenumberExtension' => 'B']
+            ],
+            'address with extension and space' => [
+                ['Kabelweg 37 B', ''],
+                ['housenumber' => '37', 'housenumberExtension' => 'B']
+            ],
+            'housenumber on second line' => [
+                ['Kabelweg', '37'],
+                ['housenumber' => '37', 'housenumberExtension' => '']
+            ],
+            'housenumber on second line with extension' => [
+                ['Kabelweg', '37B'],
+                ['housenumber' => '37', 'housenumberExtension' => 'B']
+            ],
+            'housenumber on second line with extension and space' => [
+                ['Kabelweg', '37 B'],
+                ['housenumber' => '37', 'housenumberExtension' => 'B']
+            ],
+            'Streetname with spaces' => [
+                ['Clare Lennarthof 7', ''],
+                ['housenumber' => '7', 'housenumberExtension' => '']
+            ],
+            'Streetname with spaces on second line' => [
+                ['Clare Lennarthof ', '7'],
+                ['housenumber' => '7', 'housenumberExtension' => '']
+            ],
+            'Streetname with spaces and extension' => [
+                ['Clare Lennarthof 7B', ''],
+                ['housenumber' => '7', 'housenumberExtension' => 'B']
+            ],
+            'Streetname with spaces and extension and extra space' => [
+                ['Clare Lennarthof 7 B', ''],
+                ['housenumber' => '7', 'housenumberExtension' => 'B']
+            ],
+            'Streetname with numbers' => [
+                ['7 Januaristraat 18', ''],
+                ['housenumber' => '18', 'housenumberExtension' => '']
+            ],
         ];
     }
 
     /**
-     * @param $address
+     * @param $street
      * @param $expected
      *
      * @dataProvider addressProvider
      */
-    public function testGet($address, $expected)
+    public function testGet($street, $expected)
     {
         $instance = $this->getInstance();
-        $instance->set($address);
+        $instance->set([
+            'postcode' => '1014AB',
+            'country'  => 'NL',
+            'street'   => $street
+        ]);
 
         $result = $instance->get();
 
-        $this->assertEquals($expected, $result);
-
+        $this->assertEquals($expected['housenumber'], $result['housenumber']);
+        $this->assertEquals($expected['housenumberExtension'], $result['housenumberExtension']);
     }
 }

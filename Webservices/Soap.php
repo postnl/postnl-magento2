@@ -191,10 +191,7 @@ class Soap
      */
     private function getWsdlUrl()
     {
-        $prefix = $this->defaultConfiguration->getModusCifBaseUrl();
-        $wsdlUrl = $prefix . $this->wsdlUrl . '?wsdl';
-
-        return $wsdlUrl;
+        return $this->getLocation() . '/soap.wsdl';
     }
 
     /**
@@ -228,7 +225,6 @@ class Soap
     private function parseEndpoint(AbstractEndpoint $endpoint)
     {
         $this->location = $endpoint->getLocation();
-        $this->wsdlUrl  = $endpoint->getWsdlUrl();
     }
 
     /**
