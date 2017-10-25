@@ -66,16 +66,12 @@ define([
             this[key] = value;
         }.bind(this));
 
-        this.expanded = ko.observable(false);
+        this.expanded = ko.observable(true);
 
         /**
          * Toggle the pickup hours visibility.
          */
         this.toggle = function () {
-            if (State.currentOpenPane() !== 'pickup') {
-                return;
-            }
-
             this.expanded(!this.expanded());
         };
 
