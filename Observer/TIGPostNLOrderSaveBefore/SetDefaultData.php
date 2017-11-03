@@ -36,6 +36,7 @@ use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Service\Order\ShipAt;
 use TIG\PostNL\Service\Order\ProductCodeAndType;
 use TIG\PostNL\Service\Order\FirstDeliveryDate;
+use TIG\PostNL\Service\Options\ItemsToOption;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
@@ -62,23 +63,31 @@ class SetDefaultData implements ObserverInterface
     private $log;
 
     /**
+     * @var ItemsToOption
+     */
+    private $itemsToOption;
+
+    /**
      * SetDefaultData constructor.
      *
      * @param ProductCodeAndType $productCodeAndType
      * @param FirstDeliveryDate  $firstDeliveryDate
      * @param ShipAt             $shipAt
      * @param Log                $log
+     * @param ItemsToOption      $itemsToOption
      */
     public function __construct(
         ProductCodeAndType $productCodeAndType,
         FirstDeliveryDate $firstDeliveryDate,
         ShipAt $shipAt,
-        Log $log
+        Log $log,
+        ItemsToOption $itemsToOption
     ) {
         $this->productCodeAndType = $productCodeAndType;
         $this->firstDeliveryDate  = $firstDeliveryDate;
         $this->shipAt             = $shipAt;
         $this->log                = $log;
+        $this->itemsToOption      = $itemsToOption;
     }
 
     /**
@@ -103,12 +112,12 @@ class SetDefaultData implements ObserverInterface
      */
     private function setData(OrderInterface $order)
     {
-        $productInfo = $this->productCodeAndType->get();
-        if (!$order->getProductCode()) {
+        $productInfo = $this->productCodeAndType->get('', $this->getOptionFromQuote());
+        if (!$order->getProductCode() || $order->getProductCode() !== $productInfo['code']) {
             $order->setProductCode($productInfo['code']);
         }
 
-        if (!$order->getType()) {
+        if (!$order->getType() || $order->getType() !== $productInfo['type']) {
             $order->setType($productInfo['type']);
         }
 
@@ -119,5 +128,13 @@ class SetDefaultData implements ObserverInterface
         if (!$order->getShipAt()) {
             $this->shipAt->set($order);
         }
+    }
+
+    /**
+     * @return string
+     */
+    private function getOptionFromQuote()
+    {
+        return $this->itemsToOption->getFromQuote();
     }
 }
