@@ -266,6 +266,17 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function getDeliveryDateFormatted($format = 'd-m-Y')
     {
         $deliveryDate = $this->getData('delivery_date');
+        if (!$deliveryDate) {
+            /**
+             * Delivery_date => '2017-11-09 01:00:00'
+             * When not created with \DateTime the timezoneInterface will return it like '2015-01-01 01:00:00'
+             * or something like that. When create the DateTime object with the interface it will use the locale
+             * settings and most of the times it will be day -1 which will make the delivery_date => '08-11-2017'
+             * @codingStandardsIgnoreLine
+             */
+            $deliveryDate = new \DateTime($this->getDeliveryDateByOrder());
+        }
+
         $deliveryDate = $this->timezoneInterface->date($deliveryDate);
         $deliveryDateFormatted = $deliveryDate->format($format);
 
@@ -563,5 +574,15 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         $productCode = $this->getProductCode();
         return $this->productOptions->getOptionsByCode($productCode);
+    }
+
+    /**
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    private function getDeliveryDateByOrder()
+    {
+        $postNLOrder = $this->getPostNLOrder();
+
+        return $postNLOrder->getDeliveryDate();
     }
 }
