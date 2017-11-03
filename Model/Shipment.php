@@ -582,7 +582,6 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     private function getDeliveryDateByOrder()
     {
         $postNLOrder = $this->getPostNLOrder();
-
         return $postNLOrder->getDeliveryDate();
     }
 }
