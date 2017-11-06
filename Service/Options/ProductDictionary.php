@@ -109,6 +109,24 @@ class ProductDictionary
     }
 
     /**
+     * When the item is part of a bundle or a configurable item->getProductId will return the parentId.
+     * Thats why we will load the product by sku to be sure to retrieve the correct product ID,
+     * otherwise the volume and weight could be wrong.
+     *
+     * @param ShipmentItemInterface|OrderItemInterface|QuoteItem $item
+     * @return int
+     */
+    public function getProductId($item)
+    {
+        $product = $this->productRepository->get($item->getSku());
+        if (!$product->getId()) {
+            return $item->getProductId();
+        }
+
+        return $product->getId();
+    }
+
+    /**
      * @param array $skus
      */
     private function setFilterGroups($skus)

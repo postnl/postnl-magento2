@@ -92,12 +92,13 @@ abstract class CalculateAbstract
     // @codingStandardsIgnoreLine
     protected function getVolume($products, $item)
     {
-        if (!isset($products[$item->getProductId()])) {
+        $productId = $this->productDictionary->getProductId($item);
+        if (!isset($products[$productId])) {
             return 0;
         }
 
         /** @var ProductInterface $product */
-        $product = $products[$item->getProductId()];
+        $product = $products[$productId];
         $productVolume = $product->getCustomAttribute(static::ATTRIBUTE_VOLUME);
         return ($productVolume->getValue() * $this->getQty($item));
     }

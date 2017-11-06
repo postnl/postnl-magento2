@@ -98,7 +98,11 @@ class Data
             'CollectionTimeStampEnd'   => '',
             'CollectionTimeStampStart' => '',
             'Contacts'                 => ['Contact' => $contact],
-            'Dimension'                => ['Weight' => round($shipment->getTotalWeight())],
+            'Dimension'                => [
+                    'Weight' => $this->getWeightByParcelCount(
+                        $shipment->getTotalWeight(), $shipment->getParcelCount()
+                    )
+                ],
             'DeliveryDate'             => $shipment->getDeliveryDateFormatted(),
             'DownPartnerID'            => $shipment->getPgRetailNetworkId(),
             'DownPartnerLocation'      => $shipment->getPgLocationCode(),
@@ -119,7 +123,9 @@ class Data
         $magentoShipment = $shipment->getShipment();
         if ($shipment->isExtraAtHome()) {
             $shipmentData['Content'] = $this->contentDescription->get($shipment);
-            $shipmentData['Dimension']['Volume'] = $this->shipmentVolume->get($magentoShipment->getItems());
+            $shipmentData['Dimension']['Volume'] = $this->getVolumeByParcelCount(
+                $magentoShipment->getItems(), $shipment->getParcelCount()
+            );
             $shipmentData['Reference'] = $magentoShipment->getIncrementId();
         }
 
@@ -162,6 +168,32 @@ class Data
         ];
 
         return $amounts;
+    }
+
+    /**
+     * @param $items
+     * @param $count
+     *
+     * @return float|int
+     */
+    private function getVolumeByParcelCount($items, $count)
+    {
+        $volume = $this->shipmentVolume->get($items);
+        // Devision by zero not allowed.
+        return round(($volume ?: 1) / ($count ?: 1));
+    }
+
+    /**
+     * @param $weight
+     * @param $count
+     *
+     * @return float
+     */
+    private function getWeightByParcelCount($weight, $count)
+    {
+        // Devision by zero not allowed.
+        $weight = round(($weight ?: 1) / ($count ?: 1));
+        return $weight <= 0 ? 1 : $weight;
     }
 
     /**
