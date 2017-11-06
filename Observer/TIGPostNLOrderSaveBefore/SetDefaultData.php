@@ -68,6 +68,13 @@ class SetDefaultData implements ObserverInterface
     private $itemsToOption;
 
     /**
+     * @var array
+     */
+    private $shouldUpdateByOption = [
+        ProductCodeAndType::OPTION_EXTRAATHOME
+    ];
+
+    /**
      * SetDefaultData constructor.
      *
      * @param ProductCodeAndType $productCodeAndType
@@ -112,12 +119,13 @@ class SetDefaultData implements ObserverInterface
      */
     private function setData(OrderInterface $order)
     {
-        $productInfo = $this->productCodeAndType->get('', $this->getOptionFromQuote());
-        if (!$order->getProductCode() || $order->getProductCode() !== $productInfo['code']) {
+        $option      = $this->getOptionFromQuote();
+        $productInfo = $this->productCodeAndType->get('', $option);
+        if (!$order->getProductCode() || $this->canUpdate($order->getProductCode(), $productInfo['code'], $option)) {
             $order->setProductCode($productInfo['code']);
         }
 
-        if (!$order->getType() || $order->getType() !== $productInfo['type']) {
+        if (!$order->getType() || $this->canUpdate($order->getType(), $productInfo['type'], $option)) {
             $order->setType($productInfo['type']);
         }
 
@@ -128,6 +136,26 @@ class SetDefaultData implements ObserverInterface
         if (!$order->getShipAt()) {
             $this->shipAt->set($order);
         }
+    }
+
+    /**
+     * @param $current
+     * @param $new
+     * @param $option
+     *
+     * @return bool
+     */
+    private function canUpdate($current, $new, $option)
+    {
+        if (!in_array($option, $this->shouldUpdateByOption)) {
+            return false;
+        }
+
+        if ($current == $new) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
