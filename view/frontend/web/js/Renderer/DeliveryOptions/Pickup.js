@@ -189,19 +189,11 @@ define([
                     State.pickupOptionsAreAvailable(false);
                     return false;
                 }
+
                 State.pickupOptionsAreAvailable(true);
-
-<<<<<<< HEAD
-                if (window.checkoutConfig.shipping.postnl.is_deliverydays_active === false) {
-                    data.locations = [data.locations.shift()];
-                }
-
                 State.pickupPrice(data.price);
 
                 data = data.locations.slice(0, 5);
-=======
-                data = data.slice(0, 5);
->>>>>>> develop
                 data = ko.utils.arrayMap(data, function (data) {
                     return new Location(data);
                 });
