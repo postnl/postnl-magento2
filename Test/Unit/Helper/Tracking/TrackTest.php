@@ -33,6 +33,7 @@ namespace TIG\PostNL\Test\Unit\Helper;
 
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Model\Order\Shipment as MagentoShipment;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Model\Shipment;
@@ -68,5 +69,35 @@ class TrackTest extends TestCase
             'postNLShipmentRepository' => $shipmentRepositoryMock
         ]);
         $instance->send($shipmentMock);
+    }
+
+    public function generatesTheCorrectTTUrlProvider()
+    {
+        return [
+            ['NL', 'D=NL&P=1234AB&T=C'],
+            ['BE', 'D=BE&P=1234AB&T=C'],
+        ];
+    }
+
+    /**
+     * @param $country
+     * @param $expected
+     *
+     * @dataProvider generatesTheCorrectTTUrlProvider
+     */
+    public function testGeneratesTheCorrectTTUrl($country, $expected)
+    {
+        $type = 'C';
+        $barcode = '123ABC';
+
+        /** @var OrderAddressInterface $address */
+        $address = $this->getObject(\Magento\Sales\Model\Order\Address::class);
+        $address->setCountryId($country);
+        $address->setPostcode('1234AB');
+
+        $instance = $this->getInstance();
+        $result = $this->invokeArgs('generateTrackAndTraceUrl', [$address, $barcode, $type], $instance);
+
+        $this->assertContains('B=123ABC&' . $expected, $result);
     }
 }

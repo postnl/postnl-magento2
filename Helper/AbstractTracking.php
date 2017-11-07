@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Helper;
 
+use Magento\Sales\Api\Data\OrderAddressInterface;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
 use TIG\PostNL\Config\Provider\Webshop;
@@ -140,19 +141,30 @@ abstract class AbstractTracking extends AbstractHelper
         /** @var \Magento\Sales\Model\Order\Shipment $shipment */
         $shipment = $this->shimpentRepository->get($postNLShipment->getShipmentId());
         /** @var \Magento\Sales\Api\Data\OrderAddressInterface $address */
-        $address  = $shipment->getShippingAddress();
+        $address = $shipment->getShippingAddress();
 
-        $lang = !in_array($address->getCountryId(), [
-            'NL', 'DE', 'EN', 'FR', 'ED', 'IT', 'CN'
-        ]) ? 'EN' : $address->getCountryId();
+        return $this->generateTrackAndTraceUrl($address, $trackingNumber, $type);
+    }
 
+    /**
+     * Generate the Track&Trace url based on an address.
+     *
+     * @param OrderAddressInterface $address
+     * @param                       $trackingNumber
+     * @param                       $type
+     *
+     * @return string
+     */
+    // @codingStandardsIgnoreLine
+    protected function generateTrackAndTraceUrl(OrderAddressInterface $address, $trackingNumber, $type)
+    {
         $params = [
-            'B='.$trackingNumber,
-            '&D='.$lang,
-            '&P='.$address->getPostcode(),
-            '&T='.$type
+            'B=' . $trackingNumber,
+            'D=' . $address->getCountryId(),
+            'P=' . $address->getPostcode(),
+            'T=' . $type,
         ];
 
-        return $this->webshopConfig->getTrackAndTraceServiceUrl().implode('', $params);
+        return $this->webshopConfig->getTrackAndTraceServiceUrl() . implode('&', $params);
     }
 }
