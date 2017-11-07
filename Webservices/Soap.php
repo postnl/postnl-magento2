@@ -118,11 +118,8 @@ class Soap
         $this->parseEndpoint($endpoint);
         $soapClient = $this->getClient();
 
-        $result = null;
         try {
-            $result = $soapClient->__call($method, [$requestParams]);
-
-            return $result;
+            return $soapClient->__call($method, [$requestParams]);
         } catch (\Exception $exception) {
             $this->exceptionHandler->handle($exception, $soapClient);
         } finally {
@@ -170,12 +167,14 @@ class Soap
     private function checkSoapExtensionIsLoaded()
     {
         if (!extension_loaded('soap')) {
+            // @codeCoverageIgnoreStart
             throw new WebapiException(
                 // @codingStandardsIgnoreLine
                 __('SOAP extension is not loaded.'),
                 0,
                 WebapiException::HTTP_INTERNAL_ERROR
             );
+            // @codeCoverageIgnoreEnd
         }
     }
 

@@ -47,7 +47,7 @@
         </carriers>
         <tig_postnl>
             <stability>alpha</stability>
-            <supported_magento_version>2.1.5</supported_magento_version>
+            <supported_magento_version>2.1.5 - 2.1.9, 2.2.0</supported_magento_version>
             <generalconfiguration_extension_status>
                 <modus>0</modus>
                 <customer_number_test>11223344</customer_number_test>
@@ -74,7 +74,7 @@
                 <default_option>3085</default_option>
                 <default_evening_option>3089</default_evening_option>
                 <default_extraathome_option>3628</default_extraathome_option>
-                <default_pakjegemak_option>3534</default_pakjegemak_option>
+                <default_pakjegemak_option>3533</default_pakjegemak_option>
                 <default_pakjegemak_early_option>3544</default_pakjegemak_early_option>
                 <supported_options>3085,3189,3089,3389,3096,3090,3385,3534,3544,3533,3543,4950,4952,2928</supported_options>
             </productoptions>
