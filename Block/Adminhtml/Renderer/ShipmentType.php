@@ -84,6 +84,9 @@ class ShipmentType
                 $label = __('Post office');
                 $comment = __('Early morning pickup');
                 break;
+            case 'EPS':
+                $label = __('EPS');
+                break;
         }
 
         return [

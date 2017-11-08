@@ -48,6 +48,7 @@ class ShipmentTypeTest extends TestCase
             'Sunday' => ['Sunday', 'Sunday', ''],
             'Pickup Delivery' => ['PG', 'Post office', ''],
             'Pickup Delivery Early' => ['PGE', 'Post office', 'Early morning pickup'],
+            'EPS' => ['EPS', 'EPS', ''],
         ];
     }
 
