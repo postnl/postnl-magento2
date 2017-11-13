@@ -33,7 +33,7 @@ namespace TIG\PostNL\Helper\DeliveryOptions;
 
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Service\Order\FeeCalculator;
-use TIG\PostNL\Service\Order\ProductCode;
+use TIG\PostNL\Service\Order\ProductCodeAndType;
 
 class OrderParams
 {
@@ -77,20 +77,20 @@ class OrderParams
     private $feeCalculator;
 
     /**
-     * @var ProductCode
+     * @var ProductCodeAndType
      */
-    private $productCode;
+    private $productCodeAndType;
 
     /**
-     * @param FeeCalculator $feeCalculator
-     * @param ProductCode   $productCode
+     * @param FeeCalculator      $feeCalculator
+     * @param ProductCodeAndType $productCodeAndType
      */
     public function __construct(
         FeeCalculator $feeCalculator,
-        ProductCode $productCode
+        ProductCodeAndType $productCodeAndType
     ) {
-        $this->feeCalculator = $feeCalculator;
-        $this->productCode = $productCode;
+        $this->feeCalculator      = $feeCalculator;
+        $this->productCodeAndType = $productCodeAndType;
     }
 
     /**
@@ -160,8 +160,9 @@ class OrderParams
      */
     private function formatParamData($params)
     {
+        $productInfo = $this->productCodeAndType->get($params['type'], $params['option']);
+
         return [
-            'type'                         => $params['option'],
             'quote_id'                     => isset($params['quote_id']) ? $params['quote_id'] : '',
             'delivery_date'                => isset($params['date']) ? $params['date'] : '',
             'expected_delivery_time_start' => isset($params['from']) ? $params['from'] : '',
@@ -170,9 +171,10 @@ class OrderParams
             'pg_location_code'             => isset($params['LocationCode']) ? $params['LocationCode'] : '',
             'pg_retail_network_id'         => isset($params['RetailNetworkID']) ? $params['RetailNetworkID'] : '',
             'pg_address'                   => $this->addExtraToAddress($params),
+            'type'                         => $params['option'],
             'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : '',
             'fee'                          => $this->feeCalculator->get($params),
-            'product_code'                 => $this->productCode->get($params['type'], $params['option']),
+            'product_code'                 => $productInfo['code'],
         ];
     }
 

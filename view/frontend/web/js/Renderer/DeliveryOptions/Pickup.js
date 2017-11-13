@@ -126,6 +126,7 @@ define([
                     fee = dataObject.getFee();
                 }
                 State.fee(fee);
+                State.pickupFee(fee);
 
                 State.pickupAddress({
                     company: dataObject.Name,
@@ -141,7 +142,9 @@ define([
                     telephone: ''
                 });
 
+                // this trigger makes the extension compatible with onestep checkout.
                 $(document).trigger('compatible_postnl_deliveryoptions_save_before');
+
                 $.ajax({
                     method: 'POST',
                     url: window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
@@ -186,9 +189,11 @@ define([
                     State.pickupOptionsAreAvailable(false);
                     return false;
                 }
-                State.pickupOptionsAreAvailable(true);
 
-                data = data.slice(0, 5);
+                State.pickupOptionsAreAvailable(true);
+                State.pickupPrice(data.price);
+
+                data = data.locations.slice(0, 5);
                 data = ko.utils.arrayMap(data, function (data) {
                     return new Location(data);
                 });

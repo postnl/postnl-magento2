@@ -31,17 +31,21 @@
  */
 namespace TIG\PostNL\Test\Integration\Model;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Api\SearchResultsInterface;
 use TIG\PostNL\Model\Order;
 use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Test\Integration\TestCase;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
+use TIG\PostNL\Webservices\Endpoints\SentDate;
 
 class OrderRepositoryTest extends TestCase
 {
     public function testThatAnEmptyFilterDoesNotThrowAnException()
     {
+        $this->disableEndpoint(DeliveryDate::class);
+        $this->disableEndpoint(SentDate::class);
+
         /** @var OrderRepository $repository */
         $repository = $this->getObject(OrderRepository::class);
 
@@ -57,7 +61,11 @@ class OrderRepositoryTest extends TestCase
         $criteria = $criteriaBuilder->create();
 
         $result = $repository->getList($criteria);
-        $this->assertEquals([$savedModel], $result->getItems());
+        $items  = $result->getItems();
+        $item   = end($items);
+
+        $this->assertCount(1, $items);
+        $this->assertEquals($savedModel, $item);
     }
 
     /**

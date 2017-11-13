@@ -34,17 +34,14 @@ namespace TIG\PostNL\Model;
 use TIG\PostNL\Api\OrderRepositoryInterface;
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Model\ResourceModel\Order\CollectionFactory;
-use TIG\PostNL\Model\Order as PostNLOrder;
-use TIG\PostNL\Service\Filter\SearchResults;
-
-use Magento\Framework\Api\SearchResultsInterface;
-use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchResultsInterfaceFactory;
+use TIG\PostNL\Service\Wrapper\QuoteInterface;
 
-class OrderRepository implements OrderRepositoryInterface
+class OrderRepository extends AbstractRepository implements OrderRepositoryInterface
 {
     /**
      * @var OrderFactory
@@ -52,36 +49,30 @@ class OrderRepository implements OrderRepositoryInterface
     private $orderFactory;
 
     /**
-     * @var CollectionFactory
+     * @var QuoteInterface
      */
-    private $collectionFactory;
+    private $quoteWrapper;
 
     /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
-
-    /**
-     * @var SearchResults
-     */
-    private $searchResults;
-
-    /**
-     * @param OrderFactory          $orderFactory
-     * @param CollectionFactory     $collectionFactory
-     * @param SearchResults         $searchResults,
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * OrderRepository constructor.
+     *
+     * @param SearchResultsInterfaceFactory $searchResultsFactory
+     * @param SearchCriteriaBuilder         $searchCriteriaBuilder
+     * @param OrderFactory                  $orderFactory
+     * @param CollectionFactory             $collectionFactory
      */
     public function __construct(
+        SearchResultsInterfaceFactory $searchResultsFactory,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
         OrderFactory $orderFactory,
         CollectionFactory $collectionFactory,
-        SearchResults $searchResults,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        QuoteInterface $quote
     ) {
-        $this->orderFactory          = $orderFactory;
-        $this->collectionFactory     = $collectionFactory;
-        $this->searchResults         = $searchResults;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->quoteWrapper      = $quote;
+        $this->orderFactory      = $orderFactory;
+        $this->collectionFactory = $collectionFactory;
+
+        parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
     }
 
     /**
@@ -132,24 +123,13 @@ class OrderRepository implements OrderRepositoryInterface
     }
 
     /**
-     * @param $field
-     * @param $value
+     * @param int $identifier
      *
-     * @return PostNLOrder|null
+     * @return null|Order
      */
-    public function getByFieldWithValue($field, $value)
+    public function getByOrderId($identifier)
     {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter($field, $value);
-        $searchCriteria->setPageSize(1);
-
-        /** @var \Magento\Framework\Api\SearchResults $list */
-        $list = $this->getList($searchCriteria->create());
-
-        if ($list->getTotalCount()) {
-            return $list->getItems()[0];
-        }
-
-        return null;
+        return $this->getByFieldWithValue('order_id', $identifier);
     }
 
     /**
@@ -171,19 +151,6 @@ class OrderRepository implements OrderRepositoryInterface
     }
 
     /**
-     * @param SearchCriteriaInterface $criteria
-     *
-     * @return SearchResultsInterface
-     */
-    public function getList(SearchCriteriaInterface $criteria)
-    {
-        $collection = $this->collectionFactory->create();
-        $searchResults = $this->searchResults->getCollectionItems($criteria, $collection);
-
-        return $searchResults;
-    }
-
-    /**
      * Delete a PostNL order.
      *
      * @param int $identifier
@@ -194,5 +161,19 @@ class OrderRepository implements OrderRepositoryInterface
         $order = $this->getById($identifier);
 
         return $this->delete($order);
+    }
+
+    /**
+     * @param null $quoteId
+     *
+     * @return null|AbstractModel
+     */
+    public function getByQuoteId($quoteId = null)
+    {
+        if ($quoteId === null) {
+            $quoteId = $this->quoteWrapper->getQuoteId();
+        }
+
+        return $this->getByFieldWithValue('quote_id', $quoteId);
     }
 }

@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Test\Unit\Service\Order;
 
 use TIG\PostNL\Config\Provider\ProductOptions;
-use TIG\PostNL\Service\Order\ProductCode;
+use TIG\PostNL\Service\Order\ProductCodeAndType;
 use TIG\PostNL\Test\TestCase;
 
 /**
@@ -42,6 +42,7 @@ class ProductCodeTest extends TestCase
 {
     const PRODUCT_OPTION_DEFAULT = 'default_product_option';
     const PRODUCT_OPTION_EVENING = 'evening_product_option';
+    const PRODUCT_OPTION_EXTRAATHOME = 'extraathome_product_option';
     const PRODUCT_OPTION_PAKJEGEMAK = 'pakjegemak_product_option';
     const PRODUCT_OPTION_PAKJEGEMAK_EARLY = 'pakjegemak_early_product_option';
     const PRODUCT_OPTION_SUNDAY = 'sunday_product_option';
@@ -52,11 +53,11 @@ class ProductCodeTest extends TestCase
     private $productOptionsMock;
 
     /**
-     * @var ProductCode
+     * @var ProductCodeAndType
      */
     private $instance;
 
-    public $instanceClass = ProductCode::class;
+    public $instanceClass = ProductCodeAndType::class;
 
     public function setUp()
     {
@@ -70,10 +71,9 @@ class ProductCodeTest extends TestCase
             'productOptionsFinder' => $productOptionsFinder,
         ]);
 
-//        getEpsProductOptions
-
         $this->addProductOptionsMockFunction('getDefaultProductOption', static::PRODUCT_OPTION_DEFAULT);
         $this->addProductOptionsMockFunction('getDefaultEveningProductOption', static::PRODUCT_OPTION_EVENING);
+        $this->addProductOptionsMockFunction('getDefaultExtraAtHomeProductOption', static::PRODUCT_OPTION_EXTRAATHOME);
         $this->addProductOptionsMockFunction('getDefaultPakjeGemakProductOption', static::PRODUCT_OPTION_PAKJEGEMAK);
         $this->addProductOptionsMockFunction('getDefaultSundayProductOption', static::PRODUCT_OPTION_SUNDAY);
         $this->addProductOptionsMockFunction(
@@ -85,17 +85,18 @@ class ProductCodeTest extends TestCase
     public function getShippingOptionProvider()
     {
         return [
-            'default options' => ['', '', 'NL', static::PRODUCT_OPTION_DEFAULT],
-            'default options BE' => ['', '', 'BE', '4950'],
-            'default options DE' => ['', '', 'DE', '4950'],
-            'default options ES' => ['', '', 'ES', '4950'],
-            'no option' => ['delivery', '', 'NL', static::PRODUCT_OPTION_DEFAULT],
-            'default' => ['delivery', 'default', 'NL', static::PRODUCT_OPTION_DEFAULT],
-            'evening' => ['delivery', 'evening', 'NL', static::PRODUCT_OPTION_EVENING],
-            'sunday' => ['delivery', 'sunday', 'NL', static::PRODUCT_OPTION_SUNDAY],
-            'default pg' => ['pickup', 'default', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK],
-            'pakjegemak' => ['pickup', '', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK],
-            'pakjegemak early morning' => ['pickup', 'PGE', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK_EARLY],
+            'default options' => ['', '', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
+            'default options BE' => ['', '', 'BE', '4950', 'EPS'],
+            'default options DE' => ['', '', 'DE', '4950', 'EPS'],
+            'default options ES' => ['', '', 'ES', '4950', 'EPS'],
+            'no option' => ['delivery', '', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
+            'default' => ['delivery', 'default', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
+            'evening' => ['delivery', 'evening', 'NL', static::PRODUCT_OPTION_EVENING, 'Evening'],
+            'extra at home' => ['delivery', 'extra@home', 'NL', static::PRODUCT_OPTION_EXTRAATHOME, 'Extra@Home'],
+            'sunday' => ['delivery', 'sunday', 'NL', static::PRODUCT_OPTION_SUNDAY, 'Sunday'],
+            'default pg' => ['pickup', 'default', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
+            'pakjegemak' => ['pickup', '', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
+            'pakjegemak early morning' => ['pickup', 'PGE', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK_EARLY, 'PGE'],
         ];
     }
 
@@ -103,13 +104,16 @@ class ProductCodeTest extends TestCase
      * @param $type
      * @param $option
      * @param $country
-     * @param $expected
+     * @param $expectedCode
+     * @param $expectedType
      *
      * @dataProvider getShippingOptionProvider
      */
-    public function testGetShippingOption($type, $option, $country, $expected)
+    public function testGetShippingOption($type, $option, $country, $expectedCode, $expectedType)
     {
-        $this->assertEquals($expected, $this->instance->get($type, $option, $country));
+        $result = $this->instance->get($type, $option, $country);
+        $this->assertEquals($expectedCode, $result['code']);
+        $this->assertEquals($expectedType, $result['type']);
     }
 
     private function addProductOptionsMockFunction($function, $returnValue)

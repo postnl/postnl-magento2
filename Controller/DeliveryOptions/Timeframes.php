@@ -33,14 +33,14 @@ namespace TIG\PostNL\Controller\DeliveryOptions;
 
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Model\OrderFactory;
-use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
+use TIG\PostNL\Service\Carrier\Price\Calculator;
+use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Json\Helper\Data;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Checkout\Model\Session;
 
 class Timeframes extends AbstractDeliveryOptions
@@ -56,34 +56,39 @@ class Timeframes extends AbstractDeliveryOptions
     private $timeFrameEndpoint;
 
     /**
-     * @param Context         $context
-     * @param OrderFactory    $orderFactory
-     * @param OrderRepository $orderRepository
-     * @param Data            $jsonHelper
-     * @param Session         $checkoutSession
-     * @param AddressEnhancer $addressEnhancer
-     * @param DeliveryDate    $deliveryDate
-     * @param TimeFrame       $timeFrame
+     * @var Calculator
+     */
+    private $calculator;
+
+    /**
+     * @param Context            $context
+     * @param OrderFactory       $orderFactory
+     * @param Session            $checkoutSession
+     * @param QuoteToRateRequest $quoteToRateRequest
+     * @param AddressEnhancer    $addressEnhancer
+     * @param DeliveryDate       $deliveryDate
+     * @param TimeFrame          $timeFrame
+     * @param Calculator         $calculator
      */
     public function __construct(
         Context $context,
         OrderFactory $orderFactory,
-        OrderRepository $orderRepository,
-        Data $jsonHelper,
         Session $checkoutSession,
+        QuoteToRateRequest $quoteToRateRequest,
         AddressEnhancer $addressEnhancer,
         DeliveryDate $deliveryDate,
-        TimeFrame $timeFrame
+        TimeFrame $timeFrame,
+        Calculator $calculator
     ) {
         $this->addressEnhancer   = $addressEnhancer;
         $this->timeFrameEndpoint = $timeFrame;
+        $this->calculator        = $calculator;
 
         parent::__construct(
             $context,
-            $jsonHelper,
             $orderFactory,
-            $orderRepository,
             $checkoutSession,
+            $quoteToRateRequest,
             $deliveryDate
         );
     }
@@ -102,9 +107,11 @@ class Timeframes extends AbstractDeliveryOptions
         $this->addressEnhancer->set($params['address']);
 
         try {
-            return $this->jsonResponse($this->getValidResponeType());
-        } catch (LocalizedException $exception) {
-            return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
+            $price = $this->calculator->price($this->getRateRequest());
+            return $this->jsonResponse([
+                'price' => $price['price'],
+                'timeframes' => $this->getValidResponeType(),
+            ]);
         } catch (\Exception $exception) {
             return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
         }
@@ -113,7 +120,7 @@ class Timeframes extends AbstractDeliveryOptions
     /**
      * @param $address
      *
-     * @return array
+     * @return array|\Magento\Framework\Phrase
      */
     private function getPosibleDeliveryDays($address)
     {
@@ -142,7 +149,7 @@ class Timeframes extends AbstractDeliveryOptions
      * @param $address
      * @param $startDate
      *
-     * @return \Magento\Framework\Phrase
+     * @return array|\Magento\Framework\Phrase
      */
     private function getTimeFrames($address, $startDate)
     {

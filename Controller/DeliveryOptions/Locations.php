@@ -33,14 +33,13 @@ namespace TIG\PostNL\Controller\DeliveryOptions;
 
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Model\OrderFactory;
-use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
+use TIG\PostNL\Service\Carrier\Price\Calculator;
+use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Webservices\Endpoints\Locations as LocationsEndpoint;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Json\Helper\Data;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Checkout\Model\Session;
 
 class Locations extends AbstractDeliveryOptions
@@ -56,34 +55,39 @@ class Locations extends AbstractDeliveryOptions
     private $locationsEndpoint;
 
     /**
-     * @param Context           $context
-     * @param OrderFactory      $orderFactory
-     * @param OrderRepository   $orderRepository
-     * @param Data              $jsonHelper
-     * @param Session           $checkoutSession
-     * @param AddressEnhancer   $addressEnhancer
-     * @param LocationsEndpoint $locations
-     * @param DeliveryDate      $deliveryDate
+     * @var Calculator
+     */
+    private $priceCalculator;
+
+    /**
+     * @param Context            $context
+     * @param OrderFactory       $orderFactory
+     * @param Session            $checkoutSession
+     * @param QuoteToRateRequest $quoteToRateRequest
+     * @param AddressEnhancer    $addressEnhancer
+     * @param LocationsEndpoint  $locations
+     * @param DeliveryDate       $deliveryDate
+     * @param Calculator         $priceCalculator
      */
     public function __construct(
         Context $context,
         OrderFactory $orderFactory,
-        OrderRepository $orderRepository,
-        Data $jsonHelper,
         Session $checkoutSession,
+        QuoteToRateRequest $quoteToRateRequest,
         AddressEnhancer $addressEnhancer,
         LocationsEndpoint $locations,
-        DeliveryDate $deliveryDate
+        DeliveryDate $deliveryDate,
+        Calculator $priceCalculator
     ) {
         $this->addressEnhancer   = $addressEnhancer;
         $this->locationsEndpoint = $locations;
+        $this->priceCalculator   = $priceCalculator;
 
         parent::__construct(
             $context,
-            $jsonHelper,
             $orderFactory,
-            $orderRepository,
             $checkoutSession,
+            $quoteToRateRequest,
             $deliveryDate
         );
     }
@@ -102,9 +106,11 @@ class Locations extends AbstractDeliveryOptions
         $this->addressEnhancer->set($params['address']);
 
         try {
-            return $this->jsonResponse($this->getValidResponeType());
-        } catch (LocalizedException $exception) {
-            return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
+            $price = $this->priceCalculator->price($this->getRateRequest(), 'pakjegemak');
+            return $this->jsonResponse([
+                'price' => $price['price'],
+                'locations' => $this->getValidResponeType(),
+            ]);
         } catch (\Exception $exception) {
             return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
         }

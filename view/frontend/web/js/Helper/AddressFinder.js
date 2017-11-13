@@ -62,7 +62,7 @@ define([
     ];
 
     /**
-     * Without cookie data Magento is not observing the fields so the AddressFinder is never triggert.
+     * Without cookie data Magento is not observing the fields so the AddressFinder is never triggered.
      * The Timeout is needed so it gives the Notifier the chance to retrieve the correct country code,
      * and not the default value.
      */

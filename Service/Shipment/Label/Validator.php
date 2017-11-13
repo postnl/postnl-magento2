@@ -44,23 +44,35 @@ class Validator
      */
     public function validate($input)
     {
-        $filtered = array_filter($input, function (ShipmentLabelInterface $model = null) {
-            if ($model === null) {
-                return false;
-            }
+        if (!is_array($input)) {
+            return [];
+        }
 
-            $label = $model->getLabel();
-
-            if (!is_string($label) || empty($label)) {
-                return false;
-            }
-
-            $start = substr($label, 0, strlen('invalid'));
-            $start = strtolower($start);
-
-            return $start != 'invalid';
-        });
+        $filtered = array_filter($input, [$this, 'filterInput']);
 
         return array_values($filtered);
+    }
+
+    /**
+     * @param ShipmentLabelInterface|null $model
+     *
+     * @return bool
+     */
+    private function filterInput(ShipmentLabelInterface $model = null)
+    {
+        if ($model === null) {
+            return false;
+        }
+
+        $label = $model->getLabel();
+
+        if (!is_string($label) || empty($label)) {
+            return false;
+        }
+
+        $start = substr($label, 0, strlen('invalid'));
+        $start = strtolower($start);
+
+        return $start != 'invalid';
     }
 }

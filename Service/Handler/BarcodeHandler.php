@@ -97,7 +97,7 @@ class BarcodeHandler
         $this->countryId = $countryId;
         $shipment = $this->shipmentRepository->getByShipmentId($magentoShipmentId);
 
-        if (!$shipment || $shipment->getConfirmedAt() !== null) {
+        if (!$shipment || $shipment->getMainBarcode() !== null || $shipment->getConfirmedAt() !== null) {
             return;
         }
 

@@ -32,18 +32,32 @@ define([
     'uiComponent',
     'ko',
     'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Helper/AddressFinder'
+    'TIG_PostNL/js/Helper/AddressFinder',
+    'Magento_Checkout/js/model/quote',
+    'Magento_Catalog/js/price-utils'
 ], function (
     Component,
     ko,
     State,
-    AddressFinder
+    AddressFinder,
+    quote,
+    priceUtils
 ) {
+    var formatPrice = function (price) {
+        return priceUtils.formatPrice(price, quote.getPriceFormat());
+    };
+
     return Component.extend({
+
         defaults: {
             template: 'TIG_PostNL/DeliveryOptions/Main',
-            shipmentType: State.currentOpenPane
+            shipmentType: State.currentOpenPane,
+            deliveryPrice: State.deliveryPrice,
+            pickupPrice: State.pickupPrice,
+            deliveryFee: State.deliveryFee,
+            pickupFee: State.pickupFee
         },
+
 
         initObservable: function () {
             this._super().observe([
@@ -56,16 +70,22 @@ define([
         },
 
         canUseDeliveryOptions: ko.computed(function () {
-            var address = AddressFinder();
             var deliveryOptionsAreAvailable = State.deliveryOptionsAreAvailable();
-            var isNL = (address && address !== false && address.countryCode == 'NL');
+
+            var address = AddressFinder();
+            var isNL = (address !== null && address !== false && address.countryCode === 'NL');
 
             return deliveryOptionsAreAvailable && isNL;
         }),
 
         canUsePickupLocations: ko.computed(function () {
             var isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
-            return isActive == 1 && State.pickupOptionsAreAvailable() && AddressFinder() !== false;
+            var pickupOptionsAreAvailable = State.pickupOptionsAreAvailable();
+
+            var address = AddressFinder();
+            var isNL = (address !== null && address !== false && address.countryCode === 'NL');
+
+            return isActive === 1 && isNL && pickupOptionsAreAvailable;
         }),
 
         setDelivery: function () {
@@ -74,6 +94,10 @@ define([
 
         setPickup: function () {
             State.currentOpenPane('pickup');
+        },
+
+        formatPrice: function (price) {
+            return priceUtils.formatPrice(price, quote.getPriceFormat());
         }
     });
 });

@@ -63,8 +63,8 @@ class InstallData implements InstallDataInterface
     {
         $setup->startSetup();
 
-        if (version_compare($context->getVersion(), '1.1.0', '<')) {
-            $this->installData($this->installDataObjects['v1.1.0'], $setup, $context);
+        foreach ($this->installDataObjects as $version) {
+            $this->installData($version, $setup, $context);
         }
 
         $setup->endSetup();

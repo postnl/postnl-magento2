@@ -34,10 +34,12 @@ namespace TIG\PostNL\Observer\SalesOrderSaveAfter;
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Model\OrderRepository;
-use TIG\PostNL\Service\Order\ProductCode;
+use TIG\PostNL\Service\Order\ProductCodeAndType;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
+use TIG\PostNL\Service\Parcel\Order\Count as ParcelCount;
+use \TIG\PostNL\Service\Options\ItemsToOption;
 
 class CreatePostNLOrder implements ObserverInterface
 {
@@ -45,27 +47,41 @@ class CreatePostNLOrder implements ObserverInterface
      * @var OrderRepository
      */
     private $orderRepository;
-
+    /**
+     * @var ParcelCount
+     */
+    private $parcelCount;
     /**
      * @var Data
      */
     private $helper;
     /**
-     * @var ProductCode
+     * @var ProductCodeAndType
      */
     private $productCode;
 
     /**
-     * @param OrderRepository $orderRepository
-     * @param ProductCode     $productCode
-     * @param Data            $helper
+     * @var ItemsToOption
+     */
+    private $itemsToOption;
+
+    /**
+     * @param OrderRepository    $orderRepository
+     * @param ParcelCount        $count
+     * @param ItemsToOption      $itemsToOption
+     * @param ProductCodeAndType $productCode
+     * @param Data               $helper
      */
     public function __construct(
         OrderRepository $orderRepository,
-        ProductCode $productCode,
+        ParcelCount $count,
+        ItemsToOption $itemsToOption,
+        ProductCodeAndType $productCode,
         Data $helper
     ) {
         $this->orderRepository = $orderRepository;
+        $this->parcelCount = $count;
+        $this->itemsToOption = $itemsToOption;
         $this->helper = $helper;
         $this->productCode = $productCode;
     }
@@ -92,6 +108,7 @@ class CreatePostNLOrder implements ObserverInterface
         $this->setProductCode($postnlOrder, $magentoOrder);
         $postnlOrder->setData('order_id', $magentoOrder->getId());
         $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
+        $postnlOrder->setData('parcel_count', $this->parcelCount->get($magentoOrder));
 
         $this->orderRepository->save($postnlOrder);
     }
@@ -107,9 +124,12 @@ class CreatePostNLOrder implements ObserverInterface
          * set because the deliveryoptions are disabled or this is an EPS shipment.
          */
         if (!$postnlOrder->getProductCode()) {
+            $option          = $this->itemsToOption->get($magentoOrder->getItems());
             $shippingAddress = $magentoOrder->getShippingAddress();
             $country         = $shippingAddress->getCountryId();
-            $postnlOrder->setProductCode($this->productCode->get('', '', $country));
+            $productInfo     = $this->productCode->get('', $option, $country);
+            $postnlOrder->setProductCode($productInfo['code']);
+            $postnlOrder->setType($productInfo['type']);
         }
     }
 }

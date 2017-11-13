@@ -226,6 +226,11 @@ interface ShipmentInterface
     public function isExtraCover();
 
     /**
+     * @return bool
+     */
+    public function isExtraAtHome();
+
+    /**
      * @return float
      */
     public function getExtraCoverAmount();

@@ -33,15 +33,16 @@ namespace TIG\PostNL\Config\Provider;
 
 class ProductOptions extends AbstractConfigProvider
 {
-    const XPATH_SUPPORTED_PRODUCT_OPTIONS = 'tig_postnl/productoptions/supported_options';
-    const XPATH_DEFAULT_PRODUCT_OPTION = 'tig_postnl/productoptions/default_option';
-    const XPATH_DEFAULT_EVENING_PRODUCT_OPTION = 'tig_postnl/productoptions/default_evening_option';
-    const XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION = 'tig_postnl/productoptions/default_pakjegemak_option';
+    const XPATH_SUPPORTED_PRODUCT_OPTIONS               = 'tig_postnl/productoptions/supported_options';
+    const XPATH_DEFAULT_PRODUCT_OPTION                  = 'tig_postnl/productoptions/default_option';
+    const XPATH_DEFAULT_EVENING_PRODUCT_OPTION          = 'tig_postnl/productoptions/default_evening_option';
+    const XPATH_DEFAULT_EXTRAATHOME_PRODUCT_OPTION      = 'tig_postnl/productoptions/default_extraathome_option';
+    const XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION       = 'tig_postnl/productoptions/default_pakjegemak_option';
     const XPATH_DEFAULT_PAKJEGEMAK_EARLY_PRODUCT_OPTION = 'tig_postnl/productoptions/default_pakjegemak_early_option';
-    const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION = 'tig_postnl/productoptions/default_sunday_option';
+    const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION           = 'tig_postnl/productoptions/default_sunday_option';
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getSupportedProductOptions()
     {
@@ -49,7 +50,7 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return string|int
      */
     public function getDefaultProductOption()
     {
@@ -57,7 +58,7 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return string|int
      */
     public function getDefaultEveningProductOption()
     {
@@ -65,7 +66,15 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return string|int
+     */
+    public function getDefaultExtraAtHomeProductOption()
+    {
+        return $this->getConfigFromXpath(self::XPATH_DEFAULT_EXTRAATHOME_PRODUCT_OPTION);
+    }
+
+    /**
+     * @return string|int
      */
     public function getDefaultPakjeGemakProductOption()
     {
@@ -73,7 +82,7 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return string|int
      */
     public function getDefaultPakjeGemakEarlyProductOption()
     {
@@ -81,7 +90,7 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return string|int
      */
     public function getDefaultSundayProductOption()
     {

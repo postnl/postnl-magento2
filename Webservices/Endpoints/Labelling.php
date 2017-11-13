@@ -31,21 +31,17 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
-use Magento\Sales\Model\Order\Address;
 use TIG\PostNL\Model\Shipment;
-use TIG\PostNL\Service\Shipment\Data as ShipmentData;
+use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Webservices\Parser\Label\Shipments as ShipmentData;
 use TIG\PostNL\Webservices\AbstractEndpoint;
-use TIG\PostNL\Webservices\Api\Customer;
+use TIG\PostNL\Webservices\Parser\Label\Customer;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Webservices\Soap;
 
 // @codingStandardsIgnoreFile
 class Labelling extends AbstractEndpoint
 {
-    const PREG_MATCH_STREET = '/([^\d]+)\s?(.+)/i';
-
-    const PREG_MATCH_HOUSENR = '#^([\d]+)(.*)#s';
-
     /**
      * @var Soap
      */
@@ -108,8 +104,8 @@ class Labelling extends AbstractEndpoint
     }
 
     /**
-     * @param Shipment $shipment
-     * @param int      $currentShipmentNumber
+     * @param Shipment|ShipmentInterface $shipment
+     * @param int                        $currentShipmentNumber
      */
     public function setParameters($shipment, $currentShipmentNumber = 1)
     {
@@ -117,90 +113,15 @@ class Labelling extends AbstractEndpoint
         $this->soap->updateApiKey($storeId);
         $this->customer->setStoreId($storeId);
 
-        $customer = $this->customer->get();
-        $customer['Address'] = $this->customer->address();
-        $customer['CollectionLocation'] = $this->customer->blsCode();
-
-        $shipmentData = $this->getShipmentData($shipment, $currentShipmentNumber);
-
         $barcode = $shipment->getMainBarcode();
         $printerType = ['Printertype' => 'GraphicFile|PDF'];
         $message = $this->message->get($barcode, $printerType);
 
         $this->requestParams = [
-            'Message' => $message,
-            'Customer' => $customer,
-            'Shipments' => ['Shipment' => $shipmentData],
+            'Message'   => $message,
+            'Customer'  => $this->customer->get(),
+            'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
-    }
-
-    /**
-     * @param Shipment $postnlShipment
-     * @param          $currentShipmentNumber
-     *
-     * @return array
-     */
-    private function getShipmentData($postnlShipment, $currentShipmentNumber)
-    {
-        $shipment = $postnlShipment->getShipment();
-        $postnlOrder = $postnlShipment->getPostNLOrder();
-
-        $contact = $this->getContactData($shipment);
-        $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
-
-        if ($postnlOrder->getIsPakjegemak()) {
-            $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
-        }
-
-        $shipmentData = $this->shipmentData->get($postnlShipment, $address, $contact, $currentShipmentNumber);
-
-        return $shipmentData;
-    }
-
-    /**
-     * @param \Magento\Sales\Model\Order\Shipment $shipment
-     *
-     * @return mixed
-     */
-    private function getContactData($shipment)
-    {
-        $shippingAddress = $shipment->getShippingAddress();
-        $order = $shipment->getOrder();
-
-        $contact = [
-            'ContactType' => '01', // Receiver
-            'Email'       => $order->getCustomerEmail(),
-            'TelNr'       => $shippingAddress->getTelephone(),
-        ];
-
-        return $contact;
-    }
-
-    /**
-     * @param Address $shippingAddress
-     * @param string   $addressType
-     *
-     * @return array
-     */
-    private function getAddressData($shippingAddress, $addressType = '01')
-    {
-        $streetData = $this->getStreet($shippingAddress);
-
-        $addressArray = [
-            'AddressType'      => $addressType,
-            'FirstName'        => $shippingAddress->getFirstname(),
-            'Name'             => $shippingAddress->getLastname(),
-            'CompanyName'      => $shippingAddress->getCompany(),
-            'Street'           => $streetData['Street'],
-            'HouseNr'          => $streetData['HouseNr'],
-            'HouseNrExt'       => $streetData['HouseNrExt'],
-            'Zipcode'          => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode())),
-            'City'             => $shippingAddress->getCity(),
-            'Region'           => $shippingAddress->getRegion(),
-            'Countrycode'      => $shippingAddress->getCountryId(),
-        ];
-
-        return $addressArray;
     }
 
     /**
@@ -212,30 +133,18 @@ class Labelling extends AbstractEndpoint
     }
 
     /**
-     * @param Address $shippingAddress
+     * @param Shipment|ShipmentInterface $shipment
+     * @param $currentShipmentNumber
      *
      * @return array
      */
-    private function getStreet($shippingAddress)
+    private function getShipments($shipment, $currentShipmentNumber)
     {
-        $street = $shippingAddress->getStreet();
-        $fullStreet = implode(' ', $street);
-
-        if (empty($fullStreet)) {
-            return [
-                'Street'     => '',
-                'HouseNr'    => '',
-                'HouseNrExt' => '',
-            ];
+        $shipments = [];
+        for ($number = $currentShipmentNumber; $number <= $shipment->getParcelCount(); $number++) {
+            $shipments[] = $this->shipmentData->get($shipment, $number);
         }
 
-        preg_match(self::PREG_MATCH_STREET, $fullStreet, $streetMatches);
-        preg_match(self::PREG_MATCH_HOUSENR, $streetMatches[2], $houseNrMatches);
-
-        return [
-            'Street'     => trim($streetMatches[1]),
-            'HouseNr'    => trim($houseNrMatches[1]),
-            'HouseNrExt' => trim($houseNrMatches[2]),
-        ];
+        return ['Shipment' => $shipments];
     }
 }

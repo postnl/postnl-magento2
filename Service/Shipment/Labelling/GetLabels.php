@@ -35,6 +35,7 @@ use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Service\Shipment\Label\Validator;
+use TIG\PostNL\Service\Shipment\ConfirmLabel;
 
 class GetLabels
 {
@@ -59,37 +60,46 @@ class GetLabels
     private $generateLabel;
 
     /**
+     * @var ConfirmLabel
+     */
+    private $confirmLabel;
+
+    /**
      * @param ShipmentLabelRepositoryInterface $shipmentLabelRepository
      * @param ShipmentRepositoryInterface      $shipmentRepository
      * @param GenerateLabel                    $generateLabel
      * @param Validator                        $labelValidator
+     * @param ConfirmLabel                     $confirmLabel
      */
     public function __construct(
         ShipmentLabelRepositoryInterface $shipmentLabelRepository,
         ShipmentRepositoryInterface $shipmentRepository,
         GenerateLabel $generateLabel,
-        Validator $labelValidator
+        Validator $labelValidator,
+        ConfirmLabel $confirmLabel
     ) {
         $this->shipmentRepository      = $shipmentRepository;
         $this->labelValidator          = $labelValidator;
         $this->shipmentLabelRepository = $shipmentLabelRepository;
         $this->generateLabel           = $generateLabel;
+        $this->confirmLabel            = $confirmLabel;
     }
 
     /**
      * @param int|string $shipmentId
+     * @param bool $confirm
      *
      * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface[]
      */
-    public function get($shipmentId)
+    public function get($shipmentId, $confirm = true)
     {
-        $shipment = $this->shipmentRepository->getByFieldWithValue('shipment_id', $shipmentId);
+        $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
 
         if (!$shipment) {
             return [];
         }
 
-        $labels = $this->getLabels($shipment);
+        $labels = $this->getLabels($shipment, $confirm);
         $labels = $this->labelValidator->validate($labels);
 
         return $labels;
@@ -97,34 +107,22 @@ class GetLabels
 
     /**
      * @param ShipmentInterface $shipment
+     * @param bool $confirm
      *
-     * @return array
+     * @return \Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface[]
      */
-    private function getLabels(ShipmentInterface $shipment)
+    private function getLabels(ShipmentInterface $shipment, $confirm)
     {
-        $labels = [];
-        $parcelCount = $shipment->getParcelCount();
-        for ($number = 1; $number <= $parcelCount; $number++) {
-            $labels[] = $this->getLabel($shipment, $number);
+        $labels = $this->shipmentLabelRepository->getByShipment($shipment);
+        if ($labels && $confirm) {
+            $this->confirmLabel->confirm($shipment);
+            return $labels;
         }
 
-        return $labels;
-    }
-
-    /**
-     * @param ShipmentInterface $shipment
-     * @param                   $number
-     *
-     * @return \Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
-     */
-    private function getLabel(ShipmentInterface $shipment, $number)
-    {
-        $label = $this->shipmentLabelRepository->getByShipment($shipment, $number);
-
-        if ($label) {
-            return $label;
+        if ($labels) {
+            return $labels;
         }
 
-        return $this->generateLabel->get($shipment, $number);
+        return $this->generateLabel->get($shipment, 1, $confirm);
     }
 }

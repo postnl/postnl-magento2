@@ -184,14 +184,114 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             'countryLimitation' => 'NL',
             'group'             => 'buspakje_options',
         ],
+        // Extra@Home Options
+        '3628' => [
+            'value'             => '3628',
+            'label'             => 'Extra@Home Top service 2 person delivery NL',
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'extra_at_home_options',
+        ],
+        '3629' => [
+            'value'             => '3629',
+            'label'             => 'Extra@Home Top service Btl 2 person delivery',
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => 'BE',
+            'group'             => 'extra_at_home_options',
+        ],
+        '3653' => [
+            'value'             => '3653',
+            'label'             => 'Extra@Home Top service 1 person delivery NL',
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'extra_at_home_options',
+        ],
+        '3783' => [
+            'value'             => '3783',
+            'label'             => 'Extra@Home Top service Btl 1 person delivery',
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => 'BE',
+            'group'             => 'extra_at_home_options',
+        ],
+        '3790' => [
+            'value'             => '3790',
+            'label'             => 'Extra@Home Drempelservice 1 person delivery NL',
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'extra_at_home_options',
+        ],
+        '3791' => [
+            'value'             => '3791',
+            'label'             => 'Extra@Home Drempelservice 2 person delivery NL',
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'extra_at_home_options',
+        ],
+        '3792' => [
+            'value'             => '3792',
+            'label'             => 'Extra@Home Drempelservice Btl 1 person delivery',
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => 'BE',
+            'group'             => 'extra_at_home_options',
+        ],
+        '3793' => [
+            'value'             => '3793',
+            'label'             => 'Extra@Home Drempelservice Btl 2 person delivery',
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => 'BE',
+            'group'             => 'extra_at_home_options',
+        ],
     ];
 
     protected $groups = [
-        'standard_options'   => 'Domestic options',
-        'pakjegemak_options' => 'Post Office options',
-        'eu_options'         => 'EU options',
-        'buspakje_options'   => 'Letter Box Parcel options',
+        'standard_options'      => 'Domestic options',
+        'pakjegemak_options'    => 'Post Office options',
+        'eu_options'            => 'EU options',
+        'buspakje_options'      => 'Letter Box Parcel options',
+        'extra_at_home_options' => 'Extra@Home options',
     ];
+
+    /**
+     * @param $code
+     * @param bool $short
+     *
+     * @return mixed
+     */
+    public function getOptionLabel($code, $short = false)
+    {
+        if (!array_key_exists($code, $this->availableOptions)) {
+            return $code;
+        }
+
+        if ($short) {
+            return $this->getShortLabel($code);
+        }
+
+        return $this->availableOptions[$code]['label'];
+    }
+
+    /**
+     * @param $code
+     *
+     * @return string
+     */
+    public function getShortLabel($code)
+    {
+        $label = str_replace('_options', '', $this->availableOptions[$code]['group']);
+        if (trim($label) == 'extra_at_home') {
+            $label = 'extra@Home';
+        }
+
+        return  ucfirst(__($label));
+    }
 
     /**
      * Returns option array
@@ -263,5 +363,13 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     public function getEpsProductOptions()
     {
         return $this->getProductoptions(['group' => 'eu_options']);
+    }
+
+    /**
+     * @return array
+     */
+    public function getExtraAtHomeOptions()
+    {
+        return $this->getProductoptions(['group' => 'extra_at_home_options']);
     }
 }

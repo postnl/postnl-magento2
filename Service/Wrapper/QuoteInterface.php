@@ -61,4 +61,14 @@ interface QuoteInterface
      * @return MagentoQuote\Address
      */
     public function getBillingAddress();
+
+    /**
+     * @return array
+     */
+    public function getAllItems();
+
+    /**
+     * @return int
+     */
+    public function getStoreId();
 }

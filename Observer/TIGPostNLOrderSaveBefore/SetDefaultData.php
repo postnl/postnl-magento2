@@ -31,33 +31,70 @@
  */
 namespace TIG\PostNL\Observer\TIGPostNLOrderSaveBefore;
 
+use TIG\PostNL\Api\Data\OrderInterface;
+use TIG\PostNL\Logging\Log;
+use TIG\PostNL\Service\Order\ShipAt;
+use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\FirstDeliveryDate;
+use TIG\PostNL\Service\Options\ItemsToOption;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Stdlib\DateTime\DateTime;
-use TIG\PostNL\Service\Order\ProductCode;
 
 class SetDefaultData implements ObserverInterface
 {
     /**
-     * @var ProductCode
+     * @var ProductCodeAndType
      */
-    private $productCode;
+    private $productCodeAndType;
 
     /**
-     * @var DateTime
+     * @var FirstDeliveryDate
      */
-    private $dateTime;
+    private $firstDeliveryDate;
 
     /**
-     * @param ProductCode $productCode
-     * @param DateTime    $dateTime
+     * @var ShipAt
+     */
+    private $shipAt;
+
+    /**
+     * @var Log
+     */
+    private $log;
+
+    /**
+     * @var ItemsToOption
+     */
+    private $itemsToOption;
+
+    /**
+     * @var array
+     */
+    private $shouldUpdateByOption = [
+        ProductCodeAndType::OPTION_EXTRAATHOME
+    ];
+
+    /**
+     * SetDefaultData constructor.
+     *
+     * @param ProductCodeAndType $productCodeAndType
+     * @param FirstDeliveryDate  $firstDeliveryDate
+     * @param ShipAt             $shipAt
+     * @param Log                $log
+     * @param ItemsToOption      $itemsToOption
      */
     public function __construct(
-        ProductCode $productCode,
-        DateTime $dateTime
+        ProductCodeAndType $productCodeAndType,
+        FirstDeliveryDate $firstDeliveryDate,
+        ShipAt $shipAt,
+        Log $log,
+        ItemsToOption $itemsToOption
     ) {
-        $this->productCode = $productCode;
-        $this->dateTime = $dateTime;
+        $this->productCodeAndType = $productCodeAndType;
+        $this->firstDeliveryDate  = $firstDeliveryDate;
+        $this->shipAt             = $shipAt;
+        $this->log                = $log;
+        $this->itemsToOption      = $itemsToOption;
     }
 
     /**
@@ -67,11 +104,65 @@ class SetDefaultData implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        /** @var \TIG\PostNL\Api\Data\OrderInterface $order */
+        /** @var OrderInterface $order */
         $order = $observer->getData('data_object');
 
-        if (!$order->getProductCode()) {
-            $order->setProductCode($this->productCode->get());
+        try {
+            $this->setData($order);
+        } catch (\Exception $exception) {
+            $this->log->critical($exception->getTraceAsString());
         }
+    }
+
+    /**
+     * @param $order
+     */
+    private function setData(OrderInterface $order)
+    {
+        $option      = $this->getOptionFromQuote();
+        $productInfo = $this->productCodeAndType->get('', $option);
+        if (!$order->getProductCode() || $this->canUpdate($order->getProductCode(), $productInfo['code'], $option)) {
+            $order->setProductCode($productInfo['code']);
+        }
+
+        if (!$order->getType() || $this->canUpdate($order->getType(), $productInfo['type'], $option)) {
+            $order->setType($productInfo['type']);
+        }
+
+        if (!$order->getDeliveryDate()) {
+            $this->firstDeliveryDate->set($order);
+        }
+
+        if (!$order->getShipAt()) {
+            $this->shipAt->set($order);
+        }
+    }
+
+    /**
+     * @param $current
+     * @param $new
+     * @param $option
+     *
+     * @return bool
+     */
+    private function canUpdate($current, $new, $option)
+    {
+        if (!in_array($option, $this->shouldUpdateByOption)) {
+            return false;
+        }
+
+        if ($current == $new) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return string
+     */
+    private function getOptionFromQuote()
+    {
+        return $this->itemsToOption->getFromQuote();
     }
 }

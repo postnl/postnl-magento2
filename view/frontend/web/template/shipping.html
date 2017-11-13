@@ -46,7 +46,6 @@
     </div>
 </li>
 
-
 <!--Shipping method template-->
 <li id="opc-shipping_method"
     class="checkout-shipping-method"
@@ -69,72 +68,75 @@
                         <thead>
                             <tr class="row">
                                 <th class="col col-method" data-bind="i18n: 'Select Method'"></th>
-                                <th class="col col-price" data-bind="i18n: 'Price'"></th>
                                 <th class="col col-method" data-bind="i18n: 'Method Title'"></th>
                                 <th class="col col-carrier" data-bind="i18n: 'Carrier Title'"></th>
+                                <th class="col col-price" data-bind="i18n: 'Price'"></th>
                             </tr>
                         </thead>
                         <tbody>
 
                             <!--ko foreach: { data: rates(), as: 'method'}-->
-                            <tr class="row" data-bind="click: $parent.selectShippingMethod">
-                                <td class="col col-method">
-                                    <!-- ko ifnot: method.error_message -->
-                                    <!-- ko if: $parent.rates().length == 1 -->
-                                    <input class="radio"
-                                           type="radio"
-                                           data-bind="attr: {
-                                                    checked: $parent.rates().length == 1,
-                                                    'value' : method.carrier_code + '_' + method.method_code,
-                                                    'id': 's_method_' + method.method_code,
-                                                    'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code
-                                                 }" />
-                                    <!-- /ko -->
-                                    <!--ko ifnot: ($parent.rates().length == 1)-->
-                                    <input type="radio"
-                                           data-bind="
-                                                value: method.carrier_code + '_' + method.method_code,
-                                                checked: $parent.isSelected,
-                                                attr: {
-                                                    'id': 's_method_' + method.carrier_code + '_' + method.method_code,
-                                                    'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code
-                                                },
-                                                click: $parent.selectShippingMethod"
-                                           class="radio"/>
-                                    <!--/ko-->
-                                    <!-- /ko -->
-                                </td>
 
-                                <td class="col col-price">
-                                    <!-- ko foreach: $parent.getRegion('price') -->
-                                    <!-- ko template: getTemplate() --><!-- /ko -->
-                                    <!-- /ko -->
-
-                                    <!-- TIG PostNL modification start -->
-                                        <!-- ko if: $parent.isPostNLDeliveryMethod(method) && $parent.PostNLFee() -->
-                                        + <span data-bind="text: $parent.formatPrice($parent.PostNLFee())"></span>
+                                <tr class="row" data-bind="click: $parent.selectShippingMethod">
+                                    <td class="col col-method">
+                                        <!-- ko ifnot: method.error_message -->
+                                        <!-- ko if: $parent.rates().length == 1 -->
+                                        <input class="radio"
+                                               type="radio"
+                                               data-bind="attr: {
+                                                        checked: $parent.rates().length == 1,
+                                                        'value' : method.carrier_code + '_' + method.method_code,
+                                                        'id': 's_method_' + method.method_code,
+                                                        'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code
+                                                     }" />
                                         <!-- /ko -->
-                                    <!-- TIG PostNL modification end -->
-                                </td>
+                                        <!--ko ifnot: ($parent.rates().length == 1)-->
+                                        <input type="radio"
+                                               data-bind="
+                                                    value: method.carrier_code + '_' + method.method_code,
+                                                    checked: $parent.isSelected,
+                                                    attr: {
+                                                        'id': 's_method_' + method.carrier_code + '_' + method.method_code,
+                                                        'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code
+                                                    },
+                                                    click: $parent.selectShippingMethod"
+                                               class="radio"/>
+                                        <!--/ko-->
+                                        <!-- /ko -->
+                                    </td>
 
-                                <td class="col col-method"
-                                    data-bind="text: method.method_title, attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}"></td>
 
-                                <td class="col col-carrier"
-                                    data-bind="text: method.carrier_title, attr: {'id': 'label_carrier_' + method.method_code + '_' + method.carrier_code}"></td>
-                            </tr>
+                                    <td class="col col-method"
+                                        data-bind="text: method.method_title, attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}"></td>
 
-                            <!-- ko if:  method.error_message -->
-                            <tr class="row row-error">
-                                <td class="col col-error" colspan="4">
-                                    <div class="message error">
-                                        <div data-bind="text: method.error_message"></div>
-                                    </div>
-                                <span class="no-display">
-                                    <input type="radio" data-bind="attr: {'value' : method.method_code, 'id': 's_method_' + method.method_code}"/>
-                                </span>
-                                </td>
-                            </tr>
+                                    <td class="col col-carrier"
+                                        data-bind="text: method.carrier_title, attr: {'id': 'label_carrier_' + method.method_code + '_' + method.carrier_code}"></td>
+
+                                    <td class="col col-price">
+                                        <!-- TIG PostNL modification start -->
+                                        <!-- ko ifnot: $parent.canUsePostnlDeliveryOptions(method) -->
+
+                                        <!-- ko foreach: $parent.getRegion('price') -->
+                                        <!-- ko template: getTemplate() --><!-- /ko -->
+                                        <!-- /ko -->
+
+                                        <!-- /ko -->
+                                    </td>
+
+                                </tr>
+
+                                <!-- ko if:  method.error_message -->
+                                <tr class="row row-error">
+                                    <td class="col col-error" colspan="4">
+                                        <div class="message error">
+                                            <div data-bind="text: method.error_message"></div>
+                                        </div>
+                                    <span class="no-display">
+                                        <input type="radio" data-bind="attr: {'value' : method.method_code, 'id': 's_method_' + method.method_code}"/>
+                                    </span>
+                                    </td>
+                                </tr>
+
                             <!-- /ko -->
 
                             <!-- TIG PostNL modification start -->

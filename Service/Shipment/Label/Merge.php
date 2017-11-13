@@ -68,7 +68,7 @@ class Merge
     /**
      * @param \TIG\PostNL\Api\Data\ShipmentLabelInterface[] $labels
      *
-     * @return string
+     * @return string|FPDI
      */
     public function files(array $labels)
     {

@@ -1,11 +1,36 @@
 <div class="delivery_options" data-bind="visible: canUseDeliveryOptions() || canUsePickupLocations()">
     <div class="btn-group" role="group">
         <!-- ko if: canUseDeliveryOptions() -->
-        <button type="button" class="btn btn-default" data-bind="i18n: 'Delivery', click: setDelivery, css: { 'button-active': shipmentType() == 'delivery' }"></button>
+        <button type="button" class="btn btn-default" data-bind="click: setDelivery, css: { 'button-active': shipmentType() == 'delivery' }">
+            <span class="label" data-bind="i18n:'Delivery'"></span>
+
+            <div class="data" data-bind="visible: !isLoading()">
+                <span data-bind="text: formatPrice(deliveryPrice())"></span>
+
+                <!-- ko if: shipmentType() == 'delivery' && deliveryFee() -->
+                + <span data-bind="text: formatPrice(deliveryFee())"></span>
+                <!-- /ko -->
+            </div>
+
+        </button>
+
+
         <!-- /ko -->
 
         <!-- ko if: canUsePickupLocations() -->
-        <button type="button" class="btn btn-default" data-bind="i18n: 'Pickup', click: setPickup, css: { 'button-active': shipmentType() == 'pickup' }"></button>
+        <button type="button" class="btn btn-default" data-bind="click: setPickup, css: { 'button-active': shipmentType() == 'pickup' }">
+            <span class="label" data-bind="i18n:'Pickup'"></span>
+
+            <div class="data" data-bind="visible: !isLoading()">
+                <span data-bind="text: formatPrice(pickupPrice())"></span>
+
+                <!-- ko if: shipmentType() == 'pickup' && pickupFee() -->
+                + <span data-bind="text: formatPrice(pickupFee())"></span>
+                <!-- /ko -->
+            </div>
+
+
+        </button>
         <!-- /ko -->
     </div>
 

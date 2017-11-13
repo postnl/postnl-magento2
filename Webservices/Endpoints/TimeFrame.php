@@ -57,7 +57,7 @@ class TimeFrame extends AbstractEndpoint
     private $soap;
 
     /**
-     * @var Array
+     * Array
      */
     private $requestParams;
 
@@ -136,7 +136,6 @@ class TimeFrame extends AbstractEndpoint
      * @param $address
      * @param $startDate
      *
-     * @return array
      */
     public function setParameters($address, $startDate)
     {

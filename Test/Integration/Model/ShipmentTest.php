@@ -97,18 +97,4 @@ class ShipmentTest extends TestCase
 
         return $shipment;
     }
-
-    /**
-     * @return Shipment
-     */
-    private function getNewModel()
-    {
-        /** @var ShipmentFactory $factory */
-        $factory = $this->getObject(ShipmentFactory::class);
-
-        /** @var Shipment $model */
-        $model = $factory->create();
-
-        return $model;
-    }
 }

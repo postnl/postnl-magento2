@@ -79,7 +79,7 @@ class SentDateHandler
         /** @var  Order $postnlOrder */
         $postnlOrder = $this->getPostnlOrder($shipment);
 
-        $this->sentDate->setParameters($shipment, $postnlOrder);
+        $this->sentDate->setParameters($shipment->getShippingAddress(), $shipment->getStoreId(), $postnlOrder);
 
         return $this->sentDate->call();
     }

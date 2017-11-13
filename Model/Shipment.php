@@ -266,6 +266,10 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function getDeliveryDateFormatted($format = 'd-m-Y')
     {
         $deliveryDate = $this->getData('delivery_date');
+        if (!$deliveryDate) {
+            $deliveryDate = $this->getDeliveryDateByOrder();
+        }
+
         $deliveryDate = $this->timezoneInterface->date($deliveryDate);
         $deliveryDateFormatted = $deliveryDate->format($format);
 
@@ -519,8 +523,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      */
     public function isExtraCover()
     {
-        $productCode = $this->getProductCode();
-        $productCodeOptions = $this->productOptions->getOptionsByCode($productCode);
+        $productCodeOptions = $this->getProductCodeOptions();
 
         if ($productCodeOptions === null) {
             return false;
@@ -534,6 +537,20 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     }
 
     /**
+     * @return bool
+     */
+    public function isExtraAtHome()
+    {
+        $productCodeOptions = $this->getProductCodeOptions();
+
+        if ($productCodeOptions === null) {
+            return false;
+        }
+
+        return $productCodeOptions['group'] == 'extra_at_home_options';
+    }
+
+    /**
      * This is static for the time being.
      *
      * @return int
@@ -541,5 +558,35 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function getExtraCoverAmount()
     {
         return 500;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getProductCodeOptions()
+    {
+        $productCode = $this->getProductCode();
+        return $this->productOptions->getOptionsByCode($productCode);
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    private function getDeliveryDateByOrder()
+    {
+        $postNLOrder  = $this->getPostNLOrder();
+        $deliveryDate = $postNLOrder->getDeliveryDate();
+        if (!$deliveryDate) {
+            return null;
+        }
+
+        /**
+         * Delivery_date => '2017-11-09 01:00:00'
+         * When not created with \DateTime the timezoneInterface will return it like '2015-01-01 01:00:00'
+         * or something like that. When create the DateTime object with the interface it will use the locale
+         * settings and most of the times it will be day -1 which will make the delivery_date => '08-11-2017'
+         */
+        // @codingStandardsIgnoreLine
+        return new \DateTime($deliveryDate);
     }
 }

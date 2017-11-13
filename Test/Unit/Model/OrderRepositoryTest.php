@@ -37,7 +37,6 @@ use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Model\Order;
 use TIG\PostNL\Model\ResourceModel\Order\CollectionFactory;
 use TIG\PostNL\Model\OrderFactory;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
@@ -104,58 +103,6 @@ class OrderRepositoryTest extends TestCase
     }
 
     /**
-     * @param string $field
-     * @param int    $value
-     */
-    public function testGetFieldWithValue($field = 'order_id', $value = 10)
-    {
-
-        $builder = $this->getFakeMock(SearchCriteriaBuilder::class)->getMock();
-
-        $filterExpects = $builder->expects($this->once());
-        $filterExpects->method('addFilter');
-        $filterExpects->with($field, $value);
-        $filterExpects->willReturnSelf();
-
-        $pageSizeExpects = $builder->expects($this->once());
-        $pageSizeExpects->method('setPageSize');
-        $pageSizeExpects->with(1);
-        $pageSizeExpects->willReturnSelf();
-
-        $listResults = $this->getList(true);
-
-        $createExpects = $builder->expects($this->once());
-        $createExpects->method('create');
-        $createExpects->willReturn($listResults['searchCreteria']);
-
-        $instance = $this->getInstance([
-            'collectionFactory'     => $listResults['collectionFactory'],
-            'searchResults'         => $listResults['searchResult'],
-            'searchCriteriaBuilder' => $builder
-        ]);
-
-        $result = $instance->getByFieldWithValue($field, $value);
-
-        $this->assertEquals($listResults['searchResultFactory'], $result);
-
-    }
-
-    public function testGetList()
-    {
-        $listData = $this->getList();
-        $instance = $this->getInstance([
-            'collectionFactory'    => $listData['collectionFactory'],
-            'searchResults' => $listData['searchResult']
-        ]);
-
-        $result = $instance->getList($listData['searchCreteria']);
-
-        $this->assertEquals($listData['searchResultFactory'], $result);
-    }
-
-    /**
-     * @param      $field
-     * @param      $value
      * @param bool $isFieldWithValue
      *
      * @return array
@@ -191,8 +138,8 @@ class OrderRepositoryTest extends TestCase
         return [
             'searchResultFactory' => $searchResultFactory,
             'searchResult'        => $searchResult,
-            'searchCreteria'      => $searchCriteria,
-            'collectionFactory'   => $orderCollectionFactory
+            'searchCriteria'      => $searchCriteria,
+            'collectionFactory'   => $orderCollectionFactory,
         ];
     }
 

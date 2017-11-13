@@ -31,18 +31,19 @@
  */
 namespace TIG\PostNL\Test\Integration\Observer;
 
-use Magento\Framework\Event\Observer;
-use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\ResourceModel\Order\Collection;
 use TIG\PostNL\Model\OrderRepository;
-use TIG\PostNL\Observer\SalesOrderSaveAfter\CreatePostNLOrder;
 use TIG\PostNL\Test\Integration\TestCase;
+use TIG\PostNL\Webservices\Endpoints\SentDate;
+use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
+use TIG\PostNL\Observer\SalesOrderSaveAfter\CreatePostNLOrder;
+use Magento\Sales\Model\Order;
+use Magento\Framework\Event\Observer;
+use Magento\Sales\Model\ResourceModel\Order\Collection;
 
 /**
  * @magentoDbIsolation enabled
  */
-class TestCreatePostNLShipment extends TestCase
+class SalesOrderSaveAfterEventTest extends TestCase
 {
     protected $instanceClass = CreatePostNLOrder::class;
 
@@ -51,6 +52,9 @@ class TestCreatePostNLShipment extends TestCase
      */
     public function testExecute()
     {
+        $this->disableEndpoint(DeliveryDate::class);
+        $this->disableEndpoint(SentDate::class);
+
         /** @var Collection $orderCollection */
         $orderCollection = $this->getObject(Collection::class);
         $orderCollection->addFieldToFilter('customer_email', 'customer@null.com');

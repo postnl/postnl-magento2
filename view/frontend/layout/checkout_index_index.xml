@@ -67,6 +67,17 @@
                                                             </item>
                                                         </item>
                                                     </item>
+                                                    <item name="step-config" xsi:type="array">
+                                                        <item name="children" xsi:type="array">
+                                                            <item name="shipping-rates-validation" xsi:type="array">
+                                                                <item name="children" xsi:type="array">
+                                                                    <item name="tig_postnl-rates-validation" xsi:type="array">
+                                                                        <item name="component" xsi:type="string">TIG_PostNL/js/view/shipping-rates-validation/postnl</item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
                                                 </item>
                                             </item>
                                         </item>

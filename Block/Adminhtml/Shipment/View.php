@@ -40,6 +40,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\AbstractExtensibleObject;
 use Magento\Shipping\Block\Adminhtml\View as MagentoView;
 
+// @codingStandardsIgnoreFile
 class View extends MagentoView
 {
     /**
@@ -121,8 +122,9 @@ class View extends MagentoView
         $this->buttonList->remove('print');
         //@codingStandardsIgnoreLine
         $this->buttonList->update('save', 'label', __('Send Shipment Email'));
-        $this->setPostNLPrintLabelButtonData();
         $this->setPostNLPrintLabelButton();
+        $this->setPostNLPrintLabelButtonData();
+        $this->setPostNLPrintLabelWithoutConfirmButton();
     }
 
     /**
@@ -164,6 +166,32 @@ class View extends MagentoView
         /** @codingStandardsIgnoreEnd */
     }
 
+    private function setPostNLPrintLabelWithoutConfirmButton()
+    {
+        $this->buttonList->add(
+            'postnl_print_without_confirm',
+            [
+                // @codingStandardsIgnoreLine
+                'label' => __('PostNL - Print Label'),
+                'class' => 'save primary',
+                'onclick' => 'download(\'' .$this->getLabelWithoutConfirmUrl() .'\')'
+            ]
+        );
+    }
+
+    private function setPostNLConfirmButton()
+    {
+        $this->buttonList->add(
+            'postnl_confirm_shipment',
+            [
+                // @codingStandardsIgnoreLine
+                'label' => __('PostNL - Confirm'),
+                'class' => 'save primary',
+                'onclick' => 'setLocation(\'' . $this->getConfirmUrl() . '\')',
+            ]
+        );
+    }
+
     /**
      * Set the correct text.
      */
@@ -173,8 +201,12 @@ class View extends MagentoView
         $postNLShipment = $this->getPostNLShipment();
         $confirmedAt = $postNLShipment->getConfirmedAt();
         if (!empty($confirmedAt)) {
-            $this->printLabel = 'PostNL - Print label';
+            $this->buttonList->remove('postnl_print');
             $this->setPostNLChangeConfirmButton();
+        }
+
+        if (empty($confirmedAt) && $postNLShipment->getMainBarcode()) {
+            $this->setPostNLConfirmButton();
         }
     }
 
@@ -189,32 +221,46 @@ class View extends MagentoView
     /**
      * @return string
      */
+    private function getLabelWithoutConfirmUrl()
+    {
+        return $this->getUrl(
+            'postnl/shipment/PrintShippingLabel',
+            ['shipment_id' => $this->getShipment()->getId()]
+        );
+    }
+
+    /**
+     * @return string
+     */
+    private function getConfirmUrl()
+    {
+        return $this->getUrl(
+            'postnl/shipment/ConfirmShipping',
+            ['shipment_id' => $this->getShipment()->getId()]
+        );
+    }
+
+    /**
+     * @return string
+     */
     private function getAlterUrl()
     {
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLShipment();
 
         return $this->getUrl(
-            'postnl/shipment/ChangeConfrimation',
+            'postnl/shipment/ChangeConfirmation',
             [
                 'postnl_shipment_id' => $postNLShipment->getId(),
-                'shipment_id'        => $this->getShipment()->getId()
+                'shipment_id'        => $this->getShipment()->getId(),
             ]
         );
     }
     /**
-     * @return AbstractExtensibleObject
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface|null
      */
     private function getPostNLShipment()
     {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('shipment_id', $this->getShipment()->getId());
-        $searchCriteria->setPageSize(1);
-        /** @var \Magento\Framework\Api\SearchResults $list */
-        $list = $this->postNLShipmentRepository->getList($searchCriteria->create());
-        if ($list->getTotalCount() != 0) {
-            return $list->getItems()[0];
-        }
-
-        return false;
+        return $this->postNLShipmentRepository->getByShipmentId($this->getShipment()->getId());
     }
 }

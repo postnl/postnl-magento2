@@ -131,6 +131,16 @@
             </depends>
         </field>
 
+        <field id="extraathome_active" translate="label comment" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Activate Extra@Home (BETA)</label>
+            <comment><![CDATA[Extra@Home can be used to ship large and heavy Products. Please consult your PostNL account manager for more information about activating this service for your account.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/shippingoptions/extraathome_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+        </field>
+
         <!-- Disabled because needs further development -->
         <!--<field id="sundaydelivery_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">-->
             <!--<label>Activate sunday delivery</label>-->

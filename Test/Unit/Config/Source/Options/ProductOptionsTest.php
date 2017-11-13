@@ -161,4 +161,94 @@ class ProductOptionsTest extends TestCase
         }
     }
 
+    /**
+     * @return array
+     */
+    public function getExtraAtHomeOptionsProvider()
+    {
+        return [
+            'no options configured' => [
+                false,
+                8,
+                [3628,3629,3653,3783,3790,3791,3792,3793]
+            ],
+            'single E@H option configured' => [
+                '3628',
+                1,
+                [3628]
+            ],
+            'single non-E@H option configured' => [
+                '3085',
+                1,
+                [0]
+            ],
+            'multiple E@H options configured' => [
+                '3629,3653',
+                2,
+                [3629,3653]
+            ],
+            'multiple non-E@H options configured' => [
+                '3189,3089',
+                1,
+                [0]
+            ],
+            'multiple mixed options configured' => [
+                '3389,3653,3096,3090,3783,3793',
+                3,
+                [3653,3783,3793]
+            ],
+        ];
+    }
+
+    /**
+     * @param $productOptions
+     * @param $expectedCount
+     * @param $expectedValues
+     *
+     * @dataProvider getExtraAtHomeOptionsProvider
+     */
+    public function testGetExtraAtHomeOptions($productOptions, $expectedCount, $expectedValues)
+    {
+        $configMock = $this->getFakeMock(\TIG\PostNL\Config\Provider\ProductOptions::class)
+            ->setMethods(['getSupportedProductOptions'])
+            ->getMock();
+        $configMock->expects($this->atLeastOnce())->method('getSupportedProductOptions')->willReturn($productOptions);
+
+        $instance = $this->getInstance(['config' => $configMock]);
+        $result = $instance->getExtraAtHomeOptions();
+
+        $this->assertCount($expectedCount, $result);
+        $resultValues = [];
+
+        foreach ($result as $option) {
+            $resultValues[] = $option['value'];
+            $this->assertInstanceOf(\Magento\Framework\Phrase::class, $option['label']);
+        }
+
+        $this->assertEquals($resultValues, $expectedValues, '', 0.0, 10, true);
+    }
+
+    public function testReturnsTheCorrectCode()
+    {
+        $instance = $this->getInstance();
+
+        $options = $instance->getOptionsByCode(3085);
+
+        $this->assertEquals(3085, $options['value']);
+        $this->assertEquals('Standard shipment', $options['label']);
+        $this->assertEquals(false, $options['isExtraCover']);
+        $this->assertEquals(false, $options['isEvening']);
+        $this->assertEquals(false, $options['isSunday']);
+        $this->assertEquals('NL', $options['countryLimitation']);
+        $this->assertEquals('standard_options', $options['group']);
+    }
+
+    public function testReturnsNullWhenCodeDoesNotExists()
+    {
+        $instance = $this->getInstance();
+
+        $options = $instance->getOptionsByCode(-999999999);
+
+        $this->assertNull($options);
+    }
 }

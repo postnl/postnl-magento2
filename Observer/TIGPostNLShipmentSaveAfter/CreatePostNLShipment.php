@@ -135,6 +135,16 @@ class CreatePostNLShipment implements ObserverInterface
     }
 
     /**
+     * @return mixed
+     */
+    private function getParcelCount()
+    {
+        $postNLOrder = $this->getOrder();
+
+        return $postNLOrder->getParcelCount();
+    }
+
+    /**
      * @param Shipment $shipment
      *
      * @return array
@@ -145,7 +155,7 @@ class CreatePostNLShipment implements ObserverInterface
         $shipmentType = $this->getShipmentType();
 
         $colliAmount = isset($this->shipParams['tig_postnl_colli_amount'])
-            ? $this->shipParams['tig_postnl_colli_amount'] : 1;
+            ? $this->shipParams['tig_postnl_colli_amount'] : $this->getParcelCount();
         $productCode = isset($this->shipParams['tig_postnl_product_code'])
             ? $this->shipParams['tig_postnl_product_code'] : $this->getProductCode();
 
@@ -181,6 +191,11 @@ class CreatePostNLShipment implements ObserverInterface
         return $order->getType();
     }
 
+    /**
+     * @param Shipment $shipment
+     *
+     * @return bool
+     */
     private function isPostNLShipment(Shipment $shipment)
     {
         $order = $shipment->getOrder();

@@ -33,6 +33,7 @@ namespace TIG\PostNL\Config\Provider;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Encryption\Encryptor;
+use Magento\Framework\Module\Manager;
 
 abstract class AbstractConfigProvider
 {
@@ -43,6 +44,12 @@ abstract class AbstractConfigProvider
     protected $scopeConfig;
 
     /**
+     * @var Manager $moduleManager
+     */
+    // @codingStandardsIgnoreLine
+    protected $moduleManager;
+
+    /**
      * @var Encryptor
      */
     // @codingStandardsIgnoreLine
@@ -50,13 +57,16 @@ abstract class AbstractConfigProvider
 
     /**
      * @param ScopeConfigInterface $scopeConfig
+     * @param Manager $moduleManager
      * @param Encryptor            $crypt
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
+        Manager $moduleManager,
         Encryptor $crypt
     ) {
         $this->scopeConfig = $scopeConfig;
+        $this->moduleManager = $moduleManager;
         $this->crypt = $crypt;
     }
 
@@ -76,5 +86,14 @@ abstract class AbstractConfigProvider
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
             $store
         );
+    }
+
+    /**
+     * @return bool
+     */
+    // @codingStandardsIgnoreLine
+    protected function isModuleOutputEnabled()
+    {
+        return $this->moduleManager->isOutputEnabled('TIG_PostNL');
     }
 }
