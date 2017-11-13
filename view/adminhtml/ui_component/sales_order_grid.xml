@@ -49,9 +49,18 @@
         <column name="tig_postnl_ship_at" class="TIG\PostNL\Block\Adminhtml\Grid\Order\ShippingDate">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">text</item>
+                    <item name="filter" xsi:type="string">dateRange</item>
                     <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
                     <item name="label" xsi:type="string" translate="true">Shipping Date</item>
+                </item>
+            </argument>
+        </column>
+        <column name="tig_postnl_product_code" class="TIG\PostNL\Block\Adminhtml\Grid\Order\ShipmentType">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="label" xsi:type="string" translate="true">Shipment Type</item>
                 </item>
             </argument>
         </column>

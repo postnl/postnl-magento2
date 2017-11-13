@@ -1,0 +1,2 @@
+Land,Provincie/staat,Postcode,Gewicht (en hoger),Bedrag (en hoger)
+NLD,*,*,0,0,0,pakket,5,* Om voor internationale verzendingen gebruik te maken van Magento's tablerates raden we u aan om de gewichten van uw producten (catalogus->beheer producten->gewenste product) correct te configureren.

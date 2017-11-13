@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Test;
 
+use Magento\Framework\Filesystem;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 
 abstract class TestCase extends TestCaseFinder
@@ -49,9 +50,14 @@ abstract class TestCase extends TestCaseFinder
      * @param array $args
      *
      * @return object
+     * @throws \Exception
      */
     public function getInstance(array $args = [])
     {
+        if (empty($this->instanceClass)) {
+            throw new \Exception('The instanceClass property is not set.');
+        }
+
         return $this->getObject($this->instanceClass, $args);
     }
 
@@ -217,5 +223,33 @@ abstract class TestCase extends TestCaseFinder
         }
 
         $method->willReturn($response);
+    }
+
+    /**
+     * @param $filename
+     *
+     * @return Filesystem\File\ReadInterface
+     */
+    protected function loadFile($filename): Filesystem\File\ReadInterface
+    {
+        /** @var Filesystem $filesystem */
+        $filesystem   = $this->getObject(Filesystem::class);
+        $directory = $filesystem->getDirectoryRead(\Magento\Framework\App\Filesystem\DirectoryList::ROOT);
+
+        $path = __DIR__ . '/' . $filename;
+        $path = realpath($path);
+
+        $path = $directory->getRelativePath($path);
+        $file = $directory->openFile($path);
+
+        return $file;
+    }
+
+    protected function getMagentoVersion()
+    {
+        /** @var \Magento\Framework\App\ProductMetadataInterface $productMetaData */
+        $productMetaData = $this->getObject(\Magento\Framework\App\ProductMetadataInterface::class);
+
+        return $productMetaData->getVersion();
     }
 }

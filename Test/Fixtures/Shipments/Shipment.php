@@ -57,3 +57,5 @@ $shipment->addItem($shipmentItem);
 $shipment->setShipmentStatus(Shipment::STATUS_NEW);
 
 $shipment->save();
+
+return $shipment;

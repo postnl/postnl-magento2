@@ -1,0 +1,5 @@
+"Land","Provincie/staat","Postcode","Gewicht (en hoger)","Bedrag (en hoger)","Hoeveelheid (en hoger)","pakkettype","prijs","Instructies"
+"NLD","*","*",0,0,0,"regular",5,"* Om voor internationale verzendingen gebruik te maken van Magento's tablerates raden we u aan om de gewichten van uw producten (catalogus->beheer producten->gewenste product) correct te configureren."
+"FRA,MCO","*","*",0,0,0,"*",10,
+"ESP","Las Palmas","*",0,0,0,"*",15,
+"ESP","Santa Cruz de Tenerife","*",0,0,0,"*",20,

@@ -34,6 +34,8 @@ namespace TIG\PostNL\Config\CheckoutConfiguration;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Quote\CheckIfQuoteItemsAreInStock;
+use \TIG\PostNL\Service\Quote\CheckIfQuoteHasOption;
+use TIG\PostNL\Service\Order\ProductCodeAndType;
 
 class IsShippingOptionsActive implements CheckoutConfigurationInterface
 {
@@ -53,18 +55,26 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
     private $accountConfiguration;
 
     /**
+     * @var CheckIfQuoteHasOption
+     */
+    private $quoteHasOption;
+
+    /**
      * @param ShippingOptions             $shippingOptions
      * @param AccountConfiguration        $accountConfiguration
      * @param CheckIfQuoteItemsAreInStock $quoteItemsAreInStock
+     * @param CheckIfQuoteHasOption   $quoteHasOption
      */
     public function __construct(
         ShippingOptions $shippingOptions,
         AccountConfiguration $accountConfiguration,
-        CheckIfQuoteItemsAreInStock $quoteItemsAreInStock
+        CheckIfQuoteItemsAreInStock $quoteItemsAreInStock,
+        CheckIfQuoteHasOption $quoteHasOption
     ) {
         $this->shippingOptions = $shippingOptions;
         $this->quoteItemsAreInStock = $quoteItemsAreInStock;
         $this->accountConfiguration = $accountConfiguration;
+        $this->quoteHasOption = $quoteHasOption;
     }
 
     /**
@@ -77,6 +87,10 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
         }
 
         if (!$this->hasValidApiSettings()) {
+            return false;
+        }
+
+        if ($this->quoteHasOption->get(ProductCodeAndType::OPTION_EXTRAATHOME)) {
             return false;
         }
 

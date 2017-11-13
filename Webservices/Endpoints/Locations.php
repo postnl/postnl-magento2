@@ -55,7 +55,7 @@ class Locations extends AbstractEndpoint
     private $soap;
 
     /**
-     * @var Array
+     * @var array
      */
     private $requestParams;
 

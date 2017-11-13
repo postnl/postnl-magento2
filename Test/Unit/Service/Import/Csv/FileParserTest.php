@@ -33,8 +33,8 @@ namespace TIG\PostNL\Unit\Service\Import\Csv;
 
 use Magento\Framework\Filesystem\File\ReadInterface;
 use TIG\PostNL\Exception;
+use TIG\PostNL\Service\Import\ParseErrors;
 use TIG\PostNL\Service\Import\Csv\FileParser;
-use TIG\PostNL\Service\Import\Csv\ParserErrors;
 use TIG\PostNL\Service\Import\Csv\RowParser;
 use TIG\PostNL\Test\TestCase;
 
@@ -67,8 +67,8 @@ class FileParserTest extends TestCase
      */
     public function testHasErrors($errors, $expected)
     {
-        /** @var ParserErrors $parserError */
-        $parserErrors = $this->getObject(ParserErrors::class);
+        /** @var ParseErrors $parserError */
+        $parserErrors = $this->getObject(ParseErrors::class);
 
         foreach ($errors as $error) {
             $parserErrors->addError($error);
@@ -83,8 +83,8 @@ class FileParserTest extends TestCase
 
     public function testGetErrors()
     {
-        /** @var ParserErrors $parserError */
-        $parserErrors = $this->getObject(ParserErrors::class);
+        /** @var ParseErrors $parserError */
+        $parserErrors = $this->getObject(ParseErrors::class);
         $parserErrors->addError('Column "price" not found');
         $parserErrors->addError('Row #2 invalid');
 
@@ -151,7 +151,7 @@ class FileParserTest extends TestCase
     public function testGetRows($csvRows, $expectedErrors, $expectedValidRows)
     {
         $rowParser = $this->getObject(RowParser::class);
-        $parserErrors = $this->getObject(ParserErrors::class);
+        $parserErrors = $this->getObject(ParseErrors::class);
         $csvRows[] = false;
 
         $readInterfaceMock = $this->getFakeMock(ReadInterface::class)->getMock();
@@ -204,7 +204,7 @@ class FileParserTest extends TestCase
     public function testParseRow($csvRow, $expectedHasError, $expectedResultCount)
     {
         $rowParser = $this->getObject(RowParser::class);
-        $parserError = $this->getObject(ParserErrors::class);
+        $parserError = $this->getObject(ParseErrors::class);
 
         $instance = $this->getInstance(['rowParser' => $rowParser, 'parserErrors' => $parserError]);
 
@@ -246,7 +246,7 @@ class FileParserTest extends TestCase
      */
     public function testValidateHeaders($csvHeaders, $expectedException)
     {
-        $parserErrors = $this->getObject(ParserErrors::class);
+        $parserErrors = $this->getObject(ParseErrors::class);
         $instance = $this->getInstance(['parserErrors' => $parserErrors]);
 
         $readInterfaceMock = $this->getFakeMock(ReadInterface::class)->getMock();

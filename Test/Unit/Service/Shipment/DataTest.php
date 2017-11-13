@@ -124,15 +124,16 @@ class DataTest extends TestCase
     {
         $result = $this->addParcelCount(4, 3);
 
-        $expected = [
+        $expected = [ 'Group' => [
             'GroupCount' => 4,
             'GroupSequence' => 3,
             'GroupType' => '03',
             'MainBarcode' => '',
+            ]
         ];
 
-        $this->assertArrayHasKey('Group', $result);
-        $this->assertEquals($expected, $result['Group']);
+        $this->assertArrayHasKey('Groups', $result);
+        $this->assertEquals($expected, $result['Groups']);
     }
 
     private function getAddress()

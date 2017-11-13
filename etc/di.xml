@@ -32,11 +32,13 @@
  *
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="TIG\PostNL\Api\MatrixrateRepositoryInterface" type="TIG\PostNL\Model\Carrier\MatrixrateRepository" />
     <preference for="TIG\PostNL\Api\OrderRepositoryInterface" type="TIG\PostNL\Model\OrderRepository" />
     <preference for="TIG\PostNL\Api\ShipmentRepositoryInterface" type="TIG\PostNL\Model\ShipmentRepository" />
     <preference for="TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface" type="TIG\PostNL\Model\ShipmentBarcodeRepository" />
     <preference for="TIG\PostNL\Api\ShipmentLabelRepositoryInterface" type="TIG\PostNL\Model\ShipmentLabelRepository" />
     <preference for="TIG\PostNL\Service\Wrapper\QuoteInterface" type="TIG\PostNL\Service\Wrapper\Quote" />
+    <preference for="TIG\PostNL\Service\Wrapper\StoreInterface" type="TIG\PostNL\Service\Wrapper\Store" />
     <preference for="TIG\PostNL\Service\Wrapper\CheckoutSessionInterface" type="TIG\PostNL\Service\Wrapper\CheckoutSession" />
 
     <type name="\Magento\Sales\Model\Order">
@@ -77,11 +79,44 @@
         </arguments>
     </type>
 
+    <type name="TIG\PostNL\Setup\UpgradeSchema">
+        <arguments>
+            <argument name="upgradeSchemaObjects" xsi:type="array">
+                <item name="v1.2.0" xsi:type="array">
+                    <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V120\Schema\SalesShipmentGridColumns</item>
+                    <item name="SalesOrderGridColumns" xsi:type="object">TIG\PostNL\Setup\V120\Schema\SalesOrderGridColumns</item>
+                    <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V120\Schema\UpgradeOrderTable</item>
+                    <item name="InstallMatrixRateTable" xsi:type="object">TIG\PostNL\Setup\V120\Schema\InstallMatrixRateTable</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
     <type name="TIG\PostNL\Setup\InstallData">
         <arguments>
             <argument name="installDataObjects" xsi:type="array">
                 <item name="v1.1.0" xsi:type="array">
                     <item name="InstallApiKey" xsi:type="object">TIG\PostNL\Setup\V110\Data\ApiKeyConfiguration</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="TIG\PostNL\Setup\InstallData">
+        <arguments>
+            <argument name="installDataObjects" xsi:type="array">
+                <item name="v1.2.0" xsi:type="array">
+                    <item name="InstallCustomProductAttributes" xsi:type="object">TIG\PostNL\Setup\V120\Data\CustomProductAttributes</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="TIG\PostNL\Setup\UpgradeData">
+        <arguments>
+            <argument name="upgradeDataObjects" xsi:type="array">
+                <item name="v1.2.0" xsi:type="array">
+                    <item name="InstallCustomProductAttributes" xsi:type="object">TIG\PostNL\Setup\V120\Data\CustomProductAttributes</item>
                 </item>
             </argument>
         </arguments>
@@ -102,6 +137,7 @@
             <argument name="columns" xsi:type="array">
                 <item name="entity_id" xsi:type="string">sales_shipment.entity_id</item>
                 <item name="tig_postnl_ship_at" xsi:type="string">tig_postnl_shipment.ship_at</item>
+                <item name="tig_postnl_product_code" xsi:type="string">tig_postnl_shipment.product_code</item>
                 <item name="tig_postnl_confirmed_at" xsi:type="string">tig_postnl_shipment.confirmed_at</item>
             </argument>
         </arguments>
@@ -135,6 +171,7 @@
             <argument name="columns" xsi:type="array">
                 <item name="entity_id" xsi:type="string">sales_order.entity_id</item>
                 <item name="tig_postnl_ship_at" xsi:type="string">tig_postnl_order.ship_at</item>
+                <item name="tig_postnl_product_code" xsi:type="string">tig_postnl_order.product_code</item>
             </argument>
         </arguments>
     </virtualType>
@@ -142,5 +179,17 @@
     <!-- Add the PostNL fee to the shipping total -->
     <type name="\Magento\Quote\Model\Quote\Address\Total\Shipping">
         <plugin name="TIG_PostNL_QuoteAddressTotalShipping" type="\TIG\PostNL\Plugin\Quote\Address\Total\Shipping" sortOrder="1"/>
+    </type>
+
+    <type name="TIG\PostNL\Service\Validation\Factory">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="decimal" xsi:type="object">\TIG\PostNL\Service\Validation\Decimal</item>
+                <item name="parcelType" xsi:type="object">\TIG\PostNL\Service\Validation\ParcelType</item>
+                <item name="country" xsi:type="object">\TIG\PostNL\Service\Validation\Country</item>
+                <item name="region" xsi:type="object">\TIG\PostNL\Service\Validation\Region</item>
+                <item name="duplicateImport" xsi:type="object">\TIG\PostNL\Service\Validation\DuplicateImport</item>
+            </argument>
+        </arguments>
     </type>
 </config>

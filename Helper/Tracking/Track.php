@@ -39,6 +39,7 @@ use TIG\PostNL\Model\Shipment as PostNLShipment;
 use Magento\Sales\Model\Order\Shipment\TrackFactory;
 use Magento\Shipping\Model\Tracking\Result\StatusFactory;
 use Magento\Sales\Model\Order\Shipment;
+use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Sales\Model\Order\ShipmentRepository;
@@ -97,7 +98,7 @@ class Track extends AbstractTracking
     }
 
     /**
-     * @param Shipment $shipment
+     * @param Shipment|ShipmentInterface $shipment
      */
     public function set($shipment)
     {

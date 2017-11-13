@@ -39,6 +39,12 @@
             <resource ref="Magento_Sales::sales"/>
         </resources>
     </route>
+    <route url="/V1/postnl/getByMagentoOrderId/:id" method="GET">
+        <service class="TIG\PostNL\Api\OrderRepositoryInterface" method="getByOrderId"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
     <route url="/V1/postnl/orders/search" method="GET">
         <service class="TIG\PostNL\Api\OrderRepositoryInterface" method="getList"/>
         <resources>
@@ -155,6 +161,32 @@
     </route>
     <route url="/V1/postnl/shipments/label" method="POST">
         <service class="TIG\PostNL\Api\ShipmentLabelRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+
+    <!-- Webapi description for the TIG PostNL Matrixrate model -->
+    <route url="/V1/postnl/matrixrate/search" method="GET">
+        <service class="TIG\PostNL\Api\MatrixrateRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
+    <route url="/V1/postnl/matrixrate" method="PUT">
+        <service class="TIG\PostNL\Api\MatrixrateRepositoryInterface" method="create"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/postnl/matrixrate/:id" method="DELETE">
+        <service class="TIG\PostNL\Api\MatrixrateRepositoryInterface" method="delete"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/postnl/matrixrate" method="POST">
+        <service class="TIG\PostNL\Api\MatrixrateRepositoryInterface" method="save"/>
         <resources>
             <resource ref="Magento_Sales::sales" />
         </resources>

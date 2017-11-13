@@ -94,14 +94,25 @@ abstract class OptionsAbstract extends Template implements BlockInterface
         $this->productSource   = $productOptionsSource;
         $this->orderRepository = $orderRepository;
         $this->registry        = $registry;
+    }
 
-        $request     = $context->getRequest();
-        $orderId     = (int)$request->getParam('order_id');
+    /**
+     * @return \Magento\Sales\Api\Data\OrderInterface|\Magento\Sales\Model\Order
+     */
+    // @codingStandardsIgnoreLine
+    protected function getOrder()
+    {
+        if ($this->order) {
+            return $this->order;
+        }
+
+        $request = $this->getRequest();
+        $orderId = (int)$request->getParam('order_id');
         if (!$orderId) {
             $orderId = $this->getShipment()->getOrderId();
         }
 
-        $this->order = $this->orderRepository->get($orderId);
+        return $this->order = $this->orderRepository->get($orderId);
     }
 
     /**
@@ -109,7 +120,7 @@ abstract class OptionsAbstract extends Template implements BlockInterface
      */
     public function getIsPostNLOrder()
     {
-        $method = $this->order->getShippingMethod();
+        $method = $this->getOrder()->getShippingMethod();
         return ($method == 'tig_postnl_regular');
     }
 

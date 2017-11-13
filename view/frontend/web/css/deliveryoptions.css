@@ -78,6 +78,7 @@
   background: white;
   text-align: left;
   padding: 15px;
+  min-height: 60px;
 }
 .postnl-deliveryoptions .delivery_options button.btn.btn-default:not(.primary) {
   box-shadow: none;
@@ -98,6 +99,11 @@
 }
 .postnl-deliveryoptions .delivery_options button.btn.btn-default.button-active:hover {
   color: #001A73;
+}
+@media screen and (min-width: 480px) {
+  .postnl-deliveryoptions .delivery_options button.btn.btn-default .data {
+    float: right;
+  }
 }
 .postnl-deliveryoptions .delivery_options input.tig-postnl-delivery-radio,
 .postnl-deliveryoptions .delivery_options input.tig-postnl-pickup-radio {

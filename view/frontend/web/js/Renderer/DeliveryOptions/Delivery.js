@@ -119,6 +119,7 @@ define([
                 }
 
                 State.fee(fee);
+                State.deliveryFee(fee);
 
                 $(document).trigger('compatible_postnl_deliveryoptions_save_before');
                 $.ajax({
@@ -164,7 +165,8 @@ define([
                     return false;
                 }
                 State.deliveryOptionsAreAvailable(true);
-                data = ko.utils.arrayMap(data, function (day) {
+                State.deliveryPrice(data.price);
+                data = ko.utils.arrayMap(data.timeframes, function (day) {
                     return ko.utils.arrayMap(day, function (timeFrame) {
                         return new TimeFrame(timeFrame);
                     });

@@ -44,7 +44,7 @@
         </label>
         <input id="tig_postnl_colli"
                name="shipment[tig_postnl_colli_amount]"
-               value="1"
+               value="<?php echo $this->getParcelCount(); ?>"
                class="admin__control-text"/>
     </div>
     <?php endif; ?>
@@ -72,9 +72,9 @@
         "jquery"
     ], function (jQuery) {
         var items = jQuery('.admin__page-section-item-content');
-        var email = items.find('.field-email');
+        var field = items.find('.order-history-comments-actions');
         jQuery(function () {
-            email.after(jQuery('#postnl_shipping_options'));
+            field.before(jQuery('#postnl_shipping_options'));
         });
     })
 </script>

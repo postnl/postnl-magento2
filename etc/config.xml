@@ -46,8 +46,8 @@
             </tig_postnl>
         </carriers>
         <tig_postnl>
-            <stability>alpha</stability>
-            <supported_magento_version>2.1.5 - 2.1.9, 2.2.0</supported_magento_version>
+            <stability/>
+            <supported_magento_version>2.1.0 - 2.1.10, 2.2.0 - 2.2.1</supported_magento_version>
             <generalconfiguration_extension_status>
                 <modus>0</modus>
                 <customer_number_test>11223344</customer_number_test>
@@ -73,7 +73,8 @@
             <productoptions>
                 <default_option>3085</default_option>
                 <default_evening_option>3089</default_evening_option>
-                <default_pakjegemak_option>3534</default_pakjegemak_option>
+                <default_extraathome_option>3628</default_extraathome_option>
+                <default_pakjegemak_option>3533</default_pakjegemak_option>
                 <default_pakjegemak_early_option>3544</default_pakjegemak_early_option>
                 <supported_options>3085,3189,3089,3389,3096,3090,3385,3534,3544,3533,3543,4950,4952,2928</supported_options>
             </productoptions>
@@ -85,12 +86,11 @@
                 <eveningdelivery_active>1</eveningdelivery_active>
                 <max_deliverydays>7</max_deliverydays>
                 <eveningdelivery_fee>2</eveningdelivery_fee>
+                <extraathome_active>0</extraathome_active>
                 <sundaydelivery_fee>2</sundaydelivery_fee>
                 <delivery_delay>1</delivery_delay>
             </shippingoptions>
             <endpoints>
-                <cif_base_url>https://service.postnl.com/CIF/</cif_base_url>
-                <test_cif_base_url>https://testservice.postnl.com/CIF_SB/</test_cif_base_url>
                 <api_base_url>https://api.postnl.nl/shipment/</api_base_url>
                 <test_api_base_url>https://api-sandbox.postnl.nl/shipment/</test_api_base_url>
             </endpoints>

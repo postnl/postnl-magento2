@@ -35,6 +35,8 @@ use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use TIG\PostNL\Config\CheckoutConfiguration\IsShippingOptionsActive;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Service\Quote\CheckIfQuoteHasOption;
+use TIG\PostNL\Service\Order\ProductCodeAndType;
 use TIG\PostNL\Test\TestCase;
 
 class IsShippingOptionsActiveTest extends TestCase
@@ -67,6 +69,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => true,
                 'stockOptions' => 'in_stock',
                 'productsInStock' => true,
+                'productsExtraAtHome' => false,
                 'expected' => true,
             ],
             'active, in stock, all_products and invalid api settings' => [
@@ -74,6 +77,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => false,
                 'stockOptions' => 'in_stock',
                 'productsInStock' => true,
+                'productsExtraAtHome' => false,
                 'expected' => false,
             ],
             'active, not in stock, all_products and valid api settings' => [
@@ -81,6 +85,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => true,
                 'stockOptions' => 'in_stock',
                 'productsInStock' => true,
+                'productsExtraAtHome' => false,
                 'expected' => true,
             ],
             'active, not in stock, all_products and invalid api settings' => [
@@ -88,6 +93,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => false,
                 'stockOptions' => 'in_stock',
                 'productsInStock' => true,
+                'productsExtraAtHome' => false,
                 'expected' => false,
             ],
             'active, in stock, stock_products and valid api settings' => [
@@ -95,6 +101,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => true,
                 'stockOptions' => 'backordered',
                 'productsInStock' => true,
+                'productsExtraAtHome' => false,
                 'expected' => true,
             ],
             'active, in stock, stock_products and invalid api settings' => [
@@ -102,6 +109,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => false,
                 'stockOptions' => 'backordered',
                 'productsInStock' => true,
+                'productsExtraAtHome' => false,
                 'expected' => false,
             ],
             'active, not in stock, stock_products and valid api settings' => [
@@ -109,6 +117,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => true,
                 'stockOptions' => 'backordered',
                 'productsInStock' => false,
+                'productsExtraAtHome' => false,
                 'expected' => false,
             ],
             'active, not in stock, stock_products and invalid api settings' => [
@@ -116,6 +125,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => false,
                 'stockOptions' => 'backordered',
                 'productsInStock' => false,
+                'productsExtraAtHome' => false,
                 'expected' => false,
             ],
             'inactive, in stock, all_products and valid api settings' => [
@@ -123,6 +133,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => true,
                 'stockOptions' => 'in_stock',
                 'productsInStock' => true,
+                'productsExtraAtHome' => false,
                 'expected' => false,
             ],
             'inactive, in stock, all_products and invalid api settings' => [
@@ -130,6 +141,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => false,
                 'stockOptions' => 'in_stock',
                 'productsInStock' => true,
+                'productsExtraAtHome' => false,
                 'expected' => false,
             ],
             'inactive, not in stock, all_products and valid api settings' => [
@@ -137,6 +149,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => true,
                 'stockOptions' => 'in_stock',
                 'productsInStock' => false,
+                'productsExtraAtHome' => false,
                 'expected' => false,
             ],
             'inactive, not in stock, all_products and invalid api settings' => [
@@ -144,6 +157,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => false,
                 'stockOptions' => 'in_stock',
                 'productsInStock' => false,
+                'productsExtraAtHome' => false,
                 'expected' => false,
             ],
             'inactive, in stock, stock_products and valid api settings' => [
@@ -151,6 +165,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => true,
                 'stockOptions' => 'backordered',
                 'productsInStock' => true,
+                'productsExtraAtHome' => false,
                 'expected' => false,
             ],
             'inactive, in stock, stock_products and invalid api settings' => [
@@ -158,6 +173,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => false,
                 'stockOptions' => 'backordered',
                 'productsInStock' => true,
+                'productsExtraAtHome' => false,
                 'expected' => false,
             ],
             'inactive, not in stock, stock_products and valid api settings' => [
@@ -165,6 +181,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => true,
                 'stockOptions' => 'backordered',
                 'productsInStock' => false,
+                'productsExtraAtHome' => false,
                 'expected' => false,
             ],
             'inactive, not in stock, stock_products and invalid api settings' => [
@@ -172,6 +189,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'hasValidApiSettings' => false,
                 'stockOptions' => 'backordered',
                 'productsInStock' => false,
+                'productsExtraAtHome' => false,
                 'expected' => false,
             ],
         ];
@@ -182,6 +200,7 @@ class IsShippingOptionsActiveTest extends TestCase
      * @param $hasValidApiSettings
      * @param $stockOptions
      * @param $productsInStock
+     * @param $isExtraAtHome
      * @param $expected
      *
      * @dataProvider getValueProvider
@@ -191,6 +210,7 @@ class IsShippingOptionsActiveTest extends TestCase
         $hasValidApiSettings,
         $stockOptions,
         $productsInStock,
+        $isExtraAtHome,
         $expected
     ) {
         $quoteItemsAreInStock = $this
@@ -200,11 +220,18 @@ class IsShippingOptionsActiveTest extends TestCase
         $getValueExpects = $quoteItemsAreInStock->method('getValue');
         $getValueExpects->willReturn($productsInStock);
 
+        $quoteHasOption = $this->getFakeMock(CheckIfQuoteHasOption::class)->getMock();
+
+        $extraAtHomeGetValueExpects = $quoteHasOption->method('get');
+        $extraAtHomeGetValueExpects->with(ProductCodeAndType::OPTION_EXTRAATHOME);
+        $extraAtHomeGetValueExpects->willReturn($isExtraAtHome);
+
         /** @var IsShippingOptionsActive $instance */
         $instance = $this->getInstance([
             'shippingOptions' => $this->shippingOptions,
             'accountConfiguration' => $this->accountConfiguration,
             'quoteItemsAreInStock' => $quoteItemsAreInStock,
+            'quoteHasOption' => $quoteHasOption
         ]);
 
         $this->mockShippingOptionsMethod('isShippingoptionsActive', $shippingOptionsActive);

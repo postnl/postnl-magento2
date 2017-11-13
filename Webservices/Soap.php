@@ -74,7 +74,9 @@ class Soap
      */
     private $log;
 
-    /** @var AccountConfiguration */
+    /**
+     * @var AccountConfiguration
+     */
     private $accountConfiguration;
 
     /**
@@ -93,8 +95,6 @@ class Soap
         ZendSoapClient $soapClient,
         Api\Log $log
     ) {
-        $this->checkSoapExtensionIsLoaded();
-
         $this->defaultConfiguration = $defaultConfiguration;
         $this->exceptionHandler = $exceptionHandler;
         $this->soapClient = $soapClient;
@@ -114,22 +114,14 @@ class Soap
      */
     public function call(AbstractEndpoint $endpoint, $method, $requestParams)
     {
+        $this->checkSoapExtensionIsLoaded();
         $this->parseEndpoint($endpoint);
         $soapClient = $this->getClient();
 
-        $result = null;
         try {
-            $result = $soapClient->__call($method, [$requestParams]);
-
-            return $result;
+            return $soapClient->__call($method, [$requestParams]);
         } catch (\Exception $exception) {
             $this->exceptionHandler->handle($exception, $soapClient);
-
-            throw new WebapiException(
-                __('Failed on soap call : %1', $exception->getMessage()),
-                0,
-                WebapiException::HTTP_INTERNAL_ERROR
-            );
         } finally {
             $this->log->request($soapClient);
         }
@@ -140,9 +132,7 @@ class Soap
      */
     public function getClient()
     {
-        $wsdlUrl = $this->getWsdlUrl();
-
-        $this->soapClient->setWSDL($wsdlUrl);
+        $this->soapClient->setWSDL($this->getWsdlUrl());
         $this->soapClient->setOptions($this->getOptionsArray());
 
         return $this->soapClient;
@@ -177,12 +167,14 @@ class Soap
     private function checkSoapExtensionIsLoaded()
     {
         if (!extension_loaded('soap')) {
+            // @codeCoverageIgnoreStart
             throw new WebapiException(
                 // @codingStandardsIgnoreLine
                 __('SOAP extension is not loaded.'),
                 0,
                 WebapiException::HTTP_INTERNAL_ERROR
             );
+            // @codeCoverageIgnoreEnd
         }
     }
 

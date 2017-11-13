@@ -44,8 +44,8 @@ class StockOptions extends OptionsAbstract implements ArrayInterface
     {
         // @codingStandardsIgnoreStart
         $options = [
-            ['value' => 'in_stock', 'label' => __('Always show deliveryoptions')],
-            ['value' => 'backordered', 'label' => __('Only for products that are in stock')]
+            ['value' => 'backordered', 'label' => __('Always show deliveryoptions')],
+            ['value' => 'in_stock', 'label' => __('Only for products that are in stock')]
         ];
         // @codingStandardsIgnoreEnd
         return $options;

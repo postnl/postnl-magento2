@@ -56,6 +56,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     const FIELD_FEE = 'fee';
     const FIELD_SHIP_AT = 'ship_at';
     const FIELD_CONFIRMED_AT = 'confirmed_at';
+    const FIELD_PARCEL_COUNT = 'parcel_count';
 
     /**
      * @var string
@@ -313,6 +314,24 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     public function getShipAt()
     {
         return $this->getData(static::FIELD_SHIP_AT);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParcelCount()
+    {
+        return $this->getData(static::FIELD_PARCEL_COUNT);
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setParcelCount($value)
+    {
+        return $this->setData(static::FIELD_PARCEL_COUNT, $value);
     }
 
     /**

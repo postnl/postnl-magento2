@@ -125,6 +125,10 @@ class AccountConfiguration extends AbstractConfigProvider
      */
     public function getModus($store = null)
     {
+        if (!$this->isModuleOutputEnabled()) {
+            return '0';
+        }
+
         return $this->getConfigFromXpath(self::XPATH_GENERAL_STATUS_MODUS, $store);
     }
 

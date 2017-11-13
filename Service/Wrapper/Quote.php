@@ -105,4 +105,20 @@ class Quote implements QuoteInterface
 
         return $quote->getBillingAddress();
     }
+
+    /**
+     * @return array
+     */
+    public function getAllItems()
+    {
+        return $this->getQuote()->getAllItems();
+    }
+
+    /**
+     * @return int
+     */
+    public function getStoreId()
+    {
+        return $this->getQuote()->getStoreId();
+    }
 }

@@ -4,4 +4,5 @@ Controller/Test/
 Controller/Adminhtml/Test/
 Build/
 build
+.idea/
 composer.lock

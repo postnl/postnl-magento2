@@ -40,5 +40,5 @@ class CriticalHandler extends Base
     protected $loggerType = Logger::CRITICAL;
 
     // @codingStandardsIgnoreLine
-    protected $fileName = '/var/log/PostNL/critial.log';
+    protected $fileName = '/var/log/PostNL/critical.log';
 }

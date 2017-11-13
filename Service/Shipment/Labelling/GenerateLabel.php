@@ -31,140 +31,47 @@
  */
 namespace TIG\PostNL\Service\Shipment\Labelling;
 
+use TIG\PostNL\Service\Shipment\Labelling\Generate\WithoutConfirm;
+use TIG\PostNL\Service\Shipment\Labelling\Generate\WithConfirm;
 use TIG\PostNL\Api\Data\ShipmentInterface;
-use TIG\PostNL\Api\Data\ShipmentLabelInterface;
-use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
-use TIG\PostNL\Api\ShipmentRepositoryInterface;
-use TIG\PostNL\Exception as PostNLException;
-use TIG\PostNL\Helper\Data;
-use TIG\PostNL\Logging\Log;
-use TIG\PostNL\Model\ShipmentLabelFactory;
-use TIG\PostNL\Webservices\Endpoints\Labelling;
 
 class GenerateLabel
 {
     /**
-     * @var Labelling
+     * @var WithoutConfirm
      */
-    private $labelling;
+    private $withoutConfirm;
 
     /**
-     * @var Log
+     * @var WithConfirm
      */
-    private $logger;
+    private $withConfirm;
 
     /**
-     * @var ShipmentLabelFactory
-     */
-    private $shipmentLabelFactory;
-
-    /**
-     * @var ShipmentRepositoryInterface
-     */
-    private $shipmentRepository;
-
-    /**
-     * @var ShipmentLabelRepositoryInterface
-     */
-    private $shipmentLabelRepository;
-
-    /**
-     * @var string
-     */
-    private $date;
-
-    /**
-     * @param Data                             $helper
-     * @param Labelling                        $labelling
-     * @param ShipmentLabelFactory             $shipmentLabelFactory
-     * @param ShipmentLabelRepositoryInterface $shipmentLabelRepository
-     * @param ShipmentRepositoryInterface      $shipmentRepository
-     * @param Log                              $logger
+     * @param WithConfirm    $withConfirm
+     * @param WithoutConfirm $withoutConfirm
      */
     public function __construct(
-        Data $helper,
-        Labelling $labelling,
-        ShipmentLabelFactory $shipmentLabelFactory,
-        ShipmentLabelRepositoryInterface $shipmentLabelRepository,
-        ShipmentRepositoryInterface $shipmentRepository,
-        Log $logger
+        WithConfirm $withConfirm,
+        WithoutConfirm $withoutConfirm
     ) {
-        $this->logger = $logger;
-        $this->date = $helper->getDate();
-        $this->labelling = $labelling;
-        $this->shipmentRepository = $shipmentRepository;
-        $this->shipmentLabelFactory = $shipmentLabelFactory;
-        $this->shipmentLabelRepository = $shipmentLabelRepository;
+        $this->withConfirm    = $withConfirm;
+        $this->withoutConfirm = $withoutConfirm;
     }
 
     /**
      * @param ShipmentInterface $shipment
      * @param                   $currentShipmentNumber
+     * @param bool              $confirm
      *
      * @return \Magento\Framework\Phrase|string
      */
-    public function get(ShipmentInterface $shipment, $currentShipmentNumber)
+    public function get(ShipmentInterface $shipment, $currentShipmentNumber, $confirm)
     {
-        try {
-            $label = $this->callEndpoint($shipment, $currentShipmentNumber);
-        } catch (\Exception $exception) {
-            $this->logger->debug($exception->getMessage());
-            return null;
+        if ($confirm) {
+            return $this->withConfirm->get($shipment, $currentShipmentNumber);
         }
 
-        $labelModel = $this->save($shipment, $currentShipmentNumber, $label);
-        $this->shipmentLabelRepository->save($labelModel);
-        $shipment->setConfirmedAt($this->date);
-        $this->shipmentRepository->save($shipment);
-
-        return $labelModel;
-    }
-
-    /**
-     * @param ShipmentInterface $postnlShipment
-     * @param                   $currentShipmentNumber
-     *
-     * @return \Magento\Framework\Phrase
-     * @throws PostNLException
-     */
-    private function callEndpoint(ShipmentInterface $postnlShipment, $currentShipmentNumber)
-    {
-        $this->labelling->setParameters($postnlShipment, $currentShipmentNumber);
-        $response          = $this->labelling->call();
-        $responseShipments = null;
-
-        if (isset($response->ResponseShipments)) {
-            $responseShipments = $response->ResponseShipments;
-        }
-
-        if (!is_object($response) || !isset($responseShipments->ResponseShipment)) {
-            throw new PostNLException(sprintf('Invalid generateLabel response: %1', var_export($response, true)));
-        }
-
-        /**
-         * @codingStandardsIgnoreLine
-         * TODO: GenerateLabel call usually returns one label, but update so multiple labels are taking in account
-         */
-
-        return $responseShipments->ResponseShipment[0]->Labels->Label[0]->Content;
-    }
-
-    /**
-     * @param ShipmentInterface $shipment
-     * @param int               $number
-     * @param string            $label
-     *
-     * @return ShipmentLabelInterface
-     */
-    public function save(ShipmentInterface $shipment, $number, $label)
-    {
-        /** @var ShipmentLabelInterface $labelModel */
-        $labelModel = $this->shipmentLabelFactory->create();
-        $labelModel->setParentId($shipment->getId());
-        $labelModel->setNumber($number);
-        $labelModel->setLabel(base64_encode($label));
-        $labelModel->setType(ShipmentLabelInterface::BARCODE_TYPE_LABEL);
-
-        return $labelModel;
+        return $this->withoutConfirm->get($shipment, $currentShipmentNumber);
     }
 }

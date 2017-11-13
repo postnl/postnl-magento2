@@ -61,41 +61,6 @@ class MassPrintShippingLabelTest extends TestCase
     }
 
     /**
-     * @param $shipmentIds
-     * @param $getLabelReturn
-     *
-     * @dataProvider getLabelProvider
-     */
-    public function testGetLabel($shipmentIds, $getLabelReturn)
-    {
-        $getLabelsMock = $this->getFakeMock(GetLabels::class);
-        $getLabelsMock->setMethods(['get']);
-        $getLabelsMock = $getLabelsMock->getMock();
-
-        $map = [];
-        $expectedResult = [];
-        for ($i = 0; $i < count($shipmentIds); $i++) {
-            $expectedResult[$shipmentIds[$i]] = $getLabelReturn[$i];
-
-            $returnValue = [$shipmentIds[$i] => $getLabelReturn[$i]];
-            $map[] = [$shipmentIds[$i], $returnValue];
-        }
-
-        $getExpects = $getLabelsMock->expects($this->exactly(count($shipmentIds)));
-        $getExpects->method('get');
-        $getExpects->willReturnMap($map);
-
-        $instance = $this->getInstance(['getLabels' => $getLabelsMock]);
-
-        foreach ($shipmentIds as $shipmentId) {
-            $this->invokeArgs('setLabel', [$shipmentId], $instance);
-        }
-
-        $labelsProperty = $this->getProperty('labels', $instance);
-        $this->assertEquals($expectedResult, $labelsProperty, '', 0.0, 10, true);
-    }
-
-    /**
      * @return array
      */
     public function setTracksProvider()

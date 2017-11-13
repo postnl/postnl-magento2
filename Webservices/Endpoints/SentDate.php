@@ -32,8 +32,7 @@
 namespace TIG\PostNL\Webservices\Endpoints;
 
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use Magento\Sales\Model\Order\Address;
-use Magento\Sales\Model\Order\Shipment;
+use Magento\Customer\Model\Address\AbstractAddress as Address;
 use TIG\PostNL\Api\Data\OrderInterface as PostNLOrder;
 use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
@@ -58,7 +57,7 @@ class SentDate extends AbstractEndpoint
     private $type = 'GetSentDate';
 
     /**
-     * @var Array
+     * Array
      */
     private $requestParams;
 
@@ -76,6 +75,7 @@ class SentDate extends AbstractEndpoint
      * @var TimezoneInterface
      */
     private $timezone;
+
     /**
      * @var Options
      */
@@ -119,16 +119,14 @@ class SentDate extends AbstractEndpoint
     }
 
     /**
-     * @param Shipment    $shipment
-     *
+     * @param Address $address
+     * @param $storeId
      * @param PostNLOrder $postNLOrder
      *
-     * @return array
      */
-    public function setParameters(Shipment $shipment, PostNLOrder $postNLOrder)
+    public function setParameters($address, $storeId, PostNLOrder $postNLOrder)
     {
-        $address = $shipment->getShippingAddress();
-        $this->soap->updateApiKey($shipment->getStoreId());
+        $this->soap->updateApiKey($storeId);
 
         $this->requestParams = [
             $this->type => [
@@ -162,11 +160,11 @@ class SentDate extends AbstractEndpoint
      * The sent date webservice can only work with NL addresses. That's why we default to the PostNL Pakketten office
      * postcode for addresses outside the Netherlands.
      *
-     * @param $address
+     * @param Address $address
      *
      * @return string
      */
-    private function getPostcode(Address $address)
+    private function getPostcode($address)
     {
         if ($address->getCountryId() != 'NL') {
             return '2132WT';
@@ -186,10 +184,10 @@ class SentDate extends AbstractEndpoint
      *
      * @return string
      */
-    private function getDeliveryDate(Address $address, PostNLOrder $postNLOrder)
+    private function getDeliveryDate($address, PostNLOrder $postNLOrder)
     {
-        if ($address->getCountryId() == 'NL') {
-            $deliveryDate = $postNLOrder->getDeliveryDate();
+        $deliveryDate = $postNLOrder->getDeliveryDate();
+        if ($address->getCountryId() == 'NL' || ($address->getCountryId() === null && !empty($deliveryDate))) {
             return $this->formatDate($deliveryDate);
         }
 

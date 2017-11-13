@@ -35,8 +35,9 @@ use Magento\Framework\Option\ArrayInterface;
 
 class RateType implements ArrayInterface
 {
-    const CARRIER_RATE_TYPE_FLAT  = 'flat';
+    const CARRIER_RATE_TYPE_FLAT = 'flat';
     const CARRIER_RATE_TYPE_TABLE = 'table';
+    const CARRIER_RATE_TYPE_MATRIX = 'matrix';
 
     /**
      * @return array
@@ -47,12 +48,16 @@ class RateType implements ArrayInterface
         $options = [
             [
                 'value' => self::CARRIER_RATE_TYPE_FLAT,
-                'label' => __('Flat')
+                'label' => __('Flat'),
             ],
             [
                 'value' => self::CARRIER_RATE_TYPE_TABLE,
-                'label' => __('Table')
-            ]
+                'label' => __('Table'),
+            ],
+            [
+                'value' => self::CARRIER_RATE_TYPE_MATRIX,
+                'label' => __('Matrix'),
+            ],
         ];
         // @codingStandardsIgnoreEnd
 

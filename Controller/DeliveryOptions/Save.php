@@ -38,9 +38,9 @@ use TIG\PostNL\Helper\DeliveryOptions\OrderParams;
 use TIG\PostNL\Helper\DeliveryOptions\PickupAddress;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Json\Helper\Data;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Checkout\Model\Session;
+use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 
 class Save extends AbstractDeliveryOptions
 {
@@ -55,33 +55,38 @@ class Save extends AbstractDeliveryOptions
     private $pickupAddress;
 
     /**
-     * @param Context         $context
-     * @param OrderFactory    $orderFactory
-     * @param OrderRepository $orderRepository
-     * @param Data            $jsonHelper
-     * @param OrderParams     $orderParams
-     * @param Session         $checkoutSession
-     * @param PickupAddress   $pickupAddress
+     * @var OrderRepository
+     */
+    private $orderRepository;
+
+    /**
+     * @param Context            $context
+     * @param OrderFactory       $orderFactory
+     * @param OrderRepository    $orderRepository
+     * @param QuoteToRateRequest $quoteToRateRequest
+     * @param OrderParams        $orderParams
+     * @param Session            $checkoutSession
+     * @param PickupAddress      $pickupAddress
      */
     public function __construct(
         Context $context,
         OrderFactory $orderFactory,
         OrderRepository $orderRepository,
-        Data $jsonHelper,
+        QuoteToRateRequest $quoteToRateRequest,
         OrderParams $orderParams,
         Session $checkoutSession,
         PickupAddress $pickupAddress
     ) {
         parent::__construct(
             $context,
-            $jsonHelper,
             $orderFactory,
-            $orderRepository,
-            $checkoutSession
+            $checkoutSession,
+            $quoteToRateRequest
         );
 
-        $this->orderParams   = $orderParams;
-        $this->pickupAddress = $pickupAddress;
+        $this->orderParams     = $orderParams;
+        $this->pickupAddress   = $pickupAddress;
+        $this->orderRepository = $orderRepository;
     }
 
     /**

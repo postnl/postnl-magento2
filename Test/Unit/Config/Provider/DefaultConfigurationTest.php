@@ -42,52 +42,6 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
     /**
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
-    public function testGetWsdlBaseUrl($value)
-    {
-        $instance = $this->getInstance();
-        $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_CIF_BASE_URL, $value);
-        $this->assertEquals($value, $instance->getCifBaseUrl());
-    }
-
-    /**
-     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
-     */
-    public function testGetTestWsdlBaseUrl($value)
-    {
-        $instance = $this->getInstance();
-        $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_TEST_CIF_BASE_URL, $value);
-        $this->assertEquals($value, $instance->getTestCifBaseUrl());
-    }
-
-    /**
-     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::liveStagingProvider
-     */
-    public function testGetModusWsdlBaseUrl($value, $modus)
-    {
-        $accountConfigurationMock = $this->getFakeMock(AccountConfiguration::class)->getMock();
-
-        $isModusLiveExpects = $accountConfigurationMock->expects($this->once());
-        $isModusLiveExpects->method('isModusLive');
-        $isModusLiveExpects->willReturn($value == 1);
-
-        $instance = $this->getInstance(['accountConfiguration' => $accountConfigurationMock]);
-        if ($modus == 'live') {
-            $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_CIF_BASE_URL, 'live');
-        } else {
-            $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_TEST_CIF_BASE_URL, 'staging', null, $this->at(0));
-        }
-
-        $result = $instance->getModusCifBaseUrl();
-        if ($modus == 'off') {
-            $this->assertEquals('staging', $result);
-        } else {
-            $this->assertEquals($modus, $result);
-        }
-    }
-
-    /**
-     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
-     */
     public function testGetApiBaseUrl($value)
     {
         $instance = $this->getInstance();

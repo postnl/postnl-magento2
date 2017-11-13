@@ -93,4 +93,19 @@ interface OrderRepositoryInterface
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
     public function getByFieldWithValue($field, $value);
+
+    /**
+     * @param int $id
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    // @codingStandardsIgnoreLine
+    public function getByOrderId($id);
+
+    /**
+     * @param $quoteId
+     *
+     * @return null|\TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function getByQuoteId($quoteId = null);
 }
