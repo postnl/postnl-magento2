@@ -109,7 +109,7 @@ class Shipments
 
         $addressArray = [
             'AddressType'      => $addressType,
-            'FirstName'        => $shippingAddress->getFirstname(),
+            'FirstName'        => $this->getFirstName($shippingAddress),
             'Name'             => $shippingAddress->getLastname(),
             'CompanyName'      => $shippingAddress->getCompany(),
             'Street'           => $streetData['Street'],
@@ -150,5 +150,19 @@ class Shipments
             'HouseNr'    => isset($houseNrMatches[1]) ? trim($houseNrMatches[1]) : '',
             'HouseNrExt' => isset($houseNrMatches[2]) ? trim($houseNrMatches[2]) : '',
         ];
+    }
+
+    /**
+     * @param Address $shippingAddress
+     *
+     * @return string
+     */
+    private function getFirstName($shippingAddress)
+    {
+        $name = $shippingAddress->getFirstname();
+        if ($shippingAddress->getMiddlename()) {
+            $name .= ' ' .$shippingAddress->getMiddlename();
+        }
+        return $name;
     }
 }
