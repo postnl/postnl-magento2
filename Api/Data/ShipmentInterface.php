@@ -239,4 +239,9 @@ interface ShipmentInterface
      * @return \Magento\Sales\Api\Data\ShipmentInterface
      */
     public function getShipment();
+
+    /**
+     * @return bool
+     */
+    public function canChangeParcelCount();
 }

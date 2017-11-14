@@ -34,6 +34,7 @@ namespace TIG\PostNL\Block\Adminhtml\Shipment\Options;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\OrderRepository;
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Block\Adminhtml\Shipment\OptionsAbstract;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
@@ -52,6 +53,11 @@ class View extends OptionsAbstract
      * @var ShipmentType
      */
     private $productCodeRenderer;
+
+    /**
+     * @var ShipmentInterface
+     */
+    private $shipment;
 
     /**
      * @param Context                  $context
@@ -93,7 +99,7 @@ class View extends OptionsAbstract
     {
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLShipment();
-        return $this->productCodeRenderer->render($postNLShipment->getProductCode(), false);
+        return $this->productCodeRenderer->render($postNLShipment->getShipmentType());
     }
 
     /**
@@ -101,6 +107,21 @@ class View extends OptionsAbstract
      */
     public function getPostNLShipment()
     {
-        return $this->postNLShipmentRepository->getByFieldWithValue('shipment_id', $this->getShipment()->getId());
+        if ($this->shipment === null) {
+            $this->shipment = $this->postNLShipmentRepository->getByFieldWithValue(
+                'shipment_id',
+                $this->getShipment()->getId()
+            );
+        }
+
+        return $this->shipment;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canChangeParcelCount()
+    {
+        return $this->getPostNLShipment()->canChangeParcelCount();
     }
 }

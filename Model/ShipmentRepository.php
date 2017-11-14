@@ -103,7 +103,7 @@ class ShipmentRepository implements ShipmentRepositoryInterface
     /**
      * @param $identifier
      *
-     * @return mixed
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
      * @throws NoSuchEntityException
      */
     public function getById($identifier)
