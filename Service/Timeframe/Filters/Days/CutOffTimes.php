@@ -38,14 +38,29 @@ use TIG\PostNL\Service\Timeframe\IsPastCutOff;
 class CutOffTimes implements DaysFilterInterface
 {
     /**
-     * @var bool
+     * @var IsPastCutOff
      */
     private $isPastCutOffTime;
+
+    /**
+     * @var bool
+     */
+    private $isPastCutOffResult;
 
     /**
      * @var TimezoneInterface
      */
     private $dateLoader;
+
+    /**
+     * @var \DateTime
+     */
+    private $today;
+
+    /**
+     * @var TimezoneInterface
+     */
+    private $todayTimezone;
 
     /**
      * @param IsPastCutOff      $isPastCutOff
@@ -57,9 +72,9 @@ class CutOffTimes implements DaysFilterInterface
         TimezoneInterface $dateLoader,
         TimezoneInterface $today
     ) {
+        $this->todayTimezone = $today;
         $this->dateLoader = $dateLoader;
-        $this->today = $today->date('today', null, false);
-        $this->isPastCutOffTime = $isPastCutOff->calculate();
+        $this->isPastCutOffTime = $isPastCutOff;
     }
 
     /**
@@ -69,7 +84,7 @@ class CutOffTimes implements DaysFilterInterface
      */
     public function filter($days)
     {
-        if (!$this->isPastCutOffTime || !$this->isNextDay($days[0])) {
+        if (!$this->isPastCutOffTime() || !$this->isNextDay($days[0])) {
             return $days;
         }
 
@@ -86,12 +101,40 @@ class CutOffTimes implements DaysFilterInterface
     private function isNextDay($day)
     {
         $dayDateTime = $this->dateLoader->date($day->Date, null, false);
-        $diff = $dayDateTime->diff($this->today);
+        $diff = $dayDateTime->diff($this->today());
 
         if ($diff->days == 1) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    private function today()
+    {
+        static $today = null;
+
+        if ($today) {
+            return $today;
+        }
+
+        return $today = $this->todayTimezone->date('today', null, false);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isPastCutOffTime()
+    {
+        static $isPastCutoff = null;
+
+        if ($isPastCutoff) {
+            return $isPastCutoff;
+        }
+
+        return $isPastCutoff = $this->isPastCutOffTime->calculate();
     }
 }

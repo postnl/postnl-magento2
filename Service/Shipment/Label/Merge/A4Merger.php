@@ -35,36 +35,12 @@ use TIG\PostNL\Service\Shipment\Label\File;
 use TIG\PostNL\Service\Pdf\Fpdi;
 use TIG\PostNL\Service\Pdf\FpdiFactory;
 
-class A4Merger implements MergeInterface
+class A4Merger extends AbstractMerger implements MergeInterface
 {
-    /**
-     * @var Fpdi
-     */
-    private $pdf;
-
-    /**
-     * @var File
-     */
-    private $file;
-
     /**
      * @var int
      */
     private $labelCounter = 0;
-
-    /**
-     * @param FpdiFactory $pdf
-     * @param File $file
-     */
-    public function __construct(
-        FpdiFactory $pdf,
-        File $file
-    ) {
-        $this->pdf = $pdf->create();
-        $this->pdf->addPage('L', 'A4');
-
-        $this->file = $file;
-    }
 
     /**
      * @param Fpdi[] $labels
@@ -73,6 +49,7 @@ class A4Merger implements MergeInterface
      */
     public function files(array $labels)
     {
+        $this->pdf = $this->createPdf(true);
         foreach ($labels as $label) {
             $this->increaseCounter();
             // @codingStandardsIgnoreLine

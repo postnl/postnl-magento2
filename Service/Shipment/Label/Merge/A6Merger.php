@@ -31,34 +31,10 @@
  */
 namespace TIG\PostNL\Service\Shipment\Label\Merge;
 
-use TIG\PostNL\Service\Shipment\Label\File;
 use TIG\PostNL\Service\Pdf\Fpdi;
-use TIG\PostNL\Service\Pdf\FpdiFactory;
 
-class A6Merger implements MergeInterface
+class A6Merger extends AbstractMerger implements MergeInterface
 {
-    /**
-     * @var Fpdi
-     */
-    private $pdf;
-
-    /**
-     * @var File
-     */
-    private $file;
-
-    /**
-     * @param FpdiFactory $pdf
-     * @param File $file
-     */
-    public function __construct(
-        FpdiFactory $pdf,
-        File $file
-    ) {
-        $this->pdf = $pdf->create();
-        $this->file = $file;
-    }
-
     /**
      * @param Fpdi[] $labels
      *
@@ -66,6 +42,7 @@ class A6Merger implements MergeInterface
      */
     public function files(array $labels)
     {
+        $this->pdf = $this->createPdf();
         foreach ($labels as $label) {
             // @codingStandardsIgnoreLine
             $filename = $this->file->save($label->Output('S'));

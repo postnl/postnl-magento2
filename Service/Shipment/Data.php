@@ -100,7 +100,8 @@ class Data
             'Contacts'                 => ['Contact' => $contact],
             'Dimension'                => [
                     'Weight' => $this->getWeightByParcelCount(
-                        $shipment->getTotalWeight(), $shipment->getParcelCount()
+                        $shipment->getTotalWeight(),
+                        $shipment->getParcelCount()
                     )
                 ],
             'DeliveryDate'             => $shipment->getDeliveryDateFormatted(),

@@ -58,13 +58,15 @@ class PrepareTest extends TestCase
         $invalidFactory = $this->getFakeMock(TypeInterfaceFactory::class)->setMethods(['create'])->getMock();
         $invalidFactory->expects($this->atLeastOnce())->method('create')->willReturn('randomstring');
 
-        $this->getInstance([
+        $instance = $this->getInstance([
             'typeConverter' => $typeConverter,
             'types' => [
                 'domestic' => $validFactory,
                 'test' => $invalidFactory,
             ]
         ]);
+
+        $instance->label($this->getMock(\TIG\PostNL\Api\Data\ShipmentLabelInterface::class));
     }
 
     public function testCallsTheRightProcessor()

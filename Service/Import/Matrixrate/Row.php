@@ -54,6 +54,16 @@ class Row
     private $validation;
 
     /**
+     * @var StoreInterface
+     */
+    private $store;
+
+    /**
+     * @var bool
+     */
+    private $needsDataReset = true;
+
+    /**
      * @param StoreInterface $store
      * @param Factory        $validation
      */
@@ -61,10 +71,8 @@ class Row
         StoreInterface $store,
         Factory $validation
     ) {
-        $validation->resetData();
-
-        $this->websiteId = $store->getWebsiteId();
         $this->validation = $validation;
+        $this->store = $store;
     }
 
     /**
@@ -80,6 +88,8 @@ class Row
     // @codingStandardsIgnoreStart
     public function process($row, $line)
     {
+        $this->resetData();
+
         if (!is_array($line) || empty($line)) {
             $this->errors[] = __('Invalid PostNL matrix rates format in row #%s', $row);
             return false;
@@ -142,7 +152,7 @@ class Row
         }
 
         return [
-            'website_id' => $this->websiteId,
+            'website_id' => $this->store->getWebsiteId(),
             'destiny_country_id' => $country,
             'destiny_region_id' => $region,
             'destiny_zip_code' => $line[2],
@@ -169,5 +179,16 @@ class Row
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    /**
+     * The resetData() method call only called once per instance.
+     */
+    private function resetData()
+    {
+        if ($this->needsDataReset) {
+            $this->needsDataReset = false;
+            $this->validation->resetData();
+        }
     }
 }
