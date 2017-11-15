@@ -103,6 +103,11 @@ define([
 
         allFieldsExists = true;
         $.each(fields, function () {
+            if(this == "input[name*='street[1]']") {
+                // The street[1] field does not exist when customer address is set to 1 line in customer configuration
+                return;
+            }
+            
             if (!$(this).length) {
                 allFieldsExists = false;
                 return false;
