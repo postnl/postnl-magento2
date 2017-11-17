@@ -118,12 +118,12 @@ class Tablerate extends Value
         $csvData = [];
 
         // @codingStandardsIgnoreLine
-        if (empty($_FILES['groups']['tmp_name']['tig_postnl']['fields']['import']['value'])) {
+        if (empty($_FILES['groups']['tmp_name']['tig_postnl']['fields']['tablerate_import']['value'])) {
             return $csvData;
         }
 
         // @codingStandardsIgnoreLine
-        $filePath = $_FILES['groups']['tmp_name']['tig_postnl']['fields']['import']['value'];
+        $filePath = $_FILES['groups']['tmp_name']['tig_postnl']['fields']['tablerate_import']['value'];
 
         $website = $this->storeManager->getWebsite($scopeId);
         $websiteId = $website->getId();
