@@ -29,7 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer\SalesOrderSaveAfter;
+namespace TIG\PostNL\Observer\SalesOrderPlaceAfter;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -89,7 +89,7 @@ class AddressToOrder implements ObserverInterface
     public function execute(Observer $observer)
     {
         /** @var Order $order */
-        $order = $observer->getData('data_object');
+        $order = $observer->getData('order');
         $quotePgAddres = $this->pickupAddressHelper->getPakjeGemakAddressInQuote($order->getQuoteId());
         $pgAddress     = false;
         if ($quotePgAddres->getId()) {
