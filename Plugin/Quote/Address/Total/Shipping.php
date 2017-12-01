@@ -149,7 +149,7 @@ class Shipping
      */
     private function getFee($quote)
     {
-        $order = $this->currentPostNLOrder->get($quote->getQuoteId());
+        $order = $this->currentPostNLOrder->get($quote->getId());
 
         if (!$order) {
             return 0;
