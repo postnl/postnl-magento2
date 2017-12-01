@@ -128,7 +128,7 @@ class Shipping
      */
     private function processTotal(Quote $quote, Quote\Address\Total $total, $rate, $address)
     {
-        $fee         = $this->getFee();
+        $fee         = $this->getFee($quote);
         $store       = $quote->getStore();
         $amountPrice = $this->priceCurrency->convert(
             $rate->getPrice() + $fee,
@@ -144,11 +144,12 @@ class Shipping
     }
 
     /**
+     * @param Quote $quote
      * @return float
      */
-    private function getFee()
+    private function getFee($quote)
     {
-        $order = $this->currentPostNLOrder->get();
+        $order = $this->currentPostNLOrder->get($quote->getQuoteId());
 
         if (!$order) {
             return 0;
