@@ -109,15 +109,15 @@
         </field>
 
         <field id="eveningdelivery_active" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-        <label>Activate evening delivery</label>
-        <comment><![CDATA[Activate evening delivery for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298488" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
-        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-        <config_path>tig_postnl/shippingoptions/eveningdelivery_active</config_path>
-        <depends>
-            <field id="shippingoptions_active">1</field>
-            <field id="deliverydays_active">1</field>
-        </depends>
-    </field>
+            <label>Activate evening delivery</label>
+            <comment><![CDATA[Activate evening delivery for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298488" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/shippingoptions/eveningdelivery_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+                <field id="deliverydays_active">1</field>
+            </depends>
+        </field>
 
         <field id="eveningdelivery_fee" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Eveningdelivery fee</label>

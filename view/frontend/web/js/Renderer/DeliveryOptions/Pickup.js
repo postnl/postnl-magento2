@@ -81,7 +81,7 @@ define([
                     return;
                 }
 
-                if (address.countryCode != 'NL') {
+                if (address.countryCode !== 'NL') {
                     return;
                 }
 
@@ -96,7 +96,7 @@ define([
              * Deselect the selected pickup option when a different option type is being selected.
              */
             State.currentSelectedShipmentType.subscribe(function (shipmentType) {
-                if (shipmentType != 'pickup') {
+                if (shipmentType !== 'pickup') {
                     this.selectedOption(null);
                 }
             }.bind(this));

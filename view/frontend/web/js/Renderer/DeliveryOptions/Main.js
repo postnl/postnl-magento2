@@ -77,7 +77,7 @@ define([
                 return false;
             }
 
-            if (address.countryCode === 'NL' || address.countryCode === 'BE') {
+            if (address.countryCode == 'NL' || address.countryCode == 'BE') {
                 return State.deliveryOptionsAreAvailable();
             }
 
@@ -86,20 +86,13 @@ define([
 
         canUsePickupLocations: ko.computed(function () {
 
+            var isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
+            var pickupOptionsAreAvailable = State.pickupOptionsAreAvailable();
+
             var address = AddressFinder();
+            var isNL = (address !== null && address !== false && address.countryCode === 'NL');
 
-            if (address === null || address === false) {
-                return false;
-            }
-
-            if (address.country === 'NL') {
-                var isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
-                var pickupOptionsAreAvailable = State.pickupOptionsAreAvailable();
-
-                return isActive && pickupOptionsAreAvailable;
-            }
-
-            return false;
+            return isActive === 1 && isNL && pickupOptionsAreAvailable;
         }),
 
         setDelivery: function () {
