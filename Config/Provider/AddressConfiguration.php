@@ -31,6 +31,11 @@
  */
 namespace TIG\PostNL\Config\Provider;
 
+/**
+ * This class contains all posible values of the address info parsed inside of the configuration.
+ * Which will cause that it is too long for Code Sniffer to check.
+ */
+// @codingStandardsIgnoreFile
 class AddressConfiguration extends AbstractConfigProvider
 {
 

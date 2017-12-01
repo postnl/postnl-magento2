@@ -109,7 +109,6 @@ class ProductCodeAndType
 
         $this->getProductCode($option, $country);
         return $this->response();
-
     }
 
     /**
