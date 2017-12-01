@@ -29,11 +29,11 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Order;
+namespace TIG\PostNL\Config\CheckoutConfiguration;
 
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
-class FeeCalculator
+class IsEveningDeliveryBeActive implements CheckoutConfigurationInterface
 {
     /**
      * @var ShippingOptions
@@ -50,42 +50,10 @@ class FeeCalculator
     }
 
     /**
-     * @param $params
-     *
-     * @return float
+     * @return bool|mixed
      */
-    public function get($params)
+    public function getValue()
     {
-        if (!array_key_exists('option', $params)) {
-            return (float)0.0;
-        }
-
-        if ($this->shippingOptions->isEveningDeliveryActive() && $params['option'] == 'Evening') {
-            return (float)$this->getEveningDeliveryFee($params);
-        }
-
-        if ($this->shippingOptions->isSundayDeliveryActive() && $params['option'] == 'Sunday') {
-            return (float)$this->shippingOptions->getSundayDeliveryFee();
-        }
-
-        if ($this->shippingOptions->isPakjegemakExpressActive() && $params['option'] == 'PGE') {
-            return (float)$this->shippingOptions->getPakjegemakExpressFee();
-        }
-
-        return (float)0.0;
-    }
-
-    /**
-     * @param $params
-     *
-     * @return mixed
-     */
-    private function getEveningDeliveryFee($params)
-    {
-        if (!array_key_exists('country', $params)) {
-            return $this->shippingOptions->getEveningDeliveryFee();
-        }
-
-        return $this->shippingOptions->getEveningDeliveryFee($params['country']);
+        return $this->shippingOptions->isEveningDeliveryActive('BE');
     }
 }

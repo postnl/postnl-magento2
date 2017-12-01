@@ -151,7 +151,7 @@ class OrderParams
     }
 
     /**
-     * If you whant to store the param inside the tig_postnl_order table,
+     * If you want to store the param inside the tig_postnl_order table,
      * you need to give the keys the same name as the column names.
      *
      * @param $params

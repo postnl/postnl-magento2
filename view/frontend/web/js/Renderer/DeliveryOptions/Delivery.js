@@ -80,7 +80,7 @@ define([
                     return;
                 }
 
-                if (address.countryCode != 'NL') {
+                if (address.countryCode !== 'NL' && address.countryCode !== 'BE') {
                     return;
                 }
 
@@ -95,7 +95,7 @@ define([
              * Deselect the selected delivery option when a different option type is being selected.
              */
             State.currentSelectedShipmentType.subscribe(function (shipmentType) {
-                if (shipmentType != 'delivery') {
+                if (shipmentType !== 'delivery') {
                     this.selectedOption(null);
                 }
             }.bind(this));
@@ -130,7 +130,8 @@ define([
                         date   : value.date,
                         option : value.option,
                         from   : value.from,
-                        to     : value.to
+                        to     : value.to,
+                        country: value.address.country
                     }
                 }).done(function (response) {
                     $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
@@ -168,6 +169,7 @@ define([
                 State.deliveryPrice(data.price);
                 data = ko.utils.arrayMap(data.timeframes, function (day) {
                     return ko.utils.arrayMap(day, function (timeFrame) {
+                        timeFrame.address = address;
                         return new TimeFrame(timeFrame);
                     });
                 });

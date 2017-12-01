@@ -107,20 +107,22 @@ class ProductCodeAndType
             return $this->response();
         }
 
-        $this->getProductCode($option);
+        $this->getProductCode($option, $country);
         return $this->response();
+
     }
 
     /**
      * Get the product code for the delivery options.
      *
      * @param string $option
+     * @param string $country
      */
     // @codingStandardsIgnoreStart
-    private function getProductCode($option)
+    private function getProductCode($option, $country)
     {
         if ($option == static::OPTION_EVENING) {
-            $this->code = $this->productOptionsConfiguration->getDefaultEveningProductOption();
+            $this->code = $this->getDefaultEveningProductOption($country);
             $this->type = static::SHIPMENT_TYPE_EVENING;
             return;
         }
@@ -177,5 +179,18 @@ class ProductCodeAndType
             'code' => $this->code,
             'type' => $this->type,
         ];
+    }
+
+    /**
+     * @param $country
+     * @return int
+     */
+    private function getDefaultEveningProductOption($country)
+    {
+        if ($country === 'BE') {
+            return $this->productOptionsConfiguration->getDefaultEveningBeProductOption();
+        }
+
+        return $this->productOptionsConfiguration->getDefaultEveningProductOption();
     }
 }
