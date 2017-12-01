@@ -60,7 +60,8 @@ class AddressConfiguration extends AbstractConfigProvider
             'housenumber'          => $this->getHousenumber($store),
             'housenumber_addition' => $this->getHousenumberAddition($store),
             'postcode'             => $this->getPostcode($store),
-            'city'                 => $this->getCity($store)
+            'city'                 => $this->getCity($store),
+            'country'              => $this->getCountry(),
         ];
 
         return $shippersAddress;
@@ -154,5 +155,15 @@ class AddressConfiguration extends AbstractConfigProvider
     public function getCity($store = null)
     {
         return $this->getConfigFromXpath(self::XPATH_GENERAL_CITY, $store);
+    }
+
+    /**
+     * At this moment only sending from NL is allowed. This may change in the future.
+     *
+     * @return string
+     */
+    public function getCountry()
+    {
+        return 'NL';
     }
 }
