@@ -96,7 +96,7 @@ class TablerateTest extends TestCase
         $expectedCallCount = (int)(null !== $file);
 
         // @codingStandardsIgnoreLine
-        $_FILES['groups']['tmp_name']['tig_postnl']['fields']['import']['value'] = $file;
+        $_FILES['groups']['tmp_name']['tig_postnl']['fields']['tablerate_import']['value'] = $file;
 
         $websiteMock = $this->getFakeMock(WebsiteInterface::class)->getMock();
         $websiteMock->expects($this->exactly($expectedCallCount))->method('getId')->willReturn('1');
