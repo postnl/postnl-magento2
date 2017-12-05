@@ -52,58 +52,14 @@ class ShipmentType
     }
 
     /**
-     * @param $type
-     *
-     * @return array
-     */
-    // @codingStandardsIgnoreStart
-    private function getLabel($type)
-    {
-        $label = '';
-        $comment = '';
-
-        switch ($type) {
-            case 'Daytime':
-                $label = __('Domestic');
-                break;
-            case 'Evening':
-                $label = __('Domestic');
-                $comment = __('Evening');
-                break;
-            case 'ExtraAtHome':
-            case 'Extra@Home':
-                $label = __('Extra@Home');
-                break;
-            case 'Sunday':
-                $label = __('Sunday');
-                break;
-            case 'PG':
-                $label = __('Post office');
-                break;
-            case 'PGE':
-                $label = __('Post office');
-                $comment = __('Early morning pickup');
-                break;
-            case 'EPS':
-                $label = __('EPS');
-                break;
-        }
-
-        return [
-            'label' => $label,
-            'comment' => $comment,
-        ];
-    }
-    // @codingStandardsIgnoreStop
-
-    /**
+     * @param $code
      * @param $type
      *
      * @return string
      */
-    public function render($type)
+    public function render($code, $type)
     {
-        $type = $this->getLabel($type);
+        $type = $this->productOptions->getLabel($code, $type);
         $output = (string)$type['label'];
 
         if ($type['comment']) {

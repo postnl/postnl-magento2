@@ -33,6 +33,7 @@
 namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Renderer;
 
 use TIG\PostNL\Block\Adminhtml\Renderer\ShipmentType;
+use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Test\TestCase;
 
 class ShipmentTypeTest extends TestCase
@@ -42,28 +43,40 @@ class ShipmentTypeTest extends TestCase
     public function returnsTheCorrectResultProvider()
     {
         return [
-            'Daytime' => ['Daytime', 'Domestic', ''],
-            'Evening' => ['Evening', 'Domestic', 'Evening'],
-            'Extra@Home' => ['ExtraAtHome', 'Extra@Home', ''],
-            'Sunday' => ['Sunday', 'Sunday', ''],
-            'Pickup Delivery' => ['PG', 'Post office', ''],
-            'Pickup Delivery Early' => ['PGE', 'Post office', 'Early morning pickup'],
-            'EPS' => ['EPS', 'EPS', ''],
+            'Daytime' => ['3085', 'Daytime', 'Domestic', ''],
+            'Evening' => ['3090', 'Evening', 'Domestic', 'Evening'],
+            'Evening BE' => ['4941', 'Evening', 'EPS', 'Evening'],
+            'Extra@Home' => ['3790', 'ExtraAtHome', 'Extra@Home', ''],
+            'Sunday' => ['3385', 'Sunday', 'Domestic', 'Sunday'],
+            'Pickup Delivery' => ['3533', 'PG', 'Post office', ''],
+            'Pickup Delivery Early' => ['3543', 'PGE', 'Post office', 'Early morning pickup'],
+            'EPS' => ['4950', 'EPS', 'EPS', ''],
         ];
     }
 
     /**
+     * @param $productCode
      * @param $shipmentType
      * @param $expectedType
      * @param $expectedComment
      *
      * @dataProvider returnsTheCorrectResultProvider
      */
-    public function testReturnsTheCorrectResult($shipmentType, $expectedType, $expectedComment)
+    public function testReturnsTheCorrectResult($productCode, $shipmentType, $expectedType, $expectedComment)
     {
+        $optionsMock = $this->getFakeMock(ProductOptions::class)->getMock();
+        $getLabel = $optionsMock->method('getLabel');
+        $getLabel->willReturn([
+            'label' => $expectedType,
+            'comment' => $expectedComment
+        ]);
+
         /** @var ShipmentType $instance */
-        $instance = $this->getInstance();
-        $result = $instance->render($shipmentType);
+        $instance = $this->getInstance([
+            'productOptions' => $optionsMock
+        ]);
+
+        $result = $instance->render($productCode, $shipmentType);
 
         $this->assertContains($expectedType, $result);
 

@@ -277,38 +277,43 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         'extra_at_home_options' => 'Extra@Home options',
     ];
 
+    protected $groupToLabel = [
+        'standard_options'      => 'Domestic',
+        'pakjegemak_options'    => 'Post Office',
+        'eu_options'            => 'EPS',
+        'buspakje_options'      => 'Letter Box',
+        'extra_at_home_options' => 'Extra@Home',
+    ];
+
+    protected $typeToComment = [
+        'Daytime'     => '',
+        'Evening'     => 'Evening',
+        'ExtraAtHome' => '',
+        'Extra@Home'  => '',
+        'Sunday'      => 'Sunday',
+        'PG'          => '',
+        'PGE'         => 'Early morning pickup',
+        'EPS'         => ''
+    ];
+
     /**
      * @param $code
-     * @param bool $short
+     * @param $type
      *
-     * @return mixed
+     * @return array
      */
-    public function getOptionLabel($code, $short = false)
+    public function getLabel($code, $type)
     {
-        if (!array_key_exists($code, $this->availableOptions)) {
-            return $code;
+        if (!array_key_exists($code, $this->availableOptions) || !array_key_exists($type, $this->typeToComment)) {
+            return $type;
         }
 
-        if ($short) {
-            return $this->getShortLabel($code);
-        }
+        $group = $this->availableOptions[$code]['group'];
 
-        return $this->availableOptions[$code]['label'];
-    }
-
-    /**
-     * @param $code
-     *
-     * @return string
-     */
-    public function getShortLabel($code)
-    {
-        $label = str_replace('_options', '', $this->availableOptions[$code]['group']);
-        if (trim($label) == 'extra_at_home') {
-            $label = 'extra@Home';
-        }
-
-        return  ucfirst(__($label));
+        return [
+            'label'   => $this->groupToLabel[$group],
+            'comment' => $this->typeToComment[$type]
+        ];
     }
 
     /**
