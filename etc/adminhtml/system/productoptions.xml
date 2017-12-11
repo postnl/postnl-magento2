@@ -92,8 +92,19 @@
                 <field id="tig_postnl/shippingoptions/pakjegemak_active">1</field>
             </depends>
         </field>
+
+        <field id="default_evening_be_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default evening for Belgium option</label>
+            <comment><![CDATA[Select the default product option for evening delivery to Belgium shipments.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsEveningOptionsBe</source_model>
+            <config_path>tig_postnl/productoptions/default_evening_be_option</config_path>
+            <depends>
+                <field id="tig_postnl/shippingoptions/eveningdelivery_be_active">1</field>
+            </depends>
+        </field>
+
         <!-- Disabled because needs further development -->
-        <!--<field id="default_sunday_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">-->
+        <!--<field id="default_sunday_option" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">-->
             <!--<label>Default sunday delivery option</label>-->
             <!--<comment><![CDATA[Select the default product option for sunday delivery shipments.]]></comment>-->
             <!--<source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsSundayOptions</source_model>-->

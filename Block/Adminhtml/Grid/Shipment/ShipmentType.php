@@ -85,7 +85,7 @@ class ShipmentType extends AbstractGrid
         }
 
         if ($shipment->getShipmentType()) {
-            return $this->codeRenderer->render($shipment->getShipmentType());
+            return $this->codeRenderer->render($shipment->getProductCode(), $shipment->getShipmentType());
         }
 
         return '';

@@ -33,6 +33,7 @@ namespace TIG\PostNL\Service\Order;
 
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
+use TIG\PostNL\Service\Wrapper\QuoteInterface;
 
 class ProductCodeAndType
 {
@@ -73,15 +74,23 @@ class ProductCodeAndType
     private $productOptionsFinder;
 
     /**
+     * @var QuoteInterface
+     */
+    private $quote;
+
+    /**
      * @param ProductOptionsConfiguration $productOptionsConfiguration
      * @param ProductOptionsFinder        $productOptionsFinder
+     * @param QuoteInterface              $quote
      */
     public function __construct(
         ProductOptionsConfiguration $productOptionsConfiguration,
-        ProductOptionsFinder $productOptionsFinder
+        ProductOptionsFinder $productOptionsFinder,
+        QuoteInterface $quote
     ) {
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->productOptionsFinder = $productOptionsFinder;
+        $this->quote = $quote;
     }
 
     /**
@@ -93,21 +102,24 @@ class ProductCodeAndType
      *
      * @return array
      */
-    public function get($type = '', $option = '', $country = 'NL')
+    public function get($type = '', $option = '', $country = null)
     {
-        if (empty($type) && $country != 'NL') {
+        $country = $country ?: $this->getCountryCode();
+        $type    = strtolower($type);
+        $option  = strtolower($option);
+
+        // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
+        if ((empty($type) || $option == static::OPTION_DAYTIME) && $country != 'NL') {
             $this->getEpsOption();
             return $this->response();
         }
 
-        $type = strtolower($type);
-        $option = strtolower($option);
         if ($type == static::TYPE_PICKUP) {
             $this->getPakjegemakProductOption($option);
             return $this->response();
         }
 
-        $this->getProductCode($option);
+        $this->getProductCode($option, $country);
         return $this->response();
     }
 
@@ -115,12 +127,13 @@ class ProductCodeAndType
      * Get the product code for the delivery options.
      *
      * @param string $option
+     * @param string $country
      */
     // @codingStandardsIgnoreStart
-    private function getProductCode($option)
+    private function getProductCode($option, $country)
     {
         if ($option == static::OPTION_EVENING) {
-            $this->code = $this->productOptionsConfiguration->getDefaultEveningProductOption();
+            $this->code = $this->getDefaultEveningProductOption($country);
             $this->type = static::SHIPMENT_TYPE_EVENING;
             return;
         }
@@ -177,5 +190,27 @@ class ProductCodeAndType
             'code' => $this->code,
             'type' => $this->type,
         ];
+    }
+
+    /**
+     * @param $country
+     * @return int
+     */
+    private function getDefaultEveningProductOption($country)
+    {
+        if ($country === 'BE') {
+            return $this->productOptionsConfiguration->getDefaultEveningBeProductOption();
+        }
+
+        return $this->productOptionsConfiguration->getDefaultEveningProductOption();
+    }
+
+    /**
+     * @return string
+     */
+    private function getCountryCode()
+    {
+        $address = $this->quote->getShippingAddress();
+        return $address->getCountryId();
     }
 }

@@ -61,7 +61,7 @@ class FeeCalculator
         }
 
         if ($this->shippingOptions->isEveningDeliveryActive() && $params['option'] == 'Evening') {
-            return (float)$this->shippingOptions->getEveningDeliveryFee();
+            return (float)$this->getEveningDeliveryFee($params);
         }
 
         if ($this->shippingOptions->isSundayDeliveryActive() && $params['option'] == 'Sunday') {
@@ -73,5 +73,19 @@ class FeeCalculator
         }
 
         return (float)0.0;
+    }
+
+    /**
+     * @param $params
+     *
+     * @return mixed
+     */
+    private function getEveningDeliveryFee($params)
+    {
+        if (!array_key_exists('country', $params)) {
+            return $this->shippingOptions->getEveningDeliveryFee();
+        }
+
+        return $this->shippingOptions->getEveningDeliveryFee($params['country']);
     }
 }
