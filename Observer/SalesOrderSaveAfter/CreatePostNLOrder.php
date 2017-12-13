@@ -100,7 +100,7 @@ class CreatePostNLOrder implements ObserverInterface
             return;
         }
 
-        $postnlOrder = $this->orderRepository->getByFieldWithValue('quote_id', $magentoOrder->getQuoteId());
+        $postnlOrder = $this->getPostNLOrder($magentoOrder);
         if (!$postnlOrder) {
             $postnlOrder = $this->orderRepository->create();
         }
@@ -111,6 +111,28 @@ class CreatePostNLOrder implements ObserverInterface
         $postnlOrder->setData('parcel_count', $this->parcelCount->get($magentoOrder));
 
         $this->orderRepository->save($postnlOrder);
+    }
+
+    /**
+     * Before 1.3.0 the quote ID was in FK relation, but when an quote is deleted by the Cron of Magento the quote ID
+     * of the PostNL order was set to NULL and the Magento order keeps the old quote ID.
+     *
+     * So when parsing the Magento->getQuoteId() the PostNLorder could have NULL as quote_id, but the order is still in
+     * process. And when saving the order it would give the sql error :
+     *  - Cannot add or update a child row: a foreign key constraint fails
+     *
+     * @param MagentoOrder $magentoOrder
+     *
+     * @return null|\TIG\PostNL\Model\AbstractModel|\TIG\PostNL\Model\Order
+     */
+    private function getPostNLOrder(MagentoOrder $magentoOrder)
+    {
+        $postnlOrder = $this->orderRepository->getByQuoteId($magentoOrder->getQuoteId());
+        if (!$postnlOrder) {
+            $postnlOrder = $this->orderRepository->getByOrderId($magentoOrder->getId());
+        }
+
+        return $postnlOrder;
     }
 
     /**
