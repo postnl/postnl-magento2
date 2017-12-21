@@ -26,12 +26,15 @@ env:
     - MAGENTO_VERSION=2.1.7
     - MAGENTO_VERSION=2.1.8
     - MAGENTO_VERSION=2.1.9
+    - MAGENTO_VERSION=2.1.10
     - MAGENTO_VERSION=2.2.0
+    - MAGENTO_VERSION=2.2.1
+    - MAGENTO_VERSION=2.2.2
 
 matrix:
   include:
     - php: 7.1
-      env: MAGENTO_VERSION=2.2.0 CODE_COVERAGE=true
+      env: MAGENTO_VERSION=2.2.2 CODE_COVERAGE=true
 
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
