@@ -15,25 +15,28 @@ env:
   global:
     - CODE_COVERAGE=false
 
+# We have decided to only test the latest two of each major releases.
   matrix:
-    - MAGENTO_VERSION=2.1.0
-    - MAGENTO_VERSION=2.1.1
-    - MAGENTO_VERSION=2.1.2
-    - MAGENTO_VERSION=2.1.3
-    # - MAGENTO_VERSION=2.1.4 # Skipping 2.1.4 as 2.1.5 = 2.1.4 + copyright updates
-    - MAGENTO_VERSION=2.1.5
-    - MAGENTO_VERSION=2.1.6
-    - MAGENTO_VERSION=2.1.7
-    - MAGENTO_VERSION=2.1.8
-    - MAGENTO_VERSION=2.1.9
+    # - MAGENTO_VERSION=2.1.0
+    # - MAGENTO_VERSION=2.1.1
+    # - MAGENTO_VERSION=2.1.2
+    # - MAGENTO_VERSION=2.1.3
+    # - MAGENTO_VERSION=2.1.4
+    # - MAGENTO_VERSION=2.1.5
+    # - MAGENTO_VERSION=2.1.6
+    # - MAGENTO_VERSION=2.1.7
+    # - MAGENTO_VERSION=2.1.8
+    # - MAGENTO_VERSION=2.1.9
     - MAGENTO_VERSION=2.1.10
-    - MAGENTO_VERSION=2.2.0
+    - MAGENTO_VERSION=2.1.11
+    # - MAGENTO_VERSION=2.2.0
     - MAGENTO_VERSION=2.2.1
     - MAGENTO_VERSION=2.2.2
 
 matrix:
   include:
     - php: 7.1
+      env: MAGENTO_VERSION=2.1.11
       env: MAGENTO_VERSION=2.2.2 CODE_COVERAGE=true
 
 before_script:
