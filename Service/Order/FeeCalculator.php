@@ -82,10 +82,7 @@ class FeeCalculator
      */
     private function getEveningDeliveryFee($params)
     {
-        if (!array_key_exists('country', $params)) {
-            return $this->shippingOptions->getEveningDeliveryFee();
-        }
-
-        return $this->shippingOptions->getEveningDeliveryFee($params['country']);
+        $country = isset($params['country']) ? $params['country'] : 'NL';
+        return $this->shippingOptions->getEveningDeliveryFee($country);
     }
 }
