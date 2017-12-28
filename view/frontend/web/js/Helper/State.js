@@ -31,20 +31,31 @@
 define([
     'ko',
     'Magento_Checkout/js/action/select-shipping-method',
-    'Magento_Checkout/js/checkout-data'
+    'Magento_Checkout/js/checkout-data',
+    'Magento_Checkout/js/model/quote'
 ], function (
     ko,
     selectShippingMethodAction,
-    checkoutData
+    checkoutData,
+    quote
 ) {
     var deliveryOptionsAreLoading = ko.observable(false),
         pickupOptionsAreLoading = ko.observable(false),
         fee = ko.observable(null),
         currentSelectedShipmentType = ko.observable(null),
-        config = window.checkoutConfig.shipping.postnl;
+        config = window.checkoutConfig.shipping.postnl,
+        pickupAddress = ko.observable(null);
 
     var isLoading = ko.computed(function () {
         return deliveryOptionsAreLoading() || pickupOptionsAreLoading();
+    });
+
+    quote.shippingMethod.subscribe(function (shippingMethod) {
+        if (shippingMethod.carrier_code === 'tig_postnl') {
+            return;
+        }
+
+        pickupAddress(null);
     });
 
     /**
@@ -65,7 +76,7 @@ define([
         pickupOptionsAreLoading: pickupOptionsAreLoading,
         currentSelectedShipmentType: currentSelectedShipmentType,
         currentOpenPane: ko.observable(config.is_deliverydays_active ? 'delivery' : 'pickup'),
-        pickupAddress: ko.observable(null),
+        pickupAddress: pickupAddress,
         isLoading: isLoading,
         method: ko.observable(null),
         fee: fee,
