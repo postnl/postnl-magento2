@@ -114,14 +114,13 @@ class Timeframes extends AbstractDeliveryOptions
 
         $this->addressEnhancer->set($params['address']);
         $price = $this->calculator->price($this->getRateRequest());
-
         if (!$this->isDeliveryDaysActive->getValue()) {
             return $this->jsonResponse($this->getFallBackResponse(2, $price['price']));
         }
 
         try {
             return $this->jsonResponse([
-                'price' => $price['price'],
+                'price'      => $price['price'],
                 'timeframes' => $this->getValidResponeType(),
             ]);
         } catch (\Exception $exception) {

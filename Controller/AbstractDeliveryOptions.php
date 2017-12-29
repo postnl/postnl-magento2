@@ -69,7 +69,7 @@ abstract class AbstractDeliveryOptions extends Action
      */
     //@codingStandardsIgnoreLine
     protected $returnErrors = [
-        0 => 'Could not load from soap data', //Default
+        0 => 'Could not load from soap data',
         1 => 'No Address data found.',
         2 => 'Deliverydays options are disabled.',
         3 => 'Invalid timeframes response, more information can be found in the PostNL log files.',

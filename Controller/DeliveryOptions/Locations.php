@@ -42,6 +42,7 @@ use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\App\Action\Context;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\LocalizedException;
 
 class Locations extends AbstractDeliveryOptions
 {
@@ -122,7 +123,7 @@ class Locations extends AbstractDeliveryOptions
      * @param $address
      *
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     private function getLocations($address)
     {
@@ -138,7 +139,9 @@ class Locations extends AbstractDeliveryOptions
         $response = $this->locationsEndpoint->call();
         //@codingStandardsIgnoreLine
         if (!is_object($response) || !isset($response->GetLocationsResult->ResponseLocation)) {
-            throw new Exception(__('Invalid GetLocationsResult response: %1', var_export($response, true)));
+            throw new LocalizedException(
+                __('Invalid GetLocationsResult response: %1', var_export($response, true))
+            );
         }
 
         //@codingStandardsIgnoreLine
