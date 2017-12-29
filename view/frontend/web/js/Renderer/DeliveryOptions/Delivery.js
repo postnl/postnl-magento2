@@ -56,7 +56,7 @@ define([
             countryCode: null,
             street: null,
             hasAddress:false,
-            deliverydays: [],
+            deliverydays: ko.observableArray([]),
             odd: false
         },
 
@@ -106,12 +106,13 @@ define([
              * @param TimeFrame
              */
             this.selectedOption.subscribe(function (value) {
+                State.currentSelectedShipmentType('delivery');
+
                 if (value === null) {
                     return;
                 }
 
                 State.selectShippingMethod();
-                State.currentSelectedShipmentType('delivery');
 
                 var fee = null;
                 if (value.hasFee()) {
@@ -138,8 +139,6 @@ define([
                 });
             });
 
-            this.isDeliverdaysActive = window.checkoutConfig.shipping.postnl.is_deliverydays_active === true;
-
             return this;
         },
 
@@ -149,24 +148,24 @@ define([
          * @param address
          */
         getDeliverydays: function (address) {
-            if (window.checkoutConfig.shipping.postnl.is_deliverydays_active === false) {
-                State.deliveryOptionsAreAvailable(true);
-                return;
-            }
-
             State.deliveryOptionsAreLoading(true);
             $.ajax({
                 method: 'POST',
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_timeframes,
                 data : {address: address}
             }).done(function (data) {
-                if (data.error) {
-                    Logger.error(data.error);
-                    State.deliveryOptionsAreAvailable(false);
-                    return false;
-                }
                 State.deliveryOptionsAreAvailable(true);
                 State.deliveryPrice(data.price);
+
+                if (data.error) {
+                    Logger.error(data.error);
+                    data = ko.utils.arrayMap(data.timeframes, function (fallback) {
+                        return fallback;
+                    });
+                    this.deliverydays(data);
+                    return;
+                }
+
                 data = ko.utils.arrayMap(data.timeframes, function (day) {
                     return ko.utils.arrayMap(day, function (timeFrame) {
                         timeFrame.address = address;

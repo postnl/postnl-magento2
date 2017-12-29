@@ -152,6 +152,7 @@ define([
                         type: 'pickup',
                         option: option,
                         name : dataObject.Name,
+                        country : dataObject.Address.Countrycode,
                         RetailNetworkID: dataObject.RetailNetworkID,
                         LocationCode : dataObject.LocationCode,
                         from: selectedFrom,

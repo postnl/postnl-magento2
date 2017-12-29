@@ -260,3 +260,8 @@ Percent,Percent
 "Ship at:","Ship at:"
 "Parcel count:","Parcel count:"
 "Account settings","Account settings"
+"Invalid timeframes response, more information can be found in the PostNL log files.","Invalid timeframes response, more information can be found in the PostNL log files."
+"Invalid locations response, more information can be found in the PostNL log files.","Invalid locations response, more information can be found in the PostNL log files."
+"Deliverydays options are disabled.","Deliverydays options are disabled."
+"Could not load from soap data","Could not load from soap data"
+"At the first opportunity","At the first opportunity"

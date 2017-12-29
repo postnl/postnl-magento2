@@ -77,11 +77,7 @@ define([
                 return false;
             }
 
-            if (address.countryCode == 'NL' || address.countryCode == 'BE') {
-                return State.deliveryOptionsAreAvailable();
-            }
-
-            return false;
+            return (address.countryCode === 'NL' || address.countryCode === 'BE');
         }),
 
         canUsePickupLocations: ko.computed(function () {
