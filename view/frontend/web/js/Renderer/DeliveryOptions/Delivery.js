@@ -107,12 +107,11 @@ define([
              */
             this.selectedOption.subscribe(function (value) {
                 State.currentSelectedShipmentType('delivery');
+                State.selectShippingMethod();
 
-                if (value === null) {
+                if (value === null || value.fallback) {
                     return;
                 }
-
-                State.selectShippingMethod();
 
                 var fee = null;
                 if (value.hasFee()) {
