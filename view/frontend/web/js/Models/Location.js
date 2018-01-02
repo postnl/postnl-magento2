@@ -66,7 +66,7 @@ define([
             this[key] = value;
         }.bind(this));
 
-        this.expanded = ko.observable(true);
+        this.expanded = ko.observable(false);
 
         /**
          * Toggle the pickup hours visibility.

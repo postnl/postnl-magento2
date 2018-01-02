@@ -275,3 +275,8 @@ Percent,Percentage
 "Ship at:","Versturen op:"
 "Parcel count:","Aantal pakketten:"
 "Account settings","Account instellingen"
+"Invalid locations response, more information can be found in the PostNL log files.","Ongeldig locaties response, meer infromatie kan gevonden worden in de PostNL log bestanden."
+"Invalid timeframes response, more information can be found in the PostNL log files.","Ongeldig timeframes response, meer infromatie kan gevonden worden in de PostNL log bestanden."
+"Deliverydays options are disabled.","Bezorgdagen opties staan uitgeschakeld."
+"Could not load from soap data","Kan niet vanuit de SOAP call data inladen."
+"At the first opportunity","Eerst volgende mogelijkheid"
