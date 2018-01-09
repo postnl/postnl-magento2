@@ -56,7 +56,7 @@ define([
             countryCode: null,
             street: null,
             hasAddress:false,
-            deliverydays: [],
+            deliverydays: ko.observableArray([]),
             odd: false
         },
 
@@ -80,7 +80,7 @@ define([
                     return;
                 }
 
-                if (address.countryCode != 'NL') {
+                if (address.countryCode !== 'NL' && address.countryCode !== 'BE') {
                     return;
                 }
 
@@ -95,7 +95,7 @@ define([
              * Deselect the selected delivery option when a different option type is being selected.
              */
             State.currentSelectedShipmentType.subscribe(function (shipmentType) {
-                if (shipmentType != 'delivery') {
+                if (shipmentType !== 'delivery') {
                     this.selectedOption(null);
                 }
             }.bind(this));
@@ -106,12 +106,12 @@ define([
              * @param TimeFrame
              */
             this.selectedOption.subscribe(function (value) {
-                if (value === null) {
+                State.currentSelectedShipmentType('delivery');
+                State.selectShippingMethod();
+
+                if (value === null || value.fallback) {
                     return;
                 }
-
-                State.selectShippingMethod();
-                State.currentSelectedShipmentType('delivery');
 
                 var fee = null;
                 if (value.hasFee()) {
@@ -130,14 +130,13 @@ define([
                         date   : value.date,
                         option : value.option,
                         from   : value.from,
-                        to     : value.to
+                        to     : value.to,
+                        country: value.address.country
                     }
                 }).done(function (response) {
                     $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
                 });
             });
-
-            this.isDeliverdaysActive = window.checkoutConfig.shipping.postnl.is_deliverydays_active === true;
 
             return this;
         },
@@ -148,26 +147,27 @@ define([
          * @param address
          */
         getDeliverydays: function (address) {
-            if (window.checkoutConfig.shipping.postnl.is_deliverydays_active === false) {
-                State.deliveryOptionsAreAvailable(true);
-                return;
-            }
-
             State.deliveryOptionsAreLoading(true);
             $.ajax({
                 method: 'POST',
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_timeframes,
                 data : {address: address}
             }).done(function (data) {
-                if (data.error) {
-                    Logger.error(data.error);
-                    State.deliveryOptionsAreAvailable(false);
-                    return false;
-                }
                 State.deliveryOptionsAreAvailable(true);
                 State.deliveryPrice(data.price);
+
+                if (data.error) {
+                    Logger.error(data.error);
+                    data = ko.utils.arrayMap(data.timeframes, function (fallback) {
+                        return fallback;
+                    });
+                    this.deliverydays(data);
+                    return;
+                }
+
                 data = ko.utils.arrayMap(data.timeframes, function (day) {
                     return ko.utils.arrayMap(day, function (timeFrame) {
+                        timeFrame.address = address;
                         return new TimeFrame(timeFrame);
                     });
                 });

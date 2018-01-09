@@ -30,22 +30,36 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-use Magento\Framework\ObjectManagerInterface;
-use Magento\Sales\Model\Order\Shipment as MagentoShipment;
-use TIG\PostNL\Model\Shipment;
+namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Shipment;
 
-require __DIR__ . '/Shipment.php';
-/** @var ObjectManagerInterface $objectManager */
-/** @var MagentoShipment $shipment */
+use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Test\TestCase;
 
-/** @var Shipment $postnlShipment */
-$postnlShipment = $objectManager->create(Shipment::class);
+class ViewTest extends TestCase
+{
+    public $instanceClass = \TIG\PostNL\Block\Adminhtml\Shipment\Options\View::class;
 
-$postnlShipment->setShipmentId($shipment->getId());
-$postnlShipment->setOrderId($shipment->getOrderId());
-$postnlShipment->setProductCode('3085');
-$postnlShipment->setShipmentType('DayTime');
+    public function canChangeParcelCountProvider()
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
 
-$postnlShipment->save();
+    /**
+     * @dataProvider canChangeParcelCountProvider
+     */
+    public function testCanChangeParcelCount($canChange)
+    {
+        /** @var ShipmentInterface $shipment */
+        $shipment = $this->getMock(ShipmentInterface::class);
 
-return $postnlShipment;
+        $canChangeParcelCount = $shipment->method('canChangeParcelCount');
+        $canChangeParcelCount->willReturn($canChange);
+
+        $instance = $this->getInstance();
+        $this->setProperty('shipment', $shipment, $instance);
+        $this->assertEquals($canChange, $instance->canChangeParcelCount());
+    }
+}

@@ -104,6 +104,11 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     private $barcodeRepository;
 
     /**
+     * @var \Magento\Sales\Model\Order\Address
+     */
+    private $shippingAddress;
+
+    /**
      * @param Context                            $context
      * @param Registry                           $registry
      * @param OrderShipmentRepository            $orderShipmentRepository
@@ -172,12 +177,16 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      */
     public function getShippingAddress()
     {
+        if ($this->shippingAddress !== null) {
+            return $this->shippingAddress;
+        }
+
         $postNLOrder = $this->getPostNLOrder();
         $shipment = $this->getShipment();
         $shippingAddress = $shipment->getShippingAddress();
 
         if (!$postNLOrder->getIsPakjegemak()) {
-            return $shippingAddress;
+            return $this->shippingAddress = $shippingAddress;
         }
 
         $pgOrderAddressId = $postNLOrder->getPgOrderAddressId();
@@ -188,7 +197,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
 
         $shippingAddress = $this->filterShippingAddress([$pgOrderAddressId, $orderBillingId], $pgAddressStreet);
 
-        return $shippingAddress;
+        return $this->shippingAddress = $shippingAddress;
     }
 
     /**
@@ -567,6 +576,22 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         $productCode = $this->getProductCode();
         return $this->productOptions->getOptionsByCode($productCode);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canChangeParcelCount()
+    {
+        if ($this->getConfirmedAt()) {
+            return false;
+        }
+
+        if ($this->getShippingAddress()->getCountryId() != 'NL') {
+            return false;
+        }
+
+        return true;
     }
 
     /**

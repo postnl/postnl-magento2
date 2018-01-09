@@ -45,6 +45,7 @@ class Domestic extends AbstractType implements TypeInterface
     {
         $filename = $this->saveTempLabel($label);
 
+        $this->createPdf();
         $this->pdf->AddPage('L', Fpdi::PAGE_SIZE_A6);
 
         $this->pdf->setSourceFile($filename);

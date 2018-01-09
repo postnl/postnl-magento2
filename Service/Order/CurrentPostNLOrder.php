@@ -69,11 +69,16 @@ class CurrentPostNLOrder
     }
 
     /**
+     * @param int $quoteId
      * @return PostNLOrder|null
      */
-    public function get()
+    public function get($quoteId = null)
     {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $this->getQuoteId());
+        if (!$quoteId) {
+            $quoteId = $this->getQuoteId();
+        }
+
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId);
         $searchCriteria->setPageSize(1);
 
         /** @var \Magento\Framework\Api\SearchResults $list */

@@ -103,7 +103,8 @@ define([
 
         allFieldsExists = true;
         $.each(fields, function () {
-            if (!$(this).length) {
+            /** Second street may not exist and is therefor not required and should only be observed. */
+            if (!$(this).length && this !== "input[name*='street[1]']") {
                 allFieldsExists = false;
                 return false;
             }

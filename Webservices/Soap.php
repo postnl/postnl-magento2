@@ -42,17 +42,12 @@ class Soap
     /**
      * @var string
      */
-    private $apikey;
+    private $apiKey = null;
 
     /**
      * @var string
      */
     private $location;
-
-    /**
-     * @var string
-     */
-    private $wsdlUrl;
 
     /**
      * @var DefaultConfiguration
@@ -100,8 +95,6 @@ class Soap
         $this->soapClient = $soapClient;
         $this->log = $log;
         $this->accountConfiguration = $accountConfiguration;
-
-        $this->updateApiKey();
     }
 
     /**
@@ -132,7 +125,7 @@ class Soap
      */
     public function getClient()
     {
-        $this->soapClient->setWSDL($this->getWsdlUrl());
+        $this->soapClient->setWSDL($this->getLocation() . '/soap.wsdl');
         $this->soapClient->setOptions($this->getOptionsArray());
 
         return $this->soapClient;
@@ -181,14 +174,6 @@ class Soap
     /**
      * @return string
      */
-    private function getWsdlUrl()
-    {
-        return $this->getLocation() . '/soap.wsdl';
-    }
-
-    /**
-     * @return string
-     */
     private function getLocation()
     {
         $base = $this->defaultConfiguration->getModusApiBaseUrl();
@@ -203,12 +188,16 @@ class Soap
      */
     private function getApiKey()
     {
-        if (empty($this->apikey)) {
+        if ($this->apiKey === null) {
+            $this->apiKey = $this->accountConfiguration->getApiKey();
+        }
+
+        if (empty($this->apiKey)) {
             // @codingStandardsIgnoreLine
             throw new LocalizedException(__('Please enter your API key'));
         }
 
-        return $this->apikey;
+        return $this->apiKey;
     }
 
     /**
@@ -224,6 +213,6 @@ class Soap
      */
     public function updateApiKey($storeId = null)
     {
-        $this->apikey = $this->accountConfiguration->getApiKey($storeId);
+        $this->apiKey = $this->accountConfiguration->getApiKey($storeId);
     }
 }

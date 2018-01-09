@@ -104,7 +104,7 @@ class File
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function reserveFilename()
     {

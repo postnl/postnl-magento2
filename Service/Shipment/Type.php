@@ -48,9 +48,10 @@ class Type
             return $shipmentType;
         }
 
+        /** @var MagentoShipment $magentoShipment */
         $magentoShipment = $postNLShipment->getShipment();
-        $address = $magentoShipment->getShippingAddress();
-        $countryId = $address->getCountryId();
+        $address         = $magentoShipment->getShippingAddress();
+        $countryId       = $address->getCountryId();
 
         return $this->getTypeForCountry($countryId);
     }

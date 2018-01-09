@@ -29,23 +29,31 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+namespace TIG\PostNL\Config\CheckoutConfiguration;
 
-use Magento\Framework\ObjectManagerInterface;
-use Magento\Sales\Model\Order\Shipment as MagentoShipment;
-use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
-require __DIR__ . '/Shipment.php';
-/** @var ObjectManagerInterface $objectManager */
-/** @var MagentoShipment $shipment */
+class EveningDeliveryBeFee implements CheckoutConfigurationInterface
+{
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
 
-/** @var Shipment $postnlShipment */
-$postnlShipment = $objectManager->create(Shipment::class);
+    /**
+     * @param ShippingOptions $shippingOptions
+     */
+    public function __construct(
+        ShippingOptions $shippingOptions
+    ) {
+        $this->shippingOptions = $shippingOptions;
+    }
 
-$postnlShipment->setShipmentId($shipment->getId());
-$postnlShipment->setOrderId($shipment->getOrderId());
-$postnlShipment->setProductCode('3085');
-$postnlShipment->setShipmentType('DayTime');
-
-$postnlShipment->save();
-
-return $postnlShipment;
+    /**
+     * @return bool|mixed
+     */
+    public function getValue()
+    {
+        return $this->shippingOptions->getEveningDeliveryFee('BE');
+    }
+}

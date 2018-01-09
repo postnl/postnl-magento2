@@ -37,14 +37,14 @@ use TIG\PostNL\Config\Provider\Webshop;
 class IsPastCutOff
 {
     /**
-     * @var \DateTime
+     * @var Webshop
      */
-    private $now;
+    private $webshop;
 
     /**
-     * @var string
+     * @var TimezoneInterface
      */
-    private $cutOffTime;
+    private $currentDate;
 
     /**
      * @param Webshop           $webshop
@@ -54,8 +54,8 @@ class IsPastCutOff
         Webshop $webshop,
         TimezoneInterface $currentDate
     ) {
-        $this->now = $currentDate->date('now');
-        $this->cutOffTime = $webshop->getCutOffTime();
+        $this->webshop = $webshop;
+        $this->currentDate = $currentDate;
     }
 
     /**
@@ -63,9 +63,31 @@ class IsPastCutOff
      */
     public function calculate()
     {
-        $nowTime = strtotime($this->now->format('H:i:s'));
-        $cutOffTime = strtotime($this->cutOffTime);
+        $nowTime = strtotime($this->now()->format('H:i:s'));
+        $cutOffTime = strtotime($this->cutOffTime());
 
         return $nowTime > $cutOffTime;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    private function now()
+    {
+        return $this->currentDate->date('now');
+    }
+
+    /**
+     * @return mixed
+     */
+    private function cutOffTime()
+    {
+        static $cutOffTime = null;
+
+        if ($cutOffTime) {
+            return $cutOffTime;
+        }
+
+        return $cutOffTime = $this->webshop->getCutOffTime();
     }
 }

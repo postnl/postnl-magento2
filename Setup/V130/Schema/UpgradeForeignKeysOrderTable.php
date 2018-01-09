@@ -29,48 +29,52 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+namespace TIG\PostNL\Setup\V130\Schema;
 
-namespace TIG\PostNL\Setup;
-
+use Magento\Framework\Setup\UpgradeSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
-use Magento\Framework\Setup\UpgradeSchemaInterface;
 
-class UpgradeSchema implements UpgradeSchemaInterface
+/**
+ * By default, Magento deletes quotes that are expired (converted to orders) after some period of time.
+ * It uses cron job vendor/magento/module-sales/Cron/CleanexpiredQuotes.
+ *
+ * So if there is a FK connection between the quote table and the PostNLorder table,
+ * there will be an integrity constrain violation when trying to update an PostNLorder when the quote is removed.
+ */
+class UpgradeForeignKeysOrderTable implements UpgradeSchemaInterface
 {
-    private $upgradeSchemaObjects;
+    const TABLE_NAME = 'tig_postnl_order';
 
-    public function __construct(
-        $upgradeSchemaObjects = []
-    ) {
-        $this->upgradeSchemaObjects = $upgradeSchemaObjects;
+    /**
+     * @param SchemaSetupInterface   $setup
+     * @param ModuleContextInterface $context
+     */
+    // @codingStandardsIgnoreLine
+    public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
+    {
+        $this->upgrade($setup, $context);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    // @codingStandardsIgnoreLine
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
 
-        if (version_compare($context->getVersion(), '1.2.0', '<')) {
-            $this->upgradeSchemas($this->upgradeSchemaObjects['v1.2.0'], $setup, $context);
-        }
-
-        if (version_compare($context->getVersion(), '1.3.0', '<')) {
-            $this->upgradeSchemas($this->upgradeSchemaObjects['v1.3.0'], $setup, $context);
-        }
+        $connection = $setup->getConnection(static::TABLE_NAME);
+        $connection->dropForeignKey(
+            $setup->getTable(static::TABLE_NAME),
+            $setup->getFkName(
+                static::TABLE_NAME,
+                'quote_id',
+                'quote',
+                'entity_id'
+            )
+        );
 
         $setup->endSetup();
-    }
-
-    /**
-     * @param $schemaObjects
-     * @param $setup
-     * @param $context
-     */
-    private function upgradeSchemas($schemaObjects, $setup, $context)
-    {
-        /** @var AbstractColumnsInstaller $schema */
-        foreach ($schemaObjects as $schema) {
-            $schema->install($setup, $context);
-        }
     }
 }

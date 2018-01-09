@@ -29,23 +29,22 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+namespace TIG\PostNL\Test\Unit\Config\Provider;
 
-use Magento\Framework\ObjectManagerInterface;
-use Magento\Sales\Model\Order\Shipment as MagentoShipment;
-use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Config\Provider\AddressConfiguration;
+use TIG\PostNL\Test\TestCase;
 
-require __DIR__ . '/Shipment.php';
-/** @var ObjectManagerInterface $objectManager */
-/** @var MagentoShipment $shipment */
+class AddressConfigurationTest extends TestCase
+{
+    public $instanceClass = AddressConfiguration::class;
 
-/** @var Shipment $postnlShipment */
-$postnlShipment = $objectManager->create(Shipment::class);
+    public function testShouldReturnNLAsCountry()
+    {
+        $this->assertEquals('NL', $this->getInstance()->getCountry());
+    }
 
-$postnlShipment->setShipmentId($shipment->getId());
-$postnlShipment->setOrderId($shipment->getOrderId());
-$postnlShipment->setProductCode('3085');
-$postnlShipment->setShipmentType('DayTime');
-
-$postnlShipment->save();
-
-return $postnlShipment;
+    public function testGetAddressInfoContainsCountry()
+    {
+        $this->assertArrayHasKey('country', $this->getInstance()->getAddressInfo());
+    }
+}

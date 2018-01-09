@@ -29,14 +29,14 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment\Label\Type;
 
-use TIG\PostNL\Api\Data\ShipmentLabelInterface;
-use TIG\PostNL\Service\Shipment\Label\File;
+namespace TIG\PostNL\Service\Shipment\Label\Merge;
+
 use TIG\PostNL\Service\Pdf\Fpdi;
 use TIG\PostNL\Service\Pdf\FpdiFactory;
+use TIG\PostNL\Service\Shipment\Label\File;
 
-abstract class AbstractType
+class AbstractMerger
 {
     /**
      * @var Fpdi
@@ -45,62 +45,47 @@ abstract class AbstractType
     protected $pdf;
 
     /**
+     * @var File
+     */
+    // @codingStandardsIgnoreLine
+    protected $file;
+
+    /**
      * @var FpdiFactory
      */
     // @codingStandardsIgnoreLine
-    protected $fpdi;
+    protected $fpdiFactory;
 
     /**
-     * @var File
-     */
-    private $file;
-
-    /**
-     * @param FpdiFactory $Fpdi
-     * @param File        $file
+     * @param FpdiFactory $fpdiFactory
+     * @param File $file
      */
     public function __construct(
-        FpdiFactory $Fpdi,
+        FpdiFactory $fpdiFactory,
         File $file
     ) {
+        $this->fpdiFactory = $fpdiFactory;
         $this->file = $file;
-        $this->fpdi = $Fpdi;
     }
 
     /**
-     * Fpdi expects the labels to be provided as files, therefore temporarily save each label in the var folder.
-     *
-     * @param ShipmentLabelInterface $label
-     *
-     * @return string
-     */
-    public function saveTempLabel(ShipmentLabelInterface $label)
-    {
-        /**
-         * Decode the label received from PostNL.
-         */
-        // @codingStandardsIgnoreLine
-        return $this->file->save(base64_decode($label->getLabel()));
-    }
-
-    /**
-     * Delete the file generated in the previous step.
-     */
-    public function cleanup()
-    {
-        $this->file->cleanup();
-    }
-
-    /**
-     * This function prevents that the fpdi->create() method is called multiple times.
+     * @return \FPDF|mixed|null|\PDF
      */
     // @codingStandardsIgnoreLine
-    protected function createPdf()
+    protected function createPdf($addPage = false)
     {
-        if ($this->pdf) {
-            return;
+        static $pdf = null;
+
+        if ($pdf) {
+            return $pdf;
         }
 
-        $this->pdf = $this->fpdi->create();
+        $pdf = $this->fpdiFactory->create();
+
+        if ($addPage) {
+            $pdf->addPage('L', 'A4');
+        }
+
+        return $pdf;
     }
 }

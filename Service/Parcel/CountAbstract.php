@@ -50,6 +50,9 @@ abstract class CountAbstract
     // @codingStandardsIgnoreLine
     protected $shippingOptions;
 
+    // @codingStandardsIgnoreLine
+    protected $products;
+
     /**
      * @param ProductDictionary $productDictionary
      * @param ShippingOptions $shippingOptions
@@ -71,8 +74,8 @@ abstract class CountAbstract
     // @codingStandardsIgnoreLine
     protected function calculate($weight, $items)
     {
-        $products = $this->getProducts($items);
-        if (empty($products) || !$this->shippingOptions->isExtraAtHomeActive()) {
+        $this->products = $this->getProducts($items);
+        if (empty($this->products) || !$this->shippingOptions->isExtraAtHomeActive()) {
             $remainingParcelCount = ceil($weight / self::WEIGHT_PER_PARCEL);
             return $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
         }
@@ -83,27 +86,26 @@ abstract class CountAbstract
          */
         $parcelCount = $this->getStartCount($items);
         foreach ($items as $item) {
-            $parcelCount += $this->getParcelCount($products, $item);
+            $parcelCount += $this->getParcelCount($item);
         }
 
         return $parcelCount < 1 ? 1 : $parcelCount;
     }
 
     /**
-     * @param $products
      * @param ShipmentItemInterface|OrderItemInterface|QuoteItem $item
      *
      * @return mixed
      */
     // @codingStandardsIgnoreLine
-    protected function getParcelCount($products, $item)
+    protected function getParcelCount($item)
     {
-        if (!isset($products[$item->getProductId()])) {
+        if (!isset($this->products[$item->getProductId()])) {
             return 0;
         }
 
         /** @var ProductInterface $product */
-        $product = $products[$item->getProductId()];
+        $product = $this->products[$item->getProductId()];
         $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
         return ($productParcelCount->getValue() * $this->getQty($item));
     }
@@ -185,6 +187,14 @@ abstract class CountAbstract
     {
         if ($item->getProductType() !== 'simple') {
             $startCount = 0;
+        }
+
+        /**
+         * In cases where there are extra at home products (configurable and simpel types) in combination with
+         * regular products, the start count should be one.
+         */
+        if (!$item->getParentId() && !isset($this->products[$item->getProductId()])) {
+            $startCount = 1;
         }
 
         return $startCount;

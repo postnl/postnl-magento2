@@ -43,10 +43,16 @@ class Prepare
      * @var TypeInterfaceFactory[]
      */
     private $types;
+
     /**
      * @var Type
      */
     private $typeConverter;
+
+    /**
+     * @var bool
+     */
+    private $isValidated = false;
 
     /**
      * @param Type  $typeConverter
@@ -60,10 +66,6 @@ class Prepare
     ) {
         $this->typeConverter = $typeConverter;
         $this->types = $types;
-
-        foreach ($types as $name => $instanceFactory) {
-            $this->validateType($name, $instanceFactory);
-        }
     }
 
     /**
@@ -74,6 +76,8 @@ class Prepare
      */
     public function label(ShipmentLabelInterface $label)
     {
+        $this->validateTypes();
+
         $shipment = $label->getShipment();
         $normalizedShipment = strtolower($this->typeConverter->get($shipment));
 
@@ -106,6 +110,22 @@ class Prepare
                 // @codingStandardsIgnoreLine
                 __($name . ' is not an instance of ' . TypeInterface::class)
             );
+        }
+    }
+
+    /**
+     *
+     */
+    private function validateTypes()
+    {
+        if ($this->isValidated) {
+            return;
+        }
+
+        $this->isValidated = true;
+
+        foreach ($this->types as $name => $instanceFactory) {
+            $this->validateType($name, $instanceFactory);
         }
     }
 }

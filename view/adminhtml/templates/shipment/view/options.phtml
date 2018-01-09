@@ -29,15 +29,17 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
+/** @var $block TIG\PostNL\Block\Adminhtml\Shipment\Options\View */
 ?>
 <?php if ($block->getIsPostNLOrder()) : ?>
 <!--@todo move style to less and add style to header trough xml-->
     <style>
         #postnl_shipping_options_selected {
-            height: 100px;
             width: 100%;
             background-color: #efefef;
             margin-top: 1px;
+            padding-bottom: 1px;
         }
 
         .tig_postnl_delivery_info ul {
@@ -55,32 +57,49 @@
             font-weight: 800;
         }
 
+        .tig_postnl_delivery_info ul li .value {
+            display: inline-block;
+            min-width: 100px;
+        }
     </style>
 
     <?php
     /** @var TIG\PostNL\Model\Shipment $postNLShipment */
     $postNLShipment = $block->getPostNLShipment();
     ?>
-    <?php if ($postNLShipment) :?>
-    <div id="postnl_shipping_options_selected">
+    <?php if ($postNLShipment): ?>
+    <div id="postnl_shipping_options_selected" data-bind="scope: 'PostNLSelectedOptions'">
         <div class="tig_postnl_delivery_info">
             <ul>
                 <li>
-                    <span class="type"><?php /* @escapeNotVerified */ echo __('Product option :'); ?></span>
+                    <span class="type"><?php /* @escapeNotVerified */ echo __('Product option:'); ?></span>
                     <span class="value option">
                         <?php echo $block->getProductOptionValue(); ?>
                     </span>
                 </li>
                 <li>
-                    <span class="type"><?php /* @escapeNotVerified */ echo __('Ship at :'); ?></span>
+                    <span class="type"><?php /* @escapeNotVerified */ echo __('Ship at:'); ?></span>
                     <span class="value ship_at">
                         <?php echo $postNLShipment->getShipAt(); ?>
                     </span>
                 </li>
                 <li>
-                    <span class="type"><?php /* @escapeNotVerified */ echo __('Parcel count :'); ?></span>
-                    <span class="value parcels">
-                        <?php echo $postNLShipment->getParcelCount(); ?>
+                    <span class="type"><?php /* @escapeNotVerified */ echo __('Parcel count:'); ?></span>
+                    <span data-bind="visible: !editingParcelCount()">
+                        <span class="value parcels">
+                            <!-- ko text: parcelCount --><!-- /ko -->
+                        </span>
+                        <?php if ($block->canChangeParcelCount()): ?>
+                        <button class="btn btn-default" data-bind="click: setEditingParcelCount(true)"><?php echo __('Edit'); ?></button>
+                        <?php endif; ?>
+                    </span>
+                    <span data-bind="visible: editingParcelCount">
+                        <span class="value parcels">
+                            <input type="text" data-bind="value: newParcelCount" class="input-text admin__control-text">
+
+                            <button class="btn btn-default primary" data-bind="click: saveParcelCount"><?php echo __('Save'); ?></button>
+                            <button class="btn btn-default" data-bind="click: setEditingParcelCount(false)"><?php echo __('Cancel'); ?></button>
+                        </span>
                     </span>
                 </li>
             </ul>
@@ -92,11 +111,27 @@
         require([
             "jquery"
         ], function (jQuery) {
-            var table    = jQuery('#shipment_tracking_info');
+            var table = jQuery('#shipment_tracking_info');
             jQuery(function () {
                 table.after(jQuery('#postnl_shipping_options_selected'));
             });
         })
+    </script>
+    <script type="text/x-magento-init">
+    {
+        "#postnl_shipping_options_selected": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "PostNLSelectedOptions": {
+                        "component": "TIG_PostNL/js/shipment/view/options",
+                        "parcelCount": "<?php echo $postNLShipment->getParcelCount(); ?>",
+                        "shipmentId": "<?php echo $postNLShipment->getId(); ?>",
+                        "saveUrl": "<?php echo $block->getUrl('postnl/shipment/SaveMulticolli'); ?>"
+                    }
+                }
+            }
+        }
+    }
     </script>
     <?php endif; ?>
 <?php endif; ?>

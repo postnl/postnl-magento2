@@ -38,6 +38,7 @@ use TIG\PostNL\Service\Carrier\Price\Calculator;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
+use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Json\Helper\Data;
@@ -61,14 +62,20 @@ class Timeframes extends AbstractDeliveryOptions
     private $calculator;
 
     /**
-     * @param Context            $context
-     * @param OrderFactory       $orderFactory
-     * @param Session            $checkoutSession
-     * @param QuoteToRateRequest $quoteToRateRequest
-     * @param AddressEnhancer    $addressEnhancer
-     * @param DeliveryDate       $deliveryDate
-     * @param TimeFrame          $timeFrame
-     * @param Calculator         $calculator
+     * @var IsDeliverDaysActive
+     */
+    private $isDeliveryDaysActive;
+
+    /**
+     * @param Context             $context
+     * @param OrderFactory        $orderFactory
+     * @param Session             $checkoutSession
+     * @param QuoteToRateRequest  $quoteToRateRequest
+     * @param AddressEnhancer     $addressEnhancer
+     * @param DeliveryDate        $deliveryDate
+     * @param TimeFrame           $timeFrame
+     * @param Calculator          $calculator
+     * @param IsDeliverDaysActive $isDeliverDaysActive
      */
     public function __construct(
         Context $context,
@@ -78,11 +85,13 @@ class Timeframes extends AbstractDeliveryOptions
         AddressEnhancer $addressEnhancer,
         DeliveryDate $deliveryDate,
         TimeFrame $timeFrame,
-        Calculator $calculator
+        Calculator $calculator,
+        IsDeliverDaysActive $isDeliverDaysActive
     ) {
-        $this->addressEnhancer   = $addressEnhancer;
-        $this->timeFrameEndpoint = $timeFrame;
-        $this->calculator        = $calculator;
+        $this->addressEnhancer      = $addressEnhancer;
+        $this->timeFrameEndpoint    = $timeFrame;
+        $this->calculator           = $calculator;
+        $this->isDeliveryDaysActive = $isDeliverDaysActive;
 
         parent::__construct(
             $context,
@@ -99,21 +108,23 @@ class Timeframes extends AbstractDeliveryOptions
     public function execute()
     {
         $params = $this->getRequest()->getParams();
-
         if (!isset($params['address']) || !is_array($params['address'])) {
-            return $this->jsonResponse(__('No Address data found.'));
+            return $this->jsonResponse($this->getFallBackResponse(1));
         }
 
         $this->addressEnhancer->set($params['address']);
+        $price = $this->calculator->price($this->getRateRequest());
+        if (!$this->isDeliveryDaysActive->getValue()) {
+            return $this->jsonResponse($this->getFallBackResponse(2, $price['price']));
+        }
 
         try {
-            $price = $this->calculator->price($this->getRateRequest());
             return $this->jsonResponse([
-                'price' => $price['price'],
+                'price'      => $price['price'],
                 'timeframes' => $this->getValidResponeType(),
             ]);
         } catch (\Exception $exception) {
-            return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
+            return $this->jsonResponse($this->getFallBackResponse(3, $price['price']));
         }
     }
 
@@ -159,5 +170,20 @@ class Timeframes extends AbstractDeliveryOptions
         $this->timeFrameEndpoint->setParameters($address, $startDate);
 
         return $this->timeFrameEndpoint->call();
+    }
+
+    /**
+     * @param $error
+     * @param $price
+     * @return array
+     */
+    private function getFallBackResponse($error = 0, $price = null)
+    {
+        $errorMessage = isset($this->returnErrors[$error]) ? $this->returnErrors[$error] : '';
+        return [
+            'error'      => __($errorMessage),
+            'price'      => $price,
+            'timeframes' => [[['fallback' => __('At the first opportunity')]]]
+        ];
     }
 }
