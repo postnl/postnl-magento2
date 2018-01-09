@@ -143,7 +143,8 @@ class BarcodeHandler
     /**
      * CIF call to generate a new barcode
      *
-     * @return \Magento\Framework\Phrase|string
+     * @return mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     private function generate()
     {
@@ -152,7 +153,10 @@ class BarcodeHandler
         $response = $this->barcodeEndpoint->call();
 
         if (!is_object($response) || !isset($response->Barcode)) {
-            return __('Invalid GenerateBarcode response: %1', var_export($response, true));
+            // Should throw an exception otherwise the postnl flow will break.
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('Invalid GenerateBarcode response: %1', var_export($response, true))
+            );
         }
 
         return $response->Barcode;

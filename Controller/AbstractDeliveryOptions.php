@@ -65,6 +65,18 @@ abstract class AbstractDeliveryOptions extends Action
     private $quoteToRateRequest;
 
     /**
+     * @var array
+     */
+    //@codingStandardsIgnoreLine
+    protected $returnErrors = [
+        0 => 'Could not load from soap data',
+        1 => 'No Address data found.',
+        2 => 'Deliverydays options are disabled.',
+        3 => 'Invalid timeframes response, more information can be found in the PostNL log files.',
+        4 => 'Invalid locations response, more information can be found in the PostNL log files.',
+    ];
+
+    /**
      * @param Context            $context
      * @param OrderFactory       $orderFactory
      * @param Session            $checkoutSession

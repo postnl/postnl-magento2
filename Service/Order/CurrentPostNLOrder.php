@@ -77,6 +77,7 @@ class CurrentPostNLOrder
         if (!$quoteId) {
             $quoteId = $this->getQuoteId();
         }
+
         $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId);
         $searchCriteria->setPageSize(1);
 

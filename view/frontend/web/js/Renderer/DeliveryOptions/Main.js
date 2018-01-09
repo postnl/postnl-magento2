@@ -70,15 +70,18 @@ define([
         },
 
         canUseDeliveryOptions: ko.computed(function () {
-            var deliveryOptionsAreAvailable = State.deliveryOptionsAreAvailable();
 
             var address = AddressFinder();
-            var isNL = (address !== null && address !== false && address.countryCode === 'NL');
 
-            return deliveryOptionsAreAvailable && isNL;
+            if (address === null || address === false) {
+                return false;
+            }
+
+            return (address.countryCode === 'NL' || address.countryCode === 'BE');
         }),
 
         canUsePickupLocations: ko.computed(function () {
+
             var isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
             var pickupOptionsAreAvailable = State.pickupOptionsAreAvailable();
 

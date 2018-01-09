@@ -87,7 +87,7 @@ class ShipmentType extends AbstractGrid
         }
 
         if ($order->getProductCode()) {
-            $output = $this->shipmentType->render($order->getType());
+            $output = $this->shipmentType->render($order->getProductCode(), $order->getType());
         }
 
         return $output;

@@ -47,12 +47,8 @@ class BarcodeHandlerTest extends TestCase
         return [
             [
                 (Object)['Barcode' => '3STOTA123457890'],
-                '3STOTA123457890'
-            ],
-            [
-                'Response by unittest',
-                'Invalid GenerateBarcode response: \'Response by unittest\''
-            ],
+                '3STOTA123457890',
+            ]
         ];
     }
 
@@ -64,6 +60,41 @@ class BarcodeHandlerTest extends TestCase
      */
     public function testGenerate($callReturnValue, $expected)
     {
+        $barcodeMock = $this->getBarcodeMock($callReturnValue);
+
+        $instance = $this->getInstance(['barcodeEndpoint' => $barcodeMock]);
+        $result = $this->invoke('generate', $instance);
+
+        if ($result instanceof Phrase) {
+            $result = $result->render();
+        }
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testShouldThrowExceptionWhenInvalidResponse()
+    {
+        $message = 'Invalid GenerateBarcode response: \'Response by unittest\'';
+        $barcodeMock = $this->getBarcodeMock('Response by unittest');
+
+        try {
+            $instance = $this->getInstance(['barcodeEndpoint' => $barcodeMock]);
+            $result = $this->invoke('generate', $instance);
+            if ($result instanceof Phrase) {
+                $result->render();
+            }
+        } catch (\Magento\Framework\Exception\LocalizedException $exception) {
+            $this->assertEquals($message, $exception->getMessage());
+        }
+    }
+
+    /**
+     * @param $callReturnValue
+     *
+     * @return \PHPUnit_Framework_MockObject_MockBuilder|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getBarcodeMock($callReturnValue)
+    {
         $barcodeMock = $this->getFakeMock('TIG\PostNL\Webservices\Endpoints\Barcode');
         $barcodeMock->setMethods(['call', 'setStoreId']);
         $barcodeMock = $barcodeMock->getMock();
@@ -74,13 +105,6 @@ class BarcodeHandlerTest extends TestCase
 
         $barcodeMock->expects($this->once())->method('setStoreId');
 
-        $instance = $this->getInstance(['barcodeEndpoint' => $barcodeMock]);
-        $result = $this->invoke('generate', $instance);
-
-        if ($result instanceof Phrase) {
-            $result = $result->render();
-        }
-
-        $this->assertEquals($expected, $result);
+        return $barcodeMock;
     }
 }

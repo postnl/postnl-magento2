@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
+use TIG\PostNL\Exception;
 use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Service\Carrier\Price\Calculator;
@@ -41,6 +42,7 @@ use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\App\Action\Context;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\LocalizedException;
 
 class Locations extends AbstractDeliveryOptions
 {
@@ -98,28 +100,30 @@ class Locations extends AbstractDeliveryOptions
     public function execute()
     {
         $params = $this->getRequest()->getParams();
-
         if (!isset($params['address']) || !is_array($params['address'])) {
             return $this->jsonResponse(__('No Address data found.'));
         }
 
         $this->addressEnhancer->set($params['address']);
+        $price = $this->priceCalculator->price($this->getRateRequest(), 'pakjegemak');
 
         try {
-            $price = $this->priceCalculator->price($this->getRateRequest(), 'pakjegemak');
             return $this->jsonResponse([
                 'price' => $price['price'],
                 'locations' => $this->getValidResponeType(),
             ]);
         } catch (\Exception $exception) {
-            return $this->jsonResponse($exception->getMessage(), Http::STATUS_CODE_503);
+            return $this->jsonResponse([
+                'error' => __('Invalid locations response, more information can be found in the PostNL log files.')
+            ]);
         }
     }
 
     /**
      * @param $address
      *
-     * @return \Magento\Framework\Phrase
+     * @return mixed
+     * @throws \Exception
      */
     private function getLocations($address)
     {
@@ -135,7 +139,9 @@ class Locations extends AbstractDeliveryOptions
         $response = $this->locationsEndpoint->call();
         //@codingStandardsIgnoreLine
         if (!is_object($response) || !isset($response->GetLocationsResult->ResponseLocation)) {
-            return __('Invalid GetLocationsResult response: %1', var_export($response, true));
+            throw new LocalizedException(
+                __('Invalid GetLocationsResult response: %1', var_export($response, true))
+            );
         }
 
         //@codingStandardsIgnoreLine
