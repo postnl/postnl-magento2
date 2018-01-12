@@ -1,4 +1,3 @@
 service_name: travis-pro
-repo_token: SKYLPsJu4Mfgj9OpE7uik8ec8DAwLcAh9
 coverage_clover:
   - build/logs/clover.xml
