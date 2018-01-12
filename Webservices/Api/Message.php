@@ -103,7 +103,7 @@ class Message
 
         $identifier = uniqid(
             'postnl_'
-            . ip2long($this->serverAddress->getServerAddress())
+            . $this->serverAddress->getServerAddress(true)
         );
 
         $messageIdString = $identifier
