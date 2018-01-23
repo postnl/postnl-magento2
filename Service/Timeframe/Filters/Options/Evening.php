@@ -33,6 +33,8 @@ namespace TIG\PostNL\Service\Timeframe\Filters\Options;
 
 use TIG\PostNL\Service\Timeframe\Filters\OptionsFilterInterface;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Helper\AddressEnhancer;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Evening implements OptionsFilterInterface
 {
@@ -44,12 +46,23 @@ class Evening implements OptionsFilterInterface
     private $shippingOptions;
 
     /**
-     * @param ShippingOptions $shippingOptions
+     * @var AddressEnhancer
+     */
+    private $addressEnhancer;
+
+    /**
+     * @param ShippingOptions      $shippingOptions
+     * @param AddressEnhancer      $addressEnhancer
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
-        ShippingOptions $shippingOptions
+        ShippingOptions $shippingOptions,
+        AddressEnhancer $addressEnhancer,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->shippingOptions = $shippingOptions;
+        $this->addressEnhancer = $addressEnhancer;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -80,10 +93,21 @@ class Evening implements OptionsFilterInterface
         }
 
         if ($option->string[0] === static::TIMEFRAME_OPTION_EVENING
-            && $this->shippingOptions->isEveningDeliveryActive()) {
+            && $this->shippingOptions->isEveningDeliveryActive($this->getCountryId())) {
             return true;
         }
 
         return false;
+    }
+
+    private function getCountryId()
+    {
+        $countryId = $this->scopeConfig->getValue('general/store_information/country_id');
+        $address = $this->addressEnhancer->get();
+        if ($address && isset($address['country_id'])) {
+            $countryId = $address['country_id'];
+        }
+
+        return $countryId;
     }
 }

@@ -139,7 +139,7 @@ class SentDate extends AbstractEndpoint
                 'DeliveryDate'       => $this->getDeliveryDate($address, $postNLOrder),
                 'ShippingDuration'   => '1',
                 'AllowSundaySorting' => 'true',
-                'Options'            => $this->timeframeOptions->get(),
+                'Options'            => $this->timeframeOptions->get($this->getCountryId()),
             ],
             'Message' => $this->message
         ];

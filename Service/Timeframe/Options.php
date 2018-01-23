@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Timeframe;
 
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Helper\AddressEnhancer;
 
 class Options
 {
@@ -45,22 +46,32 @@ class Options
     private $shippingOptions;
 
     /**
+     * @var AddressEnhancer
+     */
+    private $addressEnhancer;
+
+    /**
      * @param ShippingOptions $shippingOptions
+     * @param AddressEnhancer $addressEnhancer
      */
     public function __construct(
-        ShippingOptions $shippingOptions
+        ShippingOptions $shippingOptions,
+        AddressEnhancer $addressEnhancer
     ) {
         $this->shippingOptions = $shippingOptions;
+        $this->addressEnhancer = $addressEnhancer;
     }
 
     /**
+     * @param string $countryId
+     *
      * @return array
      */
-    public function get()
+    public function get($countryId = 'NL')
     {
         $deliveryTimeframesOptions = [self::DAYTIME_DELIVERY_OPTION];
 
-        if ($this->shippingOptions->isEveningDeliveryActive()) {
+        if ($this->shippingOptions->isEveningDeliveryActive($countryId)) {
             $deliveryTimeframesOptions[] = self::EVENING_DELIVERY_OPTION;
         }
 
