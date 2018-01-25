@@ -156,8 +156,9 @@ define([
                 State.deliveryOptionsAreAvailable(true);
                 State.deliveryPrice(data.price);
 
-                if (data.error) {
+                if (data.error || data.timeframes.error) {
                     Logger.error(data.error);
+                    Logger.error(data.timeframes.error);
                     data = ko.utils.arrayMap(data.timeframes, function (fallback) {
                         return fallback;
                     });

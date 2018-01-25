@@ -185,8 +185,9 @@ define([
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_locations,
                 data : {address: address}
             }).done(function (data) {
-                if (data.error) {
+                if (data.error || data.locations.error) {
                     Logger.error(data.error);
+                    Logger.error(data.locations.error);
                     State.pickupOptionsAreAvailable(false);
                     return false;
                 }
