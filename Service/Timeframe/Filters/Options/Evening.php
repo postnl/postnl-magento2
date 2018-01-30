@@ -51,6 +51,11 @@ class Evening implements OptionsFilterInterface
     private $addressEnhancer;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
      * @param ShippingOptions      $shippingOptions
      * @param AddressEnhancer      $addressEnhancer
      * @param ScopeConfigInterface $scopeConfig
@@ -100,12 +105,15 @@ class Evening implements OptionsFilterInterface
         return false;
     }
 
+    /**
+     * @return mixed
+     */
     private function getCountryId()
     {
         $countryId = $this->scopeConfig->getValue('general/store_information/country_id');
-        $address = $this->addressEnhancer->get();
-        if ($address && isset($address['country_id'])) {
-            $countryId = $address['country_id'];
+        $address   = $this->addressEnhancer->get();
+        if ($address && isset($address['country'])) {
+            $countryId = $address['country'];
         }
 
         return $countryId;
