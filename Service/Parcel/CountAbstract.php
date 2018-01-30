@@ -189,11 +189,13 @@ abstract class CountAbstract
             $startCount = 0;
         }
 
+        $productId = $this->productDictionary->getProductId($item);
+
         /**
          * In cases where there are extra at home products (configurable and simpel types) in combination with
          * regular products, the start count should be one.
          */
-        if (!$item->getParentId() && !isset($this->products[$item->getProductId()])) {
+        if (!$item->getParentId() && !isset($this->products[$productId])) {
             $startCount = 1;
         }
 
