@@ -272,7 +272,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      *
      * @return string
      */
-    public function getDeliveryDateFormatted($format = 'd-m-Y')
+    public function getDeliveryDateFormatted($format = 'd-m-Y H:i:s')
     {
         $deliveryDate = $this->getData('delivery_date');
         if (!$deliveryDate) {
