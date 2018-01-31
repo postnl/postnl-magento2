@@ -34,6 +34,7 @@ namespace TIG\PostNL\Helper\DeliveryOptions;
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Service\Order\FeeCalculator;
 use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Shipment\ProductOptions;
 
 class OrderParams
 {
@@ -82,15 +83,23 @@ class OrderParams
     private $productCodeAndType;
 
     /**
+     * @var ProductOptions
+     */
+    private $productOptions;
+
+    /**
      * @param FeeCalculator      $feeCalculator
      * @param ProductCodeAndType $productCodeAndType
+     * @param ProductOptions $productOptions
      */
     public function __construct(
         FeeCalculator $feeCalculator,
-        ProductCodeAndType $productCodeAndType
+        ProductCodeAndType $productCodeAndType,
+        ProductOptions $productOptions
     ) {
         $this->feeCalculator      = $feeCalculator;
         $this->productCodeAndType = $productCodeAndType;
+        $this->productOptions     = $productOptions;
     }
 
     /**
@@ -103,6 +112,7 @@ class OrderParams
     {
         $type                = $params['type'];
         $params              = $this->formatParamData($params);
+        $params              = array_merge($params, $this->getAcInformation($params));
         $requiredOrderParams = $this->requiredOrderParamsMissing($type, $params);
 
         if (!empty($requiredOrderParams)) {
@@ -175,6 +185,27 @@ class OrderParams
             'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : '',
             'fee'                          => $this->feeCalculator->get($params),
             'product_code'                 => $productInfo['code'],
+        ];
+    }
+
+    /**
+     * Get the AgentCodes for specifiec type consignments
+     *
+     * formatParamData
+     * @param $params
+     *
+     * @return array
+     */
+    private function getAcInformation($params)
+    {
+        $acOptions = $this->productOptions->getByType($params['type']);
+        if (!$acOptions) {
+            return [];
+        }
+
+        return [
+            'ac_characteristic' => $acOptions['Characteristic'],
+            'ac_option'         => $acOptions['Option']
         ];
     }
 

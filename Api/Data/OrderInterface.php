@@ -83,6 +83,30 @@ interface OrderInterface
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
+    public function setAcCharacteristic($value);
+
+    /**
+     * @return string|null
+     */
+    public function getAcCharacteristic();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setAcOption($value);
+
+    /**
+     * @return string|null
+     */
+    public function getAcOption();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
     public function setDeliveryDate($value);
 
     /**

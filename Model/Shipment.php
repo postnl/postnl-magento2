@@ -59,6 +59,8 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     const FIELD_MAIN_BARCODE = 'main_barcode';
     const FIELD_PRODUCT_CODE = 'product_code';
     const FIELD_SHIPMENT_TYPE = 'shipment_type';
+    const FIELD_AC_CHARACTERISTIC = 'ac_characteristic';
+    const FIELD_AC_OPTION = 'ac_option';
     const FIELD_DELIVERY_DATE = 'delivery_date';
     const FIELD_IS_PAKJEGEMAK = 'is_pakjegemak';
     const FIELD_PG_LOCATION_CODE = 'pg_location_code';
@@ -393,6 +395,42 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function getShipmentType()
     {
         return $this->getData(static::FIELD_SHIPMENT_TYPE);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setAcCharacteristic($value)
+    {
+        return $this->setData(static::FIELD_AC_CHARACTERISTIC, $value);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAcCharacteristic()
+    {
+        return $this->getData(static::FIELD_AC_CHARACTERISTIC);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setAcOption($value)
+    {
+        return $this->setData(static::FIELD_AC_OPTION, $value);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAcOption()
+    {
+        return $this->getData(static::FIELD_AC_OPTION);
     }
 
     /**

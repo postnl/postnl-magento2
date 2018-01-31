@@ -70,4 +70,20 @@ class ProductOptions
 
         return ['ProductOption' => $this->availableProductOptions[$type]];
     }
+
+    /**
+     * @param $type
+     *
+     * @return mixed|null
+     */
+    public function getByType($type)
+    {
+        $type = strtolower($type);
+
+        if (!array_key_exists($type, $this->availableProductOptions)) {
+            return null;
+        }
+
+        return $this->availableProductOptions[$type];
+    }
 }

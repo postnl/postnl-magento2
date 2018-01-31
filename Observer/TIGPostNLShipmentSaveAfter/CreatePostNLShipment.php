@@ -160,12 +160,14 @@ class CreatePostNLShipment implements ObserverInterface
             ? $this->shipParams['tig_postnl_product_code'] : $this->getProductCode();
 
         return [
-            'ship_at'       => $sentDate,
-            'shipment_id'   => $shipment->getId(),
-            'order_id'      => $shipment->getOrderId(),
-            'product_code'  => $productCode,
-            'shipment_type' => $shipmentType,
-            'parcel_count'  => $colliAmount,
+            'ship_at'           => $sentDate,
+            'shipment_id'       => $shipment->getId(),
+            'order_id'          => $shipment->getOrderId(),
+            'product_code'      => $productCode,
+            'shipment_type'     => $shipmentType,
+            'ac_characteristic' => $this->getAcCharacteristic(),
+            'ac_option'         => $this->getAcOption(),
+            'parcel_count'      => $colliAmount,
         ];
     }
 
@@ -182,13 +184,30 @@ class CreatePostNLShipment implements ObserverInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     private function getShipmentType()
     {
         $order = $this->getOrder();
 
         return $order->getType();
+    }
+
+    /**
+     * @return string
+     */
+    private function getAcCharacteristic()
+    {
+        $order = $this->getOrder();
+
+        return $order->getAcCharacteristic();
+    }
+
+    private function getAcOption()
+    {
+        $order = $this->getOrder();
+
+        return $order->getAcOption();
     }
 
     /**
