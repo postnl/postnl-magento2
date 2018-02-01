@@ -82,6 +82,10 @@
     <type name="TIG\PostNL\Setup\UpgradeSchema">
         <arguments>
             <argument name="upgradeSchemaObjects" xsi:type="array">
+                <item name="v1.3.1" xsi:type="array">
+                    <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V131\Schema\UpgradeOrderTable</item>
+                    <item name="UpgradeShipmentTable" xsi:type="object">TIG\PostNL\Setup\V131\Schema\UpgradeShipmentTable</item>
+                </item>
                 <item name="v1.3.0" xsi:type="array">
                     <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V130\Schema\UpgradeForeignKeysOrderTable</item>
                 </item>

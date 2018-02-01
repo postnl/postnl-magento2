@@ -45,6 +45,8 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     const FIELD_ORDER_ID = 'order_id';
     const FIELD_QUOTE_ID = 'quote_id';
     const FIELD_TYPE = 'type';
+    const FIELD_AC_CHARACTERISTIC = 'ac_characteristic';
+    const FIELD_AC_OPTION = 'ac_option';
     const FIELD_DELIVERY_DATE = 'delivery_date';
     const FIELD_EXPECTED_DELIVERY_TIME_START = 'expected_delivery_time_start';
     const FIELD_EXPECTED_DELIVERY_TIME_END = 'expected_delivery_time_end';
@@ -134,6 +136,42 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     public function getType()
     {
         return $this->getData(static::FIELD_TYPE);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setAcCharacteristic($value)
+    {
+        return $this->setData(static::FIELD_AC_CHARACTERISTIC, $value);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAcCharacteristic()
+    {
+        return $this->getData(static::FIELD_AC_CHARACTERISTIC);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setAcOption($value)
+    {
+        return $this->setData(static::FIELD_AC_OPTION, $value);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAcOption()
+    {
+        return $this->getData(static::FIELD_AC_OPTION);
     }
 
     /**

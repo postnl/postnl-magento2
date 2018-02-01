@@ -108,6 +108,30 @@ interface ShipmentInterface
      * @return string|null
      */
     public function getShipmentType();
+    
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setAcCharacteristic($value);
+
+    /**
+     * @return string|null
+     */
+    public function getAcCharacteristic();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setAcOption($value);
+
+    /**
+     * @return string|null
+     */
+    public function getAcOption();
 
     /**
      * @param string $value
