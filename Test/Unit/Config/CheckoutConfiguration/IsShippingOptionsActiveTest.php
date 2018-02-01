@@ -118,7 +118,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'stockOptions' => 'backordered',
                 'productsInStock' => false,
                 'productsExtraAtHome' => false,
-                'expected' => false,
+                'expected' => true,
             ],
             'active, not in stock, stock_products and invalid api settings' => [
                 'shippingOptionsActive' => true,

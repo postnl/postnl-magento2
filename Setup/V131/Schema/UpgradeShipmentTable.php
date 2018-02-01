@@ -50,6 +50,7 @@ class UpgradeShipmentTable extends AbstractColumnsInstaller
     public function installAcCharacteristicColumn()
     {
         return [
+            // @codingStandardsIgnoreLine
             'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
             'length'   => 3,
             'nullable' => true,
@@ -66,6 +67,7 @@ class UpgradeShipmentTable extends AbstractColumnsInstaller
     public function installAcOptionColumn()
     {
         return [
+            // @codingStandardsIgnoreLine
             'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
             'length'   => 3,
             'nullable' => true,
