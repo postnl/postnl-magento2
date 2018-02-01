@@ -198,7 +198,7 @@ class OrderParams
      */
     private function getAcInformation($params)
     {
-        $acOptions = $this->productOptions->getByType($params['type']);
+        $acOptions = $this->productOptions->get($params['type'], true);
         if (!$acOptions) {
             return [];
         }
