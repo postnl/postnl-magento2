@@ -70,6 +70,10 @@ class ShippingAddress
         }
 
         $postnlOrder = $this->orderRepository->getByOrderId($subject->getId());
+        if (!$postnlOrder) {
+            return $result;
+        }
+
         if (!$postnlOrder->getPgOrderAddressId()) {
             return $result;
         }
