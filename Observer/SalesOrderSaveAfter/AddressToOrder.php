@@ -29,12 +29,11 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Observer\SalesOrderPlaceAfter;
+namespace TIG\PostNL\Observer\SalesOrderSaveAfter;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
-use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\ToOrderAddress;
 use Magento\Sales\Model\Order\AddressFactory;
 use TIG\PostNL\Exception;
@@ -92,20 +91,40 @@ class AddressToOrder implements ObserverInterface
         $order = $observer->getData('order');
         $quotePgAddres = $this->pickupAddressHelper->getPakjeGemakAddressInQuote($order->getQuoteId());
         $pgAddress     = false;
-        if ($quotePgAddres->getId()) {
+        $postnlOrder   = $this->getPostNLOrder($order);
+
+        if ($quotePgAddres->getId() && !$this->addressAlreadyAdded($order, $postnlOrder)) {
             /** @var Order\Address $orderPgAddress */
             $orderPgAddress = $this->quoteAddressToOrderAddress->convert($quotePgAddres);
             $pgAddress      = $this->createOrderAddress($orderPgAddress, $order);
             $order->addAddress($pgAddress);
         }
 
-        $postnlOrder = $this->getPostNLOrder($order);
         if (false !== $pgAddress && $postnlOrder->getId()) {
             $postnlOrder->setData('pg_order_address_id', $pgAddress->getId());
             $this->orderRepository->save($postnlOrder);
         }
 
         return $this;
+    }
+
+    /**
+     * @param Order                   $order
+     * @param \TIG\PostNL\Model\Order $postnlOrder
+     *
+     * @return bool
+     */
+    private function addressAlreadyAdded(Order $order, \TIG\PostNL\Model\Order $postnlOrder)
+    {
+        if (!$postnlOrder->getPgOrderAddressId()) {
+            return false;
+        }
+
+        if ($order->getAddressById($postnlOrder->getPgOrderAddressId())) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

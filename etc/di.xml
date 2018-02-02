@@ -43,6 +43,7 @@
 
     <type name="\Magento\Sales\Model\Order">
         <plugin name="TIG_PostNL_Order_Shipment" type="TIG\PostNL\Plugin\Order\ShipmentPlugin" sortOrder="1"/>
+        <plugin name="TIG_PostNL_Order_Shipping_Address" type="TIG\PostNL\Plugin\Order\ShippingAddress" sortOrder="2"/>
     </type>
 
     <type name="\Magento\Shipping\Model\Config\Source\Allmethods">
