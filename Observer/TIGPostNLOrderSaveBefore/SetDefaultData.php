@@ -37,9 +37,11 @@ use TIG\PostNL\Service\Order\ShipAt;
 use TIG\PostNL\Service\Order\ProductCodeAndType;
 use TIG\PostNL\Service\Order\FirstDeliveryDate;
 use TIG\PostNL\Service\Options\ItemsToOption;
+use TIG\PostNL\Service\Order\MagentoOrder;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
+// @codingStandardsIgnoreFile
 class SetDefaultData implements ObserverInterface
 {
     /**
@@ -68,6 +70,11 @@ class SetDefaultData implements ObserverInterface
     private $itemsToOption;
 
     /**
+     * @var MagentoOrder
+     */
+    private $magentoOrder;
+
+    /**
      * @var array
      */
     private $shouldUpdateByOption = [
@@ -82,19 +89,22 @@ class SetDefaultData implements ObserverInterface
      * @param ShipAt             $shipAt
      * @param Log                $log
      * @param ItemsToOption      $itemsToOption
+     * @param MagentoOrder       $magentoOrder
      */
     public function __construct(
         ProductCodeAndType $productCodeAndType,
         FirstDeliveryDate $firstDeliveryDate,
         ShipAt $shipAt,
         Log $log,
-        ItemsToOption $itemsToOption
+        ItemsToOption $itemsToOption,
+        MagentoOrder $magentoOrder
     ) {
         $this->productCodeAndType = $productCodeAndType;
         $this->firstDeliveryDate  = $firstDeliveryDate;
         $this->shipAt             = $shipAt;
         $this->log                = $log;
         $this->itemsToOption      = $itemsToOption;
+        $this->magentoOrder       = $magentoOrder;
     }
 
     /**
@@ -120,7 +130,8 @@ class SetDefaultData implements ObserverInterface
     private function setData(OrderInterface $order)
     {
         $option      = $this->getOptionFromQuote();
-        $productInfo = $this->productCodeAndType->get('', $option);
+        $country     = $this->magentoOrder->getCountry($order->getOrderId());
+        $productInfo = $this->productCodeAndType->get('', $option, $country);
         if (!$order->getProductCode() || $this->canUpdate($order->getProductCode(), $productInfo['code'], $option)) {
             $order->setProductCode($productInfo['code']);
         }
