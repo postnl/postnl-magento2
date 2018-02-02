@@ -156,9 +156,17 @@ define([
                 State.deliveryOptionsAreAvailable(true);
                 State.deliveryPrice(data.price);
 
-                if (data.error || data.timeframes.error) {
-                    Logger.error(data.error);
-                    Logger.error(data.timeframes.error);
+                var error = false;
+                if (data.error) {
+                    error = data.error;
+                }
+
+                if (data.timeframes.error) {
+                    error = data.timeframes.error;
+                }
+
+                if (error) {
+                    Logger.error(error);
                     data = ko.utils.arrayMap(data.timeframes, function (fallback) {
                         return fallback;
                     });
