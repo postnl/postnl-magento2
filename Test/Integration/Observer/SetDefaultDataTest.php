@@ -40,6 +40,7 @@ use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Service\Options\ItemsToOption;
 use TIG\PostNL\Service\Order\ProductCodeAndType;
 use Magento\Framework\Event\Observer;
+use TIG\PostNL\Service\Order\MagentoOrder;
 
 /**
  * @magentoDbIsolation enabled
@@ -73,12 +74,20 @@ class SetDefaultDataTest extends TestCase
         $productCodeAndType->disableOriginalConstructor();
         $productCodeAndType = $productCodeAndType->getMock();
 
+        $magentoOrderService = $this->getMockBuilder(MagentoOrder::class);
+        $magentoOrderService->disableOriginalConstructor();
+        $magentoOrderService = $magentoOrderService->getMock();
+
         $this->objectManager->configure([
             'preferences' => [
                 ProductCodeAndType::class => get_class($productCodeAndType),
-                ItemsToOption::class => get_class($itemsToOptions)
+                ItemsToOption::class => get_class($itemsToOptions),
+                MagentoOrder::class => get_class($magentoOrderService)
             ],
         ]);
+
+        $magentoService = $this->objectManager->get(MagentoOrder::class);
+        $magentoService->method('getCountry')->willReturn('NL');
 
         $getFromQuote = $this->objectManager->get(ItemsToOption::class);
         $getFromQuote->method('getFromQuote')->willReturn(ProductCodeAndType::OPTION_EXTRAATHOME);
