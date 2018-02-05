@@ -86,7 +86,7 @@ class SetDefaultDataTest extends TestCase
         $getProductInfo = $this->objectManager->get(ProductCodeAndType::class);
         $getProductInfo->method('get')->willReturn([
             'type' => ProductCodeAndType::SHIPMENT_TYPE_EXTRAATHOME,
-            'code' => 3534
+            'code' => 3085
         ]);
 
         /** @var \TIG\PostNL\Api\Data\OrderInterface $postNLOrder */
@@ -98,7 +98,7 @@ class SetDefaultDataTest extends TestCase
 
         $this->getInstance()->execute($observer);
 
-        $this->assertEquals(3534, $postNLOrder->getProductCode());
+        $this->assertEquals(3085, $postNLOrder->getProductCode());
         $this->assertEquals(ProductCodeAndType::SHIPMENT_TYPE_EXTRAATHOME, $postNLOrder->getType());
     }
 
