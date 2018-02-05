@@ -31,7 +31,8 @@
 var config = {
     map: {
         '*': {
-            'Magento_Checkout/template/shipping.html': 'TIG_PostNL/template/shipping.html'
+            'Magento_Checkout/template/shipping.html': 'TIG_PostNL/template/shipping.html',
+            'Amasty_ShippingTableRates/template/shipping.html': 'TIG_PostNL/template/shipping.html'
         }
     }
 };
