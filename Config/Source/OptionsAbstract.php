@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Config\Source;
 
+// @codingStandardsIgnoreFile
 abstract class OptionsAbstract
 {
     /**
@@ -61,6 +62,11 @@ abstract class OptionsAbstract
         \TIG\PostNL\Config\Provider\ProductOptions $config
     ) {
         $this->productOptionsConfig = $config;
+    }
+
+    public function get()
+    {
+        return $this->availableOptions;
     }
 
     /**

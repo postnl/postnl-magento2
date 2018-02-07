@@ -36,7 +36,7 @@ use Magento\Framework\Registry;
 use Magento\Sales\Model\OrderRepository;
 use TIG\PostNL\Api\OrderRepositoryInterface as PostNLOrderRepository;
 use TIG\PostNL\Block\Adminhtml\Shipment\OptionsAbstract;
-use TIG\PostNL\Config\Provider\ProductOptions;
+use TIG\PostNL\Service\Options\ShipmentSupported;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 use TIG\PostNL\Service\Shipment\Multicolli;
 use \TIG\PostNL\Service\Parcel\Shipment\Count as ParcelCount;
@@ -65,7 +65,7 @@ class Create extends OptionsAbstract
 
     /**
      * @param Context               $context
-     * @param ProductOptions        $productOptions
+     * @param ShipmentSupported     $productOptions
      * @param ProductOptionSource   $productOptionsSource
      * @param OrderRepository       $orderRepository
      * @param PostNLOrderRepository $postnlOrderRepository
@@ -76,7 +76,7 @@ class Create extends OptionsAbstract
      */
     public function __construct(
         Context $context,
-        ProductOptions $productOptions,
+        ShipmentSupported $productOptions,
         ProductOptionSource $productOptionsSource,
         OrderRepository $orderRepository,
         PostNLOrderRepository $postnlOrderRepository,

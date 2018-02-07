@@ -52,24 +52,24 @@ class MagentoOrder
     }
 
     /**
-     * @param $postnlOrderId
+     * @param $identifier
      *
      * @return \Magento\Sales\Api\Data\OrderInterface
      */
-    public function get($postnlOrderId)
+    public function get($identifier)
     {
-        return $this->orderRepository->get($postnlOrderId);
+        return $this->orderRepository->get($identifier);
     }
 
     /**
-     * @param $postnlOrderId
+     * @param $identifier
      *
      * @return null|string
      */
-    public function getCountry($postnlOrderId)
+    public function getCountry($identifier)
     {
         /** @var \Magento\Sales\Model\Order $order */
-        $order   = $this->get($postnlOrderId);
+        $order = $this->get($identifier);
         if (!$order) {
             return null;
         }

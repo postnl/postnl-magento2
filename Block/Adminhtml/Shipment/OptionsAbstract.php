@@ -37,7 +37,7 @@ use Magento\Framework\View\Element\BlockInterface;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\Order\Shipment;
-use TIG\PostNL\Config\Provider\ProductOptions;
+use TIG\PostNL\Service\Options\ShipmentSupported;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 
 abstract class OptionsAbstract extends Template implements BlockInterface
@@ -49,7 +49,7 @@ abstract class OptionsAbstract extends Template implements BlockInterface
     protected $order;
 
     /**
-     * @var ProductOptions
+     * @var ShipmentSupported
      */
     // @codingStandardsIgnoreLine
     protected $productConfig;
@@ -74,7 +74,7 @@ abstract class OptionsAbstract extends Template implements BlockInterface
 
     /**
      * @param Context $context
-     * @param ProductOptions $productOptions
+     * @param ShipmentSupported $productOptions
      * @param ProductOptionSource $productOptionsSource
      * @param OrderRepository $orderRepository
      * @param Registry $registry
@@ -82,7 +82,7 @@ abstract class OptionsAbstract extends Template implements BlockInterface
      */
     public function __construct(
         Context $context,
-        ProductOptions $productOptions,
+        ShipmentSupported $productOptions,
         ProductOptionSource $productOptionsSource,
         OrderRepository $orderRepository,
         Registry $registry,
@@ -129,9 +129,9 @@ abstract class OptionsAbstract extends Template implements BlockInterface
      */
     public function getProductOptions()
     {
-        $supportedCodes = $this->productConfig->getSupportedProductOptions();
+        $supportedCodes = $this->productConfig->get($this->getOrder());
         $productOptions = [];
-        foreach (explode(',', $supportedCodes) as $code) {
+        foreach ($supportedCodes as $code) {
             $productOptions[$code] = $this->productSource->getOptionsByCode($code);
         }
 
