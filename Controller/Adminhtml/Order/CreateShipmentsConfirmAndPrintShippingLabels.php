@@ -31,19 +31,17 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Order;
 
-use Magento\Backend\App\Action;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
-use Magento\Sales\Model\Convert\Order as ConvertOrder;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
+use TIG\PostNL\Service\Shipment\CreateShipment;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 
 class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
@@ -59,9 +57,9 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
     private $collectionFactory;
 
     /**
-     * @var ConvertOrder
+     * @var CreateShipment
      */
-    private $convertOrder;
+    private $createShipment;
 
     /**
      * @var Track
@@ -72,11 +70,6 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
      * @var BarcodeHandler
      */
     private $barcodeHandler;
-
-    /**
-     * @var Shipment
-     */
-    private $shipment;
 
     /**
      * @var Order
@@ -99,7 +92,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
      * @param GetPdf                 $getPdf
      * @param Filter                 $filter
      * @param OrderCollectionFactory $collectionFactory
-     * @param ConvertOrder           $convertOrder
+     * @param CreateShipment         $createShipment
      * @param Track                  $track
      * @param BarcodeHandler         $barcodeHandler
      */
@@ -109,14 +102,14 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         GetPdf $getPdf,
         Filter $filter,
         OrderCollectionFactory $collectionFactory,
-        ConvertOrder $convertOrder,
+        CreateShipment $createShipment,
         Track $track,
         BarcodeHandler $barcodeHandler
     ) {
         parent::__construct($context, $getLabels, $getPdf);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
-        $this->convertOrder = $convertOrder;
+        $this->createShipment = $createShipment;
         $this->track = $track;
         $this->barcodeHandler = $barcodeHandler;
     }
@@ -135,8 +128,8 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         /** @var Order $order */
         foreach ($collection as $order) {
             $this->currentOrder = $order;
-            $this->createShipment();
-            $this->loadLabel();
+            $shipment = $this->createShipment();
+            $this->loadLabel($shipment);
         }
 
         $this->handleErrors();
@@ -145,16 +138,33 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
 //        return $this->redirectBack();
     }
 
-    private function loadLabel()
+    /**
+     * @return Shipment|null
+     */
+    public function createShipment()
     {
-        $address = $this->shipment->getShippingAddress();
-        $this->barcodeHandler->prepareShipment($this->shipment->getId(), $address->getCountryId());
-
-        if (!$this->shipment->getTracks()) {
-            $this->track->set($this->shipment);
+        //TODO: return existing PostNL shipment
+        if ($this->currentOrder->hasShipments()) {
+            return;
         }
 
-        $this->setLabel($this->shipment->getId());
+        $shipment = $this->createShipment->create($this->currentOrder);
+        return $shipment;
+    }
+
+    /**
+     * @param Shipment $shipment
+     */
+    private function loadLabel($shipment)
+    {
+        $address = $shipment->getShippingAddress();
+        $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+
+        if (!$shipment->getTracks()) {
+            $this->track->set($shipment);
+        }
+
+        $this->setLabel($shipment->getId());
     }
 
     /**
@@ -174,105 +184,14 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
     /**
      * @return $this
      */
-    private function createShipment()
-    {
-        if (!$this->isValidOrder()) {
-            return $this;
-        }
-
-        $this->shipment = $this->convertOrder->toShipment($this->currentOrder);
-
-        /** @var OrderItem $item */
-        foreach ($this->currentOrder->getAllItems() as $item) {
-            $this->handleItem($item);
-        }
-
-        $this->saveShipment();
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    private function isValidOrder()
-    {
-        if ($this->orderHasShipment()) {
-            return false;
-        }
-
-        if (!$this->currentOrder->canShip()) {
-            return false;
-        }
-
-        if ($this->currentOrder->getShippingMethod() !== 'tig_postnl_regular') {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    private function orderHasShipment()
-    {
-        $collection = $this->currentOrder->getShipmentsCollection();
-        $size = $collection->getSize();
-
-        return $size !== 0;
-    }
-
-    /**
-     * @param OrderItem $item
-     *
-     * @return $this
-     */
-    private function handleItem(OrderItem $item)
-    {
-        if (!$item->getQtyToShip() || $item->getIsVirtual()) {
-            return $this;
-        }
-
-        $qtyShipped = $item->getQtyToShip();
-
-        $shipmentItem = $this->convertOrder->itemToShipmentItem($item);
-        $shipmentItem->setQty($qtyShipped);
-
-        $this->shipment->addItem($shipmentItem);
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    private function saveShipment()
-    {
-        $this->shipment->register();
-        $order = $this->shipment->getOrder();
-        $order->setState(Order::STATE_PROCESSING);
-        $order->setStatus('processing');
-
-        try {
-            $this->shipment->save();
-            $order->save();
-        } catch (\Exception $exception) {
-            $message = $exception->getMessage();
-            $localizedErrorMessage = __($message)->render();
-            $this->errors[] = $localizedErrorMessage;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
     private function handleErrors()
     {
         foreach ($this->errors as $error) {
+            $this->messageManager->addErrorMessage($error);
+        }
+
+        $shipmentErrors = $this->createShipment->getErrors();
+        foreach ($shipmentErrors as $error) {
             $this->messageManager->addErrorMessage($error);
         }
 
@@ -285,7 +204,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
     private function redirectBack()
     {
         $redirectPath = 'sales/shipment/index';
-        if (!empty($this->errors)) {
+        if (!empty($this->errors) || !empty($this->createShipment->getErrors())) {
             $redirectPath = 'sales/order/index';
         }
 
