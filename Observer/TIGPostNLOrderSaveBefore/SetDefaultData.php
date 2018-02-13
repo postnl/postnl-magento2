@@ -130,7 +130,7 @@ class SetDefaultData implements ObserverInterface
     private function setData(OrderInterface $order)
     {
         $option      = $this->getOptionFromQuote();
-        $country     = $this->magentoOrder->getCountry($order->getOrderId());
+        $country     = $this->checkByAddressData($order);
         $productInfo = $this->productCodeAndType->get('', $option, $country);
         if (!$order->getProductCode() || $this->canUpdate($order->getProductCode(), $productInfo['code'], $option)) {
             $order->setProductCode($productInfo['code']);
@@ -175,5 +175,31 @@ class SetDefaultData implements ObserverInterface
     private function getOptionFromQuote()
     {
         return $this->itemsToOption->getFromQuote();
+    }
+
+    /**
+     * @param OrderInterface $order
+     *
+     * @return null|string
+     */
+    private function checkByAddressData(OrderInterface $order)
+    {
+        $address = null;
+        $country = null;
+
+        if ($order->getPgAddress()) {
+            $address = $order->getPgAddress();
+            $country = isset($address['Countrycode']) ? $address['Countrycode'] : null;
+        }
+
+        if (!$country && $order->getOrderId()) {
+            $country = $this->magentoOrder->getCountry($order->getOrderId());
+        }
+
+        if (!$country && $order->getQuoteId()) {
+            $country = $this->magentoOrder->getCountry($order->getQuoteId(), 'quote');
+        }
+
+        return $country;
     }
 }
