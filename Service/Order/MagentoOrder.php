@@ -66,7 +66,7 @@ class MagentoOrder
      *
      * @return \Magento\Sales\Api\Data\OrderInterface|\Magento\Quote\Api\Data\CartInterface
      */
-    public function get($identifier, $type = 'order' )
+    public function get($identifier, $type = 'order')
     {
         if ($type !== 'order') {
             return $this->cartRepository->get($identifier);
