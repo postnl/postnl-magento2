@@ -187,8 +187,9 @@ class SetDefaultData implements ObserverInterface
         $address = null;
         $country = null;
 
-        if ($order->getPgAddress()) {
-            $address = $order->getPgAddress();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $address = $order->getPgAddress();
+        if ($address) {
             $country = isset($address['Countrycode']) ? $address['Countrycode'] : null;
         }
 
