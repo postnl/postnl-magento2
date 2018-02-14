@@ -32,7 +32,6 @@
 namespace TIG\PostNL\Controller\Adminhtml\Order;
 
 use Magento\Framework\App\ResponseInterface;
-use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action\Context;
@@ -70,11 +69,6 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
      * @var BarcodeHandler
      */
     private $barcodeHandler;
-
-    /**
-     * @var Order
-     */
-    private $currentOrder;
 
     /**
      * @var array
@@ -117,15 +111,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
      */
     public function execute()
     {
-        $collection = $this->collectionFactory->create();
-        $collection = $this->filter->getCollection($collection);
-
-        foreach ($collection as $order) {
-            $this->currentOrder = $order;
-            $shipment = $this->createShipment->create($this->currentOrder);
-            $this->loadLabel($shipment);
-        }
-
+        $this->createShipmentsAndLoadLabels();
         $this->handleErrors();
 
         if (empty($this->labels)) {
@@ -137,6 +123,20 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         }
 
         return $this->getPdf->get($this->labels);
+    }
+
+    /**
+     * Create or load the shipments and labels
+     */
+    private function createShipmentsAndLoadLabels()
+    {
+        $collection = $this->collectionFactory->create();
+        $collection = $this->filter->getCollection($collection);
+
+        foreach ($collection as $order) {
+            $shipment = $this->createShipment->create($order);
+            $this->loadLabel($shipment);
+        }
     }
 
     /**

@@ -54,6 +54,7 @@ abstract class LabelAbstract extends Action
     /**
      * @var array
      */
+    //@codingStandardsIgnoreLine
     protected $labels = [];
 
     /**
@@ -61,6 +62,7 @@ abstract class LabelAbstract extends Action
      * @param GetLabels  $getLabels
      * @param GetPdf     $getPdf
      */
+    //@codingStandardsIgnoreLine
     public function __construct(
         Context $context,
         GetLabels $getLabels,
@@ -75,6 +77,7 @@ abstract class LabelAbstract extends Action
     /**
      * @param $shipmentId
      */
+    //@codingStandardsIgnoreLine
     protected function setLabel($shipmentId)
     {
         $labels = $this->getLabels->get($shipmentId);

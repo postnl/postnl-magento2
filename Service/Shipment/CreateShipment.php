@@ -102,21 +102,29 @@ class CreateShipment
             return null;
         }
 
-        $this->shipment = $this->convertOrder->toShipment($this->currentOrder);
-
-        /** @var OrderItem $item */
-        foreach ($this->currentOrder->getAllItems() as $item) {
-            $this->handleItem($item);
-        }
-
-        $this->saveShipment();
+        $this->createShipment();
 
         return $this->shipment;
     }
 
     /**
+     * Create the actual shipment
+     */
+    private function createShipment()
+    {
+        $this->shipment = $this->convertOrder->toShipment($this->currentOrder);
+
+        foreach ($this->currentOrder->getAllItems() as $item) {
+            $this->handleItem($item);
+        }
+
+        $this->saveShipment();
+    }
+
+    /**
      * Look if an order already has a PostNL shipment. If so, return that shipment.
-     * TODO: What if an order has multiple PostNL shipments?
+     * @codingStandardsIgnoreLine
+     * @todo: What if an order has multiple PostNL shipments?
      *
      * @return null|Shipment
      */
