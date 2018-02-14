@@ -79,11 +79,6 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
     /**
      * @var array
      */
-    private $labels = [];
-
-    /**
-     * @var array
-     */
     private $errors = [];
 
     /**
@@ -159,26 +154,18 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
     {
         $address = $shipment->getShippingAddress();
         $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
-
-        if (!$shipment->getTracks()) {
-            $this->track->set($shipment);
-        }
-
+        $this->setTracks($shipment);
         $this->setLabel($shipment->getId());
     }
 
     /**
-     * @param $shipmentId
+     * @param Shipment $shipment
      */
-    private function setLabel($shipmentId)
+    private function setTracks($shipment)
     {
-        $labels = $this->getLabels->get($shipmentId);
-
-        if (empty($labels)) {
-            return;
+        if (!$shipment->getTracks()) {
+            $this->track->set($shipment);
         }
-
-        $this->labels = array_merge($this->labels, $labels);
     }
 
     /**

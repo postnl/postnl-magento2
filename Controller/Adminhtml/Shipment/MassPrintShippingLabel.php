@@ -46,11 +46,6 @@ use TIG\PostNL\Service\Handler\BarcodeHandler;
 class MassPrintShippingLabel extends LabelAbstract
 {
     /**
-     * @var array
-     */
-    private $labels = [];
-
-    /**
      * @var Filter
      */
     private $filter;
@@ -122,20 +117,6 @@ class MassPrintShippingLabel extends LabelAbstract
         }
 
         return $this->getPdf->get($this->labels);
-    }
-
-    /**
-     * @param $shipmentId
-     */
-    private function setLabel($shipmentId)
-    {
-        $labels = $this->getLabels->get($shipmentId);
-
-        if (empty($labels)) {
-            return;
-        }
-
-        $this->labels = array_merge($this->labels, $labels);
     }
 
     /**

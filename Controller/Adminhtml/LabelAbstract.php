@@ -52,6 +52,11 @@ abstract class LabelAbstract extends Action
     protected $getPdf;
 
     /**
+     * @var array
+     */
+    protected $labels = [];
+
+    /**
      * @param Context    $context
      * @param GetLabels  $getLabels
      * @param GetPdf     $getPdf
@@ -65,5 +70,19 @@ abstract class LabelAbstract extends Action
 
         $this->getLabels  = $getLabels;
         $this->getPdf     = $getPdf;
+    }
+
+    /**
+     * @param $shipmentId
+     */
+    protected function setLabel($shipmentId)
+    {
+        $labels = $this->getLabels->get($shipmentId);
+
+        if (empty($labels)) {
+            return;
+        }
+
+        $this->labels = array_merge($this->labels, $labels);
     }
 }
