@@ -38,7 +38,7 @@ use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Shipment\CreateShipment;
 use TIG\PostNL\Test\TestCase;
 
-class CreateShipmentTest extends TestCase
+class CreateShipmentsConfirmAndPrintShippingLabelsTest extends TestCase
 {
     protected $instanceClass = CreateShipmentsConfirmAndPrintShippingLabels::class;
 
