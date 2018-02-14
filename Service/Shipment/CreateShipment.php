@@ -35,6 +35,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\Convert\Order as ConvertOrder;
+use TIG\PostNL\Model\ShipmentRepository;
 
 class CreateShipment
 {
@@ -42,6 +43,11 @@ class CreateShipment
      * @var ConvertOrder
      */
     private $convertOrder;
+
+    /**
+     * @var ShipmentRepository
+     */
+    private $shipmentRepository;
 
     /**
      * @var Order
@@ -59,12 +65,15 @@ class CreateShipment
     private $errors = [];
 
     /**
-     * @param ConvertOrder $convertOrder
+     * @param ConvertOrder                         $convertOrder
+     * @param ShipmentRepository $shipmentRepository
      */
     public function __construct(
-        ConvertOrder $convertOrder
+        ConvertOrder $convertOrder,
+        ShipmentRepository $shipmentRepository
     ) {
         $this->convertOrder = $convertOrder;
+        $this->shipmentRepository = $shipmentRepository;
     }
 
     /**
@@ -84,6 +93,11 @@ class CreateShipment
     {
         $this->currentOrder = $order;
 
+        $foundShipment = $this->findPostNLShipment();
+        if ($foundShipment) {
+            return $foundShipment;
+        }
+
         if (!$this->isValidOrder()) {
             return null;
         }
@@ -98,6 +112,33 @@ class CreateShipment
         $this->saveShipment();
 
         return $this->shipment;
+    }
+
+    /**
+     * Look if an order already has a PostNL shipment. If so, return that shipment.
+     * TODO: What if an order has multiple PostNL shipments?
+     *
+     * @return null|Shipment
+     */
+    private function findPostNLShipment()
+    {
+        $collection = $this->currentOrder->getShipmentsCollection();
+        $shipments = $collection->getItems();
+        $foundShipment = null;
+
+        array_walk(
+            $shipments,
+            function ($item) use (&$foundShipment) {
+                /** @var Shipment $item */
+                $postnlShipment = $this->shipmentRepository->getByShipmentId($item->getId());
+
+                if ($postnlShipment) {
+                    $foundShipment = $item;
+                }
+            }
+        );
+
+        return $foundShipment;
     }
 
     /**

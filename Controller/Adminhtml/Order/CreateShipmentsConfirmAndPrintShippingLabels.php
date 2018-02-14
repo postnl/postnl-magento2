@@ -120,31 +120,23 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         $collection = $this->collectionFactory->create();
         $collection = $this->filter->getCollection($collection);
 
-        /** @var Order $order */
         foreach ($collection as $order) {
             $this->currentOrder = $order;
-            $shipment = $this->createShipment();
+            $shipment = $this->createShipment->create($this->currentOrder);
             $this->loadLabel($shipment);
         }
 
         $this->handleErrors();
 
-        return $this->getPdf->get($this->labels);
-//        return $this->redirectBack();
-    }
+        if (empty($this->labels)) {
+            $this->messageManager->addErrorMessage(
+                __('[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information')
+            );
 
-    /**
-     * @return Shipment|null
-     */
-    public function createShipment()
-    {
-        //TODO: return existing PostNL shipment
-        if ($this->currentOrder->hasShipments()) {
-            return;
+            return $this->_redirect($this->_redirect->getRefererUrl());
         }
 
-        $shipment = $this->createShipment->create($this->currentOrder);
-        return $shipment;
+        return $this->getPdf->get($this->labels);
     }
 
     /**
@@ -183,22 +175,5 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         }
 
         return $this;
-    }
-
-    /**
-     * @return \Magento\Framework\Controller\Result\Redirect
-     */
-    private function redirectBack()
-    {
-        $redirectPath = 'sales/shipment/index';
-        if (!empty($this->errors) || !empty($this->createShipment->getErrors())) {
-            $redirectPath = 'sales/order/index';
-        }
-
-        $resultRedirect = $this->resultRedirectFactory->create();
-
-        $resultRedirect->setPath($redirectPath);
-
-        return $resultRedirect;
     }
 }
