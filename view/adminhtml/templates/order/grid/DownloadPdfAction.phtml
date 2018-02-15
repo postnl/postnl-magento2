@@ -62,7 +62,7 @@
          * @returns object
          */
         function getFormData(element) {
-            var selections = getKoScope(element).getSelections();
+            var selections = getKoScope(element.parentElement.parentNode).getSelections();
 
             return {
                 namespace: 'sales_order_grid',
@@ -77,8 +77,13 @@
          * @returns null|object
          */
         function getPostNLAction(element) {
-            text = $(element).text();
             koElement = getKoScope(element);
+            if (koElement.type !== undefined && koElement.type.toLowerCase().indexOf('postnl') !== -1) {
+                return koElement;
+            }
+
+            text = $(element).text();
+
 
             var selectedElement = null;
             ko.utils.arrayForEach(koElement.actions(), function (element) {
