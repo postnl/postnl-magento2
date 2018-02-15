@@ -144,7 +144,8 @@ class SetDefaultData implements ObserverInterface
             $this->firstDeliveryDate->set($order);
         }
 
-        if (!$order->getShipAt()) {
+        // As long as the Magento Order is not saved the ship at is not determined.
+        if (!$order->getShipAt() || !$order->getOrderId()) {
             $this->shipAt->set($order);
         }
     }
