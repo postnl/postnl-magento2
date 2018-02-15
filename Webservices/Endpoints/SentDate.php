@@ -187,7 +187,7 @@ class SentDate extends AbstractEndpoint
     private function getDeliveryDate($address, PostNLOrder $postNLOrder)
     {
         $deliveryDate = $postNLOrder->getDeliveryDate();
-        if ($address->getCountryId() == 'NL' || ($address->getCountryId() === null && !empty($deliveryDate))) {
+        if (in_array($address->getCountryId(), ['NL', 'BE']) || ($address->getCountryId() === null && !empty($deliveryDate))) {
             return $this->formatDate($deliveryDate);
         }
 
