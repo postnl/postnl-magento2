@@ -305,7 +305,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     public function getLabel($code, $type)
     {
         if (!array_key_exists($code, $this->availableOptions) || !array_key_exists($type, $this->typeToComment)) {
-            return $type;
+            return ['label'   => ''];
         }
 
         $group = $this->availableOptions[$code]['group'];
