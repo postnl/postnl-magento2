@@ -42,7 +42,7 @@
         jQuery('body').on('click', '.action-menu .action-menu-item', function () {
             var element = getPostNLAction(this);
 
-            if (element !== null) {
+            if (element !== null && element.postnl_action) {
                 var downloadUrl = getDownloadUrl(element.postnl_action);
                 download(downloadUrl, getFormData(this));
             }
