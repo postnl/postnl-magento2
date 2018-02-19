@@ -49,4 +49,9 @@ class DownloadPdfAction extends Template implements BlockInterface
     {
         return $this->getUrl('postnl/order/CreateShipmentsConfirmAndPrintShippingLabels');
     }
+
+    public function getConfirmAndPrintPackingSlipUrl()
+    {
+        return $this->getUrl('postnl/order/CreateShipmentsConfirmAndPrintPackingSlip');
+    }
 }

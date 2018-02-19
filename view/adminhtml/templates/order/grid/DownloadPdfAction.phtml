@@ -109,6 +109,9 @@
                 case 'CreateShipmentsConfirmAndPrintShippingLabels':
                     downloadUrl = '<?php echo $this->getConfirmAndPrintLabelsUrl(); ?>';
                     break;
+                case 'CreateShipmentsConfirmAndPrintPackingSlip':
+                    downloadUrl = '<?php echo $this->getConfirmAndPrintPackingSlipUrl(); ?>';
+                    break;
             }
 
             return downloadUrl;

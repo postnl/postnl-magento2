@@ -65,6 +65,7 @@ class PrintShippingLabel extends LabelAbstract
      * @param ShipmentRepository $shipmentRepository
      * @param Track              $track
      * @param BarcodeHandler     $barcodeHandler
+     * @param PdfShipment        $getPackingSlip
      */
     public function __construct(
         Context $context,
@@ -72,12 +73,14 @@ class PrintShippingLabel extends LabelAbstract
         GetPdf $getPdf,
         ShipmentRepository $shipmentRepository,
         Track $track,
-        BarcodeHandler $barcodeHandler
+        BarcodeHandler $barcodeHandler,
+        PdfShipment $getPackingSlip
     ) {
         parent::__construct(
             $context,
             $getLabels,
-            $getPdf
+            $getPdf,
+            $getPackingSlip
         );
 
         $this->shipmentRepository = $shipmentRepository;

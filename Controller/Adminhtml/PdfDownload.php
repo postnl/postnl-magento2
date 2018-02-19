@@ -47,6 +47,8 @@ class PdfDownload
      */
     private $labelGenerator;
 
+    const FILETYPE_PACKINGSLIP = 'PackingSlips';
+
     /**
      * @param FileFactory $fileFactory
      * @param Generate    $labelGenerator
@@ -61,18 +63,22 @@ class PdfDownload
 
     /**
      * @param $labels
+     * @param $filename
      *
      * @return \Magento\Framework\App\ResponseInterface
      * @throws \Exception
      * @throws \Zend_Pdf_Exception
      */
     // @codingStandardsIgnoreLine
-    public function get($labels)
+    public function get($labels, $filename = 'ShippingLabels')
     {
-        $pdfLabel = $this->labelGenerator->run($labels);
+        $pdfLabel = $labels;
+        if ($filename !== static::FILETYPE_PACKINGSLIP) {
+            $pdfLabel = $this->labelGenerator->run($labels);
+        }
 
         return $this->fileFactory->create(
-            'ShippingLabels.pdf',
+            $filename . '.pdf',
             $pdfLabel,
             DirectoryList::VAR_DIR,
             'application/pdf'

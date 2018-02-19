@@ -40,6 +40,7 @@ use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
+use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
 
 class ConfirmAndPrintShippingLabel extends LabelAbstract
 {
@@ -65,6 +66,7 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
      * @param ShipmentRepository $shipmentRepository
      * @param Track              $track
      * @param BarcodeHandler     $barcodeHandler
+     * @param PdfShipment        $pdfShipment
      */
     public function __construct(
         Context $context,
@@ -72,12 +74,14 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
         GetPdf $getPdf,
         ShipmentRepository $shipmentRepository,
         Track $track,
-        BarcodeHandler $barcodeHandler
+        BarcodeHandler $barcodeHandler,
+        pdfShipment $pdfShipment
     ) {
         parent::__construct(
             $context,
             $getLabels,
-            $getPdf
+            $getPdf,
+            $pdfShipment
         );
 
         $this->shipmentRepository = $shipmentRepository;

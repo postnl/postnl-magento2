@@ -36,6 +36,7 @@ use Magento\Backend\App\Action\Context;
 
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Controller\AdminHtml\PdfDownload as GetPdf;
+use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
 
 abstract class LabelAbstract extends Action
 {
@@ -58,20 +59,29 @@ abstract class LabelAbstract extends Action
     protected $labels = [];
 
     /**
-     * @param Context    $context
-     * @param GetLabels  $getLabels
-     * @param GetPdf     $getPdf
+     * @var $shipment
+     */
+    //@codingStandardsIgnoreLine
+    protected $getPackingSlip;
+
+    /**
+     * @param Context       $context
+     * @param GetLabels     $getLabels
+     * @param GetPdf        $getPdf
+     * @param PdfShipment   $getPackingSlip
      */
     //@codingStandardsIgnoreLine
     public function __construct(
         Context $context,
         GetLabels $getLabels,
-        GetPdf $getPdf
+        GetPdf $getPdf,
+        PdfShipment $getPackingSlip
     ) {
         parent::__construct($context);
 
         $this->getLabels  = $getLabels;
         $this->getPdf     = $getPdf;
+        $this->getPackingSlip   = $getPackingSlip;
     }
 
     /**
@@ -87,5 +97,16 @@ abstract class LabelAbstract extends Action
         }
 
         $this->labels = array_merge($this->labels, $labels);
+    }
+
+    /**
+     * @param $shipments
+     *
+     * @return \Magento\Framework\App\ResponseInterface
+     */
+    protected function generatePackingSlips($shipments)
+    {
+        $packingSlips = $this->getPackingSlip->getPdf($shipments)->render();
+        return $this->getPdf->get($packingSlips, GetPdf::FILETYPE_PACKINGSLIP);
     }
 }

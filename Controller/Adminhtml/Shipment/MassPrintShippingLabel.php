@@ -37,6 +37,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
+use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
 
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
@@ -81,12 +82,14 @@ class MassPrintShippingLabel extends LabelAbstract
         GetLabels $getLabels,
         GetPdf $getPdf,
         Track $track,
-        BarcodeHandler $barcodeHandler
+        BarcodeHandler $barcodeHandler,
+        PdfShipment $getPackingSlip
     ) {
         parent::__construct(
             $context,
             $getLabels,
-            $getPdf
+            $getPdf,
+            $getPackingSlip
         );
 
         $this->filter = $filter;

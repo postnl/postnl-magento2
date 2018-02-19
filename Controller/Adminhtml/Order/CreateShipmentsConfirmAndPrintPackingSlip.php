@@ -44,7 +44,7 @@ use TIG\PostNL\Service\Shipment\CreateShipment;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
 
-class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
+class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
 {
     /**
      * @var Filter
@@ -77,15 +77,15 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
     private $errors = [];
 
     /**
-     * @param Context                $context
-     * @param GetLabels              $getLabels
-     * @param GetPdf                 $getPdf
-     * @param Filter                 $filter
-     * @param OrderCollectionFactory $collectionFactory
-     * @param CreateShipment         $createShipment
-     * @param Track                  $track
-     * @param BarcodeHandler         $barcodeHandler
-     * @param PdfShipment            $getPackingSlip
+     * @param Context                   $context
+     * @param GetLabels                 $getLabels
+     * @param GetPdf                    $getPdf
+     * @param Filter                    $filter
+     * @param OrderCollectionFactory    $collectionFactory
+     * @param CreateShipment            $createShipment
+     * @param Track                     $track
+     * @param BarcodeHandler            $barcodeHandler
+     * @param PdfShipment               $getPackingSlip
      */
     public function __construct(
         Context $context,
@@ -114,53 +114,27 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
      */
     public function execute()
     {
-        $this->createShipmentsAndLoadLabels();
+        $packingSlips = $this->createShipmentsAndLoadPackingSlips();
         $this->handleErrors();
 
-        if (empty($this->labels)) {
-            $this->messageManager->addErrorMessage(
-                __('[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information')
-            );
-
-            return $this->_redirect($this->_redirect->getRefererUrl());
-        }
-
-        return $this->getPdf->get($this->labels);
+        return $packingSlips;
     }
 
     /**
      * Create or load the shipments and labels
      */
-    private function createShipmentsAndLoadLabels()
+    private function createShipmentsAndLoadPackingSlips()
     {
         $collection = $this->collectionFactory->create();
         $collection = $this->filter->getCollection($collection);
 
+        $shipments = [];
+
         foreach ($collection as $order) {
-            $shipment = $this->createShipment->create($order);
-            $this->loadLabel($shipment);
+            $shipments[] = $this->createShipment->create($order);
         }
-    }
 
-    /**
-     * @param Shipment $shipment
-     */
-    private function loadLabel($shipment)
-    {
-        $address = $shipment->getShippingAddress();
-        $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
-        $this->setTracks($shipment);
-        $this->setLabel($shipment->getId());
-    }
-
-    /**
-     * @param Shipment $shipment
-     */
-    private function setTracks($shipment)
-    {
-        if (!$shipment->getTracks()) {
-            $this->track->set($shipment);
-        }
+        return $this->generatePackingSlips($shipments);
     }
 
     /**
