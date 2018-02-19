@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Shipment;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Service\Volume\Items\Calculate;
 
 class Data
@@ -52,18 +53,26 @@ class Data
     private $shipmentVolume;
 
     /**
+     * @var LabelAndPackingslipOptions
+     */
+    private $labelAndPackingslipOptions;
+
+    /**
      * @param ProductOptions $productOptions
      * @param ContentDescription $contentDescription
      * @param Calculate $calculate
+     * @param LabelAndPackingslipOptions $labelAndPackingslipOptions
      */
     public function __construct(
         ProductOptions $productOptions,
         ContentDescription $contentDescription,
-        Calculate $calculate
+        Calculate $calculate,
+        LabelAndPackingslipOptions $labelAndPackingslipOptions
     ) {
         $this->productOptions = $productOptions;
         $this->contentDescription = $contentDescription;
         $this->shipmentVolume = $calculate;
+        $this->labelAndPackingslipOptions = $labelAndPackingslipOptions;
     }
 
     /**
@@ -127,7 +136,7 @@ class Data
             $shipmentData['Dimension']['Volume'] = $this->getVolumeByParcelCount(
                 $magentoShipment->getItems(), $shipment->getParcelCount()
             );
-            $shipmentData['Reference'] = $magentoShipment->getIncrementId();
+            $shipmentData['Reference'] = $this->labelAndPackingslipOptions->getReference($magentoShipment);
         }
 
         if ($shipment->isExtraCover()) {

@@ -35,6 +35,11 @@ use Magento\Framework\Option\ArrayInterface;
 
 class ReferenceType implements ArrayInterface
 {
+    const REFEENCE_TYPE_NONE        = 'none';
+    const REFEENCE_TYPE_SHIPMENT_ID = 'shipment_increment_id';
+    const REFEENCE_TYPE_ORDER_ID    = 'order_increment_id';
+    const REFEENCE_TYPE_CUSTOM      = 'custom';
+
     /**
      * @return array
      */
@@ -42,10 +47,10 @@ class ReferenceType implements ArrayInterface
     {
         // @codingStandardsIgnoreStart
         $options = [
-            ['value' => 'none', 'label' => __('None')],
-            ['value' => 'shipment_increment_id', 'label' => __('Shipment ID')],
-            ['value' => 'order_increment_id', 'label' => __('Order ID')],
-            ['value' => 'custom', 'label' => __('Use a custom value')]
+            ['value' => self::REFEENCE_TYPE_NONE, 'label' => __('None')],
+            ['value' => self::REFEENCE_TYPE_SHIPMENT_ID, 'label' => __('Shipment ID')],
+            ['value' => self::REFEENCE_TYPE_ORDER_ID, 'label' => __('Order ID')],
+            ['value' => self::REFEENCE_TYPE_CUSTOM, 'label' => __('Use a custom value')]
         ];
         // @codingStandardsIgnoreEnd
 
