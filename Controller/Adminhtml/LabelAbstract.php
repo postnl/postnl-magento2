@@ -103,10 +103,14 @@ abstract class LabelAbstract extends Action
      * @param $shipments
      *
      * @return \Magento\Framework\App\ResponseInterface
+     * @throws \Exception
+     * @throws \Zend_Pdf_Exception
      */
+    //@codingStandardsIgnoreLine
     protected function generatePackingSlips($shipments)
     {
-        $packingSlips = $this->getPackingSlip->getPdf($shipments)->render();
+        $packingSlips = $this->getPackingSlip->getPdf($shipments);
+        $packingSlips = $packingSlips->render();
         return $this->getPdf->get($packingSlips, GetPdf::FILETYPE_PACKINGSLIP);
     }
 }
