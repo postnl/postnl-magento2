@@ -42,7 +42,7 @@ class ShowShippingLabel implements ArrayInterface
     {
         // @codingStandardsIgnoreStart
         $options = [
-            ['value' => 'together', 'label' => __("Print the shipping label on the same page as the packing slip")],
+            ['value' => 'together', 'label' => __("Print the shipping label and packing slip on the same page")],
             ['value' => 'separate', 'label' => __("Print the shipping label on a separate page")],
             ['value' => 'none', 'label' => __("Don't print the shipping label")]
         ];

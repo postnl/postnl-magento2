@@ -46,7 +46,6 @@
             <include path="TIG_PostNL::system/webshop.xml"/>
             <include path="TIG_PostNL::system/shippingoptions.xml"/>
             <include path="TIG_PostNL::system/productoptions.xml" />
-            <include path="TIG_PostNL::system/labelandpackingslipoptions.xml" />
         </section>
     </system>
 </config>
