@@ -171,6 +171,7 @@ define([
                         return fallback;
                     });
                     this.deliverydays(data);
+                    State.currentOpenPane('delivery');
                     return;
                 }
 
