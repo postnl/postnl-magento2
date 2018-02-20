@@ -188,12 +188,14 @@ define([
                 if (data.error) {
                     Logger.error(data.error);
                     State.pickupOptionsAreAvailable(false);
+                    State.currentOpenPane('delivery');
                     return false;
                 }
 
                 if (data.locations.error) {
                     Logger.error(data.locations.error);
                     State.pickupOptionsAreAvailable(false);
+                    State.currentOpenPane('delivery');
                     return false;
                 }
 
