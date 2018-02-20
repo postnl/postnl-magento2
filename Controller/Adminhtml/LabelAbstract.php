@@ -35,6 +35,7 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
+use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 use TIG\PostNL\Controller\AdminHtml\PdfDownload as GetPdf;
 use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
 
@@ -59,23 +60,28 @@ abstract class LabelAbstract extends Action
     protected $labels = [];
 
     /**
-     * @var $shipment
+     * @var array
+     */
+    protected $packingslip = [];
+
+    /**
+     * @var GetPackingslip
      */
     //@codingStandardsIgnoreLine
     protected $getPackingSlip;
 
     /**
-     * @param Context       $context
-     * @param GetLabels     $getLabels
-     * @param GetPdf        $getPdf
-     * @param PdfShipment   $getPackingSlip
+     * @param Context        $context
+     * @param GetLabels      $getLabels
+     * @param GetPdf         $getPdf
+     * @param GetPackingslip $getPackingSlip
      */
     //@codingStandardsIgnoreLine
     public function __construct(
         Context $context,
         GetLabels $getLabels,
         GetPdf $getPdf,
-        PdfShipment $getPackingSlip
+        GetPackingslip $getPackingSlip
     ) {
         parent::__construct($context);
 
@@ -100,17 +106,16 @@ abstract class LabelAbstract extends Action
     }
 
     /**
-     * @param $shipments
-     *
-     * @return \Magento\Framework\App\ResponseInterface
-     * @throws \Exception
-     * @throws \Zend_Pdf_Exception
+     * @param $shipmentId
      */
-    //@codingStandardsIgnoreLine
-    protected function generatePackingSlips($shipments)
+    public function setPackingslip($shipmentId)
     {
-        $packingSlips = $this->getPackingSlip->getPdf($shipments);
-        $packingSlips = $packingSlips->render();
-        return $this->getPdf->get($packingSlips, GetPdf::FILETYPE_PACKINGSLIP);
+        $packingslip = $this->getPackingSlip->get($shipmentId);
+
+        if (strlen($packingslip) <= 0) {
+            return;
+        }
+
+        $this->packingslip[] = $packingslip;
     }
 }
