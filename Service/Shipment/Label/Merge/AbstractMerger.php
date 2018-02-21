@@ -69,14 +69,19 @@ class AbstractMerger
     }
 
     /**
+     * @param bool $addPage
+     * @param bool $createNewPdf Sometimes you want to generate a new Label PDF, for example when printing packingslips
+     *                           This parameter indicates whether to reuse the existing label PDF
+     *                           @TODO Refactor to a cleaner way rather than chaining all the way to here
+     *
      * @return \FPDF|mixed|null|\PDF
      */
     // @codingStandardsIgnoreLine
-    protected function createPdf($addPage = false)
+    protected function createPdf($addPage = false, $createNewPdf = false)
     {
         static $pdf = null;
 
-        if ($pdf) {
+        if ($pdf && !$createNewPdf) {
             return $pdf;
         }
 

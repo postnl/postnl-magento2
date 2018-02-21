@@ -37,12 +37,15 @@ class A6Merger extends AbstractMerger implements MergeInterface
 {
     /**
      * @param Fpdi[] $labels
+     * @param bool  $createNewPdf Sometimes you want to generate a new Label PDF, for example when printing packingslips
+     *                            This parameter indicates whether to reuse the existing label PDF
+     *                            @TODO Refactor to a cleaner way rather than chaining all the way to \TIG\PostNL\Service\Shipment\Label\Merge\AbstractMerger
      *
      * @return Fpdi
      */
-    public function files(array $labels)
+    public function files(array $labels, $createNewPdf = false)
     {
-        $this->pdf = $this->createPdf();
+        $this->pdf = $this->createPdf(false, $createNewPdf);
         foreach ($labels as $label) {
             // @codingStandardsIgnoreLine
             $filename = $this->file->save($label->Output('S'));

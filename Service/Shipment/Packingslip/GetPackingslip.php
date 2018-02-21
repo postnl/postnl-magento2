@@ -33,6 +33,9 @@ namespace TIG\PostNL\Service\Shipment\Packingslip;
 
 use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
+use TIG\PostNL\Service\Shipment\Label\Generate as LabelGenerate;
+use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
+use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
 
 class GetPackingslip
 {
@@ -47,21 +50,45 @@ class GetPackingslip
     private $pdfShipment;
 
     /**
+     * @var GetLabels
+     */
+    private $getLabels;
+
+    /**
+     * @var LabelGenerate
+     */
+    private $labelGenerator;
+
+    /**
+     * @var PackingslipGenerate
+     */
+    private $packingslipGenerator;
+
+    /**
      * GetPackingslip constructor.
      *
      * @param ShipmentRepositoryInterface $shipmentLabelRepository
      * @param PdfShipment                 $pdfShipment
+     * @param GetLabels                   $getLabels
+     * @param LabelGenerate               $labelGenerator
+     * @param Generate                    $packingslipGenerator
      */
     public function __construct(
         ShipmentRepositoryInterface $shipmentLabelRepository,
-        PdfShipment $pdfShipment
+        PdfShipment $pdfShipment,
+        GetLabels $getLabels,
+        LabelGenerate $labelGenerator,
+        PackingslipGenerate $packingslipGenerator
     ) {
         $this->shipmentRepository = $shipmentLabelRepository;
         $this->pdfShipment = $pdfShipment;
+        $this->getLabels = $getLabels;
+        $this->labelGenerator = $labelGenerator;
+        $this->packingslipGenerator = $packingslipGenerator;
     }
 
     /**
-     * @param $shipmentId
+     * @param int $shipmentId
      *
      * @return string
      */
@@ -74,9 +101,26 @@ class GetPackingslip
         }
 
         $magentoShipment = $shipment->getShipment();
-        $packingSlip = $this->pdfShipment->getPdf([$magentoShipment]);
-        $packingSlip = $packingSlip->render();
+        $packingSlip = $this->pdfShipment->getPdf([$magentoShipment])->render();
 
-        return $packingSlip;
+        $packingSlipPdf = $this->addLabels($shipmentId, $packingSlip);
+
+        return $packingSlipPdf;
+    }
+
+    /**
+     * @param int $shipmentId
+     * @param string $packingslip
+     *
+     * @return string
+     */
+    private function addLabels($shipmentId, $packingslip)
+    {
+        $labels = $this->getLabels->get($shipmentId);
+        $labelPdf = $this->labelGenerator->run($labels, true);
+
+        $packingslipPdf = $this->packingslipGenerator->run([$packingslip, $labelPdf]);
+
+        return $packingslipPdf;
     }
 }

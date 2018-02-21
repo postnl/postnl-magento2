@@ -37,7 +37,6 @@ use Magento\Backend\App\Action\Context;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 use TIG\PostNL\Controller\AdminHtml\PdfDownload as GetPdf;
-use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
 
 abstract class LabelAbstract extends Action
 {

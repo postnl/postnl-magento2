@@ -31,52 +31,39 @@
  */
 namespace TIG\PostNL\Service\Shipment\Packingslip;
 
-use TIG\PostNL\Service\Pdf\Fpdi;
-use TIG\PostNL\Service\Pdf\FpdiFactory;
-use TIG\PostNL\Service\Shipment\Label\File;
 
 class Generate
 {
     /**
-     * @var File
+     * @var \Zend_Pdf
      */
-    private $file;
-
-    /**
-     * @var FpdiFactory
-     */
-    // @codingStandardsIgnoreLine
-    protected $fpdi;
-
-
-    public function __construct(
-        File $file,
-        FpdiFactory $fpdi
-    ) {
-        $this->file = $file;
-        $this->fpdi = $fpdi;
-    }
+    private $pdf;
 
     /**
      * @param array $labels
      *
-     * @return FPDI
+     * @return string
      */
     public function run(array $labels)
     {
-        $pdf = $this->fpdi->create();
+        $this->pdf = new \Zend_Pdf();
 
         foreach ($labels as $label) {
-            $filename = $this->file->save($label);
-
-            $pdf->AddPage('P', 'A4');
-            $pdf->setSourceFile($filename);
-            $pageId = $pdf->importPage(1);
-            $pdf->useTemplate($pageId, 0, 0);
+            $this->addLabelToPdf($label);
         }
 
-        $this->file->cleanup();
+        return $this->pdf->render();
+    }
 
-        return $pdf->Output('s');
+    /**
+     * @param string $label
+     */
+    private function addLabelToPdf($label)
+    {
+        $labelZendPdf = \Zend_Pdf::parse($label);
+
+        foreach ($labelZendPdf->pages as $page) {
+            $this->pdf->pages[] = clone $page;
+        }
     }
 }

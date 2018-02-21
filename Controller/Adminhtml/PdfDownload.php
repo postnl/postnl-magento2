@@ -102,15 +102,11 @@ class PdfDownload
     {
         switch ($filename) {
             case static::FILETYPE_SHIPPINGLABEL:
-                $pdfLabel = $this->labelGenerator->run($labels);
-                break;
+                return $this->labelGenerator->run($labels);
             case static::FILETYPE_PACKINGSLIP:
-                $pdfLabel = $this->packingslipGenerator->run($labels);
-                break;
+                return $this->packingslipGenerator->run($labels);
             default:
-                $pdfLabel = $labels;
+                return $labels;
         }
-
-        return $pdfLabel;
     }
 }
