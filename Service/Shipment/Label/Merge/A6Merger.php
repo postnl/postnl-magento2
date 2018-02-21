@@ -37,9 +37,11 @@ class A6Merger extends AbstractMerger implements MergeInterface
 {
     /**
      * @param Fpdi[] $labels
+     * @codingStandardsIgnoreStart
      * @param bool  $createNewPdf Sometimes you want to generate a new Label PDF, for example when printing packingslips
      *                            This parameter indicates whether to reuse the existing label PDF
      *                            @TODO Refactor to a cleaner way rather than chaining all the way to \TIG\PostNL\Service\Shipment\Label\Merge\AbstractMerger
+     * @codingStandardsIgnoreEnd
      *
      * @return Fpdi
      */

@@ -101,7 +101,8 @@ class GetPackingslip
         }
 
         $magentoShipment = $shipment->getShipment();
-        $packingSlip = $this->pdfShipment->getPdf([$magentoShipment])->render();
+        $packingSlip = $this->pdfShipment->getPdf([$magentoShipment]);
+        $packingSlip = $packingSlip->render();
 
         $packingSlipPdf = $this->addLabels($shipmentId, $packingSlip);
 

@@ -31,14 +31,8 @@
  */
 namespace TIG\PostNL\Service\Shipment\Packingslip;
 
-
 class Generate
 {
-    /**
-     * @var \Zend_Pdf
-     */
-    private $pdf;
-
     /**
      * @param array $labels
      *
@@ -46,24 +40,30 @@ class Generate
      */
     public function run(array $labels)
     {
-        $this->pdf = new \Zend_Pdf();
+        // @codingStandardsIgnoreLine
+        $pdf = new \Zend_Pdf();
 
         foreach ($labels as $label) {
-            $this->addLabelToPdf($label);
+            $pdf = $this->addLabelToPdf($label, $pdf);
         }
 
-        return $this->pdf->render();
+        return $pdf->render();
     }
 
     /**
-     * @param string $label
+     * @param string    $label
+     * @param \Zend_Pdf $pdf
+     *
+     * @return \Zend_Pdf
      */
-    private function addLabelToPdf($label)
+    private function addLabelToPdf($label, $pdf)
     {
         $labelZendPdf = \Zend_Pdf::parse($label);
 
         foreach ($labelZendPdf->pages as $page) {
-            $this->pdf->pages[] = clone $page;
+            $pdf->pages[] = clone $page;
         }
+
+        return $pdf;
     }
 }

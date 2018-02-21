@@ -42,16 +42,17 @@ class A4Merger extends AbstractMerger implements MergeInterface
 
     /**
      * @param Fpdi[] $labels
+     * @codingStandardsIgnoreStart
      * @param bool  $createNewPdf Sometimes you want to generate a new Label PDF, for example when printing packingslips
      *                            This parameter indicates whether to reuse the existing label PDF
      *                            @TODO Refactor to a cleaner way rather than chaining all the way to \TIG\PostNL\Service\Shipment\Label\Merge\AbstractMerger
+     * @codingStandardsIgnoreEnd
      *
      * @return Fpdi
      */
     public function files(array $labels, $createNewPdf = false)
     {
-        //By resetting the label counter, labels will start correctly in the upper-left when creating a new PDF
-        if ($createNewPdf) {
+        if ($createNewPdf) { //By resetting the counter, labels will start in the upper-left when creating a new PDF
             $this->labelCounter = 0;
         }
 
@@ -60,7 +61,6 @@ class A4Merger extends AbstractMerger implements MergeInterface
             $this->increaseCounter();
             // @codingStandardsIgnoreLine
             $filename = $this->file->save($label->Output('S'));
-
             $this->pdf->setSourceFile($filename);
 
             $pageId = $this->pdf->importPage(1);

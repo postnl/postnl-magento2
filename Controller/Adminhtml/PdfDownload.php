@@ -98,6 +98,7 @@ class PdfDownload
      *
      * @return string
      */
+    // @codingStandardsIgnoreStart
     private function generateLabel($labels, $filename)
     {
         switch ($filename) {
@@ -109,4 +110,5 @@ class PdfDownload
                 return $labels;
         }
     }
+    // @codingStandardsIgnoreEnd
 }

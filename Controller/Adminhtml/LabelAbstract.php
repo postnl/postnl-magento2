@@ -59,11 +59,6 @@ abstract class LabelAbstract extends Action
     protected $labels = [];
 
     /**
-     * @var array
-     */
-    protected $packingslip = [];
-
-    /**
      * @var GetPackingslip
      */
     //@codingStandardsIgnoreLine
@@ -115,6 +110,6 @@ abstract class LabelAbstract extends Action
             return;
         }
 
-        $this->packingslip[] = $packingslip;
+        $this->labels[] = $packingslip;
     }
 }

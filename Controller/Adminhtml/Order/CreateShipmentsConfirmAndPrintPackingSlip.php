@@ -132,7 +132,7 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
             $this->setPackingslip($shipment->getId());
         }
 
-        return $this->getPdf->get($this->packingslip, GetPdf::FILETYPE_PACKINGSLIP);
+        return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
     }
 
     /**
