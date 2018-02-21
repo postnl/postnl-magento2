@@ -40,6 +40,7 @@ use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Service\Options\ItemsToOption;
 use TIG\PostNL\Service\Order\ProductCodeAndType;
 use Magento\Framework\Event\Observer;
+use TIG\PostNL\Service\Order\MagentoOrder;
 
 /**
  * @magentoDbIsolation enabled
@@ -73,12 +74,20 @@ class SetDefaultDataTest extends TestCase
         $productCodeAndType->disableOriginalConstructor();
         $productCodeAndType = $productCodeAndType->getMock();
 
+        $magentoOrderService = $this->getMockBuilder(MagentoOrder::class);
+        $magentoOrderService->disableOriginalConstructor();
+        $magentoOrderService = $magentoOrderService->getMock();
+
         $this->objectManager->configure([
             'preferences' => [
                 ProductCodeAndType::class => get_class($productCodeAndType),
-                ItemsToOption::class => get_class($itemsToOptions)
+                ItemsToOption::class => get_class($itemsToOptions),
+                MagentoOrder::class => get_class($magentoOrderService)
             ],
         ]);
+
+        $magentoService = $this->objectManager->get(MagentoOrder::class);
+        $magentoService->method('getCountry')->willReturn('NL');
 
         $getFromQuote = $this->objectManager->get(ItemsToOption::class);
         $getFromQuote->method('getFromQuote')->willReturn(ProductCodeAndType::OPTION_EXTRAATHOME);
@@ -86,7 +95,7 @@ class SetDefaultDataTest extends TestCase
         $getProductInfo = $this->objectManager->get(ProductCodeAndType::class);
         $getProductInfo->method('get')->willReturn([
             'type' => ProductCodeAndType::SHIPMENT_TYPE_EXTRAATHOME,
-            'code' => 3534
+            'code' => 3085
         ]);
 
         /** @var \TIG\PostNL\Api\Data\OrderInterface $postNLOrder */
@@ -98,7 +107,7 @@ class SetDefaultDataTest extends TestCase
 
         $this->getInstance()->execute($observer);
 
-        $this->assertEquals(3534, $postNLOrder->getProductCode());
+        $this->assertEquals(3085, $postNLOrder->getProductCode());
         $this->assertEquals(ProductCodeAndType::SHIPMENT_TYPE_EXTRAATHOME, $postNLOrder->getType());
     }
 

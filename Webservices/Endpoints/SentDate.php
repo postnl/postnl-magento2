@@ -139,7 +139,7 @@ class SentDate extends AbstractEndpoint
                 'DeliveryDate'       => $this->getDeliveryDate($address, $postNLOrder),
                 'ShippingDuration'   => '1',
                 'AllowSundaySorting' => 'true',
-                'Options'            => $this->timeframeOptions->get(),
+                'Options'            => $this->timeframeOptions->get($this->getCountryId()),
             ],
             'Message' => $this->message
         ];
@@ -187,7 +187,8 @@ class SentDate extends AbstractEndpoint
     private function getDeliveryDate($address, PostNLOrder $postNLOrder)
     {
         $deliveryDate = $postNLOrder->getDeliveryDate();
-        if ($address->getCountryId() == 'NL' || ($address->getCountryId() === null && !empty($deliveryDate))) {
+        if (in_array($address->getCountryId(), ['NL', 'BE'])
+            || ($address->getCountryId() === null && !empty($deliveryDate))) {
             return $this->formatDate($deliveryDate);
         }
 

@@ -106,12 +106,12 @@ define([
              * @param TimeFrame
              */
             this.selectedOption.subscribe(function (value) {
-                State.currentSelectedShipmentType('delivery');
-                State.selectShippingMethod();
-
                 if (value === null || value.fallback) {
                     return;
                 }
+
+                State.currentSelectedShipmentType('delivery');
+                State.selectShippingMethod();
 
                 var fee = null;
                 if (value.hasFee()) {
@@ -156,12 +156,22 @@ define([
                 State.deliveryOptionsAreAvailable(true);
                 State.deliveryPrice(data.price);
 
+                var error = false;
                 if (data.error) {
-                    Logger.error(data.error);
+                    error = data.error;
+                }
+
+                if (data.timeframes.error) {
+                    error = data.timeframes.error;
+                }
+
+                if (error) {
+                    Logger.error(error);
                     data = ko.utils.arrayMap(data.timeframes, function (fallback) {
                         return fallback;
                     });
                     this.deliverydays(data);
+                    State.currentOpenPane('delivery');
                     return;
                 }
 

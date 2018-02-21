@@ -94,7 +94,7 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
             return false;
         }
 
-        if ($this->shippingOptions->getShippingStockoptions() == 'backordered' &&
+        if ($this->shippingOptions->getShippingStockoptions() == 'in_stock' &&
             !$this->quoteItemsAreInStock->getValue()
         ) {
             return false;

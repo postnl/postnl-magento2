@@ -42,9 +42,12 @@ class ProductOptionsTest extends TestCase
     public function returnsTheCorrectDataProvider()
     {
         return [
-            ['pge', ['Characteristic' => '118', 'Option' => '002']],
-            ['evening', ['Characteristic' => '118', 'Option' => '006']],
-            ['sunday', ['Characteristic' => '101', 'Option' => '008']],
+            ['pge', false, ['Characteristic' => '118', 'Option' => '002']],
+            ['evening', false, ['Characteristic' => '118', 'Option' => '006']],
+            ['sunday', false, ['Characteristic' => '101', 'Option' => '008']],
+            ['pge', true, ['Characteristic' => '118', 'Option' => '002']],
+            ['evening', true, ['Characteristic' => '118', 'Option' => '006']],
+            ['sunday', true, ['Characteristic' => '101', 'Option' => '008']],
         ];
     }
 
@@ -52,20 +55,20 @@ class ProductOptionsTest extends TestCase
      * @dataProvider returnsTheCorrectDataProvider
      *
      * @param $type
+     * @param $flat
      * @param $expected
      *
      * @throws \Exception
      */
-    public function testReturnsTheCorrectData($type, $expected)
+    public function testReturnsTheCorrectData($type, $flat, $expected)
     {
-        /** @var Shipment $shipment */
-        $shipment = $this->getObject(Shipment::class);
-        $shipment->setShipmentType($type);
-
         /** @var ProductOptions $instance */
         $instance = $this->getInstance();
-        $response = $instance->get($shipment);
-        $result = $response['ProductOption'];
+
+        $result = $instance->get($type, $flat);
+        if (!$flat) {
+            $result = $result['ProductOption'];
+        }
 
         foreach ($expected as $type => $value) {
             $this->assertEquals($result[$type], $value);

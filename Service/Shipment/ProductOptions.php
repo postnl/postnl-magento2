@@ -40,32 +40,38 @@ class ProductOptions
      *
      * @var array
      */
-    private $availableProductOptions = [
-        'pge' => [
-            'Characteristic' => '118',
-            'Option'         => '002',
-        ],
-        'evening' => [
-            'Characteristic' => '118',
-            'Option'         => '006',
-        ],
-        'sunday' => [
-            'Characteristic' => '101',
-            'Option'         => '008',
-        ],
-    ];
+    private $availableProductOptions
+        = [
+            'pge'     => [
+                'Characteristic' => '118',
+                'Option'         => '002',
+            ],
+            'evening' => [
+                'Characteristic' => '118',
+                'Option'         => '006',
+            ],
+            'sunday'  => [
+                'Characteristic' => '101',
+                'Option'         => '008',
+            ],
+        ];
 
     /**
-     * @param ShipmentInterface $shipment
+     * @param string $type
+     * @param bool   $flat
      *
      * @return null
      */
-    public function get(ShipmentInterface $shipment)
+    public function get($type, $flat = false)
     {
-        $type = strtolower($shipment->getShipmentType());
+        $type = strtolower($type);
 
         if (!array_key_exists($type, $this->availableProductOptions)) {
             return null;
+        }
+
+        if ($flat) {
+            return $this->availableProductOptions[$type];
         }
 
         return ['ProductOption' => $this->availableProductOptions[$type]];

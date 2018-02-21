@@ -104,13 +104,14 @@ class ShipmentsTest extends TestCase
         $postNLShipment = $factory->create();
         $postNLShipment->setOrderId($shipment->getOrderId());
         $postNLShipment->setShipmentId($shipment->getId());
+        $postNLShipment->setShipmentType('Daytime');
         $postNLShipment->save();
 
         return $postNLShipment;
     }
 
     /**
-     * @param $shipment
+     * @param \TIG\PostNL\Model\Shipment $shipment
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
@@ -119,7 +120,7 @@ class ShipmentsTest extends TestCase
         $optionMock = $this->getFakeMock('TIG\PostNL\Service\Shipment\ProductOptions')->getMock();
         $optionMockExpects = $optionMock->expects($this->once());
         $optionMockExpects->method('get');
-        $optionMockExpects->with($shipment);
+        $optionMockExpects->with($shipment->getShipmentType());
         $optionMockExpects->willReturn(null);
 
         return $optionMock;

@@ -37,9 +37,11 @@ use TIG\PostNL\Service\Order\ShipAt;
 use TIG\PostNL\Service\Order\ProductCodeAndType;
 use TIG\PostNL\Service\Order\FirstDeliveryDate;
 use TIG\PostNL\Service\Options\ItemsToOption;
+use TIG\PostNL\Service\Order\MagentoOrder;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
+// @codingStandardsIgnoreFile
 class SetDefaultData implements ObserverInterface
 {
     /**
@@ -68,6 +70,11 @@ class SetDefaultData implements ObserverInterface
     private $itemsToOption;
 
     /**
+     * @var MagentoOrder
+     */
+    private $magentoOrder;
+
+    /**
      * @var array
      */
     private $shouldUpdateByOption = [
@@ -82,19 +89,22 @@ class SetDefaultData implements ObserverInterface
      * @param ShipAt             $shipAt
      * @param Log                $log
      * @param ItemsToOption      $itemsToOption
+     * @param MagentoOrder       $magentoOrder
      */
     public function __construct(
         ProductCodeAndType $productCodeAndType,
         FirstDeliveryDate $firstDeliveryDate,
         ShipAt $shipAt,
         Log $log,
-        ItemsToOption $itemsToOption
+        ItemsToOption $itemsToOption,
+        MagentoOrder $magentoOrder
     ) {
         $this->productCodeAndType = $productCodeAndType;
         $this->firstDeliveryDate  = $firstDeliveryDate;
         $this->shipAt             = $shipAt;
         $this->log                = $log;
         $this->itemsToOption      = $itemsToOption;
+        $this->magentoOrder       = $magentoOrder;
     }
 
     /**
@@ -120,7 +130,8 @@ class SetDefaultData implements ObserverInterface
     private function setData(OrderInterface $order)
     {
         $option      = $this->getOptionFromQuote();
-        $productInfo = $this->productCodeAndType->get('', $option);
+        $country     = $this->checkByAddressData($order);
+        $productInfo = $this->productCodeAndType->get('', $option, $country);
         if (!$order->getProductCode() || $this->canUpdate($order->getProductCode(), $productInfo['code'], $option)) {
             $order->setProductCode($productInfo['code']);
         }
@@ -133,7 +144,8 @@ class SetDefaultData implements ObserverInterface
             $this->firstDeliveryDate->set($order);
         }
 
-        if (!$order->getShipAt()) {
+        // As long as the Magento Order is not saved the ship at is not determined.
+        if (!$order->getShipAt() || !$order->getOrderId()) {
             $this->shipAt->set($order);
         }
     }
@@ -164,5 +176,32 @@ class SetDefaultData implements ObserverInterface
     private function getOptionFromQuote()
     {
         return $this->itemsToOption->getFromQuote();
+    }
+
+    /**
+     * @param OrderInterface $order
+     *
+     * @return null|string
+     */
+    private function checkByAddressData(OrderInterface $order)
+    {
+        $address = null;
+        $country = null;
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $address = $order->getPgAddress();
+        if ($address) {
+            $country = isset($address['Countrycode']) ? $address['Countrycode'] : null;
+        }
+
+        if (!$country && $order->getOrderId()) {
+            $country = $this->magentoOrder->getCountry($order->getOrderId());
+        }
+
+        if (!$country && $order->getQuoteId()) {
+            $country = $this->magentoOrder->getCountry($order->getQuoteId(), 'quote');
+        }
+
+        return $country;
     }
 }

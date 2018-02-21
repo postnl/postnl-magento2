@@ -138,7 +138,7 @@ class DeliveryDate extends AbstractEndpoint
                 'ShippingDuration'   => '1',
                 'AllowSundaySorting' => 'false',
                 'CutOffTimes'        => $this->cutoffTimes->get(),
-                'Options'            => $this->timeframeOptions->get(),
+                'Options'            => $this->timeframeOptions->get($address['country']),
             ],
             'Message' => $this->message->get('')
         ];

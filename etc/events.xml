@@ -35,11 +35,8 @@
     <event name="sales_order_save_after">
         <!-- Creates the tig_postnl_order record -->
         <observer name="tig_postnl_sales_order_place_after" instance="TIG\PostNL\Observer\SalesOrderSaveAfter\CreatePostNLOrder" />
-    </event>
-
-    <event name="sales_order_place_after">
-        <!-- Sets Pakjegemak address to order -->
-        <observer name="tig_postnl_sales_address_to_order" instance="TIG\PostNL\Observer\SalesOrderPlaceAfter\AddressToOrder" />
+        <!-- Sets Pakjegemak address (can not use place after event, because the order ID is not available)-->
+        <observer name="tig_postnl_sales_address_to_order" instance="TIG\PostNL\Observer\SalesOrderSaveAfter\AddressToOrder" />
     </event>
 
     <event name="tig_postnl_shipment_save_after">

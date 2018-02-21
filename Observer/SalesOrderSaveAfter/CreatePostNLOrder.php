@@ -31,13 +31,16 @@
  */
 namespace TIG\PostNL\Observer\SalesOrderSaveAfter;
 
+use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Api\Data\OrderInterface;
+use TIG\PostNL\Exception;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Service\Order\ProductCodeAndType;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
+use TIG\PostNL\Model\Order;
 use TIG\PostNL\Service\Parcel\Order\Count as ParcelCount;
 use \TIG\PostNL\Service\Options\ItemsToOption;
 
@@ -96,7 +99,7 @@ class CreatePostNLOrder implements ObserverInterface
         /** @var MagentoOrder $magentoOrder */
         $magentoOrder = $observer->getData('data_object');
 
-        if (!$this->helper->isPostNLOrder($magentoOrder)) {
+        if (!$this->helper->isPostNLOrder($magentoOrder) || !$magentoOrder->getId()) {
             return;
         }
 
@@ -124,6 +127,7 @@ class CreatePostNLOrder implements ObserverInterface
      * @param MagentoOrder $magentoOrder
      *
      * @return null|\TIG\PostNL\Model\AbstractModel|\TIG\PostNL\Model\Order
+     * @throws LocalizedException
      */
     private function getPostNLOrder(MagentoOrder $magentoOrder)
     {
@@ -132,7 +136,32 @@ class CreatePostNLOrder implements ObserverInterface
             $postnlOrder = $this->orderRepository->getByOrderId($magentoOrder->getId());
         }
 
-        return $postnlOrder;
+        if (!$postnlOrder) {
+            return $postnlOrder;
+        }
+
+        if ($magentoOrder->getId() == $postnlOrder->getOrderId()) {
+            return $postnlOrder;
+        }
+
+        return $this->returnNewRecord($postnlOrder);
+    }
+
+    /**
+     * When the quote has more than one Magento Order, it could be that one is canceled. So when this canceld order
+     * gets an update from the PSP it will update the incorrect PostNL record because of the same quote ID. Thats why
+     * we will create a new record.
+     *
+     * @param Order $postnlOrder
+     *
+     * @return Order
+     */
+    private function returnNewRecord(Order $postnlOrder)
+    {
+        $newRecord = $this->orderRepository->create();
+        $newRecord->setData($postnlOrder->getData());
+
+        return $newRecord;
     }
 
     /**
