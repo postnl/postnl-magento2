@@ -33,13 +33,8 @@ namespace TIG\PostNL\Service\Shipment\Packingslip;
 
 use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
-use TIG\PostNL\Service\Shipment\Label\Generate as LabelGenerate;
-use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
-use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
-
-use TIG\PostNL\Service\Pdf\Fpdi;
-use TIG\PostNL\Service\Pdf\FpdiFactory;
-use TIG\PostNL\Service\Shipment\Label\File;
+use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
+use TIG\PostNL\Config\Source\LabelAndPackingslip\ShowShippingLabel;
 
 class GetPackingslip
 {
@@ -54,57 +49,33 @@ class GetPackingslip
     private $pdfShipment;
 
     /**
-     * @var GetLabels
+     * @var LabelAndPackingslipOptions
      */
-    private $getLabels;
+    private $labelAndPackingslipOptions;
 
     /**
-     * @var LabelGenerate
+     * @var MergeWithLabels
      */
-    private $labelGenerator;
-
-    /**
-     * @var PackingslipGenerate
-     */
-    private $packingslipGenerator;
-
-    /**
-     * @var FpdiFactory
-     */
-    private $fpdiFactory;
-
-    /**
-     * @var File
-     */
-    private $file;
+    private $mergeWithLabels;
 
     /**
      * GetPackingslip constructor.
      *
      * @param ShipmentRepositoryInterface $shipmentLabelRepository
      * @param PdfShipment                 $pdfShipment
-     * @param GetLabels                   $getLabels
-     * @param LabelGenerate               $labelGenerator
-     * @param Generate                    $packingslipGenerator
-     * @param FpdiFactory                 $fpdiFactory
-     * @param File                        $file
+     * @param LabelAndPackingslipOptions  $labelAndPackingslipOptions
+     * @param MergeWithLabels             $mergeWithLabels
      */
     public function __construct(
         ShipmentRepositoryInterface $shipmentLabelRepository,
         PdfShipment $pdfShipment,
-        GetLabels $getLabels,
-        LabelGenerate $labelGenerator,
-        PackingslipGenerate $packingslipGenerator,
-        FpdiFactory $fpdiFactory,
-        File $file
+        LabelAndPackingslipOptions $labelAndPackingslipOptions,
+        MergeWithLabels $mergeWithLabels
     ) {
         $this->shipmentRepository = $shipmentLabelRepository;
         $this->pdfShipment = $pdfShipment;
-        $this->getLabels = $getLabels;
-        $this->labelGenerator = $labelGenerator;
-        $this->packingslipGenerator = $packingslipGenerator;
-        $this->fpdiFactory = $fpdiFactory;
-        $this->file = $file;
+        $this->labelAndPackingslipOptions = $labelAndPackingslipOptions;
+        $this->mergeWithLabels = $mergeWithLabels;
     }
 
     /**
@@ -122,94 +93,35 @@ class GetPackingslip
 
         $magentoShipment = $shipment->getShipment();
         $packingSlip = $this->pdfShipment->getPdf([$magentoShipment]);
-        $currentYPosition = $this->pdfShipment->y;
-//        $packingSlip = $packingSlip->render();
+        $packingSlip = $packingSlip->render();
 
-        $packingSlipPdf = $this->addLabels($shipmentId, $packingSlip, $currentYPosition);
+        $pdfShipment = $this->pdfShipment;
+        $currentYPosition = $pdfShipment->y;
+        $this->mergeWithLabels->setY($currentYPosition);
+
+        $packingSlipPdf = $this->mergeWithLabels($shipmentId, $packingSlip);
 
         return $packingSlipPdf;
     }
 
     /**
-     * @param int       $shipmentId
-     * @param \Zend_Pdf $packingslip
-     *
-     * @param           $currentYPosition
+     * @param int    $shipmentId
+     * @param string $packingslip
      *
      * @return string
      */
-    private function addLabels($shipmentId, $packingslip, $currentYPosition)
+    private function mergeWithLabels($shipmentId, $packingslip)
     {
-        $labels = $this->getLabels->get($shipmentId);
-        $pdfList = [];
-        $mergedLabel = $packingslip->render();
+        $showLabel = $this->labelAndPackingslipOptions->getShowLabel();
 
-        if ($currentYPosition > 400) {
-            $mergedLabel = $this->mergeFirstLabel(array_shift($labels), $packingslip);
+        switch ($showLabel) {
+            case ShowShippingLabel::SHOW_SHIPPING_LABEL_TOGETHER:
+                return $this->mergeWithLabels->mergeTogether($shipmentId, $packingslip);
+            case ShowShippingLabel::SHOW_SHIPPING_LABEL_SEPARATE:
+                return $this->mergeWithLabels->mergeSeparate($shipmentId, $packingslip);
+            case ShowShippingLabel::SHOW_SHIPPING_LABEL_NONE:
+            default:
+                return $packingslip;
         }
-
-        $pdfList[] = $mergedLabel;
-
-        if (count($labels) > 0) {
-            $labelPdf = $this->labelGenerator->run($labels, true);
-            $pdfList[] = $labelPdf;
-        }
-
-        $packingslipPdf = $this->packingslipGenerator->run($pdfList);
-
-        return $packingslipPdf;
-    }
-
-    /**
-     * @param \TIG\PostNL\Api\Data\ShipmentLabelInterface $label
-     * @param \Zend_Pdf                                   $packingslip
-     *
-     * @return string
-     */
-    private function mergeFirstLabel($label, $packingslip)
-    {
-        /** @var Fpdi $pdf */
-        $pdf = $this->fpdiFactory->create();
-
-        foreach ($packingslip->pages as $page) {
-            $packingslipPdfPage = new \Zend_Pdf();
-            $packingslipPdfPage->pages[] = clone $page;
-
-            $packingslipFile = $this->file->save($packingslipPdfPage->render());
-
-            $pdf->AddPage('P', 'A4');
-            $pdf->setSourceFile($packingslipFile);
-            $pageId = $pdf->importPage(1);
-            $pdf->useTemplate($pageId, 0, 0);
-        }
-
-        $labelFile = $this->file->save(base64_decode($label->getLabel()));
-        $pdf->Rotate(90);
-        $pdf->setSourceFile($labelFile);
-        $pageId = $pdf->importPage(1);
-        $pdf->useTemplate($pageId, $this->pix2pt(-1037), $this->pix2pt(413), $this->pix2pt(538));
-        $pdf->Rotate(0);
-
-        $this->file->cleanup();
-
-        return $pdf->Output('s');
-    }
-
-    /**
-     * Converts pixels to points. 3.8 pixels is 1 pt in pdfs.
-     *
-     * @param int $pixels
-     *
-     * @return int
-     */
-    private function pix2pt($pixels = 0)
-    {
-        $points = 0;
-
-        if ($pixels != 0) {
-            $points = round($pixels / 3.8, 1);
-        }
-
-        return $points;
     }
 }
