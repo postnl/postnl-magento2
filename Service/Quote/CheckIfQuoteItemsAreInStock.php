@@ -83,7 +83,7 @@ class CheckIfQuoteItemsAreInStock
         $quote = $this->checkoutSession->getQuote();
         $items = $quote->getAllItems();
 
-        if ($this->stockConfiguration->getBackorders() == 0) {
+        if ($this->stockConfiguration->getBackorders() !== 0) {
             return true;
         }
 
@@ -141,7 +141,7 @@ class CheckIfQuoteItemsAreInStock
             return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
