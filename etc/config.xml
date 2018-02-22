@@ -70,6 +70,9 @@
                 <template>tig_postnl_track_and_trace_template</template>
                 <service_url>https://postnl.nl/tracktrace/?</service_url>
             </webshop_track_and_trace>
+            <webshop_advanced>
+                <allowed_shipping_methods>tig_postnl_regular</allowed_shipping_methods>
+            </webshop_advanced>
             <productoptions>
                 <default_option>3085</default_option>
                 <default_evening_option>3089</default_evening_option>

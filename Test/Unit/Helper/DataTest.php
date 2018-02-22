@@ -35,6 +35,7 @@ use Magento\Sales\Model\Order;
 use TIG\PostNL\Helper\Data as Helper;
 use TIG\PostNL\Test\TestCase;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Config\Provider\Webshop;
 
 class DataTest extends TestCase
 {
@@ -60,8 +61,17 @@ class DataTest extends TestCase
         $order = $this->objectManager->getObject(Order::class);
         $order->setData('shipping_method', $shippingMethod);
 
+        $webshopMock = $this->getFakeMock(Webshop::class)->getMock();
+        $webshopExpects = $webshopMock->expects($this->once());
+        $webshopExpects->method('getAllowedShippingMethods')->with(0);
+        $webshopExpects->willReturn(['tig_postnl_regular']);
+
+        $instance = $this->getInstance([
+            'webshop' => $webshopMock
+        ]);
+
         /** @var bool $result */
-        $result = $this->getInstance()->isPostNLOrder($order);
+        $result = $instance->isPostNLOrder($order);
 
         $this->assertEquals($expected, $result);
     }

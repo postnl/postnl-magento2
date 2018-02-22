@@ -35,6 +35,7 @@ use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Sales\Model\Order;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Config\Provider\Webshop;
 
 /**
  * @codingStandardsIgnoreStart
@@ -59,6 +60,11 @@ class Data extends AbstractHelper
     private $shippingOptions;
 
     /**
+     * @var Webshop
+     */
+    private $webshop;
+
+    /**
      * @var null
      */
     private $currentDate = null;
@@ -66,13 +72,16 @@ class Data extends AbstractHelper
     /**
      * @param TimezoneInterface $timezoneInterface
      * @param ShippingOptions   $shippingOptions
+     * @param Webshop           $webshop
      */
     public function __construct(
         TimezoneInterface $timezoneInterface,
-        ShippingOptions $shippingOptions
+        ShippingOptions $shippingOptions,
+        Webshop $webshop
     ) {
         $this->dateTime  = $timezoneInterface;
         $this->shippingOptions = $shippingOptions;
+        $this->webshop = $webshop;
     }
 
     /**
@@ -83,6 +92,11 @@ class Data extends AbstractHelper
     public function isPostNLOrder(Order $order)
     {
         $shippingMethod = $order->getShippingMethod();
+        $allowedMethods = $this->webshop->getAllowedShippingMethods($order->getStoreId());
+
+        if (in_array($shippingMethod, $allowedMethods)) {
+            return true;
+        }
 
         return $shippingMethod == 'tig_postnl_regular';
     }
