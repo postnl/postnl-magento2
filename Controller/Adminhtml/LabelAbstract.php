@@ -102,7 +102,8 @@ abstract class LabelAbstract extends Action
     /**
      * @param $shipmentId
      */
-    public function setPackingslip($shipmentId)
+    //@codingStandardsIgnoreLine
+    protected function setPackingslip($shipmentId)
     {
         $packingslip = $this->getPackingSlip->get($shipmentId);
 
