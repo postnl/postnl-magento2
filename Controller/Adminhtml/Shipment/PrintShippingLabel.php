@@ -40,6 +40,7 @@ use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
+use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 
 class PrintShippingLabel extends LabelAbstract
 {
@@ -65,6 +66,7 @@ class PrintShippingLabel extends LabelAbstract
      * @param ShipmentRepository $shipmentRepository
      * @param Track              $track
      * @param BarcodeHandler     $barcodeHandler
+     * @param GetPackingslip     $getPackingSlip
      */
     public function __construct(
         Context $context,
@@ -72,12 +74,14 @@ class PrintShippingLabel extends LabelAbstract
         GetPdf $getPdf,
         ShipmentRepository $shipmentRepository,
         Track $track,
-        BarcodeHandler $barcodeHandler
+        BarcodeHandler $barcodeHandler,
+        GetPackingslip $getPackingSlip
     ) {
         parent::__construct(
             $context,
             $getLabels,
-            $getPdf
+            $getPdf,
+            $getPackingSlip
         );
 
         $this->shipmentRepository = $shipmentRepository;

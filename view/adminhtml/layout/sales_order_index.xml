@@ -1,5 +1,5 @@
-<?php
-/**
+<?xml version="1.0"?>
+<!--
  *
  *          ..::..
  *     ..::::::::::::..
@@ -28,18 +28,11 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
-namespace TIG\PostNL\Service\Shipment\Label\Merge;
-
-use TIG\PostNL\Service\Pdf\Fpdi;
-
-interface MergeInterface
-{
-    /**
-     * @param Fpdi[] $labels
-     * @param bool   $createNewPdf
-     *
-     * @return Fpdi
-     */
-    public function files(array $labels, $createNewPdf = false);
-}
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="before.body.end">
+            <block class="TIG\PostNL\Block\Adminhtml\Grid\Order\DownloadPdfAction"/>
+        </referenceContainer>
+    </body>
+</page>

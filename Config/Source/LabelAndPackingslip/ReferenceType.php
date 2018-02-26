@@ -29,17 +29,31 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment\Label\Merge;
+namespace TIG\PostNL\Config\Source\LabelAndPackingslip;
 
-use TIG\PostNL\Service\Pdf\Fpdi;
+use Magento\Framework\Option\ArrayInterface;
 
-interface MergeInterface
+class ReferenceType implements ArrayInterface
 {
+    const REFEENCE_TYPE_NONE        = 'none';
+    const REFEENCE_TYPE_SHIPMENT_ID = 'shipment_increment_id';
+    const REFEENCE_TYPE_ORDER_ID    = 'order_increment_id';
+    const REFEENCE_TYPE_CUSTOM      = 'custom';
+
     /**
-     * @param Fpdi[] $labels
-     * @param bool   $createNewPdf
-     *
-     * @return Fpdi
+     * @return array
      */
-    public function files(array $labels, $createNewPdf = false);
+    public function toOptionArray()
+    {
+        // @codingStandardsIgnoreStart
+        $options = [
+            ['value' => self::REFEENCE_TYPE_NONE, 'label' => __('None')],
+            ['value' => self::REFEENCE_TYPE_SHIPMENT_ID, 'label' => __('Shipment ID')],
+            ['value' => self::REFEENCE_TYPE_ORDER_ID, 'label' => __('Order ID')],
+            ['value' => self::REFEENCE_TYPE_CUSTOM, 'label' => __('Use a custom value')]
+        ];
+        // @codingStandardsIgnoreEnd
+
+        return $options;
+    }
 }

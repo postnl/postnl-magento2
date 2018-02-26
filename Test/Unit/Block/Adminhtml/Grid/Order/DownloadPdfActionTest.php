@@ -29,17 +29,32 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment\Label\Merge;
+namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Grid\Order;
 
-use TIG\PostNL\Service\Pdf\Fpdi;
+use Magento\Framework\UrlInterface;
+use TIG\PostNL\Block\Adminhtml\Grid\Order\DownloadPdfAction;
+use TIG\PostNL\Test\TestCase;
 
-interface MergeInterface
+class DownloadPdfActionTest extends TestCase
 {
-    /**
-     * @param Fpdi[] $labels
-     * @param bool   $createNewPdf
-     *
-     * @return Fpdi
-     */
-    public function files(array $labels, $createNewPdf = false);
+    public $instanceClass = DownloadPdfAction::class;
+
+
+    public function testGetConfirmAndPrintLabelsUrl()
+    {
+        $urlResultMock = "tig.nl";
+
+        $urlBuilderMock = $this->getMockBuilder(UrlInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getUrl'])
+            ->getMockForAbstractClass();
+        $urlBuilderMock->method('getUrl')->willReturn($urlResultMock);
+
+        $instance = $this->getInstance();
+        $this->setProperty('_urlBuilder', $urlBuilderMock, $instance);
+        $result = $instance->getConfirmAndPrintLabelsUrl();
+
+        $this->assertInternalType('string', $result);
+        $this->assertEquals($urlResultMock, $result);
+    }
 }

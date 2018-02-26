@@ -29,17 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment\Label\Merge;
+namespace TIG\PostNL\Block\Adminhtml\Grid\Order;
 
-use TIG\PostNL\Service\Pdf\Fpdi;
+use Magento\Backend\Block\Template;
+use Magento\Framework\View\Element\BlockInterface;
 
-interface MergeInterface
+class DownloadPdfAction extends Template implements BlockInterface
 {
     /**
-     * @param Fpdi[] $labels
-     * @param bool   $createNewPdf
-     *
-     * @return Fpdi
+     * @var string
      */
-    public function files(array $labels, $createNewPdf = false);
+    // @codingStandardsIgnoreLine
+    protected $_template = 'TIG_PostNL::order/grid/DownloadPdfAction.phtml';
+
+    /**
+     * @return string
+     */
+    public function getConfirmAndPrintLabelsUrl()
+    {
+        return $this->getUrl('postnl/order/CreateShipmentsConfirmAndPrintShippingLabels');
+    }
+
+    public function getConfirmAndPrintPackingSlipUrl()
+    {
+        return $this->getUrl('postnl/order/CreateShipmentsConfirmAndPrintPackingSlip');
+    }
 }
