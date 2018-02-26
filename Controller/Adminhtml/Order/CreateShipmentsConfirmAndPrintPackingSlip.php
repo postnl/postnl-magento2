@@ -134,7 +134,6 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
             $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
             $this->setTracks($shipment);
             $this->setPackingslip($shipment->getId());
-
         }
 
         return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
