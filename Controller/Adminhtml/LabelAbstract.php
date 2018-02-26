@@ -61,8 +61,7 @@ abstract class LabelAbstract extends Action
     /**
      * @var GetPackingslip
      */
-    //@codingStandardsIgnoreLine
-    protected $getPackingSlip;
+    private $getPackingSlip;
 
     /**
      * @param Context        $context

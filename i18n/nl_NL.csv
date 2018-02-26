@@ -114,6 +114,8 @@ Webshop,Webshop
 "Cutoff time","Cut-off tijd"
 "Shipment days","Verzenddagen"
 "PostNL - Create shipments","PostNL - Maak zendingen aan"
+"PostNL - Create shipments, print labels &amp; confirm","PostNL - Maak zendingen aan, print labels &amp; meld voor"
+"PostNL - Create shipments, print packing slip &amp; confirm","PostNL - Maak zendingen aan, print pakbonnen &amp; meld voor"
 "PostNL - Print shipping labels & confirm shipment","PostNL - Print verzendlabels & zending voormelden"
 "Confirm Status","Voormeld status"
 "Shipping Date","Verzenddatum"
