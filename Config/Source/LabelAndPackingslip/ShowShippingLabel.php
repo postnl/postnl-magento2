@@ -29,17 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment\Label\Merge;
+namespace TIG\PostNL\Config\Source\LabelAndPackingslip;
 
-use TIG\PostNL\Service\Pdf\Fpdi;
+use Magento\Framework\Option\ArrayInterface;
 
-interface MergeInterface
+class ShowShippingLabel implements ArrayInterface
 {
+    const SHOW_SHIPPING_LABEL_TOGETHER = 'together';
+    const SHOW_SHIPPING_LABEL_SEPARATE = 'separate';
+    const SHOW_SHIPPING_LABEL_NONE     = 'none';
+
     /**
-     * @param Fpdi[] $labels
-     * @param bool   $createNewPdf
-     *
-     * @return Fpdi
+     * @return array
      */
-    public function files(array $labels, $createNewPdf = false);
+    public function toOptionArray()
+    {
+        // @codingStandardsIgnoreStart
+        $options = [
+            ['value' => self::SHOW_SHIPPING_LABEL_TOGETHER, 'label' => __("Print the shipping label and packing slip on the same page")],
+            ['value' => self::SHOW_SHIPPING_LABEL_SEPARATE, 'label' => __("Print the shipping label on a separate page")],
+            ['value' => self::SHOW_SHIPPING_LABEL_NONE, 'label' => __("Don't print the shipping label")]
+        ];
+        // @codingStandardsIgnoreEnd
+
+        return $options;
+    }
 }

@@ -31,9 +31,7 @@
  */
 namespace TIG\PostNL\Service\Shipment\Label\Merge;
 
-use TIG\PostNL\Service\Shipment\Label\File;
 use TIG\PostNL\Service\Pdf\Fpdi;
-use TIG\PostNL\Service\Pdf\FpdiFactory;
 
 class A4Merger extends AbstractMerger implements MergeInterface
 {
@@ -44,17 +42,25 @@ class A4Merger extends AbstractMerger implements MergeInterface
 
     /**
      * @param Fpdi[] $labels
+     * @codingStandardsIgnoreStart
+     * @param bool  $createNewPdf Sometimes you want to generate a new Label PDF, for example when printing packingslips
+     *                            This parameter indicates whether to reuse the existing label PDF
+     *                            @TODO Refactor to a cleaner way rather than chaining all the way to \TIG\PostNL\Service\Shipment\Label\Merge\AbstractMerger
+     * @codingStandardsIgnoreEnd
      *
      * @return Fpdi
      */
-    public function files(array $labels)
+    public function files(array $labels, $createNewPdf = false)
     {
-        $this->pdf = $this->createPdf(true);
+        if ($createNewPdf) { //By resetting the counter, labels will start in the upper-left when creating a new PDF
+            $this->labelCounter = 0;
+        }
+
+        $this->pdf = $this->createPdf(true, $createNewPdf);
         foreach ($labels as $label) {
             $this->increaseCounter();
             // @codingStandardsIgnoreLine
             $filename = $this->file->save($label->Output('S'));
-
             $this->pdf->setSourceFile($filename);
 
             $pageId = $this->pdf->importPage(1);

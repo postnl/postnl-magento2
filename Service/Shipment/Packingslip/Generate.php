@@ -29,17 +29,41 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment\Label\Merge;
+namespace TIG\PostNL\Service\Shipment\Packingslip;
 
-use TIG\PostNL\Service\Pdf\Fpdi;
-
-interface MergeInterface
+class Generate
 {
     /**
-     * @param Fpdi[] $labels
-     * @param bool   $createNewPdf
+     * @param array $labels
      *
-     * @return Fpdi
+     * @return string
      */
-    public function files(array $labels, $createNewPdf = false);
+    public function run(array $labels)
+    {
+        // @codingStandardsIgnoreLine
+        $pdf = new \Zend_Pdf();
+
+        foreach ($labels as $label) {
+            $pdf = $this->addLabelToPdf($label, $pdf);
+        }
+
+        return $pdf->render();
+    }
+
+    /**
+     * @param string    $label
+     * @param \Zend_Pdf $pdf
+     *
+     * @return \Zend_Pdf
+     */
+    private function addLabelToPdf($label, $pdf)
+    {
+        $labelZendPdf = \Zend_Pdf::parse($label);
+
+        foreach ($labelZendPdf->pages as $page) {
+            $pdf->pages[] = clone $page;
+        }
+
+        return $pdf;
+    }
 }

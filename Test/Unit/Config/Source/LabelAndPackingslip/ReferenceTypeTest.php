@@ -29,17 +29,28 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment\Label\Merge;
+namespace TIG\PostNL\Unit\Config\Source\LabelAndPackingslip;
 
-use TIG\PostNL\Service\Pdf\Fpdi;
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\Source\LabelAndPackingslip\ReferenceType;
 
-interface MergeInterface
+class ReferenceTypeTest extends TestCase
 {
-    /**
-     * @param Fpdi[] $labels
-     * @param bool   $createNewPdf
-     *
-     * @return Fpdi
-     */
-    public function files(array $labels, $createNewPdf = false);
+    protected $instanceClass = ReferenceType::class;
+
+    public function testToOptionArray()
+    {
+        $expectedValues = ['none', 'shipment_increment_id', 'order_increment_id', 'custom'];
+
+        $instance = $this->getInstance();
+        $result = $instance->toOptionArray();
+
+        $this->assertCount(count($expectedValues), $result);
+
+        foreach ($result as $option) {
+            $this->assertArrayHasKey('label', $option);
+            $this->assertArrayHasKey('value', $option);
+            $this->assertContains($option['value'], $expectedValues);
+        }
+    }
 }

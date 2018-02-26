@@ -32,7 +32,6 @@
 namespace TIG\PostNL\Controller\Adminhtml\Order;
 
 use Magento\Framework\App\ResponseInterface;
-use Magento\Sales\Model\Order\Shipment;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
@@ -42,7 +41,7 @@ use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
 use TIG\PostNL\Service\Shipment\CreateShipment;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
-use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
+use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 
 class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
 {
@@ -85,7 +84,7 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
      * @param CreateShipment            $createShipment
      * @param Track                     $track
      * @param BarcodeHandler            $barcodeHandler
-     * @param PdfShipment               $getPackingSlip
+     * @param GetPackingslip            $getPackingSlip
      */
     public function __construct(
         Context $context,
@@ -96,7 +95,7 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
         CreateShipment $createShipment,
         Track $track,
         BarcodeHandler $barcodeHandler,
-        PdfShipment $getPackingSlip
+        GetPackingslip $getPackingSlip
     ) {
         parent::__construct($context, $getLabels, $getPdf, $getPackingSlip);
         $this->filter = $filter;
@@ -128,13 +127,12 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
         $collection = $this->collectionFactory->create();
         $collection = $this->filter->getCollection($collection);
 
-        $shipments = [];
-
         foreach ($collection as $order) {
-            $shipments[] = $this->createShipment->create($order);
+            $shipment = $this->createShipment->create($order);
+            $this->setPackingslip($shipment->getId());
         }
 
-        return $this->generatePackingSlips($shipments);
+        return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
     }
 
     /**

@@ -87,5 +87,33 @@
             </field>
         </group>
 
+        <group id="labelandpackingslipoptions" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Label and packingslip options</label>
+            <fieldset_css>tig_postnl-sub-section</fieldset_css>
+
+            <field id="reference_type" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Shipment reference type</label>
+                <comment><![CDATA[Select what to use as a shipment's reference. This will be printed on the shipping label.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\ReferenceType</source_model>
+                <config_path>tig_postnl/labelandpackingslipoptions/reference_type</config_path>
+            </field>
+
+            <field id="custom_shipment_reference" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Custom reference value</label>
+                <tooltip><![CDATA[You can use this field to, for example, add a prefix to the shipment increment ID or to help identify the shipment as coming from your webshop. You can use the following variables: {{var shipment_increment_id}}, {{var order_increment_id}} and {{var store_frontend_name}}. The resulting text may not exceed 28 characters.]]></tooltip>
+                <config_path>tig_postnl/labelandpackingslipoptions/custom_shipment_reference</config_path>
+                <depends>
+                    <field id="reference_type">custom</field>
+                </depends>
+            </field>
+
+            <field id="show_label" translate="label" type="radios" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <label>Show shipping label</label>
+                <tooltip><![CDATA[If you select 'on the same page' in some cases the shipping label may not fit. In this case, the shipping label will be printed on a separate page instead.]]></tooltip>
+                <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\ShowShippingLabel</source_model>
+                <config_path>tig_postnl/labelandpackingslipoptions/show_label</config_path>
+            </field>
+        </group>
+
     </group>
 </include>
