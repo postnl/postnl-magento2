@@ -34,6 +34,7 @@ namespace TIG\PostNL\Controller\Adminhtml\Order;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action\Context;
+use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
@@ -129,10 +130,24 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
 
         foreach ($collection as $order) {
             $shipment = $this->createShipment->create($order);
+            $address  = $shipment->getShippingAddress();
+            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+            $this->setTracks($shipment);
             $this->setPackingslip($shipment->getId());
+
         }
 
         return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
+    }
+
+    /**
+     * @param Shipment $shipment
+     */
+    private function setTracks($shipment)
+    {
+        if (!$shipment->getTracks()) {
+            $this->track->set($shipment);
+        }
     }
 
     /**
