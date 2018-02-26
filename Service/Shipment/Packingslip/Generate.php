@@ -29,29 +29,41 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid\Order;
+namespace TIG\PostNL\Service\Shipment\Packingslip;
 
-use Magento\Backend\Block\Template;
-use Magento\Framework\View\Element\BlockInterface;
-
-class DownloadPdfAction extends Template implements BlockInterface
+class Generate
 {
     /**
-     * @var string
-     */
-    // @codingStandardsIgnoreLine
-    protected $_template = 'TIG_PostNL::order/grid/DownloadPdfAction.phtml';
-
-    /**
+     * @param array $labels
+     *
      * @return string
      */
-    public function getConfirmAndPrintLabelsUrl()
+    public function run(array $labels)
     {
-        return $this->getUrl('postnl/order/CreateShipmentsConfirmAndPrintShippingLabels');
+        // @codingStandardsIgnoreLine
+        $pdf = new \Zend_Pdf();
+
+        foreach ($labels as $label) {
+            $pdf = $this->addLabelToPdf($label, $pdf);
+        }
+
+        return $pdf->render();
     }
 
-    public function getConfirmAndPrintPackingSlipUrl()
+    /**
+     * @param string    $label
+     * @param \Zend_Pdf $pdf
+     *
+     * @return \Zend_Pdf
+     */
+    private function addLabelToPdf($label, $pdf)
     {
-        return $this->getUrl('postnl/order/CreateShipmentsConfirmAndPrintPackingSlip');
+        $labelZendPdf = \Zend_Pdf::parse($label);
+
+        foreach ($labelZendPdf->pages as $page) {
+            $pdf->pages[] = clone $page;
+        }
+
+        return $pdf;
     }
 }

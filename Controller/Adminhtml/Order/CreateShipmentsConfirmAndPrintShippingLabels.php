@@ -42,6 +42,7 @@ use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
 use TIG\PostNL\Service\Shipment\CreateShipment;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
+use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 
 class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
 {
@@ -84,6 +85,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
      * @param CreateShipment         $createShipment
      * @param Track                  $track
      * @param BarcodeHandler         $barcodeHandler
+     * @param GetPackingslip         $getPackingSlip
      */
     public function __construct(
         Context $context,
@@ -93,9 +95,10 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         OrderCollectionFactory $collectionFactory,
         CreateShipment $createShipment,
         Track $track,
-        BarcodeHandler $barcodeHandler
+        BarcodeHandler $barcodeHandler,
+        GetPackingslip $getPackingSlip
     ) {
-        parent::__construct($context, $getLabels, $getPdf);
+        parent::__construct($context, $getLabels, $getPdf, $getPackingSlip);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->createShipment = $createShipment;

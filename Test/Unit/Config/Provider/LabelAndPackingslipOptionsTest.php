@@ -48,7 +48,7 @@ class LabelAndPackingslipOptionsTest extends AbstractConfigurationTest
     public function testGetReferenceType($value)
     {
         $instance = $this->getInstance();
-        $this->setXpath(LabelAndPackingslipOptions::XPATH_LABEL_PACKINGSLIP_OPTION_REFERENCE_TYPE, $value);
+        $this->setXpath(LabelAndPackingslipOptions::XPATH_LABEL_PACKINGSLIP_REFERENCE_TYPE, $value);
         $this->assertEquals($value, $instance->getReferenceType());
     }
 
@@ -60,7 +60,7 @@ class LabelAndPackingslipOptionsTest extends AbstractConfigurationTest
     public function testGetCustomReference($value)
     {
         $instance = $this->getInstance();
-        $this->setXpath(LabelAndPackingslipOptions::XPATH_LABEL_PACKINGSLIP_OPTION_CUSTOM_REFERENCE, $value);
+        $this->setXpath(LabelAndPackingslipOptions::XPATH_LABEL_PACKINGSLIP_CUSTOM_REFERENCE, $value);
         $this->assertEquals($value, $instance->getCustomReference());
     }
 
@@ -131,7 +131,7 @@ class LabelAndPackingslipOptionsTest extends AbstractConfigurationTest
         $shipmentMock->expects($this->once())->method('getIncrementId')->willReturn($shipmentId);
 
         $instance = $this->getInstance(['storeWrapper' => $storeWrapperMock]);
-        $this->setXpath(LabelAndPackingslipOptions::XPATH_LABEL_PACKINGSLIP_OPTION_CUSTOM_REFERENCE, $customReference);
+        $this->setXpath(LabelAndPackingslipOptions::XPATH_LABEL_PACKINGSLIP_CUSTOM_REFERENCE, $customReference);
 
         $result = $instance->getCustomReferenceParsed($shipmentMock);
         $this->assertEquals($expected, $result);
@@ -145,7 +145,7 @@ class LabelAndPackingslipOptionsTest extends AbstractConfigurationTest
     public function testGetShowLabel($value)
     {
         $instance = $this->getInstance();
-        $this->setXpath(LabelAndPackingslipOptions::XPATH_LABEL_PACKINGSLIP_OPTION_SHOW_LABEL, $value);
+        $this->setXpath(LabelAndPackingslipOptions::XPATH_LABEL_PACKINGSLIP_SHOW_LABEL, $value);
         $this->assertEquals($value, $instance->getShowLabel());
     }
 }

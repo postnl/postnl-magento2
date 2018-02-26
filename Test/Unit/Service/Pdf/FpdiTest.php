@@ -29,29 +29,39 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid\Order;
+namespace TIG\PostNL\Test\Unit\Service\Pdf;
 
-use Magento\Backend\Block\Template;
-use Magento\Framework\View\Element\BlockInterface;
+use TIG\PostNL\Service\Pdf\Fpdi;
+use TIG\PostNL\Test\TestCase;
 
-class DownloadPdfAction extends Template implements BlockInterface
+class GenerateTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    // @codingStandardsIgnoreLine
-    protected $_template = 'TIG_PostNL::order/grid/DownloadPdfAction.phtml';
+    public $instanceClass = Fpdi::class;
 
     /**
-     * @return string
+     * @return array
      */
-    public function getConfirmAndPrintLabelsUrl()
+    public function pixelsToPointsProvider()
     {
-        return $this->getUrl('postnl/order/CreateShipmentsConfirmAndPrintShippingLabels');
+        return [
+            'no pixels' => [0, 0],
+            'single digit pixel' => [3, 0.8],
+            'multi digit pixel' => [123, 32.4],
+            'single decimal pixel' => [45.6, 12],
+            'multi decimal pixel' => [78.901, 20.8]
+        ];
     }
 
-    public function getConfirmAndPrintPackingSlipUrl()
+    /**
+     * @param $pixels
+     * @param $expected
+     *
+     * @dataProvider pixelsToPointsProvider
+     */
+    public function testPixelsToPoints($pixels, $expected)
     {
-        return $this->getUrl('postnl/order/CreateShipmentsConfirmAndPrintPackingSlip');
+        $instance = $this->getInstance();
+        $result = $instance->pixelsToPoints($pixels);
+        $this->assertEquals($result, $expected);
     }
 }
