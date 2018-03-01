@@ -81,6 +81,7 @@ class PostNL extends AbstractCarrier implements CarrierInterface
      * @param MethodFactory        $rateMethodFactory
      * @param Track                $track
      * @param Calculator           $calculator
+     * @param AccountConfiguration $accountConfiguration
      * @param array                $data
      */
     public function __construct(

@@ -280,3 +280,6 @@ Percent,Percentage
 "Deliverydays options are disabled.","Bezorgdagen opties staan uitgeschakeld."
 "Could not load from soap data","Kan niet vanuit de SOAP call data inladen."
 "At the first opportunity","Eerst volgende mogelijkheid"
+"These settings are intended for advanced users only! If you're not 100% sure what you're doing, please do not touch these settings.","Deze instellingen zijn enkel bedoeld voor geavanceerde gebruikers! Indien u niet geheel zeker bent van wat u doet, pas deze instellingen dan niet aan."
+"Advanced Settings","Geavanceerde Instellingen"
+"Please select the shipping methods that will be considered to be 'PostNL' by this extension. Orders placed using one of these shipping methods may be processed using the PostNL extension.","Selecteer alle verzendmethodes die door de extensie beschouwd zullen worden als zijnde 'PostNL'. Bestellingen die met deze verzendmethodes geplaatst worden, zullen verwerkt worden door de PostNL extensie."

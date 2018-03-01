@@ -33,7 +33,7 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="\Magento\Shipping\Block\Adminhtml\View" type="\TIG\PostNL\Block\Adminhtml\Shipment\View" />
-    
+
     <type name="TIG\PostNL\Service\Shipment\Label\Prepare">
         <arguments>
             <argument name="types" xsi:type="array">

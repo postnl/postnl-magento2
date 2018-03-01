@@ -265,3 +265,7 @@ Percent,Percent
 "Deliverydays options are disabled.","Deliverydays options are disabled."
 "Could not load from soap data","Could not load from soap data"
 "At the first opportunity","At the first opportunity"
+"These settings are intended for advanced users only! If you're not 100% sure what you're doing, please do not touch these settings.","These settings are intended for advanced users only! If you're not 100% sure what you're doing, please do not touch these settings."
+"Advanced Settings","Advanced Settings"
+"Please select the shipping methods that will be considered to be 'PostNL' by this extension. Orders placed using one of these shipping methods may be processed using the PostNL extension.","Please select the shipping methods that will be considered to be 'PostNL' by this extension. Orders placed using one of these shipping methods may be processed using the PostNL extension."
+
