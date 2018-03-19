@@ -117,6 +117,7 @@ class Data
             'DownPartnerID'            => $shipment->getPgRetailNetworkId(),
             'DownPartnerLocation'      => $shipment->getPgLocationCode(),
             'ProductCodeDelivery'      => $shipment->getProductCode(),
+            'Reference'                => $this->labelAndPackingslipOptions->getReference($shipment->getShipment())
         ];
     }
 
