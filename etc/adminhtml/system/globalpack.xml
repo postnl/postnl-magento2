@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+ *
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ *
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <!-- Globalpack (Worlwide shipping) section -->
+    <group id="globalpack" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Worldwide Shipping</label>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-section</fieldset_css>
+        <group id="using_globalpack" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <attribute type="expanded">1</attribute>
+            <frontend_model>\TIG\PostNL\Block\Adminhtml\Config\Globalpack\UsingGlobalpack</frontend_model>
+        </group>
+        <field id="enabled" translate="label comment tooltip" sortOrder="20" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Use Worldwide shipping</label>
+            <comment>Worldwide shipping uses the PostNL Globalpack product.</comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/globalpack/enabled</config_path>
+        </field>
+
+        <group id="barcode_settings" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Barcode settings</label>
+            <fieldset_css>tig_postnl-sub-section</fieldset_css>
+            <field id="type" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Barcode Type</label>
+                <comment>The current global barcode type as supplied by PostNL. Must contain 2 letters.</comment>
+                <config_path>tig_postnl/globalpack/barcode_type</config_path>
+            </field>
+            <field id="range" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Barcode Range</label>
+                <comment>Your global barcode range as supplied by PostNL. Must contain 4 digits.</comment>
+                <config_path>tig_postnl/globalpack/barcode_range</config_path>
+            </field>
+            <depends>
+                <field id="tig_postnl/globalpack/activate">1</field>
+            </depends>
+        </group>
+        <group id="customs" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Customs settings</label>
+            <fieldset_css>tig_postnl-sub-section</fieldset_css>
+            <field id="license_number" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>License number</label>
+                <comment>If you do not own a customs license, leave this field empty.</comment>
+                <config_path>tig_postnl/globalpack/license_number</config_path>
+            </field>
+            <field id="certificate_number" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Certificate number</label>
+                <comment>If you do not own a certificate certificate, leave this field empty.</comment>
+                <config_path>tig_postnl/globalpack/certificate_number</config_path>
+            </field>
+            <depends>
+                <field id="tig_postnl/globalpack/activate">1</field>
+            </depends>
+        </group>
+    </group>
+</include>
