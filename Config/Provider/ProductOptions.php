@@ -34,8 +34,9 @@ namespace TIG\PostNL\Config\Provider;
 /**
  * This class contains all configuration options related to the product options.
  * This will cause that it is too long for Code Sniffer to check.
+ *
+ * @codingStandardsIgnoreStart
  */
-// @codingStandardsIgnoreFile
 class ProductOptions extends AbstractConfigProvider
 {
     const XPATH_SUPPORTED_PRODUCT_OPTIONS               = 'tig_postnl/productoptions/supported_options';
@@ -146,3 +147,6 @@ class ProductOptions extends AbstractConfigProvider
         return $this->getConfigFromXpath(self::XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION);
     }
 }
+/**
+ * codingStandardsIgnoreEnd
+ */
