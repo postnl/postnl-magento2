@@ -60,23 +60,23 @@ class Globalpack extends AbstractConfigProvider
     }
 
     /**
-     * @param null $stordeId
+     * @param null $storeId
      *
      * @return mixed
      */
-    public function getBarcodeRange($stordeId = null)
+    public function getBarcodeRange($storeId = null)
     {
-        return $this->getConfigFromXpath(static::XPATH_GLOBALPACK_BARCODE_RANGE, $stordeId);
+        return $this->getConfigFromXpath(static::XPATH_GLOBALPACK_BARCODE_RANGE, $storeId);
     }
 
     /**
-     * @param null $stordeId
+     * @param null $storeId
      *
      * @return mixed
      */
-    public function getLicenseNumber($stordeId = null)
+    public function getLicenseNumber($storeId = null)
     {
-        return $this->getConfigFromXpath(static::XPATH_GLOBALPACK_LICENSE_NUMBER, $stordeId);
+        return $this->getConfigFromXpath(static::XPATH_GLOBALPACK_LICENSE_NUMBER, $storeId);
     }
 
     /**
