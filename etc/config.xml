@@ -75,6 +75,7 @@
             </webshop_advanced>
             <productoptions>
                 <default_option>3085</default_option>
+                <use_alternative_default>0</use_alternative_default>
                 <default_evening_option>3089</default_evening_option>
                 <default_extraathome_option>3628</default_extraathome_option>
                 <default_evening_be_option>4938</default_evening_be_option>
