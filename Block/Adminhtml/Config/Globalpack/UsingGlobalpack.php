@@ -36,6 +36,7 @@ use Magento\Framework\View\Element\Template;
 
 class UsingGlobalpack extends Template implements RendererInterface
 {
+    // @codingStandardsIgnoreLine
     protected $_template = 'TIG_PostNL::config/globalpack/usingGlobalpack.phtml';
 
     /**
