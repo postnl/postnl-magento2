@@ -96,7 +96,7 @@ class ProductOptions extends AbstractConfigProvider
             return false;
         }
 
-        return $this->getConfigFromXpath(self::XPATH_USE_ALTERNATIVE_DEFAULT_OPTION);
+        return $this->getConfigFromXpath(self::XPATH_ALTERNATIVE_DEFAULT_PRODUCT_OPTION);
     }
 
     /**

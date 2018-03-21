@@ -31,8 +31,10 @@
  */
 namespace TIG\PostNL\Test\Unit\Service\Order;
 
+use Magento\Quote\Model\Quote;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Test\TestCase;
 
 /**
@@ -41,6 +43,7 @@ use TIG\PostNL\Test\TestCase;
 class ProductCodeTest extends TestCase
 {
     const PRODUCT_OPTION_DEFAULT = 'default_product_option';
+    const PRODUCT_OPTION_ALTERNATIVE_DEFAULT = 'alternative_default_product_option';
     const PRODUCT_OPTION_EVENING = 'evening_product_option';
     const PRODUCT_OPTION_EXTRAATHOME = 'extraathome_product_option';
     const PRODUCT_OPTION_PAKJEGEMAK = 'pakjegemak_product_option';
@@ -53,9 +56,9 @@ class ProductCodeTest extends TestCase
     private $productOptionsMock;
 
     /**
-     * @var ProductCodeAndType
+     * @var QuoteInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $instance;
+    private $quoteInterfaceMock;
 
     public $instanceClass = ProductCodeAndType::class;
 
@@ -64,12 +67,7 @@ class ProductCodeTest extends TestCase
         parent::setUp();
 
         $this->productOptionsMock = $this->getFakeMock(ProductOptions::class)->getMock();
-        $productOptionsFinder = $this->getObject(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
-
-        $this->instance = $this->getInstance([
-            'productOptionsConfiguration' => $this->productOptionsMock,
-            'productOptionsFinder' => $productOptionsFinder,
-        ]);
+        $this->quoteInterfaceMock = $this->getFakeMock(QuoteInterface::class)->getMockForAbstractClass();
 
         $this->addProductOptionsMockFunction('getDefaultProductOption', static::PRODUCT_OPTION_DEFAULT);
         $this->addProductOptionsMockFunction('getDefaultEveningProductOption', static::PRODUCT_OPTION_EVENING);
@@ -80,8 +78,31 @@ class ProductCodeTest extends TestCase
             'getDefaultPakjeGemakEarlyProductOption',
             static::PRODUCT_OPTION_PAKJEGEMAK_EARLY
         );
+        $this->addProductOptionsMockFunction(
+            'getAlternativeDefaultProductOption',
+            static::PRODUCT_OPTION_ALTERNATIVE_DEFAULT
+        );
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getInstance(array $args = [])
+    {
+        if (!isset($args['productOptionsConfiguration'])) {
+            $args['productOptionsConfiguration'] = $this->productOptionsMock;
+        }
+
+        if (!isset($args['quote'])) {
+            $args['quote'] = $this->quoteInterfaceMock;
+        }
+
+        return parent::getInstance($args);
+    }
+
+    /**
+     * @return array
+     */
     public function getShippingOptionProvider()
     {
         return [
@@ -111,9 +132,70 @@ class ProductCodeTest extends TestCase
      */
     public function testGetShippingOption($type, $option, $country, $expectedCode, $expectedType)
     {
-        $result = $this->instance->get($type, $option, $country);
+        $productOptionsFinder = $this->getObject(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
+
+        $quoteMock = $this->getFakeMock(Quote::class, true);
+        $this->quoteInterfaceMock->method('getQuote')->willReturn($quoteMock);
+
+        $instance = $this->getInstance(['productOptionsFinder' => $productOptionsFinder]);
+
+        $result = $instance->get($type, $option, $country);
         $this->assertEquals($expectedCode, $result['code']);
         $this->assertEquals($expectedType, $result['type']);
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultProductOptionProvider()
+    {
+        return [
+            'alternative disabled' => [
+                0,
+                5,
+                10,
+                static::PRODUCT_OPTION_DEFAULT
+            ],
+            'alternative enabled, amount limit not exceeded' => [
+                1,
+                20,
+                15,
+                static::PRODUCT_OPTION_DEFAULT
+            ],
+            'alternative enabled, amount limit exceeded' => [
+                1,
+                25,
+                30,
+                static::PRODUCT_OPTION_ALTERNATIVE_DEFAULT
+            ],
+        ];
+    }
+
+    /**
+     * @param $useAlternative
+     * @param $alternativeMaxAmount
+     * @param $quoteTotal
+     * @param $expected
+     *
+     * @dataProvider getDefaultProductOptionProvider
+     */
+    public function testGetDefaultProductOption($useAlternative, $alternativeMaxAmount, $quoteTotal, $expected)
+    {
+        $quoteMock = $this->getFakeMock(Quote::class)->setMethods(['getBaseGrandTotal'])->getMock();
+        $quoteMock->expects($this->once())->method('getBaseGrandTotal')->willReturn($quoteTotal);
+
+        $this->quoteInterfaceMock->method('getQuote')->willReturn($quoteMock);
+        $this->productOptionsMock->method('getUseAlternativeDefault')->willReturn($useAlternative);
+        $this->productOptionsMock->method('getAlternativeDefaultMaxAmount')->willReturn($alternativeMaxAmount);
+
+        $instance = $this->getInstance();
+        $this->invoke('getDefaultProductOption', $instance);
+
+        $resultCode = $this->getProperty('code', $instance);
+        $resultType = $this->getProperty('type', $instance);
+
+        $this->assertEquals($expected, $resultCode);
+        $this->assertEquals('Daytime', $resultType);
     }
 
     private function addProductOptionsMockFunction($function, $returnValue)
