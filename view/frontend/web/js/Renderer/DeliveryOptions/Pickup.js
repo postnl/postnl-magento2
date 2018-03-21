@@ -52,8 +52,8 @@ define([
     return Component.extend({
         defaults: {
             template: 'TIG_PostNL/DeliveryOptions/Pickup',
-            postalCode : null,
-            countryCode : null,
+            postcode : null,
+            country : null,
             street : null,
             hasAddress :false,
             pickupAddresses: []
@@ -62,8 +62,8 @@ define([
         initObservable : function () {
             this._super().observe([
                 'pickupAddresses',
-                'postalCode',
-                'countryCode',
+                'postcode',
+                'country',
                 'street',
                 'hasAddress',
                 'selectedOption'
@@ -81,15 +81,11 @@ define([
                     return;
                 }
 
-                if (address.countryCode !== 'NL') {
+                if (address.country !== 'NL') {
                     return;
                 }
 
-                this.getPickupAddresses({
-                    postcode: address.postalCode,
-                    country : address.countryCode,
-                    street  : address.street
-                });
+                this.getPickupAddresses(address);
             }.bind(this));
 
             /**

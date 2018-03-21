@@ -42,12 +42,13 @@ define([
     'use strict';
 
     var address = {
-            postalCode  : null,
-            countryCode : null,
+            postcode    : null,
+            country     : null,
             street      : null,
             firstname   : null,
             lastname    : null,
-            telephone   : null
+            telephone   : null,
+            housenumber : null
         },
         countryCode,
         timer,
@@ -91,11 +92,11 @@ define([
         if (customer.isLoggedIn() && shippingAddress && shippingAddress.street) {
             address = {
                 street: shippingAddress.street,
-                postalCode: shippingAddress.postcode,
+                postcode: shippingAddress.postcode,
                 lastname: shippingAddress.lastname,
                 firstname: shippingAddress.firstname,
                 telephone: shippingAddress.telephone,
-                countryCode: shippingAddress.countryId
+                country: shippingAddress.countryId
             };
 
             return address;
@@ -122,19 +123,30 @@ define([
             1 : $("input[name*='street[1]']").val()
         };
 
-        address.postalCode = $("input[name*='postcode']").val();
+        var housenumber;
+        if (window.checkoutConfig.postcode !== undefined) {
+            housenumber = $("input[name*='tig_housenumber']").val();
+        }
+
+        if (housenumber !== undefined) {
+            address.housenumber = housenumber;
+        }
+
+        address.postcode   = $("input[name*='postcode']").val();
         address.firstname  = $("input[name*='firstname']").val();
         address.lastname   = $("input[name*='lastname']").val();
         address.telephone  = $("input[name*='telephone']").val();
 
-        if (!address.countryCode || address.countryCode !== countryCode) {
-            address.countryCode = $("select[name*='country_id']").val();
+        if (!address.country || address.country !== countryCode) {
+            address.country = $("select[name*='country_id']").val();
         }
 
-        if (!address.countryCode || !address.postalCode || !address.street) {
+        if (!address.country || !address.postcode || !address.street[0]) {
             return false;
         }
 
         return address;
+
+
     }.bind(this));
 });
