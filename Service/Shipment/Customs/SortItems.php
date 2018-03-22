@@ -34,7 +34,8 @@ namespace TIG\PostNL\Service\Shipment\Customs;
 use TIG\PostNL\Config\Provider\Globalpack;
 use Magento\Sales\Api\Data\ShipmentItemInterface;
 use Magento\Sales\Api\Data\ShipmentInterface;
-use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use TIG\PostNL\Config\Provider\ProductType;
+use TIG\PostNL\Service\Options\ProductDictionary;
 
 class SortItems
 {
@@ -51,9 +52,11 @@ class SortItems
     private $storeId;
 
     /**
-     * @var CollectionFactory
+     * @var ProductDictionary
      */
-    private $productCollection;
+    private $productDictionary;
+
+    private $productType;
 
     private $attributeToSort;
 
@@ -63,14 +66,17 @@ class SortItems
      * SortItems constructor.
      *
      * @param Globalpack        $globalpack
-     * @param CollectionFactory $collectionFactory
+     * @param ProductDictionary $productDictionary
+     * @param ProductType       $productType
      */
     public function __construct(
         Globalpack $globalpack,
-        CollectionFactory $collectionFactory
+        ProductDictionary $productDictionary,
+        ProductType $productType
     ) {
         $this->globalpackConfig  = $globalpack;
-        $this->productCollection = $collectionFactory;
+        $this->productDictionary = $productDictionary;
+        $this->productType       = $productType;
     }
 
     /**
@@ -108,15 +114,11 @@ class SortItems
         }
 
         natsort($sortItems);
-        if ($this->attributeSortDirection == 'desc') {
-            $sortItems = array_reverse($sortItems, true);
-        }
-
         foreach ($items as $item) {
             $sortItems[$item->getId()] = $item;
         }
 
-        return $sortItems;
+        return $this->attributeSortDirection == 'desc' ? array_reverse($sortItems, true) : $sortItems;
     }
 
     /**
@@ -128,41 +130,18 @@ class SortItems
     {
         return array_filter($items, function ($item) {
             /** @var \Magento\Sales\Model\Order\Shipment\Item $item */
-            $productType = $item->getOrderItem()->getProductType();
-            return !($item->isDeleted() || $productType == 'bundle');
+            $orderItem = $item->getOrderItem();
+            return !($item->isDeleted() || $orderItem->getProductType() == 'bundle');
         });
     }
 
     /**
      * @param $items
      *
-     * @return \Magento\Catalog\Model\ResourceModel\Product\Collection
+     * @return \Magento\Catalog\Api\Data\ProductInterface[]
      */
     private function getProductCollection($items)
     {
-        $productCollection = $this->productCollection->create();
-        $productCollection->setStore($this->storeId);
-        $productCollection->addAttributeToSelect($this->attributeToSort);
-        $productCollection->addFieldToFilter('entity_id', ['in' => $this->getAllProductIds($items)]);
-        $productCollection->setOrder($this->attributeToSort, strtoupper($this->attributeSortDirection));
-        $productCollection->setPageSize(static::MAX_CUSTOMS_CONTENT_ROWS);
-
-        return $productCollection;
-    }
-
-    /**
-     * @param $items
-     *
-     * @return array
-     */
-    private function getAllProductIds($items)
-    {
-        $ids = [];
-        /** @var ShipmentItemInterface $item */
-        foreach ($items as $item) {
-            $ids[] = $item->getProductId();
-        }
-
-        return $ids;
+        return $this->productDictionary->get($items, $this->productType->getAllTypes());
     }
 }
