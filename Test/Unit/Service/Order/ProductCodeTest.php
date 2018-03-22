@@ -173,20 +173,20 @@ class ProductCodeTest extends TestCase
 
     /**
      * @param $useAlternative
-     * @param $alternativeMaxAmount
+     * @param $alternativeMinAmount
      * @param $quoteTotal
      * @param $expected
      *
      * @dataProvider getDefaultProductOptionProvider
      */
-    public function testGetDefaultProductOption($useAlternative, $alternativeMaxAmount, $quoteTotal, $expected)
+    public function testGetDefaultProductOption($useAlternative, $alternativeMinAmount, $quoteTotal, $expected)
     {
         $quoteMock = $this->getFakeMock(Quote::class)->setMethods(['getBaseGrandTotal'])->getMock();
         $quoteMock->expects($this->once())->method('getBaseGrandTotal')->willReturn($quoteTotal);
 
         $this->quoteInterfaceMock->method('getQuote')->willReturn($quoteMock);
         $this->productOptionsMock->method('getUseAlternativeDefault')->willReturn($useAlternative);
-        $this->productOptionsMock->method('getAlternativeDefaultMaxAmount')->willReturn($alternativeMaxAmount);
+        $this->productOptionsMock->method('getAlternativeDefaultMinAmount')->willReturn($alternativeMinAmount);
 
         $instance = $this->getInstance();
         $this->invoke('getDefaultProductOption', $instance);

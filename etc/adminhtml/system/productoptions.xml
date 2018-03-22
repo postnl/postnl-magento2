@@ -60,11 +60,11 @@
             <config_path>tig_postnl/productoptions/use_alternative_default</config_path>
         </field>
 
-        <field id="alternative_default_max_amount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Maximum amount</label>
+        <field id="alternative_default_min_amount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Minimum amount</label>
             <comment><![CDATA[The alternative default option will be used when the shipment's total amount exceeds this value.]]></comment>
             <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
-            <config_path>tig_postnl/productoptions/alternative_default_max_amount</config_path>
+            <config_path>tig_postnl/productoptions/alternative_default_min_amount</config_path>
             <depends>
                 <field id="use_alternative_default">1</field>
             </depends>

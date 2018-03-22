@@ -163,9 +163,9 @@ class ProductCodeAndType
         $quoteTotal = $magentoQuote->getBaseGrandTotal();
 
         $alternativeActive = $this->productOptionsConfiguration->getUseAlternativeDefault();
-        $alternativeMaxAmount = $this->productOptionsConfiguration->getAlternativeDefaultMaxAmount();
+        $alternativeMinAmount = $this->productOptionsConfiguration->getAlternativeDefaultMinAmount();
 
-        if ($alternativeActive && $quoteTotal > $alternativeMaxAmount) {
+        if ($alternativeActive && $quoteTotal > $alternativeMinAmount) {
             $this->code = $this->productOptionsConfiguration->getAlternativeDefaultProductOption();
         }
     }
