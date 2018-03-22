@@ -31,6 +31,8 @@
  */
 namespace TIG\PostNL\Unit\Config\Source\Options;
 
+use Magento\Framework\Phrase;
+use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsProvider;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Test\TestCase;
 
@@ -42,6 +44,22 @@ class ProductOptionsTest extends TestCase
         '3385' => [
             'value'             => '3385',
             'label'             => 'label',
+            'isEvening'         => true,
+            'isSunday'          => true,
+            'group'             => 'standard_options',
+        ],
+        '3087' => [
+            'value'             => '3087',
+            'label'             => 'label',
+            'isExtraCover'      => true,
+            'isEvening'         => true,
+            'isSunday'          => true,
+            'group'             => 'standard_options',
+        ],
+        '3094' => [
+            'value'             => '3094',
+            'label'             => 'label',
+            'isExtraCover'      => true,
             'isEvening'         => true,
             'isSunday'          => true,
             'group'             => 'standard_options',
@@ -94,7 +112,8 @@ class ProductOptionsTest extends TestCase
         return [
             [$this->options, ['isEvening' => true], false, ['3385', '3089']],
             [$this->options, ['isSunday'  => false], false, ['3534']],
-            [$this->options, ['isEvening' => true], true, ['3089']]
+            [$this->options, ['isEvening' => true], true, ['3089']],
+            [$this->options, ['isExtraCover' => true], true, ['3087', '3094']]
         ];
     }
 
@@ -164,6 +183,73 @@ class ProductOptionsTest extends TestCase
     /**
      * @return array
      */
+    public function getExtraCoverProductOptionsProvider()
+    {
+        return [
+            'no options configured' => [
+                false,
+                4,
+                [3087,3094,3534,3544]
+            ],
+            'single Extra Cover option configured' => [
+                '3087',
+                1,
+                [3087]
+            ],
+            'single non Extra Cover option configured' => [
+                '3085',
+                1,
+                [0]
+            ],
+            'multiple E@H options configured' => [
+                '3087,3534',
+                2,
+                [3087,3534]
+            ],
+            'multiple non Extra Cover options configured' => [
+                '3189,3089',
+                1,
+                [0]
+            ],
+            'multiple mixed options configured' => [
+                '3389,3087,3096,3090,3094,3544',
+                3,
+                [3087,3094,3544]
+            ],
+        ];
+    }
+
+    /**
+     * @param $productOptions
+     * @param $expectedCount
+     * @param $expectedValues
+     *
+     * @dataProvider getExtraCoverProductOptionsProvider
+     */
+    public function testGetExtraCoverProductOptions($productOptions, $expectedCount, $expectedValues)
+    {
+        $configMock = $this->getFakeMock(ProductOptionsProvider::class)
+            ->setMethods(['getSupportedProductOptions'])
+            ->getMock();
+        $configMock->expects($this->atLeastOnce())->method('getSupportedProductOptions')->willReturn($productOptions);
+
+        $instance = $this->getInstance(['config' => $configMock]);
+        $result = $instance->getExtraCoverProductOptions();
+
+        $this->assertCount($expectedCount, $result);
+        $resultValues = [];
+
+        foreach ($result as $option) {
+            $resultValues[] = $option['value'];
+            $this->assertInstanceOf(Phrase::class, $option['label']);
+        }
+
+        $this->assertEquals($resultValues, $expectedValues, '', 0.0, 10, true);
+    }
+
+    /**
+     * @return array
+     */
     public function getExtraAtHomeOptionsProvider()
     {
         return [
@@ -209,7 +295,7 @@ class ProductOptionsTest extends TestCase
      */
     public function testGetExtraAtHomeOptions($productOptions, $expectedCount, $expectedValues)
     {
-        $configMock = $this->getFakeMock(\TIG\PostNL\Config\Provider\ProductOptions::class)
+        $configMock = $this->getFakeMock(ProductOptionsProvider::class)
             ->setMethods(['getSupportedProductOptions'])
             ->getMock();
         $configMock->expects($this->atLeastOnce())->method('getSupportedProductOptions')->willReturn($productOptions);
@@ -222,7 +308,7 @@ class ProductOptionsTest extends TestCase
 
         foreach ($result as $option) {
             $resultValues[] = $option['value'];
-            $this->assertInstanceOf(\Magento\Framework\Phrase::class, $option['label']);
+            $this->assertInstanceOf(Phrase::class, $option['label']);
         }
 
         $this->assertEquals($resultValues, $expectedValues, '', 0.0, 10, true);
