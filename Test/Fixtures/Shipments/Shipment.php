@@ -53,6 +53,11 @@ $shipment->setOrder($order);
 
 $shipmentItem = $objectManager->create(ShipmentItem::class);
 $shipmentItem->setOrderItem($orderItem);
+$shipmentItem->setProductId($orderItem->getProductId());
+$shipmentItem->setPrice($orderItem->getPrice());
+$shipmentItem->setSku($orderItem->getSku());
+$shipmentItem->setWeight($orderItem->getWeight());
+$shipmentItem->setQty($orderItem->getQtyToShip());
 $shipment->addItem($shipmentItem);
 $shipment->setShipmentStatus(Shipment::STATUS_NEW);
 
