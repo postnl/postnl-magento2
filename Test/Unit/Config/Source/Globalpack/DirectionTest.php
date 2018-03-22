@@ -29,25 +29,25 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\Globalpack;
+namespace TIG\PostNL\Unit\Config\Source\Globalpack;
 
-use Magento\Framework\Option\ArrayInterface;
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\Source\Globalpack\Direction;
 
-class ShipmentType implements ArrayInterface
+class DirectionTest extends TestCase
 {
-    /**
-     * @return array
-     */
-    public function toOptionArray()
+    protected $instanceClass = Direction::class;
+
+    public function testToOptionArray()
     {
-        // @codingStandardsIgnoreStart
-        return [
-            ['value' => 'Gift', 'label' => __('Gift')],
-            ['value' => 'Documents', 'label' => __('Documents')],
-            ['value' => 'Commercial Goods', 'label' => __('Commercial Goods')],
-            ['value' => 'Commercial Sample', 'label' => __('Commercial Sample')],
-            ['value' => 'Returned Goods', 'label' => __('Returned Goods')],
-        ];
-        // @codingStandardsIgnoreEnd
+        $instance = $this->getInstance();
+        $options  = $instance->toOptionArray();
+
+        $this->assertCount(2, $options);
+
+        foreach ($options as $option) {
+            $this->assertArrayHasKey('label', $option);
+            $this->assertArrayHasKey('value', $option);
+        }
     }
 }
