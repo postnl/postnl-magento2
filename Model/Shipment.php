@@ -612,13 +612,12 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function getExtraCoverAmount()
     {
         $totalPrice = 0;
-        $products = [];
 
         $shipment = $this->getShipment();
         $order = $shipment->getOrder();
         $orderItems = $order->getItems();
 
-        $productPrices = $this->getPricePerProductId($orderItems, $products);
+        $productPrices = $this->getPricePerProductId($orderItems);
 
         $shipmentItems = $shipment->getAllItems();
 
@@ -642,7 +641,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      *
      * @return mixed
      */
-    private function getPricePerProductId($items, $productPrices) {
+    private function getPricePerProductId($items) {
         array_walk(
             $items,
             function ($orderItem) use (&$productPrices) {
