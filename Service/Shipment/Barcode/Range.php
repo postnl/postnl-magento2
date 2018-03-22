@@ -32,7 +32,6 @@
 namespace TIG\PostNL\Service\Shipment\Barcode;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
-use TIG\PostNL\Config\Provider\DefaultConfiguration;
 use TIG\PostNL\Config\Provider\Globalpack;
 
 use TIG\PostNL\Exception as PostnlException;
@@ -55,11 +54,6 @@ class Range
     private $accountConfiguration;
 
     /**
-     * @var DefaultConfiguration
-     */
-    private $defaultConfiguration;
-
-    /**
      * @var Globalpack
      */
     private $globalpackConfiguration;
@@ -71,16 +65,13 @@ class Range
 
     /**
      * @param AccountConfiguration  $accountConfiguration
-     * @param DefaultConfiguration  $defaultConfiguration
      * @param Globalpack            $globalpack
      */
     public function __construct(
         AccountConfiguration $accountConfiguration,
-        DefaultConfiguration $defaultConfiguration,
         Globalpack $globalpack
     ) {
         $this->accountConfiguration    = $accountConfiguration;
-        $this->defaultConfiguration    = $defaultConfiguration;
         $this->globalpackConfiguration = $globalpack;
     }
 
