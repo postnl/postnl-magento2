@@ -623,7 +623,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     }
 
     /**
-     * @param \Magento\Sales\Model\Order\Item\Interceptor $orderItems
+     * @param \Magento\Sales\Model\Order\Item $orderItems
      *
      * @return array
      */
@@ -675,7 +675,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     }
 
     /**
-     * @param \Magento\Sales\Model\Order\Item\Interceptor $bundleItem
+     * @param \Magento\Sales\Model\Order\Item $bundleItem
      *
      * @return float
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -684,7 +684,8 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         $bundlePrice = 0;
         foreach ($bundleItem->getChildrenItems() as $childItem) {
-            $bundlePrice += $this->productRepository->get($childItem->getSku())->getPrice();
+            $product     = $this->productRepository->get($childItem->getSku());
+            $bundlePrice += $product->getPrice();
         }
 
         return $bundlePrice;
