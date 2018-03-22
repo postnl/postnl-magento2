@@ -51,19 +51,24 @@ class Data
      */
     private $shipmentVolume;
 
+    private $customsInfo;
+
     /**
      * @param ProductOptions $productOptions
      * @param ContentDescription $contentDescription
      * @param Calculate $calculate
+     * @param Customs $customs
      */
     public function __construct(
         ProductOptions $productOptions,
         ContentDescription $contentDescription,
-        Calculate $calculate
+        Calculate $calculate,
+        Customs $customs
     ) {
         $this->productOptions = $productOptions;
         $this->contentDescription = $contentDescription;
         $this->shipmentVolume = $calculate;
+        $this->customsInfo = $customs;
     }
 
     /**
@@ -128,6 +133,10 @@ class Data
                 $magentoShipment->getItems(), $shipment->getParcelCount()
             );
             $shipmentData['Reference'] = $magentoShipment->getIncrementId();
+        }
+
+        if ($shipment->isGlobalPack()) {
+            $shipmentData['Customs'] = $this->customsInfo->get($shipment);
         }
 
         if ($shipment->isExtraCover()) {

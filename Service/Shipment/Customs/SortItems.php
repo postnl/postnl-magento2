@@ -90,7 +90,9 @@ class SortItems
         $this->attributeToSort = $this->globalpackConfig->getProductSortingAttributeCode($this->storeId);
         $this->attributeSortDirection = $this->globalpackConfig->getProductSortingDirection($this->storeId);
 
-        $items = $this->filterItems($shipment->getItems());
+        $items = $shipment->getItems();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $items = $this->filterItems($items->getItems());
         return $this->sort($items);
     }
 
@@ -142,6 +144,7 @@ class SortItems
      */
     private function getProductCollection($items)
     {
-        return $this->productDictionary->get($items, $this->productType->getAllTypes());
+        $filters = array_merge($this->productType->getAllTypes(), [false]);
+        return $this->productDictionary->get($items, $filters);
     }
 }

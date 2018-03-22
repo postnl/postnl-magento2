@@ -139,7 +139,7 @@ class Customs
             $content[] = [
                 'Description'     => $this->attributeValues->getDescription($item, $this->shipment->getStoreId()),
                 'Quantity'        => $item->getQty(),
-                'Weight'          => $item->getWeight() * $item->getQty(),
+                'Weight'          => $this->getWeight($item),
                 'Value'           => $this->attributeValues->getCustomsValue($item, $this->shipment->getStoreId()),
                 'HSTariffNr'      => $this->attributeValues->getHsTariff($item, $this->shipment->getStoreId()),
                 'CountryOfOrigin' => $this->attributeValues->getCountryOfOrigin($item, $this->shipment->getStoreId())
@@ -147,5 +147,17 @@ class Customs
         }
 
         $this->customs['Content'] = $content;
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order\Shipment\Item $item  $item
+     *
+     * @return float|int
+     */
+    private function getWeight($item)
+    {
+        // Divide by zero not allowed.
+        $weight = round(($item->getWeight() ?: 1) * ($item->getQty() ?: 1));
+        return $weight <= 0 ? 1 : $weight;
     }
 }

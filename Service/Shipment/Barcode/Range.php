@@ -33,6 +33,7 @@ namespace TIG\PostNL\Service\Shipment\Barcode;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
+use TIG\PostNL\Config\Provider\Globalpack;
 
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Service\Shipment\EpsCountries;
@@ -59,6 +60,11 @@ class Range
     private $defaultConfiguration;
 
     /**
+     * @var Globalpack
+     */
+    private $globalpackConfiguration;
+
+    /**
      * @var int
      */
     private $storeId;
@@ -66,13 +72,16 @@ class Range
     /**
      * @param AccountConfiguration  $accountConfiguration
      * @param DefaultConfiguration  $defaultConfiguration
+     * @param Globalpack            $globalpack
      */
     public function __construct(
         AccountConfiguration $accountConfiguration,
-        DefaultConfiguration $defaultConfiguration
+        DefaultConfiguration $defaultConfiguration,
+        Globalpack $globalpack
     ) {
-        $this->accountConfiguration = $accountConfiguration;
-        $this->defaultConfiguration = $defaultConfiguration;
+        $this->accountConfiguration    = $accountConfiguration;
+        $this->defaultConfiguration    = $defaultConfiguration;
+        $this->globalpackConfiguration = $globalpack;
     }
 
     /**
@@ -160,8 +169,8 @@ class Range
      */
     private function getGlobalBarcode()
     {
-        $type  = $this->defaultConfiguration->getBarcodeGlobalType();
-        $range = $this->defaultConfiguration->getBarcodeGlobalRange();
+        $type  = $this->globalpackConfiguration->getBarcodeType();
+        $range = $this->globalpackConfiguration->getBarcodeRange();
         $serie = static::GLOBAL_BARCODE_SERIE;
 
         return [

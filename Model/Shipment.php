@@ -586,6 +586,14 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     /**
      * @return bool
      */
+    public function isGlobalPack()
+    {
+        return $this->getShipmentType() == 'GP';
+    }
+
+    /**
+     * @return bool
+     */
     public function isExtraAtHome()
     {
         $productCodeOptions = $this->getProductCodeOptions();

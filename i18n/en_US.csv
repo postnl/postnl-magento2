@@ -20,7 +20,7 @@ label,label
 "No Type specified","No Type specified"
 ok,ok
 "Unable to extract the house number, because the street data could not be found","Unable to extract the house number, because the street data could not be found"
-"Unable to extract the house number, could not find an number inside the street value","Unable to extract the house number, could not find an number inside the street value"
+"Unable to extract the house number, could not find a number inside the street value","Unable to extract the house number, could not find a number inside the street value"
 "Invalid house number supplied: %1","Invalid house number supplied: %1"
 "Unable to retrieve barcode data.","Unable to retrieve barcode data."
 "Invalid barcodetype requested: %s","Invalid barcodetype requested: %s"
