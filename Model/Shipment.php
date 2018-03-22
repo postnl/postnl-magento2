@@ -126,7 +126,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      * @param DateTime                           $dateTime
      * @param ProductOptions                     $productOptions
      * @param ShipmentBarcodeRepositoryInterface $barcodeRepository
-     * @param ProductRepositoryInterface         $productFactory
+     * @param ProductRepositoryInterface         $productRepository
      * @param AbstractResource                   $resource
      * @param AbstractDb                         $resourceCollection
      * @param array                              $data
@@ -607,54 +607,43 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getExtraCoverAmount()
     {
-        $totalPrice = 0;
-
-        $shipment = $this->getShipment();
-        $order = $shipment->getOrder();
+        $shipment   = $this->getShipment();
+        $order      = $shipment->getOrder();
         $orderItems = $order->getItems();
 
         $productPrices = $this->getPricePerProductId($orderItems);
 
         $shipmentItems = $shipment->getAllItems();
 
-        array_walk(
-          $shipmentItems,
-          function($shipmentItem) use ($productPrices, &$totalPrice) {
-              if(!array_key_exists($shipmentItem->getSku(), $productPrices)) {
-                  return;
-              }
-              $productPrice = $productPrices[$shipmentItem->getSku()];
-              $totalPrice += $productPrice * $shipmentItem->getQty();
-          }
-        );
-
-        return $totalPrice;
+        return $this->getTotalPrice($shipmentItems, $productPrices);
     }
 
     /**
-     * @param $items
-     * @param $productPrices
+     * @param \Magento\Sales\Model\Order\Item\Interceptor $orderItems
      *
-     * @return mixed
+     * @return array
      */
-    private function getPricePerProductId($items) {
+    private function getPricePerProductId($orderItems)
+    {
+        $productPrices = [];
         array_walk(
-            $items,
+            $orderItems,
             function ($orderItem) use (&$productPrices) {
-                if($orderItem->getProductType() == 'bundle') {
+                if ($orderItem->getProductType() == 'bundle') {
                     $productPrices[$orderItem->getSku()] = $this->getBundledPrice($orderItem);
+
                     return;
                 }
 
-                if($orderItem->getProductType() != 'simple') {
+                if ($orderItem->getProductType() != 'simple') {
                     return;
                 }
-
-                $productPrice = $this->productRepository->get($orderItem->getSku())->getPrice();
+                $product                             = $this->productRepository->get($orderItem->getSku());
+                $productPrice                        = $product->getPrice();
                 $productPrices[$orderItem->getSku()] = $productPrice;
             }
         );
@@ -663,15 +652,38 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     }
 
     /**
-     * @param $bundleItem
+     * @param $shipmentItems
+     * @param $productPrices
      *
-     * @return int
+     * @return float
+     */
+    private function getTotalPrice($shipmentItems, $productPrices)
+    {
+        $totalPrice = 0;
+        array_walk(
+            $shipmentItems,
+            function ($shipmentItem) use ($productPrices, &$totalPrice) {
+                if (!array_key_exists($shipmentItem->getSku(), $productPrices)) {
+                    return;
+                }
+                $productPrice = $productPrices[$shipmentItem->getSku()];
+                $totalPrice   += $productPrice * $shipmentItem->getQty();
+            }
+        );
+
+        return $totalPrice;
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order\Item\Interceptor $bundleItem
+     *
+     * @return float
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getBundledPrice($bundleItem)
     {
         $bundlePrice = 0;
-        foreach($bundleItem->getChildrenItems() as $childItem) {
+        foreach ($bundleItem->getChildrenItems() as $childItem) {
             $bundlePrice += $this->productRepository->get($childItem->getSku())->getPrice();
         }
 
