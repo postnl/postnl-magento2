@@ -77,7 +77,7 @@ define([
                 return false;
             }
 
-            return (address.countryCode === 'NL' || address.countryCode === 'BE');
+            return (address.country === 'NL' || address.country === 'BE');
         }),
 
         canUsePickupLocations: ko.computed(function () {
@@ -86,7 +86,7 @@ define([
             var pickupOptionsAreAvailable = State.pickupOptionsAreAvailable();
 
             var address = AddressFinder();
-            var isNL = (address !== null && address !== false && address.countryCode === 'NL');
+            var isNL = (address !== null && address !== false && address.country === 'NL');
 
             return isActive === 1 && isNL && pickupOptionsAreAvailable;
         }),

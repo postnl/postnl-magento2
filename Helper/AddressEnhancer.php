@@ -76,7 +76,7 @@ class AddressEnhancer
             ];
         }
 
-        if (!isset($address['housenumber'])) {
+        if (!isset($address['housenumber']) || !$address['housenumber']) {
             $address = $this->extractHousenumber($address);
         }
 
