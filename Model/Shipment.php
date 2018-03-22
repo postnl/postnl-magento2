@@ -112,7 +112,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     private $shippingAddress;
 
     /**
-     * @var \Magento\Catalog\Api\ProductRepositoryInterface
+     * @var ProductRepositoryInterface
      */
     private $productRepository;
 
