@@ -108,7 +108,7 @@ interface ShipmentInterface
      * @return string|null
      */
     public function getShipmentType();
-    
+
     /**
      * @param $value
      *
@@ -248,6 +248,11 @@ interface ShipmentInterface
      * @return bool
      */
     public function isExtraCover();
+
+    /**
+     * @return bool
+     */
+    public function isGlobalPack();
 
     /**
      * @return bool

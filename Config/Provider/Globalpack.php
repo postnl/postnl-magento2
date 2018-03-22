@@ -79,7 +79,7 @@ class Globalpack extends AbstractConfigProvider
      */
     public function getBarcodeRange($storeId = null)
     {
-        return $this->getConfigFromXpath(static::XPATH_GLOBALPACK_BARCODE_RANGE, $storeId);
+        return $this->getConfigFromXpath(static::XPATH_BARCODE_RANGE, $storeId);
     }
 
     /**
@@ -89,7 +89,7 @@ class Globalpack extends AbstractConfigProvider
      */
     public function getLicenseNumber($storeId = null)
     {
-        return $this->getConfigFromXpath(static::XPATH_GLOBALPACK_LICENSE_NUMBER, $storeId);
+        return $this->getConfigFromXpath(static::XPATH_LICENSE_NUMBER, $storeId);
     }
 
     /**
