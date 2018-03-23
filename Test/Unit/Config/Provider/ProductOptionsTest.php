@@ -82,7 +82,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
     /**
      * @return array
      */
-    public function getAlternativeDefaultMaxAmountProvider()
+    public function getAlternativeDefaultMinAmountProvider()
     {
         return [
             'alternative disabled' => [0, 500, 0],
@@ -97,17 +97,17 @@ class ProductOptionsTest extends AbstractConfigurationTest
      * @param $value
      * @param $expected
      *
-     * @dataProvider getAlternativeDefaultMaxAmountProvider
+     * @dataProvider getAlternativeDefaultMinAmountProvider
      */
-    public function testGetAlternativeDefaultMaxAmount($enabled, $value, $expected)
+    public function testGetAlternativeDefaultMinAmount($enabled, $value, $expected)
     {
         $instance = $this->getInstance();
         $this->setXpathConsecutive(
-            [[ProductOptions::XPATH_USE_ALTERNATIVE_DEFAULT_OPTION], [ProductOptions::XPATH_ALTERNATIVE_DEFAULT_MAX_AMOUNT]],
+            [[ProductOptions::XPATH_USE_ALTERNATIVE_DEFAULT_OPTION], [ProductOptions::XPATH_ALTERNATIVE_DEFAULT_MIN_AMOUNT]],
             [$enabled, $value]
         );
 
-        $result = $instance->getAlternativeDefaultMaxAmount();
+        $result = $instance->getAlternativeDefaultMinAmount();
         $this->assertEquals($expected, $result);
     }
 

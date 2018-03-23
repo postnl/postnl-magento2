@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Service\Order;
 
+use Magento\Quote\Model\Quote;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
@@ -129,7 +130,6 @@ class ProductCodeAndType
      * @param string $option
      * @param string $country
      */
-    // @codingStandardsIgnoreStart
     private function getProductCode($option, $country)
     {
         if ($option == static::OPTION_EVENING) {
@@ -150,10 +150,25 @@ class ProductCodeAndType
             return;
         }
 
+        $this->getDefaultProductOption();
+    }
+
+    private function getDefaultProductOption()
+    {
         $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
         $this->type = static::SHIPMENT_TYPE_DAYTIME;
+
+        /** @var Quote $magentoQuote */
+        $magentoQuote = $this->quote->getQuote();
+        $quoteTotal = $magentoQuote->getBaseGrandTotal();
+
+        $alternativeActive = $this->productOptionsConfiguration->getUseAlternativeDefault();
+        $alternativeMinAmount = $this->productOptionsConfiguration->getAlternativeDefaultMinAmount();
+
+        if ($alternativeActive && $quoteTotal >= $alternativeMinAmount) {
+            $this->code = $this->productOptionsConfiguration->getAlternativeDefaultProductOption();
+        }
     }
-    // @codingStandardsIgnoreEnd
 
     /**
      * @param string $option

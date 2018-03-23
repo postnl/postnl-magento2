@@ -42,7 +42,7 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_SUPPORTED_PRODUCT_OPTIONS               = 'tig_postnl/productoptions/supported_options';
     const XPATH_DEFAULT_PRODUCT_OPTION                  = 'tig_postnl/productoptions/default_option';
     const XPATH_USE_ALTERNATIVE_DEFAULT_OPTION          = 'tig_postnl/productoptions/use_alternative_default';
-    const XPATH_ALTERNATIVE_DEFAULT_MAX_AMOUNT          = 'tig_postnl/productoptions/alternative_default_max_amount';
+    const XPATH_ALTERNATIVE_DEFAULT_MIN_AMOUNT          = 'tig_postnl/productoptions/alternative_default_min_amount';
     const XPATH_ALTERNATIVE_DEFAULT_PRODUCT_OPTION      = 'tig_postnl/productoptions/alternative_default_option';
     const XPATH_DEFAULT_EVENING_PRODUCT_OPTION          = 'tig_postnl/productoptions/default_evening_option';
     const XPATH_DEFAULT_EXTRAATHOME_PRODUCT_OPTION      = 'tig_postnl/productoptions/default_extraathome_option';
@@ -78,13 +78,13 @@ class ProductOptions extends AbstractConfigProvider
     /**
      * @return string|int
      */
-    public function getAlternativeDefaultMaxAmount()
+    public function getAlternativeDefaultMinAmount()
     {
         if (!$this->getUseAlternativeDefault()) {
             return '0';
         }
 
-        return $this->getConfigFromXpath(self::XPATH_ALTERNATIVE_DEFAULT_MAX_AMOUNT);
+        return $this->getConfigFromXpath(self::XPATH_ALTERNATIVE_DEFAULT_MIN_AMOUNT);
     }
 
     /**
@@ -96,7 +96,7 @@ class ProductOptions extends AbstractConfigProvider
             return false;
         }
 
-        return $this->getConfigFromXpath(self::XPATH_USE_ALTERNATIVE_DEFAULT_OPTION);
+        return $this->getConfigFromXpath(self::XPATH_ALTERNATIVE_DEFAULT_PRODUCT_OPTION);
     }
 
     /**
