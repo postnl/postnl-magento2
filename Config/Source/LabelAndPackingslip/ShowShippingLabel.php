@@ -29,32 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid\Shipment;
+namespace TIG\PostNL\Config\Source\LabelAndPackingslip;
 
-use Magento\Backend\Block\Template;
-use Magento\Framework\View\Element\BlockInterface;
+use Magento\Framework\Option\ArrayInterface;
 
-class DownloadPdfAction extends Template implements BlockInterface
+class ShowShippingLabel implements ArrayInterface
 {
-    /**
-     * @var string
-     */
-    // @codingStandardsIgnoreLine
-    protected $_template = 'TIG_PostNL::shipment/grid/DownloadPdfAction.phtml';
+    const SHOW_SHIPPING_LABEL_TOGETHER = 'together';
+    const SHOW_SHIPPING_LABEL_SEPARATE = 'separate';
+    const SHOW_SHIPPING_LABEL_NONE     = 'none';
 
     /**
-     * @return string
+     * @return array
      */
-    public function getDownloadUrl()
+    public function toOptionArray()
     {
-        return $this->getUrl('postnl/shipment/massPrintShippingLabel');
-    }
+        // @codingStandardsIgnoreStart
+        $options = [
+            ['value' => self::SHOW_SHIPPING_LABEL_TOGETHER, 'label' => __("Print the shipping label and packing slip on the same page")],
+            ['value' => self::SHOW_SHIPPING_LABEL_SEPARATE, 'label' => __("Print the shipping label on a separate page")],
+            ['value' => self::SHOW_SHIPPING_LABEL_NONE, 'label' => __("Don't print the shipping label")]
+        ];
+        // @codingStandardsIgnoreEnd
 
-    /**
-     * @return string
-     */
-    public function getConfirmAndPrintPackingSlipUrl()
-    {
-        return $this->getUrl('postnl/shipment/massPrintPackingslip');
+        return $options;
     }
 }

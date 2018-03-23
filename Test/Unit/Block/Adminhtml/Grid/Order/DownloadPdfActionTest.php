@@ -29,32 +29,32 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid\Shipment;
+namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Grid\Order;
 
-use Magento\Backend\Block\Template;
-use Magento\Framework\View\Element\BlockInterface;
+use Magento\Framework\UrlInterface;
+use TIG\PostNL\Block\Adminhtml\Grid\Order\DownloadPdfAction;
+use TIG\PostNL\Test\TestCase;
 
-class DownloadPdfAction extends Template implements BlockInterface
+class DownloadPdfActionTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    // @codingStandardsIgnoreLine
-    protected $_template = 'TIG_PostNL::shipment/grid/DownloadPdfAction.phtml';
+    public $instanceClass = DownloadPdfAction::class;
 
-    /**
-     * @return string
-     */
-    public function getDownloadUrl()
-    {
-        return $this->getUrl('postnl/shipment/massPrintShippingLabel');
-    }
 
-    /**
-     * @return string
-     */
-    public function getConfirmAndPrintPackingSlipUrl()
+    public function testGetConfirmAndPrintLabelsUrl()
     {
-        return $this->getUrl('postnl/shipment/massPrintPackingslip');
+        $urlResultMock = "tig.nl";
+
+        $urlBuilderMock = $this->getMockBuilder(UrlInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getUrl'])
+            ->getMockForAbstractClass();
+        $urlBuilderMock->method('getUrl')->willReturn($urlResultMock);
+
+        $instance = $this->getInstance();
+        $this->setProperty('_urlBuilder', $urlBuilderMock, $instance);
+        $result = $instance->getConfirmAndPrintLabelsUrl();
+
+        $this->assertInternalType('string', $result);
+        $this->assertEquals($urlResultMock, $result);
     }
 }

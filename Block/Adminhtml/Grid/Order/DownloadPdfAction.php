@@ -29,7 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid\Shipment;
+namespace TIG\PostNL\Block\Adminhtml\Grid\Order;
 
 use Magento\Backend\Block\Template;
 use Magento\Framework\View\Element\BlockInterface;
@@ -40,21 +40,18 @@ class DownloadPdfAction extends Template implements BlockInterface
      * @var string
      */
     // @codingStandardsIgnoreLine
-    protected $_template = 'TIG_PostNL::shipment/grid/DownloadPdfAction.phtml';
+    protected $_template = 'TIG_PostNL::order/grid/DownloadPdfAction.phtml';
 
     /**
      * @return string
      */
-    public function getDownloadUrl()
+    public function getConfirmAndPrintLabelsUrl()
     {
-        return $this->getUrl('postnl/shipment/massPrintShippingLabel');
+        return $this->getUrl('postnl/order/CreateShipmentsConfirmAndPrintShippingLabels');
     }
 
-    /**
-     * @return string
-     */
     public function getConfirmAndPrintPackingSlipUrl()
     {
-        return $this->getUrl('postnl/shipment/massPrintPackingslip');
+        return $this->getUrl('postnl/order/CreateShipmentsConfirmAndPrintPackingSlip');
     }
 }

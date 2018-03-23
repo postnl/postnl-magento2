@@ -96,6 +96,10 @@
                 <sundaydelivery_fee>2</sundaydelivery_fee>
                 <delivery_delay>1</delivery_delay>
             </shippingoptions>
+            <labelandpackingslipoptions>
+                <reference_type>shipment_increment_id</reference_type>
+                <show_label>together</show_label>
+            </labelandpackingslipoptions>
             <endpoints>
                 <api_base_url>https://api.postnl.nl/shipment/</api_base_url>
                 <test_api_base_url>https://api-sandbox.postnl.nl/shipment/</test_api_base_url>

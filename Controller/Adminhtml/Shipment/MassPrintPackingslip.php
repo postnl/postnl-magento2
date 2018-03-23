@@ -31,20 +31,19 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
-use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
-use Magento\Framework\App\ResponseInterface;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Sales\Model\Order\Shipment;
-use Magento\Ui\Component\MassAction\Filter;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
-
-use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
+use Magento\Ui\Component\MassAction\Filter;
+use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
+use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 
-class MassPrintShippingLabel extends LabelAbstract
+class MassPrintPackingslip extends LabelAbstract
 {
     /**
      * @var Filter
@@ -100,10 +99,7 @@ class MassPrintShippingLabel extends LabelAbstract
     }
 
     /**
-     * Dispatch request
-     *
-     * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
-     * @throws \Magento\Framework\Exception\NotFoundException
+     * @return ResponseInterface
      */
     public function execute()
     {
@@ -113,14 +109,14 @@ class MassPrintShippingLabel extends LabelAbstract
 
         if (empty($this->labels)) {
             $this->messageManager->addErrorMessage(
-                // @codingStandardsIgnoreLine
+            // @codingStandardsIgnoreLine
                 __('[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information')
             );
 
             return $this->_redirect($this->_redirect->getRefererUrl());
         }
 
-        return $this->getPdf->get($this->labels);
+        return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
     }
 
     /**
@@ -143,7 +139,7 @@ class MassPrintShippingLabel extends LabelAbstract
             $address = $shipment->getShippingAddress();
             $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
             $this->setTracks($shipment);
-            $this->setLabel($shipment->getId());
+            $this->setPackingslip($shipment->getId());
         }
     }
 }

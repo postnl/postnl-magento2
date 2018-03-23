@@ -29,22 +29,22 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Controller\Adminhtml\Shipment;
+namespace TIG\PostNL\Controller\Adminhtml\Order;
 
-use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use Magento\Framework\App\ResponseInterface;
+use Magento\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\Shipment;
-use Magento\Ui\Component\MassAction\Filter;
-use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
-
-use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
+use TIG\PostNL\Service\Shipment\CreateShipment;
+use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 
-class MassPrintShippingLabel extends LabelAbstract
+class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
 {
     /**
      * @var Filter
@@ -52,9 +52,14 @@ class MassPrintShippingLabel extends LabelAbstract
     private $filter;
 
     /**
-     * @var ShipmentCollectionFactory
+     * @var OrderCollectionFactory
      */
     private $collectionFactory;
+
+    /**
+     * @var CreateShipment
+     */
+    private $createShipment;
 
     /**
      * @var Track
@@ -67,34 +72,36 @@ class MassPrintShippingLabel extends LabelAbstract
     private $barcodeHandler;
 
     /**
+     * @var array
+     */
+    private $errors = [];
+
+    /**
      * @param Context                   $context
-     * @param Filter                    $filter
-     * @param ShipmentCollectionFactory $collectionFactory
      * @param GetLabels                 $getLabels
      * @param GetPdf                    $getPdf
+     * @param Filter                    $filter
+     * @param OrderCollectionFactory    $collectionFactory
+     * @param CreateShipment            $createShipment
      * @param Track                     $track
      * @param BarcodeHandler            $barcodeHandler
      * @param GetPackingslip            $getPackingSlip
      */
     public function __construct(
         Context $context,
-        Filter $filter,
-        ShipmentCollectionFactory $collectionFactory,
         GetLabels $getLabels,
         GetPdf $getPdf,
+        Filter $filter,
+        OrderCollectionFactory $collectionFactory,
+        CreateShipment $createShipment,
         Track $track,
         BarcodeHandler $barcodeHandler,
         GetPackingslip $getPackingSlip
     ) {
-        parent::__construct(
-            $context,
-            $getLabels,
-            $getPdf,
-            $getPackingSlip
-        );
-
+        parent::__construct($context, $getLabels, $getPdf, $getPackingSlip);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
+        $this->createShipment = $createShipment;
         $this->track = $track;
         $this->barcodeHandler = $barcodeHandler;
     }
@@ -107,20 +114,29 @@ class MassPrintShippingLabel extends LabelAbstract
      */
     public function execute()
     {
+        $packingSlips = $this->createShipmentsAndLoadPackingSlips();
+        $this->handleErrors();
+
+        return $packingSlips;
+    }
+
+    /**
+     * Create or load the shipments and labels
+     */
+    private function createShipmentsAndLoadPackingSlips()
+    {
         $collection = $this->collectionFactory->create();
         $collection = $this->filter->getCollection($collection);
-        $this->loadLabels($collection);
 
-        if (empty($this->labels)) {
-            $this->messageManager->addErrorMessage(
-                // @codingStandardsIgnoreLine
-                __('[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information')
-            );
-
-            return $this->_redirect($this->_redirect->getRefererUrl());
+        foreach ($collection as $order) {
+            $shipment = $this->createShipment->create($order);
+            $address  = $shipment->getShippingAddress();
+            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+            $this->setTracks($shipment);
+            $this->setPackingslip($shipment->getId());
         }
 
-        return $this->getPdf->get($this->labels);
+        return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
     }
 
     /**
@@ -134,16 +150,19 @@ class MassPrintShippingLabel extends LabelAbstract
     }
 
     /**
-     * @param $collection
+     * @return $this
      */
-    private function loadLabels($collection)
+    private function handleErrors()
     {
-        /** @var Shipment $shipment */
-        foreach ($collection as $shipment) {
-            $address = $shipment->getShippingAddress();
-            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
-            $this->setTracks($shipment);
-            $this->setLabel($shipment->getId());
+        foreach ($this->errors as $error) {
+            $this->messageManager->addErrorMessage($error);
         }
+
+        $shipmentErrors = $this->createShipment->getErrors();
+        foreach ($shipmentErrors as $error) {
+            $this->messageManager->addErrorMessage($error);
+        }
+
+        return $this;
     }
 }

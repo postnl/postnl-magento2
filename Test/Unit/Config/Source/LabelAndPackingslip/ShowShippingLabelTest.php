@@ -29,32 +29,28 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid\Shipment;
+namespace TIG\PostNL\Unit\Config\Source\LabelAndPackingslip;
 
-use Magento\Backend\Block\Template;
-use Magento\Framework\View\Element\BlockInterface;
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\Source\LabelAndPackingslip\ShowShippingLabel;
 
-class DownloadPdfAction extends Template implements BlockInterface
+class ShowShippingLabelTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    // @codingStandardsIgnoreLine
-    protected $_template = 'TIG_PostNL::shipment/grid/DownloadPdfAction.phtml';
+    protected $instanceClass = ShowShippingLabel::class;
 
-    /**
-     * @return string
-     */
-    public function getDownloadUrl()
+    public function testToOptionArray()
     {
-        return $this->getUrl('postnl/shipment/massPrintShippingLabel');
-    }
+        $expectedValues = ['together', 'separate', 'none'];
 
-    /**
-     * @return string
-     */
-    public function getConfirmAndPrintPackingSlipUrl()
-    {
-        return $this->getUrl('postnl/shipment/massPrintPackingslip');
+        $instance = $this->getInstance();
+        $result = $instance->toOptionArray();
+
+        $this->assertCount(count($expectedValues), $result);
+
+        foreach ($result as $option) {
+            $this->assertArrayHasKey('label', $option);
+            $this->assertArrayHasKey('value', $option);
+            $this->assertContains($option['value'], $expectedValues);
+        }
     }
 }

@@ -29,32 +29,31 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid\Shipment;
+namespace TIG\PostNL\Config\Source\LabelAndPackingslip;
 
-use Magento\Backend\Block\Template;
-use Magento\Framework\View\Element\BlockInterface;
+use Magento\Framework\Option\ArrayInterface;
 
-class DownloadPdfAction extends Template implements BlockInterface
+class ReferenceType implements ArrayInterface
 {
-    /**
-     * @var string
-     */
-    // @codingStandardsIgnoreLine
-    protected $_template = 'TIG_PostNL::shipment/grid/DownloadPdfAction.phtml';
+    const REFEENCE_TYPE_NONE        = 'none';
+    const REFEENCE_TYPE_SHIPMENT_ID = 'shipment_increment_id';
+    const REFEENCE_TYPE_ORDER_ID    = 'order_increment_id';
+    const REFEENCE_TYPE_CUSTOM      = 'custom';
 
     /**
-     * @return string
+     * @return array
      */
-    public function getDownloadUrl()
+    public function toOptionArray()
     {
-        return $this->getUrl('postnl/shipment/massPrintShippingLabel');
-    }
+        // @codingStandardsIgnoreStart
+        $options = [
+            ['value' => self::REFEENCE_TYPE_NONE, 'label' => __('None')],
+            ['value' => self::REFEENCE_TYPE_SHIPMENT_ID, 'label' => __('Shipment ID')],
+            ['value' => self::REFEENCE_TYPE_ORDER_ID, 'label' => __('Order ID')],
+            ['value' => self::REFEENCE_TYPE_CUSTOM, 'label' => __('Use a custom value')]
+        ];
+        // @codingStandardsIgnoreEnd
 
-    /**
-     * @return string
-     */
-    public function getConfirmAndPrintPackingSlipUrl()
-    {
-        return $this->getUrl('postnl/shipment/massPrintPackingslip');
+        return $options;
     }
 }
