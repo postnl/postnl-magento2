@@ -39,14 +39,10 @@ use TIG\PostNL\Service\Shipment\EpsCountries;
 
 class ProductCodeAndType
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     private $code = null;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $type = null;
 
     const TYPE_PICKUP = 'pickup';
@@ -66,19 +62,13 @@ class ProductCodeAndType
     const SHIPMENT_TYPE_DAYTIME = 'Daytime';
     const SHIPMENT_TYPE_EXTRAATHOME = 'Extra@Home';
 
-    /**
-     * @var ProductOptionsConfiguration
-     */
+    /** @var ProductOptionsConfiguration */
     private $productOptionsConfiguration;
 
-    /**
-     * @var ProductOptionsFinder
-     */
+    /** @var ProductOptionsFinder */
     private $productOptionsFinder;
 
-    /**
-     * @var QuoteInterface
-     */
+    /** @var QuoteInterface */
     private $quote;
 
     /**
@@ -170,7 +160,6 @@ class ProductCodeAndType
         /** @var Quote $magentoQuote */
         $magentoQuote = $this->quote->getQuote();
         $quoteTotal = $magentoQuote->getBaseGrandTotal();
-
         $alternativeActive = $this->productOptionsConfiguration->getUseAlternativeDefault();
         $alternativeMinAmount = $this->productOptionsConfiguration->getAlternativeDefaultMinAmount();
 
