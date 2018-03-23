@@ -168,6 +168,12 @@ class ProductCodeTest extends TestCase
                 30,
                 static::PRODUCT_OPTION_ALTERNATIVE_DEFAULT
             ],
+            'alternative enabled, amount limit equals quote total' => [
+                1,
+                40,
+                40,
+                static::PRODUCT_OPTION_ALTERNATIVE_DEFAULT
+            ]
         ];
     }
 

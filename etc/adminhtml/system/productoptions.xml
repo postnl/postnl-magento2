@@ -55,14 +55,14 @@
 
         <field id="use_alternative_default" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Use an alternative default option</label>
-            <comment><![CDATA[Enable this to use an alternative default option when a shipment's total value exceeds a certain amount.]]></comment>
+            <comment><![CDATA[Enable this to use an alternative default option when a shipment's total value reaches a certain amount.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/productoptions/use_alternative_default</config_path>
         </field>
 
         <field id="alternative_default_min_amount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Minimum amount</label>
-            <comment><![CDATA[The alternative default option will be used when the shipment's total amount exceeds this value.]]></comment>
+            <comment><![CDATA[The alternative default option will be used from this value.]]></comment>
             <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
             <config_path>tig_postnl/productoptions/alternative_default_min_amount</config_path>
             <depends>
@@ -72,7 +72,7 @@
 
         <field id="alternative_default_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Alternative default shipping option</label>
-            <comment><![CDATA[This option will be used as default when the shipment's total value exceeds the given amount.]]></comment>
+            <comment><![CDATA[This option will be used as default from the given amount.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
             <config_path>tig_postnl/productoptions/alternative_default_option</config_path>
             <depends>

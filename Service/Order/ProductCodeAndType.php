@@ -165,7 +165,7 @@ class ProductCodeAndType
         $alternativeActive = $this->productOptionsConfiguration->getUseAlternativeDefault();
         $alternativeMinAmount = $this->productOptionsConfiguration->getAlternativeDefaultMinAmount();
 
-        if ($alternativeActive && $quoteTotal > $alternativeMinAmount) {
+        if ($alternativeActive && $quoteTotal >= $alternativeMinAmount) {
             $this->code = $this->productOptionsConfiguration->getAlternativeDefaultProductOption();
         }
     }
