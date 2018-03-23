@@ -38,7 +38,11 @@ class Country
 {
     private $globalPackConfiguration;
 
-
+    /**
+     * Country constructor.
+     *
+     * @param Globalpack $globalpack
+     */
     public function __construct(
         Globalpack $globalpack
     ) {

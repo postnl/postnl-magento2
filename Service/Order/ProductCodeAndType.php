@@ -104,6 +104,7 @@ class ProductCodeAndType
      *
      * @return array
      */
+    // @codingStandardsIgnoreStart
     public function get($type = '', $option = '', $country = null)
     {
         $country = $country ?: $this->getCountryCode();
@@ -129,6 +130,7 @@ class ProductCodeAndType
         $this->getProductCode($option, $country);
         return $this->response();
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Get the product code for the delivery options.
