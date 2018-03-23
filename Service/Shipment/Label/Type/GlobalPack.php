@@ -40,7 +40,7 @@ class GlobalPack extends AbstractType implements TypeInterface
         $filename = $this->saveTempLabel($label);
 
         $this->createPdf();
-        $this->pdf->AddPage('L', '');
+        $this->pdf->AddPage('P', '');
 
         $this->pdf->setSourceFile($filename);
         $pageId = $this->pdf->importPage(1);
