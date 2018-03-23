@@ -105,10 +105,13 @@
                 <api_base_url>https://api.postnl.nl/shipment/</api_base_url>
                 <test_api_base_url>https://api-sandbox.postnl.nl/shipment/</test_api_base_url>
             </endpoints>
-            <barcode>
-                <global_type>CD</global_type>
-                <global_range>1660</global_range>
-            </barcode>
+            <globalpack>
+                <product_settings_value_attribute>price</product_settings_value_attribute>
+                <product_settings_country_of_origin>country_of_manufacture</product_settings_country_of_origin>
+                <product_settings_description>name</product_settings_description>
+                <product_settings_sorting_attribute>price</product_settings_sorting_attribute>
+                <product_settings_sorting_direction>desc</product_settings_sorting_direction>
+            </globalpack>
         </tig_postnl>
     </default>
 </config>

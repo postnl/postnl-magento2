@@ -53,6 +53,11 @@ class Data
     private $shipmentVolume;
 
     /**
+     * @var Customs
+     */
+    private $customsInfo;
+
+    /**
      * @var LabelAndPackingslipOptions
      */
     private $labelAndPackingslipOptions;
@@ -62,17 +67,20 @@ class Data
      * @param ContentDescription $contentDescription
      * @param Calculate $calculate
      * @param LabelAndPackingslipOptions $labelAndPackingslipOptions
+     * @param Customs $customs
      */
     public function __construct(
         ProductOptions $productOptions,
         ContentDescription $contentDescription,
         Calculate $calculate,
-        LabelAndPackingslipOptions $labelAndPackingslipOptions
+        LabelAndPackingslipOptions $labelAndPackingslipOptions,
+        Customs $customs
     ) {
         $this->productOptions = $productOptions;
         $this->contentDescription = $contentDescription;
         $this->shipmentVolume = $calculate;
         $this->labelAndPackingslipOptions = $labelAndPackingslipOptions;
+        $this->customsInfo = $customs;
     }
 
     /**
@@ -138,6 +146,10 @@ class Data
                 $magentoShipment->getItems(), $shipment->getParcelCount()
             );
             $shipmentData['Reference'] = $this->labelAndPackingslipOptions->getReference($magentoShipment);
+        }
+
+        if ($shipment->isGlobalPack()) {
+            $shipmentData['Customs'] = $this->customsInfo->get($shipment);
         }
 
         if ($shipment->isExtraCover()) {

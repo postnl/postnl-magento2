@@ -29,48 +29,37 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment;
+namespace TIG\PostNL\Model\Carrier\Validation;
 
-class ProductOptions
+use TIG\PostNL\Config\Provider\Globalpack;
+use TIG\PostNL\Service\Shipment\EpsCountries;
+
+class Country
 {
-    /**
-     * These shipment types need specific product options.
-     *
-     * @var array
-     */
-    private $availableProductOptions = [
-            'pge'     => [
-                'Characteristic' => '118',
-                'Option'         => '002',
-            ],
-            'evening' => [
-                'Characteristic' => '118',
-                'Option'         => '006',
-            ],
-            'sunday'  => [
-                'Characteristic' => '101',
-                'Option'         => '008',
-            ],
-        ];
+    private $globalPackConfiguration;
 
     /**
-     * @param string $type
-     * @param bool   $flat
+     * Country constructor.
      *
-     * @return null
+     * @param Globalpack $globalpack
      */
-    public function get($type, $flat = false)
+    public function __construct(
+        Globalpack $globalpack
+    ) {
+        $this->globalPackConfiguration = $globalpack;
+    }
+
+    /**
+     * @param $country
+     *
+     * @return bool
+     */
+    public function validate($country)
     {
-        $type = strtolower($type);
-
-        if (!array_key_exists($type, $this->availableProductOptions)) {
-            return null;
+        if (!in_array($country, EpsCountries::ALL)) {
+            return $this->globalPackConfiguration->isEnabled();
         }
 
-        if ($flat) {
-            return $this->availableProductOptions[$type];
-        }
-
-        return ['ProductOption' => $this->availableProductOptions[$type]];
+        return true;
     }
 }

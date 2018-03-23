@@ -211,6 +211,15 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             'countryLimitation' => 'BE',
             'group'             => 'eu_options',
         ],
+        // GlobalPack
+        '4945'=> [
+            'value'             => '4945',
+            'label'             => 'GlobalPack',
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => false,
+            'group'             => 'global_options',
+        ],
         // Brievenbuspakje Options
         '2928' => [
             'value'             => '2928',
@@ -291,6 +300,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         'standard_options'      => 'Domestic options',
         'pakjegemak_options'    => 'Post Office options',
         'eu_options'            => 'EU options',
+        'global_options'        => 'Global options',
         'buspakje_options'      => 'Letter Box Parcel options',
         'extra_at_home_options' => 'Extra@Home options',
     ];
@@ -299,6 +309,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         'standard_options'      => 'Domestic',
         'pakjegemak_options'    => 'Post Office',
         'eu_options'            => 'EPS',
+        'global_options'        => 'Global Pack',
         'buspakje_options'      => 'Letter Box',
         'extra_at_home_options' => 'Extra@Home',
     ];
@@ -311,7 +322,8 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         'Sunday'      => 'Sunday',
         'PG'          => '',
         'PGE'         => 'Early morning pickup',
-        'EPS'         => ''
+        'EPS'         => '',
+        'GP'          => '',
     ];
 
     /**
@@ -413,6 +425,14 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     public function getEpsProductOptions()
     {
         return $this->getProductoptions(['group' => 'eu_options']);
+    }
+
+    /**
+     * @return array
+     */
+    public function getGlobalPackOptions()
+    {
+        return $this->getProductoptions(['group' => 'global_options']);
     }
 
     /**

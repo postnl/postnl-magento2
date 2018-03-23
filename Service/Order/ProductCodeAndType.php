@@ -35,6 +35,7 @@ use Magento\Quote\Model\Quote;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
+use TIG\PostNL\Service\Shipment\EpsCountries;
 
 class ProductCodeAndType
 {
@@ -59,6 +60,7 @@ class ProductCodeAndType
     const SHIPMENT_TYPE_PG = 'PG';
     const SHIPMENT_TYPE_PGE = 'PGE';
     const SHIPMENT_TYPE_EPS = 'EPS';
+    const SHIPMENT_TYPE_GP = 'GP';
     const SHIPMENT_TYPE_SUNDAY = 'Sunday';
     const SHIPMENT_TYPE_EVENING = 'Evening';
     const SHIPMENT_TYPE_DAYTIME = 'Daytime';
@@ -103,11 +105,17 @@ class ProductCodeAndType
      *
      * @return array
      */
+    // @codingStandardsIgnoreStart
     public function get($type = '', $option = '', $country = null)
     {
         $country = $country ?: $this->getCountryCode();
         $type    = strtolower($type);
         $option  = strtolower($option);
+
+        if (!in_array($country, EpsCountries::ALL) && $country != 'NL') {
+            $this->getGlobalPackOption();
+            return $this->response();
+        }
 
         // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
         if ((empty($type) || $option == static::OPTION_DAYTIME) && $country != 'NL') {
@@ -123,6 +131,7 @@ class ProductCodeAndType
         $this->getProductCode($option, $country);
         return $this->response();
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Get the product code for the delivery options.
@@ -194,6 +203,18 @@ class ProductCodeAndType
 
         $this->code = $firstOption['value'];
         $this->type = static::SHIPMENT_TYPE_EPS;
+    }
+
+    /**
+     *
+     */
+    private function getGlobalPackOption()
+    {
+        $options = $this->productOptionsFinder->getGlobalPackOptions();
+        $firstOption = array_shift($options);
+
+        $this->code = $firstOption['value'];
+        $this->type = static::SHIPMENT_TYPE_GP;
     }
 
     /**

@@ -29,48 +29,28 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment;
+namespace TIG\PostNL\Block\Adminhtml\Config\Globalpack;
 
-class ProductOptions
+use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
+use Magento\Framework\View\Element\Template;
+
+class UsingGlobalpack extends Template implements RendererInterface
 {
-    /**
-     * These shipment types need specific product options.
-     *
-     * @var array
-     */
-    private $availableProductOptions = [
-            'pge'     => [
-                'Characteristic' => '118',
-                'Option'         => '002',
-            ],
-            'evening' => [
-                'Characteristic' => '118',
-                'Option'         => '006',
-            ],
-            'sunday'  => [
-                'Characteristic' => '101',
-                'Option'         => '008',
-            ],
-        ];
+    // @codingStandardsIgnoreLine
+    protected $_template = 'TIG_PostNL::config/globalpack/usingGlobalpack.phtml';
 
     /**
-     * @param string $type
-     * @param bool   $flat
+     * Render form element as HTML
      *
-     * @return null
+     * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
+     *
+     * @return string
      */
-    public function get($type, $flat = false)
+    public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
-        $type = strtolower($type);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->setElement($element);
 
-        if (!array_key_exists($type, $this->availableProductOptions)) {
-            return null;
-        }
-
-        if ($flat) {
-            return $this->availableProductOptions[$type];
-        }
-
-        return ['ProductOption' => $this->availableProductOptions[$type]];
+        return $this->toHtml();
     }
 }

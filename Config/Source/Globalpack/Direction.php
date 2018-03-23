@@ -29,48 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment;
+namespace TIG\PostNL\Config\Source\Globalpack;
 
-class ProductOptions
+use Magento\Framework\Option\ArrayInterface;
+
+class Direction implements ArrayInterface
 {
     /**
-     * These shipment types need specific product options.
-     *
-     * @var array
+     * @return array
      */
-    private $availableProductOptions = [
-            'pge'     => [
-                'Characteristic' => '118',
-                'Option'         => '002',
-            ],
-            'evening' => [
-                'Characteristic' => '118',
-                'Option'         => '006',
-            ],
-            'sunday'  => [
-                'Characteristic' => '101',
-                'Option'         => '008',
-            ],
-        ];
 
-    /**
-     * @param string $type
-     * @param bool   $flat
-     *
-     * @return null
-     */
-    public function get($type, $flat = false)
+    public function toOptionArray()
     {
-        $type = strtolower($type);
-
-        if (!array_key_exists($type, $this->availableProductOptions)) {
-            return null;
-        }
-
-        if ($flat) {
-            return $this->availableProductOptions[$type];
-        }
-
-        return ['ProductOption' => $this->availableProductOptions[$type]];
+        // @codingStandardsIgnoreStart
+        return [
+            [
+                'value' => 'asc',
+                'label' => __('Ascending')
+            ],
+            [
+                'value' => 'desc',
+                'label' => __('Descending')
+            ]
+        ];
+        // @codingStandardsIgnoreEnd
     }
 }
