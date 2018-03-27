@@ -131,14 +131,8 @@ class SortItems
     private function filterItems($items)
     {
         $filtered = [];
-
         foreach ($items as $item) {
-            $orderItem = $item->getOrderItem();
-            if ($orderItem->getProductType() == 'bundle') {
-                $filtered = array_merge($filtered, $orderItem->getChildrenItems());
-            } else {
-                $filtered[] = $item;
-            }
+            $filtered = $this->setItemsArray($item, $filtered);
         }
 
         $items = array_filter($filtered, function ($item) {
@@ -147,6 +141,26 @@ class SortItems
         });
 
         return $items;
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order\Shipment\Item $item
+     * @param $filtered
+     *
+     * @return array $filtered
+     */
+    private function setItemsArray($item, $filtered)
+    {
+        /** @var \Magento\Sales\Model\Order\Item $orderItem */
+        $orderItem = $item->getOrderItem();
+
+        $filtered[$item->getProductId()] = $item;
+        if ($orderItem->getProductType() == 'bundle') {
+            unset($filtered[$orderItem->getProductId()]);
+            $filtered = array_merge($filtered, $orderItem->getChildrenItems());
+        }
+
+        return array_values($filtered);
     }
 
     /**
