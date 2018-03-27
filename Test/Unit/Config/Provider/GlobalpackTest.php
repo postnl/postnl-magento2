@@ -98,7 +98,7 @@ class GlobalpackTest extends AbstractConfigurationTest
             'product country of origin' =>
                 ['getProductCountryOfOriginAttributeCode', Globalpack::XPATH_PRODUCT_COUNTRY_OF_ORIGIN, 'country_of_manufacture'],
             'product description' =>
-                ['getProductDescriptionAttributeCode', Globalpack::XPATH_PRODUCT_DESICRIPTION, 'name'],
+                ['getProductDescriptionAttributeCode', Globalpack::XPATH_PRODUCT_DESCRIPTION, 'name'],
             'product sorting attribute' =>
                 ['getProductSortingAttributeCode', Globalpack::XPATH_PRODUCT_SORTING, 'price'],
             'product sorting direction' =>
