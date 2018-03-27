@@ -52,8 +52,8 @@ define([
     return Component.extend({
         defaults: {
             template: 'TIG_PostNL/DeliveryOptions/Delivery',
-            postalCode: null,
-            countryCode: null,
+            postcode: null,
+            country: null,
             street: null,
             hasAddress:false,
             deliverydays: ko.observableArray([]),
@@ -63,8 +63,8 @@ define([
         initObservable: function () {
             this._super().observe([
                 'deliverydays',
-                'postalCode',
-                'countryCode',
+                'postcode',
+                'country',
                 'street',
                 'hasAddress',
                 'selectedOption'
@@ -80,15 +80,11 @@ define([
                     return;
                 }
 
-                if (address.countryCode !== 'NL' && address.countryCode !== 'BE') {
+                if (address.country !== 'NL' && address.country !== 'BE') {
                     return;
                 }
 
-                this.getDeliverydays({
-                    postcode: address.postalCode,
-                    country : address.countryCode,
-                    street  : address.street
-                });
+                this.getDeliverydays(address);
             }.bind(this));
 
             /**
