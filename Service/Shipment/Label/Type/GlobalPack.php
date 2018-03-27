@@ -35,12 +35,17 @@ use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 
 class GlobalPack extends AbstractType implements TypeInterface
 {
+    /**
+     * @param ShipmentLabelInterface $label
+     *
+     * @return \TIG\PostNL\Service\Pdf\Fpdi
+     */
     public function process(ShipmentLabelInterface $label)
     {
         $filename = $this->saveTempLabel($label);
 
         $this->createPdf();
-        $this->pdf->AddPage('P', '');
+        $this->pdf->AddPage('L', '');
 
         $this->pdf->setSourceFile($filename);
         $pageId = $this->pdf->importPage(1);

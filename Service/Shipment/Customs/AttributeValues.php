@@ -35,6 +35,7 @@ use Magento\Sales\Api\Data\ShipmentItemInterface;
 use TIG\PostNL\Config\Provider\Globalpack;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use TIG\PostNL\Exception as PostNLException;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class AttributeValues
 {
@@ -44,18 +45,27 @@ class AttributeValues
 
     private $productRepository;
 
+    private $scopeConfig;
+
+    private $hasFallback = [
+        'country_of_manufacture'
+    ];
+
     /**
      * AttributeValues constructor.
      *
      * @param Globalpack                 $globalpack
      * @param ProductRepositoryInterface $productRepository
+     * @param ScopeConfigInterface       $scopeConfig
      */
     public function __construct(
         Globalpack $globalpack,
-        ProductRepositoryInterface $productRepository
+        ProductRepositoryInterface $productRepository,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->globalpackConfig  = $globalpack;
         $this->productRepository = $productRepository;
+        $this->scopeConfig       = $scopeConfig;
     }
 
     /**
@@ -71,7 +81,7 @@ class AttributeValues
         $product = $this->productRepository->get($item->getSku());
         $attributeValue = $product->getDataUsingMethod($attributeCode);
 
-        if (empty($attributeValue)) {
+        if (empty($attributeValue) && !in_array($attributeCode, $this->hasFallback)) {
             // @codingStandardsIgnoreLine
             throw new PostNLException(
                 __('Missing customs %1 attribute on product %2', [$attributeCode, $item->getSku()]),
@@ -127,6 +137,8 @@ class AttributeValues
      */
     public function getCountryOfOrigin($item, $storeId)
     {
-        return $this->get($this->globalpackConfig->getProductCountryOfOriginAttributeCode($storeId), $item);
+        $country = $this->get($this->globalpackConfig->getProductCountryOfOriginAttributeCode($storeId), $item);
+        $country = $country ?: $this->scopeConfig->getValue('general/store_information/country_id');
+        return $country ?: 'NL';
     }
 }

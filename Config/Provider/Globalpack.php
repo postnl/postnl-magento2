@@ -48,7 +48,7 @@ class Globalpack extends AbstractConfigProvider
     const XPATH_HS_TARIFF_ATTRIBUTE       = 'tig_postnl/globalpack/product_settings_hs_tariff_attribute';
     const XPATH_PRODUCT_VALUE_ATTRIBUTE   = 'tig_postnl/globalpack/product_settings_value_attribute';
     const XPATH_PRODUCT_COUNTRY_OF_ORIGIN = 'tig_postnl/globalpack/product_settings_country_of_origin';
-    const XPATH_PRODUCT_DESICRIPTION      = 'tig_postnl/globalpack/product_settings_description';
+    const XPATH_PRODUCT_DESCRIPTION      = 'tig_postnl/globalpack/product_settings_description';
     const XPATH_PRODUCT_SORTING           = 'tig_postnl/globalpack/product_settings_sorting_attribute';
     const XPATH_PRODUCT_SORTING_DIRECTION = 'tig_postnl/globalpack/product_settings_sorting_direction';
 
@@ -163,7 +163,7 @@ class Globalpack extends AbstractConfigProvider
      */
     public function getProductDescriptionAttributeCode($storeId = null)
     {
-        return $this->getConfigFromXpath(static::XPATH_PRODUCT_DESICRIPTION, $storeId);
+        return $this->getConfigFromXpath(static::XPATH_PRODUCT_DESCRIPTION, $storeId);
     }
 
     /**

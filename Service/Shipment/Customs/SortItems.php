@@ -92,7 +92,7 @@ class SortItems
 
         $items = $shipment->getItems();
         /** @noinspection PhpUndefinedMethodInspection */
-        $items = $this->filterItems($items->getItems());
+        $items = $this->filterItems(is_array($items) ? $items : $items->getItems());
         return $this->sort($items);
     }
 
@@ -130,11 +130,23 @@ class SortItems
      */
     private function filterItems($items)
     {
-        return array_filter($items, function ($item) {
-            /** @var \Magento\Sales\Model\Order\Shipment\Item $item */
+        $filtered = [];
+
+        foreach ($items as $item) {
             $orderItem = $item->getOrderItem();
-            return !($item->isDeleted() || $orderItem->getProductType() == 'bundle');
+            if ($orderItem->getProductType() == 'bundle') {
+                $filtered = array_merge($filtered, $orderItem->getChildrenItems());
+            } else {
+                $filtered[] = $item;
+            }
+        }
+
+        $items = array_filter($filtered, function ($item) {
+            /** @var \Magento\Sales\Model\Order\Shipment\Item $item */
+            return !$item->isDeleted();
         });
+
+        return $items;
     }
 
     /**

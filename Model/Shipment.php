@@ -631,7 +631,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     }
 
     /**
-     * @param \Magento\Sales\Model\Order\Item $orderItems
+     * @param \Magento\Sales\Api\Data\OrderItemInterface[]|\Magento\Sales\Model\Order\Item[] $orderItems
      *
      * @return array
      */
@@ -641,6 +641,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         array_walk(
             $orderItems,
             function ($orderItem) use (&$productPrices) {
+                /** @var \Magento\Sales\Model\Order\Item $orderItem */
                 if ($orderItem->getProductType() == 'bundle') {
                     $productPrices[$orderItem->getSku()] = $this->getBundledPrice($orderItem);
 
@@ -671,6 +672,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         array_walk(
             $shipmentItems,
             function ($shipmentItem) use ($productPrices, &$totalPrice) {
+                /** @var \Magento\Sales\Model\Order\Shipment\Item $shipmentItem */
                 if (!array_key_exists($shipmentItem->getSku(), $productPrices)) {
                     return;
                 }
@@ -691,9 +693,11 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     private function getBundledPrice($bundleItem)
     {
         $bundlePrice = 0;
+        /** @var \Magento\Sales\Model\Order\Item $childItem */
         foreach ($bundleItem->getChildrenItems() as $childItem) {
             $product     = $this->productRepository->get($childItem->getSku());
-            $bundlePrice += $product->getPrice();
+            $qty = $childItem->getQtyOrdered() - ($childItem->getQtyShipped() - $childItem->getQtyCanceled());
+            $bundlePrice += $product->getPrice() * $qty;
         }
 
         return $bundlePrice;

@@ -138,15 +138,26 @@ class Customs
         foreach ($this->sortItems->get($this->shipment) as $item) {
             $content[] = [
                 'Description'     => $this->attributeValues->getDescription($item, $this->shipment->getStoreId()),
-                'Quantity'        => $item->getQty(),
+                'Quantity'        => $this->getQty($item),
                 'Weight'          => $this->getWeight($item),
-                'Value'           => $this->attributeValues->getCustomsValue($item, $this->shipment->getStoreId()),
+                'Value'           => $this->getValue($item),
                 'HSTariffNr'      => $this->attributeValues->getHsTariff($item, $this->shipment->getStoreId()),
                 'CountryOfOrigin' => $this->attributeValues->getCountryOfOrigin($item, $this->shipment->getStoreId())
             ];
         }
 
         $this->customs['Content'] = $content;
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order\Shipment\Item $item
+     *
+     * @return float|int
+     */
+    private function getValue($item)
+    {
+        $value = $this->attributeValues->getCustomsValue($item, $this->shipment->getStoreId());
+        return round($value * $this->getQty($item));
     }
 
     /**
@@ -157,7 +168,22 @@ class Customs
     private function getWeight($item)
     {
         // Divide by zero not allowed.
-        $weight = round(($item->getWeight() ?: 1) * ($item->getQty() ?: 1));
+        $weight = round(($item->getWeight() ?: 1) * $this->getQty($item));
         return $weight <= 0 ? 1 : $weight;
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order\Shipment\Item|\Magento\Sales\Model\Order\Item $item  $item
+     *
+     * @return int
+     */
+    private function getQty($item)
+    {
+        if (!$item->getQty()) {
+            // It means this is an order Item of bundle products.
+            $item->setQty($item->getQtyOrdered() - ($item->getQtyShipped() - $item->getQtyCanceled()));
+        }
+
+        return $item->getQty() ?: 1;
     }
 }
