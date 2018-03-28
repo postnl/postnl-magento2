@@ -32,10 +32,10 @@
             <!-- /ko -->
             <!-- ko if: $data[0].fallback -->
             <ul data-bind="foreach: $data">
-                <li data-bind="css: { 'selected-row': true, 'odd': $parents[1].isOdd() }">
+                <li data-bind="css: { 'selected-row': $parents[1].isRowSelected($data), 'odd': $parents[1].isOdd() }">
                     <label>
                         <input type="radio"
-                               data-bind="checked: true, checkedValue: $data"
+                               data-bind="checked: $parents[1].selectedOption, checkedValue: $data"
                                name="deliveryday"
                                class="tig-postnl-delivery-radio" />
 
