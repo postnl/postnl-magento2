@@ -102,12 +102,16 @@ define([
              * @param TimeFrame
              */
             this.selectedOption.subscribe(function (value) {
-                if (value === null || value.fallback) {
+                if (value === null) {
                     return;
                 }
 
                 State.currentSelectedShipmentType('delivery');
                 State.selectShippingMethod();
+
+                if (value.fallback) {
+                    return;
+                }
 
                 var fee = null;
                 if (value.hasFee()) {
