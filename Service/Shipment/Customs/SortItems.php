@@ -112,7 +112,7 @@ class SortItems
         $sortItems = [];
         /** @var \Magento\Sales\Model\Order\Shipment\Item $item */
         foreach ($items as $item) {
-            $sortItems[$item->getId()] = $attributeValues[$item->getProductId()];
+            $sortItems[$item->getId()] = $attributeValues[$this->productDictionary->getProductId($item)];
         }
 
         natsort($sortItems);
