@@ -1,53 +1,3 @@
-<!--
-/**
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
--->
-<li id="shipping" class="checkout-shipping-address" data-bind="fadeVisible: visible()">
-    <div class="step-title" data-bind="i18n: 'Shipping Address'" data-role="title"></div>
-    <div id="checkout-step-shipping"
-         class="step-content"
-         data-role="content">
-
-        <!-- ko if: (!quoteIsVirtual) -->
-        <!-- ko foreach: getRegion('customer-email') -->
-        <!-- ko template: getTemplate() --><!-- /ko -->
-        <!--/ko-->
-        <!--/ko-->
-
-        <!-- ko foreach: getRegion('address-list') -->
-        <!-- ko template: getTemplate() --><!-- /ko -->
-        <!--/ko-->
-
-        <!-- ko foreach: getRegion('address-list-additional-addresses') -->
-        <!-- ko template: getTemplate() --><!-- /ko -->
-        <!--/ko-->
-
-        <!-- Address form pop up -->
-        <!-- ko if: (!isFormInline) -->
-        <button type="button"
-                data-bind="click: showFormPopUp, visible: !isNewAddressAdded()"
-                class="action action-show-popup">
-            <span data-bind="i18n: 'New Address'"></span></button>
-        <div id="opc-new-shipping-address" data-bind="visible: isFormPopUpVisible()">
-            <!-- ko template: 'Magento_Checkout/shipping-address/form' --><!-- /ko -->
-        </div>
-        <!-- /ko -->
-
-        <!-- ko foreach: getRegion('before-form') -->
-        <!-- ko template: getTemplate() --><!-- /ko -->
-        <!--/ko-->
-
-        <!-- Inline address form -->
-        <!-- ko if: (isFormInline) -->
-        <!-- ko template: 'Magento_Checkout/shipping-address/form' --><!-- /ko -->
-        <!-- /ko -->
-    </div>
-</li>
-
-
-<!--Shipping method template-->
 <li id="opc-shipping_method"
     class="checkout-shipping-method"
     data-bind="fadeVisible: visible(), blockLoader: isLoading"
@@ -81,8 +31,7 @@
                                 <td class="col col-method">
                                     <!-- ko ifnot: method.error_message -->
                                     <!-- ko if: $parent.rates().length == 1 -->
-                                    <input name="shipping_method"
-                                           class="radio"
+                                    <input class="radio"
                                            type="radio"
                                            data-bind="attr: {
                                                     checked: $parent.rates().length == 1,
@@ -92,7 +41,7 @@
                                                  }" />
                                     <!-- /ko -->
                                     <!--ko ifnot: ($parent.rates().length == 1)-->
-                                    <input name="shipping_method" type="radio"
+                                    <input type="radio"
                                            data-bind="
                                                 value: method.carrier_code + '_' + method.method_code,
                                                 checked: $parent.isSelected,
@@ -106,18 +55,6 @@
                                     <!-- /ko -->
                                 </td>
                                 <td class="col col-price">
-                                    <!-- ko foreach: $parent.getRegion('price') -->
-                                    <!-- ko template: getTemplate() --><!-- /ko -->
-                                    <!-- /ko -->
-                                </td>
-
-                                <td class="col col-method"
-                                    data-bind="text: method.method_title, attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}"></td>
-
-                                <td class="col col-carrier"
-                                    data-bind="text: method.carrier_title, attr: {'id': 'label_carrier_' + method.method_code + '_' + method.carrier_code}"></td>
-
-                                <td class="col col-price">
                                     <!-- TIG PostNL modification start -->
                                     <!-- ko ifnot: $parent.canUsePostnlDeliveryOptions(method)-->
 
@@ -128,6 +65,11 @@
                                     <!-- /ko -->
                                 </td>
 
+                                <td class="col col-method"
+                                    data-bind="text: method.method_title, attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}"></td>
+
+                                <td class="col col-carrier"
+                                    data-bind="text: method.carrier_title, attr: {'id': 'label_carrier_' + method.method_code + '_' + method.carrier_code}"></td>
                             </tr>
 
                             <!-- ko if:  method.comment -->
@@ -145,7 +87,7 @@
                                         <div data-bind="text: method.error_message"></div>
                                     </div>
                                     <span class="no-display">
-                                    <input name="shipping_method" type="radio" data-bind="attr: {'value' : method.method_code, 'id': 's_method_' + method.method_code}"/>
+                                    <input type="radio" data-bind="attr: {'value' : method.method_code, 'id': 's_method_' + method.method_code}"/>
                                 </span>
                                 </td>
                             </tr>
@@ -162,8 +104,6 @@
                             </tr>
                             <!-- /ko -->
                             <!-- TIG PostNL modification end -->
-
-                            <!-- /ko -->
 
                             <!-- /ko -->
                         </tbody>
