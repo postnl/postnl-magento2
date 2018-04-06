@@ -71,7 +71,7 @@ class FirstDeliveryDate
     public function set(OrderInterface $order)
     {
         $address = $this->quote->getShippingAddress();
-        if (!$address->getCountryId() || !$address->getPostcode()) {
+        if (is_null($address)) {
             return null;
         }
 
