@@ -79,7 +79,7 @@
             </field>
             <field id="shipment_type" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Default shipment type</label>
-                <comment>Please select the default shipment type. You can also specify this manually when creating GlobalPack shipments.</comment>
+                <comment>Please select the default shipment type.</comment>
                 <source_model>TIG\PostNL\Config\Source\Globalpack\ShipmentType</source_model>
                 <config_path>tig_postnl/globalpack/shipment_type</config_path>
             </field>

@@ -47,19 +47,23 @@ class SortItems
     private $globalpackConfig;
 
     /**
-     * @var \Magento\Sales\Model\Order
-     */
-    private $storeId;
-
-    /**
      * @var ProductDictionary
      */
     private $productDictionary;
 
+    /**
+     * @var ProductType
+     */
     private $productType;
 
+    /**
+     * @var string
+     */
     private $attributeToSort;
 
+    /**
+     * @var string
+     */
     private $attributeSortDirection;
 
     /**
@@ -86,9 +90,8 @@ class SortItems
      */
     public function get($shipment)
     {
-        $this->storeId = $shipment->getStoreId();
-        $this->attributeToSort = $this->globalpackConfig->getProductSortingAttributeCode($this->storeId);
-        $this->attributeSortDirection = $this->globalpackConfig->getProductSortingDirection($this->storeId);
+        $this->attributeToSort = $this->globalpackConfig->getProductSortingAttributeCode($shipment->getStoreId());
+        $this->attributeSortDirection = $this->globalpackConfig->getProductSortingDirection($shipment->getStoreId());
 
         $items = $shipment->getItems();
         /** @noinspection PhpUndefinedMethodInspection */
