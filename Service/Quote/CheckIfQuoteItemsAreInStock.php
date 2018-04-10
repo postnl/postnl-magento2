@@ -83,10 +83,6 @@ class CheckIfQuoteItemsAreInStock
         $quote = $this->checkoutSession->getQuote();
         $items = $quote->getAllItems();
 
-        if ($this->stockConfiguration->getBackorders() !== 0) {
-            return true;
-        }
-
         return $this->itemsAreInStock($items);
     }
 
@@ -126,10 +122,6 @@ class CheckIfQuoteItemsAreInStock
     private function isItemInStock(QuoteItem $item)
     {
         $stockItem = $this->getStockItem($item);
-
-        if ($this->useConfigBackOrders($stockItem)) {
-            return true;
-        }
 
         $minimumQuantity = $this->getMinimumQuantity($stockItem);
 
@@ -171,20 +163,6 @@ class CheckIfQuoteItemsAreInStock
         }
 
         return $item->getQty();
-    }
-
-    /**
-     * @param StockItemInterface $stockItem
-     *
-     * @return bool
-     */
-    private function useConfigBackOrders(StockItemInterface $stockItem)
-    {
-        if (!$stockItem->getUseConfigBackorders() && $stockItem->getBackorders() == 0) {
-            return true;
-        }
-
-        return false;
     }
 
     /**

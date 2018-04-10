@@ -98,7 +98,7 @@ class AddressEnhancer
             return [
                 'error' => [
                     'code'    => 'POSTNL-0124',
-                    'message' => 'Unable to extract the house number, could not find an number inside the street value'
+                    'message' => 'Unable to extract the house number, could not find a number inside the street value'
                 ]
             ];
         }

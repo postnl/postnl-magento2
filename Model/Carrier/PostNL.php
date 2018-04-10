@@ -29,6 +29,9 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+/**
+ * @codingStandardsIgnoreStart
+ */
 namespace TIG\PostNL\Model\Carrier;
 
 use TIG\PostNL\Helper\Tracking\Track;
@@ -42,6 +45,7 @@ use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
 use Magento\Shipping\Model\Rate\ResultFactory;
 use Psr\Log\LoggerInterface;
+use TIG\PostNL\Model\Carrier\Validation\Country;
 
 class PostNL extends AbstractCarrier implements CarrierInterface
 {
@@ -74,6 +78,11 @@ class PostNL extends AbstractCarrier implements CarrierInterface
     private $accountConfiguration;
 
     /**
+     * @var Country
+     */
+    private $countryValidation;
+
+    /**
      * @param ScopeConfigInterface $scopeConfig
      * @param ErrorFactory         $rateErrorFactory
      * @param LoggerInterface      $logger
@@ -83,6 +92,7 @@ class PostNL extends AbstractCarrier implements CarrierInterface
      * @param Calculator           $calculator
      * @param AccountConfiguration $accountConfiguration
      * @param array                $data
+     * @param Country              $country
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -93,6 +103,7 @@ class PostNL extends AbstractCarrier implements CarrierInterface
         Track $track,
         Calculator $calculator,
         AccountConfiguration $accountConfiguration,
+        Country $country,
         array $data = []
     ) {
         $this->rateResultFactory      = $rateResultFactory;
@@ -100,6 +111,7 @@ class PostNL extends AbstractCarrier implements CarrierInterface
         $this->track                  = $track;
         $this->calculator             = $calculator;
         $this->accountConfiguration   = $accountConfiguration;
+        $this->countryValidation      = $country;
 
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
@@ -130,6 +142,10 @@ class PostNL extends AbstractCarrier implements CarrierInterface
         }
 
         if (!$this->getConfigFlag('active')) {
+            return false;
+        }
+
+        if (!$this->countryValidation->validate($request->getData('dest_country_id'))) {
             return false;
         }
 
@@ -213,3 +229,6 @@ class PostNL extends AbstractCarrier implements CarrierInterface
         return $amount;
     }
 }
+/**
+ * @codingStandardsIgnoreEnd
+ */

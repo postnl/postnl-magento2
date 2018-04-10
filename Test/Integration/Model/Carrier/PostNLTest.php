@@ -171,11 +171,20 @@ class PostNLTest extends TestCase
             ScopeInterface::SCOPE_STORE
         );
 
+        $countryValidationMock = $this->getMockBuilder(\TIG\PostNL\Model\Carrier\Validation\Country::class);
+        $countryValidationMock->disableOriginalConstructor();
+        $countryValidationMock = $countryValidationMock->getMock();
+
         $this->request->setDestCountryId($countryId);
         $this->request->setDestRegionId($regionId);
 
+        $countryValidationMock->method('validate')->willReturn(true);
+
         /** @var PostNL $instance */
-        $instance = $this->getInstance();
+        $instance = $this->getInstance([
+            'country' => $countryValidationMock
+        ]);
+
         $result = $instance->collectRates($this->request);
 
         $rate = $result->getCheapestRate();
