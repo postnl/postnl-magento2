@@ -33,7 +33,8 @@ namespace TIG\PostNL\Controller\Adminhtml;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Response\Http\FileFactory;
-use TIG\PostNL\Service\Shipment\Label\Generate;
+use TIG\PostNL\Service\Shipment\Label\Generate as LabelGenerate;
+use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
 
 class PdfDownload
 {
@@ -43,39 +44,71 @@ class PdfDownload
     private $fileFactory;
 
     /**
-     * @var Generate
+     * @var LabelGenerate
      */
     private $labelGenerator;
 
     /**
-     * @param FileFactory $fileFactory
-     * @param Generate    $labelGenerator
+     * @var PackingslipGenerate
+     */
+    private $packingslipGenerator;
+
+    const FILETYPE_PACKINGSLIP   = 'PackingSlips';
+    const FILETYPE_SHIPPINGLABEL = 'ShippingLabels';
+
+    /**
+     * @param FileFactory            $fileFactory
+     * @param Generate|LabelGenerate $labelGenerator
+     * @param PackingslipGenerate    $packingslipGenerator
      */
     public function __construct(
         FileFactory $fileFactory,
-        Generate $labelGenerator
+        LabelGenerate $labelGenerator,
+        PackingslipGenerate $packingslipGenerator
     ) {
         $this->fileFactory = $fileFactory;
         $this->labelGenerator = $labelGenerator;
+        $this->packingslipGenerator = $packingslipGenerator;
     }
 
     /**
      * @param $labels
+     * @param $filename
      *
      * @return \Magento\Framework\App\ResponseInterface
      * @throws \Exception
      * @throws \Zend_Pdf_Exception
      */
     // @codingStandardsIgnoreLine
-    public function get($labels)
+    public function get($labels, $filename = 'ShippingLabels')
     {
-        $pdfLabel = $this->labelGenerator->run($labels);
+        $pdfLabel = $this->generateLabel($labels, $filename);
 
         return $this->fileFactory->create(
-            'ShippingLabels.pdf',
+            $filename . '.pdf',
             $pdfLabel,
             DirectoryList::VAR_DIR,
             'application/pdf'
         );
     }
+
+    /**
+     * @param $labels
+     * @param $filename
+     *
+     * @return string
+     */
+    // @codingStandardsIgnoreStart
+    private function generateLabel($labels, $filename)
+    {
+        switch ($filename) {
+            case static::FILETYPE_SHIPPINGLABEL:
+                return $this->labelGenerator->run($labels);
+            case static::FILETYPE_PACKINGSLIP:
+                return $this->packingslipGenerator->run($labels);
+            default:
+                return $labels;
+        }
+    }
+    // @codingStandardsIgnoreEnd
 }

@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Test\Unit\Service\Shipment;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Service\Shipment\Data;
 use TIG\PostNL\Service\Shipment\ProductOptions;
 use TIG\PostNL\Test\TestCase;
@@ -45,11 +46,26 @@ class DataTest extends TestCase
      */
     private $shipmentMock;
 
+    private $packingslipOptionsMock;
+
     public function setUp()
     {
         parent::setUp();
 
         $this->shipmentMock = $this->getMock(ShipmentInterface::class);
+        $this->packingslipOptionsMock = $this->getFakeMock(LabelAndPackingslipOptions::class, true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getInstance(array $args = [])
+    {
+        if (!isset($args['labelAndPackingslipOptions'])) {
+            $args['labelAndPackingslipOptions'] = $this->packingslipOptionsMock;
+        }
+
+        return parent::getInstance($args);
     }
 
     public function testReturnsTheDefaultData()
@@ -175,6 +191,7 @@ class DataTest extends TestCase
             'DownPartnerID'            => '12345',
             'DownPartnerLocation'      => '112345',
             'ProductCodeDelivery'      => '3085',
+            'Reference'                => '0000000012'
         ];
 
         $this->mockFunction($this->shipmentMock, 'getMainBarcode', $shipmentData['Barcode']);
@@ -183,6 +200,8 @@ class DataTest extends TestCase
         $this->mockFunction($this->shipmentMock, 'getPgRetailNetworkId', $shipmentData['DownPartnerID']);
         $this->mockFunction($this->shipmentMock, 'getPgLocationCode', $shipmentData['DownPartnerLocation']);
         $this->mockFunction($this->shipmentMock, 'getProductCode', $shipmentData['ProductCodeDelivery']);
+
+        $this->mockFunction($this->packingslipOptionsMock, 'getReference', $shipmentData['Reference']);
 
         return $shipmentData;
     }

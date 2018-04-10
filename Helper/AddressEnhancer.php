@@ -35,7 +35,7 @@ use TIG\PostNL\Exception as PostnlException;
 
 class AddressEnhancer
 {
-    const STREET_SPLIT_NAME_FROM_NUMBER = '/([^\d]+)\s?(.+)/i';
+    const STREET_SPLIT_NAME_FROM_NUMBER = '/([^\d].*)\s+(.+)/i';
     const SPLIT_HOUSENUMBER_REGEX       = '#^([\d]+)(.*)#s';
 
     /** @var array */
@@ -98,7 +98,7 @@ class AddressEnhancer
             return [
                 'error' => [
                     'code'    => 'POSTNL-0124',
-                    'message' => 'Unable to extract the house number, could not find an number inside the street value'
+                    'message' => 'Unable to extract the house number, could not find a number inside the street value'
                 ]
             ];
         }

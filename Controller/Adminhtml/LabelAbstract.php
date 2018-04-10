@@ -35,6 +35,7 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
+use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 use TIG\PostNL\Controller\AdminHtml\PdfDownload as GetPdf;
 
 abstract class LabelAbstract extends Action
@@ -52,18 +53,63 @@ abstract class LabelAbstract extends Action
     protected $getPdf;
 
     /**
-     * @param Context    $context
-     * @param GetLabels  $getLabels
-     * @param GetPdf     $getPdf
+     * @var array
      */
+    //@codingStandardsIgnoreLine
+    protected $labels = [];
+
+    /**
+     * @var GetPackingslip
+     */
+    private $getPackingSlip;
+
+    /**
+     * @param Context        $context
+     * @param GetLabels      $getLabels
+     * @param GetPdf         $getPdf
+     * @param GetPackingslip $getPackingSlip
+     */
+    //@codingStandardsIgnoreLine
     public function __construct(
         Context $context,
         GetLabels $getLabels,
-        GetPdf $getPdf
+        GetPdf $getPdf,
+        GetPackingslip $getPackingSlip
     ) {
         parent::__construct($context);
 
         $this->getLabels  = $getLabels;
         $this->getPdf     = $getPdf;
+        $this->getPackingSlip   = $getPackingSlip;
+    }
+
+    /**
+     * @param $shipmentId
+     */
+    //@codingStandardsIgnoreLine
+    protected function setLabel($shipmentId)
+    {
+        $labels = $this->getLabels->get($shipmentId);
+
+        if (empty($labels)) {
+            return;
+        }
+
+        $this->labels = array_merge($this->labels, $labels);
+    }
+
+    /**
+     * @param $shipmentId
+     */
+    //@codingStandardsIgnoreLine
+    protected function setPackingslip($shipmentId)
+    {
+        $packingslip = $this->getPackingSlip->get($shipmentId);
+
+        if (strlen($packingslip) <= 0) {
+            return;
+        }
+
+        $this->labels[] = $packingslip;
     }
 }
