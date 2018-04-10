@@ -64,134 +64,582 @@ class IsShippingOptionsActiveTest extends TestCase
     public function getValueProvider()
     {
         return [
-            'active, in stock, all_products and valid api settings' => [
-                'shippingOptionsActive' => true,
-                'hasValidApiSettings' => true,
-                'stockOptions' => 'in_stock',
-                'productsInStock' => true,
-                'productsExtraAtHome' => false,
-                'expected' => true,
-            ],
-            'active, in stock, all_products and invalid api settings' => [
-                'shippingOptionsActive' => true,
-                'hasValidApiSettings' => false,
-                'stockOptions' => 'in_stock',
-                'productsInStock' => true,
-                'productsExtraAtHome' => false,
-                'expected' => false,
-            ],
-            'active, not in stock, all_products and valid api settings' => [
-                'shippingOptionsActive' => true,
-                'hasValidApiSettings' => true,
-                'stockOptions' => 'in_stock',
-                'productsInStock' => true,
-                'productsExtraAtHome' => false,
-                'expected' => true,
-            ],
-            'active, not in stock, all_products and invalid api settings' => [
-                'shippingOptionsActive' => true,
-                'hasValidApiSettings' => false,
-                'stockOptions' => 'in_stock',
-                'productsInStock' => true,
-                'productsExtraAtHome' => false,
-                'expected' => false,
-            ],
-            'active, in stock, stock_products and valid api settings' => [
-                'shippingOptionsActive' => true,
-                'hasValidApiSettings' => true,
-                'stockOptions' => 'backordered',
-                'productsInStock' => true,
-                'productsExtraAtHome' => false,
-                'expected' => true,
-            ],
-            'active, in stock, stock_products and invalid api settings' => [
-                'shippingOptionsActive' => true,
-                'hasValidApiSettings' => false,
-                'stockOptions' => 'backordered',
-                'productsInStock' => true,
-                'productsExtraAtHome' => false,
-                'expected' => false,
-            ],
-            'active, not in stock, stock_products and valid api settings' => [
-                'shippingOptionsActive' => true,
-                'hasValidApiSettings' => true,
-                'stockOptions' => 'backordered',
-                'productsInStock' => false,
-                'productsExtraAtHome' => false,
-                'expected' => true,
-            ],
-            'active, not in stock, stock_products and invalid api settings' => [
-                'shippingOptionsActive' => true,
-                'hasValidApiSettings' => false,
-                'stockOptions' => 'backordered',
-                'productsInStock' => false,
-                'productsExtraAtHome' => false,
-                'expected' => false,
-            ],
-            'inactive, in stock, all_products and valid api settings' => [
-                'shippingOptionsActive' => false,
-                'hasValidApiSettings' => true,
-                'stockOptions' => 'in_stock',
-                'productsInStock' => true,
-                'productsExtraAtHome' => false,
-                'expected' => false,
-            ],
-            'inactive, in stock, all_products and invalid api settings' => [
-                'shippingOptionsActive' => false,
-                'hasValidApiSettings' => false,
-                'stockOptions' => 'in_stock',
-                'productsInStock' => true,
-                'productsExtraAtHome' => false,
-                'expected' => false,
-            ],
-            'inactive, not in stock, all_products and valid api settings' => [
-                'shippingOptionsActive' => false,
-                'hasValidApiSettings' => true,
-                'stockOptions' => 'in_stock',
-                'productsInStock' => false,
-                'productsExtraAtHome' => false,
-                'expected' => false,
-            ],
-            'inactive, not in stock, all_products and invalid api settings' => [
-                'shippingOptionsActive' => false,
-                'hasValidApiSettings' => false,
-                'stockOptions' => 'in_stock',
-                'productsInStock' => false,
-                'productsExtraAtHome' => false,
-                'expected' => false,
-            ],
-            'inactive, in stock, stock_products and valid api settings' => [
-                'shippingOptionsActive' => false,
-                'hasValidApiSettings' => true,
-                'stockOptions' => 'backordered',
-                'productsInStock' => true,
-                'productsExtraAtHome' => false,
-                'expected' => false,
-            ],
-            'inactive, in stock, stock_products and invalid api settings' => [
-                'shippingOptionsActive' => false,
-                'hasValidApiSettings' => false,
-                'stockOptions' => 'backordered',
-                'productsInStock' => true,
-                'productsExtraAtHome' => false,
-                'expected' => false,
-            ],
-            'inactive, not in stock, stock_products and valid api settings' => [
-                'shippingOptionsActive' => false,
-                'hasValidApiSettings' => true,
-                'stockOptions' => 'backordered',
-                'productsInStock' => false,
-                'productsExtraAtHome' => false,
-                'expected' => false,
-            ],
-            'inactive, not in stock, stock_products and invalid api settings' => [
-                'shippingOptionsActive' => false,
-                'hasValidApiSettings' => false,
-                'stockOptions' => 'backordered',
-                'productsInStock' => false,
-                'productsExtraAtHome' => false,
-                'expected' => false,
-            ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 0 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => false,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 0 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => false,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => true
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => true
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => true
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 0 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'backordered',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 0 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => false,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => false,
+                 'expected'              => true
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 0 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => false,
+                 'canBackorder'          => true,
+                 'expected'              => true
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 0 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => false,
+                 'expected'              => false
+                ],
+            'shippingOptionsActive = 1 | hasValidApiSettings = 1 | stockOptions = 1 | productsInStock = 1 | productsExtraAtHome = 1 | canBackorder = 1 | ' =>
+                ['shippingOptionsActive' => true,
+                 'hasValidApiSettings'   => true,
+                 'stockOptions'          => 'in_stock',
+                 'productsInStock'       => true,
+                 'productsExtraAtHome'   => true,
+                 'canBackorder'          => true,
+                 'expected'              => false
+                ]
         ];
     }
 
@@ -202,6 +650,7 @@ class IsShippingOptionsActiveTest extends TestCase
      * @param $productsInStock
      * @param $isExtraAtHome
      * @param $expected
+     * @param $canBackorder
      *
      * @dataProvider getValueProvider
      */
@@ -211,6 +660,7 @@ class IsShippingOptionsActiveTest extends TestCase
         $stockOptions,
         $productsInStock,
         $isExtraAtHome,
+        $canBackorder,
         $expected
     ) {
         $quoteItemsAreInStock = $this
@@ -219,6 +669,13 @@ class IsShippingOptionsActiveTest extends TestCase
 
         $getValueExpects = $quoteItemsAreInStock->method('getValue');
         $getValueExpects->willReturn($productsInStock);
+
+        $quoteItemCanBackorder = $this
+            ->getFakeMock(\TIG\PostNL\Service\Quote\CheckIfQuoteItemsCanBackorder::class)
+            ->getMock();
+
+        $getBackorderValueExpects = $quoteItemCanBackorder->method('getValue');
+        $getBackorderValueExpects->willReturn($canBackorder);
 
         $quoteHasOption = $this->getFakeMock(CheckIfQuoteHasOption::class)->getMock();
 
@@ -231,7 +688,8 @@ class IsShippingOptionsActiveTest extends TestCase
             'shippingOptions' => $this->shippingOptions,
             'accountConfiguration' => $this->accountConfiguration,
             'quoteItemsAreInStock' => $quoteItemsAreInStock,
-            'quoteHasOption' => $quoteHasOption
+            'quoteHasOption' => $quoteHasOption,
+            'quoteItemsCanBackorder' => $quoteItemCanBackorder
         ]);
 
         $this->mockShippingOptionsMethod('isShippingoptionsActive', $shippingOptionsActive);
@@ -239,7 +697,6 @@ class IsShippingOptionsActiveTest extends TestCase
         $this->mockAccountConfigurationMethod('getCustomerNumber', $hasValidApiSettings);
         $this->mockAccountConfigurationMethod('getApiKey', $hasValidApiSettings);
         $this->getShippingStockoptions($stockOptions);
-
         $this->assertEquals($expected, $instance->getValue());
     }
 
