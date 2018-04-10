@@ -29,37 +29,124 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-
 namespace TIG\PostNL\Test\Unit\Block\Adminhtml\Shipment;
 
-use TIG\PostNL\Api\Data\ShipmentInterface;
+use Magento\Backend\Block\Widget\Button\ButtonList;
+use Magento\Backend\Block\Widget\Context;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\AuthorizationInterface;
+use Magento\Framework\Registry;
+use Magento\Framework\UrlInterface;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Shipment;
+use TIG\PostNL\Block\Adminhtml\Shipment\View;
 use TIG\PostNL\Test\TestCase;
 
 class ViewTest extends TestCase
 {
-    public $instanceClass = \TIG\PostNL\Block\Adminhtml\Shipment\Options\View::class;
+    public $instanceClass = View::class;
 
-    public function canChangeParcelCountProvider()
+    /**
+     * @var Context|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $contextMock;
+
+    /**
+     * @var Registry|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $registryMock;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUp()
     {
-        return [
-            [true],
-            [false],
-        ];
+        parent::setUp();
+
+        $this->contextMock = $this->getFakeMock(Context::class, true);
+        $this->registryMock = $this->getFakeMock(Registry::class, true);
     }
 
     /**
-     * @dataProvider canChangeParcelCountProvider
+     * Make sure the instance always has the context and registry mocks
+     *
+     * {@inheritdoc}
      */
-    public function testCanChangeParcelCount($canChange)
+    public function getInstance(array $args = [])
     {
-        /** @var ShipmentInterface $shipment */
-        $shipment = $this->getMock(ShipmentInterface::class);
+        if (!isset($args['context'])) {
+            $args['context'] = $this->contextMock;
+        }
 
-        $canChangeParcelCount = $shipment->method('canChangeParcelCount');
-        $canChangeParcelCount->willReturn($canChange);
+        if (!isset($args['registry'])) {
+            $args['registry'] = $this->registryMock;
+        }
+
+        return parent::getInstance($args);
+    }
+
+    /**
+     * Fill the context object with minimal data necessary for the instance
+     */
+    private function prepareContextMock()
+    {
+        $urlBuilderMock = $this->getFakeMock(UrlInterface::class, true);
+        $requestMock = $this->getFakeMock(RequestInterface::class, true);
+        $authorizationMock = $this->getFakeMock(AuthorizationInterface::class)->getMockForAbstractClass();
+
+        $buttonListMock = $this->getFakeMock(ButtonList::class)->setMethods(['add'])->getMock();
+        $buttonListMock->expects($this->atLeastOnce())->method('add');
+
+        $this->contextMock->method('getUrlBuilder')->willReturn($urlBuilderMock);
+        $this->contextMock->method('getButtonList')->willReturn($buttonListMock);
+        $this->contextMock->expects($this->once())->method('getRequest')->willReturn($requestMock);
+        $this->contextMock->expects($this->once())->method('getAuthorization')->willReturn($authorizationMock);
+    }
+
+    /**
+     * Fill the registry object with minimal data necessary for the instance
+     */
+    private function prepareRegistryMock()
+    {
+        $orderMock = $this->getFakeMock(Order::class, true);
+        $shipmentMock = $this->getFakeMock(Shipment::class)->setMethods(['getOrder', 'getId'])->getMock();
+        $shipmentMock->method('getOrder')->willReturn($orderMock);
+        $shipmentMock->method('getId')->willReturn(1);
+
+        $this->registryMock->method('registry')->with('current_shipment')->willReturn($shipmentMock);
+    }
+
+    public function testSetPostNLPrintPackingslipButton()
+    {
+        $this->prepareContextMock();
+        $this->prepareRegistryMock();
+
+        /** @var ButtonList|\PHPUnit_Framework_MockObject_MockObject $buttonListMock */
+        $buttonListMock = $this->contextMock->getButtonList();
+        $buttonListMock->expects($this->at(4))->method('add')->with(
+            'postnl_print_packingslip',
+            ['label' => __('PostNL - Print Packingslip'), 'class' => 'save primary', 'onclick' => 'download(\'\')']
+        );
 
         $instance = $this->getInstance();
-        $this->setProperty('shipment', $shipment, $instance);
-        $this->assertEquals($canChange, $instance->canChangeParcelCount());
+        $this->invoke('setPostNLPrintPackingslipButton', $instance);
+    }
+
+    public function testGetPackingslipUrl()
+    {
+        $this->prepareContextMock();
+        $this->prepareRegistryMock();
+
+        /** @var UrlInterface|\PHPUnit_Framework_MockObject_MockObject $urlBuilderMock */
+        $urlBuilderMock = $this->contextMock->getUrlBuilder();
+        $urlBuilderMock->expects($this->at(2))
+            ->method('getUrl')
+            ->with('postnl/shipment/PrintPackingslip', ['shipment_id' => 1])
+            ->willReturn('https://printpackingslip.com');
+
+        $insance = $this->getInstance();
+        $result = $this->invoke('getPackingslipUrl', $insance);
+
+        $this->assertEquals('https://printpackingslip.com', $result);
     }
 }
