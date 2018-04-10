@@ -35,6 +35,7 @@ use TIG\PostNL\Exception as PostnlException;
 
 class AddressEnhancer
 {
+    // @codingStandardsIgnoreLine
     const STREET_SPLIT_NAME_FROM_NUMBER = '/^(?P<street>\d*[\wäöüß\d \'\-\.]+)[,\s]+(?P<number>\d+)\s*(?P<addition>[\wäöüß\d\-\/]*)$/i';
 
     /** @var array */
