@@ -34,6 +34,7 @@ namespace TIG\PostNL\Config\CheckoutConfiguration;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Quote\CheckIfQuoteItemsAreInStock;
+use TIG\PostNL\Service\Quote\CheckIfQuoteItemsCanBackorder;
 use \TIG\PostNL\Service\Quote\CheckIfQuoteHasOption;
 use TIG\PostNL\Service\Order\ProductCodeAndType;
 
@@ -59,22 +60,28 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
      */
     private $quoteHasOption;
 
+    /** @var  CheckIfQuoteItemsCanBackorder */
+    private $quoteItemsCanBackorder;
+
     /**
-     * @param ShippingOptions             $shippingOptions
-     * @param AccountConfiguration        $accountConfiguration
-     * @param CheckIfQuoteItemsAreInStock $quoteItemsAreInStock
-     * @param CheckIfQuoteHasOption   $quoteHasOption
+     * @param ShippingOptions               $shippingOptions
+     * @param AccountConfiguration          $accountConfiguration
+     * @param CheckIfQuoteItemsAreInStock   $quoteItemsAreInStock
+     * @param CheckIfQuoteHasOption         $quoteHasOption
+     * @param CheckIfQuoteItemsCanBackorder $quoteItemsCanBackorder
      */
     public function __construct(
         ShippingOptions $shippingOptions,
         AccountConfiguration $accountConfiguration,
         CheckIfQuoteItemsAreInStock $quoteItemsAreInStock,
-        CheckIfQuoteHasOption $quoteHasOption
+        CheckIfQuoteHasOption $quoteHasOption,
+        CheckIfQuoteItemsCanBackorder $quoteItemsCanBackorder
     ) {
         $this->shippingOptions = $shippingOptions;
         $this->quoteItemsAreInStock = $quoteItemsAreInStock;
         $this->accountConfiguration = $accountConfiguration;
         $this->quoteHasOption = $quoteHasOption;
+        $this->quoteItemsCanBackorder = $quoteItemsCanBackorder;
     }
 
     /**
@@ -94,8 +101,26 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
             return false;
         }
 
+        return $this->validateStockOptions();
+    }
+
+    /**
+     * @return bool
+     */
+    private function validateStockOptions()
+    {
+        if ($this->quoteItemsAreInStock->getValue()) {
+            return true;
+        }
+
         if ($this->shippingOptions->getShippingStockoptions() == 'in_stock' &&
             !$this->quoteItemsAreInStock->getValue()
+        ) {
+            return false;
+        }
+
+        if ($this->shippingOptions->getShippingStockoptions() !== 'in_stock' &&
+            !$this->quoteItemsCanBackorder->getValue()
         ) {
             return false;
         }

@@ -32,5 +32,5 @@
  *
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
-    <template id="tig_postnl_track_and_trace_template" label="Track and Trace" file="track_and_trace.html" type="html" module="TIG_PostNL" area="adminhtml"/>
+    <template id="tig_postnl_webshop_track_and_trace_template" label="Track and Trace" file="track_and_trace.html" type="html" module="TIG_PostNL" area="adminhtml"/>
 </config>
