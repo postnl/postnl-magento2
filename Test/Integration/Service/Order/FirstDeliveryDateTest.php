@@ -60,6 +60,7 @@ class FirstDeliveryDateTest extends TestCase
         $call->willReturn((object)['DeliveryDate' => '2016-11-19']);
 
         $address = $this->getObject(\Magento\Quote\Model\Quote\Address::class);
+        $address->setCountryId('NL');
 
         $quote = $this->getMock(QuoteInterface::class);
         $getShippingAddress = $quote->expects($this->once());

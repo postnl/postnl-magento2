@@ -35,7 +35,7 @@ use TIG\PostNL\Exception as PostnlException;
 
 class AddressEnhancer
 {
-    const STREET_SPLIT_NAME_FROM_NUMBER = '/(?P<street>\D+) (?P<number>\d+)(?P<addition>\D*)/';
+    const STREET_SPLIT_NAME_FROM_NUMBER = '/^(?P<street>\d*[\wäöüß\d \'\-\.]+)[,\s]+(?P<number>\d+)\s*(?P<addition>[\wäöüß\d\-\/]*)$/i';
 
     /** @var array */
     // @codingStandardsIgnoreLine
@@ -92,7 +92,7 @@ class AddressEnhancer
     protected function extractHousenumber($address)
     {
         $street = implode(' ', $address['street']);
-        $matched = preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER, $street, $result);
+        $matched = preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER, trim($street), $result);
         if (!$matched) {
             return [
                 'error' => [

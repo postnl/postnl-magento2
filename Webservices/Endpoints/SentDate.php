@@ -192,7 +192,7 @@ class SentDate extends AbstractEndpoint
             return $this->formatDate($deliveryDate);
         }
 
-        return $this->formatDate('next weekday');
+        return $this->formatDate('now');
     }
 
     /**
