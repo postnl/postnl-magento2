@@ -161,10 +161,6 @@ define([
                     error = data.error;
                 }
 
-                if (data.timeframes.error) {
-                    error = data.timeframes.error;
-                }
-
                 if (error) {
                     Logger.error(error);
                     data = ko.utils.arrayMap(data.timeframes, function (fallback) {

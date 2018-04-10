@@ -36,6 +36,13 @@ define([
     State
 ) {
     return Shipping.extend({
+        defaults : {
+            template: 'TIG_PostNL/shipping',
+            shippingFormTemplate: 'Magento_Checkout/shipping-address/form',
+            shippingMethodListTemplate: 'TIG_PostNL/shipping-address/shipping-method-list',
+            shippingMethodItemTemplate: 'TIG_PostNL/shipping-address/shipping-method-item'
+        },
+
         canUseDeliveryOption: function () {
             var deliveryOptionsActive = window.checkoutConfig.shipping.postnl.shippingoptions_active == 1;
             var deliveryDaysActive = window.checkoutConfig.shipping.postnl.is_deliverydays_active;
@@ -60,6 +67,14 @@ define([
             }
 
             return result;
+        },
+
+        /**
+         * MAGETWO-83272
+         * @param step
+         */
+        navigate: function (step) {
+            step && step.isVisible(true);
         }
     });
 });

@@ -33,6 +33,12 @@ var config = {
         '*': {
             "Magento_Checkout/template/shipping-address/shipping-method-item.html" :
                 "TIG_PostNL/template/shipping-address/shipping-method-item.html",
+            //Magento Backwards Compatibility
+            "Magento_Checkout/template/shipping.html" :
+                "TIG_PostNL/template/shipping.html",
+            //Rubic Clean Checkout Compatibility
+            "Rubic_CleanCheckout/template/shipping-address/shipping-method-item.html":
+                "TIG_PostNL/template/shipping-address/shipping-method-item.html",
             //Amasty Checkout Compatibility
             "Amasty_Checkout/template/onepage/shipping/methods.html" :
                 "TIG_PostNL/template/Compatibility/amasty_checkout/methods.html",
