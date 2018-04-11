@@ -38,7 +38,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 
-class CheckIfQuoteItemsAreInStock
+class CheckIfQuoteItemsCanBackorder
 {
     /**
      * @var Session
@@ -51,14 +51,14 @@ class CheckIfQuoteItemsAreInStock
     private $stockRegistry;
 
     /**
-     * @var null
-     */
-    private $itemsAreInStock = null;
-
-    /**
      * @var StockConfigurationInterface
      */
     private $stockConfiguration;
+
+    /**
+     * @var null | bool
+     */
+    private $itemsCanBackorder = null;
 
     /**
      * @param CheckoutSession             $checkoutSession
@@ -83,21 +83,18 @@ class CheckIfQuoteItemsAreInStock
         $quote = $this->checkoutSession->getQuote();
         $items = $quote->getAllItems();
 
-        return $this->itemsAreInStock($items);
+        return $this->itemsCanBackorder($items);
     }
 
     /**
-     * Loop over the items and remove all items that have stock. If there are any items left, it means that not all
-     * items are in stock so we return false.
-     *
-     * @param QuoteItem[] $items
+     * @param $items
      *
      * @return bool
      */
-    private function itemsAreInStock($items)
+    private function itemsCanBackorder($items)
     {
-        if ($this->itemsAreInStock !== null) {
-            return $this->itemsAreInStock;
+        if ($this->itemsCanBackorder !== null) {
+            return $this->itemsCanBackorder;
         }
 
         $items = array_filter($items, function (QuoteItem $item) {
@@ -107,62 +104,36 @@ class CheckIfQuoteItemsAreInStock
                 return false;
             }
 
-            return !$this->isItemInStock($item);
+            return !$this->canItemBackorder($item);
         });
 
-        $this->itemsAreInStock = empty($items);
-        return $this->itemsAreInStock;
+        $this->itemsCanBackorder = empty($items);
+        return $this->itemsCanBackorder;
     }
 
     /**
-     * @param QuoteItem $item
+     * @param $item
      *
      * @return bool
      */
-    private function isItemInStock(QuoteItem $item)
+    private function canItemBackorder($item)
     {
         $stockItem = $this->getStockItem($item);
-
-        $minimumQuantity = $this->getMinimumQuantity($stockItem);
-
-        /**
-         * Check if the product has the required quantity available.
-         */
-        $requiredQuantity = $this->getRequiredQuantity($item);
-        if (($stockItem->getQty() - $minimumQuantity) < $requiredQuantity) {
-            return false;
-        }
-
-        return true;
+        return $this->useConfigBackOrders($stockItem);
     }
 
     /**
      * @param StockItemInterface $stockItem
      *
-     * @return float
+     * @return bool
      */
-    private function getMinimumQuantity(StockItemInterface $stockItem)
+    private function useConfigBackOrders(StockItemInterface $stockItem)
     {
-        if (!$stockItem->getUseConfigMinQty()) {
-            return $stockItem->getMinQty();
+        if ($stockItem->getUseConfigBackorders()) {
+            return $this->stockConfiguration->getBackorders() !== 0;
         }
 
-        return $this->stockConfiguration->getMinQty();
-    }
-
-    /**
-     * @param QuoteItem $item
-     *
-     * @return int
-     */
-    private function getRequiredQuantity(QuoteItem $item)
-    {
-        $parentItem = $item->getParentItem();
-        if ($parentItem) {
-            return $parentItem->getQty();
-        }
-
-        return $item->getQty();
+        return $stockItem->getBackorders() !== 0;
     }
 
     /**

@@ -67,7 +67,7 @@
                 <email_enabled>1</email_enabled>
             </webshop_shipping>
             <webshop_track_and_trace>
-                <template>tig_postnl_track_and_trace_template</template>
+                <template>tig_postnl_webshop_track_and_trace_template</template>
                 <service_url>https://postnl.nl/tracktrace/?</service_url>
             </webshop_track_and_trace>
             <webshop_advanced>
