@@ -151,7 +151,7 @@ class CreatePostNLShipment implements ObserverInterface
      */
     private function formatModelData($shipment)
     {
-        $sentDate    = $this->sentDateHandler->get($shipment);
+        $sentDate     = $this->sentDateHandler->get($shipment);
         $shipmentType = $this->getShipmentType();
 
         $colliAmount = isset($this->shipParams['tig_postnl_colli_amount'])
@@ -203,6 +203,9 @@ class CreatePostNLShipment implements ObserverInterface
         return $order->getAcCharacteristic();
     }
 
+    /**
+     * @return null|string
+     */
     private function getAcOption()
     {
         $order = $this->getOrder();
