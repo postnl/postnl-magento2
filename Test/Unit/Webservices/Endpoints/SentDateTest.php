@@ -37,6 +37,7 @@ use Magento\Sales\Model\Order\Shipment;
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Webservices\Endpoints\SentDate;
+use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
 
 class SentDateTest extends \TIG\PostNL\Test\TestCase
 {
@@ -89,9 +90,11 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
         $orderMock = $this->getMock(OrderInterface::class);
         $this->mockFunction($orderMock, 'getDeliveryDate', $input['delivery_date']);
         $timezoneMock = $this->timezoneInterfaceMock();
+        $falbackMock  = $this->deliveryDateFallbackMock();
 
         $instance = $this->getInstance([
             'timezone' => $timezoneMock,
+            'dateFallback' => $falbackMock
         ]);
         $instance->setParameters($address, 1, $orderMock);
 
@@ -111,10 +114,23 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
         $postNLHelperMock = $this->getMock(TimezoneInterface::class);
 
         $dateTime = new \DateTime('19-11-2016');
-        $getDate = $postNLHelperMock->expects($this->once());
+        $getDate = $postNLHelperMock->expects($this->any());
         $getDate->method('date');
         $getDate->willReturn($dateTime);
 
         return $postNLHelperMock;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    private function deliveryDateFallbackMock()
+    {
+        $fallbackMock = $this->getMock(DeliveryDateFallback::class);
+        $getFalback = $fallbackMock->expects($this->any());
+        $getFalback->method('get');
+        $getFalback->willReturn('19-11-2016');
+
+        return $fallbackMock;
     }
 }
