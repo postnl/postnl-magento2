@@ -64,20 +64,20 @@ class DeliveryDateFallback
     public function get()
     {
         $shippingDays = explode(',', $this->webshop->getShipmentDays());
-        $nextDay      = strtotime('+1 day');
+        $nextDay      = '+1 day';
         if ($this->isPastCutOff->calculate()) {
-            $nextDay = strtotime('+2 day');
+            $nextDay = '+2 day';
         }
 
         $date = $this->getDate($nextDay);
         $day  = $this->helper->getDayOrWeekNumber($nextDay);
         if ($day == 0 || $day == 7) {
-            $nextDay = strtotime($date .'+1 day');
+            $nextDay = $date .'+1 day';
         }
 
         $day = $this->helper->getDayOrWeekNumber($nextDay);
         if ($day == 1 && !in_array(0, $shippingDays)) {
-            $nextDay = strtotime($date. '+2 day');
+            $nextDay = $date. '+2 day';
         }
 
         return $this->getDate($nextDay);
@@ -89,7 +89,7 @@ class DeliveryDateFallback
      */
     private function getDate($nextDay)
     {
-        $date = $this->timeZone->date($nextDay);
+        $date = $this->timeZone->date(strtotime($nextDay));
         return $date->format('d-m-Y');
     }
 }
