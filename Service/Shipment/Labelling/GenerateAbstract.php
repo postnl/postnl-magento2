@@ -165,9 +165,10 @@ abstract class GenerateAbstract
     {
         $labelModels = [];
         foreach ($responsShipments as $labelItem) {
-            $labelModel    = $this->save($shipment, $currentShipmentNumber, $labelItem->Labels->Label[0]->Content);
-            $labelModels[] = $labelModel;
-            $this->shipmentLabelRepository->save($labelModel);
+            $labelModels = array_merge(
+                $labelModels,
+                $this->getLabelModels($labelItem, $shipment, $currentShipmentNumber)
+            );
             $currentShipmentNumber++;
         }
 
@@ -176,20 +177,40 @@ abstract class GenerateAbstract
     //@codingStandardsIgnoreEnd
 
     /**
+     * @param $labelItem
+     * @param $shipment
+     * @param $currentShipmentNumber
+     *
+     * @return array
+     */
+    private function getLabelModels($labelItem, $shipment, $currentShipmentNumber)
+    {
+        $labelModels = [];
+        foreach ($labelItem->Labels->Label as $Label) {
+            $labelModel    = $this->save($shipment, $currentShipmentNumber, $Label->Content, $Label->Labeltype);
+            $labelModels[] = $labelModel;
+            $this->shipmentLabelRepository->save($labelModel);
+        }
+
+        return $labelModels;
+    }
+
+    /**
      * @param ShipmentInterface|Shipment $shipment
      * @param int                        $number
      * @param string                     $label
+     * @param null|string                $type
      *
      * @return ShipmentLabelInterface
      */
-    public function save(ShipmentInterface $shipment, $number, $label)
+    public function save(ShipmentInterface $shipment, $number, $label, $type)
     {
         /** @var ShipmentLabelInterface $labelModel */
         $labelModel = $this->shipmentLabelFactory->create();
         $labelModel->setParentId($shipment->getId());
         $labelModel->setNumber($number);
         $labelModel->setLabel(base64_encode($label));
-        $labelModel->setType(ShipmentLabelInterface::BARCODE_TYPE_LABEL);
+        $labelModel->setType($type ?: ShipmentLabelInterface::BARCODE_TYPE_LABEL);
 
         return $labelModel;
     }
