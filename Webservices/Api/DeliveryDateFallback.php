@@ -75,7 +75,7 @@ class DeliveryDateFallback
             $nextDay = strtotime($date .'+1 day');
         }
 
-        $day = $this->helper->getDayOrWeekNumber($nextDay);;
+        $day = $this->helper->getDayOrWeekNumber($nextDay);
         if ($day == 1 && !in_array(0, $shippingDays)) {
             $nextDay = strtotime($date. '+2 day');
         }
