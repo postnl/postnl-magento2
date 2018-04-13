@@ -160,7 +160,6 @@ abstract class GenerateAbstract
      *
      * @return ShipmentLabelInterface[]
      */
-    //@codingStandardsIgnoreStart
     protected function handleLabels($shipment, $responsShipments, $currentShipmentNumber)
     {
         $labelModels = [];
@@ -174,7 +173,6 @@ abstract class GenerateAbstract
 
         return $labelModels;
     }
-    //@codingStandardsIgnoreEnd
 
     /**
      * @param $labelItem
@@ -183,6 +181,7 @@ abstract class GenerateAbstract
      *
      * @return array
      */
+    //@codingStandardsIgnoreStart
     private function getLabelModels($labelItem, $shipment, $currentShipmentNumber)
     {
         $labelModels = [];
@@ -194,6 +193,7 @@ abstract class GenerateAbstract
 
         return $labelModels;
     }
+    //@codingStandardsIgnoreEnd
 
     /**
      * @param ShipmentInterface|Shipment $shipment
