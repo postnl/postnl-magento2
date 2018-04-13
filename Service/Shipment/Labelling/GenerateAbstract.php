@@ -160,6 +160,7 @@ abstract class GenerateAbstract
      *
      * @return ShipmentLabelInterface[]
      */
+    //@codingStandardsIgnoreLine
     protected function handleLabels($shipment, $responsShipments, $currentShipmentNumber)
     {
         $labelModels = [];
