@@ -33,6 +33,8 @@ namespace TIG\PostNL\Webservices\Api;
 
 use TIG\PostNL\Service\Timeframe\IsPastCutOff;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Helper\Data;
 
 class DeliveryDateFallback
 {
@@ -40,12 +42,20 @@ class DeliveryDateFallback
 
     private $timeZone;
 
+    private $webshop;
+
+    private $helper;
+
     public function __construct(
         IsPastCutOff $isPastCutOff,
-        TimezoneInterface $timezone
+        TimezoneInterface $timezone,
+        Webshop $webshop,
+        Data $data
     ) {
         $this->isPastCutOff = $isPastCutOff;
         $this->timeZone = $timezone;
+        $this->webshop = $webshop;
+        $this->helper = $data;
     }
 
     /**
@@ -53,13 +63,34 @@ class DeliveryDateFallback
      */
     public function get()
     {
-        $date = $this->timeZone->date(strtotime('next weekday'));
-        $date = $date->format('d-m-Y');
+        $date = $this->getDate();
         if ($this->isPastCutOff->calculate()) {
-            $date = $this->timeZone->date(strtotime($date . '+1 Weekday'));
-            $date = $date->format('d-m-Y');
+            $date = $this->getDate($date . '+1 day');
         }
 
         return $date;
+    }
+
+    /**
+     * @param $nextDay
+     * @return string
+     */
+    private function getDate($nextDay = '+1 day')
+    {
+        $dayNumber = $this->helper->getDayOrWeekNumber($nextDay);
+        // If its a sunday we can not deliver.
+        if ($dayNumber == 0 || $dayNumber == 7) {
+            $nextDay = 'next weekday';
+        }
+
+        $dayNumber = $this->helper->getDayOrWeekNumber($nextDay);
+        $shippingDays = explode(',', $this->webshop->getShipmentDays());
+        if ($dayNumber == 1 || $dayNumber == 0 && !in_array(0, $shippingDays)) {
+            // Can not deliver on Monday.
+            $nextDay = '+2 Weekday';
+        }
+
+        $date = $this->timeZone->date(strtotime($nextDay));
+        return $date->format('d-m-Y');
     }
 }
