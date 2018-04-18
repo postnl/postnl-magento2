@@ -43,6 +43,7 @@ use TIG\PostNL\Model\ShipmentLabelFactory;
 use TIG\PostNL\Webservices\Endpoints\Labelling;
 use TIG\PostNL\Webservices\Endpoints\LabellingWithoutConfirm;
 
+
 abstract class GenerateAbstract
 {
     /**
@@ -82,24 +83,33 @@ abstract class GenerateAbstract
     protected $date;
 
     /**
+     * @var Handler
+     */
+    //@codingStandardsIgnoreLine
+    protected $handler;
+
+    /**
      * @param Data                              $helper
      * @param ShipmentLabelFactory              $shipmentLabelFactory
      * @param ShipmentLabelRepositoryInterface  $shipmentLabelRepository
      * @param ShipmentRepositoryInterface       $shipmentRepository
      * @param Log                               $logger
+     * @param Handler                        $handler
      */
     public function __construct(
         Data $helper,
         ShipmentLabelFactory $shipmentLabelFactory,
         ShipmentLabelRepositoryInterface $shipmentLabelRepository,
         ShipmentRepositoryInterface $shipmentRepository,
-        Log $logger
+        Log $logger,
+        Handler $handler
     ) {
         $this->logger = $logger;
         $this->date = $helper->getDate();
         $this->shipmentRepository = $shipmentRepository;
         $this->shipmentLabelFactory = $shipmentLabelFactory;
         $this->shipmentLabelRepository = $shipmentLabelRepository;
+        $this->handler = $handler;
     }
 
     /**
@@ -183,11 +193,13 @@ abstract class GenerateAbstract
      * @return array
      */
     //@codingStandardsIgnoreStart
-    private function getLabelModels($labelItem, $shipment, $currentShipmentNumber)
+    private function getLabelModels($labelItem, ShipmentInterface $shipment, $currentShipmentNumber)
     {
-        $labelModels = [];
-        foreach ($labelItem->Labels->Label as $Label) {
-            $labelModel    = $this->save($shipment, $currentShipmentNumber, $Label->Content, $Label->Labeltype);
+        $labelModels     = [];
+        $labelItemHandle = $this->handler->handle($shipment, $labelItem->Labels->Label);
+
+        foreach ($labelItemHandle['labels'] as $Label) {
+            $labelModel    = $this->save($shipment, $currentShipmentNumber, $Label, $labelItemHandle['type']);
             $labelModels[] = $labelModel;
             $this->shipmentLabelRepository->save($labelModel);
         }

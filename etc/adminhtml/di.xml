@@ -44,6 +44,14 @@
         </arguments>
     </type>
 
+    <type name="TIG\PostNL\Service\Shipment\Labelling\Handler">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="gp" xsi:type="object">\TIG\PostNL\Service\Shipment\Labelling\Handler\GlobalpackFactory</item>
+            </argument>
+        </arguments>
+    </type>
+
     <type name="\Magento\Ui\Component\MassAction">
         <plugin name="TIG_PostNL_Remove_MassAction_When_Disabled" type="\TIG\PostNL\Plugin\Admin\Ui\Component\MassAction" />
     </type>

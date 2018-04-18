@@ -56,16 +56,29 @@ class A4Merger extends AbstractMerger implements MergeInterface
             $this->labelCounter = 0;
         }
 
-        $this->pdf = $this->createPdf(true, $createNewPdf);
+        $this->pdf = $this->createPdf(false, $createNewPdf);
         foreach ($labels as $label) {
-            $this->increaseCounter();
             // @codingStandardsIgnoreLine
             $filename = $this->file->save($label->Output('S'));
-            $this->pdf->setSourceFile($filename);
+            $count = $this->pdf->setSourceFile($filename);
+            if ($count <= 1) {
+                $this->increaseCounter();
+                $this->pdf->addPage('L', 'A4');
+                $pageId = $this->pdf->importPage(1);
+                list($xPosition, $yPosition) = $this->getPosition();
+                $this->pdf->useTemplate($pageId, $xPosition, $yPosition);
+                continue;
+            }
 
-            $pageId = $this->pdf->importPage(1);
-            list($xPosition, $yPosition) = $this->getPosition();
-            $this->pdf->useTemplate($pageId, $xPosition, $yPosition);
+            for ($pageNo = 1; $pageNo <= $count; $pageNo++) {
+                $templateId   = $this->pdf->importPage($pageNo);
+                $templateSize = $this->pdf->getTemplateSize($templateId);
+                $orientation  = $templateSize['w'] > $templateSize['h'] ? 'L' :'P';
+
+                $this->pdf->AddPage($orientation, [$templateSize['w'], $templateSize['h']]);
+                $this->pdf->useTemplate($templateId);
+            }
+
         }
 
         $this->file->cleanup();
