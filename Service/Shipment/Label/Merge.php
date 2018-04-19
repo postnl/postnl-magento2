@@ -66,7 +66,7 @@ class Merge
     }
 
     /**
-     * @param \TIG\PostNL\Api\Data\ShipmentLabelInterface[] $labels
+     * @param \TIG\PostNL\Service\Pdf\Fpdi[] $labels
      * @codingStandardsIgnoreStart
      * @param bool $createNewPdf Sometimes you want to generate a new Label PDF, for example when printing packingslips
      *                           This parameter indicates whether to reuse the existing label PDF

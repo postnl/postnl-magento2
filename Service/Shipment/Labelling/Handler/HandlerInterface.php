@@ -29,32 +29,19 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment\Label\Type;
+namespace TIG\PostNL\Service\Shipment\Labelling\Handler;
 
-use TIG\PostNL\Api\Data\ShipmentLabelInterface;
-
-class GlobalPack extends AbstractType implements TypeInterface
+interface HandlerInterface
 {
     /**
-     * @param ShipmentLabelInterface $label
+     * @param object $labelItems
      *
-     * @return \TIG\PostNL\Service\Pdf\Fpdi
+     * @return string (base64_encode)
      */
-    public function process(ShipmentLabelInterface $label)
-    {
-        $filename = $this->saveTempLabel($label);
+    public function format($labelItems);
 
-        $this->pdf = $this->fpdi->create();
-        $count = $this->pdf->setSourceFile($filename);
-        for ($pageNo = 1; $pageNo <= $count; $pageNo++) {
-            $templateId   = $this->pdf->importPage($pageNo);
-            $templateSize = $this->pdf->getTemplateSize($templateId);
-            $orientation  = $templateSize['w'] > $templateSize['h'] ? 'L' :'P';
-
-            $this->pdf->AddPage($orientation, [$templateSize['w'], $templateSize['h']]);
-            $this->pdf->useTemplate($templateId);
-        }
-
-        return $this->pdf;
-    }
+    /**
+     * Cleanup after we are done.
+     */
+    public function cleanup();
 }

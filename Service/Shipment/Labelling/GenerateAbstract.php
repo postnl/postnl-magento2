@@ -43,6 +43,7 @@ use TIG\PostNL\Model\ShipmentLabelFactory;
 use TIG\PostNL\Webservices\Endpoints\Labelling;
 use TIG\PostNL\Webservices\Endpoints\LabellingWithoutConfirm;
 
+// @codingStandardsIgnoreFile
 abstract class GenerateAbstract
 {
     /**
@@ -82,24 +83,33 @@ abstract class GenerateAbstract
     protected $date;
 
     /**
+     * @var Handler
+     */
+    //@codingStandardsIgnoreLine
+    protected $handler;
+
+    /**
      * @param Data                              $helper
      * @param ShipmentLabelFactory              $shipmentLabelFactory
      * @param ShipmentLabelRepositoryInterface  $shipmentLabelRepository
      * @param ShipmentRepositoryInterface       $shipmentRepository
      * @param Log                               $logger
+     * @param Handler                        $handler
      */
     public function __construct(
         Data $helper,
         ShipmentLabelFactory $shipmentLabelFactory,
         ShipmentLabelRepositoryInterface $shipmentLabelRepository,
         ShipmentRepositoryInterface $shipmentRepository,
-        Log $logger
+        Log $logger,
+        Handler $handler
     ) {
         $this->logger = $logger;
         $this->date = $helper->getDate();
         $this->shipmentRepository = $shipmentRepository;
         $this->shipmentLabelFactory = $shipmentLabelFactory;
         $this->shipmentLabelRepository = $shipmentLabelRepository;
+        $this->handler = $handler;
     }
 
     /**
@@ -160,15 +170,38 @@ abstract class GenerateAbstract
      *
      * @return ShipmentLabelInterface[]
      */
-    //@codingStandardsIgnoreStart
+    //@codingStandardsIgnoreLine
     protected function handleLabels($shipment, $responsShipments, $currentShipmentNumber)
     {
         $labelModels = [];
         foreach ($responsShipments as $labelItem) {
-            $labelModel    = $this->save($shipment, $currentShipmentNumber, $labelItem->Labels->Label[0]->Content);
+            $labelModels = array_merge(
+                $labelModels,
+                $this->getLabelModels($labelItem, $shipment, $currentShipmentNumber)
+            );
+            $currentShipmentNumber++;
+        }
+
+        return $labelModels;
+    }
+
+    /**
+     * @param $labelItem
+     * @param $shipment
+     * @param $currentShipmentNumber
+     *
+     * @return array
+     */
+    //@codingStandardsIgnoreStart
+    private function getLabelModels($labelItem, ShipmentInterface $shipment, $currentShipmentNumber)
+    {
+        $labelModels     = [];
+        $labelItemHandle = $this->handler->handle($shipment, $labelItem->Labels->Label);
+
+        foreach ($labelItemHandle['labels'] as $Label) {
+            $labelModel    = $this->save($shipment, $currentShipmentNumber, $Label, $labelItemHandle['type']);
             $labelModels[] = $labelModel;
             $this->shipmentLabelRepository->save($labelModel);
-            $currentShipmentNumber++;
         }
 
         return $labelModels;
@@ -179,17 +212,18 @@ abstract class GenerateAbstract
      * @param ShipmentInterface|Shipment $shipment
      * @param int                        $number
      * @param string                     $label
+     * @param null|string                $type
      *
      * @return ShipmentLabelInterface
      */
-    public function save(ShipmentInterface $shipment, $number, $label)
+    public function save(ShipmentInterface $shipment, $number, $label, $type)
     {
         /** @var ShipmentLabelInterface $labelModel */
         $labelModel = $this->shipmentLabelFactory->create();
         $labelModel->setParentId($shipment->getId());
         $labelModel->setNumber($number);
         $labelModel->setLabel(base64_encode($label));
-        $labelModel->setType(ShipmentLabelInterface::BARCODE_TYPE_LABEL);
+        $labelModel->setType($type ?: ShipmentLabelInterface::BARCODE_TYPE_LABEL);
 
         return $labelModel;
     }

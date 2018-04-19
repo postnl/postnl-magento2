@@ -138,7 +138,7 @@ class MergeWithLabelsTest extends TestCase
         ]);
         $instance->setY($yPosition);
 
-        $result = $instance->mergeTogether(0, $packingslip);
+        $result = $instance->merge(0, $packingslip, true);
         $this->assertEquals($expected, $result);
     }
 
@@ -184,7 +184,7 @@ class MergeWithLabelsTest extends TestCase
             'labelGenerator' => $labelGenerateMock,
             'packingslipGenerator' => $packingslipGenerateMock
         ]);
-        $result = $instance->mergeSeparate(0, $packingslip);
+        $result = $instance->merge(0, $packingslip, false);
         $this->assertEquals($expected, $result);
     }
 
