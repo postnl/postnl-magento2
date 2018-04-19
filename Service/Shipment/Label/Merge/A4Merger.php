@@ -41,6 +41,11 @@ class A4Merger extends AbstractMerger implements MergeInterface
     private $labelCounter = 0;
 
     /**
+     * @var string
+     */
+    private $lastOrientation = '';
+
+    /**
      * @param Fpdi[] $labels
      * @codingStandardsIgnoreStart
      * @param bool  $createNewPdf Sometimes you want to generate a new Label PDF, for example when printing packingslips
@@ -52,7 +57,8 @@ class A4Merger extends AbstractMerger implements MergeInterface
      */
     public function files(array $labels, $createNewPdf = false)
     {
-        if ($createNewPdf) { //By resetting the counter, labels will start in the upper-left when creating a new PDF
+        //By resetting the counter, labels will start in the upper-left when creating a new PDF
+        if ($createNewPdf) {
             $this->labelCounter = 0;
         }
 
@@ -96,6 +102,11 @@ class A4Merger extends AbstractMerger implements MergeInterface
         $size = [$templateSize['w'], $templateSize['h']];
         $xPosition = $yPosition = null;
 
+        if ($this->shouldAddNewPage($orientation)) {
+            $this->labelCounter = 0;
+            $this->pdf->AddPage($orientation, 'A4');
+        }
+
         if ($count <= 1 && $orientation == 'L') {
             $this->increaseCounter();
             $size = 'A4';
@@ -107,6 +118,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
             $this->pdf->AddPage($orientation, $size);
         }
 
+        $this->setLastOrientation($orientation);
         $this->pdf->useTemplate($templateId, $xPosition, $yPosition);
     }
 
@@ -143,5 +155,42 @@ class A4Merger extends AbstractMerger implements MergeInterface
         }
 
         return [0, 0];
+    }
+
+    /**
+     * @param $orientation
+     *
+     * @return bool
+     */
+    private function shouldAddNewPage($orientation)
+    {
+        if (!($this->isOrientationDifferent($orientation) && $this->pdf->PageNo() !== 0)) {
+            return false;
+        }
+
+        // Switching back from L to P will add a new page further in the process.
+        if ($this->lastOrientation == 'L' ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $orientation
+     *
+     * @return bool
+     */
+    private function isOrientationDifferent($orientation)
+    {
+        return $this->lastOrientation !== $orientation;
+    }
+
+    /**
+     * @param $orientation
+     */
+    private function setLastOrientation($orientation)
+    {
+        $this->lastOrientation = $orientation;
     }
 }
