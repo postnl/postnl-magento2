@@ -34,7 +34,6 @@ namespace TIG\PostNL\Service\Shipment\Labelling\Handler;
 /**
  * Globalpack returns in some cases three kind of labels. CN23, CN71 and a commercial invoice.
  * This handler will merge them togetter so it is stored as one inside the tig_postnl_shipment_label table.
- * @todo: Upgrade script for label content column -> needs to be medium blob
  *
  * @package TIG\PostNL\Service\Shipment\Labelling\Handler
  */

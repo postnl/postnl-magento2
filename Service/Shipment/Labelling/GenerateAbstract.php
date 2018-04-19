@@ -43,7 +43,7 @@ use TIG\PostNL\Model\ShipmentLabelFactory;
 use TIG\PostNL\Webservices\Endpoints\Labelling;
 use TIG\PostNL\Webservices\Endpoints\LabellingWithoutConfirm;
 
-
+// @codingStandardsIgnoreFile
 abstract class GenerateAbstract
 {
     /**
