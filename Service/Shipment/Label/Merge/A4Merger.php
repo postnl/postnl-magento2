@@ -98,8 +98,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
      */
     private function addPageToPdf($templateId, $templateSize, $count)
     {
-        $orientation  = $templateSize['w'] > $templateSize['h'] ? 'L' :'P';
-        $size = [$templateSize['w'], $templateSize['h']];
+        $orientation = $templateSize['w'] > $templateSize['h'] ? 'L' :'P';
         $xPosition = $yPosition = null;
 
         if ($this->shouldAddNewPage($orientation)) {
@@ -109,13 +108,12 @@ class A4Merger extends AbstractMerger implements MergeInterface
 
         if ($count <= 1 && $orientation == 'L') {
             $this->increaseCounter();
-            $size = 'A4';
             list($xPosition, $yPosition) = $this->getPosition();
         }
 
         if ($this->pdf->PageNo() == 0 || $orientation == 'P') {
             $this->labelCounter = 1;
-            $this->pdf->AddPage($orientation, $size);
+            $this->pdf->AddPage($orientation, 'A4');
         }
 
         $this->setLastOrientation($orientation);
@@ -155,42 +153,5 @@ class A4Merger extends AbstractMerger implements MergeInterface
         }
 
         return [0, 0];
-    }
-
-    /**
-     * @param $orientation
-     *
-     * @return bool
-     */
-    private function shouldAddNewPage($orientation)
-    {
-        if (!($this->isOrientationDifferent($orientation) && $this->pdf->PageNo() !== 0)) {
-            return false;
-        }
-
-        // Switching back from L to P will add a new page further in the process.
-        if ($this->lastOrientation == 'L' ) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param $orientation
-     *
-     * @return bool
-     */
-    private function isOrientationDifferent($orientation)
-    {
-        return $this->lastOrientation !== $orientation;
-    }
-
-    /**
-     * @param $orientation
-     */
-    private function setLastOrientation($orientation)
-    {
-        $this->lastOrientation = $orientation;
     }
 }

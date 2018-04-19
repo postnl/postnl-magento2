@@ -57,6 +57,12 @@ class AbstractMerger
     protected $fpdiFactory;
 
     /**
+     * @var string
+     */
+    // @codingStandardsIgnoreLine
+    protected $lastOrientation;
+
+    /**
      * @param FpdiFactory $fpdiFactory
      * @param File $file
      */
@@ -94,5 +100,44 @@ class AbstractMerger
         }
 
         return $pdf;
+    }
+
+    /**
+     * @param $orientation
+     *
+     * @return bool
+     */
+    protected function shouldAddNewPage($orientation)
+    {
+        if (!($this->isOrientationDifferent($orientation) && $this->pdf->PageNo() !== 0)) {
+            return false;
+        }
+
+        // Switching back from L to P will add a new page further in the process.
+        if ($this->lastOrientation == 'L' ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $orientation
+     *
+     * @return bool
+     */
+    // @codingStandardsIgnoreLine
+    protected function isOrientationDifferent($orientation)
+    {
+        return $this->lastOrientation !== $orientation;
+    }
+
+    /**
+     * @param $orientation
+     */
+    // @codingStandardsIgnoreLine
+    protected function setLastOrientation($orientation)
+    {
+        $this->lastOrientation = $orientation;
     }
 }
