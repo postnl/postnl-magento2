@@ -34,36 +34,45 @@ namespace TIG\PostNL\Service\Shipment;
 class EpsCountries
 {
     /**
-     * Array of countries to which PostNL ships using EPS. Other EU countries are shipped to using GlobalPack
-     * http://www.postnl.nl/zakelijke-oplossingen/pakket-versturen/pakket-buitenland/binnen-de-eu/
+     * Array of countries to which PostNL ships using EPS. Other EU countries are shipped to using Global Pack
+     * https://developer.postnl.nl/browse-apis/send-and-track/products/ => Destination EU
+     *
+     * Parcels to the Channel Islands, the Canary Islands and Malta can only be sent with the Global Pack product.
+     * ==== Channel Islands ====
+     * 'GG', // Guernsey
+     * 'JE', // Jersy
+     * 'IM', // Isle of Man
+     *
+     * ==== Canary Islands ====
+     * 'IC' // Las Palmas, Santa Cruz and Melilla
      *
      * @var array
      */
     const ALL = [
-        'BE',
-        'BG',
-        'DK',
-        'DE',
-        'EE',
-        'FI',
-        'FR',
-        'GB',
-        'UK',
-        'HU',
-        'IE',
-        'IT',
-        'LV',
-        'LT',
-        'LU',
-        'AT',
-        'PL',
-        'PT',
-        'RO',
-        'SI',
-        'SK',
-        'ES',
-        'CZ',
-        'SE',
-        'NL',
+        'AT', // Austria
+        'BE', // Belgium
+        'BG', // Bulgaria
+        'CZ', // Czech Republic
+        'DK', // Denmark (Excluding Faroe Islands and Greenland)
+        'EE', // Estonia
+        'FI', // Finland
+        'FR', // France (Including Monaco and Corsica. Excluding Andorra)
+        'DE', // Germany
+        'GB', // Great Britain (Including Northern Ireland. Excluding Gibraltar and the Channel Islands)
+        'GR', // Greece
+        'HU', // Hungary
+        'IE', // Ireland
+        'IT', // Italy (Excluding San Marino and Vatican City)
+        'LV', // Latvia
+        'LT', // Lithuania
+        'LU', // Luxembourg
+        'NL', // Netherlands
+        'PL', // Poland
+        'PT', // Portugal (Including Azores and Madeira)
+        'RO', // Romania
+        'SK', // Slovakia
+        'SI', // Slovenia
+        'ES', // Spain (Including Balearic Islands. Excluding Canary Islands, Melilla and Ceuta)
+        'SE', // Sweden
     ];
 }
