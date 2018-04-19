@@ -61,22 +61,28 @@ class A4Merger extends AbstractMerger implements MergeInterface
             // @codingStandardsIgnoreLine
             $filename = $this->file->save($label->Output('S'));
             $count = $this->pdf->setSourceFile($filename);
-            if ($count <= 1) {
-                $this->increaseCounter();
-                $this->pdf->addPage('L', 'A4');
-                $pageId = $this->pdf->importPage(1);
-                list($xPosition, $yPosition) = $this->getPosition();
-                $this->pdf->useTemplate($pageId, $xPosition, $yPosition);
-                continue;
-            }
 
             for ($pageNo = 1; $pageNo <= $count; $pageNo++) {
                 $templateId   = $this->pdf->importPage($pageNo);
                 $templateSize = $this->pdf->getTemplateSize($templateId);
-                $orientation  = $templateSize['w'] > $templateSize['h'] ? 'L' :'P';
 
-                $this->pdf->AddPage($orientation, [$templateSize['w'], $templateSize['h']]);
-                $this->pdf->useTemplate($templateId);
+                $orientation  = $templateSize['w'] > $templateSize['h'] ? 'L' :'P';
+                $size = [$templateSize['w'], $templateSize['h']];
+                $xPosition = $yPosition = null;
+
+                if ($count <= 1 && $orientation == 'L') {
+                    $this->increaseCounter();
+
+                    $size = 'A4';
+                    list($xPosition, $yPosition) = $this->getPosition();
+                }
+
+                if ($this->pdf->PageNo() == 0 || $orientation == 'P') {
+                    $this->labelCounter = 1;
+                    $this->pdf->AddPage($orientation, $size);
+                }
+
+                $this->pdf->useTemplate($templateId, $xPosition, $yPosition);
             }
 
         }

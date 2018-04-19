@@ -31,6 +31,8 @@
  */
 namespace TIG\PostNL\Service\Shipment\Packingslip;
 
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
+use TIG\PostNL\Service\Order\ProductCodeAndType;
 use TIG\PostNL\Service\Pdf\Fpdi;
 use TIG\PostNL\Service\Pdf\FpdiFactory;
 use TIG\PostNL\Service\Shipment\Label\File;
@@ -102,10 +104,11 @@ class MergeWithLabels
     /**
      * @param int    $shipmentId
      * @param string $packingslip
+     * @param bool   $mergeFirstLabel
      *
      * @return string
      */
-    public function mergeTogether($shipmentId, $packingslip)
+    public function merge($shipmentId, $packingslip, $mergeFirstLabel = false)
     {
         $labels = $this->getLabels->get($shipmentId);
 
@@ -113,7 +116,7 @@ class MergeWithLabels
             return $packingslip;
         }
 
-        if ($this->packingslipYPos > 400) {
+        if ($mergeFirstLabel && $this->canMergeFirstLabel($labels[0])) {
             $firstLabel = array_shift($labels);
             // @codingStandardsIgnoreLine
             $label = base64_decode($firstLabel->getLabel());
@@ -129,22 +132,19 @@ class MergeWithLabels
     }
 
     /**
-     * @param int    $shipmentId
-     * @param string $packingslip
+     * @param ShipmentLabelInterface $firstLabel
      *
-     * @return string
+     * @return bool
      */
-    public function mergeSeparate($shipmentId, $packingslip)
+    private function canMergeFirstLabel($firstLabel)
     {
-        $labels = $this->getLabels->get($shipmentId);
+        $labelTypeGP = strtolower(ProductCodeAndType::SHIPMENT_TYPE_GP);
 
-        if (empty($labels)) {
-            return $packingslip;
+        if ($this->packingslipYPos <= 400 || $firstLabel->getType() == $labelTypeGP) {
+            return false;
         }
 
-        $packingslipPdf = $this->addLabelsToPackingslip($packingslip, $labels);
-
-        return $packingslipPdf;
+        return true;
     }
 
     /**

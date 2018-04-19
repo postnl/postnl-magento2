@@ -116,9 +116,9 @@ class GetPackingslip
 
         switch ($showLabel) {
             case ShowShippingLabel::SHOW_SHIPPING_LABEL_TOGETHER:
-                return $this->mergeWithLabels->mergeTogether($shipmentId, $packingslip);
+                return $this->mergeWithLabels->merge($shipmentId, $packingslip, true);
             case ShowShippingLabel::SHOW_SHIPPING_LABEL_SEPARATE:
-                return $this->mergeWithLabels->mergeSeparate($shipmentId, $packingslip);
+                return $this->mergeWithLabels->merge($shipmentId, $packingslip, false);
             case ShowShippingLabel::SHOW_SHIPPING_LABEL_NONE:
             default:
                 return $packingslip;

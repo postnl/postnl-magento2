@@ -105,10 +105,9 @@ class GetPackingslipTest extends TestCase
         $labelPackinslipOptionsMock->expects($this->once())->method('getShowLabel')->willReturn($showLabelOption);
 
         $mergeWithLabelsMock = $this->getFakeMock(MergeWithLabels::class)
-            ->setMethods(['mergeTogether', 'mergeSeparate'])
+            ->setMethods(['merge'])
             ->getMock();
-        $mergeWithLabelsMock->method('mergeTogether')->willReturn('merge together');
-        $mergeWithLabelsMock->method('mergeSeparate')->willReturn('merge separate');
+        $mergeWithLabelsMock->method('merge')->willReturn($expected);
 
         $instance = $this->getInstance([
             'labelAndPackingslipOptions' => $labelPackinslipOptionsMock,
