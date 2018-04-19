@@ -41,11 +41,6 @@ class A4Merger extends AbstractMerger implements MergeInterface
     private $labelCounter = 0;
 
     /**
-     * @var string
-     */
-    private $lastOrientation = '';
-
-    /**
      * @param Fpdi[] $labels
      * @codingStandardsIgnoreStart
      * @param bool  $createNewPdf Sometimes you want to generate a new Label PDF, for example when printing packingslips
@@ -99,7 +94,6 @@ class A4Merger extends AbstractMerger implements MergeInterface
     private function addPageToPdf($templateId, $templateSize, $count)
     {
         $orientation = $templateSize['w'] > $templateSize['h'] ? 'L' :'P';
-        $xPosition = $yPosition = null;
 
         if ($this->shouldAddNewPage($orientation)) {
             $this->labelCounter = 0;
@@ -108,7 +102,6 @@ class A4Merger extends AbstractMerger implements MergeInterface
 
         if ($count <= 1 && $orientation == 'L') {
             $this->increaseCounter();
-            list($xPosition, $yPosition) = $this->getPosition();
         }
 
         if ($this->pdf->PageNo() == 0 || $orientation == 'P') {
@@ -116,6 +109,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
             $this->pdf->AddPage($orientation, 'A4');
         }
 
+        list($xPosition, $yPosition) = $this->getPosition();
         $this->setLastOrientation($orientation);
         $this->pdf->useTemplate($templateId, $xPosition, $yPosition);
     }

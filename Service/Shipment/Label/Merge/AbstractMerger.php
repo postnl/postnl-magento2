@@ -107,6 +107,7 @@ class AbstractMerger
      *
      * @return bool
      */
+    // @codingStandardsIgnoreLine
     protected function shouldAddNewPage($orientation)
     {
         if (!($this->isOrientationDifferent($orientation) && $this->pdf->PageNo() !== 0)) {
@@ -114,7 +115,7 @@ class AbstractMerger
         }
 
         // Switching back from L to P will add a new page further in the process.
-        if ($this->lastOrientation == 'L' ) {
+        if ($this->lastOrientation == 'L') {
             return false;
         }
 
