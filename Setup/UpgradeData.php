@@ -60,6 +60,10 @@ class UpgradeData implements UpgradeDataInterface
             $this->upgradeData($this->upgradeDataObjects['v1.2.0'], $setup, $context);
         }
 
+        if (version_compare($context->getVersion(), '1.4.1', '<')) {
+            $this->upgradeData($this->upgradeDataObjects['v1.4.1'], $setup, $context);
+        }
+
         $setup->endSetup();
     }
 

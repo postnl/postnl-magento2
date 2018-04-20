@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,16 +28,39 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="1.4.1">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Directory"/>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Quote"/>
-            <module name="Magento_Checkout"/>
-        </sequence>
-    </module>
-</config>
+ */
+namespace TIG\PostNL\Config\Provider;
+
+use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
+
+class ShippingDuration extends AbstractSource
+{
+    public function getAllOptions()
+    {
+        $options = [];
+        foreach (range(0, 14) as $day) {
+            $options[] = [
+                'value' => $day,
+                'label' => $this->getLabel($day)
+            ];
+        }
+
+        return $options;
+    }
+
+    /**
+     * @param $day
+     *
+     * @return \Magento\Framework\Phrase
+     */
+    private function getLabel($day)
+    {
+        if ($day == 1) {
+            // @codingStandardsIgnoreLine
+            return __('%1 Day', $day);
+        }
+
+        // @codingStandardsIgnoreLine
+        return __('%1 Days', $day);
+    }
+}

@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,16 +28,35 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="1.4.1">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Directory"/>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Quote"/>
-            <module name="Magento_Checkout"/>
-        </sequence>
-    </module>
-</config>
+ */
+namespace TIG\PostNL\Config\Source\Settings;
+
+use \Magento\Framework\Option\ArrayInterface;
+use TIG\PostNL\Config\Provider\ShippingDuration as SourceProvider;
+
+class ShippingDuration implements ArrayInterface
+{
+    /**
+     * @var SourceProvider
+     */
+    private $sourceProvider;
+
+    /**
+     * ShippingDuration constructor.
+     *
+     * @param SourceProvider $shippingDuration
+     */
+    public function __construct(
+        SourceProvider $shippingDuration
+    ) {
+        $this->sourceProvider = $shippingDuration;
+    }
+
+    /**
+     * @return array
+     */
+    public function toOptionArray()
+    {
+        return $this->sourceProvider->getAllOptions();
+    }
+}

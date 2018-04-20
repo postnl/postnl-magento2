@@ -36,6 +36,7 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UpgradeSchemaInterface;
 
+// @codingStandardsIgnoreFile
 class UpgradeSchema implements UpgradeSchemaInterface
 {
     private $upgradeSchemaObjects;
@@ -64,6 +65,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         if (version_compare($context->getVersion(), '1.4.0', '<')) {
             $this->upgradeSchemas($this->upgradeSchemaObjects['v1.4.0'], $setup, $context);
+        }
+
+        if (version_compare($context->getVersion(), '1.4.1', '<')) {
+            $this->upgradeSchemas($this->upgradeSchemaObjects['v1.4.1'], $setup, $context);
         }
 
         $setup->endSetup();
