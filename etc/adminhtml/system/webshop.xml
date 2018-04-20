@@ -53,6 +53,14 @@
         <group id="shipping" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Shipping Settings</label>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
+
+            <field id="shipping_duration" translate="label comment" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Shipping Duration</label>
+                <comment><![CDATA[The number of days that it takes for the order to be shipped after the order is placed.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Settings\ShippingDuration</source_model>
+                <config_path>tig_postnl/webshop_shipping/shipping_duration</config_path>
+            </field>
+
             <field id="cutoff_time" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Cutoff time</label>
                 <comment><![CDATA[When an order is placed after this time, another day will be added to the shipping duration. Please enter this time in the Europe/Amsterdam time zone.]]></comment>
