@@ -29,39 +29,23 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\Settings;
+namespace TIG\PostNL\Test\Unit\Config\Provider;
 
-use \Magento\Framework\Option\ArrayInterface;
-use TIG\PostNL\Config\Provider\ShippingDuration as SourceProvider;
+use TIG\PostNL\Config\Provider\ShippingDuration;
+use TIG\PostNL\Test\TestCase;
 
-class ShippingDuration implements ArrayInterface
+class ShippingDurationTest extends TestCase
 {
-    /**
-     * @var SourceProvider
-     */
-    private $sourceProvider;
+    protected $instanceClass = ShippingDuration::class;
 
-    /**
-     * ShippingDuration constructor.
-     *
-     * @param SourceProvider $shippingDuration
-     */
-    public function __construct(
-        SourceProvider $shippingDuration
-    ) {
-        $this->sourceProvider = $shippingDuration;
-    }
-
-    /**
-     * @return array
-     */
-    public function toOptionArray()
+    public function testGetAllOptions()
     {
-        $options = $this->sourceProvider->getAllOptions();
-        $options = array_filter($options, function ($option) {
-            return $option['value'] !== SourceProvider::CONFIGURATION_VALUE;
+        $options = $this->getInstance()->getAllOptions();
+        $defaultOptions = array_filter($options, function($item) {
+            return $item['value'] === ShippingDuration::CONFIGURATION_VALUE;
         });
 
-        return $options;
+        $this->assertCount(1, $defaultOptions);
+        $this->assertCount(16, $options);
     }
 }

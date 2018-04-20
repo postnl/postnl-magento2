@@ -29,39 +29,40 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\Settings;
+namespace TIG\PostNL\Test\Unit\Config\Source\Settings;
 
-use \Magento\Framework\Option\ArrayInterface;
+use TIG\PostNL\Config\Source\Settings\ShippingDuration;
 use TIG\PostNL\Config\Provider\ShippingDuration as SourceProvider;
+use TIG\PostNL\Test\TestCase;
 
-class ShippingDuration implements ArrayInterface
+class ShippingDurationTest extends TestCase
 {
-    /**
-     * @var SourceProvider
-     */
-    private $sourceProvider;
+    protected $instanceClass = ShippingDuration::class;
 
-    /**
-     * ShippingDuration constructor.
-     *
-     * @param SourceProvider $shippingDuration
-     */
-    public function __construct(
-        SourceProvider $shippingDuration
-    ) {
-        $this->sourceProvider = $shippingDuration;
-    }
-
-    /**
-     * @return array
-     */
-    public function toOptionArray()
+    public function testToOptionArray()
     {
-        $options = $this->sourceProvider->getAllOptions();
-        $options = array_filter($options, function ($option) {
-            return $option['value'] !== SourceProvider::CONFIGURATION_VALUE;
-        });
+        $optionsFromProvider = [
+            [
+                'label' => '1 Day',
+                'value' => 1
+            ],
+            [
+                'label' => 'Use configuration value',
+                'value' => SourceProvider::CONFIGURATION_VALUE
+            ]
+        ];
 
-        return $options;
+        $sourceProviderMock = $this->getFakeMock(SourceProvider::class)->getMock();
+        $providerExpects = $sourceProviderMock->expects($this->once())->method('getAllOptions');
+        $providerExpects->willReturn($optionsFromProvider);
+
+        $options = $this->getInstance([
+            'shippingDuration' => $sourceProviderMock
+        ])->toOptionArray();
+
+        $this->assertEquals(1, $options[0]['value']);
+        $this->assertCount(1, $options);
     }
 }
+
+

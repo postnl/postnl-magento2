@@ -35,13 +35,14 @@ use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
 class ShippingDuration extends AbstractSource
 {
+    const CONFIGURATION_VALUE = 'default';
     /**
      * @return array
      */
     public function getAllOptions()
     {
         $options[] = [
-            'value' => 'default',
+            'value' => static::CONFIGURATION_VALUE,
             // @codingStandardsIgnoreLine
             'label' => __('Use configuration value')
         ];
