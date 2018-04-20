@@ -35,9 +35,17 @@ use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
 class ShippingDuration extends AbstractSource
 {
+    /**
+     * @return array
+     */
     public function getAllOptions()
     {
-        $options = [];
+        $options[] = [
+            'value' => 'default',
+            // @codingStandardsIgnoreLine
+            'label' => __('Use configuration value')
+        ];
+
         foreach (range(0, 14) as $day) {
             $options[] = [
                 'value' => $day,

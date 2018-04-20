@@ -57,6 +57,11 @@ class ShippingDuration implements ArrayInterface
      */
     public function toOptionArray()
     {
-        return $this->sourceProvider->getAllOptions();
+        $options = $this->sourceProvider->getAllOptions();
+        $options = array_filter($options, function ($option) {
+            return $option['value'] !== 'default';
+        });
+
+        return $options;
     }
 }
