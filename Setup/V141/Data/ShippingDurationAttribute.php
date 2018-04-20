@@ -56,6 +56,7 @@ class ShippingDurationAttribute extends AbstractDataInstaller
      * @param ModuleDataSetupInterface $setup
      * @param ModuleContextInterface   $context
      */
+    // @codingStandardsIgnoreLine
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
         /** @var EavSetup $eavSetup */
