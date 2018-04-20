@@ -38,6 +38,7 @@ use TIG\PostNL\Config\Provider\PostNLConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Provider\Globalpack;
+use TIG\PostNL\Config\Provider\LoggingConfiguration;
 use TIG\PostNL\Test\TestCase;
 
 abstract class AbstractConfigurationTest extends TestCase
@@ -55,7 +56,7 @@ abstract class AbstractConfigurationTest extends TestCase
     /**
      * @param array $args
      *
-     * @return DefaultConfiguration|PostNLConfiguration|ShippingOptions|ProductOptions|Globalpack
+     * @return DefaultConfiguration|PostNLConfiguration|ShippingOptions|ProductOptions|Globalpack|LoggingConfiguration
      */
     public function getInstance(array $args = [])
     {
