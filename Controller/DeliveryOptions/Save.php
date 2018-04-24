@@ -41,6 +41,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Checkout\Model\Session;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
+use TIG\PostNL\Service\Quote\ShippingDuration;
 
 class Save extends AbstractDeliveryOptions
 {
@@ -67,6 +68,7 @@ class Save extends AbstractDeliveryOptions
      * @param OrderParams        $orderParams
      * @param Session            $checkoutSession
      * @param PickupAddress      $pickupAddress
+     * @param ShippingDuration   $shippingDuration
      */
     public function __construct(
         Context $context,
@@ -75,13 +77,15 @@ class Save extends AbstractDeliveryOptions
         QuoteToRateRequest $quoteToRateRequest,
         OrderParams $orderParams,
         Session $checkoutSession,
-        PickupAddress $pickupAddress
+        PickupAddress $pickupAddress,
+        ShippingDuration $shippingDuration
     ) {
         parent::__construct(
             $context,
             $orderFactory,
             $checkoutSession,
-            $quoteToRateRequest
+            $quoteToRateRequest,
+            $shippingDuration
         );
 
         $this->orderParams     = $orderParams;

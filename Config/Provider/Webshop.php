@@ -54,11 +54,12 @@ class Webshop extends AbstractConfigProvider
     }
 
     /**
+     * @param $storeId
      * @return mixed
      */
-    public function getShippingDuration()
+    public function getShippingDuration($storeId = null)
     {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SHIPPING_DURATION);
+        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SHIPPING_DURATION, $storeId);
     }
 
     /**

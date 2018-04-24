@@ -146,7 +146,7 @@ class SentDate extends AbstractEndpoint
                 'Street'             => '',
                 'City'               => $address->getCity(),
                 'DeliveryDate'       => $this->getDeliveryDate($address, $postNLOrder),
-                'ShippingDuration'   => '1',
+                'ShippingDuration'   => $postNLOrder->getShippingDuration() ?: '1',
                 'AllowSundaySorting' => 'true',
                 'Options'            => $this->timeframeOptions->get($this->getCountryId()),
             ],
