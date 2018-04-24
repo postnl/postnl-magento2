@@ -29,6 +29,7 @@ try {
         ->setMetaDescription('meta description')
         ->setVisibility(\Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH)
         ->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
+        ->setCustomAttribute('postnl_shipping_duration', 3)
         ->setStockData(
             [
                 'qty'                   => 50,
@@ -71,7 +72,7 @@ $store = Magento\TestFramework\Helper\Bootstrap::getObjectManager()
 $quote = Bootstrap::getObjectManager()->create(\Magento\Quote\Model\Quote::class);
 $quote->setCustomerIsGuest(true)
     ->setStoreId($store->getId())
-    ->setReservedOrderId('instock01')
+    ->setReservedOrderId('shippingDuration_01')
     ->setBillingAddress($billingAddress)
     ->setShippingAddress($shippingAddress)
     ->addProduct($product);

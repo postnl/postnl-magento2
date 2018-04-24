@@ -58,7 +58,7 @@ class ShippingDurationTest extends TestCase
      */
     public function testGet($hasQuote, $expected)
     {
-        require __DIR__ . '/../../../Fixtures/Quote/quoteInStock.php';
+        require __DIR__ . '/../../../Fixtures/Quote/quoteShippingDuration.php';
         $quote = $this->getQuote($hasQuote);
 
         $checkoutSession        = $this->getFakeMock(QuoteInterface::class)->getMock();
@@ -88,6 +88,6 @@ class ShippingDurationTest extends TestCase
             return null;
         }
 
-        return $this->getObject(Quote::class)->load('instock01', 'reserved_order_id');
+        return $this->getObject(Quote::class)->load('shippingDuration_01', 'reserved_order_id');
     }
 }

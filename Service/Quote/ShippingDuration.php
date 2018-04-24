@@ -101,7 +101,6 @@ class ShippingDuration
             return $attribute->getValue();
         }, $products);
 
-
         $itemsDuration = $this->getItemsDuration($shippingDurations);
         if (false === $itemsDuration || !is_numeric($itemsDuration)) {
             return $this->webshopConfiguration->getShippingDuration($store);
