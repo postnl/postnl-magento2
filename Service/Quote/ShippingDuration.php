@@ -106,6 +106,6 @@ class ShippingDuration
             return $this->webshopConfiguration->getShippingDuration($store);
         }
 
-        return $itemsDuration < 0 ? 1 : round($itemsDuration,0);
+        return $itemsDuration < 0 ? 1 : round($itemsDuration, 0);
     }
 }
