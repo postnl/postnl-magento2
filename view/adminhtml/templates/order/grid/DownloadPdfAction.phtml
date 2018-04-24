@@ -1,0 +1,120 @@
+<?php
+/**
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
+?>
+
+<script type="text/javascript">
+    /**
+     * Magento supports callbacks on the massaction, but there is no documentation at all, and the example Magento
+     * provides itself (the inline editor) seems to be hardcoded. That's why we fix it this way using jQuery and Knockout.
+     */
+    require(['ko', 'jquery', 'TIG_PostNL/js/shipment/grid/DownloadPdf'], function (ko, $, download) {
+        var koElement, text;
+
+        jQuery('body').on('click', '.action-menu .action-menu-item', function () {
+            var element = getPostNLAction(this);
+
+            if (element !== null && element.postnl_action) {
+                var downloadUrl = getDownloadUrl(element.postnl_action);
+                download(downloadUrl, getFormData(this));
+            }
+        });
+
+        /**
+         * Retrieve the Knockout scope for the element.
+         */
+        function getKoScope(element) {
+            return ko.dataFor(element);
+        }
+
+        /**
+         * Build the formdata
+         *
+         * @param element
+         * @returns object
+         */
+        function getFormData(element) {
+            var selections = getKoScope(element.parentElement.parentNode).getSelections();
+
+            return {
+                namespace: 'sales_order_grid',
+                selected: selections.selected
+            };
+        }
+
+        /**
+         * Check if the current selected action is the PostNL action, and if so, return it.
+         *
+         * @param element
+         * @returns null|object
+         */
+        function getPostNLAction(element) {
+            koElement = getKoScope(element);
+            if (koElement.type !== undefined && koElement.type.toLowerCase().indexOf('postnl') !== -1) {
+                return koElement;
+            }
+
+            text = $(element).text();
+
+
+            var selectedElement = null;
+            ko.utils.arrayForEach(koElement.actions(), function (element) {
+                if (element.label == text && element.type.toLowerCase().indexOf('postnl') !== -1) {
+                    selectedElement = element;
+                }
+            });
+
+            return selectedElement;
+        }
+
+        /**
+         * Get the correct url where the necessary actions are handled
+         *
+         * @param action
+         * @returns {string}
+         */
+        function getDownloadUrl(action)
+        {
+            var downloadUrl = '';
+
+            switch(action) {
+                case 'CreateShipmentsConfirmAndPrintShippingLabels':
+                    downloadUrl = '<?php echo $this->getConfirmAndPrintLabelsUrl(); ?>';
+                    break;
+                case 'CreateShipmentsConfirmAndPrintPackingSlip':
+                    downloadUrl = '<?php echo $this->getConfirmAndPrintPackingSlipUrl(); ?>';
+                    break;
+            }
+
+            return downloadUrl;
+        }
+    });
+</script>

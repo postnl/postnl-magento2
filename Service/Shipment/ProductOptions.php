@@ -31,8 +31,6 @@
  */
 namespace TIG\PostNL\Service\Shipment;
 
-use TIG\PostNL\Api\Data\ShipmentInterface;
-
 class ProductOptions
 {
     /**
@@ -40,8 +38,7 @@ class ProductOptions
      *
      * @var array
      */
-    private $availableProductOptions
-        = [
+    private $availableProductOptions = [
             'pge'     => [
                 'Characteristic' => '118',
                 'Option'         => '002',

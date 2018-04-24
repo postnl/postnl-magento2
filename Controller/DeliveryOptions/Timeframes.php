@@ -39,9 +39,7 @@ use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
 use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
-use Magento\Framework\App\Response\Http;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Json\Helper\Data;
 use Magento\Checkout\Model\Session;
 
 class Timeframes extends AbstractDeliveryOptions
@@ -119,10 +117,7 @@ class Timeframes extends AbstractDeliveryOptions
         }
 
         try {
-            return $this->jsonResponse([
-                'price'      => $price['price'],
-                'timeframes' => $this->getValidResponeType(),
-            ]);
+            return $this->jsonResponse($this->getValidResponeType($price['price']));
         } catch (\Exception $exception) {
             return $this->jsonResponse($this->getFallBackResponse(3, $price['price']));
         }
@@ -141,18 +136,26 @@ class Timeframes extends AbstractDeliveryOptions
     }
 
     /**
+     * @param $price
      * @return array|\Magento\Framework\Phrase
      */
-    private function getValidResponeType()
+    private function getValidResponeType($price)
     {
         $address = $this->addressEnhancer->get();
 
         if (isset($address['error'])) {
             //@codingStandardsIgnoreLine
-            return ['error' => __('%1 : %2', $address['error']['code'], $address['error']['message'])];
+            return [
+                'error'      => __('%1 : %2', $address['error']['code'], $address['error']['message']),
+                'price'      => $price,
+                'timeframes' => [[['fallback' => __('At the first opportunity')]]]
+            ];
         }
 
-        return $this->getPosibleDeliveryDays($address);
+        return [
+            'price'      => $price,
+            'timeframes' => $this->getPosibleDeliveryDays($address)
+        ];
     }
 
     /**

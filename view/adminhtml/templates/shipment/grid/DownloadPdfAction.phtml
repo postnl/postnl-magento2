@@ -37,12 +37,13 @@
  * provides itself (the inline editor) seems to be hardcoded. That's why we fix it this way using jQuery and Knockout.
  */
 require(['ko', 'jquery', 'TIG_PostNL/js/shipment/grid/DownloadPdf'], function (ko, $, download) {
-    var koElement, text, downloadUrl = '<?php echo $this->getDownloadUrl(); ?>';
+    var koElement, text;
 
     jQuery('body').on('click', '.action-menu .action-menu-item', function () {
         var element = getPostNLAction(this);
 
-        if (element !== null) {
+        if (element !== null && element.postnl_action) {
+            var downloadUrl = getDownloadUrl(element.postnl_action);
             download(downloadUrl, getFormData(this));
         }
     });
@@ -61,7 +62,7 @@ require(['ko', 'jquery', 'TIG_PostNL/js/shipment/grid/DownloadPdf'], function (k
      * @returns object
      */
     function getFormData(element) {
-        var selections = getKoScope(element).getSelections();
+        var selections = getKoScope(element.parentElement.parentNode).getSelections();
 
         return {
             namespace: 'sales_order_shipment_grid',
@@ -76,8 +77,13 @@ require(['ko', 'jquery', 'TIG_PostNL/js/shipment/grid/DownloadPdf'], function (k
      * @returns null|object
      */
     function getPostNLAction(element) {
-        text = $(element).text();
         koElement = getKoScope(element);
+
+        if(koElement.type !== undefined && koElement.type.toLowerCase().indexOf('postnl') !== -1) {
+            return koElement;
+        }
+
+        text = $(element).text();
 
         var selectedElement = null;
         ko.utils.arrayForEach(koElement.actions(), function (element) {
@@ -87,6 +93,28 @@ require(['ko', 'jquery', 'TIG_PostNL/js/shipment/grid/DownloadPdf'], function (k
         });
 
         return selectedElement;
+    }
+
+    /**
+     * Get the correct url where the necessary actions are handled
+     *
+     * @param action
+     * @returns {string}
+     */
+    function getDownloadUrl(action)
+    {
+        var downloadUrl = '';
+
+        switch(action) {
+            case 'ConfirmAndPrintShippingLabels':
+                downloadUrl = '<?php echo $this->getDownloadUrl(); ?>';
+                break;
+            case 'ConfirmAndPrintPackingSlip':
+                downloadUrl = '<?php echo $this->getConfirmAndPrintPackingSlipUrl(); ?>';
+                break;
+        }
+
+        return downloadUrl;
     }
 });
 </script>

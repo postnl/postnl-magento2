@@ -45,6 +45,7 @@ use Magento\Sales\Model\Order\ShipmentRepository as OrderShipmentRepository;
 use Magento\Sales\Model\Order\Shipment\Item;
 use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 
 // @codingStandardsIgnoreFile
 /**
@@ -111,6 +112,11 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     private $shippingAddress;
 
     /**
+     * @var ProductRepositoryInterface
+     */
+    private $productRepository;
+
+    /**
      * @param Context                            $context
      * @param Registry                           $registry
      * @param OrderShipmentRepository            $orderShipmentRepository
@@ -120,6 +126,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      * @param DateTime                           $dateTime
      * @param ProductOptions                     $productOptions
      * @param ShipmentBarcodeRepositoryInterface $barcodeRepository
+     * @param ProductRepositoryInterface         $productRepository
      * @param AbstractResource                   $resource
      * @param AbstractDb                         $resourceCollection
      * @param array                              $data
@@ -134,6 +141,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         DateTime $dateTime,
         ProductOptions $productOptions,
         ShipmentBarcodeRepositoryInterface $barcodeRepository,
+        ProductRepositoryInterface $productRepository,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -146,6 +154,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         $this->addressFactory = $addressFactory;
         $this->productOptions = $productOptions;
         $this->barcodeRepository = $barcodeRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -586,6 +595,14 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     /**
      * @return bool
      */
+    public function isGlobalPack()
+    {
+        return $this->getShipmentType() == 'GP';
+    }
+
+    /**
+     * @return bool
+     */
     public function isExtraAtHome()
     {
         $productCodeOptions = $this->getProductCodeOptions();
@@ -598,13 +615,92 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     }
 
     /**
-     * This is static for the time being.
-     *
-     * @return int
+     * @return float
      */
     public function getExtraCoverAmount()
     {
-        return 500;
+        $shipment   = $this->getShipment();
+        $order      = $shipment->getOrder();
+        $orderItems = $order->getItems();
+
+        $productPrices = $this->getPricePerProductId($orderItems);
+
+        $shipmentItems = $shipment->getAllItems();
+
+        return $this->getTotalPrice($shipmentItems, $productPrices);
+    }
+
+    /**
+     * @param \Magento\Sales\Api\Data\OrderItemInterface[]|\Magento\Sales\Model\Order\Item[] $orderItems
+     *
+     * @return array
+     */
+    private function getPricePerProductId($orderItems)
+    {
+        $productPrices = [];
+        array_walk(
+            $orderItems,
+            function ($orderItem) use (&$productPrices) {
+                /** @var \Magento\Sales\Model\Order\Item $orderItem */
+                if ($orderItem->getProductType() == 'bundle') {
+                    $productPrices[$orderItem->getSku()] = $this->getBundledPrice($orderItem);
+
+                    return;
+                }
+
+                if ($orderItem->getProductType() != 'simple') {
+                    return;
+                }
+                $product                             = $this->productRepository->get($orderItem->getSku());
+                $productPrice                        = $product->getPrice();
+                $productPrices[$orderItem->getSku()] = $productPrice;
+            }
+        );
+
+        return $productPrices;
+    }
+
+    /**
+     * @param $shipmentItems
+     * @param $productPrices
+     *
+     * @return float
+     */
+    private function getTotalPrice($shipmentItems, $productPrices)
+    {
+        $totalPrice = 0;
+        array_walk(
+            $shipmentItems,
+            function ($shipmentItem) use ($productPrices, &$totalPrice) {
+                /** @var \Magento\Sales\Model\Order\Shipment\Item $shipmentItem */
+                if (!array_key_exists($shipmentItem->getSku(), $productPrices)) {
+                    return;
+                }
+                $productPrice = $productPrices[$shipmentItem->getSku()];
+                $totalPrice   += $productPrice * $shipmentItem->getQty();
+            }
+        );
+
+        return $totalPrice;
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order\Item $bundleItem
+     *
+     * @return float
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function getBundledPrice($bundleItem)
+    {
+        $bundlePrice = 0;
+        /** @var \Magento\Sales\Model\Order\Item $childItem */
+        foreach ($bundleItem->getChildrenItems() as $childItem) {
+            $product     = $this->productRepository->get($childItem->getSku());
+            $qty = $childItem->getQtyOrdered() - ($childItem->getQtyShipped() - $childItem->getQtyCanceled());
+            $bundlePrice += $product->getPrice() * $qty;
+        }
+
+        return $bundlePrice;
     }
 
     /**

@@ -31,14 +31,15 @@
  */
 namespace TIG\PostNL\Service\Shipment\Label\Merge;
 
-use TIG\PostNL\Service\Shipment\Label\FPDI;
+use TIG\PostNL\Service\Pdf\Fpdi;
 
 interface MergeInterface
 {
     /**
-     * @param FPDI[] $labels
+     * @param Fpdi[] $labels
+     * @param bool   $createNewPdf
      *
-     * @return FPDI
+     * @return Fpdi
      */
-    public function files(array $labels);
+    public function files(array $labels, $createNewPdf = false);
 }

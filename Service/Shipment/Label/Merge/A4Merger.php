@@ -31,9 +31,7 @@
  */
 namespace TIG\PostNL\Service\Shipment\Label\Merge;
 
-use TIG\PostNL\Service\Shipment\Label\File;
 use TIG\PostNL\Service\Pdf\Fpdi;
-use TIG\PostNL\Service\Pdf\FpdiFactory;
 
 class A4Merger extends AbstractMerger implements MergeInterface
 {
@@ -44,22 +42,24 @@ class A4Merger extends AbstractMerger implements MergeInterface
 
     /**
      * @param Fpdi[] $labels
+     * @codingStandardsIgnoreStart
+     * @param bool  $createNewPdf Sometimes you want to generate a new Label PDF, for example when printing packingslips
+     *                            This parameter indicates whether to reuse the existing label PDF
+     *                            @TODO Refactor to a cleaner way rather than chaining all the way to \TIG\PostNL\Service\Shipment\Label\Merge\AbstractMerger
+     * @codingStandardsIgnoreEnd
      *
      * @return Fpdi
      */
-    public function files(array $labels)
+    public function files(array $labels, $createNewPdf = false)
     {
-        $this->pdf = $this->createPdf(true);
+        //By resetting the counter, labels will start in the upper-left when creating a new PDF
+        if ($createNewPdf) {
+            $this->labelCounter = 0;
+        }
+
+        $this->pdf = $this->createPdf(false, $createNewPdf);
         foreach ($labels as $label) {
-            $this->increaseCounter();
-            // @codingStandardsIgnoreLine
-            $filename = $this->file->save($label->Output('S'));
-
-            $this->pdf->setSourceFile($filename);
-
-            $pageId = $this->pdf->importPage(1);
-            list($xPosition, $yPosition) = $this->getPosition();
-            $this->pdf->useTemplate($pageId, $xPosition, $yPosition);
+            $this->addPagesToPdf($label);
         }
 
         $this->file->cleanup();
@@ -68,7 +68,54 @@ class A4Merger extends AbstractMerger implements MergeInterface
     }
 
     /**
-     * Adds the page if the counter is too high.
+     * @param Fpdi $label
+     */
+    private function addPagesToPdf($label)
+    {
+        // @codingStandardsIgnoreLine
+        $filename = $this->file->save($label->Output('S'));
+        $count    = $this->pdf->setSourceFile($filename);
+
+        for ($pageNo = 1; $pageNo <= $count; $pageNo++) {
+            $templateId   = $this->pdf->importPage($pageNo);
+            $templateSize = $this->pdf->getTemplateSize($templateId);
+
+            $this->addPageToPdf($templateId, $templateSize, $count);
+        }
+    }
+
+    /**
+     * Add page to the pdf with correct orientation.
+     *
+     * @param $templateId
+     * @param $templateSize
+     * @param $count
+     */
+    private function addPageToPdf($templateId, $templateSize, $count)
+    {
+        $orientation = $templateSize['w'] > $templateSize['h'] ? 'L' :'P';
+
+        if ($this->shouldAddNewPage($orientation)) {
+            $this->labelCounter = 0;
+            $this->pdf->AddPage($orientation, 'A4');
+        }
+
+        if ($count <= 1 && $orientation == 'L') {
+            $this->increaseCounter();
+        }
+
+        if ($this->pdf->PageNo() == 0 || $orientation == 'P') {
+            $this->labelCounter = 1;
+            $this->pdf->AddPage($orientation, 'A4');
+        }
+
+        list($xPosition, $yPosition) = $this->getPosition();
+        $this->setLastOrientation($orientation);
+        $this->pdf->useTemplate($templateId, $xPosition, $yPosition);
+    }
+
+    /**
+     * Adds an new page if the counter is too high.
      */
     private function increaseCounter()
     {
@@ -87,10 +134,6 @@ class A4Merger extends AbstractMerger implements MergeInterface
      */
     private function getPosition()
     {
-        if ($this->labelCounter == 1) {
-            return [0, 0];
-        }
-
         if ($this->labelCounter == 2) {
             return [0, Fpdi::PAGE_SIZE_A6_WIDTH];
         }
@@ -102,5 +145,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
         if ($this->labelCounter == 4) {
             return [Fpdi::PAGE_SIZE_A6_HEIGHT, Fpdi::PAGE_SIZE_A6_WIDTH];
         }
+
+        return [0, 0];
     }
 }

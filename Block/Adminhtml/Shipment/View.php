@@ -125,6 +125,7 @@ class View extends MagentoView
         $this->setPostNLPrintLabelButton();
         $this->setPostNLPrintLabelButtonData();
         $this->setPostNLPrintLabelWithoutConfirmButton();
+        $this->setPostNLPrintPackingslipButton();
     }
 
     /**
@@ -179,6 +180,19 @@ class View extends MagentoView
         );
     }
 
+    private function setPostNLPrintPackingslipButton()
+    {
+        $this->buttonList->add(
+            'postnl_print_packingslip',
+            [
+                // @codingStandardsIgnoreLine
+                'label' => __('PostNL - Print Packingslip'),
+                'class' => 'save primary',
+                'onclick' => 'download(\'' .$this->getPackingslipUrl() .'\')'
+            ]
+        );
+    }
+
     private function setPostNLConfirmButton()
     {
         $this->buttonList->add(
@@ -225,6 +239,17 @@ class View extends MagentoView
     {
         return $this->getUrl(
             'postnl/shipment/PrintShippingLabel',
+            ['shipment_id' => $this->getShipment()->getId()]
+        );
+    }
+
+    /**
+     * @return string
+     */
+    private function getPackingslipUrl()
+    {
+        return $this->getUrl(
+            'postnl/shipment/PrintPackingslip',
             ['shipment_id' => $this->getShipment()->getId()]
         );
     }

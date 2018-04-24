@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Shipment;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Service\Volume\Items\Calculate;
 
 class Data
@@ -52,18 +53,34 @@ class Data
     private $shipmentVolume;
 
     /**
+     * @var Customs
+     */
+    private $customsInfo;
+
+    /**
+     * @var LabelAndPackingslipOptions
+     */
+    private $labelAndPackingslipOptions;
+
+    /**
      * @param ProductOptions $productOptions
      * @param ContentDescription $contentDescription
      * @param Calculate $calculate
+     * @param LabelAndPackingslipOptions $labelAndPackingslipOptions
+     * @param Customs $customs
      */
     public function __construct(
         ProductOptions $productOptions,
         ContentDescription $contentDescription,
-        Calculate $calculate
+        Calculate $calculate,
+        LabelAndPackingslipOptions $labelAndPackingslipOptions,
+        Customs $customs
     ) {
         $this->productOptions = $productOptions;
         $this->contentDescription = $contentDescription;
         $this->shipmentVolume = $calculate;
+        $this->labelAndPackingslipOptions = $labelAndPackingslipOptions;
+        $this->customsInfo = $customs;
     }
 
     /**
@@ -108,6 +125,7 @@ class Data
             'DownPartnerID'            => $shipment->getPgRetailNetworkId(),
             'DownPartnerLocation'      => $shipment->getPgLocationCode(),
             'ProductCodeDelivery'      => $shipment->getProductCode(),
+            'Reference'                => $this->labelAndPackingslipOptions->getReference($shipment->getShipment())
         ];
     }
 
@@ -127,7 +145,11 @@ class Data
             $shipmentData['Dimension']['Volume'] = $this->getVolumeByParcelCount(
                 $magentoShipment->getItems(), $shipment->getParcelCount()
             );
-            $shipmentData['Reference'] = $magentoShipment->getIncrementId();
+            $shipmentData['Reference'] = $this->labelAndPackingslipOptions->getReference($magentoShipment);
+        }
+
+        if ($shipment->isGlobalPack()) {
+            $shipmentData['Customs'] = $this->customsInfo->get($shipment);
         }
 
         if ($shipment->isExtraCover()) {

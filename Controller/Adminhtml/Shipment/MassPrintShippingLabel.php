@@ -42,14 +42,10 @@ use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
+use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 
 class MassPrintShippingLabel extends LabelAbstract
 {
-    /**
-     * @var array
-     */
-    private $labels = [];
-
     /**
      * @var Filter
      */
@@ -78,6 +74,7 @@ class MassPrintShippingLabel extends LabelAbstract
      * @param GetPdf                    $getPdf
      * @param Track                     $track
      * @param BarcodeHandler            $barcodeHandler
+     * @param GetPackingslip            $getPackingSlip
      */
     public function __construct(
         Context $context,
@@ -86,12 +83,14 @@ class MassPrintShippingLabel extends LabelAbstract
         GetLabels $getLabels,
         GetPdf $getPdf,
         Track $track,
-        BarcodeHandler $barcodeHandler
+        BarcodeHandler $barcodeHandler,
+        GetPackingslip $getPackingSlip
     ) {
         parent::__construct(
             $context,
             $getLabels,
-            $getPdf
+            $getPdf,
+            $getPackingSlip
         );
 
         $this->filter = $filter;
@@ -122,20 +121,6 @@ class MassPrintShippingLabel extends LabelAbstract
         }
 
         return $this->getPdf->get($this->labels);
-    }
-
-    /**
-     * @param $shipmentId
-     */
-    private function setLabel($shipmentId)
-    {
-        $labels = $this->getLabels->get($shipmentId);
-
-        if (empty($labels)) {
-            return;
-        }
-
-        $this->labels = array_merge($this->labels, $labels);
     }
 
     /**
