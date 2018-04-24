@@ -101,11 +101,26 @@ class ShippingDuration
             return $attribute->getValue();
         }, $products);
 
-        $itemsDuration = max($shippingDurations);
+
+        $itemsDuration = $this->getItemsDuration($shippingDurations);
         if (false === $itemsDuration || !is_numeric($itemsDuration)) {
             return $this->webshopConfiguration->getShippingDuration($store);
         }
 
         return $itemsDuration < 0 ? 1 : round($itemsDuration, 0);
+    }
+
+    /**
+     * @param $shippingDurations
+     *
+     * @return bool|mixed
+     */
+    private function getItemsDuration($shippingDurations)
+    {
+        if (empty($shippingDurations)) {
+            return false;
+        }
+
+        return max($shippingDurations);
     }
 }
