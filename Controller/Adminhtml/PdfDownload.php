@@ -33,8 +33,12 @@ namespace TIG\PostNL\Controller\Adminhtml;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Response\Http\FileFactory;
+use Magento\Framework\Message\ManagerInterface;
+use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Config\Source\Settings\LabelsizeSettings;
 use TIG\PostNL\Service\Shipment\Label\Generate as LabelGenerate;
 use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
+use TIG\PostNL\Service\Shipment\ShipmentService as Shipment;
 
 class PdfDownload
 {
@@ -42,6 +46,16 @@ class PdfDownload
      * @var FileFactory
      */
     private $fileFactory;
+
+    /**
+     * @var ManagerInterface
+     */
+    private $messageManager;
+
+    /**
+     * @var Webshop
+     */
+    private $webshopConfig;
 
     /**
      * @var LabelGenerate
@@ -53,6 +67,16 @@ class PdfDownload
      */
     private $packingslipGenerator;
 
+    /**
+     * @var Shipment
+     */
+    private $shipment;
+
+    /**
+     * @var array
+     */
+    private $filteredLabels = [];
+
     const FILETYPE_PACKINGSLIP   = 'PackingSlips';
     const FILETYPE_SHIPPINGLABEL = 'ShippingLabels';
 
@@ -63,25 +87,52 @@ class PdfDownload
      */
     public function __construct(
         FileFactory $fileFactory,
+        ManagerInterface $messageManager,
+        Webshop $webshopConfig,
         LabelGenerate $labelGenerator,
-        PackingslipGenerate $packingslipGenerator
+        PackingslipGenerate $packingslipGenerator,
+        Shipment $shipment
     ) {
         $this->fileFactory = $fileFactory;
+        $this->messageManager = $messageManager;
+        $this->webshopConfig = $webshopConfig;
         $this->labelGenerator = $labelGenerator;
         $this->packingslipGenerator = $packingslipGenerator;
+        $this->shipment = $shipment;
     }
 
     /**
      * @param $labels
      * @param $filename
      *
-     * @return \Magento\Framework\App\ResponseInterface
+     * @return \Magento\Framework\App\ResponseInterface | \Magento\Framework\Message\ManagerInterface
      * @throws \Exception
      * @throws \Zend_Pdf_Exception
      */
     // @codingStandardsIgnoreLine
     public function get($labels, $filename = 'ShippingLabels')
     {
+        if ($this->webshopConfig->getLabelSize() == LabelsizeSettings::A6_LABELSIZE) {
+            $labels = $this->filterLabel($labels);
+        }
+
+        if (!$labels) {
+            $this->messageManager->addErrorMessage(
+                'No labels were created. If you\'re trying to generate Global Pack shipments, set your Label Size to A4. Please check your Label Size settings.'
+            );
+            return;
+        }
+
+        if (count($this->filteredLabels) >= 1) {
+            $filteredShipments = $this->getShipmentIds($this->filteredLabels);
+            $filteredShipments = implode(", ", $filteredShipments);
+
+            $this->messageManager->addNoticeMessage(
+                'Not all labels were created. Please check your Label Size settings. Labels are not generated for the following Shipment ID\'s: ' .
+                $filteredShipments
+            );
+        }
+
         $pdfLabel = $this->generateLabel($labels, $filename);
 
         return $this->fileFactory->create(
@@ -90,6 +141,38 @@ class PdfDownload
             DirectoryList::VAR_DIR,
             'application/pdf'
         );
+    }
+
+    /**
+     * @param $labels
+     * @return array
+     */
+    private function filterLabel($labels) {
+        return array_filter($labels, function($label) {
+            /** @var \TIG\PostNL\Api\Data\ShipmentLabelInterface $label */
+            $shouldRemove = false;
+
+            if ($label->getType() !== 'gp') {
+                $shouldRemove = true;
+                $this->filteredLabels[] = $label->getParentId();
+            }
+
+            return $shouldRemove;
+        });
+    }
+
+    /**
+     * @param $labels
+     * @return array
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function getShipmentIds($labels) {
+        foreach ($labels as $label) {
+            $shipmentIds[] = $this->shipment->getShipment($label)->getIncrementId();
+        }
+
+        return $shipmentIds;
     }
 
     /**
