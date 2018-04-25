@@ -35,11 +35,14 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\Message\ManagerInterface;
 use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Config\Source\Settings\LabelsizeSettings;
 use TIG\PostNL\Service\Shipment\Label\Generate as LabelGenerate;
 use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
 use TIG\PostNL\Service\Shipment\ShipmentService as Shipment;
+use TIG\PostNL\Service\Order\ProductCodeAndType;
 
+// @codingStandardsIgnoreFile
 class PdfDownload
 {
     /**
@@ -81,9 +84,14 @@ class PdfDownload
     const FILETYPE_SHIPPINGLABEL = 'ShippingLabels';
 
     /**
-     * @param FileFactory            $fileFactory
-     * @param Generate|LabelGenerate $labelGenerator
-     * @param PackingslipGenerate    $packingslipGenerator
+     * PdfDownload constructor.
+     *
+     * @param FileFactory         $fileFactory
+     * @param ManagerInterface    $messageManager
+     * @param Webshop             $webshopConfig
+     * @param LabelGenerate       $labelGenerator
+     * @param PackingslipGenerate $packingslipGenerator
+     * @param Shipment            $shipment
      */
     public function __construct(
         FileFactory $fileFactory,
@@ -105,7 +113,7 @@ class PdfDownload
      * @param $labels
      * @param $filename
      *
-     * @return \Magento\Framework\App\ResponseInterface | \Magento\Framework\Message\ManagerInterface
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Message\ManagerInterface
      * @throws \Exception
      * @throws \Zend_Pdf_Exception
      */
@@ -117,20 +125,15 @@ class PdfDownload
         }
 
         if (!$labels) {
-            $this->messageManager->addErrorMessage(
-                'No labels were created. If you\'re trying to generate Global Pack shipments, set your Label Size to A4. Please check your Label Size settings.'
-            );
+            $this->setEmptyLabelsResponse();
+            // @codingStandardsIgnoreLine
+            /** @todo : find a beter solution to close the new browser tab. */
+            echo "<script>window.close();</script>";
             return;
         }
 
-        if (count($this->filteredLabels) >= 1) {
-            $filteredShipments = $this->getShipmentIds($this->filteredLabels);
-            $filteredShipments = implode(", ", $filteredShipments);
-
-            $this->messageManager->addNoticeMessage(
-                'Not all labels were created. Please check your Label Size settings. Labels are not generated for the following Shipment ID\'s: ' .
-                $filteredShipments
-            );
+        if (count($this->filteredLabels) > 0) {
+            $this->setSkippedLabelsResponse();
         }
 
         $pdfLabel = $this->generateLabel($labels, $filename);
@@ -147,32 +150,58 @@ class PdfDownload
      * @param $labels
      * @return array
      */
-    private function filterLabel($labels) {
-        return array_filter($labels, function($label) {
-            /** @var \TIG\PostNL\Api\Data\ShipmentLabelInterface $label */
-            $shouldRemove = false;
-
-            if ($label->getType() !== 'gp') {
-                $shouldRemove = true;
+    private function filterLabel($labels)
+    {
+        return array_filter($labels, function ($label) {
+            /** @var ShipmentLabelInterface $label */
+            if (strtoupper($label->getType()) == ProductCodeAndType::SHIPMENT_TYPE_GP) {
                 $this->filteredLabels[] = $label->getParentId();
+                return false;
             }
 
-            return $shouldRemove;
+            return true;
         });
     }
 
     /**
-     * @param $labels
-     * @return array
+     * @return string
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function getShipmentIds($labels) {
-        foreach ($labels as $label) {
-            $shipmentIds[] = $this->shipment->getShipment($label)->getIncrementId();
+    private function getShipmentIds()
+    {
+        $shipmentIds = [];
+        foreach ($this->filteredLabels as $identifier) {
+            $postNLShipment = $this->shipment->getPostNLShipment($identifier);
+            $shipment       = $postNLShipment->getShipment();
+            $shipmentIds[]  = $shipment->getIncrementId();
         }
 
-        return $shipmentIds;
+        return implode(", ", $shipmentIds);
+    }
+
+    /**
+     * Set empty labels response.
+     */
+    private function setEmptyLabelsResponse()
+    {
+        $this->messageManager->addWarningMessage(
+        // @codingStandardsIgnoreLine
+            __('No labels were created. If you\'re trying to generate Global Pack shipments, set your Label Size to A4. Please check your Label Size settings.')
+        );
+    }
+
+    /**
+     * Set response message for shipment where the label is not printed.
+     */
+    private function setSkippedLabelsResponse()
+    {
+        $this->messageManager->addNoticeMessage(
+        // @codingStandardsIgnoreLine
+            __('Not all labels were created. Please check your Label Size settings. Labels are not generated for the following Shipment(s): %1',
+                $this->getShipmentIds()
+            )
+        );
     }
 
     /**
