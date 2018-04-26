@@ -73,6 +73,14 @@ class MergeWithLabels
     private $file;
 
     /**
+     * PDF label positions
+     */
+    private $rotation  = 90;
+    private $xPosition = -1037;
+    private $yPosition = 413;
+    private $width     = 538;
+
+    /**
      * @param GetLabels                  $getLabels
      * @param LabelGenerate              $labelGenerator
      * @param Generate                   $packingslipGenerator
@@ -111,7 +119,6 @@ class MergeWithLabels
     public function merge($shipmentId, $packingslip, $mergeFirstLabel = false)
     {
         $labels = $this->getLabels->get($shipmentId);
-
         if (empty($labels)) {
             return $packingslip;
         }
@@ -120,7 +127,7 @@ class MergeWithLabels
             $firstLabel = array_shift($labels);
             // @codingStandardsIgnoreLine
             $label = base64_decode($firstLabel->getLabel());
-            $packingslip = $this->mergeFirstLabel($label, $packingslip);
+            $packingslip = $this->mergeFirstLabel($label, $packingslip, $firstLabel->getType());
         }
 
         if (empty($labels)) {
@@ -139,7 +146,6 @@ class MergeWithLabels
     private function canMergeFirstLabel($firstLabel)
     {
         $labelTypeGP = strtolower(ProductCodeAndType::SHIPMENT_TYPE_GP);
-
         if ($this->packingslipYPos <= 400 || $firstLabel->getType() == $labelTypeGP) {
             return false;
         }
@@ -162,31 +168,57 @@ class MergeWithLabels
     }
 
     /**
-     * @param string    $label
+     * @param string $label
      * @param string $packingslip
+     * @param string $type
      *
      * @return string
      */
-    private function mergeFirstLabel($label, $packingslip)
+    private function mergeFirstLabel($label, $packingslip, $type = null)
     {
         /** @var Fpdi $pdf */
         $pdf = $this->fpdiFactory->create();
-
         $packingslipFile = $this->file->save($packingslip);
         $pdf->addMultiplePages($packingslipFile, 0, 0);
 
         $labelFile = $this->file->save($label);
-        $pdf->Rotate(90);
-        $pdf->addSinglePage(
-            $labelFile,
-            $pdf->pixelsToPoints(-1037),
-            $pdf->pixelsToPoints(413),
-            $pdf->pixelsToPoints(538)
-        );
-        $pdf->Rotate(0);
-
+        $pdf = $this->addLabelToPdf($labelFile, $pdf, $type);
         $this->file->cleanup();
 
         return $pdf->Output('s');
+    }
+
+    /**
+     * @param      $labelFile
+     * @param Fpdi $pdf
+     * @param      $type
+     *
+     * @return Fpdi
+     */
+    private function addLabelToPdf($labelFile, Fpdi $pdf, $type)
+    {
+        if ($type == 'eps') {
+            $this->setEpsPosition();
+        }
+
+        $pdf->Rotate($this->rotation);
+        $pdf->addSinglePage(
+            $labelFile,
+            $pdf->pixelsToPoints($this->xPosition),
+            $pdf->pixelsToPoints($this->yPosition),
+            $pdf->pixelsToPoints($this->width)
+        );
+
+        $pdf->Rotate(0);
+
+        return $pdf;
+    }
+
+    private function setEpsPosition()
+    {
+        $this->rotation  = 0;
+        $this->xPosition = 400;
+        $this->yPosition = 560;
+        $this->width     = 390;
     }
 }
