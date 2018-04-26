@@ -78,12 +78,13 @@ class Merge
     public function files(array $labels, $createNewPdf = false)
     {
         $output = '';
-        if ($this->webshop->getLabelSize() == 'A4') {
+        if ($this->webshop->getLabelSize() == 'A4' || $createNewPdf) {
             $result = $this->a4Merger->files($labels, $createNewPdf);
             $output = $result->Output('s');
         }
 
-        if ($this->webshop->getLabelSize() == 'A6') {
+        //  Create PDF is used for packingslips which are always A4.
+        if ($this->webshop->getLabelSize() == 'A6' && !$createNewPdf) {
             $result = $this->a6Merger->files($labels, $createNewPdf);
             $output = $result->Output('s');
         }

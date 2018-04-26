@@ -73,7 +73,7 @@ class MergeWithLabels
     private $file;
 
     /**
-     * PDF label positions
+     * label positions
      */
     private $rotation  = 90;
     private $xPosition = -1037;
