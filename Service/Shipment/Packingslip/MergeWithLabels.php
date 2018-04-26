@@ -42,6 +42,15 @@ use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
 
 class MergeWithLabels
 {
+    // @codingStandardsIgnoreLine
+    private $rotation  = 90;
+    // @codingStandardsIgnoreLine
+    private $xPosition = -1037;
+    // @codingStandardsIgnoreLine
+    private $yPosition = 413;
+    // @codingStandardsIgnoreLine
+    private $width     = 538;
+        
     /**
      * @var int
      */
@@ -71,14 +80,6 @@ class MergeWithLabels
      * @var File
      */
     private $file;
-
-    /**
-     * label positions
-     */
-    private $rotation  = 90;
-    private $xPosition = -1037;
-    private $yPosition = 413;
-    private $width     = 538;
 
     /**
      * @param GetLabels                  $getLabels
