@@ -120,7 +120,9 @@ class PdfDownload
     // @codingStandardsIgnoreLine
     public function get($labels, $filename = 'ShippingLabels')
     {
-        if ($this->webshopConfig->getLabelSize() == LabelsizeSettings::A6_LABELSIZE) {
+        if ($this->webshopConfig->getLabelSize() == LabelsizeSettings::A6_LABELSIZE
+            && $filename !== 'PackingSlips'
+        ) {
             $labels = $this->filterLabel($labels);
         }
 

@@ -197,7 +197,7 @@ class MergeWithLabels
      */
     private function addLabelToPdf($labelFile, Fpdi $pdf, $type)
     {
-        if ($type == 'eps') {
+        if ($type == strtolower(ProductCodeAndType::SHIPMENT_TYPE_EPS)) {
             $this->setEpsPosition();
         }
 
