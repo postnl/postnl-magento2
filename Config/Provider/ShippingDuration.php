@@ -29,46 +29,47 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Wrapper;
+namespace TIG\PostNL\Config\Provider;
 
-use Magento\Quote\Model\Quote as MagentoQuote;
+use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
-interface QuoteInterface
+class ShippingDuration extends AbstractSource
 {
-    /**
-     * @param MagentoQuote $quote
-     *
-     * @return mixed
-     */
-    public function setQuote(MagentoQuote $quote);
-
-    /**
-     * @return MagentoQuote
-     */
-    public function getQuote();
-
-    /**
-     * @return int
-     */
-    public function getQuoteId();
-
-    /**
-     * @return MagentoQuote\Address
-     */
-    public function getShippingAddress();
-
-    /**
-     * @return MagentoQuote\Address
-     */
-    public function getBillingAddress();
-
+    const CONFIGURATION_VALUE = 'default';
     /**
      * @return array
      */
-    public function getAllItems();
+    public function getAllOptions()
+    {
+        $options[] = [
+            'value' => static::CONFIGURATION_VALUE,
+            // @codingStandardsIgnoreLine
+            'label' => __('Use configuration value')
+        ];
+
+        foreach (range(0, 14) as $day) {
+            $options[] = [
+                'value' => $day,
+                'label' => $this->getLabel($day)
+            ];
+        }
+
+        return $options;
+    }
 
     /**
-     * @return int
+     * @param $day
+     *
+     * @return \Magento\Framework\Phrase
      */
-    public function getStoreId();
+    private function getLabel($day)
+    {
+        if ($day == 1) {
+            // @codingStandardsIgnoreLine
+            return __('%1 Day', $day);
+        }
+
+        // @codingStandardsIgnoreLine
+        return __('%1 Days', $day);
+    }
 }
