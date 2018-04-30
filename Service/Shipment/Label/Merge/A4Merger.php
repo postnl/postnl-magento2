@@ -139,13 +139,13 @@ class A4Merger extends AbstractMerger implements MergeInterface
         }
 
         if ($this->labelCounter == 3) {
-            return [Fpdi::PAGE_SIZE_A6_HEIGHT, 0];
+            return [0, 0];
         }
 
         if ($this->labelCounter == 4) {
             return [Fpdi::PAGE_SIZE_A6_HEIGHT, Fpdi::PAGE_SIZE_A6_WIDTH];
         }
 
-        return [0, 0];
+        return [Fpdi::PAGE_SIZE_A6_HEIGHT, 0];
     }
 }

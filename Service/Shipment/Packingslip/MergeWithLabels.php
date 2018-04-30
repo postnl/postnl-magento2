@@ -50,7 +50,7 @@ class MergeWithLabels
     private $yPosition = 413;
     // @codingStandardsIgnoreLine
     private $width     = 538;
-        
+
     /**
      * @var int
      */
