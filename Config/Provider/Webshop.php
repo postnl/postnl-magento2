@@ -31,6 +31,12 @@
  */
 namespace TIG\PostNL\Config\Provider;
 
+/**
+ * This class contains all configuration options related to webshop options.
+ * This will cause that it is too long for Code Sniffer to check.
+ *
+ * @codingStandardsIgnoreStart
+ */
 class Webshop extends AbstractConfigProvider
 {
 

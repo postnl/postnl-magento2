@@ -160,6 +160,7 @@ class CutoffTimesTest extends TestCase
 
         $result = $instance->get();
 
+        $this->assertCount(7, $result);
         $this->assertEquals($expects, $result);
     }
 }
