@@ -56,6 +56,18 @@ class WebshopTest extends AbstractConfigurationTest
         $this->assertEquals('02:00:00', $instance->getCutOffTime());
     }
 
+    public function testGetSaturdayCutoffTime() {
+        $instance = $this->getInstance();
+        $this->setXpath(Webshop::XPATH_WEBSHOP_SATURDAY_CUTOFFTIME, '20:00:00');
+        $this->assertEquals('20:00:00', $instance->getSaturdayCutOffTime());
+    }
+
+    public function testGetSundayCutoffTime() {
+        $instance = $this->getInstance();
+        $this->setXpath(Webshop::XPATH_WEBSHOP_SUNDAY_CUTOFFTIME, '20:00:00');
+        $this->assertEquals('20:00:00', $instance->getSundayCutOffTime());
+    }
+
     public function testGetShipmentDays() {
         $instance = $this->getInstance();
         $this->setXpath(Webshop::XPATH_WEBSHOP_SHIPMENTDAYS, 1);

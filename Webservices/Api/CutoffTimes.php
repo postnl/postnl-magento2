@@ -52,13 +52,43 @@ class CutoffTimes
      */
     public function get()
     {
-        $shipmentDays = explode(',', $this->webshopSettings->getShipmentDays());
         return array_map(function ($value) {
+            $day = (string) $value;
             return [
-                'Day'  => $value == '0' ? '07' : '0'.$value,
-                'Time' => $this->webshopSettings->getCutOffTime(),
-                'Available' => '1',
+                'Day'  => '0'.$day,
+                'Time' => $this->getCutOffTimeForDay($day),
+                'Available' => $this->isAvailable($day),
             ];
-        }, $shipmentDays);
+        }, range(1, 7));
+    }
+
+    /**
+     * @param $day
+     *
+     * @return string
+     */
+    private function isAvailable($day)
+    {
+        $shipmentDays = explode(',', $this->webshopSettings->getShipmentDays());
+        $day = $day == '7' ? '0' : $day;
+        return in_array($day, $shipmentDays) ? '1' : '0';
+    }
+
+    /**
+     * @param $day
+     *
+     * @return mixed
+     */
+    private function getCutOffTimeForDay($day)
+    {
+        if ($day == '7') {
+            return $this->webshopSettings->getSundayCutOffTime();
+        }
+
+        if ($day == '6') {
+            return $this->webshopSettings->getSaturdayCutOffTime();
+        }
+
+        return $this->webshopSettings->getCutOffTime();
     }
 }
