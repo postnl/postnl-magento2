@@ -61,7 +61,21 @@
                 <config_path>tig_postnl/webshop_shipping/cutoff_time</config_path>
             </field>
 
-            <field id="shipment_days" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <field id="saturday_cutoff_time" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Saturday cutoff time</label>
+                <comment><![CDATA[When an order is placed after this time, another day will be added to the shipping duration. Please enter this time in the Europe/Amsterdam time zone.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Settings\CutOffSettings</source_model>
+                <config_path>tig_postnl/webshop_shipping/saturday_cutoff_time</config_path>
+            </field>
+
+            <field id="sunday_cutoff_time" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Sunday cutoff time</label>
+                <comment><![CDATA[When an order is placed after this time, another day will be added to the shipping duration. Please enter this time in the Europe/Amsterdam time zone.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Settings\CutOffSettings</source_model>
+                <config_path>tig_postnl/webshop_shipping/sunday_cutoff_time</config_path>
+            </field>
+
+            <field id="shipment_days" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Shipment days</label>
                 <comment><![CDATA[Select on which days of the week orders are shipped. You can read more about shipping and delivery days <a href="https://servicedesk.tig.nl/hc/nl/articles/115003398667" target="_blank" title="PostNL shipping days">here</a>.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Settings\DaysOfWeek</source_model>

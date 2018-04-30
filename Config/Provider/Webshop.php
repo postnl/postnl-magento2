@@ -33,9 +33,11 @@ namespace TIG\PostNL\Config\Provider;
 
 class Webshop extends AbstractConfigProvider
 {
-    const XPATH_WEBSHOP_LABEL_SIZE    = 'tig_postnl/webshop_printer/label_size';
-    const XPATH_WEBSHOP_CUTOFFTIME    = 'tig_postnl/webshop_shipping/cutoff_time';
-    const XPATH_WEBSHOP_SHIPMENTDAYS  = 'tig_postnl/webshop_shipping/shipment_days';
+    const XPATH_WEBSHOP_LABEL_SIZE          = 'tig_postnl/webshop_printer/label_size';
+    const XPATH_WEBSHOP_CUTOFFTIME          = 'tig_postnl/webshop_shipping/cutoff_time';
+    const XPATH_WEBSHOP_SATURDAY_CUTOFFTIME = 'tig_postnl/webshop_shipping/saturday_cutoff_time';
+    const XPATH_WEBSHOP_SUNDAY_CUTOFFTIME   = 'tig_postnl/webshop_shipping/sunday_cutoff_time';
+    const XPATH_WEBSHOP_SHIPMENTDAYS        = 'tig_postnl/webshop_shipping/shipment_days';
 
     const XPATH_TRACK_AND_TRACE_ENABLED       = 'tig_postnl/webshop_track_and_trace/email_enabled';
     const XPATH_TRACK_AND_TRACE_BCC_EMAIL     = 'tig_postnl/webshop_track_and_trace/email_bcc';
@@ -58,6 +60,22 @@ class Webshop extends AbstractConfigProvider
     public function getCutOffTime()
     {
         return $this->getConfigFromXpath(self::XPATH_WEBSHOP_CUTOFFTIME);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSaturdayCutOffTime()
+    {
+        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SATURDAY_CUTOFFTIME);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSundayCutOffTime()
+    {
+        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SUNDAY_CUTOFFTIME);
     }
 
     /**
