@@ -135,11 +135,11 @@ class A4Merger extends AbstractMerger implements MergeInterface
     private function getPosition()
     {
         if ($this->labelCounter == 2) {
-            return [0, Fpdi::PAGE_SIZE_A6_WIDTH];
+            return [0, 0];
         }
 
         if ($this->labelCounter == 3) {
-            return [0, 0];
+            return [0, Fpdi::PAGE_SIZE_A6_WIDTH];
         }
 
         if ($this->labelCounter == 4) {
