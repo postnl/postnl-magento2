@@ -109,7 +109,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
             $this->pdf->AddPage($orientation, 'A4');
         }
 
-        list($xPosition, $yPosition) = $this->getPosition();
+        list($xPosition, $yPosition) = $this->getPosition($templateSize);
         $this->setLastOrientation($orientation);
         $this->pdf->useTemplate($templateId, $xPosition, $yPosition);
     }
@@ -130,10 +130,16 @@ class A4Merger extends AbstractMerger implements MergeInterface
     /**
      * Get the position for the label based on the counter.
      *
+     * @param $templateSize
      * @return array
      */
-    private function getPosition()
+    private function getPosition($templateSize)
     {
+        // Global Pack should always start on 0 0 position
+        if ($templateSize['w'] > 210 && $templateSize['h'] > 297) {
+            return [0, 0];
+        }
+
         if ($this->labelCounter == 2) {
             return [0, 0];
         }
