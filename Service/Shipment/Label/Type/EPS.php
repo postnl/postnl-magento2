@@ -73,9 +73,9 @@ class EPS extends Domestic
     private function insertRotated()
     {
         $this->templateInserted = true;
-        $this->pdf->Rotate(-90);
+        $this->pdf->Rotate(90);
         $pageId = $this->pdf->importPage(1);
-        $this->pdf->useTemplate($pageId, 0, -125, Fpdi::PAGE_SIZE_A6_WIDTH, Fpdi::PAGE_SIZE_A6_HEIGHT);
+        $this->pdf->useTemplate($pageId, -85, 0, Fpdi::PAGE_SIZE_A6_WIDTH, Fpdi::PAGE_SIZE_A6_HEIGHT);
         $this->pdf->Rotate(0);
     }
 
