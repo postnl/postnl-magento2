@@ -145,7 +145,6 @@ class A4Merger extends AbstractMerger implements MergeInterface
 
         if ($this->labelCounter == 3) {
             return [Fpdi::PAGE_SIZE_A6_WIDTH, 0];
-
         }
 
         if ($this->labelCounter == 4) {

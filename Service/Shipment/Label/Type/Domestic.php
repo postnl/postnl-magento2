@@ -56,5 +56,4 @@ class Domestic extends AbstractType implements TypeInterface
 
         return $this->pdf;
     }
-
 }
