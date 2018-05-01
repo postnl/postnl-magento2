@@ -46,12 +46,15 @@ class Domestic extends AbstractType implements TypeInterface
         $filename = $this->saveTempLabel($label);
 
         $this->createPdf();
-        $this->pdf->AddPage('L', Fpdi::PAGE_SIZE_A6);
+        $this->pdf->AddPage('P', Fpdi::PAGE_SIZE_A6);
 
         $this->pdf->setSourceFile($filename);
+        $this->pdf->Rotate(90);
         $pageId = $this->pdf->importPage(1);
-        $this->pdf->useTemplate($pageId, -2, 0);
+        $this->pdf->useTemplate($pageId, - 130, 0);
+        $this->pdf->Rotate(0);
 
         return $this->pdf;
     }
+
 }
