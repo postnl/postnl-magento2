@@ -142,17 +142,9 @@ class CutoffTimesTest extends TestCase
         $getShipmentDaysExpects->method('getShipmentDays');
         $getShipmentDaysExpects->willReturn($shipmentDays);
 
-        $getCutoffTimeExpects = $webshopConfigMock->expects($this->exactly(5));
-        $getCutoffTimeExpects->method('getCutOffTime');
+        $getCutoffTimeExpects = $webshopConfigMock->expects($this->exactly(7));
+        $getCutoffTimeExpects->method('getCutOffTimeForDay');
         $getCutoffTimeExpects->willReturn($cutoffTime);
-
-        $getSundayCutOffTimeExpects = $webshopConfigMock->expects($this->once());
-        $getSundayCutOffTimeExpects->method('getSundayCutOffTime');
-        $getSundayCutOffTimeExpects->willReturn($cutoffTime);
-
-        $getSaturdayCutoffTimesExpects = $webshopConfigMock->expects($this->once());
-        $getSaturdayCutoffTimesExpects->method('getSaturdayCutOffTime');
-        $getSaturdayCutoffTimesExpects->willReturn($cutoffTime);
 
         $instance = $this->getInstance([
             'webshopSettings' => $webshopConfigMock

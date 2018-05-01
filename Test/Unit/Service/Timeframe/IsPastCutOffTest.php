@@ -35,6 +35,7 @@ use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Test\TestCase;
 use TIG\PostNL\Service\Timeframe\IsPastCutOff;
+use TIG\PostNL\Helper\Data as PostNLHelper;
 
 class IsPastCutOffTest extends TestCase
 {
@@ -61,8 +62,11 @@ class IsPastCutOffTest extends TestCase
      */
     private function prepareInstance($beforeCutOff)
     {
+        $helperMock = $this->getFakeMock(PostNLHelper::class, true);
+        $this->mockFunction($helperMock, 'getDayOrWeekNumber', '4');
+
         $webshopMock = $this->getFakeMock(Webshop::class, true);
-        $this->mockFunction($webshopMock, 'getCutOffTime', date('H:30:00'));
+        $this->mockFunction($webshopMock, 'getCutOffTimeForDay', date('H:30:00'), ['4']);
 
         $nowDate = new \DateTime('today ' . date('H:' . ($beforeCutOff ? '25' : '35') . ':00'));
         $timezoneInterfaceMock = $this->getMock(TimezoneInterface::class);
@@ -70,8 +74,9 @@ class IsPastCutOffTest extends TestCase
 
         /** @var IsPastCutOff $instance */
         $instance = $this->getInstance([
-            'webshop'     => $webshopMock,
-            'currentDate' => $timezoneInterfaceMock,
+            'webshop'      => $webshopMock,
+            'currentDate'  => $timezoneInterfaceMock,
+            'postNLHelper' => $helperMock
         ]);
 
         $result = $instance->calculate();

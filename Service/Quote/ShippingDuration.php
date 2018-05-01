@@ -98,6 +98,9 @@ class ShippingDuration
 
         $shippingDurations = array_map(function (ProductInterface $product) {
             $attribute = $product->getCustomAttribute(static::ATTRIBUTE_CODE);
+            if (!$attribute) {
+                return $this->webshopConfiguration->getShippingDuration();
+            }
             return $attribute->getValue();
         }, $products);
 

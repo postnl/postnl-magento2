@@ -96,6 +96,24 @@ class Webshop extends AbstractConfigProvider
     }
 
     /**
+     * @param $day
+     *
+     * @return mixed
+     */
+    public function getCutOffTimeForDay($day)
+    {
+        switch ($day) {
+            case '7':
+            case '0':
+                return $this->getSundayCutOffTime();
+            case '6':
+                return $this->getSaturdayCutOffTime();
+            default :
+                return $this->getCutOffTime();
+        }
+    }
+
+    /**
      * @return mixed
      */
     public function getShipmentDays()

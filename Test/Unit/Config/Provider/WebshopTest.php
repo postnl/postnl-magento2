@@ -114,4 +114,41 @@ class WebshopTest extends AbstractConfigurationTest
         $this->assertEquals($expected, $result);
         $this->assertTrue(is_array($result));
     }
+
+    public function cutoffTimeForDayProvider()
+    {
+        return [
+            'CutoffTime for sundays, day number 0' => [
+                '0', Webshop::XPATH_WEBSHOP_SUNDAY_CUTOFFTIME, '10:00:00'
+            ],
+            'CutoffTime for sundays, day number 7' => [
+                '7', Webshop::XPATH_WEBSHOP_SUNDAY_CUTOFFTIME, '10:00:00'
+            ],
+            'CutoffTime for saturdays' => [
+                '6', Webshop::XPATH_WEBSHOP_SATURDAY_CUTOFFTIME, '11:00:00'
+            ],
+            'CutoffTime for midweekdays' => [
+                '4', Webshop::XPATH_WEBSHOP_CUTOFFTIME, '22:00:00'
+            ],
+            'CutoffTime when day is null' => [
+                null, Webshop::XPATH_WEBSHOP_CUTOFFTIME, '22:00:00'
+            ]
+        ];
+    }
+
+    /**
+     * @param $day
+     * @param $xpath
+     * @param $cutoffTime
+     *
+     * @dataProvider cutoffTimeForDayProvider
+     */
+    public function testGetCutOffTimeForDay($day, $xpath, $cutoffTime)
+    {
+        $instance = $this->getInstance();
+        $this->setXpath($xpath, $cutoffTime);
+
+        $result = $instance->getCutOffTimeForDay($day);
+        $this->assertEquals($cutoffTime, $result);
+    }
 }
