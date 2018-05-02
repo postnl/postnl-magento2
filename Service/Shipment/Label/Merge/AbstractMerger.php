@@ -96,7 +96,7 @@ class AbstractMerger
         $pdf = $this->fpdiFactory->create();
 
         if ($addPage) {
-            $pdf->addPage('L', 'A4');
+            $pdf->addPage('P', 'A4');
         }
 
         return $pdf;

@@ -35,6 +35,8 @@ use \Magento\Framework\Option\ArrayInterface;
 
 class LabelsizeSettings implements ArrayInterface
 {
+    const A4_LABELSIZE = 'A4';
+    const A6_LABELSIZE = 'A6';
     /**
      * @return array
      */
@@ -42,8 +44,8 @@ class LabelsizeSettings implements ArrayInterface
     {
         // @codingStandardsIgnoreStart
         $options = [
-            ['value' => 'A4', 'label' => __('A4 Format')],
-            ['value' => 'A6', 'label' => __('A6 Format')],
+            ['value' => static::A4_LABELSIZE, 'label' => __('A4 Format')],
+            ['value' => static::A6_LABELSIZE, 'label' => __('A6 Format')],
         ];
         // @codingStandardsIgnoreEnd
         return $options;

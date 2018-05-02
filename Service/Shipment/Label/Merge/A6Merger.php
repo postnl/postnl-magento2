@@ -52,7 +52,7 @@ class A6Merger extends AbstractMerger implements MergeInterface
             // @codingStandardsIgnoreLine
             $filename = $this->file->save($label->Output('S'));
 
-            $this->pdf->addPage('L', Fpdi::PAGE_SIZE_A6);
+            $this->pdf->addPage('P', Fpdi::PAGE_SIZE_A6);
             $this->pdf->setSourceFile($filename);
 
             $pageId = $this->pdf->importPage(1);

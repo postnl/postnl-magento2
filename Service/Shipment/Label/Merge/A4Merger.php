@@ -97,19 +97,18 @@ class A4Merger extends AbstractMerger implements MergeInterface
 
         if ($this->shouldAddNewPage($orientation)) {
             $this->labelCounter = 0;
-            $this->pdf->AddPage($orientation, 'A4');
+            $this->pdf->AddPage('P', 'A4');
         }
 
-        if ($count <= 1 && $orientation == 'L') {
+        if ($this->pdf->PageNo() == 0 || $this->labelCounter == 0) {
+            $this->pdf->AddPage('P', 'A4');
+        }
+
+        if ($count <= 1 && $orientation == 'P') {
             $this->increaseCounter();
         }
 
-        if ($this->pdf->PageNo() == 0 || $orientation == 'P') {
-            $this->labelCounter = 1;
-            $this->pdf->AddPage($orientation, 'A4');
-        }
-
-        list($xPosition, $yPosition) = $this->getPosition();
+        list($xPosition, $yPosition) = $this->getPosition($templateSize);
         $this->setLastOrientation($orientation);
         $this->pdf->useTemplate($templateId, $xPosition, $yPosition);
     }
@@ -123,29 +122,35 @@ class A4Merger extends AbstractMerger implements MergeInterface
 
         if ($this->labelCounter > 4) {
             $this->labelCounter = 1;
-            $this->pdf->addPage('L', 'A4');
+            $this->pdf->addPage('P', 'A4');
         }
     }
 
     /**
      * Get the position for the label based on the counter.
      *
+     * @param $templateSize
      * @return array
      */
-    private function getPosition()
+    private function getPosition($templateSize)
     {
+        // Global Pack should always start on 0 0 position
+        if ($templateSize['w'] > 210 && $templateSize['h'] > 297) {
+            return [0, 0];
+        }
+
         if ($this->labelCounter == 2) {
-            return [0, Fpdi::PAGE_SIZE_A6_WIDTH];
+            return [0, Fpdi::PAGE_SIZE_A6_HEIGHT];
         }
 
         if ($this->labelCounter == 3) {
-            return [Fpdi::PAGE_SIZE_A6_HEIGHT, 0];
+            return [Fpdi::PAGE_SIZE_A6_WIDTH, 0];
         }
 
         if ($this->labelCounter == 4) {
-            return [Fpdi::PAGE_SIZE_A6_HEIGHT, Fpdi::PAGE_SIZE_A6_WIDTH];
+            return [0, 0];
         }
 
-        return [0, 0];
+        return [Fpdi::PAGE_SIZE_A6_WIDTH, Fpdi::PAGE_SIZE_A6_HEIGHT];
     }
 }

@@ -302,3 +302,7 @@ Percent,Percent
 "Certificate number","Certificate number"
 "If you do not own a certificate certificate, leave this field empty.","If you do not own a certificate certificate, leave this field empty."
 "Default shipment type","Default shipment type"
+"No labels were created. If you're trying to generate Global Pack shipments, set your Label Size to A4. Please check your Label Size settings.","No labels were created. If you're trying to generate Global Pack shipments, set your Label Size to A4. Please check your Label Size settings."
+"Not all labels were created. Please check your Label Size settings. Labels are not generated for the following Shipment ID's: %1","Not all labels were created. Please check your Label Size settings. Labels are not generated for the following Shipment ID's: %1"
+"Some label types, like Global Pack or Combi EPS, can only be printed in A4 format.","Some label types, like Global Pack or Combi EPS, can only be printed in A4 format."
+"The PostNL extension is compatible with the software mentoined below. The use of other software and extensions is at your own risk and is not supported by PostNL.","The PostNL extension is compatible with the software mentoined below. The use of other software and extensions is at your own risk and is not supported by PostNL."
