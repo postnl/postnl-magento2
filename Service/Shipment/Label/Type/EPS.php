@@ -53,7 +53,7 @@ class EPS extends Domestic
         $filename = $this->saveTempLabel($label);
 
         $this->createPdf();
-        $this->pdf->AddPage('L', Fpdi::PAGE_SIZE_A6);
+        $this->pdf->AddPage('P', Fpdi::PAGE_SIZE_A6);
         $this->pdf->setSourceFile($filename);
 
         if ($this->isRotated()) {
@@ -73,9 +73,9 @@ class EPS extends Domestic
     private function insertRotated()
     {
         $this->templateInserted = true;
-        $this->pdf->Rotate(-90);
         $pageId = $this->pdf->importPage(1);
-        $this->pdf->useTemplate($pageId, 0, -125, Fpdi::PAGE_SIZE_A6_WIDTH, Fpdi::PAGE_SIZE_A6_HEIGHT);
+        $this->pdf->Rotate(90);
+        $this->pdf->useTemplate($pageId, -85, 0, Fpdi::PAGE_SIZE_A6_WIDTH, Fpdi::PAGE_SIZE_A6_HEIGHT);
         $this->pdf->Rotate(0);
     }
 
@@ -86,7 +86,7 @@ class EPS extends Domestic
     {
         $this->templateInserted = true;
         $pageId = $this->pdf->importPage(1);
-        $this->pdf->useTemplate($pageId, -2, 0);
+        $this->pdf->useTemplate($pageId, 0, 0, Fpdi::PAGE_SIZE_A6_WIDTH, Fpdi::PAGE_SIZE_A6_HEIGHT);
     }
 
     /**
@@ -97,7 +97,7 @@ class EPS extends Domestic
         $pageId = $this->pdf->importPage(1);
         $sizes = $this->pdf->getTemplateSize($pageId);
 
-        if (isset($sizes['w']) && isset($sizes['h']) && $sizes['w'] < $sizes['h']) {
+        if (isset($sizes['w']) && isset($sizes['h']) && $sizes['w'] > $sizes['h']) {
             return true;
         }
 
