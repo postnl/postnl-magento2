@@ -10079,6 +10079,7 @@ CREATE TABLE `vault_payment_token` (
   `gateway_token` varchar(255) NOT NULL COMMENT 'Gateway Token',
   `details` text COMMENT 'Details',
   `is_active` smallint(5) unsigned DEFAULT NULL COMMENT 'Is active flag',
+  `is_visible` smallint(5) unsigned DEFAULT NULL COMMENT 'Is visible flag',
   PRIMARY KEY (`entity_id`),
   UNIQUE KEY `VAULT_PAYMENT_TOKEN_HASH_UNIQUE_INDEX_PUBLIC_HASH` (`public_hash`),
   UNIQUE KEY `VAULT_PAYMENT_TOKEN_UNIQUE_INDEX_CUSTOMER_ID_GATEWAY_TOKEN` (`customer_id`,`gateway_token`),
