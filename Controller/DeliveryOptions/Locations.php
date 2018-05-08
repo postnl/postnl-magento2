@@ -43,6 +43,7 @@ use Magento\Framework\App\Response\Http;
 use Magento\Framework\App\Action\Context;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
+use TIG\PostNL\Service\Quote\ShippingDuration;
 
 class Locations extends AbstractDeliveryOptions
 {
@@ -70,6 +71,7 @@ class Locations extends AbstractDeliveryOptions
      * @param LocationsEndpoint  $locations
      * @param DeliveryDate       $deliveryDate
      * @param Calculator         $priceCalculator
+     * @param ShippingDuration   $shippingDuration
      */
     public function __construct(
         Context $context,
@@ -79,7 +81,8 @@ class Locations extends AbstractDeliveryOptions
         AddressEnhancer $addressEnhancer,
         LocationsEndpoint $locations,
         DeliveryDate $deliveryDate,
-        Calculator $priceCalculator
+        Calculator $priceCalculator,
+        ShippingDuration $shippingDuration
     ) {
         $this->addressEnhancer   = $addressEnhancer;
         $this->locationsEndpoint = $locations;
@@ -90,6 +93,7 @@ class Locations extends AbstractDeliveryOptions
             $orderFactory,
             $checkoutSession,
             $quoteToRateRequest,
+            $shippingDuration,
             $deliveryDate
         );
     }

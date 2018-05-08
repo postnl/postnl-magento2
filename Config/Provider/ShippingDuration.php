@@ -29,48 +29,47 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Webservices\Api;
+namespace TIG\PostNL\Config\Provider;
 
-use TIG\PostNL\Config\Provider\Webshop;
+use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
-class CutoffTimes
+class ShippingDuration extends AbstractSource
 {
-    /** @var  Webshop */
-    private $webshopSettings;
-
-    /**
-     * @param Webshop $webshopSettings
-     */
-    public function __construct(
-        Webshop $webshopSettings
-    ) {
-        $this->webshopSettings = $webshopSettings;
-    }
-
+    const CONFIGURATION_VALUE = 'default';
     /**
      * @return array
      */
-    public function get()
+    public function getAllOptions()
     {
-        return array_map(function ($value) {
-            $day = (string) $value;
-            return [
-                'Day'  => '0'.$day,
-                'Time' => $this->webshopSettings->getCutOffTimeForDay($day),
-                'Available' => $this->isAvailable($day),
+        $options[] = [
+            'value' => static::CONFIGURATION_VALUE,
+            // @codingStandardsIgnoreLine
+            'label' => __('Use configuration value')
+        ];
+
+        foreach (range(0, 14) as $day) {
+            $options[] = [
+                'value' => $day,
+                'label' => $this->getLabel($day)
             ];
-        }, range(1, 7));
+        }
+
+        return $options;
     }
 
     /**
      * @param $day
      *
-     * @return string
+     * @return \Magento\Framework\Phrase
      */
-    private function isAvailable($day)
+    private function getLabel($day)
     {
-        $shipmentDays = explode(',', $this->webshopSettings->getShipmentDays());
-        $day = $day == '7' ? '0' : $day;
-        return in_array($day, $shipmentDays) ? '1' : '0';
+        if ($day == 1) {
+            // @codingStandardsIgnoreLine
+            return __('%1 Day', $day);
+        }
+
+        // @codingStandardsIgnoreLine
+        return __('%1 Days', $day);
     }
 }

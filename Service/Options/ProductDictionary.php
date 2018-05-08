@@ -37,9 +37,8 @@ use Magento\Catalog\Model\ProductRepository;
 use Magento\Sales\Api\Data\ShipmentItemInterface;
 use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\FilterGroup;
+
+use TIG\PostNL\Service\Product\CollectionByItems;
 
 class ProductDictionary
 {
@@ -49,36 +48,20 @@ class ProductDictionary
     private $productRepository;
 
     /**
-     * @var SearchCriteriaBuilder
+     * @var CollectionByItems
      */
-    private $searchCriteriaBuilder;
-
-    /**
-     * @var FilterBuilder
-     */
-    private $filterBuilder;
-
-    /**
-     * @var FilterGroup
-     */
-    private $filterGroup;
+    private $collectionByItems;
 
     /**
      * @param ProductRepository        $productRepository
-     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
-     * @param FilterBuilder            $filterBuilder
-     * @param FilterGroup              $filterGroup
+     * @param CollectionByItems        $collectionByItems
      */
     public function __construct(
         ProductRepository $productRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder,
-        FilterGroup $filterGroup
+        CollectionByItems $collectionByItems
     ) {
         $this->productRepository = $productRepository;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->filterBuilder = $filterBuilder;
-        $this->filterGroup = $filterGroup;
+        $this->collectionByItems = $collectionByItems;
     }
 
     /**
@@ -89,19 +72,8 @@ class ProductDictionary
      */
     public function get($items, array $postNLTypes)
     {
-        $skus = [];
-        /** @var ShipmentItemInterface|OrderItemInterface|QuoteItem $item */
-        foreach ($items as $item) {
-            $skus[] = $item->getSku();
-        }
-
-        $this->setFilterGroups($skus);
-
-        $this->searchCriteriaBuilder->setFilterGroups([$this->filterGroup]);
-        /** @var \Magento\Catalog\Api\Data\ProductSearchResultsInterface $products */
-        $products = $this->productRepository->getList($this->searchCriteriaBuilder->create());
-
-        return array_filter($products->getItems(), function (ProductInterface $product) use ($postNLTypes) {
+        $products = $this->collectionByItems->get($items);
+        return array_filter($products, function (ProductInterface $product) use ($postNLTypes) {
             $attribute = $product->getCustomAttribute(PostNLType::POSTNL_PRODUCT_TYPE);
             $value = $attribute !== null ? $attribute->getValue() : false;
             return in_array($value, $postNLTypes);
@@ -124,20 +96,5 @@ class ProductDictionary
         }
 
         return $product->getId();
-    }
-
-    /**
-     * @param array $skus
-     */
-    private function setFilterGroups($skus)
-    {
-        $this->filterGroup->setFilters([
-            // @codingStandardsIgnoreLine
-            $this->filterBuilder
-                ->setField(ProductInterface::SKU)
-                ->setConditionType('in')
-                ->setValue($skus)
-                ->create()
-        ]);
     }
 }
