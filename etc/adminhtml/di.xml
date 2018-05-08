@@ -39,6 +39,15 @@
             <argument name="types" xsi:type="array">
                 <item name="eps" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\EPSFactory</item>
                 <item name="domestic" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\DomesticFactory</item>
+                <item name="gp" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\GlobalPackFactory</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="TIG\PostNL\Service\Shipment\Labelling\Handler">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="gp" xsi:type="object">\TIG\PostNL\Service\Shipment\Labelling\Handler\GlobalpackFactory</item>
             </argument>
         </arguments>
     </type>

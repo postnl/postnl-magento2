@@ -97,4 +97,15 @@ class ShipmentTest extends TestCase
 
         return $shipment;
     }
+
+    /**
+     *  Test if the extra cover amount is gathered correctly from shipments
+     *  TODO: Write tests for bundle products and configurable products
+     */
+    public function testExtraCoverAmount()
+    {
+        $postnlShipment = include __DIR__ . '/../../Fixtures/Shipments/PostNLShipment.php';
+
+        $this->assertEquals($postnlShipment->getExtraCoverAmount(), 10);
+    }
 }

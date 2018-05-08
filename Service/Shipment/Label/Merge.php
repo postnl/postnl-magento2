@@ -66,20 +66,26 @@ class Merge
     }
 
     /**
-     * @param \TIG\PostNL\Api\Data\ShipmentLabelInterface[] $labels
+     * @param \TIG\PostNL\Service\Pdf\Fpdi[] $labels
+     * @codingStandardsIgnoreStart
+     * @param bool $createNewPdf Sometimes you want to generate a new Label PDF, for example when printing packingslips
+     *                           This parameter indicates whether to reuse the existing label PDF
+     *                           @TODO Refactor to a cleaner way rather than chaining all the way to \TIG\PostNL\Service\Shipment\Label\Merge\AbstractMerger
+     * @codingStandardsIgnoreEnd
      *
-     * @return string|FPDI
+     * @return string
      */
-    public function files(array $labels)
+    public function files(array $labels, $createNewPdf = false)
     {
         $output = '';
-        if ($this->webshop->getLabelSize() == 'A4') {
-            $result = $this->a4Merger->files($labels);
+        if ($this->webshop->getLabelSize() == 'A4' || $createNewPdf) {
+            $result = $this->a4Merger->files($labels, $createNewPdf);
             $output = $result->Output('s');
         }
 
-        if ($this->webshop->getLabelSize() == 'A6') {
-            $result = $this->a6Merger->files($labels);
+        //  Create PDF is used for packingslips which are always A4.
+        if ($this->webshop->getLabelSize() == 'A6' && !$createNewPdf) {
+            $result = $this->a6Merger->files($labels, $createNewPdf);
             $output = $result->Output('s');
         }
 

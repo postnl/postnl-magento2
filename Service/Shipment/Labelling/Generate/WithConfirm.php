@@ -39,6 +39,7 @@ use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Model\ShipmentLabelFactory;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Webservices\Endpoints\Labelling;
+use TIG\PostNL\Service\Shipment\Labelling\Handler;
 
 class WithConfirm extends GenerateAbstract
 {
@@ -48,6 +49,7 @@ class WithConfirm extends GenerateAbstract
         ShipmentLabelRepositoryInterface $shipmentLabelRepository,
         ShipmentRepositoryInterface $shipmentRepository,
         Log $logger,
+        Handler $handler,
         Labelling $labelling
     ) {
         parent::__construct(
@@ -55,7 +57,8 @@ class WithConfirm extends GenerateAbstract
             $shipmentLabelFactory,
             $shipmentLabelRepository,
             $shipmentRepository,
-            $logger
+            $logger,
+            $handler
         );
 
         $this->labelService = $labelling;

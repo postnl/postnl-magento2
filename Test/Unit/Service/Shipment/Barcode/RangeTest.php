@@ -33,6 +33,7 @@ namespace TIG\PostNL\Test\Unit\Service\Shipment\Barcode;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
+use TIG\PostNL\Config\Provider\Globalpack;
 use TIG\PostNL\Service\Shipment\Barcode\Range;
 use TIG\PostNL\Test\TestCase;
 
@@ -118,14 +119,13 @@ class RangeTest extends TestCase
         $accountConfigurationMock = $this->getFakeMock(AccountConfiguration::class, true);
         $this->mockFunction($accountConfigurationMock, 'getCustomerCode', '123456');
 
-        $defaultConfigurationMock = $this->getFakeMock(DefaultConfiguration::class, true);
-        $this->mockFunction($defaultConfigurationMock, 'getBarcodeGlobalType', 'CD');
-        $this->mockFunction($defaultConfigurationMock, 'getBarcodeGlobalRange', '1660');
-
+        $defaultConfigurationMock = $this->getFakeMock(Globalpack::class, true);
+        $this->mockFunction($defaultConfigurationMock, 'getBarcodeType', 'CD');
+        $this->mockFunction($defaultConfigurationMock, 'getBarcodeRange', '1660');
 
         $instance = parent::getInstance($args + [
             'accountConfiguration' => $accountConfigurationMock,
-            'defaultConfiguration' => $defaultConfigurationMock
+            'globalpack' => $defaultConfigurationMock
         ]);
 
         return $instance;
