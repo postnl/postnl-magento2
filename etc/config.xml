@@ -63,6 +63,8 @@
             </printer>
             <webshop_shipping>
                 <cutoff_time>18:00:00</cutoff_time>
+                <sunday_cutoff_time>18:00:00</sunday_cutoff_time>
+                <saturday_cutoff_time>18:00:00</saturday_cutoff_time>
                 <shipment_days>0,1,2,3,4,5,6</shipment_days>
                 <email_enabled>1</email_enabled>
             </webshop_shipping>
