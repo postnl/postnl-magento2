@@ -67,15 +67,6 @@ define([
             }
 
             return result;
-        },
-
-        /**
-         * MAGETWO-83272
-         * @param step
-         */
-        navigate: function (step) {
-            // @codingStandardsIgnoreLine
-            step && step.isVisible(true);
         }
     });
 });
