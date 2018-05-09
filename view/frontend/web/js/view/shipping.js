@@ -74,6 +74,7 @@ define([
          * @param step
          */
         navigate: function (step) {
+            // @codingStandardsIgnoreLine
             step && step.isVisible(true);
         }
     });
