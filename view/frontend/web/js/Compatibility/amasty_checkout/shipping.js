@@ -28,6 +28,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+// @codingStandardsIgnoreFile
 define([
     'jquery',
     'Magento_Ui/js/lib/view/utils/async',
