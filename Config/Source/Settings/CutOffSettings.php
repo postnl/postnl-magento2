@@ -42,7 +42,7 @@ class CutOffSettings implements ArrayInterface
     {
         $options = [
             // @codingStandardsIgnoreLine
-            ['value' => '', 'label' => __('No cut-off time')],
+            ['value' => '00:00:00', 'label' => __('00:00')],
         ];
 
         for ($hour = 0; $hour < 24; $hour++) {
@@ -59,13 +59,8 @@ class CutOffSettings implements ArrayInterface
      */
     private function addHour($hour)
     {
-        $hour = str_pad($hour, 2, '0', STR_PAD_LEFT);
-
+        $hour    = str_pad($hour, 2, '0', STR_PAD_LEFT);
         $options = [];
-        if ($hour !== '00') {
-            // @codingStandardsIgnoreLine
-            $options[] = ['value' => $hour . ':00:00', 'label' => __($hour . ':00')];
-        }
 
         // @codingStandardsIgnoreStart
         $options[] = ['value' => $hour . ':15:00', 'label' => __($hour . ':15')];

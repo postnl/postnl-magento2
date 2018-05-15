@@ -60,7 +60,7 @@ class ShipAt
     {
         $address = $this->quote->getShippingAddress();
 
-        if (!$address) {
+        if (!$address || !$order) {
             return null;
         }
 

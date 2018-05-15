@@ -44,16 +44,13 @@ class CutOffSettingsTest extends TestCase
         $instance = $this->getInstance();
         $result = $instance->toOptionArray();
 
-        $this->assertEquals('No cut-off time', $result[0]['label']->render());
+        $this->assertEquals('00:00', $result[0]['label']->render());
 
-        $hours = array_filter($result, function ($item) {
-            return $item['value'] != '';
-        });
-
-        $this->assertCount(95, $hours);
-        $this->assertEquals('00:15:00', $hours[1]['value']);
-        $this->assertEquals('00:30:00', $hours[2]['value']);
-        $this->assertEquals('00:45:00', $hours[3]['value']);
-        $this->assertEquals('23:45:00', end($hours)['value']);
+        // 24 hours x 3 + default 1 = 73;
+        $this->assertCount(73, $result);
+        $this->assertEquals('00:15:00', $result[1]['value']);
+        $this->assertEquals('00:30:00', $result[2]['value']);
+        $this->assertEquals('00:45:00', $result[3]['value']);
+        $this->assertEquals('23:45:00', end($result)['value']);
     }
 }
