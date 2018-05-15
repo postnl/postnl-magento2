@@ -67,6 +67,7 @@
                 <saturday_cutoff_time>18:00:00</saturday_cutoff_time>
                 <shipment_days>0,1,2,3,4,5,6</shipment_days>
                 <email_enabled>1</email_enabled>
+                <shipping_duration>1</shipping_duration>
             </webshop_shipping>
             <webshop_track_and_trace>
                 <template>tig_postnl_webshop_track_and_trace_template</template>
