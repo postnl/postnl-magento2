@@ -41,6 +41,16 @@ class A4Merger extends AbstractMerger implements MergeInterface
     private $labelCounter = 0;
 
     /**
+     * @var null
+     */
+    private $currentLabelType = null;
+
+    /**
+     * @var null
+     */
+    private $lastLabelType = null;
+
+    /**
      * @param Fpdi[] $labels
      * @codingStandardsIgnoreStart
      * @param bool  $createNewPdf Sometimes you want to generate a new Label PDF, for example when printing packingslips
@@ -52,7 +62,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
      */
     public function files(array $labels, $createNewPdf = false)
     {
-        //By resetting the counter, labels will start in the upper-left when creating a new PDF
+        //By resetting the counter, labels will start in the bottom-right when creating a new PDF
         if ($createNewPdf) {
             $this->labelCounter = 0;
         }
@@ -79,8 +89,9 @@ class A4Merger extends AbstractMerger implements MergeInterface
         for ($pageNo = 1; $pageNo <= $count; $pageNo++) {
             $templateId   = $this->pdf->importPage($pageNo);
             $templateSize = $this->pdf->getTemplateSize($templateId);
-
+            $this->setCurrentLabelType($templateSize);
             $this->addPageToPdf($templateId, $templateSize, $count);
+            $this->setLastLabelType();
         }
     }
 
@@ -95,8 +106,8 @@ class A4Merger extends AbstractMerger implements MergeInterface
     {
         $orientation = $templateSize['w'] > $templateSize['h'] ? 'L' :'P';
 
-        if ($this->shouldAddNewPage($orientation)) {
-            $this->labelCounter = 0;
+        if ($this->shouldAddNewPage($orientation) || $this->isNewLabelType()) {
+            $this->labelCounter = $this->isNewLabelType() ? 1 : 0;
             $this->pdf->AddPage('P', 'A4');
         }
 
@@ -104,11 +115,11 @@ class A4Merger extends AbstractMerger implements MergeInterface
             $this->pdf->AddPage('P', 'A4');
         }
 
-        if ($count <= 1 && $orientation == 'P') {
+        if ($count <= 1 && $orientation == 'P' && $this->currentLabelType !== 'GP') {
             $this->increaseCounter();
         }
 
-        list($xPosition, $yPosition) = $this->getPosition($templateSize);
+        list($xPosition, $yPosition) = $this->getPosition();
         $this->setLastOrientation($orientation);
         $this->pdf->useTemplate($templateId, $xPosition, $yPosition);
     }
@@ -128,14 +139,12 @@ class A4Merger extends AbstractMerger implements MergeInterface
 
     /**
      * Get the position for the label based on the counter.
-     *
-     * @param $templateSize
      * @return array
      */
-    private function getPosition($templateSize)
+    private function getPosition()
     {
         // Global Pack should always start on 0 0 position
-        if ($templateSize['w'] > 210 && $templateSize['h'] > 297) {
+        if ($this->currentLabelType == 'GP') {
             return [0, 0];
         }
 
@@ -152,5 +161,44 @@ class A4Merger extends AbstractMerger implements MergeInterface
         }
 
         return [Fpdi::PAGE_SIZE_A6_WIDTH, Fpdi::PAGE_SIZE_A6_HEIGHT];
+    }
+
+    /**
+     * @return bool
+     */
+    private function isNewLabelType()
+    {
+        if ($this->lastLabelType == null || $this->currentLabelType == null) {
+            return false;
+        }
+
+        if ($this->currentLabelType === $this->lastLabelType) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $templateSize
+     */
+    private function setCurrentLabelType($templateSize)
+    {
+        if ($templateSize['w'] > 210 && $templateSize['h'] > 297) {
+            // Globalpack
+            $this->currentLabelType = 'GP';
+            return;
+        }
+
+        //  Regular Label
+        $this->currentLabelType = 'RL';
+    }
+
+    /**
+     * Register last label type
+     */
+    private function setLastLabelType()
+    {
+        $this->lastLabelType = $this->currentLabelType;
     }
 }
