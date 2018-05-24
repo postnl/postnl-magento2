@@ -36,6 +36,7 @@ use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\Convert\Order as ConvertOrder;
 use TIG\PostNL\Model\ShipmentRepository;
+use TIG\PostNL\Helper\Data;
 
 class CreateShipment
 {
@@ -60,6 +61,11 @@ class CreateShipment
     private $shipment;
 
     /**
+     * @var Data
+     */
+    private $postNLHelper;
+
+    /**
      * @var array
      */
     private $errors = [];
@@ -67,13 +73,16 @@ class CreateShipment
     /**
      * @param ConvertOrder                         $convertOrder
      * @param ShipmentRepository $shipmentRepository
+     * @param Data  $postnlHelper
      */
     public function __construct(
         ConvertOrder $convertOrder,
-        ShipmentRepository $shipmentRepository
+        ShipmentRepository $shipmentRepository,
+        Data $postnlHelper
     ) {
         $this->convertOrder = $convertOrder;
         $this->shipmentRepository = $shipmentRepository;
+        $this->postNLHelper = $postnlHelper;
     }
 
     /**
@@ -162,7 +171,7 @@ class CreateShipment
             return false;
         }
 
-        if ($this->currentOrder->getShippingMethod() !== 'tig_postnl_regular') {
+        if (!$this->postNLHelper->isPostNLOrder($this->currentOrder)) {
             return false;
         }
 
