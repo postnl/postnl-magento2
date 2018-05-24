@@ -236,7 +236,7 @@ class CreatePostNLShipment implements ObserverInterface
         if (in_array($shippingMethod, $allowedMethods)) {
             return true;
         }
-                
+
         return $shippingMethod == 'tig_postnl_regular';
     }
 }
