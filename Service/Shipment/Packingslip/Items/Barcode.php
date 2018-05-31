@@ -29,16 +29,13 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment\Label;
+namespace TIG\PostNL\Service\Shipment\Packingslip\Items;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Io\File as IoFile;
 
-class File
+class Barcode implements ItemsInterface
 {
-    const TEMP_LABEL_FOLDER = 'PostNL' . DIRECTORY_SEPARATOR . 'templabel';
-    const TEMP_LABEL_FILENAME = 'TIG_PostNL_temp.pdf';
-
     /**
      * @var DirectoryList
      */
@@ -67,52 +64,36 @@ class File
     }
 
     /**
-     * @param $contents
-     *
-     * @return string
-     * @throws \Exception
+     * @inheritdoc
      */
-    public function save($contents)
+    public function add($packingSlip, $shipment)
     {
-        $filename = $this->reserveFilename();
+        if ($packingSlip instanceof \Zend_Pdf) {
+            $packingSlip = $packingSlip->render();
+        }
 
-        $this->ioFile->checkAndCreateFolder($this->getPath());
-        $this->ioFile->write($filename, $contents);
+        // @codingStandardsIgnoreLine
+        $pdf = new \Zend_Pdf();
 
-        return $filename;
-    }
+        $packingSlip = \Zend_Pdf::parse($packingSlip);
+        /** @var \Zend_Pdf_Page $page */
+        foreach ($packingSlip->pages as $page) {
 
-    /**
-     * Cleanup old files.
-     */
-    public function cleanup()
-    {
-        foreach ($this->fileList as $file) {
-            // @codingStandardsIgnoreLine
-            $this->ioFile->rm($file);
+            $pdf->pages[] = clone $page;
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getPath()
+    private function createBarcode($barcode)
     {
-        $tempFilePath = $this->directoryList->getPath('var') . DIRECTORY_SEPARATOR . self::TEMP_LABEL_FOLDER;
+        $barcodeOptions = [
+            'text'      => $barcode,
+            'barHeight' => '50',
+            'factor'    => '1',
+            'drawText'  => true
+        ];
 
-        return $tempFilePath;
-    }
+        $imageResource = \Zend_Barcode::draw('code128', 'image', $barcodeOptions, []);
 
-    /**
-     * @return string
-     */
-    public function reserveFilename()
-    {
-        $tempFilePath     = $this->getPath();
-        $tempFileName     = sha1(microtime()) . '-' . time() . '-' . self::TEMP_LABEL_FILENAME;
-        $filename         = $tempFilePath . DIRECTORY_SEPARATOR . $tempFileName;
-        $this->fileList[] = $filename;
 
-        return $filename;
     }
 }
