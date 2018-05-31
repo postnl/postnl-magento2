@@ -89,7 +89,7 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
      */
     public function getValue()
     {
-        if (!$this->shippingOptions->isShippingoptionsActive()) {
+        if (!$this->shippingOptions->isShippingoptionsActive() || $this->accountConfiguration->isModusOff()) {
             return false;
         }
 
