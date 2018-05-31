@@ -71,12 +71,26 @@ class FirstDeliveryDate
     public function set(OrderInterface $order)
     {
         $address = $this->quote->getShippingAddress();
-        if (!$address) {
+        if ($address === null) {
+            return null;
+        }
+
+        if (!$this->validateCountry($address)) {
             return null;
         }
 
         $order->setDeliveryDate($this->getDeliveryDate($address));
         return $order;
+    }
+
+    /**
+     * @param Address $address
+     *
+     * @return bool
+     */
+    private function validateCountry(Address $address)
+    {
+        return in_array($address->getCountryId(), ['NL', 'BE']);
     }
 
     /**

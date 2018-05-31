@@ -96,6 +96,9 @@
             <div>
                 <ul class="version-compatibility">
                     <li>
+                        <?php echo $block->escapeHtml(__('The PostNL extension is compatible with the software mentoined below. The use of other software and extensions is at your own risk and is not supported by PostNL.'));?>
+                    </li>
+                    <li>
                         <span class="text"><?php echo $block->escapeHtml(__('Magento Enterprise Edition version'));?>:</span>
                         <span class="version"><?php echo $block->getSupportedMagentoVersions(); ?></span>
                     </li>

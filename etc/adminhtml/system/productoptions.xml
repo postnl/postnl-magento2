@@ -53,7 +53,34 @@
             <config_path>tig_postnl/productoptions/default_option</config_path>
         </field>
 
-        <field id="default_evening_option" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+        <field id="use_alternative_default" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Use an alternative default option</label>
+            <comment><![CDATA[Enable this to use an alternative default option when a shipment's total value reaches a certain amount.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/productoptions/use_alternative_default</config_path>
+        </field>
+
+        <field id="alternative_default_min_amount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Minimum amount</label>
+            <comment><![CDATA[The alternative default option will be used from this value.]]></comment>
+            <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
+            <config_path>tig_postnl/productoptions/alternative_default_min_amount</config_path>
+            <depends>
+                <field id="use_alternative_default">1</field>
+            </depends>
+        </field>
+
+        <field id="alternative_default_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Alternative default shipping option</label>
+            <comment><![CDATA[This option will be used as default from the given amount.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
+            <config_path>tig_postnl/productoptions/alternative_default_option</config_path>
+            <depends>
+                <field id="use_alternative_default">1</field>
+            </depends>
+        </field>
+
+        <field id="default_evening_option" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default evening option</label>
             <comment><![CDATA[Select the default product option for evening delivery shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsEveningOptions</source_model>
@@ -63,7 +90,7 @@
             </depends>
         </field>
 
-        <field id="default_extraathome_option" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+        <field id="default_extraathome_option" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default Extra@Home option</label>
             <comment><![CDATA[Select the default product option for Extra@Home shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getExtraAtHomeOptions</source_model>
@@ -73,7 +100,7 @@
             </depends>
         </field>
 
-        <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+        <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default post office delivery option</label>
             <comment><![CDATA[Select the default product option for postoffice delivery shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakOptions</source_model>
@@ -83,7 +110,7 @@
             </depends>
         </field>
 
-        <field id="default_pakjegemak_early_option" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+        <field id="default_pakjegemak_early_option" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default postoffice early pickup option</label>
             <comment><![CDATA[Select the default product option for early pickup option.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakEarlyDeliveryOptions</source_model>
@@ -93,7 +120,7 @@
             </depends>
         </field>
 
-        <field id="default_evening_be_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+        <field id="default_evening_be_option" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default evening for Belgium option</label>
             <comment><![CDATA[Select the default product option for evening delivery to Belgium shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsEveningOptionsBe</source_model>

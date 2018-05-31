@@ -38,6 +38,7 @@ use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Webservices\Soap;
+use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
 
 class SentDate extends AbstractEndpoint
 {
@@ -82,21 +83,29 @@ class SentDate extends AbstractEndpoint
     private $timeframeOptions;
 
     /**
-     * @param Soap              $soap
-     * @param TimezoneInterface $timezone
-     * @param Options           $timeframeOptions
-     * @param Message           $message
+     * @var DeliveryDateFallback
+     */
+    private $dateFallback;
+
+    /**
+     * @param Soap                 $soap
+     * @param TimezoneInterface    $timezone
+     * @param Options              $timeframeOptions
+     * @param Message              $message
+     * @param DeliveryDateFallback $dateFallback
      */
     public function __construct(
         Soap $soap,
         TimezoneInterface $timezone,
         Options $timeframeOptions,
-        Message $message
+        Message $message,
+        DeliveryDateFallback $dateFallback
     ) {
         $this->soap = $soap;
         $this->message = $message->get('');
         $this->timezone = $timezone;
         $this->timeframeOptions = $timeframeOptions;
+        $this->dateFallback = $dateFallback;
     }
 
     /**
@@ -192,7 +201,7 @@ class SentDate extends AbstractEndpoint
             return $this->formatDate($deliveryDate);
         }
 
-        return $this->formatDate('next weekday');
+        return $this->dateFallback->get();
     }
 
     /**

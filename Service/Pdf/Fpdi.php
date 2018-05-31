@@ -79,6 +79,54 @@ class Fpdi extends \FPDI
     }
 
     /**
+     * Converts pixels to points. 3.8 pixels is 1 pt in pdfs.
+     *
+     * @param int $pixels
+     *
+     * @return float|int
+     */
+    function pixelsToPoints($pixels = 0)
+    {
+        $points = 0;
+
+        if ($pixels != 0) {
+            $points = round($pixels / 3.8, 1);
+        }
+
+        return $points;
+    }
+
+    /**
+     * @param string   $file
+     * @param null|int $xPosition
+     * @param null|int $yPosition
+     * @param int      $width
+     */
+    function addSinglePage($file, $xPosition = null, $yPosition = null, $width = 0)
+    {
+        $this->setSourceFile($file);
+        $pageId = $this->importPage(1);
+        $this->useTemplate($pageId, $xPosition, $yPosition, $width);
+    }
+
+    /**
+     * @param string   $file
+     * @param null|int $xPosition
+     * @param null|int $yPosition
+     * @param int      $width
+     */
+    function addMultiplePages($file, $xPosition = null, $yPosition = null, $width = 0)
+    {
+        $pages = $this->setSourceFile($file);
+
+        for ($page = 1; $page <= $pages; $page++) {
+            $this->AddPage('P', 'A4');
+            $pageId = $this->importPage($page);
+            $this->useTemplate($pageId, $xPosition, $yPosition, $width);
+        }
+    }
+
+    /**
      * Close the page.
      */
     protected function _endpage()
