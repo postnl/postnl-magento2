@@ -43,7 +43,7 @@ interface QuoteInterface
     public function setQuote(MagentoQuote $quote);
 
     /**
-     * @return Quote
+     * @return MagentoQuote
      */
     public function getQuote();
 

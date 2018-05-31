@@ -35,6 +35,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\Collection;
 use TIG\PostNL\Service\Shipment\CreateShipment;
 use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Helper\Data as Helper;
 
 class CreateShipmentTest extends TestCase
 {
@@ -99,6 +100,13 @@ class CreateShipmentTest extends TestCase
             ->getMock();
         $collectionMock->expects($this->once())->method('getSize')->willReturn($size);
 
+        $mockHelper = $this->getMockBuilder(Helper::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isPostNLOrder'])
+            ->getMock();
+        $isPostNLShipment = $shippingMethod == 'tig_postnl_regular';
+        $mockHelper->expects($this->any())->method('isPostNLOrder')->willReturn($isPostNLShipment);
+
         $orderMock = $this->getMockBuilder(Order::class)
             ->disableOriginalConstructor()
             ->setMethods(['getShipmentsCollection', 'canShip', 'getShippingMethod'])
@@ -107,7 +115,9 @@ class CreateShipmentTest extends TestCase
         $orderMock->method('canShip')->willReturn($canShip);
         $orderMock->method('getShippingMethod')->willReturn($shippingMethod);
 
-        $instance = $this->getInstance();
+        $instance = $this->getInstance([
+            'postnlHelper' => $mockHelper
+        ]);
         $this->setProperty('currentOrder', $orderMock, $instance);
 
         $result = $this->invoke('isValidOrder', $instance);

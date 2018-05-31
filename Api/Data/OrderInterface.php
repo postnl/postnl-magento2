@@ -269,4 +269,16 @@ interface OrderInterface
      * @return string
      */
     public function getUpdatedAt();
+
+    /**
+     * @return int
+     */
+    public function getShippingDuration();
+
+    /**
+     * @param $value
+     *
+     * @return int
+     */
+    public function setShippingDuration($value);
 }

@@ -29,28 +29,47 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Config\Source\Settings;
+namespace TIG\PostNL\Config\Provider;
 
-use TIG\PostNL\Config\Source\Settings\CutOffSettings;
-use TIG\PostNL\Test\TestCase;
+use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
-class CutOffSettingsTest extends TestCase
+class ShippingDuration extends AbstractSource
 {
-    public $instanceClass = CutOffSettings::class;
-
-    public function testToOptionArray()
+    const CONFIGURATION_VALUE = 'default';
+    /**
+     * @return array
+     */
+    public function getAllOptions()
     {
-        /** @var CutOffSettings $instance */
-        $instance = $this->getInstance();
-        $result = $instance->toOptionArray();
+        $options[] = [
+            'value' => static::CONFIGURATION_VALUE,
+            // @codingStandardsIgnoreLine
+            'label' => __('Use configuration value')
+        ];
 
-        $this->assertEquals('00:00', $result[0]['label']->render());
+        foreach (range(0, 14) as $day) {
+            $options[] = [
+                'value' => $day,
+                'label' => $this->getLabel($day)
+            ];
+        }
 
-        // 24 hours x 3 + default 1 = 73;
-        $this->assertCount(73, $result);
-        $this->assertEquals('00:15:00', $result[1]['value']);
-        $this->assertEquals('00:30:00', $result[2]['value']);
-        $this->assertEquals('00:45:00', $result[3]['value']);
-        $this->assertEquals('23:45:00', end($result)['value']);
+        return $options;
+    }
+
+    /**
+     * @param $day
+     *
+     * @return \Magento\Framework\Phrase
+     */
+    private function getLabel($day)
+    {
+        if ($day == 1) {
+            // @codingStandardsIgnoreLine
+            return __('%1 Day', $day);
+        }
+
+        // @codingStandardsIgnoreLine
+        return __('%1 Days', $day);
     }
 }

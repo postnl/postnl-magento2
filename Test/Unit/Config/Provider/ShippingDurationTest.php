@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,16 +28,24 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="1.4.2">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Directory"/>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Quote"/>
-            <module name="Magento_Checkout"/>
-        </sequence>
-    </module>
-</config>
+ */
+namespace TIG\PostNL\Test\Unit\Config\Provider;
+
+use TIG\PostNL\Config\Provider\ShippingDuration;
+use TIG\PostNL\Test\TestCase;
+
+class ShippingDurationTest extends TestCase
+{
+    protected $instanceClass = ShippingDuration::class;
+
+    public function testGetAllOptions()
+    {
+        $options = $this->getInstance()->getAllOptions();
+        $defaultOptions = array_filter($options, function($item) {
+            return $item['value'] === ShippingDuration::CONFIGURATION_VALUE;
+        });
+
+        $this->assertCount(1, $defaultOptions);
+        $this->assertCount(16, $options);
+    }
+}

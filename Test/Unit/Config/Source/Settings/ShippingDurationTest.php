@@ -31,26 +31,36 @@
  */
 namespace TIG\PostNL\Test\Unit\Config\Source\Settings;
 
-use TIG\PostNL\Config\Source\Settings\CutOffSettings;
+use TIG\PostNL\Config\Source\Settings\ShippingDuration;
+use TIG\PostNL\Config\Provider\ShippingDuration as SourceProvider;
 use TIG\PostNL\Test\TestCase;
 
-class CutOffSettingsTest extends TestCase
+class ShippingDurationTest extends TestCase
 {
-    public $instanceClass = CutOffSettings::class;
+    protected $instanceClass = ShippingDuration::class;
 
     public function testToOptionArray()
     {
-        /** @var CutOffSettings $instance */
-        $instance = $this->getInstance();
-        $result = $instance->toOptionArray();
+        $optionsFromProvider = [
+            [
+                'label' => '1 Day',
+                'value' => 1
+            ],
+            [
+                'label' => 'Use configuration value',
+                'value' => SourceProvider::CONFIGURATION_VALUE
+            ]
+        ];
 
-        $this->assertEquals('00:00', $result[0]['label']->render());
+        $sourceProviderMock = $this->getFakeMock(SourceProvider::class)->getMock();
+        $providerExpects = $sourceProviderMock->expects($this->once())->method('getAllOptions');
+        $providerExpects->willReturn($optionsFromProvider);
 
-        // 24 hours x 3 + default 1 = 73;
-        $this->assertCount(73, $result);
-        $this->assertEquals('00:15:00', $result[1]['value']);
-        $this->assertEquals('00:30:00', $result[2]['value']);
-        $this->assertEquals('00:45:00', $result[3]['value']);
-        $this->assertEquals('23:45:00', end($result)['value']);
+        $options = $this->getInstance([
+            'shippingDuration' => $sourceProviderMock
+        ])->toOptionArray();
+
+        $this->assertEquals(1, $options[0]['value']);
+        $this->assertCount(1, $options);
     }
 }
