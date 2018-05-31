@@ -33,9 +33,13 @@ namespace TIG\PostNL\Service\Shipment\Packingslip\Items;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Io\File as IoFile;
+use TIG\PostNL\Config\Provider\PackingslipBarcode;
 
 class Barcode implements ItemsInterface
 {
+    const TMP_BARCODE_PATH = 'PostNL' . DIRECTORY_SEPARATOR . 'tempbarcode';
+    const TMP_BARCODE_FILE = 'TIG_PostNL_temp.jpeg';
+
     /**
      * @var DirectoryList
      */
@@ -47,20 +51,38 @@ class Barcode implements ItemsInterface
     private $ioFile;
 
     /**
+     * @var PackingslipBarcode
+     */
+    private $barcodeSettings;
+
+    /**
      * @var array
      */
     private $fileList = [];
 
     /**
-     * @param DirectoryList $directoryList
-     * @param IoFile        $ioFile
+     * @var $storeId
+     */
+    private $storeId = null;
+
+    /**
+     * @var
+     */
+    private $fileName;
+
+    /**
+     * @param DirectoryList      $directoryList
+     * @param IoFile             $ioFile
+     * @param PackingslipBarcode $packingslipBarcode
      */
     public function __construct(
         DirectoryList $directoryList,
-        IoFile $ioFile
+        IoFile $ioFile,
+        PackingslipBarcode $packingslipBarcode
     ) {
         $this->directoryList = $directoryList;
         $this->ioFile = $ioFile;
+        $this->barcodeSettings = $packingslipBarcode;
     }
 
     /**
@@ -68,6 +90,9 @@ class Barcode implements ItemsInterface
      */
     public function add($packingSlip, $shipment)
     {
+        $this->storeId = $shipment->getStoreId();
+        $this->setFileName();
+
         if ($packingSlip instanceof \Zend_Pdf) {
             $packingSlip = $packingSlip->render();
         }
@@ -79,21 +104,49 @@ class Barcode implements ItemsInterface
         /** @var \Zend_Pdf_Page $page */
         foreach ($packingSlip->pages as $page) {
 
+
+
             $pdf->pages[] = clone $page;
         }
     }
 
+    /**
+     * @param $barcode
+     */
     private function createBarcode($barcode)
     {
         $barcodeOptions = [
             'text'      => $barcode,
-            'barHeight' => '50',
+            'barHeight' => $this->barcodeSettings->getHeight($this->storeId),
             'factor'    => '1',
-            'drawText'  => true
+            'drawText'  => $this->barcodeSettings->includeNumber($this->storeId)
         ];
 
-        $imageResource = \Zend_Barcode::draw('code128', 'image', $barcodeOptions, []);
+        $type = $this->barcodeSettings->getType($this->storeId);
+        $imageResource = \Zend_Barcode::draw($type, 'image', $barcodeOptions, []);
 
+        imagejpeg($imageResource, $this->fileName, 100);
+        imagedestroy($imageResource);
+    }
 
+    /**
+     * Cleanup old files.
+     */
+    private function cleanup()
+    {
+        foreach ($this->fileList as $file) {
+            // @codingStandardsIgnoreLine
+            $this->ioFile->rm($file);
+        }
+    }
+
+    private function setFileName()
+    {
+        $pathFile = $this->directoryList->getPath('var') . DIRECTORY_SEPARATOR . static::TMP_BARCODE_PATH;
+        $this->ioFile->checkAndCreateFolder($pathFile);
+
+        $tempFileName     = sha1(microtime()) . '-' . time() . '-' . self::TMP_BARCODE_FILE;
+        $this->fileName   = $pathFile . DIRECTORY_SEPARATOR . $tempFileName;
+        $this->fileList[] = $this->fileName;
     }
 }

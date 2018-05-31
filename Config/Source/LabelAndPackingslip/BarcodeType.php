@@ -48,7 +48,6 @@ class BarcodeType implements ArrayInterface
             ['value' => 'code25', 'label' => __('Code 25')],
             ['value' => 'code39', 'label' => __('Code 39')],
             ['value' => 'code128', 'label' => __('Code 128')],
-            ['value' => 'code128', 'label' => __('Code 128')],
             ['value' => 'royalmail', 'label' => __('Royalmail')],
         ];
         // @codingStandardsIgnoreEnd

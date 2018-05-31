@@ -177,7 +177,7 @@
                     <config_path>tig_postnl/labelandpackingslipoptions/barcode_type</config_path>
                 </field>
 
-                <field id="include_number" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <field id="include_number" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Include value</label>
                     <comment><![CDATA[Print the line of numbers underneath the barcode pattern.]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
