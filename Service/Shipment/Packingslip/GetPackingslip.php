@@ -35,6 +35,7 @@ use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Config\Source\LabelAndPackingslip\ShowShippingLabel;
+use TIG\PostNL\Service\Shipment\Packingslip\Items\Barcode;
 
 class GetPackingslip
 {
@@ -59,23 +60,31 @@ class GetPackingslip
     private $mergeWithLabels;
 
     /**
+     * @var Barcode
+     */
+    private $barcodeMerger;
+
+    /**
      * GetPackingslip constructor.
      *
      * @param ShipmentRepositoryInterface $shipmentLabelRepository
      * @param PdfShipment                 $pdfShipment
      * @param LabelAndPackingslipOptions  $labelAndPackingslipOptions
      * @param MergeWithLabels             $mergeWithLabels
+     * @param Barcode                     $barcode
      */
     public function __construct(
         ShipmentRepositoryInterface $shipmentLabelRepository,
         PdfShipment $pdfShipment,
         LabelAndPackingslipOptions $labelAndPackingslipOptions,
-        MergeWithLabels $mergeWithLabels
+        MergeWithLabels $mergeWithLabels,
+        Barcode $barcode
     ) {
         $this->shipmentRepository = $shipmentLabelRepository;
         $this->pdfShipment = $pdfShipment;
         $this->labelAndPackingslipOptions = $labelAndPackingslipOptions;
         $this->mergeWithLabels = $mergeWithLabels;
+        $this->barcodeMerger = $barcode;
     }
 
     /**
@@ -93,7 +102,7 @@ class GetPackingslip
 
         $magentoShipment = $shipment->getShipment();
         $packingSlip = $this->pdfShipment->getPdf([$magentoShipment]);
-        $packingSlip = $packingSlip->render();
+        $packingSlip = $this->barcodeMerger->add($packingSlip->render(), $magentoShipment);
 
         $pdfShipment = $this->pdfShipment;
         $currentYPosition = $pdfShipment->y;

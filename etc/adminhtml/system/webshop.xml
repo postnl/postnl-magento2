@@ -166,18 +166,25 @@
                     <config_path>tig_postnl/labelandpackingslipoptions/barcode_position</config_path>
                 </field>
 
-                <field id="height" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Height of the barcode</label>
-                    <config_path>tig_postnl/labelandpackingslipoptions/barcode_height</config_path>
-                </field>
-
-                <field id="type" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <field id="type" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Barcode Type</label>
                     <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\BarcodeType</source_model>
                     <config_path>tig_postnl/labelandpackingslipoptions/barcode_type</config_path>
                 </field>
 
-                <field id="include_number" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <field id="background_color" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Background color</label>
+                    <comment><![CDATA[Color of the background (e.g. “#333333”)]]></comment>
+                    <config_path>tig_postnl/labelandpackingslipoptions/background_color</config_path>
+                </field>
+
+                <field id="barcode_color" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Barcode color</label>
+                    <comment><![CDATA[Color of the bar and the text. (e.g. “#333333”)]]></comment>
+                    <config_path>tig_postnl/labelandpackingslipoptions/barcode_color</config_path>
+                </field>
+
+                <field id="include_number" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Include value</label>
                     <comment><![CDATA[Print the line of numbers underneath the barcode pattern.]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

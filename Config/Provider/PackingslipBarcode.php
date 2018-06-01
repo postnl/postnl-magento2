@@ -36,8 +36,9 @@ class PackingslipBarcode extends AbstractConfigProvider
     const XPATH_BARCODE_ENABLED        = 'tig_postnl/labelandpackingslipoptions/enable_barcode';
     const XPATH_BARCODE_VALUE          = 'tig_postnl/labelandpackingslipoptions/barcode_value';
     const XPATH_BARCODE_POSITION       = 'tig_postnl/labelandpackingslipoptions/barcode_position';
-    const XPATH_BARCODE_HEIGHT         = 'tig_postnl/labelandpackingslipoptions/barcode_height';
     const XPATH_BARCODE_TYPE           = 'tig_postnl/labelandpackingslipoptions/barcode_type';
+    const XPATH_BARCODE_BACKGROUND     = 'tig_postnl/labelandpackingslipoptions/background_color';
+    const XPATH_BARCODE_COLOR          = 'tig_postnl/labelandpackingslipoptions/barcode_color';
     const XPATH_BARCODE_INCLUDE_NUMBER = 'tig_postnl/labelandpackingslipoptions/barcode_numberinclude';
 
     /**
@@ -63,21 +64,17 @@ class PackingslipBarcode extends AbstractConfigProvider
     /**
      * @param null $storeId
      *
-     * @return string
+     * @return array
      */
     public function getPosition($storeId = null)
     {
-        return $this->getConfigFromXpath(static::XPATH_BARCODE_POSITION, $storeId);
-    }
+        $position = explode(',', $this->getConfigFromXpath(static::XPATH_BARCODE_POSITION, $storeId));
+        if (count($position) !== 4) {
+            // Invalid value given, fall back on default setting.
+            $position = [360, 750, 550, 790];
+        }
 
-    /**
-     * @param null $storeId
-     *
-     * @return string
-     */
-    public function getHeight($storeId = null)
-    {
-        return $this->getConfigFromXpath(static::XPATH_BARCODE_HEIGHT, $storeId);
+        return $position;
     }
 
     /**
@@ -88,6 +85,26 @@ class PackingslipBarcode extends AbstractConfigProvider
     public function getType($storeId = null)
     {
         return $this->getConfigFromXpath(static::XPATH_BARCODE_TYPE, $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return string
+     */
+    public function getBackgroundColor($storeId = null)
+    {
+        return strtoupper($this->getConfigFromXpath(static::XPATH_BARCODE_BACKGROUND, $storeId));
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return string
+     */
+    public function getFontColor($storeId = null)
+    {
+        return strtoupper($this->getConfigFromXpath(static::XPATH_BARCODE_COLOR, $storeId));
     }
 
     /**
