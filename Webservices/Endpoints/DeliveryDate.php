@@ -136,7 +136,7 @@ class DeliveryDate extends AbstractEndpoint
                 'PostalCode'         => str_replace(' ', '', $address['postcode']),
                 'ShippingDate'       => $this->postNLhelper->getCurrentTimeStamp(),
                 'ShippingDuration'   => $shippingDuration,
-                'AllowSundaySorting' => 'false',
+                'AllowSundaySorting' => $this->cutoffTimes->isSundaySortingAllowed(),
                 'CutOffTimes'        => $this->cutoffTimes->get(),
                 'Options'            => $this->timeframeOptions->get($address['country']),
             ],
