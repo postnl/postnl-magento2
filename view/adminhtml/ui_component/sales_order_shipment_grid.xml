@@ -62,6 +62,15 @@
                     </item>
                 </argument>
             </action>
+            <action name="postnl_mass_change_confirmation">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">postnl_mass_change_confirmation</item>
+                        <item name="label" xsi:type="string" translate="true">PostNL - Change Confirmation</item>
+                        <item name="url" xsi:type="url" path="postnl/shipment/MassChangeConfirmation"/>
+                    </item>
+                </argument>
+            </action>
         </massaction>
     </listingToolbar>
     <columns name="sales_order_shipment_columns">
