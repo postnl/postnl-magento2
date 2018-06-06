@@ -116,6 +116,15 @@ class Data extends AbstractHelper
     }
 
     /**
+     * @return string
+     */
+    public function isSundaySortingAllowed()
+    {
+        $shipmentDays = explode(',', $this->webshop->getShipmentDays());
+        return !empty(array_intersect(['0', '6', '7'], $shipmentDays)) ? 'true' : 'false';
+    }
+
+    /**
      * @param \DateTime|bool|object $date
      * @param $format
      * @return string

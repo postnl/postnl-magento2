@@ -120,10 +120,6 @@ class DeliveryDate extends AbstractEndpoint
     }
 
     /**
-     * @codingStandardsIgnoreStart
-     * @todo: 1. Add configuration for sundaysorting (if not enabled Monday should not return)
-     * @todo: 2. Move surounding @codingStandardsIgnore tags
-     * @codingStandardsIgnoreEnd
      * @param $address
      * @param $shippingDuration
      *
@@ -136,7 +132,7 @@ class DeliveryDate extends AbstractEndpoint
                 'PostalCode'         => str_replace(' ', '', $address['postcode']),
                 'ShippingDate'       => $this->postNLhelper->getCurrentTimeStamp(),
                 'ShippingDuration'   => $shippingDuration,
-                'AllowSundaySorting' => $this->cutoffTimes->isSundaySortingAllowed(),
+                'AllowSundaySorting' => $this->postNLhelper->isSundaySortingAllowed(),
                 'CutOffTimes'        => $this->cutoffTimes->get(),
                 'Options'            => $this->timeframeOptions->get($address['country']),
             ],
