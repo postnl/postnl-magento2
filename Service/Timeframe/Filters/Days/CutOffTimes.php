@@ -43,19 +43,9 @@ class CutOffTimes implements DaysFilterInterface
     private $isPastCutOffTime;
 
     /**
-     * @var bool
-     */
-    private $isPastCutOffResult;
-
-    /**
      * @var TimezoneInterface
      */
     private $dateLoader;
-
-    /**
-     * @var \DateTime
-     */
-    private $today;
 
     /**
      * @var TimezoneInterface

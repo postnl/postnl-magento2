@@ -63,15 +63,6 @@ class CutoffTimes
     }
 
     /**
-     * @return bool
-     */
-    public function isSundaySortingAllowed()
-    {
-        $shipmentDays = explode(',', $this->webshopSettings->getShipmentDays());
-        return !empty([array_intersect(['6','0', '7'], $shipmentDays)]) ? 'true' : 'false';
-    }
-
-    /**
      * @param $day
      *
      * @return string
