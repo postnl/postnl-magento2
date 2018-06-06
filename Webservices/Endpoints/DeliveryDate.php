@@ -120,10 +120,6 @@ class DeliveryDate extends AbstractEndpoint
     }
 
     /**
-     * @codingStandardsIgnoreStart
-     * @todo: 1. Add configuration for sundaysorting (if not enabled Monday should not return)
-     * @todo: 2. Move surounding @codingStandardsIgnore tags
-     * @codingStandardsIgnoreEnd
      * @param $address
      * @param $shippingDuration
      *

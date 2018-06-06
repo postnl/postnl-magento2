@@ -128,11 +128,6 @@ class TimeFrame extends AbstractEndpoint
     }
 
     /**
-     * @codingStandardsIgnoreStart
-     * @todo: Add Housenumber validation, can be extracted from $address['street'][1] or regexed out of [0]
-     * @todo: Add configuration for sundaysorting (if not enabled Monday should not return)
-     * @todo: Remove the @codingStandardsIgnore tags
-     * @codingStandardsIgnoreEnd
      * @param $address
      * @param $startDate
      *
