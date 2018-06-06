@@ -138,9 +138,10 @@
                 </depends>
             </field>
 
-            <field id="show_label" translate="label" type="radios" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <field id="show_label" translate="label tooltip comment" type="radios" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                 <label>Show shipping label</label>
                 <tooltip><![CDATA[If you select 'on the same page' in some cases the shipping label may not fit. In this case, the shipping label will be printed on a separate page instead.]]></tooltip>
+                <comment><![CDATA[This setting has only influence on the action 'PostNL - Create shipments, print packing slip &amp; confirm']]></comment>
                 <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\ShowShippingLabel</source_model>
                 <config_path>tig_postnl/labelandpackingslipoptions/show_label</config_path>
             </field>

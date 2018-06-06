@@ -196,7 +196,7 @@ class Barcode implements ItemsInterface
         $pathFile = $this->directoryList->getPath('var') . DIRECTORY_SEPARATOR . static::TMP_BARCODE_PATH;
         $this->ioFile->checkAndCreateFolder($pathFile);
 
-        $tempFileName     = sha1(microtime()) . '-' . time() . '-' . self::TMP_BARCODE_FILE;
+        $tempFileName     = sha1(microtime()) . '-' . time() . '-' . static::TMP_BARCODE_FILE;
         $this->fileName   = $pathFile . DIRECTORY_SEPARATOR . $tempFileName;
         $this->fileList[] = $this->fileName;
     }

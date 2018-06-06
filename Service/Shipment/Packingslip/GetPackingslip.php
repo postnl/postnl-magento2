@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Service\Shipment\Packingslip;
 
-use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
+use TIG\PostNL\Service\Shipment\Packingslip\Factory as PdfFactory;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Config\Source\LabelAndPackingslip\ShowShippingLabel;
@@ -45,7 +45,7 @@ class GetPackingslip
     private $shipmentRepository;
 
     /**
-     * @var PdfShipment
+     * @var PdfFactory
      */
     private $pdfShipment;
 
@@ -68,14 +68,14 @@ class GetPackingslip
      * GetPackingslip constructor.
      *
      * @param ShipmentRepositoryInterface $shipmentLabelRepository
-     * @param PdfShipment                 $pdfShipment
+     * @param PdfFactory                 $pdfShipment
      * @param LabelAndPackingslipOptions  $labelAndPackingslipOptions
      * @param MergeWithLabels             $mergeWithLabels
      * @param Barcode                     $barcode
      */
     public function __construct(
         ShipmentRepositoryInterface $shipmentLabelRepository,
-        PdfShipment $pdfShipment,
+        PdfFactory $pdfShipment,
         LabelAndPackingslipOptions $labelAndPackingslipOptions,
         MergeWithLabels $mergeWithLabels,
         Barcode $barcode
@@ -89,10 +89,11 @@ class GetPackingslip
 
     /**
      * @param int $shipmentId
+     * @param bool $withLabels
      *
      * @return string
      */
-    public function get($shipmentId)
+    public function get($shipmentId, $withLabels = true)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
 
@@ -101,16 +102,17 @@ class GetPackingslip
         }
 
         $magentoShipment = $shipment->getShipment();
-        $packingSlip = $this->pdfShipment->getPdf([$magentoShipment]);
-        $packingSlip = $this->barcodeMerger->add($packingSlip->render(), $magentoShipment);
+        $packingSlip = $this->pdfShipment->create($magentoShipment, $withLabels);
+        $packingSlip = $this->barcodeMerger->add($packingSlip, $magentoShipment);
 
         $pdfShipment = $this->pdfShipment;
-        $currentYPosition = $pdfShipment->y;
-        $this->mergeWithLabels->setY($currentYPosition);
+        $this->mergeWithLabels->setY($pdfShipment->getY());
 
-        $packingSlipPdf = $this->mergeWithLabels($shipmentId, $packingSlip);
+        if ($withLabels) {
+            $packingSlip = $this->mergeWithLabels($shipmentId, $packingSlip);
+        }
 
-        return $packingSlipPdf;
+        return $packingSlip;
     }
 
     /**

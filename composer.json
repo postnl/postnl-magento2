@@ -8,7 +8,6 @@
         "setasign/fpdi": "1.6.1"
     },
     "type": "magento2-module",
-    "version" : "1.4.0",
     "license": "CC-BY-NC-ND-3.0",
     "version": "1.4.2",
     "authors": [
@@ -41,6 +40,6 @@
         "magento": {
             "type": "composer",
             "url": "https://repo.magento.com/"
-        }
+        },
     }
 }
