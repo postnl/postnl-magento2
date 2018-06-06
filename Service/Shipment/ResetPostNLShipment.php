@@ -84,7 +84,10 @@ class ResetPostNLShipment
     /**
      * Resets the confirmation date to null.
      *
-     * @param $postNLShipment
+     * @param $shipmentId
+     *
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
     public function resetShipment($shipmentId)
     {
