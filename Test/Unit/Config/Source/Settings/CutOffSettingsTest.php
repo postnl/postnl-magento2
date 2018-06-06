@@ -46,8 +46,9 @@ class CutOffSettingsTest extends TestCase
 
         $this->assertEquals('00:00', $result[0]['label']->render());
 
-        // 24 hours x 4 + default 1 = 97;
-        $this->assertCount(97, $result);
+        // 24 hours x 4 = 96;
+        $this->assertCount(96, $result);
+        $this->assertEquals('00:00:00', $result[0]['value']);
         $this->assertEquals('00:15:00', $result[1]['value']);
         $this->assertEquals('00:30:00', $result[2]['value']);
         $this->assertEquals('00:45:00', $result[3]['value']);
