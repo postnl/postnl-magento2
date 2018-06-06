@@ -101,15 +101,13 @@ class Matrixrate extends Value
     {
         /** @var \Zend\Stdlib\Parameters $requestFiles */
         $requestFiles = $this->request->getFiles();
-        $files = $requestFiles->offsetGet('groups');
-
+        $files        = $requestFiles->offsetGet('groups');
         if (!isset($files['tig_postnl']) || !isset($files['tig_postnl']['fields']['matrixrate_import'])) {
             return parent::beforeSave();
         }
 
         $websiteId = $this->request->getParam('website', 0);
         $fileName  = $files['tig_postnl']['fields']['matrixrate_import']['value']['tmp_name'];
-
         if (empty($fileName)) {
             return parent::afterSave();
         }
