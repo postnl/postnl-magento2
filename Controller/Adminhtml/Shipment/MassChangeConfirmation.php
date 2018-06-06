@@ -103,8 +103,7 @@ class MassChangeConfirmation extends Action
 
         return $this->redirectBack();
     }
-
-
+    
     /**
      * @return $this
      */
