@@ -44,6 +44,7 @@ use TIG\PostNL\Config\Provider\Webshop;
  *       2. Remove the codingStandardsIgnore line an if posible the whole class.
  * @codingStandardsIgnoreEnd
  */
+// @codingStandardsIgnoreFile
 class Data extends AbstractHelper
 {
     const PAKJEGEMAK_DELIVERY_OPTION         = 'PG';
