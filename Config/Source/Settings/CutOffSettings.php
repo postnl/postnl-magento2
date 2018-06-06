@@ -40,10 +40,7 @@ class CutOffSettings implements ArrayInterface
      */
     public function toOptionArray()
     {
-        $options = [
-            // @codingStandardsIgnoreLine
-            ['value' => '00:00:00', 'label' => __('00:00')],
-        ];
+        $options = [];
 
         for ($hour = 0; $hour < 24; $hour++) {
             $options = array_merge($options, $this->addHour($hour));
