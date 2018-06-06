@@ -63,6 +63,7 @@ class CutOffSettings implements ArrayInterface
         $options = [];
 
         // @codingStandardsIgnoreStart
+        $options[] = ['value' => $hour . ':00:00', 'label' => __($hour . ':00')];
         $options[] = ['value' => $hour . ':15:00', 'label' => __($hour . ':15')];
         $options[] = ['value' => $hour . ':30:00', 'label' => __($hour . ':30')];
         $options[] = ['value' => $hour . ':45:00', 'label' => __($hour . ':45')];
