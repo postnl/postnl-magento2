@@ -107,14 +107,15 @@ class Matrixrate extends Value
             return parent::beforeSave();
         }
 
-        $fileName = $files['tig_postnl']['fields']['matrixrate_import']['value']['tmp_name'];
+        $websiteId = $this->request->getParam('website', 0);
+        $fileName  = $files['tig_postnl']['fields']['matrixrate_import']['value']['tmp_name'];
 
         if (empty($fileName)) {
             return parent::afterSave();
         }
 
         $file = $this->getCsvFile($fileName);
-        $this->matrixrateData->import($file);
+        $this->matrixrateData->import($file, $websiteId);
         $file->close();
 
         return parent::afterSave();

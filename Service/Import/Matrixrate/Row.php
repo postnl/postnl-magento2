@@ -82,11 +82,12 @@ class Row
      *
      * @param int $row
      * @param array $line
+     * @param int $website
      *
      * @return bool|array
      */
     // @codingStandardsIgnoreStart
-    public function process($row, $line)
+    public function process($row, $line, $website)
     {
         $this->resetData();
 
@@ -152,7 +153,7 @@ class Row
         }
 
         return [
-            'website_id' => $this->store->getWebsiteId(),
+            'website_id' => $website,
             'destiny_country_id' => $country,
             'destiny_region_id' => $region,
             'destiny_zip_code' => $line[2],

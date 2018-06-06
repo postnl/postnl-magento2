@@ -60,7 +60,7 @@ class RowTest extends TestCase
 
     public function testThatTheRowIsEmpty()
     {
-        $this->instance->process(1, []);
+        $this->instance->process(1, [], 1);
 
         $this->assertTrue($this->instance->hasErrors());
         $this->assertTrue(in_array('Invalid PostNL matrix rates format in row #%s', $this->instance->getErrors()));
