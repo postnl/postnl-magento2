@@ -219,7 +219,7 @@ define([
          * @returns {boolean}
          */
         isRowSelected: function ($data) {
-            return JSON.stringify(this.selectedOption()) == JSON.stringify($data);
+            return this.selectedOption() && JSON.stringify(this.selectedOption().data) == JSON.stringify($data);
         }
     });
 });
