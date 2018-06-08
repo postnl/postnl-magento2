@@ -294,6 +294,16 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             'countryLimitation' => 'BE',
             'group'             => 'extra_at_home_options',
         ],
+        //ID Check
+        '3437' => [
+            'value'             => '3437',
+            'label'             => 'Delivery to neighbour + Age Check',
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'isExtraEarly'      => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_options'
+        ],
     ];
 
     protected $groups = [
@@ -303,6 +313,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         'global_options'        => 'Global options',
         'buspakje_options'      => 'Letter Box Parcel options',
         'extra_at_home_options' => 'Extra@Home options',
+        'id_check_options'      => 'ID Check options',
     ];
 
     protected $groupToLabel = [
@@ -312,6 +323,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         'global_options'        => 'Global Pack',
         'buspakje_options'      => 'Letter Box',
         'extra_at_home_options' => 'Extra@Home',
+        'id_check_options'      => 'ID Check',
     ];
 
     protected $typeToComment = [
@@ -408,7 +420,10 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getDefaultOptions()
     {
-        return $this->getProductoptions(['group' => 'standard_options']);
+        $flags = [];
+        $flags['groups'][] = array('group' => 'standard_options');
+        $flags['groups'][] = array('group' => 'id_check_options');
+        return $this->getProductoptions($flags);
     }
 
     /**
