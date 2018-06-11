@@ -38,15 +38,10 @@ use Magento\Ui\Component\MassAction\Filter;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 
-/**
- * Class MassChangeConfirmation
- *
- * @package TIG\PostNL\Controller\Adminhtml\Shipment
- */
 class MassChangeConfirmation extends Action
 {
     /**
-     * @var \Magento\Ui\Component\MassAction\Filter
+     * @var Filter
      */
     private $filter;
 
@@ -103,7 +98,7 @@ class MassChangeConfirmation extends Action
 
         return $this->redirectBack();
     }
-    
+
     /**
      * @return $this
      */
