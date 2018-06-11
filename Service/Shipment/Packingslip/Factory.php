@@ -71,7 +71,7 @@ class Factory
     /**
      * @var int
      */
-    private $y = 0;
+    private $yCoordinate = 0;
 
     /**
      * Factory constructor.
@@ -103,6 +103,7 @@ class Factory
     {
         if (!$this->moduleManager->isEnabled('Fooman_PrintOrderPdf') || $forceMangento) {
             $renderer = $this->magentoPdf->getPdf([$magentoShipment]);
+            // @codingStandardsIgnoreLine
             $this->setY($this->magentoPdf->y);
             return $renderer->render();
         }
@@ -143,7 +144,7 @@ class Factory
      */
     public function getY()
     {
-        return $this->y;
+        return $this->yCoordinate;
     }
 
     /**
@@ -151,6 +152,6 @@ class Factory
      */
     public function setY($cordinate)
     {
-        $this->y = $cordinate;
+        $this->yCoordinate = $cordinate;
     }
 }

@@ -72,7 +72,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
             $this->addPagesToPdf($label);
         }
 
-        //$this->file->cleanup();
+        $this->file->cleanup();
 
         return $this->pdf;
     }

@@ -74,12 +74,12 @@ class Barcode implements ItemsInterface
     private $storeId = null;
 
     /**
-     * @var string $fileName
+     * @var string
      */
     private $fileName;
 
     /**
-     * @var string $barcodeValue
+     * @var string
      */
     private $barcodeValue;
 
@@ -160,9 +160,9 @@ class Barcode implements ItemsInterface
         $type = $this->barcodeSettings->getType($this->storeId);
         // @codingStandardsIgnoreLine
         $imageResource = \Zend_Barcode::draw($type, 'image', $barcodeOptions, []);
-
+        // @codingStandardsIgnoreLine
         imagejpeg($imageResource, $this->fileName, 100);
-        // Clean cache.
+        // @codingStandardsIgnoreLine
         imagedestroy($imageResource);
     }
 

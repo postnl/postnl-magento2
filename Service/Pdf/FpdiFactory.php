@@ -83,6 +83,7 @@ class FpdiFactory
      */
     private function constructTCPDF()
     {
+        // @codingStandardsIgnoreLine
         return $this->objectManager->create(Fpdi::class, [
             'orientation' => 'P',
             'unit' => 'mm',
