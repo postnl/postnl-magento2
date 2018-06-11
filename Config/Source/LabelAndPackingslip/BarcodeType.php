@@ -36,7 +36,8 @@ use Magento\Framework\Option\ArrayInterface;
 class BarcodeType implements ArrayInterface
 {
     /**
-     * These are the only Zend Barcode types (see :public/vendor/magento/zendframework1/library/Zend/Barcode/Object)
+     * These are the only Zend Barcode types
+     * @see \Zend_Barcode_Object_ObjectAbstract
      * which support full length increment ID's.
      *
      * @return array

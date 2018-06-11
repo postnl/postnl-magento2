@@ -32,25 +32,10 @@
 namespace TIG\PostNL\Block\Adminhtml\Config\Form\Field;
 
 use \Magento\Config\Block\System\Config\Form\Field as MagentoField;
-use \Magento\Backend\Block\Template\Context;
 use \Magento\Framework\Data\Form\Element\AbstractElement;
 
-// @codingStandardsIgnoreFile
 class Color extends MagentoField
 {
-    /**
-     * Color constructor.
-     *
-     * @param Context $context
-     * @param array   $data
-     */
-    public function __construct(
-        Context $context,
-        array $data = []
-    ) {
-        parent::__construct($context, $data);
-    }
-
     /**
      * @param AbstractElement $element
      *
@@ -73,6 +58,7 @@ class Color extends MagentoField
      */
     private function addColorPickerToHtml(AbstractElement $element, $value)
     {
+        // @codingStandardsIgnoreStart
         return '<script type="text/javascript">
             require(["jquery","jquery/colorpicker/js/colorpicker"], function ($) {
                 $(document).ready(function () {
@@ -87,5 +73,6 @@ class Color extends MagentoField
                 });
             });
             </script>';
+        // @codingStandardsIgnoreEnd
     }
 }

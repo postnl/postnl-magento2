@@ -95,13 +95,13 @@ class Factory
 
     /**
      * @param ShipmentInterface $magentoShipment
-     * @param bool $forceMangento
+     * @param bool $forceMagento
      *
      * @return string
      */
-    public function create($magentoShipment, $forceMangento = false)
+    public function create($magentoShipment, $forceMagento = false)
     {
-        if (!$this->moduleManager->isEnabled('Fooman_PrintOrderPdf') || $forceMangento) {
+        if (!$this->moduleManager->isEnabled('Fooman_PrintOrderPdf') || $forceMagento) {
             $renderer = $this->magentoPdf->getPdf([$magentoShipment]);
             // @codingStandardsIgnoreLine
             $this->setY($this->magentoPdf->y);

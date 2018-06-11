@@ -161,8 +161,9 @@
                     <config_path>tig_postnl/labelandpackingslipoptions/barcode_value</config_path>
                 </field>
 
-                <field id="position" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="position" translate="label tooltip" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Position of the barcode</label>
+                    <tooltip><![CDATA[The position must contain four coordinates (x1, y1, x2, y2) given as string.]]></tooltip>
                     <config_path>tig_postnl/labelandpackingslipoptions/barcode_position</config_path>
                 </field>
 
