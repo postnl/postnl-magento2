@@ -35,6 +35,7 @@ use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Service\Volume\Items\Calculate;
 
+// @codingStandardsIgnoreFile
 class Data
 {
     /**
