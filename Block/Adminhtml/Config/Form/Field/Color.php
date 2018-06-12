@@ -41,6 +41,7 @@ class Color extends MagentoField
      *
      * @return string
      */
+    // @codingStandardsIgnoreLine
     protected function _getElementHtml(AbstractElement $element)
     {
         $html  = $element->getElementHtml();
