@@ -43,7 +43,7 @@ var config = {
             "Amasty_Checkout/template/onepage/shipping/methods.html" :
                 "TIG_PostNL/template/Compatibility/amasty_checkout/methods.html",
             "Amasty_Checkout/js/view/shipping" :
-                "TIG_PostNL/js/view/Compatibility/amasty_checkout/shipping"
+                "TIG_PostNL/js/Compatibility/amasty_checkout/shipping"
         }
     }
 };
