@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,16 +28,31 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <css src="TIG_PostNL::css/adminhtml_config.css" />
-        <css src="jquery/colorpicker/css/colorpicker.css"/>
-    </head>
-    <body>
-        <referenceContainer name="content">
-            <block class="TIG\PostNL\Block\Adminhtml\Config\Support\BodyClass" name="postnl.support" before="system.config.edit" />
-        </referenceContainer>
-    </body>
-</page>
+ */
+namespace TIG\PostNL\Config\Source\LabelAndPackingslip;
+
+use Magento\Framework\Option\ArrayInterface;
+
+class BarcodeType implements ArrayInterface
+{
+    /**
+     * These are the only Zend Barcode types
+     * @see \Zend_Barcode_Object_ObjectAbstract
+     * which support full length increment ID's.
+     *
+     * @return array
+     */
+    public function toOptionArray()
+    {
+        // @codingStandardsIgnoreStart
+        $options = [
+            ['value' => 'code25', 'label' => __('Code 25')],
+            ['value' => 'code39', 'label' => __('Code 39')],
+            ['value' => 'code128', 'label' => __('Code 128')],
+            ['value' => 'royalmail', 'label' => __('Royalmail')],
+        ];
+        // @codingStandardsIgnoreEnd
+
+        return $options;
+    }
+}
