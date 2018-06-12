@@ -504,8 +504,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getPakjeGemakOptions()
     {
-        if (!$this->shippingOptions->isIDCheckActive())
-        {
+        if (!$this->shippingOptions->isIDCheckActive()) {
             return $this->getProductoptions(['group' => 'pakjegemak_options']);
         }
 
@@ -530,8 +529,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getDefaultOptions()
     {
-        if (!$this->shippingOptions->isIDCheckActive())
-        {
+        if (!$this->shippingOptions->isIDCheckActive()) {
             return $this->getProductoptions(['group' => 'standard_options']);
         }
 
