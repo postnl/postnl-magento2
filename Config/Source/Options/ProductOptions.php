@@ -340,6 +340,47 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             'countryLimitation' => 'NL',
             'group'             => 'id_check_options'
         ],
+        // ID Check Pakje gemak
+        '3571' => [
+            'value'             => '3571',
+            'label'             => 'Post Office + Age Check',
+            'isExtraCover'      => false,
+            'isExtraEarly'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => 'NL',
+            'pge'               => false,
+            'group'             => 'id_check_pakjegemak_options',
+        ],
+        '3574' => [
+            'value'             => '3574',
+            'label'             => 'Post Office + Age Check + Notification',
+            'isExtraCover'      => false,
+            'isExtraEarly'      => true,
+            'isSunday'          => false,
+            'countryLimitation' => 'NL',
+            'pge'               => true,
+            'group'             => 'id_check_pakjegemak_options',
+        ],
+        '3581' => [
+            'value'             => '3581',
+            'label'             => 'Post Office + Extra Cover + Age Check',
+            'isExtraCover'      => true,
+            'isExtraEarly'      => false,
+            'isSunday'          => false,
+            'countryLimitation' => 'NL',
+            'pge'               => false,
+            'group'             => 'id_check_pakjegemak_options',
+        ],
+        '3584' => [
+            'value'             => '3584',
+            'label'             => 'Post Office + Extra Cover + Age Check + Notification',
+            'isExtraCover'      => true,
+            'isExtraEarly'      => true,
+            'isSunday'          => false,
+            'countryLimitation' => 'NL',
+            'pge'               => true,
+            'group'             => 'id_check_pakjegemak_options',
+        ]
     ];
 
     protected $groups = [
@@ -350,6 +391,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         'buspakje_options'      => 'Letter Box Parcel options',
         'extra_at_home_options' => 'Extra@Home options',
         'id_check_options'      => 'ID Check options',
+        'id_check_pakjegemak_options'      => 'ID Check Post Office options',
     ];
 
     protected $groupToLabel = [
@@ -360,6 +402,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         'buspakje_options'      => 'Letter Box',
         'extra_at_home_options' => 'Extra@Home',
         'id_check_options'      => 'ID Check',
+        'id_check_pakjegemak_options'      => 'ID Check Post Office',
     ];
 
     protected $typeToComment = [
@@ -438,7 +481,10 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getPakjeGemakOptions()
     {
-        return $this->getProductoptions(['group' => 'pakjegemak_options']);
+        $flags = [];
+        $flags['groups'][] = array('group' => 'pakjegemak_options');
+        $flags['groups'][] = array('group' => 'id_check_pakjegemak_options');
+        return $this->getProductoptions($flags);
     }
 
     /**
