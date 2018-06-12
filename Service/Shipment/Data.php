@@ -160,7 +160,13 @@ class Data
             $shipmentData['Groups'] = $this->getGroupData($shipment, $currentShipmentNumber);
         }
 
-        $productOptions = $this->productOptions->get($shipment->getShipmentType());
+        $shipmentType = $shipment->getShipmentType();
+
+        if ($shipment->isIDCheck()) {
+            $shipmentType = 'idcheck';
+        }
+
+        $productOptions = $this->productOptions->get($shipmentType);
         if ($productOptions) {
             $shipmentData['ProductOptions'] = $productOptions;
         }

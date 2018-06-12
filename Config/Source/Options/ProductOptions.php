@@ -304,6 +304,42 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             'countryLimitation' => 'NL',
             'group'             => 'id_check_options'
         ],
+        '3438' => [
+            'value'             => '3438',
+            'label'             => 'Standard Shipment + Age Check',
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'isExtraEarly'      => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_options'
+        ],
+        '3443' => [
+            'value'             => '3443',
+            'label'             => 'Extra Cover + Age Check',
+            'isExtraCover'      => true,
+            'isSunday'          => false,
+            'isExtraEarly'      => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_options'
+        ],
+        '3446' => [
+            'value'             => '3446',
+            'label'             => 'Extra Cover + Return when not home + Age Check',
+            'isExtraCover'      => true,
+            'isSunday'          => false,
+            'isExtraEarly'      => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_options'
+        ],
+        '3449' => [
+            'value'             => '3449',
+            'label'             => 'Return when not home + Age Check',
+            'isExtraCover'      => false,
+            'isSunday'          => false,
+            'isExtraEarly'      => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_options'
+        ],
     ];
 
     protected $groups = [
