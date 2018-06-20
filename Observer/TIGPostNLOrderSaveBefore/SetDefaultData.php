@@ -40,6 +40,8 @@ use TIG\PostNL\Service\Options\ItemsToOption;
 use TIG\PostNL\Service\Order\MagentoOrder;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use TIG\PostNL\Service\Quote\ShippingDuration;
+
 
 // @codingStandardsIgnoreFile
 class SetDefaultData implements ObserverInterface
@@ -75,6 +77,11 @@ class SetDefaultData implements ObserverInterface
     private $magentoOrder;
 
     /**
+     * @var ShippingDuration
+     */
+    private $shippingDuration;
+
+    /**
      * @var array
      */
     private $shouldUpdateByOption = [
@@ -90,6 +97,7 @@ class SetDefaultData implements ObserverInterface
      * @param Log                $log
      * @param ItemsToOption      $itemsToOption
      * @param MagentoOrder       $magentoOrder
+     * @param ShippingDuration   $shippingDuration
      */
     public function __construct(
         ProductCodeAndType $productCodeAndType,
@@ -97,7 +105,8 @@ class SetDefaultData implements ObserverInterface
         ShipAt $shipAt,
         Log $log,
         ItemsToOption $itemsToOption,
-        MagentoOrder $magentoOrder
+        MagentoOrder $magentoOrder,
+        ShippingDuration $shippingDuration
     ) {
         $this->productCodeAndType = $productCodeAndType;
         $this->firstDeliveryDate  = $firstDeliveryDate;
@@ -105,6 +114,7 @@ class SetDefaultData implements ObserverInterface
         $this->log                = $log;
         $this->itemsToOption      = $itemsToOption;
         $this->magentoOrder       = $magentoOrder;
+        $this->shippingDuration   = $shippingDuration;
     }
 
     /**
@@ -132,12 +142,18 @@ class SetDefaultData implements ObserverInterface
         $option      = $this->getOptionFromQuote();
         $country     = $this->checkByAddressData($order);
         $productInfo = $this->productCodeAndType->get('', $option, $country);
+        $duration    = $this->shippingDuration->get();
+
         if (!$order->getProductCode() || $this->canUpdate($order->getProductCode(), $productInfo['code'], $option)) {
             $order->setProductCode($productInfo['code']);
         }
 
         if (!$order->getType() || $this->canUpdate($order->getType(), $productInfo['type'], $option)) {
             $order->setType($productInfo['type']);
+        }
+
+        if (!$order->getShippingDuration()) {
+            $order->setShippingDuration($duration);
         }
 
         if (!$order->getDeliveryDate()) {

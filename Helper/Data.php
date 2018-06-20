@@ -44,6 +44,7 @@ use TIG\PostNL\Config\Provider\Webshop;
  *       2. Remove the codingStandardsIgnore line an if posible the whole class.
  * @codingStandardsIgnoreEnd
  */
+// @codingStandardsIgnoreFile
 class Data extends AbstractHelper
 {
     const PAKJEGEMAK_DELIVERY_OPTION         = 'PG';
@@ -113,6 +114,15 @@ class Data extends AbstractHelper
         }
 
         return $stamp->format('d-m-Y H:i:s');
+    }
+
+    /**
+     * @return string
+     */
+    public function isSundaySortingAllowed()
+    {
+        $shipmentDays = explode(',', $this->webshop->getShipmentDays());
+        return !empty(array_intersect(['0', '6', '7'], $shipmentDays)) ? 'true' : 'false';
     }
 
     /**

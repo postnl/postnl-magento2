@@ -76,7 +76,7 @@ class RowTest extends TestCase
 
     private function verifyError($expectedError)
     {
-        $this->assertFalse($this->instance->process(1, $this->validRow));
+        $this->assertFalse($this->instance->process(1, $this->validRow, 1));
         $this->assertTrue($this->instance->hasErrors());
         $errors = $this->convertPhraseArrayToTextArray($this->instance->getErrors());
         $this->assertContains($expectedError, $errors);
@@ -128,7 +128,7 @@ class RowTest extends TestCase
     public function testAnDuplicateRow()
     {
         $this->validRow[2] = '*';
-        $this->assertTrue(is_array($this->instance->process(1, $this->validRow)));
+        $this->assertTrue(is_array($this->instance->process(1, $this->validRow, 1)));
         $this->verifyError('Duplicate row #1 (country "US", region/state "California", zip "*", weight "13.37", ' .
             'subtotal "159.99", quantity "5" and parcel type "regular").');
     }
@@ -147,7 +147,7 @@ class RowTest extends TestCase
             'price' => 6.20,
         ];
 
-        $this->assertEquals($expected, $this->instance->process(1, $this->validRow));
+        $this->assertEquals($expected, $this->instance->process(1, $this->validRow,1));
         $this->assertFalse($this->instance->hasErrors());
     }
 }

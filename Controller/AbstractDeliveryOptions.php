@@ -35,6 +35,7 @@ use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use TIG\PostNL\Service\Quote\ShippingDuration;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\Action;
 use Magento\Checkout\Model\Session;
@@ -60,6 +61,12 @@ abstract class AbstractDeliveryOptions extends Action
     protected $deliveryEndpoint;
 
     /**
+     * @var ShippingDuration
+     */
+    //@codingStandardsIgnoreLine
+    protected $shippingDuration;
+
+    /**
      * @var QuoteToRateRequest
      */
     private $quoteToRateRequest;
@@ -82,18 +89,21 @@ abstract class AbstractDeliveryOptions extends Action
      * @param Session            $checkoutSession
      * @param QuoteToRateRequest $quoteToRateRequest
      * @param DeliveryDate       $deliveryDate
+     * @param ShippingDuration   $shippingDuration
      */
     public function __construct(
         Context $context,
         OrderFactory $orderFactory,
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
+        ShippingDuration $shippingDuration,
         DeliveryDate $deliveryDate = null
     ) {
         $this->orderFactory       = $orderFactory;
         $this->checkoutSession    = $checkoutSession;
         $this->deliveryEndpoint   = $deliveryDate;
         $this->quoteToRateRequest = $quoteToRateRequest;
+        $this->shippingDuration   = $shippingDuration;
 
         parent::__construct($context);
     }
@@ -154,10 +164,11 @@ abstract class AbstractDeliveryOptions extends Action
             return $this->checkoutSession->getPostNLDeliveryDate();
         }
 
-        $quote = $this->checkoutSession->getQuote();
+        $quote   = $this->checkoutSession->getQuote();
         $storeId = $quote->getStoreId();
+        $shippingDuration = $this->shippingDuration->get();
         $this->deliveryEndpoint->setStoreId($storeId);
-        $this->deliveryEndpoint->setParameters($address);
+        $this->deliveryEndpoint->setParameters($address, $shippingDuration);
         $response = $this->deliveryEndpoint->call();
 
         if (!is_object($response) || !isset($response->DeliveryDate)) {

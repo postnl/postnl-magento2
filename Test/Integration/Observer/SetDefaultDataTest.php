@@ -41,6 +41,7 @@ use TIG\PostNL\Service\Options\ItemsToOption;
 use TIG\PostNL\Service\Order\ProductCodeAndType;
 use Magento\Framework\Event\Observer;
 use TIG\PostNL\Service\Order\MagentoOrder;
+use TIG\PostNL\Service\Quote\ShippingDuration;
 
 /**
  * @magentoDbIsolation enabled
@@ -78,11 +79,16 @@ class SetDefaultDataTest extends TestCase
         $magentoOrderService->disableOriginalConstructor();
         $magentoOrderService = $magentoOrderService->getMock();
 
+        $shippingDuration = $this->getMockBuilder(ShippingDuration::class);
+        $shippingDuration->disableOriginalConstructor();
+        $shippingDuration = $shippingDuration->getMock();
+
         $this->objectManager->configure([
             'preferences' => [
                 ProductCodeAndType::class => get_class($productCodeAndType),
                 ItemsToOption::class => get_class($itemsToOptions),
-                MagentoOrder::class => get_class($magentoOrderService)
+                MagentoOrder::class => get_class($magentoOrderService),
+                ShippingDuration::class => get_class($shippingDuration)
             ],
         ]);
 
@@ -97,6 +103,9 @@ class SetDefaultDataTest extends TestCase
             'type' => ProductCodeAndType::SHIPMENT_TYPE_EXTRAATHOME,
             'code' => 3085
         ]);
+
+        $shippingDurationExpects = $this->objectManager->get(ShippingDuration::class);
+        $shippingDurationExpects->method('get')->willReturn('1');
 
         /** @var \TIG\PostNL\Api\Data\OrderInterface $postNLOrder */
         $postNLOrder = $this->getPostNLOrder();

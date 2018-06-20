@@ -85,6 +85,11 @@ define([
     return ko.computed(function () {
         valueUpdateNotifier();
 
+        var housenumber;
+        if (window.checkoutConfig.postcode !== undefined) {
+            housenumber = $("input[name*='tig_housenumber']").val();
+        }
+
         /**
          * The street is not always available on the first run.
          */
@@ -96,7 +101,8 @@ define([
                 lastname: shippingAddress.lastname,
                 firstname: shippingAddress.firstname,
                 telephone: shippingAddress.telephone,
-                country: shippingAddress.countryId
+                country: shippingAddress.countryId,
+                housenumber : housenumber
             };
 
             return address;
@@ -122,11 +128,6 @@ define([
             0 : $("input[name*='street[0]']").val(),
             1 : $("input[name*='street[1]']").val()
         };
-
-        var housenumber;
-        if (window.checkoutConfig.postcode !== undefined) {
-            housenumber = $("input[name*='tig_housenumber']").val();
-        }
 
         if (housenumber !== undefined) {
             address.housenumber = housenumber;
