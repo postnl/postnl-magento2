@@ -46,6 +46,10 @@
         <plugin name="TIG_PostNL_Order_Shipping_Address" type="TIG\PostNL\Plugin\Order\ShippingAddress" sortOrder="2"/>
     </type>
 
+    <type name="\Magento\Quote\Model\Quote">
+        <plugin name="TIG_PostNL_Quote_RestDeliveryDate" type="\TIG\PostNL\Plugin\Quote\ResetDeliveryDate" sortOrder="1"/>
+    </type>
+
     <type name="\Magento\Shipping\Model\Config\Source\Allmethods">
         <plugin name="TIG_PostNL_Config_Source_Allmethods" type="TIG\PostNL\Plugin\Config\Source\AllMethodsPlugin" sortOrder="1"/>
     </type>
