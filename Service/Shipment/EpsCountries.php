@@ -72,7 +72,7 @@ class EpsCountries
         'DK', // Denmark (Excluding Faroe Islands and GL: Greenland)
         'EE', // Estonia
         'FI', // Finland
-        'FR', // France (Including Monaco and Corsica. Excluding Andorra)
+        'FR', // France (Including orsica. Excluding Andorra)
         'DE', // Germany
         'GB', // Great Britain (Including Northern Ireland. Excluding Gibraltar and the Channel Islands)
         'GR', // Greece
@@ -90,5 +90,6 @@ class EpsCountries
         'SI', // Slovenia
         'ES', // Spain (Including Balearic Islands. Excluding Canary Islands, Melilla and Ceuta)
         'SE', // Sweden
+        'MC', // Monaco (Is it's own country, Is EPS because France is EPS)
     ];
 }
