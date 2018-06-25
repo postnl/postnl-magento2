@@ -40,10 +40,7 @@ class CutOffSettings implements ArrayInterface
      */
     public function toOptionArray()
     {
-        $options = [
-            // @codingStandardsIgnoreLine
-            ['value' => '', 'label' => __('No cut-off time')],
-        ];
+        $options = [];
 
         for ($hour = 0; $hour < 24; $hour++) {
             $options = array_merge($options, $this->addHour($hour));
@@ -59,15 +56,11 @@ class CutOffSettings implements ArrayInterface
      */
     private function addHour($hour)
     {
-        $hour = str_pad($hour, 2, '0', STR_PAD_LEFT);
-
+        $hour    = str_pad($hour, 2, '0', STR_PAD_LEFT);
         $options = [];
-        if ($hour !== '00') {
-            // @codingStandardsIgnoreLine
-            $options[] = ['value' => $hour . ':00:00', 'label' => __($hour . ':00')];
-        }
 
         // @codingStandardsIgnoreStart
+        $options[] = ['value' => $hour . ':00:00', 'label' => __($hour . ':00')];
         $options[] = ['value' => $hour . ':15:00', 'label' => __($hour . ':15')];
         $options[] = ['value' => $hour . ':30:00', 'label' => __($hour . ':30')];
         $options[] = ['value' => $hour . ':45:00', 'label' => __($hour . ':45')];

@@ -41,6 +41,7 @@ use TIG\PostNL\Webservices\Endpoints\TimeFrame;
 use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
 use Magento\Framework\App\Action\Context;
 use Magento\Checkout\Model\Session;
+use TIG\PostNL\Service\Quote\ShippingDuration;
 
 class Timeframes extends AbstractDeliveryOptions
 {
@@ -74,6 +75,7 @@ class Timeframes extends AbstractDeliveryOptions
      * @param TimeFrame           $timeFrame
      * @param Calculator          $calculator
      * @param IsDeliverDaysActive $isDeliverDaysActive
+     * @param ShippingDuration    $shippingDuration
      */
     public function __construct(
         Context $context,
@@ -84,7 +86,8 @@ class Timeframes extends AbstractDeliveryOptions
         DeliveryDate $deliveryDate,
         TimeFrame $timeFrame,
         Calculator $calculator,
-        IsDeliverDaysActive $isDeliverDaysActive
+        IsDeliverDaysActive $isDeliverDaysActive,
+        ShippingDuration $shippingDuration
     ) {
         $this->addressEnhancer      = $addressEnhancer;
         $this->timeFrameEndpoint    = $timeFrame;
@@ -96,6 +99,7 @@ class Timeframes extends AbstractDeliveryOptions
             $orderFactory,
             $checkoutSession,
             $quoteToRateRequest,
+            $shippingDuration,
             $deliveryDate
         );
     }

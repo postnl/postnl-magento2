@@ -120,23 +120,19 @@ class DeliveryDate extends AbstractEndpoint
     }
 
     /**
-     * @codingStandardsIgnoreStart
-     * @todo: 1. Calculation for shippingDuration
-     * @todo: 2. Add configuration for sundaysorting (if not enabled Monday should not return)
-     * @todo: 3. Move surounding @codingStandardsIgnore tags
-     * @codingStandardsIgnoreEnd
      * @param $address
+     * @param $shippingDuration
      *
      */
-    public function setParameters($address)
+    public function setParameters($address, $shippingDuration = '1')
     {
         $this->requestParams = [
             'GetDeliveryDate' => [
                 'CountryCode'        => $address['country'],
                 'PostalCode'         => str_replace(' ', '', $address['postcode']),
                 'ShippingDate'       => $this->postNLhelper->getCurrentTimeStamp(),
-                'ShippingDuration'   => '1',
-                'AllowSundaySorting' => 'false',
+                'ShippingDuration'   => $shippingDuration,
+                'AllowSundaySorting' => $this->postNLhelper->isSundaySortingAllowed(),
                 'CutOffTimes'        => $this->cutoffTimes->get(),
                 'Options'            => $this->timeframeOptions->get($address['country']),
             ],

@@ -56,6 +56,10 @@ class Store implements StoreInterface
     }
 
     /**
+     * See : https://github.com/magento/magento2/issues/9741
+     * Website ID can not be retrieved form the storeManger.
+     * This will always returns the website thats stated as default.
+     *
      * @return int
      */
     public function getWebsiteId()

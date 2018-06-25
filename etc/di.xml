@@ -46,6 +46,10 @@
         <plugin name="TIG_PostNL_Order_Shipping_Address" type="TIG\PostNL\Plugin\Order\ShippingAddress" sortOrder="2"/>
     </type>
 
+    <type name="\Magento\Quote\Model\Quote">
+        <plugin name="TIG_PostNL_Quote_RestDeliveryDate" type="\TIG\PostNL\Plugin\Quote\ResetDeliveryDate" sortOrder="1"/>
+    </type>
+
     <type name="\Magento\Shipping\Model\Config\Source\Allmethods">
         <plugin name="TIG_PostNL_Config_Source_Allmethods" type="TIG\PostNL\Plugin\Config\Source\AllMethodsPlugin" sortOrder="1"/>
     </type>
@@ -83,6 +87,9 @@
     <type name="TIG\PostNL\Setup\UpgradeSchema">
         <arguments>
             <argument name="upgradeSchemaObjects" xsi:type="array">
+                <item name="v1.4.1" xsi:type="array">
+                    <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V141\Schema\UpgradeOrderTable</item>
+                </item>
                 <item name="v1.4.0" xsi:type="array">
                     <item name="UpgradeShippingLabelType" xsi:type="object">TIG\PostNL\Setup\V140\Schema\UpgradeShippingLabelType</item>
                 </item>
@@ -109,15 +116,11 @@
                 <item name="v1.1.0" xsi:type="array">
                     <item name="InstallApiKey" xsi:type="object">TIG\PostNL\Setup\V110\Data\ApiKeyConfiguration</item>
                 </item>
-            </argument>
-        </arguments>
-    </type>
-
-    <type name="TIG\PostNL\Setup\InstallData">
-        <arguments>
-            <argument name="installDataObjects" xsi:type="array">
                 <item name="v1.2.0" xsi:type="array">
                     <item name="InstallCustomProductAttributes" xsi:type="object">TIG\PostNL\Setup\V120\Data\CustomProductAttributes</item>
+                </item>
+                <item name="v1.4.1" xsi:type="array">
+                    <item name="InstallShippingDurationAttribute" xsi:type="object">TIG\PostNL\Setup\V141\Data\ShippingDurationAttribute</item>
                 </item>
             </argument>
         </arguments>
@@ -128,6 +131,9 @@
             <argument name="upgradeDataObjects" xsi:type="array">
                 <item name="v1.2.0" xsi:type="array">
                     <item name="InstallCustomProductAttributes" xsi:type="object">TIG\PostNL\Setup\V120\Data\CustomProductAttributes</item>
+                </item>
+                <item name="v1.4.1" xsi:type="array">
+                    <item name="InstallShippingDurationAttribute" xsi:type="object">TIG\PostNL\Setup\V141\Data\ShippingDurationAttribute</item>
                 </item>
             </argument>
         </arguments>

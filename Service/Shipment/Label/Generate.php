@@ -31,6 +31,9 @@
  */
 namespace TIG\PostNL\Service\Shipment\Label;
 
+use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
+
 class Generate
 {
     /**
@@ -42,6 +45,8 @@ class Generate
      * @var Merge
      */
     private $merge;
+
+    private $globalPackLabels = [];
 
     /**
      * @param Prepare $prepare
@@ -70,10 +75,30 @@ class Generate
     public function run(array $labels, $createNewPdf = false)
     {
         $preparedLabels = [];
-        foreach ($labels as $label) {
+        foreach ($this->orderLabels($labels) as $label) {
             $preparedLabels[] = $this->prepare->label($label);
         }
 
         return $this->merge->files($preparedLabels, $createNewPdf);
+    }
+
+    /**
+     * @param $labels
+     *
+     * @return array
+     */
+    public function orderLabels($labels)
+    {
+        $otherLabels = array_filter($labels, function ($label) {
+            /** @var ShipmentLabelInterface $label */
+            if (strtoupper($label->getType()) == ProductCodeAndType::SHIPMENT_TYPE_GP) {
+                $this->globalPackLabels[] = $label;
+                return false;
+            }
+
+            return true;
+        });
+
+        return array_merge($this->globalPackLabels, $otherLabels);
     }
 }

@@ -75,7 +75,7 @@ class EPS extends Domestic
         $this->templateInserted = true;
         $pageId = $this->pdf->importPage(1);
         $this->pdf->Rotate(90);
-        $this->pdf->useTemplate($pageId, -85, 0, Fpdi::PAGE_SIZE_A6_WIDTH, Fpdi::PAGE_SIZE_A6_HEIGHT);
+        $this->pdf->useTemplate($pageId, - 130, 0);
         $this->pdf->Rotate(0);
     }
 

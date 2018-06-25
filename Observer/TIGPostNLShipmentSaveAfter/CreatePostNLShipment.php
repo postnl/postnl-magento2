@@ -40,6 +40,7 @@ use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Model\Order as PostNLOrder;
 use TIG\PostNL\Service\Handler\SentDateHandler;
+use TIG\PostNL\Config\Provider\Webshop;
 
 // @codingStandardsIgnoreFile
 /**
@@ -79,20 +80,28 @@ class CreatePostNLShipment implements ObserverInterface
     private $order;
 
     /**
+     * @var Webshop
+     */
+    private $webshopConfig;
+
+    /**
      * @param ShipmentRepositoryInterface $shipmentRepository
      * @param OrderRepository             $orderRepository
      * @param SentDateHandler             $sendDateHandler
      * @param RequestInterface            $requestInterface
+     * @param Webshop                     $webshopConfig
      */
     public function __construct(
         ShipmentRepositoryInterface $shipmentRepository,
         OrderRepository $orderRepository,
         SentDateHandler $sendDateHandler,
-        RequestInterface $requestInterface
+        RequestInterface $requestInterface,
+        Webshop $webshopConfig
     ) {
         $this->orderRepository = $orderRepository;
         $this->sentDateHandler = $sendDateHandler;
         $this->shipmentRepository = $shipmentRepository;
+        $this->webshopConfig = $webshopConfig;
 
         $this->shipParams = $requestInterface->getParam('shipment');
     }
@@ -222,6 +231,11 @@ class CreatePostNLShipment implements ObserverInterface
     {
         $order = $shipment->getOrder();
         $shippingMethod = $order->getShippingMethod();
+
+        $allowedMethods = $this->webshopConfig->getAllowedShippingMethods($order->getStoreId());
+        if (in_array($shippingMethod, $allowedMethods)) {
+            return true;
+        }
 
         return $shippingMethod == 'tig_postnl_regular';
     }

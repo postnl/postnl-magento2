@@ -34,17 +34,33 @@ namespace TIG\PostNL\Service\Shipment;
 class EpsCountries
 {
     /**
-     * Array of countries to which PostNL ships using EPS. Other EU countries are shipped to using Global Pack
+     * Array of countries to which PostNL ships using EPS. Other EU countries are shipped, using Global Pack.
      * https://developer.postnl.nl/browse-apis/send-and-track/products/ => Destination EU
      *
      * Parcels to the Channel Islands, the Canary Islands and Malta can only be sent with the Global Pack product.
-     * ==== Channel Islands ====
+     *
+     * ==== Great Britain ====
      * 'GG', // Guernsey
      * 'JE', // Jersy
      * 'IM', // Isle of Man
+     * 'GI', // Gibraltar
+     * 'MT', // Malta
      *
-     * ==== Canary Islands ====
-     * 'IC' // Las Palmas, Santa Cruz and Melilla
+     * ==== Denmark ====
+     * 'FO', // Faeröer (Faroe Islands)
+     * 'GL', // Greenland
+     *
+     * ==== SPAIN ====
+     * @codingStandardsIgnoreLine
+     * @todo: Not in the Magento Country list, customer will use ES which will cause the shipment to be EPS.
+     * 'IC', // Las Palmas, Santa Cruz and Melilla
+     *
+     * ==== Italy ====
+     * 'VA', // Vatican City
+     * 'SM', // San Marino
+     *
+     * ==== France ====
+     * 'AD', // Andorra
      *
      * @var array
      */
@@ -53,16 +69,16 @@ class EpsCountries
         'BE', // Belgium
         'BG', // Bulgaria
         'CZ', // Czech Republic
-        'DK', // Denmark (Excluding Faroe Islands and Greenland)
+        'DK', // Denmark (Excluding Faroe Islands and GL: Greenland)
         'EE', // Estonia
         'FI', // Finland
-        'FR', // France (Including Monaco and Corsica. Excluding Andorra)
+        'FR', // France (Including orsica. Excluding Andorra)
         'DE', // Germany
         'GB', // Great Britain (Including Northern Ireland. Excluding Gibraltar and the Channel Islands)
         'GR', // Greece
         'HU', // Hungary
         'IE', // Ireland
-        'IT', // Italy (Excluding San Marino and Vatican City)
+        'IT', // Italy (Excluding (SM: San Marino and Vatican City)
         'LV', // Latvia
         'LT', // Lithuania
         'LU', // Luxembourg
@@ -74,5 +90,6 @@ class EpsCountries
         'SI', // Slovenia
         'ES', // Spain (Including Balearic Islands. Excluding Canary Islands, Melilla and Ceuta)
         'SE', // Sweden
+        'MC', // Monaco (Is it's own country, Is EPS because France is EPS)
     ];
 }

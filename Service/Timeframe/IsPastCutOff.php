@@ -33,6 +33,7 @@ namespace TIG\PostNL\Service\Timeframe;
 
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Helper\Data as PostNLHelper;
 
 class IsPastCutOff
 {
@@ -47,15 +48,23 @@ class IsPastCutOff
     private $currentDate;
 
     /**
+     * @var PostNLHelper
+     */
+    private $postNLHelper;
+
+    /**
      * @param Webshop           $webshop
      * @param TimezoneInterface $currentDate
+     * @param PostNLHelper      $postNLHelper
      */
     public function __construct(
         Webshop $webshop,
-        TimezoneInterface $currentDate
+        TimezoneInterface $currentDate,
+        PostNLHelper $postNLHelper
     ) {
         $this->webshop = $webshop;
         $this->currentDate = $currentDate;
+        $this->postNLHelper = $postNLHelper;
     }
 
     /**
@@ -88,6 +97,7 @@ class IsPastCutOff
             return $cutOffTime;
         }
 
-        return $cutOffTime = $this->webshop->getCutOffTime();
+        $day = $this->postNLHelper->getDayOrWeekNumber($this->now()->format('H:i:s'));
+        return $cutOffTime = $this->webshop->getCutOffTimeForDay($day);
     }
 }

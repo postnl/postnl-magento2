@@ -51,6 +51,10 @@ define([
     });
 
     quote.shippingMethod.subscribe(function (shippingMethod) {
+        if (!shippingMethod) {
+            return;
+        }
+
         if (shippingMethod.carrier_code === 'tig_postnl') {
             return;
         }
