@@ -95,7 +95,7 @@ define([
              * }
              */
             var data = this.getSelectedItems();
-            data[this.currentSelected()] = jQuery('#'+this.currentSelected())[0].value;
+            data[this.currentSelected()] = $('#'+this.currentSelected())[0].value;
 
             console.log(submitUrl);
             console.log(data);
