@@ -28,20 +28,47 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+/* eslint-disable strict */
 define([
     'jquery',
     'ko',
-    'Magento_Ui/js/grid/toolbar'
+    'underscore',
+    'Magento_Ui/js/grid/toolbar',
+    'mageUtils',
+    'mage/url',
+    'TIG_PostNL/js/dataprovider'
 ], function (
     $,
     ko,
-    Toolbar
+    _,
+    Toolbar,
+    utils,
+    url,
+    DataProvider
 ) {
+    'use strict';
     return Toolbar.extend({
         defaults : {
-            currentSelected : ko.observable('change_parcel')
+            currentSelected : ko.observable('change_parcel'),
+            selectProvider: 'ns = ${ $.ns }, index = ids',
+            modules: {
+                selections: '${ $.selectProvider }'
+            },
+            actionList : ko.observableArray([
+                {text: $.mage.__('Change parcel'), value: 'change_parcel'},
+                {text: $.mage.__('Change product'), value: 'change_product'}
+            ]),
+            defaultOption : ko.observable(DataProvider.getDefaultOption()),
+            optionList : ko.observableArray(
+                DataProvider.getProductOptions()
+            )
         },
 
+        /**
+         * Init.
+         *
+         * @returns {exports}
+         */
         initObservable : function () {
             this._super().observe([
                 'currentSelected'
@@ -54,15 +81,91 @@ define([
             return this;
         },
 
+        /**
+         * The PostNL toolbar should only be visable on the order and shipment grid.
+         *
+         * @returns {boolean}
+         */
         showPostNLToolbarActions : function () {
             return this.ns === 'sales_order_grid' || this.ns === 'sales_order_shipment_grid';
         },
 
-        getPostNLActionsList : function () {
-            return [
-                {name: $.mage.__('Change parcel'), value: 'change_parcel'},
-                {name: $.mage.__('Change product'), value: 'change_product'}
-            ];
+        /**
+         * Submit selected items and postnl form data to controllers
+         * - MassChangeMulticolli
+         * - MassChangeProduct
+         */
+        submit : function () {
+            var data = this.getSelectedItems();
+            data[this.currentSelected()] = $('#'+this.currentSelected())[0].value;
+
+            utils.submit({
+                url: this.getSubmitUrl(),
+                data: data
+            });
+        },
+
+        /**
+         * Creates the url bases on grid an selected action.
+         *
+         * @returns string
+         */
+        getSubmitUrl : function () {
+            var url = 'postnl/' + this.getCurrentGrid() + '/' + this.getCurrentAction();
+            return url.build(url);
+        },
+
+        /**
+         * Gets the controller based on the currently selected action.
+         *
+         * @returns {*}
+         */
+        getCurrentAction : function () {
+            if (this.currentSelected() === 'change_parcel') {
+                return 'MassChangeMulticolli';
+            }
+
+            if (this.currentSelected() === 'change_product') {
+                return 'MassChangeProduct';
+            }
+        },
+
+        /**
+         * Retuns the controller directory bases on the current grid.
+         *
+         * @returns {*}
+         */
+        getCurrentGrid : function () {
+            if (this.ns === 'sales_order_grid') {
+                return 'order';
+            }
+
+            if (this.ns === 'sales_order_shipment_grid') {
+                return 'shipment';
+            }
+        },
+
+        /**
+         * Obtain and return the selected items from the grid
+         *
+         * @returns {*}
+         */
+        getSelectedItems : function () {
+            var provider = this.selections();
+            var selections = provider && provider.getSelections();
+            var itemsType = selections.excludeMode ? 'excluded' : 'selected';
+
+            var selectedItems = {};
+            selectedItems[itemsType] = selections[itemsType];
+
+            if (!selectedItems[itemsType].length) {
+                selectedItems[itemsType] = false;
+            }
+
+            // Params includes extra data like filters
+            _.extend(selectedItems, selections.params || {});
+
+            return selectedItems;
         }
     });
 });

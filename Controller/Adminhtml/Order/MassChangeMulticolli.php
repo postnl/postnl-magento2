@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<!--
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -28,12 +28,15 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <body>
-        <referenceContainer name="before.body.end">
-            <block class="TIG\PostNL\Block\Adminhtml\Grid\Order\DownloadPdfAction"/>
-            <block class="TIG\PostNL\Block\Adminhtml\Grid\DataProvider"/>
-        </referenceContainer>
-    </body>
-</page>
+ */
+namespace TIG\PostNL\Controller\Adminhtml\Order;
+
+use TIG\PostNL\Controller\Adminhtml\ToolbarAbstract;
+
+class MassChangeMulticolli extends ToolbarAbstract
+{
+    public function execute()
+    {
+        // TODO: Implement execute() method.
+    }
+}

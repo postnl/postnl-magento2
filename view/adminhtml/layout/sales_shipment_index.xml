@@ -9,6 +9,7 @@
     <body>
         <referenceContainer name="before.body.end">
             <block class="TIG\PostNL\Block\Adminhtml\Grid\Shipment\DownloadPdfAction"/>
+            <block class="TIG\PostNL\Block\Adminhtml\Grid\DataProvider"/>
         </referenceContainer>
     </body>
 </page>
