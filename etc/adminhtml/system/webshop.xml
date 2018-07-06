@@ -138,13 +138,70 @@
                 </depends>
             </field>
 
-            <field id="show_label" translate="label" type="radios" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <field id="show_label" translate="label tooltip comment" type="radios" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                 <label>Show shipping label</label>
+                <comment><![CDATA[Printing a custom (like Fooman) packingslip including the PostNL labels is not supported yet.]]></comment>
                 <tooltip><![CDATA[If you select 'on the same page' in some cases the shipping label may not fit. In this case, the shipping label will be printed on a separate page instead.]]></tooltip>
                 <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\ShowShippingLabel</source_model>
                 <config_path>tig_postnl/labelandpackingslipoptions/show_label</config_path>
             </field>
+
+            <field id="enable_barcode" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <label>Enable barcode on Packingslip</label>
+                <comment><![CDATA[This will print a barcode on the packingslip.]]></comment>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <config_path>tig_postnl/labelandpackingslipoptions/enable_barcode</config_path>
+            </field>
+
+            <group id="barcode_settings" translate="label" type="text" sortOrder="45" showInDefault="1" showInStore="0" showInWebsite="1">
+                <label>Barcode settings</label>
+                <fieldset_css>tig_postnl-sub-section</fieldset_css>
+                <field id="value" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInStore="0" showInWebsite="1">
+                    <label>Value for barcode</label>
+                    <comment><![CDATA[Select what to use as value for the barcode. If you select shipment ID, be aware that this only will work if you combine the print packingslip and create shipment methods.]]></comment>
+                    <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\BarcodeValue</source_model>
+                    <config_path>tig_postnl/labelandpackingslipoptions/barcode_value</config_path>
+                </field>
+
+                <field id="position" translate="label tooltip" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Position of the barcode</label>
+                    <tooltip><![CDATA[The position must contain four coordinates (x1, y1, x2, y2) given as string.]]></tooltip>
+                    <config_path>tig_postnl/labelandpackingslipoptions/barcode_position</config_path>
+                </field>
+
+                <field id="type" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Barcode Type</label>
+                    <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\BarcodeType</source_model>
+                    <config_path>tig_postnl/labelandpackingslipoptions/barcode_type</config_path>
+                </field>
+
+                <field id="background_color" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Background color</label>
+                    <comment><![CDATA[Color of the background.]]></comment>
+                    <config_path>tig_postnl/labelandpackingslipoptions/background_color</config_path>
+                    <frontend_model>\TIG\PostNL\Block\Adminhtml\Config\Form\Field\Color</frontend_model>
+                </field>
+
+                <field id="barcode_color" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Barcode color</label>
+                    <comment><![CDATA[Color of the barcode and the text.]]></comment>
+                    <config_path>tig_postnl/labelandpackingslipoptions/barcode_color</config_path>
+                    <frontend_model>\TIG\PostNL\Block\Adminhtml\Config\Form\Field\Color</frontend_model>
+                </field>
+
+                <field id="include_number" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Include value</label>
+                    <comment><![CDATA[Print the line of numbers underneath the barcode pattern.]]></comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>tig_postnl/labelandpackingslipoptions/barcode_numberinclude</config_path>
+                </field>
+
+                <depends>
+                    <field id="tig_postnl/webshop/labelandpackingslipoptions/enable_barcode">1</field>
+                </depends>
+            </group>
         </group>
+
 
         <group id="advanced" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced Settings</label>

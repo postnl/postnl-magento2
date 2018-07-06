@@ -62,7 +62,7 @@ class UpgradeShippingLabelType implements UpgradeSchemaInterface
 
         $connection = $setup->getConnection();
         $connection->modifyColumn(
-            static::TABLE_NAME,
+            $setup->getTable(static::TABLE_NAME),
             'label',
             'mediumblob'
         );

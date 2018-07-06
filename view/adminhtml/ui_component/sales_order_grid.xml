@@ -57,6 +57,20 @@
                     </item>
                 </argument>
             </action>
+            <action name="postnl_create_shipments_print_packingslip">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">postnl_create_shipments_print_packingslip</item>
+                        <item name="label" xsi:type="string" translate="true">PostNL - Create shipments &amp; print packing slip</item>
+                        <item name="postnl_action" xsi:type="string">CreateShipmentsAndPrintPackingSlip</item>
+                        <!-- This forces the massaction to not execute anything. We handle the action in js/shipment/grid/DownloadPdf.js -->
+                        <item name="callback" xsi:type="array">
+                            <item name="provider" xsi:type="string">fake.data.provider</item>
+                            <item name="target" xsi:type="string">fakeFunction</item>
+                        </item>
+                    </item>
+                </argument>
+            </action>
             <action name="postnl_create_shipments_print_packingslip_confirm">
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">

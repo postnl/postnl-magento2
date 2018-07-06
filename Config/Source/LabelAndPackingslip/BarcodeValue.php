@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,16 +28,28 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <css src="TIG_PostNL::css/adminhtml_config.css" />
-        <css src="jquery/colorpicker/css/colorpicker.css"/>
-    </head>
-    <body>
-        <referenceContainer name="content">
-            <block class="TIG\PostNL\Block\Adminhtml\Config\Support\BodyClass" name="postnl.support" before="system.config.edit" />
-        </referenceContainer>
-    </body>
-</page>
+ */
+namespace TIG\PostNL\Config\Source\LabelAndPackingslip;
+
+use Magento\Framework\Option\ArrayInterface;
+
+class BarcodeValue implements ArrayInterface
+{
+    const REFEENCE_TYPE_SHIPMENT_ID = 'shipment_increment_id';
+    const REFEENCE_TYPE_ORDER_ID    = 'order_increment_id';
+
+    /**
+     * @return array
+     */
+    public function toOptionArray()
+    {
+        // @codingStandardsIgnoreStart
+        $options = [
+            ['value' => self::REFEENCE_TYPE_SHIPMENT_ID, 'label' => __('Shipment ID')],
+            ['value' => self::REFEENCE_TYPE_ORDER_ID, 'label' => __('Order ID')],
+        ];
+        // @codingStandardsIgnoreEnd
+
+        return $options;
+    }
+}

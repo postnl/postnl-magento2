@@ -103,6 +103,14 @@
             <labelandpackingslipoptions>
                 <reference_type>shipment_increment_id</reference_type>
                 <show_label>together</show_label>
+                <enable_barcode>0</enable_barcode>
+                <barcode_value>order_increment_id</barcode_value>
+                <barcode_position>360,750,550,790</barcode_position>
+                <background_color>#FFFFFF</background_color>
+                <barcode_color>#000000</barcode_color>
+                <barcode_height>40</barcode_height>
+                <barcode_type>code39</barcode_type>
+                <barcode_numberinclude>1</barcode_numberinclude>
             </labelandpackingslipoptions>
             <endpoints>
                 <api_base_url>https://api.postnl.nl/shipment/</api_base_url>
