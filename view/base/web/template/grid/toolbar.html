@@ -24,24 +24,27 @@
         <div class="col-xs-9 postnl-grid-toolbar">
             <div class="col-xs-2">
                 <select class="action-select admin__control-select"
-                        data-bind="options:$data.getPostNLActionsList(), value: $data.currentSelected
-                        optionsText: 'name', optionsValue: 'value'">
+                        data-bind="options:$data.actionList,
+                        optionsText: 'text', optionsValue: 'value', value: $data.currentSelected">
                 </select>
             </div>
             <div class="col-xs-2">
                 <input class="admin__control-text" id="change_parcel" type="text"
                        data-bind="visible: $data.currentSelected() == 'change_parcel'"/>
 
-                <input class="admin__control-text" id="change_product" type="text"
-                       data-bind="visible: $data.currentSelected() == 'change_product'"/>
+                <div class="select-holder" data-bind="visible: $data.currentSelected() == 'change_product'">
+                    <select class="action-select admin__control-select" id="change_product"
+                            data-bind="options:$data.optionList,
+                            optionsText: 'text', optionsValue: 'value', value: $data.defaultOption">
+                    </select>
+                </div>
             </div>
 
-            <button class="action-secondary" type="button" click="submit" style="width: 100px; height: 25px;">
+            <button class="action-secondary" type="button" click="submit" style="width: 100px; height: 30px;">
                 <span translate="'Sumbit'">Submit</span>
             </button>
         </div>
         <!-- /ko -->
-
     </div>
 </div>
 

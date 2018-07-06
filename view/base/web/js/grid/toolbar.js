@@ -28,30 +28,47 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+/* eslint-disable strict */
 define([
     'jquery',
     'ko',
     'underscore',
     'Magento_Ui/js/grid/toolbar',
     'mageUtils',
-    'mage/url'
+    'mage/url',
+    'TIG_PostNL/js/dataprovider'
 ], function (
     $,
     ko,
     _,
     Toolbar,
     utils,
-    url
+    url,
+    DataProvider
 ) {
+    'use strict';
     return Toolbar.extend({
         defaults : {
             currentSelected : ko.observable('change_parcel'),
             selectProvider: 'ns = ${ $.ns }, index = ids',
             modules: {
                 selections: '${ $.selectProvider }'
-            }
+            },
+            actionList : ko.observableArray([
+                {text: $.mage.__('Change parcel'), value: 'change_parcel'},
+                {text: $.mage.__('Change product'), value: 'change_product'}
+            ]),
+            defaultOption : ko.observable(DataProvider.getDefaultOption()),
+            optionList : ko.observableArray(
+                DataProvider.getProductOptions()
+            )
         },
 
+        /**
+         * Init.
+         *
+         * @returns {exports}
+         */
         initObservable : function () {
             this._super().observe([
                 'currentSelected'
@@ -64,51 +81,68 @@ define([
             return this;
         },
 
+        /**
+         * The PostNL toolbar should only be visable on the order and shipment grid.
+         *
+         * @returns {boolean}
+         */
         showPostNLToolbarActions : function () {
             return this.ns === 'sales_order_grid' || this.ns === 'sales_order_shipment_grid';
         },
 
-        getPostNLActionsList : function () {
-            return [
-                {name: $.mage.__('Change parcel'), value: 'change_parcel'},
-                {name: $.mage.__('Change product'), value: 'change_product'}
-            ];
-        },
-
+        /**
+         * Submit selected items and postnl form data to controllers
+         * - MassChangeMulticolli
+         * - MassChangeProduct
+         */
         submit : function () {
-            /**
-             * In the frontend, url.build() will take care of everything (base url, form key etc.)
-             * and return the proper url. However, this doesn't seem to be the case in the backend,
-             * the base url needs to be set manually. TODO: Find a correct way to set the base url
-             */
-            url.setBaseUrl('http://postnl223.local/testadmin/');
-            var submitUrl = url.build('sales/order/massCancel/');
-
-
-            /**
-             * this will create a data json which will look similar to:
-             * {
-             *   change_parcel: "3", //data inserted in the new field
-             *   selected: ["1", "2"], //Selected orders from the grid. "selected" key could be "excluded", depending on your filters
-             *   filters: {....},
-             *   namespace: "..."
-             * }
-             */
             var data = this.getSelectedItems();
             data[this.currentSelected()] = $('#'+this.currentSelected())[0].value;
 
-            console.log(submitUrl);
-            console.log(data);
-
-            /**
-             * utils.submit() will take care of everything; it will trigger a post request to the provided url,
-             * handle the form key if necessary, and redirect you to the url. All that it needs is a full url
-             * (so http://base.url/route/controller/action), and the post data.
-             */
             utils.submit({
-                url: submitUrl,
+                url: this.getSubmitUrl(),
                 data: data
             });
+        },
+
+        /**
+         * Creates the url bases on grid an selected action.
+         *
+         * @returns string
+         */
+        getSubmitUrl : function () {
+            var url = 'postnl/' + this.getCurrentGrid() + '/' + this.getCurrentAction();
+            return url.build(url);
+        },
+
+        /**
+         * Gets the controller based on the currently selected action.
+         *
+         * @returns {*}
+         */
+        getCurrentAction : function () {
+            if (this.currentSelected() === 'change_parcel') {
+                return 'MassChangeMulticolli';
+            }
+
+            if (this.currentSelected() === 'change_product') {
+                return 'MassChangeProduct';
+            }
+        },
+
+        /**
+         * Retuns the controller directory bases on the current grid.
+         *
+         * @returns {*}
+         */
+        getCurrentGrid : function () {
+            if (this.ns === 'sales_order_grid') {
+                return 'order';
+            }
+
+            if (this.ns === 'sales_order_shipment_grid') {
+                return 'shipment';
+            }
         },
 
         /**
@@ -123,8 +157,6 @@ define([
 
             var selectedItems = {};
             selectedItems[itemsType] = selections[itemsType];
-
-            console.log(selections);
 
             if (!selectedItems[itemsType].length) {
                 selectedItems[itemsType] = false;
