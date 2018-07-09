@@ -33,8 +33,167 @@ namespace TIG\PostNL\Controller\Adminhtml;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Ui\Component\MassAction\Filter;
+use TIG\PostNL\Api\ShipmentRepositoryInterface;
+use TIG\PostNL\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order;
 
 abstract class ToolbarAbstract extends Action
 {
-    //
+    const PARCELCOUNT_PARAM_KEY = 'change_parcel';
+    const PRODUCTCODE_PARAM_KEY = 'change_product';
+
+    /**
+     * @var Filter
+     */
+    //@codingStandardsIgnoreLine
+    protected $uiFilter;
+
+    /**
+     * @var ShipmentRepositoryInterface
+     */
+    //@codingStandardsIgnoreLine
+    protected $shipmentRepository;
+
+    /**
+     * @var OrderRepositoryInterface
+     */
+    //@codingStandardsIgnoreLine
+    protected $orderRepository;
+
+    /**
+     * @var array
+     */
+    //@codingStandardsIgnoreLine
+    protected $errors = [];
+
+    public function __construct(
+        Context $context,
+        Filter $filter,
+        ShipmentRepositoryInterface $shipmentRepository,
+        OrderRepositoryInterface $orderRepository
+    ) {
+        parent::__construct($context);
+
+        $this->uiFilter = $filter;
+        $this->shipmentRepository = $shipmentRepository;
+        $this->orderRepository = $orderRepository;
+    }
+
+    /**
+     * @param Order $order
+     * @param       $productCode
+     */
+    //@codingStandardsIgnoreLine
+    protected function orderChangeProductCode(Order $order, $productCode)
+    {
+        $postnlOrder = $this->getPostNLOrder($order->getId());
+
+        $shipments = $order->getShipmentsCollection();
+        foreach ($shipments as $shipment) {
+            $this->shipmentChangeProductCode($shipment->getId(), $productCode);
+        }
+
+        $postnlOrder->setProductCode($productCode);
+        $this->orderRepository->save($postnlOrder);
+    }
+
+    /**
+     * @param $shipmentId
+     * @param $productCode
+     *
+     * @return bool
+     */
+    //@codingStandardsIgnoreLine
+    protected function shipmentChangeProductCode($shipmentId, $productCode)
+    {
+        $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
+        if ($shipment->getConfirmedAt()) {
+            $this->errors[] = __('Can not change product for confirmed shipment %1', $shipment->getShipmentId());
+            return false;
+        }
+
+        $shipment->setProductCode($productCode);
+        $this->shipmentRepository->save($shipment);
+        return true;
+    }
+
+    /**
+     * @param Order $order
+     * @param       $parcelCount
+     */
+    //@codingStandardsIgnoreLine
+    protected function orderChangeParcelCount(Order $order, $parcelCount)
+    {
+        $postnlOrder = $this->getPostNLOrder($order->getId());
+
+        $shipments = $order->getShipmentsCollection();
+        foreach ($shipments as $shipment) {
+            $this->shipmentChangeParcelCount($shipment->getId(), $parcelCount);
+        }
+
+        $postnlOrder->setParcelCount($parcelCount);
+        $this->orderRepository->save($postnlOrder);
+    }
+
+    /**
+     * @param $shipmentId
+     * @param $parcelCount
+     *
+     * @return bool
+     */
+    //@codingStandardsIgnoreLine
+    protected function shipmentChangeParcelCount($shipmentId, $parcelCount)
+    {
+        $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
+        if (!$shipment->canChangeParcelCount()) {
+            $this->errors[] = __('Can not change the parcel count for shipment %1', $shipment->getShipmentId());
+            return false;
+        }
+
+        $shipment->setParcelCount($parcelCount);
+        $this->shipmentRepository->save($shipment);
+        return true;
+    }
+
+    /**
+     * @return $this
+     */
+    //@codingStandardsIgnoreLine
+    protected function handelErrors()
+    {
+        foreach ($this->errors as $error) {
+            $this->messageManager->addWarningMessage($error);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $count
+     *
+     * @return mixed
+     */
+    //@codingStandardsIgnoreLine
+    protected function getTotalCount($count)
+    {
+        $totalErrors = count($this->errors);
+        return $count - $totalErrors;
+    }
+
+    /**
+     * @param $orderId
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    //@codingStandardsIgnoreLine
+    protected function getPostNLOrder($orderId)
+    {
+        $postnlOrder = $this->orderRepository->getByOrderId($orderId);
+        if (!$postnlOrder->getEntityId()) {
+            $this->errors[] = __('Could not find a PostNL order for %1', $postnlOrder->getOrderId());
+        }
+
+        return $postnlOrder;
+    }
 }
