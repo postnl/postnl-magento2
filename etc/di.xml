@@ -34,6 +34,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="TIG\PostNL\Api\MatrixrateRepositoryInterface" type="TIG\PostNL\Model\Carrier\MatrixrateRepository" />
     <preference for="TIG\PostNL\Api\OrderRepositoryInterface" type="TIG\PostNL\Model\OrderRepository" />
+    <preference for="TIG\PostNL\Api\Data\OrderInterface" type="TIG\PostNL\Model\Order" />
     <preference for="TIG\PostNL\Api\ShipmentRepositoryInterface" type="TIG\PostNL\Model\ShipmentRepository" />
     <preference for="TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface" type="TIG\PostNL\Model\ShipmentBarcodeRepository" />
     <preference for="TIG\PostNL\Api\ShipmentLabelRepositoryInterface" type="TIG\PostNL\Model\ShipmentLabelRepository" />

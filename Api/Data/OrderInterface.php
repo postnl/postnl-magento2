@@ -43,6 +43,14 @@ interface OrderInterface
     public function getEntityId();
 
     /**
+     * Sets entity ID.
+     *
+     * @param int $entityId
+     * @return $this
+     */
+    public function setEntityId($entityId);
+
+    /**
      * @param $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface

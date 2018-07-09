@@ -53,6 +53,7 @@ interface ShipmentRepositoryInterface
     /**
      * Retrieve a specific PostNL shipment.
      *
+     * @api
      * @param int $identifier
      * @return \TIG\PostNL\Api\Data\ShipmentInterface
      */

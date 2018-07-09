@@ -265,6 +265,11 @@ interface ShipmentInterface
     public function getExtraCoverAmount();
 
     /**
+     * @return \Magento\Sales\Api\Data\OrderAddressInterface;
+     */
+    public function getOriginalShippingAddress();
+
+    /**
      * @return \Magento\Sales\Api\Data\ShipmentInterface
      */
     public function getShipment();
