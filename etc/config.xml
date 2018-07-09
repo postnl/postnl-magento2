@@ -96,6 +96,7 @@
                 <max_deliverydays>7</max_deliverydays>
                 <eveningdelivery_fee>2</eveningdelivery_fee>
                 <extraathome_active>0</extraathome_active>
+                <idcheck_active>0</idcheck_active>
                 <eveningdelivery_be_fee>2</eveningdelivery_be_fee>
                 <sundaydelivery_fee>2</sundaydelivery_fee>
                 <delivery_delay>1</delivery_delay>

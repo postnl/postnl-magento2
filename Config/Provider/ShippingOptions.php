@@ -47,6 +47,7 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_EVENING_BE_ACTIVE         = 'tig_postnl/shippingoptions/eveningdelivery_be_active';
     const XPATH_SHIPPING_OPTION_EVENING_FEE               = 'tig_postnl/shippingoptions/eveningdelivery_fee';
     const XPATH_SHIPPING_OPTION_EXTRAATHOME_ACTIVE        = 'tig_postnl/shippingoptions/extraathome_active';
+    const XPATH_SHIPPING_OPTION_IDCHECK_ACTIVE            = 'tig_postnl/shippingoptions/idcheck_active';
     const XPATH_SHIPPING_OPTION_EVENING_BE_FEE            = 'tig_postnl/shippingoptions/eveningdelivery_be_fee';
     const XPATH_SHIPPING_OPTION_SUNDAY_ACTIVE             = 'tig_postnl/shippingoptions/sundaydelivery_active';
     const XPATH_SHIPPING_OPTION_SUNDAY_FEE                = 'tig_postnl/shippingoptions/sundaydelivery_fee';
@@ -167,6 +168,14 @@ class ShippingOptions extends AbstractConfigProvider
     public function isExtraAtHomeActive()
     {
         return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EXTRAATHOME_ACTIVE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIDCheckActive()
+    {
+        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_IDCHECK_ACTIVE);
     }
 
     /**

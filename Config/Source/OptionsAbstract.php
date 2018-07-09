@@ -97,9 +97,14 @@ abstract class OptionsAbstract
     public function setFilterdOptions($flags)
     {
         $this->filterdOptions = [];
+
         // Filter availableOptions on flags
         foreach ($this->availableOptions as $key => $option) {
-            $this->setOptionsByFlagFilters($flags, $option, $key);
+            if (isset($flags['groups'])) {
+                $this->setOptionsByMultipleFlagFilters($flags, $option, $key);
+            } else {
+                $this->setOptionsByFlagFilters($flags, $option, $key);
+            }
         }
     }
 
@@ -119,6 +124,27 @@ abstract class OptionsAbstract
 
         if (count($filterFlags) == count($flags)) {
             $this->filterdOptions[$productCode] = $this->availableOptions[$productCode];
+        }
+    }
+
+    /**
+     * @param $flags => [
+     *               'isAvond' => true,
+     *               'isSunday => false,
+     *               etc.. ]
+     * @param $option
+     * @param $productCode
+     */
+    public function setOptionsByMultipleFlagFilters($flags, $option, $productCode)
+    {
+        foreach ($flags['groups'] as $flag) {
+            $filterFlags = array_filter($flag, function ($value, $key) use ($option) {
+                return isset($option[$key]) && $option[$key] == $value;
+            }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
+
+            if (count($filterFlags) == count($flags)) {
+                $this->filterdOptions[$productCode] = $this->availableOptions[$productCode];
+            }
         }
     }
 

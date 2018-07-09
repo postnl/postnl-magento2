@@ -274,6 +274,20 @@ class ShippingOptionsTest extends AbstractConfigurationTest
     }
 
     /**
+     * @param $value
+     *
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
+     */
+    public function testIsIDCheckActive($value)
+    {
+        $instance = $this->getInstance();
+        $this->setXpath(ShippingOptions::XPATH_SHIPPING_OPTION_IDCHECK_ACTIVE, $value);
+
+        $result = $instance->isIDCheckActive();
+        $this->assertEquals($value, $result);
+    }
+
+    /**
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
      * @param $value
      */

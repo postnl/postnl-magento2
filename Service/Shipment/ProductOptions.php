@@ -51,6 +51,14 @@ class ProductOptions
                 'Characteristic' => '101',
                 'Option'         => '008',
             ],
+            'idcheck' => [
+                'Characteristic' => '002',
+                'Option'         => '014'
+            ],
+            'idcheck_pg' => [
+                'Characteristic' => '002',
+                'Option'         => '014'
+            ],
         ];
 
     /**
