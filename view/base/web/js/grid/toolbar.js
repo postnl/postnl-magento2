@@ -36,7 +36,7 @@ define([
     'Magento_Ui/js/grid/toolbar',
     'mageUtils',
     'mage/url',
-    'TIG_PostNL/js/dataprovider'
+    'TIG_PostNL/js/grid/dataprovider'
 ], function (
     $,
     ko,
@@ -111,8 +111,8 @@ define([
          * @returns string
          */
         getSubmitUrl : function () {
-            var url = 'postnl/' + this.getCurrentGrid() + '/' + this.getCurrentAction();
-            return url.build(url);
+            var action = 'postnl/' + this.getCurrentGrid() + '/' + this.getCurrentAction();
+            return url.build(action);
         },
 
         /**

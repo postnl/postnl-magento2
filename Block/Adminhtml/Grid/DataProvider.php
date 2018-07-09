@@ -43,7 +43,7 @@ class DataProvider extends Template implements BlockInterface
      * @var string
      */
     // @codingStandardsIgnoreLine
-    protected $_template = 'TIG_PostNL::DataProvider.phtml';
+    protected $_template = 'TIG_PostNL::grid/DataProvider.phtml';
 
     /**
      * @var Reader
