@@ -45,7 +45,7 @@ class File
     private $directoryList;
 
     /**
-     * @var File
+     * @var IoFile
      */
     private $ioFile;
 

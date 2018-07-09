@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,16 +28,28 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <css src="TIG_PostNL::css/adminhtml_config.css" />
-        <css src="jquery/colorpicker/css/colorpicker.css"/>
-    </head>
-    <body>
-        <referenceContainer name="content">
-            <block class="TIG\PostNL\Block\Adminhtml\Config\Support\BodyClass" name="postnl.support" before="system.config.edit" />
-        </referenceContainer>
-    </body>
-</page>
+ */
+namespace TIG\PostNL\Unit\Config\Source\LabelAndPackingslip;
+
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\Source\LabelAndPackingslip\BarcodeValue;
+
+class BarcodeValueTest extends TestCase
+{
+    protected $instanceClass = BarcodeValue::class;
+
+    public function testToOptionArray()
+    {
+        $expectedValues = ['shipment_increment_id', 'order_increment_id'];
+        $instance = $this->getInstance();
+
+        $result = $instance->toOptionArray();
+        $this->assertCount(count($expectedValues), $result);
+
+        foreach ($result as $option) {
+            $this->assertArrayHasKey('label', $option);
+            $this->assertArrayHasKey('value', $option);
+            $this->assertContains($option['value'], $expectedValues);
+        }
+    }
+}

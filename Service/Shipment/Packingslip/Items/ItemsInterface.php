@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,16 +28,18 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <css src="TIG_PostNL::css/adminhtml_config.css" />
-        <css src="jquery/colorpicker/css/colorpicker.css"/>
-    </head>
-    <body>
-        <referenceContainer name="content">
-            <block class="TIG\PostNL\Block\Adminhtml\Config\Support\BodyClass" name="postnl.support" before="system.config.edit" />
-        </referenceContainer>
-    </body>
-</page>
+ */
+namespace TIG\PostNL\Service\Shipment\Packingslip\Items;
+
+use \Magento\Sales\Api\Data\ShipmentInterface;
+
+interface ItemsInterface
+{
+    /**
+     * @param \Zend_Pdf|string  $packingSlip
+     * @param ShipmentInterface $shipment
+     *
+     * @return \Zend_Pdf
+     */
+    public function add($packingSlip, $shipment);
+}
