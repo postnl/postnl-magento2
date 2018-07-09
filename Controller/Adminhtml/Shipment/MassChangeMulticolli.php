@@ -59,7 +59,9 @@ class MassChangeMulticolli extends ToolbarAbstract
         $this->collectionFactory = $collectionFactory;
     }
 
-
+    /**
+     * @return \Magento\Framework\Controller\Result\Redirect
+     */
     public function execute()
     {
         $collection     = $this->collectionFactory->create();
