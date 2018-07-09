@@ -534,8 +534,8 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         }
 
         $flags = [];
-        $flags['groups'][] = [('group' => 'standard_options'];
-        $flags['groups'][] = [('group' => 'id_check_options'];
+        $flags['groups'][] = ['group' => 'standard_options'];
+        $flags['groups'][] = ['group' => 'id_check_options'];
         return $this->getProductoptions($flags);
     }
 
