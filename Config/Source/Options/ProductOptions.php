@@ -391,25 +391,25 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     ];
 
     protected $groups = [
-        'standard_options'      => 'Domestic options',
-        'pakjegemak_options'    => 'Post Office options',
-        'eu_options'            => 'EU options',
-        'global_options'        => 'Global options',
-        'buspakje_options'      => 'Letter Box Parcel options',
-        'extra_at_home_options' => 'Extra@Home options',
-        'id_check_options'      => 'ID Check options',
-        'id_check_pakjegemak_options'      => 'ID Check Post Office options',
+        'standard_options'              => 'Domestic options',
+        'pakjegemak_options'            => 'Post Office options',
+        'eu_options'                    => 'EU options',
+        'global_options'                => 'Global options',
+        'buspakje_options'              => 'Letter Box Parcel options',
+        'extra_at_home_options'         => 'Extra@Home options',
+        'id_check_options'              => 'ID Check options',
+        'id_check_pakjegemak_options'   => 'ID Check Post Office options',
     ];
 
     protected $groupToLabel = [
-        'standard_options'      => 'Domestic',
-        'pakjegemak_options'    => 'Post Office',
-        'eu_options'            => 'EPS',
-        'global_options'        => 'Global Pack',
-        'buspakje_options'      => 'Letter Box',
-        'extra_at_home_options' => 'Extra@Home',
-        'id_check_options'      => 'ID Check',
-        'id_check_pakjegemak_options'      => 'ID Check Post Office',
+        'standard_options'              => 'Domestic',
+        'pakjegemak_options'            => 'Post Office',
+        'eu_options'                    => 'EPS',
+        'global_options'                => 'Global Pack',
+        'buspakje_options'              => 'Letter Box',
+        'extra_at_home_options'         => 'Extra@Home',
+        'id_check_options'              => 'ID Check',
+        'id_check_pakjegemak_options'   => 'ID Check Post Office',
     ];
 
     protected $typeToComment = [
@@ -489,8 +489,8 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     public function getPakjeGemakOptions()
     {
         $flags = [];
-        $flags['groups'][] = array('group' => 'pakjegemak_options');
-        $flags['groups'][] = array('group' => 'id_check_pakjegemak_options');
+        $flags['groups'][] = ['group' => 'pakjegemak_options'];
+        $flags['groups'][] = ['group' => 'id_check_pakjegemak_options'];
         return $this->getProductoptions($flags);
     }
 
@@ -510,8 +510,8 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     public function getDefaultOptions()
     {
         $flags = [];
-        $flags['groups'][] = array('group' => 'standard_options');
-        $flags['groups'][] = array('group' => 'id_check_options');
+        $flags['groups'][] = [('group' => 'standard_options'];
+        $flags['groups'][] = [('group' => 'id_check_options'];
         return $this->getProductoptions($flags);
     }
 
