@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Config\Source\Options;
 
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Config\Source\OptionsAbstract;
 use Magento\Framework\Option\ArrayInterface;
 
@@ -424,6 +425,21 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         'GP'          => '',
     ];
 
+    // @codingStandardsIgnoreLine
+    protected $shippingOptions;
+
+    /**
+     * @param \TIG\PostNL\Config\Provider\ProductOptions $config
+     * @param ShippingOptions                            $shippingOptions
+     */
+    public function __construct(
+        \TIG\PostNL\Config\Provider\ProductOptions $config,
+        ShippingOptions $shippingOptions
+    ) {
+        parent::__construct($config);
+        $this->shippingOptions   = $shippingOptions;
+    }
+
     /**
      * @param $code
      * @param $type
@@ -488,6 +504,10 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getPakjeGemakOptions()
     {
+        if (!$this->shippingOptions->isIDCheckActive()) {
+            return $this->getProductoptions(['group' => 'pakjegemak_options']);
+        }
+
         $flags = [];
         $flags['groups'][] = array('group' => 'pakjegemak_options');
         $flags['groups'][] = array('group' => 'id_check_pakjegemak_options');
@@ -509,6 +529,10 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getDefaultOptions()
     {
+        if (!$this->shippingOptions->isIDCheckActive()) {
+            return $this->getProductoptions(['group' => 'standard_options']);
+        }
+
         $flags = [];
         $flags['groups'][] = array('group' => 'standard_options');
         $flags['groups'][] = array('group' => 'id_check_options');
