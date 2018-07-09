@@ -88,7 +88,7 @@ class MassChangeProduct extends ToolbarAbstract
 
         $this->handelErrors();
 
-        $count = $this->getTotalCount($collection->count());
+        $count = $this->getTotalCount($collection->getSize());
         if ($count > 0) {
             $this->messageManager->addSuccessMessage(
                 __('Productcode changed for %1 shipment(s)', $count)
