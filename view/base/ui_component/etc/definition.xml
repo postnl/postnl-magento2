@@ -31,7 +31,11 @@
  *
 -->
 <components xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_definition.xsd">
-    <listingToolbar class="Magento\Ui\Component\Container" component="TIG_PostNL/js/grid/toolbar">
-
+    <listingToolbar class="Magento\Ui\Component\Container">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="component" xsi:type="string">TIG_PostNL/js/grid/toolbar</item>
+            </item>
+        </argument>
     </listingToolbar>
 </components>
