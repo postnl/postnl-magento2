@@ -55,8 +55,8 @@ define([
                 selections: '${ $.selectProvider }'
             },
             actionList : ko.observableArray([
-                {text: $.mage.__('Change parcel'), value: 'change_parcel'},
-                {text: $.mage.__('Change product'), value: 'change_product'}
+                {text: $.mage.__('Change parcel count'), value: 'change_parcel'},
+                {text: $.mage.__('Change productcode'), value: 'change_product'}
             ]),
             defaultOption : ko.observable(DataProvider.getDefaultOption()),
             optionList : ko.observableArray(

@@ -88,6 +88,10 @@ abstract class ToolbarAbstract extends Action
     protected function orderChangeProductCode(Order $order, $productCode)
     {
         $postnlOrder = $this->getPostNLOrder($order->getId());
+        if (!$postnlOrder->getEntityId()) {
+            $this->errors[] = __('Can not change product for non PostNL order %1', $order->getIncrementId());
+            return;
+        }
 
         $shipments = $order->getShipmentsCollection();
         foreach ($shipments as $shipment) {
@@ -108,6 +112,10 @@ abstract class ToolbarAbstract extends Action
     protected function shipmentChangeProductCode($shipmentId, $productCode)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
+        if (!$shipment->getId()) {
+            return false;
+        }
+
         if ($shipment->getConfirmedAt()) {
             $this->errors[] = __('Can not change product for confirmed shipment %1', $shipment->getShipmentId());
             return false;
@@ -126,6 +134,10 @@ abstract class ToolbarAbstract extends Action
     protected function orderChangeParcelCount(Order $order, $parcelCount)
     {
         $postnlOrder = $this->getPostNLOrder($order->getId());
+        if (!$postnlOrder->getEntityId()) {
+            $this->errors[] = __('Can not change parcel count for non PostNL order %1', $order->getIncrementId());
+            return;
+        }
 
         $shipments = $order->getShipmentsCollection();
         foreach ($shipments as $shipment) {
@@ -146,6 +158,10 @@ abstract class ToolbarAbstract extends Action
     protected function shipmentChangeParcelCount($shipmentId, $parcelCount)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
+        if (!$shipment->getId()) {
+            return false;
+        }
+
         if (!$shipment->canChangeParcelCount()) {
             $this->errors[] = __('Can not change the parcel count for shipment %1', $shipment->getShipmentId());
             return false;

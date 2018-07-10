@@ -21,14 +21,14 @@
         </div>
 
         <!-- ko if: $data.showPostNLToolbarActions() -->
-        <div class="col-xs-9 postnl-grid-toolbar">
-            <div class="col-xs-2">
+        <div class="col-xs-5 postnl-grid-toolbar">
+            <div class="col-xs-5">
                 <select class="action-select admin__control-select"
                         data-bind="options:$data.actionList,
                         optionsText: 'text', optionsValue: 'value', value: $data.currentSelected">
                 </select>
             </div>
-            <div class="col-xs-2">
+            <div class="col-xs-5">
                 <input class="admin__control-text" id="change_parcel" type="text"
                        data-bind="visible: $data.currentSelected() == 'change_parcel'"/>
 
@@ -39,10 +39,11 @@
                     </select>
                 </div>
             </div>
-
-            <button class="action-secondary" type="button" click="submit" style="width: 100px; height: 30px;">
-                <span translate="'Sumbit'">Submit</span>
-            </button>
+            <div class="col-xs-2">
+                <button class="action-secondary" type="button" click="submit">
+                    <span translate="'Submit'">Submit</span>
+                </button>
+            </div>
         </div>
         <!-- /ko -->
     </div>

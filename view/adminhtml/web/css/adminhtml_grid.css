@@ -1,0 +1,27 @@
+.postnl-grid-toolbar {
+    margin: 10px 0 0 15px;
+    padding: 10px;
+    background: #efefef;
+    border: 0.1rem solid #8a837f;
+}
+
+.postnl-grid-toolbar button {
+    height: 31px;
+    width: 100px;
+    background-color: #eb5202;
+    border-color: #eb5202;
+}
+
+.postnl-grid-toolbar button:hover, .postnl-grid-toolbar button:focus {
+    background-color: #ba4000;
+    border-color: #b84002;
+}
+
+.postnl-grid-toolbar .col-xs-3, .postnl-grid-toolbar .col-xs-4, .postnl-grid-toolbar .col-xs-5 {
+    padding: 1px 10px 0 0;
+}
+
+.postnl-grid-toolbar input {
+    height: 31px;
+    width: 100%;
+}
