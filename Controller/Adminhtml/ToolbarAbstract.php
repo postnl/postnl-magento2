@@ -94,12 +94,15 @@ abstract class ToolbarAbstract extends Action
         }
 
         $shipments = $order->getShipmentsCollection();
+        $error = false;
         foreach ($shipments as $shipment) {
-            $this->shipmentChangeProductCode($shipment->getId(), $productCode);
+            $error = $this->shipmentChangeProductCode($shipment->getId(), $productCode);
         }
 
-        $postnlOrder->setProductCode($productCode);
-        $this->orderRepository->save($postnlOrder);
+        if ($error) {
+            $postnlOrder->setProductCode($productCode);
+            $this->orderRepository->save($postnlOrder);
+        }
     }
 
     /**
@@ -140,12 +143,15 @@ abstract class ToolbarAbstract extends Action
         }
 
         $shipments = $order->getShipmentsCollection();
+        $error = false;
         foreach ($shipments as $shipment) {
-            $this->shipmentChangeParcelCount($shipment->getId(), $parcelCount);
+            $error = $this->shipmentChangeParcelCount($shipment->getId(), $parcelCount);
         }
 
-        $postnlOrder->setParcelCount($parcelCount);
-        $this->orderRepository->save($postnlOrder);
+        if ($error) {
+            $postnlOrder->setParcelCount($parcelCount);
+            $this->orderRepository->save($postnlOrder);
+        }
     }
 
     /**
