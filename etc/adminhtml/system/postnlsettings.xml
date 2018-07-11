@@ -173,20 +173,20 @@
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
 
             <field id="shippingoptions_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                <label>Activate shipping options -> Activate delivery settings</label>
+                <label>Activate delivery settings</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <config_path>tig_postnl/shippingoptions/shippingoptions_active</config_path>
             </field>
 
              <field id="default_option" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                <label>Default shipping option -> Default delivery</label>
+                <label>Default delivery</label>
                 <comment><![CDATA[Select the default product option for domestic shipments.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
                 <config_path>tig_postnl/productoptions/default_option</config_path>
             </field>
 
             <field id="use_alternative_default" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                <label>Use an alternative default option -> Activate alternative delivery</label>
+                <label>Activate alternative delivery</label>
                 <comment><![CDATA[Enable this to use an alternative default option when a shipment's total value reaches a certain amount.]]></comment>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <config_path>tig_postnl/productoptions/use_alternative_default</config_path>
@@ -203,7 +203,7 @@
             </field>
 
             <field id="alternative_default_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Alternative default shipping option -> Alternative delivery</label>
+                <label>Alternative delivery</label>
                 <comment><![CDATA[This option will be used as default from the given amount.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
                 <config_path>tig_postnl/productoptions/alternative_default_option</config_path>
@@ -301,7 +301,7 @@
 
 
                  <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                    <label>Default post office delivery option -> Post office delivery</label>
+                    <label>Post office delivery</label>
                     <comment><![CDATA[Select the default product option for postoffice delivery shipments.]]></comment>
                     <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakOptions</source_model>
                     <config_path>tig_postnl/productoptions/default_pakjegemak_option</config_path>
@@ -311,7 +311,7 @@
                 </field>
 
                 <field id="default_pakjegemak_early_option" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                    <label>Default postoffice early pickup option -> Post office early delivery </label>
+                    <label>Post office early delivery</label>
                     <comment><![CDATA[Select the default product option for early pickup option.]]></comment>
                     <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakEarlyDeliveryOptions</source_model>
                     <config_path>tig_postnl/productoptions/default_pakjegemak_early_option</config_path>
@@ -331,7 +331,6 @@
                 <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
                 <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
 
-
                  <!-- Evening Delivery NL -->
                  <group id="evening_delivery_nl" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Evening Delivery NL</label>
@@ -350,7 +349,7 @@
                         </field>
 
                         <field id="eveningdelivery_fee" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
-                            <label>Eveningdelivery fee</label>
+                            <label>Evening delivery fee</label>
                             <comment><![CDATA[Additional costs for evening delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
                             <config_path>tig_postnl/shippingoptions/eveningdelivery_fee</config_path>
                             <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
@@ -362,7 +361,7 @@
                         </field>
 
                        <field id="default_evening_option" translate="label" type="select" sortOrder="95" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                            <label>Default evening option -> Evening delivery the Netherlands</label>
+                            <label>Evening delivery the Netherlands</label>
                             <comment><![CDATA[Select the default product option for evening delivery shipments.]]></comment>
                             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsEveningOptions</source_model>
                             <config_path>tig_postnl/productoptions/default_evening_option</config_path>
@@ -390,7 +389,7 @@
                         </field>
 
                         <field id="eveningdelivery_be_fee" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
-                            <label>Eveningdelivery for Belgium fee</label>
+                            <label>Evening delivery for Belgium fee</label>
                             <comment><![CDATA[Additional costs for evening delivery to Belgium in the store's base currency. This fee will be added to the shipping costs.]]></comment>
                             <config_path>tig_postnl/shippingoptions/eveningdelivery_be_fee</config_path>
                             <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
@@ -402,7 +401,7 @@
                         </field>
 
                         <field id="default_evening_be_option" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                            <label>Default evening for Belgium option -> Evening delivery Belgium</label>
+                            <label>Evening delivery Belgium</label>
                             <comment><![CDATA[Select the default product option for evening delivery to Belgium shipments.]]></comment>
                             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsEveningOptionsBe</source_model>
                             <config_path>tig_postnl/productoptions/default_evening_be_option</config_path>
@@ -431,7 +430,7 @@
                     </field>
 
                     <field id="default_extraathome_option" translate="label" type="select" sortOrder="130" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                        <label>Default Extra@Home option -> Extra@Home delivery</label>
+                        <label>Extra@Home delivery</label>
                         <comment><![CDATA[Select the default product option for Extra@Home shipments.]]></comment>
                         <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getExtraAtHomeOptions</source_model>
                         <config_path>tig_postnl/productoptions/default_extraathome_option</config_path>
@@ -469,17 +468,7 @@
 
         </group>
 
-
-
         <!-- Track & Trace should come here -->
-
-
-
-
-
-
-
-
 
     </group>
 </include>

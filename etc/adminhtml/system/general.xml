@@ -119,7 +119,7 @@
             </field>
         </group>
         <group id="shipping_address" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Shipping address -> Senders address</label>
+            <label>Senders address</label>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
             <field id="firstname" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>First name</label>
