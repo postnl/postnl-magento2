@@ -40,10 +40,15 @@
     <preference for="TIG\PostNL\Service\Wrapper\QuoteInterface" type="TIG\PostNL\Service\Wrapper\Quote" />
     <preference for="TIG\PostNL\Service\Wrapper\StoreInterface" type="TIG\PostNL\Service\Wrapper\Store" />
     <preference for="TIG\PostNL\Service\Wrapper\CheckoutSessionInterface" type="TIG\PostNL\Service\Wrapper\CheckoutSession" />
+    <preference for="\Magento\Framework\App\Arguments\ValidationState" type="TIG\PostNL\Service\Framework\ValidationState"/>
 
     <type name="\Magento\Sales\Model\Order">
         <plugin name="TIG_PostNL_Order_Shipment" type="TIG\PostNL\Plugin\Order\ShipmentPlugin" sortOrder="1"/>
         <plugin name="TIG_PostNL_Order_Shipping_Address" type="TIG\PostNL\Plugin\Order\ShippingAddress" sortOrder="2"/>
+    </type>
+
+    <type name="\Magento\Quote\Model\Quote">
+        <plugin name="TIG_PostNL_Quote_RestDeliveryDate" type="\TIG\PostNL\Plugin\Quote\ResetDeliveryDate" sortOrder="1"/>
     </type>
 
     <type name="\Magento\Shipping\Model\Config\Source\Allmethods">

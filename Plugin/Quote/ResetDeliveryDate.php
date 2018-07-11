@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<!--
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -28,15 +28,37 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <css src="TIG_PostNL::css/adminhtml_grid.css" />
-    </head>
-    <body>
-        <referenceContainer name="before.body.end">
-            <block class="TIG\PostNL\Block\Adminhtml\Grid\Order\DownloadPdfAction"/>
-            <block class="TIG\PostNL\Block\Adminhtml\Grid\DataProvider"/>
-        </referenceContainer>
-    </body>
-</page>
+ */
+namespace TIG\PostNL\Plugin\Quote;
+
+use \Magento\Quote\Model\Quote;
+use \Magento\Checkout\Model\Session;
+
+class ResetDeliveryDate
+{
+    /**
+     * @var Session
+     */
+    private $checkoutSession;
+
+    /**
+     * ResetDeliveryDate constructor.
+     *
+     * @param Session $session
+     */
+    public function __construct(
+        Session $session
+    ) {
+        $this->checkoutSession = $session;
+    }
+
+    //@codingStandardsIgnoreLine
+    public function afterAddProduct(Quote $subject, $result)
+    {
+        // Since 1.4.2 the shipping duration can be configured on individual products.
+        // So if deliveryDate is set and new quote items are added to the cart, it needs should be recalculated.
+        if ($this->checkoutSession->getPostNLDeliveryDate()) {
+            $this->checkoutSession->setPostNLDeliveryDate(false);
+        }
+    }
+}

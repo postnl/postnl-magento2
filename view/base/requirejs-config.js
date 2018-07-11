@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -28,15 +27,13 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <css src="TIG_PostNL::css/adminhtml_grid.css" />
-    </head>
-    <body>
-        <referenceContainer name="before.body.end">
-            <block class="TIG\PostNL\Block\Adminhtml\Grid\Order\DownloadPdfAction"/>
-            <block class="TIG\PostNL\Block\Adminhtml\Grid\DataProvider"/>
-        </referenceContainer>
-    </body>
-</page>
+ */
+var config = {
+    map:  {
+        '*': {
+            //Magento_Ui/templates is mapped to ui/template
+            'ui/template/grid/toolbar.html' : 'TIG_PostNL/template/grid/toolbar.html',
+            'ui/template/grid/sticky/sticky.html' : 'TIG_PostNL/template/grid/sticky/sticky.html'
+        }
+    }
+};

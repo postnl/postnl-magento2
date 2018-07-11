@@ -104,11 +104,14 @@ class Data
 
     /**
      * @param ReadInterface $file
+     * @param int|null $websiteId
      *
      * @throws \Exception
      */
-    public function import(ReadInterface $file)
+    public function import(ReadInterface $file, $websiteId = null)
     {
+        $this->websiteId = $websiteId ?: $this->websiteId;
+
         $this->validateHeaders($file->readCsv());
 
         $this->connection = $this->matrixrateResource->getConnection();
@@ -157,7 +160,7 @@ class Data
 
         /** @var Row $row */
         $row = $this->rowFactory->create(['errorParser' => $this->parseErrors]);
-        $data = $row->process($rowNumber, $line);
+        $data = $row->process($rowNumber, $line, $this->websiteId);
 
         if ($row->hasErrors()) {
             $this->parseErrors->addErrors($row->getErrors());

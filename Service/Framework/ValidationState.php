@@ -29,41 +29,40 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+namespace TIG\PostNL\Service\Framework;
 
-namespace TIG\PostNL\Service\Wrapper;
+use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\Config\ValidationStateInterface;
+use Magento\Framework\App\State;
 
-use Magento\Store\Model\StoreManagerInterface;
-
-class Store implements StoreInterface
+class ValidationState implements ValidationStateInterface
 {
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
+    private $productMetaData;
+
+    private $appMode;
 
     public function __construct(
-        StoreManagerInterface $storeManager
+        ProductMetadataInterface $productMetadata,
+        State $state
     ) {
-        $this->storeManager = $storeManager;
+        $this->productMetaData = $productMetadata;
+        $this->appMode = $state->getMode();
     }
 
     /**
-     * @return \Magento\Store\Api\Data\StoreInterface
-     */
-    public function getStore()
-    {
-        return $this->storeManager->getStore();
-    }
-
-    /**
-     * See : https://github.com/magento/magento2/issues/9741
-     * Website ID can not be retrieved form the storeManger.
-     * This will always returns the website thats stated as default.
+     * Retrieve current validation state
      *
-     * @return int
+     * Magento 2.1.* uses xsd schemes that are not containing the listingToolbar component.
+     * When in developer mode these schemes are triggerd to validate the ui_definition.xml which will break the backend.
+     *
+     * @return boolean
      */
-    public function getWebsiteId()
+    public function isValidationRequired()
     {
-        return $this->getStore()->getWebsiteId();
+        if (!version_compare($this->productMetaData->getVersion(), '2.2.0', '<')) {
+            return $this->appMode == State::MODE_DEVELOPER;
+        }
+
+        return false;
     }
 }
