@@ -88,7 +88,7 @@ abstract class ToolbarAbstract extends Action
     protected function orderChangeProductCode(Order $order, $productCode)
     {
         $postnlOrder = $this->getPostNLOrder($order->getId());
-        if (!$postnlOrder->getEntityId()) {
+        if (!$postnlOrder) {
             $this->errors[] = __('Can not change product for non PostNL order %1', $order->getIncrementId());
             return;
         }
@@ -137,7 +137,7 @@ abstract class ToolbarAbstract extends Action
     protected function orderChangeParcelCount(Order $order, $parcelCount)
     {
         $postnlOrder = $this->getPostNLOrder($order->getId());
-        if (!$postnlOrder->getEntityId()) {
+        if (!$postnlOrder) {
             $this->errors[] = __('Can not change parcel count for non PostNL order %1', $order->getIncrementId());
             return;
         }
@@ -212,8 +212,8 @@ abstract class ToolbarAbstract extends Action
     protected function getPostNLOrder($orderId)
     {
         $postnlOrder = $this->orderRepository->getByOrderId($orderId);
-        if (!$postnlOrder->getEntityId()) {
-            $this->errors[] = __('Could not find a PostNL order for %1', $postnlOrder->getOrderId());
+        if (!$postnlOrder) {
+            $this->errors[] = __('Could not find a PostNL order for %1', $orderId);
         }
 
         return $postnlOrder;

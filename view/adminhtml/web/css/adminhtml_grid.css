@@ -3,6 +3,7 @@
     padding: 10px;
     background: #f2f2f2;
     border: 0.1rem solid #adadad;
+    min-width: 480px;
 }
 
 .postnl-grid-toolbar:before {
@@ -16,7 +17,6 @@
 
 .postnl-grid-toolbar button {
     height: 30px;
-    width: 100px;
     background-color: #eb5202;
     border-color: #eb5202;
     line-height: 0;

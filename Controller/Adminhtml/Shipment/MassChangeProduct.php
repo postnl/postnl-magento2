@@ -71,7 +71,7 @@ class MassChangeProduct extends ToolbarAbstract
         $this->changeProductCode($collection, $newParcelCount);
 
         $resultRedirect = $this->resultRedirectFactory->create();
-        $resultRedirect->setPath('sales/shipment/*/');
+        $resultRedirect->setPath('sales/shipment/index');
         return $resultRedirect;
     }
 

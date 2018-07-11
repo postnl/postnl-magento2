@@ -71,7 +71,7 @@ class MassChangeMulticolli extends ToolbarAbstract
         $this->changeMultiColli($collection, $newParcelCount);
 
         $resultRedirect = $this->resultRedirectFactory->create();
-        $resultRedirect->setPath('sales/shipment/*/');
+        $resultRedirect->setPath('sales/shipment/index');
         return $resultRedirect;
     }
 

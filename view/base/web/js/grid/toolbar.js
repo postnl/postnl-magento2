@@ -97,12 +97,22 @@ define([
          */
         submit : function () {
             var data = this.getSelectedItems();
-            data[this.currentSelected()] = $('#'+this.currentSelected())[0].value;
+            var value = $('#'+this.currentSelected())[0].value;
+            if (isNaN(parseInt(value))) {
+                alert($.mage.__(this.currentSelected() + ' should be a number.'));
+                return;
+            }
+
+            data[this.currentSelected()] = value;
 
             utils.submit({
                 url: this.getSubmitUrl(),
                 data: data
             });
+        },
+
+        isNumeric : function (value) {
+            return !isNaN(parseInt(value)) && isFinite(value);
         },
 
         /**
