@@ -94,15 +94,32 @@ abstract class ToolbarAbstract extends Action
         }
 
         $shipments = $order->getShipmentsCollection();
+        $noError     = true;
+
+        if ($shipments->getSize() > 0) {
+            $noError = $this->shipmentsChangeProductCode($shipments, $productCode);
+        }
+
+        if ($noError) {
+            $postnlOrder->setProductCode($productCode);
+            $this->orderRepository->save($postnlOrder);
+        }
+    }
+
+    /**
+     * @param $shipments
+     * @param $productCode
+     *
+     * @return bool
+     */
+    private function shipmentsChangeProductCode($shipments, $productCode)
+    {
         $error = false;
         foreach ($shipments as $shipment) {
             $error = $this->shipmentChangeProductCode($shipment->getId(), $productCode);
         }
 
-        if ($error) {
-            $postnlOrder->setProductCode($productCode);
-            $this->orderRepository->save($postnlOrder);
-        }
+        return $error;
     }
 
     /**
@@ -111,8 +128,7 @@ abstract class ToolbarAbstract extends Action
      *
      * @return bool
      */
-    //@codingStandardsIgnoreLine
-    protected function shipmentChangeProductCode($shipmentId, $productCode)
+    private function shipmentChangeProductCode($shipmentId, $productCode)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
         if (!$shipment->getId()) {
@@ -143,15 +159,32 @@ abstract class ToolbarAbstract extends Action
         }
 
         $shipments = $order->getShipmentsCollection();
+        $noError     = true;
+
+        if ($shipments->getSize() > 0) {
+            $noError = $this->shipmentsChangeParcelCount($shipments, $parcelCount);
+        }
+
+        if ($noError) {
+            $postnlOrder->setParcelCount($parcelCount);
+            $this->orderRepository->save($postnlOrder);
+        }
+    }
+
+    /**
+     * @param $shipments
+     * @param $parcelCount
+     *
+     * @return bool
+     */
+    private function shipmentsChangeParcelCount($shipments, $parcelCount)
+    {
         $error = false;
         foreach ($shipments as $shipment) {
             $error = $this->shipmentChangeParcelCount($shipment->getId(), $parcelCount);
         }
 
-        if ($error) {
-            $postnlOrder->setParcelCount($parcelCount);
-            $this->orderRepository->save($postnlOrder);
-        }
+        return $error;
     }
 
     /**
@@ -160,8 +193,7 @@ abstract class ToolbarAbstract extends Action
      *
      * @return bool
      */
-    //@codingStandardsIgnoreLine
-    protected function shipmentChangeParcelCount($shipmentId, $parcelCount)
+    private function shipmentChangeParcelCount($shipmentId, $parcelCount)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
         if (!$shipment->getId()) {

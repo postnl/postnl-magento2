@@ -29,7 +29,7 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 /* eslint-disable strict */
-define(['jquery'], function ($) {
+define(['jquery', 'mage/url'], function ($, url) {
     var productOptions = '';
     var defaultOption = '3085';
 
@@ -58,6 +58,41 @@ define(['jquery'], function ($) {
 
             if (option === 'change_product') {
                 return $.mage.__('Productcode should be a number and availble within the configuration');
+            }
+        },
+
+        getSubmitUrl : function (option, grid) {
+            var action = 'postnl/' + this.getCurrentGrid(grid) + '/' + this.getCurrentAction(option);
+            return url.build(action);
+        },
+
+        /**
+         * Gets the controller based on the currently selected action.
+         *
+         * @returns {*}
+         */
+        getCurrentAction : function (option) {
+            if (option === 'change_parcel') {
+                return 'MassChangeMulticolli';
+            }
+
+            if (option === 'change_product') {
+                return 'MassChangeProduct';
+            }
+        },
+
+        /**
+         * Retuns the controller directory bases on the current grid.
+         *
+         * @returns {*}
+         */
+        getCurrentGrid : function (grid) {
+            if (grid === 'sales_order_grid') {
+                return 'order';
+            }
+
+            if (grid === 'sales_order_shipment_grid') {
+                return 'shipment';
             }
         }
     };

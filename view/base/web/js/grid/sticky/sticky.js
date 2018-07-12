@@ -35,7 +35,6 @@ define([
     'underscore',
     'Magento_Ui/js/grid/sticky/sticky',
     'mageUtils',
-    'mage/url',
     'TIG_PostNL/js/grid/dataprovider'
 ], function (
     $,
@@ -43,7 +42,6 @@ define([
     _,
     Sticky,
     utils,
-    url,
     DataProvider
 ) {
     'use strict';
@@ -105,49 +103,9 @@ define([
 
             data[this.currentSelected()] = value;
             utils.submit({
-                url: this.getSubmitUrl(),
+                url: DataProvider.getSubmitUrl(this.currentSelected(), this.ns),
                 data: data
             });
-        },
-
-        /**
-         * Creates the url bases on grid an selected action.
-         *
-         * @returns string
-         */
-        getSubmitUrl : function () {
-            var action = 'postnl/' + this.getCurrentGrid() + '/' + this.getCurrentAction();
-            return url.build(action);
-        },
-
-        /**
-         * Gets the controller based on the currently selected action.
-         *
-         * @returns {*}
-         */
-        getCurrentAction : function () {
-            if (this.currentSelected() === 'change_parcel') {
-                return 'MassChangeMulticolli';
-            }
-
-            if (this.currentSelected() === 'change_product') {
-                return 'MassChangeProduct';
-            }
-        },
-
-        /**
-         * Retuns the controller directory bases on the current grid.
-         *
-         * @returns {*}
-         */
-        getCurrentGrid : function () {
-            if (this.ns === 'sales_order_grid') {
-                return 'order';
-            }
-
-            if (this.ns === 'sales_order_shipment_grid') {
-                return 'shipment';
-            }
         },
 
         /**
