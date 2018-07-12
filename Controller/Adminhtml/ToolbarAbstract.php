@@ -38,6 +38,7 @@ use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 
+//@codingStandardsIgnoreFile
 abstract class ToolbarAbstract extends Action
 {
     const PARCELCOUNT_PARAM_KEY = 'change_parcel';
@@ -240,8 +241,7 @@ abstract class ToolbarAbstract extends Action
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
-    //@codingStandardsIgnoreLine
-    protected function getPostNLOrder($orderId)
+    private function getPostNLOrder($orderId)
     {
         $postnlOrder = $this->orderRepository->getByOrderId($orderId);
         if (!$postnlOrder) {
