@@ -343,3 +343,5 @@ Percent,Percent
 "Post Office + Extra Cover + Notification + Agecheck 18+","Post Office + Extra Cover + Notification + Agecheck 18+"
 "ID Check offers you the ability to make sure that confidential and age-validation transaction can be secure.","ID Check offers you the ability to make sure that confidential and age-validation transaction can be secure."
 "Activate ID Check","Activate ID Check"
+"Parcel count should be a number","Parcel count should be a number"
+"Productcode should be a number and availble within the configuration","Productcode should be a number and availble within the configuration"

@@ -361,3 +361,5 @@ Percent,Percentage
 "Post Office + Extra Cover + Notification + Agecheck 18+","Afhaal locatie + Extra dekking + Notificatie + Leeftijd controle 18+"
 "ID Check offers you the ability to make sure that confidential and age-validation transaction can be secure.", "ID Check geeft u de mogelijkheid om leeftijdsrestricties te hanteren bij bezorging."
 "Activate ID Check","Activeer ID Check"
+"Parcel count should be a number","Pakket aantal dient ingevuld te worden met een nummer"
+"Productcode should be a number and availble within the configuration","Productcode dient een nummer te zijn en beschikbaar te zijn gesteld binnen de PostNL configuratie"

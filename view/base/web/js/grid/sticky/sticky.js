@@ -49,14 +49,14 @@ define([
     'use strict';
     return Sticky.extend({
         defaults : {
-            currentSelected : ko.observable('change_parcel'),
+            currentSelected : ko.observable('change_product'),
             selectProvider: 'ns = ${ $.ns }, index = ids',
             modules: {
                 selections: '${ $.selectProvider }'
             },
             actionList : ko.observableArray([
-                {text: $.mage.__('Change parcel count'), value: 'change_parcel'},
-                {text: $.mage.__('Change productcode'), value: 'change_product'}
+                {text: $.mage.__('Change productcode'), value: 'change_product'},
+                {text: $.mage.__('Change parcel count'), value: 'change_parcel'}
             ]),
             defaultOption : ko.observable(DataProvider.getDefaultOption()),
             optionList : ko.observableArray(
@@ -99,7 +99,7 @@ define([
             var data = this.getSelectedItems();
             var value = $('#'+this.currentSelected())[0].value;
             if (isNaN(parseInt(value))) {
-                alert($.mage.__(this.currentSelected() + ' should be a number.'));
+                alert(DataProvider.getInputWarningMessage(this.currentSelected()));
                 return;
             }
 

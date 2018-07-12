@@ -29,7 +29,7 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 /* eslint-disable strict */
-define([], function () {
+define(['jquery'], function ($) {
     var productOptions = '';
     var defaultOption = '3085';
 
@@ -49,6 +49,16 @@ define([], function () {
 
         getProductOptions: function () {
             return JSON.parse(productOptions);
+        },
+
+        getInputWarningMessage: function (option) {
+            if (option === 'change_parcel') {
+                return $.mage.__('Parcel count should be a number');
+            }
+
+            if (option === 'change_product') {
+                return $.mage.__('Productcode should be a number and availble within the configuration');
+            }
         }
     };
 });
