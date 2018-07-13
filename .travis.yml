@@ -29,20 +29,22 @@ env:
     # - MAGENTO_VERSION=2.1.9
     # - MAGENTO_VERSION=2.1.10
     # - MAGENTO_VERSION=2.1.11
-    - MAGENTO_VERSION=2.1.12
+    # - MAGENTO_VERSION=2.1.12
     - MAGENTO_VERSION=2.1.13
+    - MAGENTO_VERSION=2.1.14
     # - MAGENTO_VERSION=2.2.0
     # - MAGENTO_VERSION=2.2.1
     # - MAGENTO_VERSION=2.2.2
-    - MAGENTO_VERSION=2.2.3
+    # - MAGENTO_VERSION=2.2.3
     - MAGENTO_VERSION=2.2.4
+    - MAGENTO_VERSION=2.2.5
 
 matrix:
 # PHP 7.1 would be supported in Magento since Magento 2.2
 # And there wouldn't be support of PHP 7.1 in Magento 2.0 or 2.1
   include:
     - php: 7.1
-      env: MAGENTO_VERSION=2.2.4 CODE_COVERAGE=true
+      env: MAGENTO_VERSION=2.2.5 CODE_COVERAGE=true
 
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
