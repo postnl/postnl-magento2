@@ -60,5 +60,7 @@ class ResetDeliveryDate
         if ($this->checkoutSession->getPostNLDeliveryDate()) {
             $this->checkoutSession->setPostNLDeliveryDate(false);
         }
+
+        return $result;
     }
 }
