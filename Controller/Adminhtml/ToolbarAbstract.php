@@ -137,7 +137,8 @@ abstract class ToolbarAbstract extends Action
         }
 
         if ($shipment->getConfirmedAt()) {
-            $this->errors[] = __('Can not change product for confirmed shipment %1', $shipment->getShipmentId());
+            $magentoShipment = $shipment->getShipment();
+            $this->errors[]  = __('Can not change product for confirmed shipment %1', $magentoShipment->getIncrementId());
             return false;
         }
 
@@ -202,7 +203,8 @@ abstract class ToolbarAbstract extends Action
         }
 
         if (!$shipment->canChangeParcelCount()) {
-            $this->errors[] = __('Can not change the parcel count for shipment %1', $shipment->getShipmentId());
+            $magentoShipment = $shipment->getShipment();
+            $this->errors[]  = __('Can not change the parcel count for shipment %1', $magentoShipment->getIncrementId());
             return false;
         }
 

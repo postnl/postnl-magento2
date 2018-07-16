@@ -71,7 +71,7 @@ class FpdiFactory
             return $this->objectManager->create(Fpdi::class, [
                 'orientation' => 'P',
                 'unit' => 'mm',
-                'format' => 'A4',
+                'size' => 'A4',
             ]);
         }
 
