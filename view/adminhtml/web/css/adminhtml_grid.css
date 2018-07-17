@@ -44,10 +44,12 @@
     width: 100%;
 }
 
-/* Sticky-header */
+/* Sticky Header ==================================================================================================== */
 
 .sticky-header .postnl-grid-toolbar {
-    margin: 0;
+    clear: both;
+    margin-top: 20px;
+    margin-left: 0;
 }
 
 
