@@ -48,6 +48,10 @@ define(['jquery', 'mage/url'], function ($, url) {
         },
 
         getProductOptions: function () {
+            if (!productOptions) {
+                return null;
+            }
+
             return JSON.parse(productOptions);
         },
 
