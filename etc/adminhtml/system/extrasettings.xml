@@ -46,7 +46,7 @@
                 <label>Label size</label>
                 <tooltip><![CDATA[Some label types, like Global Pack or Combi EPS, can only be printed in A4 format.]]></tooltip>
                 <source_model>TIG\PostNL\Config\Source\Settings\LabelsizeSettings</source_model>
-                <config_path>tig_postnl/webshop_printer/label_size</config_path>
+                <config_path>tig_postnl/extra_settings_printer/label_size</config_path>
                 <comment><model>TIG\PostNL\Config\Comment\LabelSize</model></comment>
             </field>
         </group>
@@ -60,7 +60,7 @@
                 <label>PostNL shippingmethods</label>
                 <tooltip>Please select the shipping methods that will be considered to be 'PostNL' by this extension. Orders placed using one of these shipping methods may be processed using the PostNL extension.</tooltip>
                 <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
-                <config_path>tig_postnl/webshop_advanced/allowed_shipping_methods</config_path>
+                <config_path>tig_postnl/extra_settings_advanced/allowed_shipping_methods</config_path>
             </field>
         </group>
     </group>

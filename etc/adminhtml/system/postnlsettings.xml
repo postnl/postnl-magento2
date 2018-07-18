@@ -47,122 +47,39 @@
                 <label>Shipping Duration</label>
                 <comment><![CDATA[The number of days that it takes for the order to be shipped after the order is placed.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Settings\ShippingDuration</source_model>
-                <config_path>tig_postnl/webshop_shipping/shipping_duration</config_path>
+                <config_path>tig_postnl/postnl_settings/shipping_duration</config_path>
             </field>
 
             <field id="cutoff_time" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Cutoff time</label>
                 <comment><![CDATA[When an order is placed after this time, another day will be added to the shipping duration.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Settings\CutOffSettings</source_model>
-                <config_path>tig_postnl/webshop_shipping/cutoff_time</config_path>
+                <config_path>tig_postnl/postnl_settings/cutoff_time</config_path>
             </field>
 
             <field id="saturday_cutoff_time" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Saturday cutoff time</label>
                 <comment><![CDATA[When an order is placed after this time, another day will be added to the shipping duration.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Settings\CutOffSettings</source_model>
-                <config_path>tig_postnl/webshop_shipping/saturday_cutoff_time</config_path>
+                <config_path>tig_postnl/postnl_settings/saturday_cutoff_time</config_path>
             </field>
 
             <field id="sunday_cutoff_time" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Sunday cutoff time</label>
                 <comment><![CDATA[When an order is placed after this time, another day will be added to the shipping duration.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Settings\CutOffSettings</source_model>
-                <config_path>tig_postnl/webshop_shipping/sunday_cutoff_time</config_path>
+                <config_path>tig_postnl/postnl_settings/sunday_cutoff_time</config_path>
             </field>
 
             <field id="shipment_days" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Shipment days</label>
                 <comment><![CDATA[Select on which days of the week orders are shipped. You can read more about shipping and delivery days <a href="https://servicedesk.tig.nl/hc/nl/articles/115003398667" target="_blank" title="PostNL shipping days">here</a>.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Settings\DaysOfWeek</source_model>
-                <config_path>tig_postnl/webshop_shipping/shipment_days</config_path>
+                <config_path>tig_postnl/postnl_settings/shipment_days</config_path>
             </field>
 
+            <include path="TIG_PostNL::system/postnlsettings/labelandpackingslib.xml"/>
 
-
-            <group id="labelandpackingslipoptions" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Label and packingslip options</label>
-                <fieldset_css>tig_postnl-sub-section</fieldset_css>
-
-                <field id="reference_type" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Shipment reference type</label>
-                    <comment><![CDATA[Select what to use as a shipment's reference. This will be printed on the shipping label.]]></comment>
-                    <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\ReferenceType</source_model>
-                    <config_path>tig_postnl/labelandpackingslipoptions/reference_type</config_path>
-                </field>
-
-                <field id="custom_shipment_reference" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Custom reference value</label>
-                    <tooltip><![CDATA[You can use this field to, for example, add a prefix to the shipment increment ID or to help identify the shipment as coming from your webshop. You can use the following variables: {{var shipment_increment_id}}, {{var order_increment_id}} and {{var store_frontend_name}}. The resulting text may not exceed 28 characters.]]></tooltip>
-                    <config_path>tig_postnl/labelandpackingslipoptions/custom_shipment_reference</config_path>
-                    <depends>
-                        <field id="reference_type">custom</field>
-                    </depends>
-                </field>
-
-                <field id="show_label" translate="label tooltip comment" type="radios" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-                    <label>Show shipping label</label>
-                    <comment><![CDATA[Printing a custom (like Fooman) packingslip including the PostNL labels is not supported yet.]]></comment>
-                    <tooltip><![CDATA[If you select 'on the same page' in some cases the shipping label may not fit. In this case, the shipping label will be printed on a separate page instead.]]></tooltip>
-                    <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\ShowShippingLabel</source_model>
-                    <config_path>tig_postnl/labelandpackingslipoptions/show_label</config_path>
-                </field>
-
-                <field id="enable_barcode" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-                    <label>Enable barcode on Packingslip</label>
-                    <comment><![CDATA[This will print a barcode on the packingslip.]]></comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>tig_postnl/labelandpackingslipoptions/enable_barcode</config_path>
-                </field>
-
-                <group id="barcode_settings" translate="label" type="text" sortOrder="45" showInDefault="1" showInStore="0" showInWebsite="1">
-                    <label>Barcode settings</label>
-                    <fieldset_css>tig_postnl-sub-section</fieldset_css>
-                    <field id="value" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInStore="0" showInWebsite="1">
-                        <label>Value for barcode</label>
-                        <comment><![CDATA[Select what to use as value for the barcode. If you select shipment ID, be aware that this only will work if you combine the print packingslip and create shipment methods.]]></comment>
-                        <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\BarcodeValue</source_model>
-                        <config_path>tig_postnl/labelandpackingslipoptions/barcode_value</config_path>
-                    </field>
-
-                    <field id="position" translate="label tooltip" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>Position of the barcode</label>
-                        <tooltip><![CDATA[The position must contain four coordinates (x1, y1, x2, y2) given as string.]]></tooltip>
-                        <config_path>tig_postnl/labelandpackingslipoptions/barcode_position</config_path>
-                    </field>
-
-                    <field id="type" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-                        <label>Barcode Type</label>
-                        <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\BarcodeType</source_model>
-                        <config_path>tig_postnl/labelandpackingslipoptions/barcode_type</config_path>
-                    </field>
-
-                    <field id="background_color" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>Background color</label>
-                        <comment><![CDATA[Color of the background.]]></comment>
-                        <config_path>tig_postnl/labelandpackingslipoptions/background_color</config_path>
-                        <frontend_model>\TIG\PostNL\Block\Adminhtml\Config\Form\Field\Color</frontend_model>
-                    </field>
-
-                    <field id="barcode_color" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>Barcode color</label>
-                        <comment><![CDATA[Color of the barcode and the text.]]></comment>
-                        <config_path>tig_postnl/labelandpackingslipoptions/barcode_color</config_path>
-                        <frontend_model>\TIG\PostNL\Block\Adminhtml\Config\Form\Field\Color</frontend_model>
-                    </field>
-
-                    <field id="include_number" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-                        <label>Include value</label>
-                        <comment><![CDATA[Print the line of numbers underneath the barcode pattern.]]></comment>
-                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                        <config_path>tig_postnl/labelandpackingslipoptions/barcode_numberinclude</config_path>
-                    </field>
-
-                    <depends>
-                        <field id="tig_postnl/webshop/labelandpackingslipoptions/enable_barcode">1</field>
-                    </depends>
-                </group>
-            </group>
         </group>
 
 
@@ -171,32 +88,41 @@
             <label>Delivery</label>
             <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
+            <comment><![CDATA[If you are unsure which options to select, ask your PostNL account manager. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004290928" target="_blank" title="product options">PostNL product options</a>.]]></comment>
+
 
             <field id="shippingoptions_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Activate delivery settings</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                <config_path>tig_postnl/shippingoptions/shippingoptions_active</config_path>
+                <config_path>tig_postnl/delivery_options/shippingoptions_active</config_path>
+            </field>
+
+            <field id="supported_options" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                <label>Select the available options</label>
+                <comment><![CDATA[Select the PostNL product that you want to use for your shipments.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Options\ProductOptions</source_model>
+                <config_path>tig_postnl/delivery_options/supported_options</config_path>
             </field>
 
              <field id="default_option" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Default delivery</label>
                 <comment><![CDATA[Select the default product option for domestic shipments.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
-                <config_path>tig_postnl/productoptions/default_option</config_path>
+                <config_path>tig_postnl/delivery_options/default_option</config_path>
             </field>
 
             <field id="use_alternative_default" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Activate alternative delivery</label>
                 <comment><![CDATA[Enable this to use an alternative default option when a shipment's total value reaches a certain amount.]]></comment>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                <config_path>tig_postnl/productoptions/use_alternative_default</config_path>
+                <config_path>tig_postnl/delivery_options/use_alternative_default</config_path>
             </field>
 
             <field id="alternative_default_min_amount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Minimum amount</label>
                 <comment><![CDATA[The alternative default option will be used from this value.]]></comment>
                 <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
-                <config_path>tig_postnl/productoptions/alternative_default_min_amount</config_path>
+                <config_path>tig_postnl/delivery_options/alternative_default_min_amount</config_path>
                 <depends>
                     <field id="use_alternative_default">1</field>
                 </depends>
@@ -206,269 +132,55 @@
                 <label>Alternative delivery</label>
                 <comment><![CDATA[This option will be used as default from the given amount.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
-                <config_path>tig_postnl/productoptions/alternative_default_option</config_path>
+                <config_path>tig_postnl/delivery_options/alternative_default_option</config_path>
                 <depends>
                     <field id="use_alternative_default">1</field>
                 </depends>
             </field>
 
-             <!-- Stock -->
-
-             <group id="stock_settings" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Stock Settings</label>
-                <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
-                <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
-
-                 <field id="stockoptions" translate="label" type="radios" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Stock options</label>
-                    <comment><![CDATA[Select for which products PostNL delivery options should be available.]]></comment>
-                    <source_model>TIG\PostNL\Config\Source\Options\StockOptions</source_model>
-                    <config_path>tig_postnl/shippingoptions/stockoptions</config_path>
-                    <depends>
-                        <field id="shippingoptions_active">1</field>
-                    </depends>
-                </field>
-             </group>
-
-             <!-- Delivery Days -->
-
-             <group id="delivery_days" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Delivery Days</label>
-                <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
-                <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
-
-                 <field id="deliverydays_active" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Activate delivery days</label>
-                    <comment><![CDATA[Delivery days allow customers to choose on which date they want their order delivered.]]></comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>tig_postnl/shippingoptions/deliverydays_active</config_path>
-                    <depends>
-                        <field id="shippingoptions_active">1</field>
-                    </depends>
-                </field>
-
-                <field id="max_deliverydays" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Maximum number of delivery days</label>
-                    <comment><![CDATA[Submit how many days in the future after the first delivery moment your customers can choose to receive their orders.]]></comment>
-                    <source_model>TIG\PostNL\Config\Source\Options\DeliverydaysOptions</source_model>
-                    <config_path>tig_postnl/shippingoptions/max_deliverydays</config_path>
-                    <depends>
-                        <field id="shippingoptions_active">1</field>
-                        <field id="deliverydays_active">1</field>
-                    </depends>
-                </field>
-             </group>
-
-             <!-- Post Offices -->
-
-             <group id="post_offices" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Post Offices</label>
-                <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
-                <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
-
-                 <field id="pakjegemak_active" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Activate post office locations</label>
-                    <comment><![CDATA[Whether or not customers may choose to have their order delivered to a nearby post office.]]></comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>tig_postnl/shippingoptions/pakjegemak_active</config_path>
-                    <depends>
-                        <field id="shippingoptions_active">1</field>
-                    </depends>
-                 </field>
-
-                 <field id="pakjegemak_express_active" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Activate early delivery post office locations</label>
-                    <comment><![CDATA[Activate early delivery locations for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004296048/" target="_blank" title="early delivery">early delivery</a>.]]></comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>tig_postnl/shippingoptions/pakjegemak_express_active</config_path>
-                    <depends>
-                        <field id="pakjegemak_active">1</field>
-                        <field id="shippingoptions_active">1</field>
-                    </depends>
-                 </field>
-
-                 <field id="pakjegemak_express_fee" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Early delivery fee</label>
-                    <comment><![CDATA[Additional costs for early delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
-                    <config_path>tig_postnl/shippingoptions/pakjegemak_express_fee</config_path>
-                    <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
-                    <depends>
-                        <field id="pakjegemak_active">1</field>
-                        <field id="pakjegemak_express_active">1</field>
-                        <field id="shippingoptions_active">1</field>
-                    </depends>
-                 </field>
-
-
-                 <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                    <label>Post office delivery</label>
-                    <comment><![CDATA[Select the default product option for postoffice delivery shipments.]]></comment>
-                    <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakOptions</source_model>
-                    <config_path>tig_postnl/productoptions/default_pakjegemak_option</config_path>
-                    <depends>
-                        <field id="tig_postnl/shippingoptions/pakjegemak_active">1</field>
-                    </depends>
-                </field>
-
-                <field id="default_pakjegemak_early_option" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                    <label>Post office early delivery</label>
-                    <comment><![CDATA[Select the default product option for early pickup option.]]></comment>
-                    <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakEarlyDeliveryOptions</source_model>
-                    <config_path>tig_postnl/productoptions/default_pakjegemak_early_option</config_path>
-                    <depends>
-                        <field id="tig_postnl/shippingoptions/pakjegemak_active">1</field>
-                    </depends>
-                </field>
-
-             </group>
-
-
-
-             <!-- Evening Delivery -->
-
-             <group id="evening_delivery" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Evening Delivery</label>
-                <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
-                <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
-
-                 <!-- Evening Delivery NL -->
-                 <group id="evening_delivery_nl" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Evening Delivery NL</label>
-                    <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
-                    <fieldset_css>tig_postnl-sub-sub-sub-section</fieldset_css>
-
-                         <field id="eveningdelivery_active" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                            <label>Activate evening delivery</label>
-                            <comment><![CDATA[Activate evening delivery for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298488" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
-                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                            <config_path>tig_postnl/shippingoptions/eveningdelivery_active</config_path>
-                            <depends>
-                                <field id="shippingoptions_active">1</field>
-                                <field id="deliverydays_active">1</field>
-                            </depends>
-                        </field>
-
-                        <field id="eveningdelivery_fee" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
-                            <label>Evening delivery fee</label>
-                            <comment><![CDATA[Additional costs for evening delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
-                            <config_path>tig_postnl/shippingoptions/eveningdelivery_fee</config_path>
-                            <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
-                            <depends>
-                                <field id="shippingoptions_active">1</field>
-                                <field id="eveningdelivery_active">1</field>
-                                <field id="deliverydays_active">1</field>
-                            </depends>
-                        </field>
-
-                       <field id="default_evening_option" translate="label" type="select" sortOrder="95" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                            <label>Evening delivery the Netherlands</label>
-                            <comment><![CDATA[Select the default product option for evening delivery shipments.]]></comment>
-                            <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsEveningOptions</source_model>
-                            <config_path>tig_postnl/productoptions/default_evening_option</config_path>
-                            <depends>
-                                <field id="tig_postnl/shippingoptions/eveningdelivery_active">1</field>
-                            </depends>
-                        </field>
-                 </group>
-
-                 <!-- Evening Delivery BE -->
-                 <group id="evening_delivery_be" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Evening Delivery BE</label>
-                    <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
-                    <fieldset_css>tig_postnl-sub-sub-sub-section</fieldset_css>
-
-                        <field id="eveningdelivery_be_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                            <label>Activate evening delivery for Belgium</label>
-                            <comment><![CDATA[Activate evening delivery to Belgium for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298488" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
-                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                            <config_path>tig_postnl/shippingoptions/eveningdelivery_be_active</config_path>
-                            <depends>
-                                <field id="shippingoptions_active">1</field>
-                                <field id="deliverydays_active">1</field>
-                            </depends>
-                        </field>
-
-                        <field id="eveningdelivery_be_fee" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
-                            <label>Evening delivery for Belgium fee</label>
-                            <comment><![CDATA[Additional costs for evening delivery to Belgium in the store's base currency. This fee will be added to the shipping costs.]]></comment>
-                            <config_path>tig_postnl/shippingoptions/eveningdelivery_be_fee</config_path>
-                            <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
-                            <depends>
-                                <field id="shippingoptions_active">1</field>
-                                <field id="eveningdelivery_be_active">1</field>
-                                <field id="deliverydays_active">1</field>
-                            </depends>
-                        </field>
-
-                        <field id="default_evening_be_option" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                            <label>Evening delivery Belgium</label>
-                            <comment><![CDATA[Select the default product option for evening delivery to Belgium shipments.]]></comment>
-                            <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsEveningOptionsBe</source_model>
-                            <config_path>tig_postnl/productoptions/default_evening_be_option</config_path>
-                            <depends>
-                                <field id="tig_postnl/shippingoptions/eveningdelivery_be_active">1</field>
-                            </depends>
-                        </field>
-                 </group>
-              </group>
-
-             <!-- Extra at Home -->
-
-             <group id="extra_at_home" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Extra@Home</label>
-                    <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
-                    <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
-
-                    <field id="extraathome_active" translate="label comment" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Activate Extra@Home (BETA)</label>
-                        <comment><![CDATA[Extra@Home can be used to ship large and heavy Products. Please consult your PostNL account manager for more information about activating this service for your account.]]></comment>
-                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                        <config_path>tig_postnl/shippingoptions/extraathome_active</config_path>
-                        <depends>
-                            <field id="shippingoptions_active">1</field>
-                        </depends>
-                    </field>
-
-                    <field id="default_extraathome_option" translate="label" type="select" sortOrder="130" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                        <label>Extra@Home delivery</label>
-                        <comment><![CDATA[Select the default product option for Extra@Home shipments.]]></comment>
-                        <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getExtraAtHomeOptions</source_model>
-                        <config_path>tig_postnl/productoptions/default_extraathome_option</config_path>
-                        <depends>
-                            <field id="tig_postnl/shippingoptions/extraathome_active">1</field>
-                        </depends>
-                    </field>
-             </group>
-
-
-             <!-- Sunday Delivery -->
-
-             <!-- Disabled because needs further development -->
-             <!--<field id="sundaydelivery_active" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">-->
-             <!--<label>Activate sunday delivery</label>-->
-             <!--<comment><![CDATA[Activate sunday delivery for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298588" target="_blank" title="sunday delivery">sunday delivery</a>.]]></comment>-->
-             <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
-             <!--<config_path>tig_postnl/shippingoptions/sundaydelivery_active</config_path>-->
-             <!--<depends>-->
-             <!--<field id="shippingoptions_active">1</field>-->
-             <!--</depends>-->
-             <!--</field>-->
-
-             <!--<field id="sundaydelivery_fee" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="0" showInStore="0">-->
-             <!--<label>Sunday delivery fee</label>-->
-             <!--<comment><![CDATA[Additional costs for sunday delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>-->
-             <!--<config_path>tig_postnl/shippingoptions/sundaydelivery_fee</config_path>-->
-             <!--<backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>-->
-             <!--<depends>-->
-             <!--<field id="shippingoptions_active">1</field>-->
-             <!--<field id="sundaydelivery_active">1</field>-->
-             <!--</depends>-->
-             <!--</field>-->
-
+            <include path="TIG_PostNL::system/postnlsettings/stock.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/deliverydays.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/postoffices.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/eveningdelivery.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/extraathome.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/sundaydelivery.xml"/>
 
         </group>
 
         <!-- Track & Trace should come here -->
 
     </group>
+
+
+
+
+    <!--<group id="webshop" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">-->
+         <!--<group id="track_and_trace" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">-->
+            <!--<label>Track and Trace</label>-->
+            <!--<comment><![CDATA[Automatically send Track and Trace email to customer. Read more about the <a href="https://servicedesk.tig.nl/hc/nl/articles/115004148927" target="_blank" title="track and trace">Track and Trace</a> e-mails within the extension.]]></comment>-->
+            <!--<fieldset_css>tig_postnl-sub-section</fieldset_css>-->
+            <!--<field id="email_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">-->
+                <!--<label>Send Track and Trace email</label>-->
+                <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                <!--<config_path>tig_postnl/webshop_track_and_trace/email_enabled</config_path>-->
+            <!--</field>-->
+            <!--<field id="template" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">-->
+                <!--<label>Template</label>-->
+                <!--<source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>-->
+                <!--<config_path>tig_postnl/webshop_track_and_trace/template</config_path>-->
+                <!--<depends>-->
+                    <!--<field id="email_enabled">1</field>-->
+                <!--</depends>-->
+            <!--</field>-->
+            <!--<field id="email_bcc" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">-->
+                <!--<label>BCC e-mail</label>-->
+                <!--<comment><![CDATA[This e-mail address will be added as BCC to the Track And Trace template]]></comment>-->
+                <!--<config_path>tig_postnl/webshop_track_and_trace/email_bcc</config_path>-->
+                <!--<depends>-->
+                    <!--<field id="email_enabled">1</field>-->
+                <!--</depends>-->
+            <!--</field>-->
+        <!--</group>-->
+    <!--</group>-->
+
 </include>

@@ -32,22 +32,23 @@
  *
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <!--General configuration section-->
-    <group id="developer_settings" translate="label" type="text" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Developer Settings</label>
+
+     <!-- Stock -->
+
+    <group id="stock_settings" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Stock Settings</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
-        <fieldset_css>tig_postnl-section</fieldset_css>
+        <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
 
-        <group id="logging" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Logging</label>
-            <comment><![CDATA[Log files will be created within the var/log/PostNL/ directory. You can find more information about the different kind of log files <a href="https://servicedesk.tig.nl/hc/nl/articles/115003513908" target="_blank" title="PostNL log files">here</a>.]]></comment>
-            <fieldset_css>tig_postnl-sub-section</fieldset_css>
-            <field id="types" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                <label>Types of logging</label>
-                <source_model>TIG\PostNL\Config\Source\General\Logging</source_model>
-                <config_path>tig_postnl/developer_settings/types</config_path>
-            </field>
-        </group>
+         <field id="stockoptions" translate="label" type="radios" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Stock options</label>
+            <comment><![CDATA[Select for which products PostNL delivery options should be available.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\StockOptions</source_model>
+            <config_path>tig_postnl/stock_settings/stockoptions</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+        </field>
+     </group>
 
-    </group>
 </include>
