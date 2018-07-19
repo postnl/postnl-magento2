@@ -41,18 +41,12 @@
             <resource>Sales_PostNL::configuration</resource>
             <class>postnl-section</class>
 
-            <include path="TIG_PostNL::system/support.xml"/> <!-- config paths unchanged -->
-            <include path="TIG_PostNL::system/general.xml"/> <!-- config paths unchanged -->
-
+            <include path="TIG_PostNL::system/support.xml"/>
+            <include path="TIG_PostNL::system/general.xml"/>
             <include path="TIG_PostNL::system/postnlsettings.xml"/>
-            <include path="TIG_PostNL::system/globalpack.xml" />  <!-- config paths unchanged -->
-            <include path="TIG_PostNL::system/extrasettings.xml"/> <!-- config paths fixed -->
-            <include path="TIG_PostNL::system/developersettings.xml"/> <!-- config paths fixed -->
-
-
-            <!--<include path="TIG_PostNL::system/webshop.xml"/>-->
-            <!--<include path="TIG_PostNL::system/shippingoptions.xml"/>-->
-            <!--<include path="TIG_PostNL::system/productoptions.xml" />-->
+            <include path="TIG_PostNL::system/globalpack.xml" />
+            <include path="TIG_PostNL::system/extrasettings.xml"/>
+            <include path="TIG_PostNL::system/developersettings.xml"/>
 
         </section>
     </system>
