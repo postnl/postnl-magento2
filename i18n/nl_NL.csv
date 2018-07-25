@@ -340,7 +340,7 @@ Percent,Percentage
 "Printing a custom (like Fooman) packingslip including the PostNL labels is not supported yet.","Het printen van custom pakbonnen (Fooman) inclusief de PostNL labels is nog niet ondersteund."
 "This will print a barcode on the packingslip.","Deze functie print een barcode op het pakbon."
 "Can not change product for non PostNL order %1","Kan niet het product wijzigen voor een niet PostNL order %1"
-"Can not change product for confirmed shipment %1","Kan niet het product wijzigen voor zending %1 welk is voorgemeld "
+"First change the confirmation of shipment %1 before changing the product code.","Wijzig eerst de voormelding van zending %1 voordat het product veranderd kan worden."
 "Can not change parcel count for non PostNL order %1","Kan niet het pakket aantal wijzigen voor een niet PostNL order %1"
 "Can not change the parcel count for shipment %1","Kan niet het pakket aantal wijzigen voor verzending %1"
 "Could not find a PostNL order for %1","Geen PostNL order gevonden behorende bij order %1"

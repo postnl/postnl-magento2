@@ -117,7 +117,7 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
         foreach ($collection as $order) {
             $this->currentOrder = $order;
             $shipment = $this->createShipment->create($order);
-            $this->setPackingslip($shipment->getId(), false);
+            $this->setPackingslip($shipment->getId(), true);
         }
 
         $this->handleErrors();

@@ -138,7 +138,7 @@ abstract class ToolbarAbstract extends Action
 
         if ($shipment->getConfirmedAt()) {
             $magentoShipment = $shipment->getShipment();
-            $this->errors[]  = __('Can not change product for confirmed shipment %1', $magentoShipment->getIncrementId());
+            $this->errors[]  = __('First change the confirmation of shipment %1 before changing the product code.', $magentoShipment->getIncrementId());
             return false;
         }
 
