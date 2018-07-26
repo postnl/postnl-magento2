@@ -89,7 +89,7 @@ class ChangeConfirmation extends Action
         $this->shipmentId       = $this->getRequest()->getParam('shipment_id');
 
         $this->resetShipment();
-        $this->resetService->resetShipment($this->shipmentId->getId());
+        $this->resetService->resetShipment($this->shipmentId);
 
         $resultDirect = $this->resultRedirectFactory->create();
         return $resultDirect->setPath(

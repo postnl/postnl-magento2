@@ -35,6 +35,28 @@
                                         <b style="font-weight: normal; font-size: 14px; ">{{trans "Order"}} {{var order_id}}</b><br/>
                                         {{var DateAndTime}}
                                     </li>
+                                    <li style=" color: #868681; vertical-align: top;">
+                                        <b style="font-weight: normal; font-size: 14px; ">{{trans "Expected Delivery"}}</b><br/>
+                                        {{var delivery_date}}
+                                    </li>
+                                </ul>
+
+                                <div class="block-divider" style="clear: both;height: 5px; margin-bottom: 20px; border-top: 1px solid #E3E3E3;"></div>
+
+                                <b style="font-weight: bold; font-size: 14px; ">{{var address_type}}</b>
+                                <ul style=" list-style:none; padding-left: 30px; ">
+                                    <li style=" color: #868681; vertical-align: top;">
+                                        {{var name}}
+                                    </li>
+                                    <li style=" color: #868681; vertical-align: top;">
+                                        {{var street}}
+                                    </li>
+                                    <li style=" color: #868681; vertical-align: top;">
+                                        {{var city}} {{var zipcode}}
+                                    </li>
+                                    <li style=" color: #868681; vertical-align: top;">
+                                        {{var country}}
+                                    </li>
                                 </ul>
 
                                 <div class="block-divider" style="clear: both;height: 5px; border-top: 1px solid #E3E3E3; margin-top: 25px; margin-bottom: 25px;"></div>
