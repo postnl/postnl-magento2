@@ -187,16 +187,18 @@ class Mail extends AbstractTracking
     }
 
     /**
-     * @param $shipment
+     * @param \TIG\PostNL\Api\Data\ShipmentInterface $shipment
      *
      * @return \Magento\Framework\Phrase
      */
     private function getAddressType($shipment)
     {
         if ($shipment->getIsPakjegemak()) {
+            // @codingStandardsIgnoreLine
             return __('Pakjegemak address');
         }
 
+        // @codingStandardsIgnoreLine
         return __('Shipping address');
     }
 
