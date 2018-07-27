@@ -35,7 +35,7 @@
 
     <group id="labelandpackingslipoptions" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Label and packingslip options</label>
-        <fieldset_css>tig_postnl-sub-section</fieldset_css>
+        <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
 
         <field id="reference_type" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Shipment reference type</label>
@@ -70,7 +70,7 @@
 
         <group id="barcode_settings" translate="label" type="text" sortOrder="45" showInDefault="1" showInStore="0" showInWebsite="1">
             <label>Barcode settings</label>
-            <fieldset_css>tig_postnl-sub-section</fieldset_css>
+            <fieldset_css>tig_postnl-sub-sub-sub-section barcode</fieldset_css>
             <field id="value" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInStore="0" showInWebsite="1">
                 <label>Value for barcode</label>
                 <comment><![CDATA[Select what to use as value for the barcode. If you select shipment ID, be aware that this only will work if you combine the print packingslip and create shipment methods.]]></comment>

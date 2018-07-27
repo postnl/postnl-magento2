@@ -36,7 +36,7 @@
     <group id="generalconfiguration" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>General configuration and account information</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
-        <fieldset_css>tig_postnl-section</fieldset_css>
+        <fieldset_css>tig_postnl-section tig_postnl-general-section</fieldset_css>
         <group id="extension_use" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
             <attribute type="expanded">1</attribute>
             <frontend_model>\TIG\PostNL\Block\Adminhtml\Config\General\AccountSettings</frontend_model>

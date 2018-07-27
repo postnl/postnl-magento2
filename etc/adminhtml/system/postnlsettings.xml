@@ -36,7 +36,7 @@
     <group id="postnl_settings" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>PostNL settings</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
-        <fieldset_css>tig_postnl-section</fieldset_css>
+        <fieldset_css>tig_postnl-section tig_postnl-postnl-section</fieldset_css>
 
         <group id="shipping_settings" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Shipping</label>
