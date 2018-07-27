@@ -395,34 +395,34 @@
 
 /* Identity - Content =============================================================================================== */
 
-/*.postnl-config-page .entry-edit.form-inline {*/
-    /*padding-top: 80px;*/
-/*}*/
+.postnl-config-page .entry-edit.form-inline {
+    padding-top: 80px;
+}
 
-/*.postnl-config-page .admin__scope-old:before {*/
-    /*background-image: url(../images/logo_tig.png) !important;*/
-    /*background-repeat: no-repeat;*/
-    /*content: ' ';*/
+.postnl-config-page .admin__scope-old:before {
+    background-image: url(../images/logo_tig.png) !important;
+    background-repeat: no-repeat;
+    content: ' ';
 
-    /*width: 50px;*/
-    /*float:right;*/
-    /*height: 50px;*/
-    /*background-size: auto 50px;*/
-/*}*/
+    width: 50px;
+    float:right;
+    height: 50px;
+    background-size: auto 50px;
+}
 
-/*.postnl-config-page #container:before  {*/
-    /*background-image: url(../images/postnl_logo.png) !important;*/
-    /*background-repeat: no-repeat;*/
-    /*content: 'PostNL';*/
-    /*text-indent: 70px;*/
-    /*float: left;*/
-    /*height: 50px;*/
-    /*background-size: auto 50px;*/
-    /*width: 295px;*/
-    /*line-height: 49px;*/
-    /*font-weight: bold;*/
-    /*font-size: 18px;*/
-/*}*/
+.postnl-config-page #container:before  {
+    background-image: url(../images/postnl_logo.png) !important;
+    background-repeat: no-repeat;
+    content: 'PostNL';
+    text-indent: 70px;
+    float: left;
+    height: 50px;
+    background-size: auto 50px;
+    width: 295px;
+    line-height: 49px;
+    font-weight: bold;
+    font-size: 18px;
+}
 
 
 /* Shipment Methods ================================================================================================= */
@@ -520,15 +520,3 @@ h4#carriers_tig_postnl_import_export_header {
     padding-bottom: 30px !important;
 }
 
-
-/*.section-config.tig_postnl-sub-section {*/
-    /*padding-bottom: 30px;*/
-/*}*/
-
-
-/*.tig-postnl-section select:not([multiple]),*/
-/*.tig-postnl-section input {*/
-    /*border-radius: 5px !important;*/
-    /*padding-left: 15px !important;*/
-    /*height: 40px !important;*/
-/*}*/
