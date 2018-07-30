@@ -1,6 +1,6 @@
 {
   "name": "TIG_PostNL",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "The official PostNL Magento 2 extension build by TIG",
   "main": "Gruntfile.js",
   "scripts": {
