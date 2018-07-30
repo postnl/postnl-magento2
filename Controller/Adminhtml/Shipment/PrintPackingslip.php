@@ -50,15 +50,6 @@ class PrintPackingslip extends LabelAbstract
      */
     private $shipmentRepository;
 
-    /**
-     * @var Track
-     */
-    private $track;
-
-    /**
-     * @var BarcodeHandler
-     */
-    private $barcodeHandler;
 
     /**
      * @param Context            $context
@@ -82,12 +73,12 @@ class PrintPackingslip extends LabelAbstract
             $context,
             $getLabels,
             $getPdf,
-            $getPackingSlip
+            $getPackingSlip,
+            $barcodeHandler,
+            $track
         );
 
         $this->shipmentRepository = $shipmentRepository;
-        $this->track              = $track;
-        $this->barcodeHandler     = $barcodeHandler;
     }
 
     /**
@@ -129,13 +120,4 @@ class PrintPackingslip extends LabelAbstract
         return $this->shipmentRepository->get($shipmentId);
     }
 
-    /**
-     * @param Shipment $shipment
-     */
-    private function setTracks($shipment)
-    {
-        if (!$shipment->getTracks()) {
-            $this->track->set($shipment);
-        }
-    }
 }

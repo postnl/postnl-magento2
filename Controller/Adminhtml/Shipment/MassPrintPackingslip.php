@@ -56,16 +56,6 @@ class MassPrintPackingslip extends LabelAbstract
     private $collectionFactory;
 
     /**
-     * @var Track
-     */
-    private $track;
-
-    /**
-     * @var BarcodeHandler
-     */
-    private $barcodeHandler;
-
-    /**
      * @param Context                   $context
      * @param Filter                    $filter
      * @param ShipmentCollectionFactory $collectionFactory
@@ -89,13 +79,13 @@ class MassPrintPackingslip extends LabelAbstract
             $context,
             $getLabels,
             $getPdf,
-            $getPackingSlip
+            $getPackingSlip,
+            $barcodeHandler,
+            $track
         );
 
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
-        $this->track = $track;
-        $this->barcodeHandler = $barcodeHandler;
     }
 
     /**
@@ -117,16 +107,6 @@ class MassPrintPackingslip extends LabelAbstract
         }
 
         return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
-    }
-
-    /**
-     * @param Shipment $shipment
-     */
-    private function setTracks($shipment)
-    {
-        if (!$shipment->getTracks()) {
-            $this->track->set($shipment);
-        }
     }
 
     /**
