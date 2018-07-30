@@ -50,7 +50,6 @@ class PrintPackingslip extends LabelAbstract
      */
     private $shipmentRepository;
 
-
     /**
      * @param Context            $context
      * @param GetLabels          $getLabels
@@ -119,5 +118,4 @@ class PrintPackingslip extends LabelAbstract
         $shipmentId = $this->getRequest()->getParam('shipment_id');
         return $this->shipmentRepository->get($shipmentId);
     }
-
 }
