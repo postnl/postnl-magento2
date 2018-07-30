@@ -123,7 +123,7 @@ class Data extends AbstractHelper
     {
         $shipmentDays = explode(',', $this->webshop->getShipmentDays());
         
-        return in_array('0', $shipmentDays);
+        return in_array('0', $shipmentDays) ? 'true' : 'false';
     }
 
     /**
