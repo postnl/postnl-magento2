@@ -1,6 +1,6 @@
 <!--@subject {{trans "Track & Trace"|raw}} @-->
 <!--@vars {
-"var order_id":"Increment ID",
+"var order.getIncrementId()":"Increment ID",
 "var dateAndTime":"Date and Time of Transaction",
 "var url":"track and trace url to PostNL",
 "var logo_url":"PostNL Track & Trace"
@@ -32,12 +32,12 @@
 
                                 <ul style=" list-style:square; padding-left: 30px; ">
                                     <li style=" color: #868681; vertical-align: top;">
-                                        <b style="font-weight: normal; font-size: 14px; ">{{trans "Order"}} {{var order_id}}</b><br/>
+                                        <b style="font-weight: normal; font-size: 14px; ">{{trans "Order"}} {{var order.getIncrementId()}}</b><br/>
                                         {{var DateAndTime}}
                                     </li>
                                     <li style=" color: #868681; vertical-align: top;">
                                         <b style="font-weight: normal; font-size: 14px; ">{{trans "Expected Delivery"}}</b><br/>
-                                        {{var delivery_date}}
+                                        {{var postnlShipment.getDeliveryDateFormatted()}}
                                     </li>
                                 </ul>
 
@@ -52,10 +52,10 @@
                                         {{var street}}
                                     </li>
                                     <li style=" color: #868681; vertical-align: top;">
-                                        {{var city}} {{var zipcode}}
+                                        {{var shippingAddress.getCity()}} {{var shippingAddress.getPostcode()}}
                                     </li>
                                     <li style=" color: #868681; vertical-align: top;">
-                                        {{var country}}
+                                        {{var shippingAddress.getCountryId()}}
                                     </li>
                                 </ul>
 

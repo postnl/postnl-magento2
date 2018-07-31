@@ -155,20 +155,23 @@ class Mail extends AbstractTracking
      */
     private function getTemplateVars($order, $url)
     {
-        $shipment = $this->postNLShipmentRepository->getByFieldWithValue('order_id', $order->getId());
-        $address = $shipment->getOriginalShippingAddress();
+        $shipment        = $this->postNLShipmentRepository->getByFieldWithValue('order_id', $order->getId());
+        $shippingAddress = $shipment->getOriginalShippingAddress();
+        $billingAddress  = $order->getBillingAddress();
+
         return [
-            'order_id'        => $order->getIncrementId(),
+            'order_id'        => $order,
+            'postnlShipment'  => $shipment,
+            'shippingAddress' => $shippingAddress,
+            'billingAddress'  => $billingAddress,
             'dateAndTime'     => $this->postNLHelperData->getDate(),
             'url'             => $url,
             'logo_url'        => $this->getLogoUrl(),
-            'delivery_date'   => $shipment->getDeliveryDateFormatted(),
             'address_type'    => $this->getAddressType($shipment),
-            'name'            => $address->getFirstname().' '.$address->getMiddlename().' '.$address->getLastname(),
-            'street'          => $this->getStreetFlattend($address->getStreet()),
-            'city'            => $address->getCity(),
-            'zipcode'         => $address->getPostcode(),
-            'country'         => $address->getCountryId(),
+            'name'            => $shippingAddress->getFirstname() . ' ' .
+                $shippingAddress->getMiddlename() . ' ' .
+                $shippingAddress->getLastname(),
+            'street'          => $this->getStreetFlattend($shippingAddress->getStreet())
         ];
     }
 
