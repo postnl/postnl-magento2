@@ -118,7 +118,7 @@ class MergeWithLabels
      *
      * @return string
      */
-    public function merge($shipmentId, $packingslip, $mergeFirstLabel = false, $confirm)
+    public function merge($shipmentId, $packingslip, $mergeFirstLabel = false, $confirm = true)
     {
         $labels = $this->getLabels->get($shipmentId, $confirm);
         if (empty($labels)) {
