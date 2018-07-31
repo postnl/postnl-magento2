@@ -158,17 +158,15 @@ class Mail extends AbstractTracking
         $shipment = $this->postNLShipmentRepository->getByFieldWithValue('order_id', $order->getId());
         $address = $shipment->getOriginalShippingAddress();
         return [
-            'order_id'        => $order->getIncrementId(),
+            'order_id'        => $order,
+            'postnlShipment'  => $shipment,
+            'address'         => $address,
             'dateAndTime'     => $this->postNLHelperData->getDate(),
             'url'             => $url,
             'logo_url'        => $this->getLogoUrl(),
-            'delivery_date'   => $shipment->getDeliveryDateFormatted(),
             'address_type'    => $this->getAddressType($shipment),
             'name'            => $address->getFirstname().' '.$address->getMiddlename().' '.$address->getLastname(),
-            'street'          => $this->getStreetFlattend($address->getStreet()),
-            'city'            => $address->getCity(),
-            'zipcode'         => $address->getPostcode(),
-            'country'         => $address->getCountryId(),
+            'street'          => $this->getStreetFlattend($address->getStreet())
         ];
     }
 
