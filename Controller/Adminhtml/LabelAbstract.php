@@ -122,11 +122,12 @@ abstract class LabelAbstract extends Action
     /**
      * @param $shipmentId
      * @param $withLabels
+     * @param $confirm
      */
     //@codingStandardsIgnoreLine
-    protected function setPackingslip($shipmentId, $withLabels = true)
+    protected function setPackingslip($shipmentId, $withLabels = true, $confirm = true)
     {
-        $packingslip = $this->getPackingSlip->get($shipmentId, $withLabels);
+        $packingslip = $this->getPackingSlip->get($shipmentId, $withLabels, $confirm);
 
         if (strlen($packingslip) <= 0) {
             return;

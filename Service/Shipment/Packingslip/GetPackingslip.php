@@ -90,10 +90,11 @@ class GetPackingslip
     /**
      * @param int $shipmentId
      * @param bool $withLabels
+     * @param bool $confirm
      *
      * @return string
      */
-    public function get($shipmentId, $withLabels = true)
+    public function get($shipmentId, $withLabels = true, $confirm = true)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
 
@@ -109,7 +110,7 @@ class GetPackingslip
         $this->mergeWithLabels->setY($pdfShipment->getY());
 
         if ($withLabels) {
-            $packingSlip = $this->mergeWithLabels($shipmentId, $packingSlip);
+            $packingSlip = $this->mergeWithLabels($shipmentId, $packingSlip, $confirm);
         }
 
         return $packingSlip;
@@ -118,18 +119,19 @@ class GetPackingslip
     /**
      * @param int    $shipmentId
      * @param string $packingslip
+     * @param bool   $confirm
      *
      * @return string
      */
-    private function mergeWithLabels($shipmentId, $packingslip)
+    private function mergeWithLabels($shipmentId, $packingslip, $confirm)
     {
         $showLabel = $this->labelAndPackingslipOptions->getShowLabel();
 
         switch ($showLabel) {
             case ShowShippingLabel::SHOW_SHIPPING_LABEL_TOGETHER:
-                return $this->mergeWithLabels->merge($shipmentId, $packingslip, true);
+                return $this->mergeWithLabels->merge($shipmentId, $packingslip, true, $confirm);
             case ShowShippingLabel::SHOW_SHIPPING_LABEL_SEPARATE:
-                return $this->mergeWithLabels->merge($shipmentId, $packingslip, false);
+                return $this->mergeWithLabels->merge($shipmentId, $packingslip, false, $confirm);
             case ShowShippingLabel::SHOW_SHIPPING_LABEL_NONE:
             default:
                 return $packingslip;

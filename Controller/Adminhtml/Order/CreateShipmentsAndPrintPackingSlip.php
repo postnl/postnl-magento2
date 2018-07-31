@@ -152,6 +152,6 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
         $address = $shipment->getShippingAddress();
         $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
         $this->setTracks($shipment);
-        $this->setPackingslip($shipment->getId());
+        $this->setPackingslip($shipment->getId(), true, false);
     }
 }
