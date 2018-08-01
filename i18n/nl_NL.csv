@@ -363,3 +363,4 @@ Percent,Percentage
 "Activate ID Check","Activeer ID Check"
 "Parcel count should be a number","Pakket aantal dient ingevuld te worden met een nummer"
 "Productcode should be a number and availble within the configuration","Productcode dient een nummer te zijn en beschikbaar te zijn gesteld binnen de PostNL configuratie"
+"There is no evening delivery and extra early delivery post office locations possible for the shipping product ID check. Deactivate evening delivery and extra early delivery if you send everything with ID check.","Er is geen avondbezorging en extra vroeg afhalen mogelijk voor het verzendproduct ID check. Deactiveer avondbezorging en extra vroeg afhalen als u alles met ID check verzendt."

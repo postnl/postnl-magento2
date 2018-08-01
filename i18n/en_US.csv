@@ -345,3 +345,4 @@ Percent,Percent
 "Activate ID Check","Activate ID Check"
 "Parcel count should be a number","Parcel count should be a number"
 "Productcode should be a number and availble within the configuration","Productcode should be a number and availble within the configuration"
+"There is no evening delivery and extra early delivery post office locations possible for the shipping product ID check. Deactivate evening delivery and extra early delivery if you send everything with ID check.","There is no evening delivery and extra early delivery post office locations possible for the shipping product ID check. Deactivate evening delivery and extra early delivery if you send everything with ID check."
