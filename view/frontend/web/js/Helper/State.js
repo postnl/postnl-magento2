@@ -30,11 +30,13 @@
  */
 define([
     'ko',
+    'jquery',
     'Magento_Checkout/js/action/select-shipping-method',
     'Magento_Checkout/js/checkout-data',
     'Magento_Checkout/js/model/quote'
 ], function (
     ko,
+    $,
     selectShippingMethodAction,
     checkoutData,
     quote
@@ -58,6 +60,9 @@ define([
         if (shippingMethod.carrier_code === 'tig_postnl') {
             return;
         }
+
+        $("input[name*='deliveryday']").prop('checked', false);
+        $("input[name*='pickuplocation']").prop('checked', false);
 
         pickupAddress(null);
     });
