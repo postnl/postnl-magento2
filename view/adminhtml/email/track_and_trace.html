@@ -1,6 +1,6 @@
 <!--@subject {{trans "Track & Trace"|raw}} @-->
 <!--@vars {
-"var order_id":"Increment ID",
+"var order.getIncrementId()":"Increment ID",
 "var dateAndTime":"Date and Time of Transaction",
 "var url":"track and trace url to PostNL",
 "var logo_url":"PostNL Track & Trace"
@@ -32,8 +32,30 @@
 
                                 <ul style=" list-style:square; padding-left: 30px; ">
                                     <li style=" color: #868681; vertical-align: top;">
-                                        <b style="font-weight: normal; font-size: 14px; ">{{trans "Order"}} {{var order_id}}</b><br/>
+                                        <b style="font-weight: normal; font-size: 14px; ">{{trans "Order"}} {{var order.getIncrementId()}}</b><br/>
                                         {{var DateAndTime}}
+                                    </li>
+                                    <li style=" color: #868681; vertical-align: top;">
+                                        <b style="font-weight: normal; font-size: 14px; ">{{trans "Expected Delivery"}}</b><br/>
+                                        {{var postnlShipment.getDeliveryDateFormatted()}}
+                                    </li>
+                                </ul>
+
+                                <div class="block-divider" style="clear: both;height: 5px; margin-bottom: 20px; border-top: 1px solid #E3E3E3;"></div>
+
+                                <b style="font-weight: bold; font-size: 14px; ">{{var address_type}}</b>
+                                <ul style=" list-style:none; padding-left: 30px; ">
+                                    <li style=" color: #868681; vertical-align: top;">
+                                        {{var name}}
+                                    </li>
+                                    <li style=" color: #868681; vertical-align: top;">
+                                        {{var street}}
+                                    </li>
+                                    <li style=" color: #868681; vertical-align: top;">
+                                        {{var shippingAddress.getCity()}} {{var shippingAddress.getPostcode()}}
+                                    </li>
+                                    <li style=" color: #868681; vertical-align: top;">
+                                        {{var shippingAddress.getCountryId()}}
                                     </li>
                                 </ul>
 

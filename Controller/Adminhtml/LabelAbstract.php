@@ -37,6 +37,9 @@ use Magento\Backend\App\Action\Context;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 use TIG\PostNL\Controller\AdminHtml\PdfDownload as GetPdf;
+use TIG\PostNL\Service\Handler\BarcodeHandler;
+use TIG\PostNL\Helper\Tracking\Track;
+use \Magento\Sales\Model\Order\Shipment;
 
 abstract class LabelAbstract extends Action
 {
@@ -59,6 +62,18 @@ abstract class LabelAbstract extends Action
     protected $labels = [];
 
     /**
+     * @var BarcodeHandler
+     */
+    //@codingStandardsIgnoreLine
+    protected $barcodeHandler;
+
+    /**
+     * @var Track
+     */
+    //@codingStandardsIgnoreLine
+    protected $track;
+
+    /**
      * @var GetPackingslip
      */
     private $getPackingSlip;
@@ -68,19 +83,25 @@ abstract class LabelAbstract extends Action
      * @param GetLabels      $getLabels
      * @param GetPdf         $getPdf
      * @param GetPackingslip $getPackingSlip
+     * @param BarcodeHandler $barcodeHandler
+     * @param Track          $track
      */
     //@codingStandardsIgnoreLine
     public function __construct(
         Context $context,
         GetLabels $getLabels,
         GetPdf $getPdf,
-        GetPackingslip $getPackingSlip
+        GetPackingslip $getPackingSlip,
+        BarcodeHandler $barcodeHandler,
+        Track $track
     ) {
         parent::__construct($context);
 
-        $this->getLabels  = $getLabels;
-        $this->getPdf     = $getPdf;
-        $this->getPackingSlip   = $getPackingSlip;
+        $this->getLabels      = $getLabels;
+        $this->getPdf         = $getPdf;
+        $this->getPackingSlip = $getPackingSlip;
+        $this->barcodeHandler = $barcodeHandler;
+        $this->track          = $track;
     }
 
     /**
@@ -100,16 +121,29 @@ abstract class LabelAbstract extends Action
 
     /**
      * @param $shipmentId
+     * @param $withLabels
+     * @param $confirm
      */
     //@codingStandardsIgnoreLine
-    protected function setPackingslip($shipmentId)
+    protected function setPackingslip($shipmentId, $withLabels = true, $confirm = true)
     {
-        $packingslip = $this->getPackingSlip->get($shipmentId);
+        $packingslip = $this->getPackingSlip->get($shipmentId, $withLabels, $confirm);
 
         if (strlen($packingslip) <= 0) {
             return;
         }
 
         $this->labels[] = $packingslip;
+    }
+
+    /**
+     * @param Shipment $shipment
+     */
+    //@codingStandardsIgnoreLine
+    protected function setTracks($shipment)
+    {
+        if (!$shipment->getTracks()) {
+            $this->track->set($shipment);
+        }
     }
 }

@@ -134,12 +134,9 @@ class Mail extends AbstractTracking
 
         /** @var \Magento\Sales\Model\Order $order */
         $order = $shipment->getOrder();
-        $transport->setTemplateVars([
-           'order_id'      => $order->getIncrementId(),
-           'dateAndTime'   => $this->postNLHelperData->getDate(),
-           'url'           => $url,
-           'logo_url'      => $this->getLogoUrl()
-        ]);
+        $transport->setTemplateVars(
+            $this->getTemplateVars($order, $url)
+        );
 
         $transport->setFrom('general');
         $address = $shipment->getShippingAddress();
@@ -149,6 +146,64 @@ class Mail extends AbstractTracking
         $this->trackAndTraceEmail = $transport->getTransport();
     }
     // @codingStandardsIgnoreEnd
+
+    /**
+     * @param \Magento\Sales\Model\Order $order
+     * @param $url
+     *
+     * @return array
+     */
+    private function getTemplateVars($order, $url)
+    {
+        $shipment        = $this->postNLShipmentRepository->getByFieldWithValue('order_id', $order->getId());
+        $shippingAddress = $shipment->getOriginalShippingAddress();
+        $billingAddress  = $order->getBillingAddress();
+
+        return [
+            'order_id'        => $order,
+            'postnlShipment'  => $shipment,
+            'shippingAddress' => $shippingAddress,
+            'billingAddress'  => $billingAddress,
+            'dateAndTime'     => $this->postNLHelperData->getDate(),
+            'url'             => $url,
+            'logo_url'        => $this->getLogoUrl(),
+            'address_type'    => $this->getAddressType($shipment),
+            'name'            => $shippingAddress->getFirstname() . ' ' .
+                $shippingAddress->getMiddlename() . ' ' .
+                $shippingAddress->getLastname(),
+            'street'          => $this->getStreetFlattend($shippingAddress->getStreet())
+        ];
+    }
+
+    /**
+     * @param $street
+     *
+     * @return string
+     */
+    private function getStreetFlattend($street)
+    {
+        if (!is_array($street)) {
+            return $street;
+        }
+
+        return trim(implode(' ', $street));
+    }
+
+    /**
+     * @param \TIG\PostNL\Api\Data\ShipmentInterface $shipment
+     *
+     * @return \Magento\Framework\Phrase
+     */
+    private function getAddressType($shipment)
+    {
+        if ($shipment->getIsPakjegemak()) {
+            // @codingStandardsIgnoreLine
+            return __('Pakjegemak address');
+        }
+
+        // @codingStandardsIgnoreLine
+        return __('Shipping address');
+    }
 
     /**
      * Get the url to the logo

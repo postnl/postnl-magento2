@@ -31,10 +31,11 @@
  */
 namespace TIG\PostNL\Service\Shipment\Packingslip;
 
-use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
+use TIG\PostNL\Service\Shipment\Packingslip\Factory as PdfFactory;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Config\Source\LabelAndPackingslip\ShowShippingLabel;
+use TIG\PostNL\Service\Shipment\Packingslip\Items\Barcode;
 
 class GetPackingslip
 {
@@ -44,7 +45,7 @@ class GetPackingslip
     private $shipmentRepository;
 
     /**
-     * @var PdfShipment
+     * @var PdfFactory
      */
     private $pdfShipment;
 
@@ -59,31 +60,41 @@ class GetPackingslip
     private $mergeWithLabels;
 
     /**
+     * @var Barcode
+     */
+    private $barcodeMerger;
+
+    /**
      * GetPackingslip constructor.
      *
      * @param ShipmentRepositoryInterface $shipmentLabelRepository
-     * @param PdfShipment                 $pdfShipment
+     * @param PdfFactory                 $pdfShipment
      * @param LabelAndPackingslipOptions  $labelAndPackingslipOptions
      * @param MergeWithLabels             $mergeWithLabels
+     * @param Barcode                     $barcode
      */
     public function __construct(
         ShipmentRepositoryInterface $shipmentLabelRepository,
-        PdfShipment $pdfShipment,
+        PdfFactory $pdfShipment,
         LabelAndPackingslipOptions $labelAndPackingslipOptions,
-        MergeWithLabels $mergeWithLabels
+        MergeWithLabels $mergeWithLabels,
+        Barcode $barcode
     ) {
         $this->shipmentRepository = $shipmentLabelRepository;
         $this->pdfShipment = $pdfShipment;
         $this->labelAndPackingslipOptions = $labelAndPackingslipOptions;
         $this->mergeWithLabels = $mergeWithLabels;
+        $this->barcodeMerger = $barcode;
     }
 
     /**
      * @param int $shipmentId
+     * @param bool $withLabels
+     * @param bool $confirm
      *
      * @return string
      */
-    public function get($shipmentId)
+    public function get($shipmentId, $withLabels = true, $confirm = true)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
 
@@ -92,33 +103,35 @@ class GetPackingslip
         }
 
         $magentoShipment = $shipment->getShipment();
-        $packingSlip = $this->pdfShipment->getPdf([$magentoShipment]);
-        $packingSlip = $packingSlip->render();
+        $packingSlip = $this->pdfShipment->create($magentoShipment, $withLabels);
+        $packingSlip = $this->barcodeMerger->add($packingSlip, $magentoShipment);
 
         $pdfShipment = $this->pdfShipment;
-        $currentYPosition = $pdfShipment->y;
-        $this->mergeWithLabels->setY($currentYPosition);
+        $this->mergeWithLabels->setY($pdfShipment->getY());
 
-        $packingSlipPdf = $this->mergeWithLabels($shipmentId, $packingSlip);
+        if ($withLabels) {
+            $packingSlip = $this->mergeWithLabels($shipmentId, $packingSlip, $confirm);
+        }
 
-        return $packingSlipPdf;
+        return $packingSlip;
     }
 
     /**
      * @param int    $shipmentId
      * @param string $packingslip
+     * @param bool   $confirm
      *
      * @return string
      */
-    private function mergeWithLabels($shipmentId, $packingslip)
+    private function mergeWithLabels($shipmentId, $packingslip, $confirm)
     {
         $showLabel = $this->labelAndPackingslipOptions->getShowLabel();
 
         switch ($showLabel) {
             case ShowShippingLabel::SHOW_SHIPPING_LABEL_TOGETHER:
-                return $this->mergeWithLabels->merge($shipmentId, $packingslip, true);
+                return $this->mergeWithLabels->merge($shipmentId, $packingslip, true, $confirm);
             case ShowShippingLabel::SHOW_SHIPPING_LABEL_SEPARATE:
-                return $this->mergeWithLabels->merge($shipmentId, $packingslip, false);
+                return $this->mergeWithLabels->merge($shipmentId, $packingslip, false, $confirm);
             case ShowShippingLabel::SHOW_SHIPPING_LABEL_NONE:
             default:
                 return $packingslip;

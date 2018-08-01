@@ -62,16 +62,6 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
     private $createShipment;
 
     /**
-     * @var Track
-     */
-    private $track;
-
-    /**
-     * @var BarcodeHandler
-     */
-    private $barcodeHandler;
-
-    /**
      * @var array
      */
     private $errors = [];
@@ -98,12 +88,10 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         BarcodeHandler $barcodeHandler,
         GetPackingslip $getPackingSlip
     ) {
-        parent::__construct($context, $getLabels, $getPdf, $getPackingSlip);
+        parent::__construct($context, $getLabels, $getPdf, $getPackingSlip, $barcodeHandler, $track);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->createShipment = $createShipment;
-        $this->track = $track;
-        $this->barcodeHandler = $barcodeHandler;
     }
 
     /**
@@ -151,16 +139,6 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
         $this->setTracks($shipment);
         $this->setLabel($shipment->getId());
-    }
-
-    /**
-     * @param Shipment $shipment
-     */
-    private function setTracks($shipment)
-    {
-        if (!$shipment->getTracks()) {
-            $this->track->set($shipment);
-        }
     }
 
     /**

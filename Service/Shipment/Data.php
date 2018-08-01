@@ -35,6 +35,7 @@ use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Service\Volume\Items\Calculate;
 
+// @codingStandardsIgnoreFile
 class Data
 {
     /**
@@ -160,7 +161,13 @@ class Data
             $shipmentData['Groups'] = $this->getGroupData($shipment, $currentShipmentNumber);
         }
 
-        $productOptions = $this->productOptions->get($shipment->getShipmentType());
+        $shipmentType = $shipment->getShipmentType();
+
+        if ($shipment->isIDCheck()) {
+            $shipmentType = 'idcheck';
+        }
+
+        $productOptions = $this->productOptions->get($shipmentType);
         if ($productOptions) {
             $shipmentData['ProductOptions'] = $productOptions;
         }

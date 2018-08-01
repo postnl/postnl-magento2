@@ -62,16 +62,6 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
     private $createShipment;
 
     /**
-     * @var Track
-     */
-    private $track;
-
-    /**
-     * @var BarcodeHandler
-     */
-    private $barcodeHandler;
-
-    /**
      * @var array
      */
     private $errors = [];
@@ -98,12 +88,10 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
         BarcodeHandler $barcodeHandler,
         GetPackingslip $getPackingSlip
     ) {
-        parent::__construct($context, $getLabels, $getPdf, $getPackingSlip);
+        parent::__construct($context, $getLabels, $getPdf, $getPackingSlip, $barcodeHandler, $track);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->createShipment = $createShipment;
-        $this->track = $track;
-        $this->barcodeHandler = $barcodeHandler;
     }
 
     /**
@@ -137,16 +125,6 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
         }
 
         return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
-    }
-
-    /**
-     * @param Shipment $shipment
-     */
-    private function setTracks($shipment)
-    {
-        if (!$shipment->getTracks()) {
-            $this->track->set($shipment);
-        }
     }
 
     /**

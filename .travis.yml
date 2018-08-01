@@ -44,7 +44,7 @@ matrix:
 # And there wouldn't be support of PHP 7.1 in Magento 2.0 or 2.1
   include:
     - php: 7.1
-      env: MAGENTO_VERSION=2.2.4 CODE_COVERAGE=true
+      env: MAGENTO_VERSION=2.2.5 CODE_COVERAGE=true
 
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
