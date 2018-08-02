@@ -64,7 +64,6 @@ class Track extends AbstractTracking
     /**
      * @param Context                  $context
      * @param TrackFactory             $trackFactory
-     * @param ShipmentRepository       $shipmentRepository
      * @param PostNLShipmentRepository $postNLShipmentRepository
      * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      * @param StatusFactory            $statusFactory
@@ -75,7 +74,6 @@ class Track extends AbstractTracking
     public function __construct(
         Context $context,
         TrackFactory $trackFactory,
-        ShipmentRepository $shipmentRepository,
         PostNLShipmentRepository $postNLShipmentRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         StatusFactory $statusFactory,
@@ -89,7 +87,6 @@ class Track extends AbstractTracking
 
         parent::__construct(
             $context,
-            $shipmentRepository,
             $postNLShipmentRepository,
             $searchCriteriaBuilder,
             $webshop,

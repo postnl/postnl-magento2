@@ -71,7 +71,6 @@ class Mail extends AbstractTracking
     /**
      * @param Context                  $context
      * @param SearchCriteriaBuilder    $searchCriteriaBuilder
-     * @param ShipmentRepository       $shipmentRepository
      * @param PostNLShipmentRepository $postNLShipmentRepository
      * @param TransportBuilder         $transportBuilder
      * @param PostNLHelper             $data
@@ -81,7 +80,6 @@ class Mail extends AbstractTracking
      */
     public function __construct(
         Context $context,
-        ShipmentRepository $shipmentRepository,
         PostNLShipmentRepository $postNLShipmentRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         TransportBuilder $transportBuilder,
@@ -96,7 +94,6 @@ class Mail extends AbstractTracking
 
         parent::__construct(
             $context,
-            $shipmentRepository,
             $postNLShipmentRepository,
             $searchCriteriaBuilder,
             $webshop,
