@@ -94,35 +94,35 @@
             <field id="shippingoptions_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Activate delivery settings</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                <config_path>tig_postnl/delivery_options/shippingoptions_active</config_path>
+                <config_path>tig_postnl/delivery_settings/shippingoptions_active</config_path>
             </field>
 
             <field id="supported_options" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Select the available options</label>
                 <comment><![CDATA[Select the PostNL product that you want to use for your shipments.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Options\ProductOptions</source_model>
-                <config_path>tig_postnl/delivery_options/supported_options</config_path>
+                <config_path>tig_postnl/delivery_settings/supported_options</config_path>
             </field>
 
              <field id="default_option" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Default delivery</label>
                 <comment><![CDATA[Select the default product option for domestic shipments.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
-                <config_path>tig_postnl/delivery_options/default_option</config_path>
+                <config_path>tig_postnl/delivery_settings/default_option</config_path>
             </field>
 
             <field id="use_alternative_default" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Activate alternative delivery</label>
                 <comment><![CDATA[Enable this to use an alternative default option when a shipment's total value reaches a certain amount.]]></comment>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                <config_path>tig_postnl/delivery_options/use_alternative_default</config_path>
+                <config_path>tig_postnl/delivery_settings/use_alternative_default</config_path>
             </field>
 
             <field id="alternative_default_min_amount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Minimum amount</label>
                 <comment><![CDATA[The alternative default option will be used from this value.]]></comment>
                 <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
-                <config_path>tig_postnl/delivery_options/alternative_default_min_amount</config_path>
+                <config_path>tig_postnl/delivery_settings/alternative_default_min_amount</config_path>
                 <depends>
                     <field id="use_alternative_default">1</field>
                 </depends>
@@ -132,7 +132,7 @@
                 <label>Alternative delivery</label>
                 <comment><![CDATA[This option will be used as default from the given amount.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
-                <config_path>tig_postnl/delivery_options/alternative_default_option</config_path>
+                <config_path>tig_postnl/delivery_settings/alternative_default_option</config_path>
                 <depends>
                     <field id="use_alternative_default">1</field>
                 </depends>

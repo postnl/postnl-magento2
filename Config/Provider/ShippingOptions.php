@@ -36,7 +36,7 @@ namespace TIG\PostNL\Config\Provider;
  */
 class ShippingOptions extends AbstractConfigProvider
 {
-    const XPATH_SHIPPING_OPTION_ACITVE                    = 'tig_postnl/delivery_options/shippingoptions_active';
+    const XPATH_SHIPPING_OPTION_ACITVE                    = 'tig_postnl/delivery_settings/shippingoptions_active';
     const XPATH_SHIPPING_OPTION_STOCK                     = 'tig_postnl/stock_settings/stockoptions';
     const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE       = 'tig_postnl/delivery_days/deliverydays_active';
     const XPATH_SHIPPING_OPTION_MAX_DELIVERYDAYS          = 'tig_postnl/delivery_days/max_deliverydays';
@@ -50,8 +50,8 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_EVENING_BE_FEE            = 'tig_postnl/evening_delivery_be/eveningdelivery_be_fee';
     const XPATH_SHIPPING_OPTION_SUNDAY_ACTIVE             = 'tig_postnl/sunday_delivery/sundaydelivery_active';
     const XPATH_SHIPPING_OPTION_SUNDAY_FEE                = 'tig_postnl/sunday_delivery/sundaydelivery_fee';
-    const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE        = 'tig_postnl/shippingoptions/send_track_and_trace_email';
-    const XPATH_SHIPPING_OPTION_DELIVERY_DELAY            = 'tig_postnl/shippingoptions/delivery_delay';
+    const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE        = 'tig_postnl/track_and_trace/send_track_and_trace_email';
+    const XPATH_SHIPPING_OPTION_DELIVERY_DELAY            = 'tig_postnl/track_and_trace/delivery_delay';
 
     private $defaultMaxDeliverydays = '5';
 
