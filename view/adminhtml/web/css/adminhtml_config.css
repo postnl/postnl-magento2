@@ -36,7 +36,6 @@
 * =================================================================================================================== */
 
 #section { float: left; width: 100%; clear: both; }
-/*#supporttab { margin-left: 4rem;  }*/
 #supporttab #section { border-bottom: 1px solid #cccccc; }
 #supporttab #section:last-child { border-bottom: none; }
 
@@ -243,7 +242,6 @@
 
 .block-version {
     padding:10px;
-    /*background: #F8F8F8;*/
     float:left;
     width: calc(100% - 20px);
     box-sizing: border-box;
@@ -464,8 +462,6 @@ h4#carriers_tig_postnl_import_export_header {
 /* TIG Admin 2 Columns col-set ====================================================================================== */
 
 .tig-admin-col-set.box {
-    /*background: #F8F8F8;*/
-    /*padding: 10px;*/
     box-sizing:border-box;
 }
 
