@@ -40,7 +40,6 @@ use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Sales\Model\Order\ShipmentRepository;
 use Magento\Framework\Mail\TransportInterface;
 use Magento\Framework\Exception\MailException;
 use Magento\Sales\Model\Order\Shipment;
