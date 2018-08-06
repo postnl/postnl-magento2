@@ -1,6 +1,6 @@
 # Postnl Magento 2
 
-[![Build Status](https://travis-ci.org/tig-nl/postnl-magento2.svg?branch=master)](https://travis-ci.org/tig-nl/postnl-magento2) ![Coverage Status](https://coveralls.io/repos/github/tig-nl/tig-extension-tig-postnl-magento2/badge.svg?branch=master&t=JGRVuI)
+[![Build Status](https://travis-ci.org/tig-nl/postnl-magento2.svg?branch=master)](https://travis-ci.org/tig-nl/postnl-magento2) ![Coverage Status](https://coveralls.io/repos/github/tig-nl/tig-extension-tig-postnl-magento2/badge.svg?t=uuXzu3)
 
 ## Installation
 
