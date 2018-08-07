@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Pdf;
 
 use Magento\Framework\ObjectManager\ObjectManager;
+use Magento\Framework\Module\Manager;
 
 /**
  * As Magento does auto generate the Fpdi class when using FpdiFactory we are doing this ourself.
@@ -44,12 +45,20 @@ class FpdiFactory
     private $objectManager;
 
     /**
+     * @var Manager
+     */
+    private $moduleManager;
+
+    /**
      * @param ObjectManager $objectManager
+     * @param Manager $moduleManager
      */
     public function __construct(
-        ObjectManager $objectManager
+        ObjectManager $objectManager,
+        Manager $moduleManager
     ) {
         $this->objectManager = $objectManager;
+        $this->moduleManager = $moduleManager;
     }
 
     /**
@@ -57,11 +66,32 @@ class FpdiFactory
      */
     public function create()
     {
+        if (!$this->moduleManager->isEnabled('Fooman_PrintOrderPdf')) {
+            // @codingStandardsIgnoreLine
+            return $this->objectManager->create(Fpdi::class, [
+                'orientation' => 'P',
+                'unit' => 'mm',
+                'size' => 'A4',
+            ]);
+        }
+
+        return $this->constructTCPDF();
+    }
+
+    /**
+     * @return mixed
+     */
+    private function constructTCPDF()
+    {
         // @codingStandardsIgnoreLine
         return $this->objectManager->create(Fpdi::class, [
             'orientation' => 'P',
             'unit' => 'mm',
-            'size' => 'A4'
+            'format' => 'A4',
+            'unicode' => true,
+            'encoding' => 'UTF-8',
+            'diskcache' => false,
+            'pdfa' => false,
         ]);
     }
 }

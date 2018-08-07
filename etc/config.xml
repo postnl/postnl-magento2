@@ -47,7 +47,7 @@
         </carriers>
         <tig_postnl>
             <stability/>
-            <supported_magento_version>2.1.0 - 2.1.12, 2.2.0 - 2.2.3</supported_magento_version>
+            <supported_magento_version>2.1.0 - 2.1.14, 2.2.0 - 2.2.5</supported_magento_version>
             <generalconfiguration_extension_status>
                 <modus>0</modus>
                 <customer_number_test>11223344</customer_number_test>
@@ -96,6 +96,7 @@
                 <max_deliverydays>7</max_deliverydays>
                 <eveningdelivery_fee>2</eveningdelivery_fee>
                 <extraathome_active>0</extraathome_active>
+                <idcheck_active>0</idcheck_active>
                 <eveningdelivery_be_fee>2</eveningdelivery_be_fee>
                 <sundaydelivery_fee>2</sundaydelivery_fee>
                 <delivery_delay>1</delivery_delay>
@@ -103,6 +104,14 @@
             <labelandpackingslipoptions>
                 <reference_type>shipment_increment_id</reference_type>
                 <show_label>together</show_label>
+                <enable_barcode>0</enable_barcode>
+                <barcode_value>order_increment_id</barcode_value>
+                <barcode_position>360,750,550,790</barcode_position>
+                <background_color>#FFFFFF</background_color>
+                <barcode_color>#000000</barcode_color>
+                <barcode_height>40</barcode_height>
+                <barcode_type>code39</barcode_type>
+                <barcode_numberinclude>1</barcode_numberinclude>
             </labelandpackingslipoptions>
             <endpoints>
                 <api_base_url>https://api.postnl.nl/shipment/</api_base_url>

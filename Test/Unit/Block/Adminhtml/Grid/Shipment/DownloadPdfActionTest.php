@@ -103,8 +103,8 @@ class DownloadPdfActionTest extends TestCase
         $this->assertDownloadUrl('postnl/shipment/massPrintShippingLabel', 'tig.nl', 'getDownloadUrl');
     }
 
-    public function testGetConfirmAndPrintPackingSlipUrl()
+    public function testGetPrintPackingSlipUrl()
     {
-        $this->assertDownloadUrl('postnl/shipment/massPrintPackingslip', 'tig.nl', 'getConfirmAndPrintPackingSlipUrl');
+        $this->assertDownloadUrl('postnl/shipment/massPrintPackingslip', 'tig.nl', 'getPrintPackingSlipUrl');
     }
 }

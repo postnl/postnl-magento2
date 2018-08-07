@@ -627,6 +627,20 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     }
 
     /**
+     * @return bool
+     */
+    public function isIDCheck()
+    {
+        $productCodeOptions = $this->getProductCodeOptions();
+
+        if ($productCodeOptions === null) {
+            return false;
+        }
+
+        return $productCodeOptions['group'] == 'id_check_options';
+    }
+
+    /**
      * @return float
      */
     public function getExtraCoverAmount()

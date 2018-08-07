@@ -31,12 +31,13 @@
  */
 namespace TIG\PostNL\Test\Unit\Service\Shipment\Packingslip;
 
-use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
+use TIG\PostNL\Service\Shipment\Packingslip\Factory as PdfShipment;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Config\Source\LabelAndPackingslip\ShowShippingLabel;
 use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 use TIG\PostNL\Service\Shipment\Packingslip\MergeWithLabels;
+use TIG\PostNL\Service\Shipment\Packingslip\Items\Barcode;
 use TIG\PostNL\Test\TestCase;
 
 class GetPackingslipTest extends TestCase
@@ -58,16 +59,19 @@ class GetPackingslipTest extends TestCase
         $shipmentRepoMock->expects($this->once())->method('getByShipmentId')->willReturnSelf();
         $shipmentRepoMock->expects($this->once())->method('getShipment')->willReturnSelf();
 
-        $pdfShipmentMock = $this->getFakeMock(PdfShipment::class)->setMethods(['getPdf', 'render'])->getMock();
-        $pdfShipmentMock->expects($this->once())->method('getPdf')->with([$shipmentRepoMock])->willReturnSelf();
-        $pdfShipmentMock->expects($this->once())->method('render')->willReturn('packingslip pdf');
+        $pdfShipmentMock = $this->getFakeMock(PdfShipment::class)->disableOriginalConstructor()->setMethods(['create'])->getMock();
+        $pdfShipmentMock->expects($this->once())->method('create')->with($shipmentRepoMock)->willReturn('packingslip pdf');
+
+        $barcodeMergeMock = $this->getFakeMock(Barcode::class)->disableOriginalConstructor()->setMethods(['add'])->getMock();
+        $barcodeMergeMock->expects($this->once())->method('add')->with('packingslip pdf', $shipmentRepoMock)->willReturn('packingslip pdf with barcode');
 
         $instance = $this->getInstance([
             'shipmentRepository' => $shipmentRepoMock,
-            'pdfShipment' => $pdfShipmentMock
+            'pdfShipment' => $pdfShipmentMock,
+            'barcode' => $barcodeMergeMock
         ]);
         $result = $instance->get(1);
-        $this->assertEquals('packingslip pdf', $result);
+        $this->assertEquals('packingslip pdf with barcode', $result);
     }
 
     /**
@@ -114,7 +118,7 @@ class GetPackingslipTest extends TestCase
             'mergeWithLabels' => $mergeWithLabelsMock
         ]);
 
-        $result = $this->invokeArgs('mergeWithLabels', [0, 'not merged'], $instance);
+        $result = $this->invokeArgs('mergeWithLabels', [0, 'not merged', 0], $instance);
         $this->assertEquals($expected, $result);
     }
 }

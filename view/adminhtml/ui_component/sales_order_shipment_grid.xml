@@ -52,13 +52,22 @@
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
                         <item name="type" xsi:type="string">postnl_print_packingslip_and_confirm</item>
-                        <item name="label" xsi:type="string" translate="true">PostNL - Print packing slip &amp; confirm shipment</item>
-                        <item name="postnl_action" xsi:type="string">ConfirmAndPrintPackingSlip</item>
+                        <item name="label" xsi:type="string" translate="true">PostNL - Print packing slip</item>
+                        <item name="postnl_action" xsi:type="string">PrintPackingSlip</item>
                         <!-- This forces the massaction to not execute anything. We handle the action in js/shipment/grid/DownloadPdf.js -->
                         <item name="callback" xsi:type="array">
                             <item name="provider" xsi:type="string">fake.data.provider</item>
                             <item name="target" xsi:type="string">fakeFunction</item>
                         </item>
+                    </item>
+                </argument>
+            </action>
+            <action name="postnl_mass_change_confirmation">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">postnl_mass_change_confirmation</item>
+                        <item name="label" xsi:type="string" translate="true">PostNL - Change Confirmation</item>
+                        <item name="url" xsi:type="url" path="postnl/shipment/MassChangeConfirmation"/>
                     </item>
                 </argument>
             </action>

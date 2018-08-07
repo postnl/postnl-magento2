@@ -260,6 +260,11 @@ interface ShipmentInterface
     public function isExtraAtHome();
 
     /**
+     * @return mixed
+     */
+    public function isIDCheck();
+
+    /**
      * @return float
      */
     public function getExtraCoverAmount();

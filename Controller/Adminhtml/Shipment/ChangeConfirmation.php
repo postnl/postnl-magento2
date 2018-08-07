@@ -35,9 +35,7 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 
 use TIG\PostNL\Service\Shipment\ShipmentService;
-use TIG\PostNL\Service\Shipment\Track\DeleteTrack;
-use TIG\PostNL\Service\Shipment\Label\DeleteLabel;
-use TIG\PostNL\Service\Shipment\Barcode\DeleteBarcode;
+use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
 
 class ChangeConfirmation extends Action
@@ -48,19 +46,9 @@ class ChangeConfirmation extends Action
     private $shipmentService;
 
     /**
-     * @var DeleteLabel
+     * @var ResetPostNLShipment
      */
-    private $labelDeleteHandler;
-
-    /**
-     * @var DeleteBarcode
-     */
-    private $barcodeDeleteHandler;
-
-    /**
-     * @var DeleteTrack
-     */
-    private $trackDeleteHandler;
+    private $resetService;
 
     /**
      * @var int
@@ -75,23 +63,17 @@ class ChangeConfirmation extends Action
     /**
      * @param Context         $context
      * @param ShipmentService $shipmentService
-     * @param DeleteLabel     $labelDeleteHandler
-     * @param DeleteBarcode   $barcodeDeleteHandler
-     * @param DeleteTrack     $trackDeleteHandler
+
      */
     public function __construct(
         Context $context,
         ShipmentService $shipmentService,
-        DeleteLabel $labelDeleteHandler,
-        DeleteBarcode $barcodeDeleteHandler,
-        DeleteTrack $trackDeleteHandler
+        ResetPostNLShipment $resetService
     ) {
         parent::__construct($context);
 
         $this->shipmentService      = $shipmentService;
-        $this->barcodeDeleteHandler = $barcodeDeleteHandler;
-        $this->labelDeleteHandler   = $labelDeleteHandler;
-        $this->trackDeleteHandler   = $trackDeleteHandler;
+        $this->resetService = $resetService;
     }
 
     /**
@@ -107,9 +89,7 @@ class ChangeConfirmation extends Action
         $this->shipmentId       = $this->getRequest()->getParam('shipment_id');
 
         $this->resetShipment();
-        $this->barcodeDeleteHandler->deleteAllByShipmentId($this->postNLShipmentId);
-        $this->labelDeleteHandler->deleteAllByParentId($this->postNLShipmentId);
-        $this->trackDeleteHandler->deleteAllByShipmentId($this->shipmentId);
+        $this->resetService->resetShipment($this->shipmentId);
 
         $resultDirect = $this->resultRedirectFactory->create();
         return $resultDirect->setPath(

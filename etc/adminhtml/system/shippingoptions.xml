@@ -164,6 +164,17 @@
             </depends>
         </field>
 
+        <field id="idcheck_active" translate="label comment tooltip" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Activate ID Check</label>
+            <tooltip><![CDATA[ID Check offers you the ability to make sure that confidential and age-validation transaction can be secure.]]></tooltip>
+            <comment><model>TIG\PostNL\Config\Comment\IdCheck</model></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/shippingoptions/idcheck_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+        </field>
+
         <!-- Disabled because needs further development -->
         <!--<field id="sundaydelivery_active" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">-->
             <!--<label>Activate sunday delivery</label>-->
