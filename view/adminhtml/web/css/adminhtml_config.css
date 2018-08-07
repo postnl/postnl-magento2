@@ -391,38 +391,6 @@
     background-size: auto 29px;
 }
 
-/* Identity - Content =============================================================================================== */
-
-.postnl-config-page .entry-edit.form-inline {
-    padding-top: 80px;
-}
-
-.postnl-config-page .admin__scope-old:before {
-    background-image: url(../images/logo_tig.png) !important;
-    background-repeat: no-repeat;
-    content: ' ';
-
-    width: 50px;
-    float:right;
-    height: 50px;
-    background-size: auto 50px;
-}
-
-.postnl-config-page #container:before  {
-    background-image: url(../images/postnl_logo.png) !important;
-    background-repeat: no-repeat;
-    content: 'PostNL';
-    text-indent: 70px;
-    float: left;
-    height: 50px;
-    background-size: auto 50px;
-    width: 295px;
-    line-height: 49px;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-
 /* Shipment Methods ================================================================================================= */
 
 #carriers_tig_postnl-head:after  {
