@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Config\Source\Options;
 
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Config\Source\OptionsAbstract;
 use Magento\Framework\Option\ArrayInterface;
 
@@ -294,24 +295,122 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
             'countryLimitation' => 'BE',
             'group'             => 'extra_at_home_options',
         ],
+        //ID Check
+        '3437' => [
+            'value'             => '3437',
+            'label'             => 'Parcel with Agecheck 18+ Neighbors',
+            'isExtraCover'      => false,
+            'isEvening'         => true,
+            'isSunday'          => true,
+            'isSameDay'         => true,
+            'statedAddressOnly' => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_options',
+        ],
+        '3438' => [
+            'value'             => '3438',
+            'label'             => 'Parcel with Agecheck 18+',
+            'isExtraCover'      => false,
+            'isEvening'         => true,
+            'isSunday'          => true,
+            'isSameDay'         => true,
+            'statedAddressOnly' => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_options',
+        ],
+        '3443' => [
+            'value'             => '3443',
+            'label'             => 'Parcel with Extra Cover + Agecheck 18+',
+            'isExtraCover'      => true,
+            'isEvening'         => true,
+            'isSunday'          => true,
+            'isSameDay'         => true,
+            'statedAddressOnly' => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_options',
+        ],
+        '3446' => [
+            'value'             => '3446',
+            'label'             => 'Parcel with Extra Cover + Agecheck 18+ Return when not home',
+            'isExtraCover'      => true,
+            'isEvening'         => true,
+            'isSunday'          => true,
+            'isSameDay'         => true,
+            'statedAddressOnly' => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_options',
+        ],
+        '3449' => [
+            'value'             => '3449',
+            'label'             => 'Parcel with Agecheck 18+ Return when not home',
+            'isExtraCover'      => false,
+            'isEvening'         => true,
+            'isSunday'          => true,
+            'isSameDay'         => true,
+            'statedAddressOnly' => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_options',
+        ],
+        // ID Check Pakje gemak
+        '3571' => [
+            'value'             => '3571',
+            'label'             => 'Post Office + Agecheck 18+',
+            'isExtraCover'      => false,
+            'pge'               => false,
+            'statedAddressOnly' => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_pakjegemak_options',
+        ],
+        '3574' => [
+            'value'             => '3574',
+            'label'             => 'Post Office + Notification + Agecheck 18+',
+            'isExtraCover'      => false,
+            'pge'               => true,
+            'statedAddressOnly' => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_pakjegemak_options',
+        ],
+        '3581' => [
+            'value'             => '3581',
+            'label'             => 'Post Office + Extra Cover + Agecheck 18+',
+            'isExtraCover'      => true,
+            'pge'               => false,
+            'statedAddressOnly' => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_pakjegemak_options',
+        ],
+        '3584' => [
+            'value'             => '3584',
+            'label'             => 'Post Office + Extra Cover + Notification + Agecheck 18+',
+            'isExtraCover'      => true,
+            'pge'               => true,
+            'statedAddressOnly' => false,
+            'isSunday'          => false,
+            'countryLimitation' => 'NL',
+            'group'             => 'id_check_pakjegemak_options',
+        ]
     ];
 
     protected $groups = [
-        'standard_options'      => 'Domestic options',
-        'pakjegemak_options'    => 'Post Office options',
-        'eu_options'            => 'EU options',
-        'global_options'        => 'Global options',
-        'buspakje_options'      => 'Letter Box Parcel options',
-        'extra_at_home_options' => 'Extra@Home options',
+        'standard_options'              => 'Domestic options',
+        'pakjegemak_options'            => 'Post Office options',
+        'eu_options'                    => 'EU options',
+        'global_options'                => 'Global options',
+        'buspakje_options'              => 'Letter Box Parcel options',
+        'extra_at_home_options'         => 'Extra@Home options',
+        'id_check_options'              => 'ID Check options',
+        'id_check_pakjegemak_options'   => 'ID Check Post Office options',
     ];
 
     protected $groupToLabel = [
-        'standard_options'      => 'Domestic',
-        'pakjegemak_options'    => 'Post Office',
-        'eu_options'            => 'EPS',
-        'global_options'        => 'Global Pack',
-        'buspakje_options'      => 'Letter Box',
-        'extra_at_home_options' => 'Extra@Home',
+        'standard_options'              => 'Domestic',
+        'pakjegemak_options'            => 'Post Office',
+        'eu_options'                    => 'EPS',
+        'global_options'                => 'Global Pack',
+        'buspakje_options'              => 'Letter Box',
+        'extra_at_home_options'         => 'Extra@Home',
+        'id_check_options'              => 'ID Check',
+        'id_check_pakjegemak_options'   => 'ID Check Post Office',
     ];
 
     protected $typeToComment = [
@@ -325,6 +424,21 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         'EPS'         => '',
         'GP'          => '',
     ];
+
+    // @codingStandardsIgnoreLine
+    protected $shippingOptions;
+
+    /**
+     * @param \TIG\PostNL\Config\Provider\ProductOptions $config
+     * @param ShippingOptions                            $shippingOptions
+     */
+    public function __construct(
+        \TIG\PostNL\Config\Provider\ProductOptions $config,
+        ShippingOptions $shippingOptions
+    ) {
+        parent::__construct($config);
+        $this->shippingOptions   = $shippingOptions;
+    }
 
     /**
      * @param $code
@@ -390,7 +504,14 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getPakjeGemakOptions()
     {
-        return $this->getProductoptions(['group' => 'pakjegemak_options']);
+        if (!$this->shippingOptions->isIDCheckActive()) {
+            return $this->getProductoptions(['group' => 'pakjegemak_options']);
+        }
+
+        $flags = [];
+        $flags['groups'][] = ['group' => 'pakjegemak_options'];
+        $flags['groups'][] = ['group' => 'id_check_pakjegemak_options'];
+        return $this->getProductoptions($flags);
     }
 
     /**
@@ -408,7 +529,14 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getDefaultOptions()
     {
-        return $this->getProductoptions(['group' => 'standard_options']);
+        if (!$this->shippingOptions->isIDCheckActive()) {
+            return $this->getProductoptions(['group' => 'standard_options']);
+        }
+
+        $flags = [];
+        $flags['groups'][] = ['group' => 'standard_options'];
+        $flags['groups'][] = ['group' => 'id_check_options'];
+        return $this->getProductoptions($flags);
     }
 
     /**

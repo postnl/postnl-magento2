@@ -138,6 +138,7 @@
                 </depends>
             </field>
 
+            <include path="TIG_PostNL::system/postnlsettings/idcheck.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/stock.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/deliverydays.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/postoffices.xml"/>
@@ -145,6 +146,7 @@
             <include path="TIG_PostNL::system/postnlsettings/extraathome.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/sundaydelivery.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/trackandtrace.xml"/>
+
         </group>
     </group>
 </include>

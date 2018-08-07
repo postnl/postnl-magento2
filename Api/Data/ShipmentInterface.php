@@ -260,9 +260,19 @@ interface ShipmentInterface
     public function isExtraAtHome();
 
     /**
+     * @return mixed
+     */
+    public function isIDCheck();
+
+    /**
      * @return float
      */
     public function getExtraCoverAmount();
+
+    /**
+     * @return \Magento\Sales\Api\Data\OrderAddressInterface;
+     */
+    public function getOriginalShippingAddress();
 
     /**
      * @return \Magento\Sales\Api\Data\ShipmentInterface

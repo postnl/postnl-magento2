@@ -118,7 +118,7 @@ class GetPackingslipTest extends TestCase
             'mergeWithLabels' => $mergeWithLabelsMock
         ]);
 
-        $result = $this->invokeArgs('mergeWithLabels', [0, 'not merged'], $instance);
+        $result = $this->invokeArgs('mergeWithLabels', [0, 'not merged', 0], $instance);
         $this->assertEquals($expected, $result);
     }
 }

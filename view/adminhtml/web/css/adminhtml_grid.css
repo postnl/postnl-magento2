@@ -1,0 +1,55 @@
+.postnl-grid-toolbar {
+    margin: 10px 0 0 15px;
+    padding: 10px;
+    background: #f2f2f2;
+    border: 0.1rem solid #adadad;
+    min-width: 480px;
+}
+
+.postnl-grid-toolbar:before {
+    content: '';
+    background-image : url(../images/postnl_logo_50.png);
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: auto 28px;
+    padding: 20px;
+    left: 16px;
+    top: 12px;
+    z-index: 10;
+}
+
+.postnl-grid-toolbar button {
+    height: 30px;
+    background-color: #eb5202;
+    border-color: #eb5202;
+    line-height: 0;
+    margin-top: 1px;
+}
+
+.postnl-grid-toolbar button:hover, .postnl-grid-toolbar button:focus {
+    background-color: #ba4000;
+    border-color: #b84002;
+}
+
+.postnl-grid-toolbar .col-xs-3, .postnl-grid-toolbar .col-xs-4, .postnl-grid-toolbar .col-xs-5 {
+    padding: 1px 10px 0 0;
+}
+
+.postnl-grid-toolbar .col-xs-5:first-child {
+    padding: 1px 10px 0 48px;
+}
+
+.postnl-grid-toolbar input {
+    height: 31px;
+    width: 100%;
+}
+
+/* Sticky Header ==================================================================================================== */
+
+.sticky-header .postnl-grid-toolbar {
+    clear: both;
+    margin-top: 20px;
+    margin-left: 0;
+}
+
+

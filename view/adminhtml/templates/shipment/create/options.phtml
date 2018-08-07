@@ -33,10 +33,10 @@
  * @var \TIG\PostNL\Block\Adminhtml\Shipment\Options\Create $this
  */
 ?>
-<?php if ($block->getIsPostNLOrder()) :?>
+<?php if ($this->getIsPostNLOrder()) :?>
 <!--@todo move style to less and add style to header trough xml-->
 <div id="postnl_shipping_options" style="margin-top: 20px; border-top: 1px solid #cecece; padding-top: 5px;">
-    <?php if ($block->isMultiColliAllowed()) : ?>
+    <?php if ($this->isMultiColliAllowed()) : ?>
     <div class="field admin__field admin__field-option field-postnl-colli">
         <label for="tig_postnl_colli"
                class="admin__field-label" style="display:inline-block; min-width: 170px;">
@@ -49,7 +49,7 @@
     </div>
     <?php endif; ?>
 
-    <?php if ($block->getProductOptions()) :?>
+    <?php if ($this->getProductOptions()) :?>
     <div class="field admin__field admin__field-option field-postnl-products">
         <label for="tig_postnl_product"
                class="admin__field-label" style="display:inline-block; min-width: 170px;">

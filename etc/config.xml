@@ -47,7 +47,8 @@
         </carriers>
         <tig_postnl>
             <stability/>
-            <supported_magento_version>2.1.0 - 2.1.12, 2.2.0 - 2.2.3</supported_magento_version>
+
+            <supported_magento_version>2.1.0 - 2.1.14, 2.2.0 - 2.2.5</supported_magento_version>
 
             <generalconfiguration_extension_status>
                 <modus>0</modus>
@@ -152,6 +153,8 @@
                 <product_settings_sorting_attribute>price</product_settings_sorting_attribute>
                 <product_settings_sorting_direction>desc</product_settings_sorting_direction>
             </globalpack>
+
+            <idcheck_active>0</idcheck_active>
 
         </tig_postnl>
     </default>

@@ -212,6 +212,18 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     }
 
     /**
+     * Mainly used when pakjegemak is available
+     *
+     * @return Address
+     */
+    public function getOriginalShippingAddress()
+    {
+        $shippingAddress = $this->getShippingAddress();
+
+        return $shippingAddress;
+    }
+
+    /**
      * @param array $ignoreAddressIds
      * @param       $ignoreStreet
      *
@@ -263,7 +275,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
      */
     public function getTotalWeight()
     {
-        $items = $this->getShipment()->getAllItems();
+        $items = $this->getShipment()->getItems();
         $weight = 0;
 
         /** @var Item $item */
@@ -612,6 +624,20 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         }
 
         return $productCodeOptions['group'] == 'extra_at_home_options';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIDCheck()
+    {
+        $productCodeOptions = $this->getProductCodeOptions();
+
+        if ($productCodeOptions === null) {
+            return false;
+        }
+
+        return $productCodeOptions['group'] == 'id_check_options';
     }
 
     /**

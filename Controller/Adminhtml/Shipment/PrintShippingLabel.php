@@ -50,16 +50,6 @@ class PrintShippingLabel extends LabelAbstract
     private $shipmentRepository;
 
     /**
-     * @var Track
-     */
-    private $track;
-
-    /**
-     * @var BarcodeHandler
-     */
-    private $barcodeHandler;
-
-    /**
      * @param Context            $context
      * @param GetLabels          $getLabels
      * @param GetPdf             $getPdf
@@ -81,12 +71,12 @@ class PrintShippingLabel extends LabelAbstract
             $context,
             $getLabels,
             $getPdf,
-            $getPackingSlip
+            $getPackingSlip,
+            $barcodeHandler,
+            $track
         );
 
         $this->shipmentRepository = $shipmentRepository;
-        $this->track              = $track;
-        $this->barcodeHandler     = $barcodeHandler;
     }
 
     /**

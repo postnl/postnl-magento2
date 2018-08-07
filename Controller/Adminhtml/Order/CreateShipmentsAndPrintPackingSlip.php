@@ -42,6 +42,9 @@ use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
+use TIG\PostNL\Service\Handler\BarcodeHandler;
+use TIG\PostNL\Helper\Tracking\Track;
+use \Magento\Sales\Model\Order\Shipment;
 
 class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
 {
@@ -84,6 +87,8 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
      * @param ConvertOrder           $convertOrder
      * @param CreateShipment         $createShipment
      * @param GetPackingslip         $getPackingSlip
+     * @param BarcodeHandler         $barcodeHandler
+     * @param Track                  $track
      */
     public function __construct(
         Context $context,
@@ -93,9 +98,11 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
         OrderCollectionFactory $collectionFactory,
         CreateShipment $createShipment,
         ConvertOrder $convertOrder,
-        GetPackingslip $getPackingSlip
+        GetPackingslip $getPackingSlip,
+        BarcodeHandler $barcodeHandler,
+        Track $track
     ) {
-        parent::__construct($context, $getLabels, $getPdf, $getPackingSlip);
+        parent::__construct($context, $getLabels, $getPdf, $getPackingSlip, $barcodeHandler, $track);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->convertOrder = $convertOrder;
@@ -117,7 +124,7 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
         foreach ($collection as $order) {
             $this->currentOrder = $order;
             $shipment = $this->createShipment->create($order);
-            $this->setPackingslip($shipment->getId(), false);
+            $this->loadLabels($shipment);
         }
 
         $this->handleErrors();
@@ -135,5 +142,16 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
         }
 
         return $this;
+    }
+
+    /**
+     * @param Shipment $shipment
+     */
+    private function loadLabels($shipment)
+    {
+        $address = $shipment->getShippingAddress();
+        $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+        $this->setTracks($shipment);
+        $this->setPackingslip($shipment->getId(), true, false);
     }
 }
