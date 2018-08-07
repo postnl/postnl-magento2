@@ -39,6 +39,9 @@
         <label>Delivery Days</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+        <depends>
+            <field id="shippingoptions_active">1</field>
+        </depends>
 
          <field id="deliverydays_active" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Activate delivery days</label>

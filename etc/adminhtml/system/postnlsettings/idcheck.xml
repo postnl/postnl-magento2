@@ -39,6 +39,9 @@
         <label>ID Check</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+        <depends>
+            <field id="shippingoptions_active">1</field>
+        </depends>
 
 
          <field id="idcheck_active" translate="label comment tooltip" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">

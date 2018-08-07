@@ -39,12 +39,21 @@
         <label>Evening Delivery</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+         <depends>
+            <field id="shippingoptions_active">1</field>
+            <field id="deliverydays_active">1</field>
+         </depends>
+
 
          <!-- Evening Delivery NL -->
          <group id="evening_delivery_nl" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Evening Delivery NL</label>
             <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
             <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+                <field id="deliverydays_active">1</field>
+            </depends>
 
                  <field id="eveningdelivery_active" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Activate evening delivery</label>
@@ -85,6 +94,10 @@
             <label>Evening Delivery BE</label>
             <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
             <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+             <depends>
+                 <field id="shippingoptions_active">1</field>
+                 <field id="deliverydays_active">1</field>
+             </depends>
 
                 <field id="eveningdelivery_be_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Activate evening delivery for Belgium</label>
