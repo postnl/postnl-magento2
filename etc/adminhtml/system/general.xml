@@ -36,7 +36,7 @@
     <group id="generalconfiguration" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>General configuration and account information</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
-        <fieldset_css>tig_postnl-section</fieldset_css>
+        <fieldset_css>tig_postnl-section tig_postnl-general-section</fieldset_css>
         <group id="extension_use" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
             <attribute type="expanded">1</attribute>
             <frontend_model>\TIG\PostNL\Block\Adminhtml\Config\General\AccountSettings</frontend_model>
@@ -119,7 +119,7 @@
             </field>
         </group>
         <group id="shipping_address" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Shipping address</label>
+            <label>Senders address</label>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
             <field id="firstname" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>First name</label>
@@ -156,17 +156,6 @@
             <field id="city" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>City</label>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/city</config_path>
-            </field>
-        </group>
-
-        <group id="logging" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Logging</label>
-            <comment><![CDATA[Log files will be created within the var/log/PostNL/ directory. You can find more information about the different kind of log files <a href="https://servicedesk.tig.nl/hc/nl/articles/115003513908" target="_blank" title="PostNL log files">here</a>.]]></comment>
-            <fieldset_css>tig_postnl-sub-section</fieldset_css>
-            <field id="types" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                <label>Types of logging</label>
-                <source_model>TIG\PostNL\Config\Source\General\Logging</source_model>
-                <config_path>tig_postnl/generalconfiguration_logging/types</config_path>
             </field>
         </group>
 

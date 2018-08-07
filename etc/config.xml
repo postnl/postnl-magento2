@@ -47,7 +47,9 @@
         </carriers>
         <tig_postnl>
             <stability/>
+
             <supported_magento_version>2.1.0 - 2.1.14, 2.2.0 - 2.2.5</supported_magento_version>
+
             <generalconfiguration_extension_status>
                 <modus>0</modus>
                 <customer_number_test>11223344</customer_number_test>
@@ -55,52 +57,77 @@
                 <api_key_test>GXRgqbUdNxL1xWLaGNR77cWeWWIGDSJw</api_key_test>
                 <bls_code_test>103861</bls_code_test>
             </generalconfiguration_extension_status>
-            <generalconfiguration_logging>
+
+            <developer_settings>
                 <types>300,400,500,550,600</types>
-            </generalconfiguration_logging>
-            <printer>
+            </developer_settings>
+
+            <extra_settings_printer>
                 <label_size>A6</label_size>
-            </printer>
-            <webshop_shipping>
+            </extra_settings_printer>
+
+            <postnl_settings>
                 <cutoff_time>18:00:00</cutoff_time>
                 <sunday_cutoff_time>18:00:00</sunday_cutoff_time>
                 <saturday_cutoff_time>18:00:00</saturday_cutoff_time>
                 <shipment_days>0,1,2,3,4,5,6</shipment_days>
-                <email_enabled>1</email_enabled>
                 <shipping_duration>1</shipping_duration>
-            </webshop_shipping>
-            <webshop_track_and_trace>
+            </postnl_settings>
+
+            <track_and_trace>
                 <template>tig_postnl_webshop_track_and_trace_template</template>
                 <service_url>https://postnl.nl/tracktrace/?</service_url>
-            </webshop_track_and_trace>
-            <webshop_advanced>
+                <delivery_delay>1</delivery_delay>
+                <email_enabled>1</email_enabled>
+            </track_and_trace>
+
+            <extra_settings_advanced>
                 <allowed_shipping_methods>tig_postnl_regular</allowed_shipping_methods>
-            </webshop_advanced>
-            <productoptions>
+            </extra_settings_advanced>
+
+            <delivery_settings>
                 <default_option>3085</default_option>
                 <use_alternative_default>0</use_alternative_default>
+                <supported_options>2928,3085,3087,3094,3089,3090,3096,3189,3385,3389,3533,3534,3543,3544,4938,4941,4950,4952</supported_options>
+            </delivery_settings>
+
+            <delivery_days>
+                <deliverydays_active>0</deliverydays_active>
+                <max_deliverydays>7</max_deliverydays>
+            </delivery_days>
+
+            <stock_settings>
+                <stockoptions>in_stock</stockoptions>
+            </stock_settings>
+
+            <evening_delivery_nl>
                 <default_evening_option>3089</default_evening_option>
-                <default_extraathome_option>3628</default_extraathome_option>
+                <eveningdelivery_active>1</eveningdelivery_active>
+                <eveningdelivery_fee>2</eveningdelivery_fee>
+            </evening_delivery_nl>
+
+            <evening_delivery_be>
                 <default_evening_be_option>4938</default_evening_be_option>
+                <eveningdelivery_be_active>0</eveningdelivery_be_active>
+                <eveningdelivery_be_fee>2</eveningdelivery_be_fee>
+            </evening_delivery_be>
+
+            <post_offices>
                 <default_pakjegemak_option>3534</default_pakjegemak_option>
                 <default_pakjegemak_early_option>3544</default_pakjegemak_early_option>
-                <supported_options>2928,3085,3087,3094,3089,3090,3096,3189,3385,3389,3533,3534,3543,3544,4938,4941,4950,4952</supported_options>
-            </productoptions>
-            <shippingoptions>
-                <deliverydays_active>0</deliverydays_active>
-                <stockoptions>in_stock</stockoptions>
                 <pakjegemak_active>1</pakjegemak_active>
-                <sundaydelivery_active>0</sundaydelivery_active>
-                <eveningdelivery_active>1</eveningdelivery_active>
-                <eveningdelivery_be_active>0</eveningdelivery_be_active>
-                <max_deliverydays>7</max_deliverydays>
-                <eveningdelivery_fee>2</eveningdelivery_fee>
+            </post_offices>
+
+            <extra_at_home>
+                <default_extraathome_option>3628</default_extraathome_option>
                 <extraathome_active>0</extraathome_active>
-                <idcheck_active>0</idcheck_active>
-                <eveningdelivery_be_fee>2</eveningdelivery_be_fee>
+            </extra_at_home>
+
+            <sunday_delivery>
+                <sundaydelivery_active>0</sundaydelivery_active>
                 <sundaydelivery_fee>2</sundaydelivery_fee>
-                <delivery_delay>1</delivery_delay>
-            </shippingoptions>
+            </sunday_delivery>
+
             <labelandpackingslipoptions>
                 <reference_type>shipment_increment_id</reference_type>
                 <show_label>together</show_label>
@@ -113,10 +140,12 @@
                 <barcode_type>code39</barcode_type>
                 <barcode_numberinclude>1</barcode_numberinclude>
             </labelandpackingslipoptions>
+
             <endpoints>
                 <api_base_url>https://api.postnl.nl/shipment/</api_base_url>
                 <test_api_base_url>https://api-sandbox.postnl.nl/shipment/</test_api_base_url>
             </endpoints>
+
             <globalpack>
                 <product_settings_value_attribute>price</product_settings_value_attribute>
                 <product_settings_country_of_origin>country_of_manufacture</product_settings_country_of_origin>
@@ -124,6 +153,9 @@
                 <product_settings_sorting_attribute>price</product_settings_sorting_attribute>
                 <product_settings_sorting_direction>desc</product_settings_sorting_direction>
             </globalpack>
+
+            <idcheck_active>0</idcheck_active>
+
         </tig_postnl>
     </default>
 </config>

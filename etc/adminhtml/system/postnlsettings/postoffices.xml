@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ *
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+
+     <!-- Post Offices -->
+
+    <group id="post_offices" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Post Offices</label>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+        <depends>
+            <field id="shippingoptions_active">1</field>
+        </depends>
+
+         <field id="pakjegemak_active" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Activate post office locations</label>
+            <comment><![CDATA[Whether or not customers may choose to have their order delivered to a nearby post office.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/post_offices/pakjegemak_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+         </field>
+
+         <field id="pakjegemak_express_active" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Activate early delivery post office locations</label>
+            <comment><![CDATA[Activate early delivery locations for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004296048/" target="_blank" title="early delivery">early delivery</a>.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/post_offices/pakjegemak_express_active</config_path>
+            <depends>
+                <field id="pakjegemak_active">1</field>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+         </field>
+
+         <field id="pakjegemak_express_fee" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Early delivery fee</label>
+            <comment><![CDATA[Additional costs for early delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
+            <config_path>tig_postnl/post_offices/pakjegemak_express_fee</config_path>
+            <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
+            <depends>
+                <field id="pakjegemak_active">1</field>
+                <field id="pakjegemak_express_active">1</field>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+         </field>
+
+
+         <field id="default_pakjegemak_option" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Post office delivery</label>
+            <comment><![CDATA[Select the default product option for postoffice delivery shipments.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakOptions</source_model>
+            <config_path>tig_postnl/post_offices/default_pakjegemak_option</config_path>
+            <depends>
+                <field id="tig_postnl/shippingoptions/pakjegemak_active">1</field>
+            </depends>
+        </field>
+
+        <field id="default_pakjegemak_early_option" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Post office early delivery</label>
+            <comment><![CDATA[Select the default product option for early pickup option.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakEarlyDeliveryOptions</source_model>
+            <config_path>tig_postnl/post_offices/default_pakjegemak_early_option</config_path>
+            <depends>
+                <field id="tig_postnl/shippingoptions/pakjegemak_active">1</field>
+            </depends>
+        </field>
+
+     </group>
+
+</include>

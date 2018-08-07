@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ *
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+
+    <group id="postnl_settings" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>PostNL settings</label>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-section tig_postnl-postnl-section</fieldset_css>
+
+        <group id="shipping_settings" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Shipping</label>
+            <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+            <fieldset_css>tig_postnl-sub-section</fieldset_css>
+
+            <field id="shipping_duration" translate="label comment" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Shipping Duration</label>
+                <comment><![CDATA[The number of days that it takes for the order to be shipped after the order is placed.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Settings\ShippingDuration</source_model>
+                <config_path>tig_postnl/postnl_settings/shipping_duration</config_path>
+            </field>
+
+            <field id="cutoff_time" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Cutoff time</label>
+                <comment><![CDATA[When an order is placed after this time, another day will be added to the shipping duration.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Settings\CutOffSettings</source_model>
+                <config_path>tig_postnl/postnl_settings/cutoff_time</config_path>
+            </field>
+
+            <field id="saturday_cutoff_time" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Saturday cutoff time</label>
+                <comment><![CDATA[When an order is placed after this time, another day will be added to the shipping duration.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Settings\CutOffSettings</source_model>
+                <config_path>tig_postnl/postnl_settings/saturday_cutoff_time</config_path>
+            </field>
+
+            <field id="sunday_cutoff_time" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Sunday cutoff time</label>
+                <comment><![CDATA[When an order is placed after this time, another day will be added to the shipping duration.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Settings\CutOffSettings</source_model>
+                <config_path>tig_postnl/postnl_settings/sunday_cutoff_time</config_path>
+            </field>
+
+            <field id="shipment_days" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Shipment days</label>
+                <comment><![CDATA[Select on which days of the week orders are shipped. You can read more about shipping and delivery days <a href="https://servicedesk.tig.nl/hc/nl/articles/115003398667" target="_blank" title="PostNL shipping days">here</a>.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Settings\DaysOfWeek</source_model>
+                <config_path>tig_postnl/postnl_settings/shipment_days</config_path>
+            </field>
+
+            <include path="TIG_PostNL::system/postnlsettings/labelandpackingslib.xml"/>
+
+        </group>
+
+        <!--Shipping options combined with product options -->
+
+        <group id="delivery_settings" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Delivery</label>
+            <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+            <fieldset_css>tig_postnl-sub-section</fieldset_css>
+            <comment><![CDATA[If you are unsure which options to select, ask your PostNL account manager. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004290928" target="_blank" title="product options">PostNL product options</a>.]]></comment>
+
+
+            <field id="shippingoptions_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Activate delivery settings</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <config_path>tig_postnl/delivery_settings/shippingoptions_active</config_path>
+            </field>
+
+            <field id="supported_options" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                <label>Select the available options</label>
+                <comment><![CDATA[Select the PostNL product that you want to use for your shipments.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Options\ProductOptions</source_model>
+                <config_path>tig_postnl/delivery_settings/supported_options</config_path>
+            </field>
+
+             <field id="default_option" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                <label>Default delivery</label>
+                <comment><![CDATA[Select the default product option for domestic shipments.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
+                <config_path>tig_postnl/delivery_settings/default_option</config_path>
+            </field>
+
+            <field id="use_alternative_default" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                <label>Activate alternative delivery</label>
+                <comment><![CDATA[Enable this to use an alternative default option when a shipment's total value reaches a certain amount.]]></comment>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <config_path>tig_postnl/delivery_settings/use_alternative_default</config_path>
+            </field>
+
+            <field id="alternative_default_min_amount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Minimum amount</label>
+                <comment><![CDATA[The alternative default option will be used from this value.]]></comment>
+                <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
+                <config_path>tig_postnl/delivery_settings/alternative_default_min_amount</config_path>
+                <depends>
+                    <field id="use_alternative_default">1</field>
+                </depends>
+            </field>
+
+            <field id="alternative_default_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Alternative delivery</label>
+                <comment><![CDATA[This option will be used as default from the given amount.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
+                <config_path>tig_postnl/delivery_settings/alternative_default_option</config_path>
+                <depends>
+                    <field id="use_alternative_default">1</field>
+                </depends>
+            </field>
+
+            <include path="TIG_PostNL::system/postnlsettings/idcheck.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/stock.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/deliverydays.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/postoffices.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/eveningdelivery.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/extraathome.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/sundaydelivery.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/trackandtrace.xml"/>
+
+        </group>
+    </group>
+</include>

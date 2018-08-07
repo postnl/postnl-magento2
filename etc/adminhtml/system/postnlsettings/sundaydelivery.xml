@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ *
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+
+    <!-- Disabled because needs further development -->
+
+    <!-- Sunday Delivery -->
+    <!--<group id="sunday_delivery" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">-->
+        <!--<label>Sunday Delivery</label>-->
+        <!--<frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>-->
+        <!--<fieldset_css>tig_postnl-sub-sub-section</fieldset_css>-->
+        <!--<depends>-->
+        <!--<field id="shippingoptions_active">1</field>-->
+        <!--</depends>-->
+
+        <!--<field id="sundaydelivery_active" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">-->
+        <!--<label>Activate sunday delivery</label>-->
+        <!--<comment><![CDATA[Activate sunday delivery for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298588" target="_blank" title="sunday delivery">sunday delivery</a>.]]></comment>-->
+        <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+        <!--<config_path>tig_postnl/sunday_delivery/sundaydelivery_active</config_path>-->
+        <!--<depends>-->
+        <!--<field id="shippingoptions_active">1</field>-->
+        <!--</depends>-->
+        <!--</field>-->
+
+        <!--<field id="sundaydelivery_fee" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="0" showInStore="0">-->
+        <!--<label>Sunday delivery fee</label>-->
+        <!--<comment><![CDATA[Additional costs for sunday delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>-->
+        <!--<config_path>tig_postnl/sunday_delivery/sundaydelivery_fee</config_path>-->
+        <!--<backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>-->
+        <!--<depends>-->
+        <!--<field id="shippingoptions_active">1</field>-->
+        <!--<field id="sundaydelivery_active">1</field>-->
+        <!--</depends>-->
+        <!--</field>-->
+    <!--</group>-->
+
+</include>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ *
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <!--Webshop section-->
+    <group id="extra_settings" translate="label" type="text" sortOrder="800" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Extra settings</label>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-section</fieldset_css>
+
+        <group id="printer" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Printer Settings</label>
+            <fieldset_css>tig_postnl-sub-section</fieldset_css>
+
+            <field id="label_size" translate="label tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Label size</label>
+                <tooltip><![CDATA[Some label types, like Global Pack or Combi EPS, can only be printed in A4 format.]]></tooltip>
+                <source_model>TIG\PostNL\Config\Source\Settings\LabelsizeSettings</source_model>
+                <config_path>tig_postnl/extra_settings_printer/label_size</config_path>
+                <comment><model>TIG\PostNL\Config\Comment\LabelSize</model></comment>
+            </field>
+        </group>
+
+        <group id="advanced" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Advanced Settings</label>
+            <comment><![CDATA[These settings are intended for advanced users only! If you're not 100% sure what you're doing, please do not touch these settings.]]></comment>
+            <fieldset_css>tig_postnl-sub-section</fieldset_css>
+
+            <field id="allowed_shipping_methods" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>PostNL shippingmethods</label>
+                <tooltip>Please select the shipping methods that will be considered to be 'PostNL' by this extension. Orders placed using one of these shipping methods may be processed using the PostNL extension.</tooltip>
+                <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
+                <config_path>tig_postnl/extra_settings_advanced/allowed_shipping_methods</config_path>
+            </field>
+        </group>
+    </group>
+</include>
