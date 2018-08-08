@@ -112,7 +112,7 @@
             </field>
 
             <depends>
-                <field id="tig_postnl/webshop/labelandpackingslipoptions/enable_barcode">1</field>
+                <field id="enable_barcode">1</field>
             </depends>
         </group>
     </group>

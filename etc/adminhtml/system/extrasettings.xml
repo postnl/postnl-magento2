@@ -51,7 +51,7 @@
             </field>
         </group>
 
-        <group id="advanced" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+        <group id="advanced" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced Settings</label>
             <comment><![CDATA[These settings are intended for advanced users only! If you're not 100% sure what you're doing, please do not touch these settings.]]></comment>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
@@ -64,6 +64,7 @@
             </field>
         </group>
 
-        <include path="TIG_PostNL::system/extrasettings/labelandpackingslib.xml"/>
+        <include path="TIG_PostNL::system/extrasettings/labelandpackingslip.xml"/>
+        <include path="TIG_PostNL::system/extrasettings/addresscheck.xml"/>
     </group>
 </include>

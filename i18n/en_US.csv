@@ -360,3 +360,8 @@ Percent,Percent
 "Productcode should be a number and availble within the configuration","Productcode should be a number and availble within the configuration"
 "There is no evening delivery and extra early delivery post office locations possible for the shipping product ID check. Deactivate evening delivery and extra early delivery if you send everything with ID check.","There is no evening delivery and extra early delivery post office locations possible for the shipping product ID check. Deactivate evening delivery and extra early delivery if you send everything with ID check."
 "This API key is used to send parcels with PostNL and to supplement and validate addresses. Keep this API key secret to prevent other parties from taking PostNL services on your account.","This API key is used to send parcels with PostNL and to supplement and validate addresses. Keep this API key secret to prevent other parties from taking PostNL services on your account."
+"Automatically complete <strong>Dutch addresses</strong> after your customer fills in his postcode and house number.","Automatically complete <strong>Dutch addresses</strong> after your customer fills in his postcode and house number."
+"Use postcode check","Use postcode check"
+"If you use a different address validation service, only leave the one you want to use activated.","If you use a different address validation service, only leave the one you want to use activated."
+"Postcode validation is only available for these supported checkouts.","Postcode validation is only available for these supported checkouts."
+
