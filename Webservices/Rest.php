@@ -32,10 +32,10 @@
 namespace TIG\PostNL\Webservices;
 
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Webapi\Exception as WebapiException;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
 use Magento\Framework\HTTP\ZendClient as ZendClient;
+use TIG\PostNL\Webservices\Endpoints\Address\RestInterface;
 
 class Rest
 {
@@ -58,4 +58,98 @@ class Rest
      * @var DefaultConfiguration
      */
     private $defaultConfiguration;
+
+    /**
+     * Rest constructor.
+     *
+     * @param ZendClient           $zendClient
+     * @param AccountConfiguration $accountConfiguration
+     * @param DefaultConfiguration $defaultConfiguration
+     */
+    public function __construct(
+        ZendClient $zendClient,
+        AccountConfiguration $accountConfiguration,
+        DefaultConfiguration $defaultConfiguration
+    ) {
+        $this->zendClient = $zendClient;
+        $this->accountConfiguration = $accountConfiguration;
+        $this->defaultConfiguration = $defaultConfiguration;
+    }
+
+    /**
+     * @param RestInterface $endpoint
+     *
+     * @return array|\Zend_Http_Response
+     */
+    public function getRequest(RestInterface $endpoint)
+    {
+        $this->zendClient->resetParameters();
+        $this->setUri($endpoint);
+        $this->setHeaders();
+        $this->setParameters($endpoint);
+
+        try {
+            $response = $this->zendClient->request();
+        } catch (\Zend_Http_Client_Exception $exception) {
+            $response = [
+                'status' => false,
+                'error'  => __('Address API exception : %1', $exception->getCode())
+            ];
+        }
+
+        return $response;
+    }
+
+    /**
+     * Includes the API key into the headers.
+     */
+    private function setHeaders()
+    {
+        $this->zendClient->setHeaders([
+            'apikey' => $this->getApiKey()
+        ]);
+    }
+
+    /**
+     * @param RestInterface $endpoint
+     */
+    private function setParameters(RestInterface $endpoint)
+    {
+        $params = $endpoint->getRequestData();
+        if ($endpoint->getMethod() == ZendClient::GET) {
+            $this->zendClient->setParameterGet($params);
+        }
+
+        if ($endpoint->getMethod() == ZendClient::POST) {
+            $this->zendClient->setParameterPost($params);
+        }
+    }
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    private function getApiKey()
+    {
+        if ($this->apiKey === null) {
+            $this->apiKey = $this->accountConfiguration->getApiKey();
+        }
+
+        if (empty($this->apiKey)) {
+            // @codingStandardsIgnoreLine
+            throw new LocalizedException(__('Please enter your API key'));
+        }
+
+        return $this->apiKey;
+    }
+
+    /**
+     * @param RestInterface $endpoint
+     */
+    private function setUri(RestInterface $endpoint)
+    {
+        $url = $this->defaultConfiguration->getModusAddressApiUrl() . $endpoint->getVersion() .'/';
+        $uri = $url . $endpoint->getEndpoint();
+        $this->zendClient->setUri($uri);
+    }
 }

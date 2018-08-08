@@ -43,7 +43,8 @@ class Postalcode implements RestInterface
     /**
      * @var string
      */
-    private $endpoint = 'getAddress/';
+    private $endpoint = 'postalcode/';
+
     /**
      * @var string
      */

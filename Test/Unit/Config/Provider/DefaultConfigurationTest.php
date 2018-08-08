@@ -132,7 +132,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
      * @param $value
      * @param $modus
      */
-    public function testGetModusAddressApiBaseUrl($value, $modus)
+    public function testGetModusAddressApiUrl($value, $modus)
     {
         $accountConfigurationMock = $this->getFakeMock(AccountConfiguration::class)->getMock();
 
