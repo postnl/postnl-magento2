@@ -35,6 +35,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\Result\JsonFactory;
 use TIG\PostNL\Webservices\Endpoints\Address\Postalcode;
+use TIG\PostNL\Service\Handler\PostcodecheckHandler;
 
 class Postcode extends Action
 {
@@ -48,15 +49,22 @@ class Postcode extends Action
      */
     private $postcodeService;
 
+    /**
+     * @var PostcodecheckHandler
+     */
+    private $handler;
+
     public function __construct(
         Context $context,
         JsonFactory $jsonFactory,
-        Postalcode $postalcodeService
+        Postalcode $postalcodeService,
+        PostcodecheckHandler $postcodecheckHandler
     ) {
         parent::__construct($context);
 
-        $this->jsonFactory = $jsonFactory;
+        $this->jsonFactory     = $jsonFactory;
         $this->postcodeService = $postalcodeService;
+        $this->handler         = $postcodecheckHandler;
     }
 
     /**
@@ -65,6 +73,7 @@ class Postcode extends Action
     public function execute()
     {
         $params = $this->getRequest()->getParams();
+        $params = $this->handler->convertRequest($params);
         if (!$params) {
             return $this->returnJson([
                 'status' => false,

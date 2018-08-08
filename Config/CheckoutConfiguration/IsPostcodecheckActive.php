@@ -31,39 +31,31 @@
  */
 namespace TIG\PostNL\Config\CheckoutConfiguration;
 
-use Magento\Framework\UrlInterface;
+use TIG\PostNL\Config\Provider\Webshop;
 
-class Urls implements CheckoutConfigurationInterface
+class IsPostcodecheckActive implements CheckoutConfigurationInterface
 {
     /**
-     * @var UrlInterface
+     * @var Webshop
      */
-    private $urlBuilder;
+    private $webshopConfig;
 
+    /**
+     * IsPostcodecheckActive constructor.
+     *
+     * @param Webshop $webshop
+     */
     public function __construct(
-        UrlInterface $urlBuilder
+        Webshop $webshop
     ) {
-        $this->urlBuilder = $urlBuilder;
-    }
-
-    public function getValue()
-    {
-        return [
-            'deliveryoptions_timeframes' => $this->getUrl('postnl/deliveryoptions/timeframes'),
-            'deliveryoptions_locations'  => $this->getUrl('postnl/deliveryoptions/locations'),
-            'deliveryoptions_save'       => $this->getUrl('postnl/deliveryoptions/save'),
-            'pakjegemak_address'         => $this->getUrl('postnl/pakjegemak/address'),
-            'address_check'              => $this->getUrl('postnl/address/postcode')
-        ];
+        $this->webshopConfig = $webshop;
     }
 
     /**
-     * @param $path
-     *
-     * @return string
+     * @return bool
      */
-    private function getUrl($path)
+    public function getValue()
     {
-        return $this->urlBuilder->getUrl($path, ['_secure' => true]);
+        return (bool) $this->webshopConfig->getIsAddressCheckEnabled();
     }
 }

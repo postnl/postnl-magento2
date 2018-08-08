@@ -54,6 +54,25 @@ class Webshop extends AbstractConfigProvider
 
     const XPATH_ADVANCED_ALLOWED_METHODS      = 'tig_postnl/extra_settings_advanced/allowed_shipping_methods';
 
+    const XPATH_ADDRESS_CHECK_ENABLED         = 'tig_postnl/addresscheck/enable_postcodecheck';
+    const XPATH_ADDRESS_CHECK_COMPATIBLE      = 'tig_postnl/addresscheck/checkout_compatible';
+
+    /**
+     * @return bool
+     */
+    public function getIsAddressCheckEnabled()
+    {
+        return $this->getConfigFromXpath(self::XPATH_ADDRESS_CHECK_ENABLED);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCheckoutCompatibleForAddressCheck()
+    {
+        return $this->getConfigFromXpath(self::XPATH_ADDRESS_CHECK_COMPATIBLE);
+    }
+
     /**
      * @return mixed
      */

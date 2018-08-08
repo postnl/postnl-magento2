@@ -29,41 +29,42 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\CheckoutConfiguration;
+namespace TIG\PostNL\Test\Unit\Config\CheckoutConfiguration;
 
-use Magento\Framework\UrlInterface;
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\CheckoutConfiguration\IsPostcodecheckActive;
+use TIG\PostNL\Config\Provider\Webshop;
 
-class Urls implements CheckoutConfigurationInterface
+class IsPostcodecheckActiveTest extends TestCase
 {
-    /**
-     * @var UrlInterface
-     */
-    private $urlBuilder;
+    protected $instanceClass = IsPostcodecheckActive::class;
 
-    public function __construct(
-        UrlInterface $urlBuilder
-    ) {
-        $this->urlBuilder = $urlBuilder;
-    }
-
-    public function getValue()
+    public function getValueProvider()
     {
         return [
-            'deliveryoptions_timeframes' => $this->getUrl('postnl/deliveryoptions/timeframes'),
-            'deliveryoptions_locations'  => $this->getUrl('postnl/deliveryoptions/locations'),
-            'deliveryoptions_save'       => $this->getUrl('postnl/deliveryoptions/save'),
-            'pakjegemak_address'         => $this->getUrl('postnl/pakjegemak/address'),
-            'address_check'              => $this->getUrl('postnl/address/postcode')
+            'is active' => [true],
+            'is not active' => [true],
         ];
     }
 
     /**
-     * @param $path
+     * @dataProvider getValueProvider
      *
-     * @return string
+     * @param $expected
      */
-    private function getUrl($path)
+    public function testGetValue($expected)
     {
-        return $this->urlBuilder->getUrl($path, ['_secure' => true]);
+        $webshopConfig = $this->getFakeMock(Webshop::class)->getMock();
+
+        $expects = $webshopConfig->expects($this->once());
+        $expects->method('getIsAddressCheckEnabled');
+        $expects->willReturn($expected);
+
+        /** @var IsPostcodecheckActive $instance */
+        $instance = $this->getInstance([
+            'webshop' => $webshopConfig,
+        ]);
+
+        $this->assertEquals($expected, $instance->getValue());
     }
 }
