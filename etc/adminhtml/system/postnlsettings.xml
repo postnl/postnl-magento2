@@ -78,8 +78,6 @@
                 <config_path>tig_postnl/postnl_settings/shipment_days</config_path>
             </field>
 
-            <include path="TIG_PostNL::system/postnlsettings/labelandpackingslib.xml"/>
-
         </group>
 
         <!--Shipping options combined with product options -->

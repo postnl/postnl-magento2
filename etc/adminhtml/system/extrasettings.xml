@@ -63,5 +63,7 @@
                 <config_path>tig_postnl/extra_settings_advanced/allowed_shipping_methods</config_path>
             </field>
         </group>
+
+        <include path="TIG_PostNL::system/extrasettings/labelandpackingslib.xml"/>
     </group>
 </include>
