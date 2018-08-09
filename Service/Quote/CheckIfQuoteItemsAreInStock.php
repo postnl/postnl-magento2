@@ -129,7 +129,7 @@ class CheckIfQuoteItemsAreInStock
          * Check if the product has the required quantity available.
          */
         $requiredQuantity = $this->getRequiredQuantity($item);
-        if (($stockItem->getQty() - $minimumQuantity) < $requiredQuantity) {
+        if ($stockItem->getManageStock() && ($stockItem->getQty() - $minimumQuantity) < $requiredQuantity) {
             return false;
         }
 

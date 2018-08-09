@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Config\CheckoutConfiguration;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Quote\CheckIfQuoteItemsAreInStock;
@@ -64,6 +65,12 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
     private $quoteItemsCanBackorder;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
+     * @param ScopeConfigInterface          $scopeConfig
      * @param ShippingOptions               $shippingOptions
      * @param AccountConfiguration          $accountConfiguration
      * @param CheckIfQuoteItemsAreInStock   $quoteItemsAreInStock
@@ -71,12 +78,14 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
      * @param CheckIfQuoteItemsCanBackorder $quoteItemsCanBackorder
      */
     public function __construct(
+        ScopeConfigInterface $scopeConfig,
         ShippingOptions $shippingOptions,
         AccountConfiguration $accountConfiguration,
         CheckIfQuoteItemsAreInStock $quoteItemsAreInStock,
         CheckIfQuoteHasOption $quoteHasOption,
         CheckIfQuoteItemsCanBackorder $quoteItemsCanBackorder
     ) {
+        $this->scopeConfig = $scopeConfig;
         $this->shippingOptions = $shippingOptions;
         $this->quoteItemsAreInStock = $quoteItemsAreInStock;
         $this->accountConfiguration = $accountConfiguration;
@@ -109,7 +118,9 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
      */
     private function validateStockOptions()
     {
-        if ($this->quoteItemsAreInStock->getValue()) {
+        $manageStock = $this->scopeConfig->getValue('cataloginventory/item_options/manage_stock');
+
+        if (!$manageStock || $this->quoteItemsAreInStock->getValue()) {
             return true;
         }
 
