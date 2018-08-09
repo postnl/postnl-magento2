@@ -34,20 +34,6 @@ namespace TIG\PostNL\Service\Handler;
 class PostcodecheckHandler
 {
     /**
-     * Minimal params required for request.
-     *
-     * @var array
-     */
-    private $requestKeys  = ['postcode', 'housenumber'];
-
-    /**
-     * Minimal params required for repsonse.
-     *
-     * @var array
-     */
-    private $responseKeys = ['status', 'streetName', 'city'];
-
-    /**
      * @param $params
      *
      * @return bool|mixed
@@ -58,7 +44,7 @@ class PostcodecheckHandler
             $params = json_decode($params, true);
         }
 
-        if (!$this->validateParams($params, $this->responseKeys)) {
+        if (!$this->validateParams($params, ['status', 'streetName', 'city'])) {
             return false;
         }
 
@@ -72,7 +58,7 @@ class PostcodecheckHandler
      */
     public function convertRequest($params)
     {
-        if (!$this->validateParams($params, $this->requestKeys)) {
+        if (!$this->validateParams($params, ['postcode', 'housenumber'])) {
             return false;
         }
 
