@@ -29,41 +29,42 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\CheckoutConfiguration;
+namespace TIG\PostNL\Test\Unit\Config\CheckoutConfiguration;
 
-use Magento\Framework\UrlInterface;
+use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
+use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Test\TestCase;
 
-class Urls implements CheckoutConfigurationInterface
+class IsDeliverDaysActiveTest extends TestCase
 {
-    /**
-     * @var UrlInterface
-     */
-    private $urlBuilder;
+    public $instanceClass = IsDeliverDaysActive::class;
 
-    public function __construct(
-        UrlInterface $urlBuilder
-    ) {
-        $this->urlBuilder = $urlBuilder;
-    }
-
-    public function getValue()
+    public function getValueProvider()
     {
         return [
-            'deliveryoptions_timeframes' => $this->getUrl('postnl/deliveryoptions/timeframes'),
-            'deliveryoptions_locations'  => $this->getUrl('postnl/deliveryoptions/locations'),
-            'deliveryoptions_save'       => $this->getUrl('postnl/deliveryoptions/save'),
-            'pakjegemak_address'         => $this->getUrl('postnl/pakjegemak/address'),
-            'address_postcode'           => $this->getUrl('postnl/address/postcode')
+            'is active' => [true],
+            'is not active' => [true],
         ];
     }
 
     /**
-     * @param $path
+     * @dataProvider getValueProvider
      *
-     * @return string
+     * @param $expected
      */
-    private function getUrl($path)
+    public function testGetValue($expected)
     {
-        return $this->urlBuilder->getUrl($path, ['_secure' => true]);
+        $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
+
+        $expects = $shippingOptions->expects($this->once());
+        $expects->method('isDeliverydaysActive');
+        $expects->willReturn($expected);
+
+        /** @var IsDeliverDaysActive $instance */
+        $instance = $this->getInstance([
+            'shippingOptions' => $shippingOptions,
+        ]);
+
+        $this->assertEquals($expected, $instance->getValue());
     }
 }
