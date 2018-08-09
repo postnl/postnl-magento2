@@ -133,6 +133,8 @@ class Rest
         if ($endpoint->getMethod() == ZendClient::POST) {
             $this->zendClient->setParameterPost($params);
         }
+
+        $this->zendClient->setMethod($endpoint->getMethod());
     }
 
     /**
