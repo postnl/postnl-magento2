@@ -53,11 +53,18 @@ class AccountSettings extends Template implements RendererInterface
      */
     private $accountConfig;
 
+    /**
+     * AccountSettings constructor.
+     *
+     * @param Template\Context     $context
+     * @param AccountConfiguration $accountConfiguration
+     * @param array                $data
+     */
     public function __construct(
         Template\Context $context,
         AccountConfiguration $accountConfiguration,
-        array $data = [])
-    {
+        array $data = []
+    ) {
         parent::__construct($context, $data);
         $this->accountConfig = $accountConfiguration;
     }
