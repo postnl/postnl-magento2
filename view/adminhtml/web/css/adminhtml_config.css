@@ -175,6 +175,17 @@
     background: #eff0ff;
 }
 
+.tig-admin-col-set.modus_live {
+    background: #e9ffe7 !important;
+}
+
+.tig-admin-col-set.modus_test {
+    background: #fffcf1 !important;
+}
+
+.tig-admin-col-set.modus_off {
+    background: #eff0ff !important;
+}
 
 /* SupportTab - Legend ============================================================================================== */
 
