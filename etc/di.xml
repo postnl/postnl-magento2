@@ -211,4 +211,13 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="TIG\PostNL\Plugin\Postcodecheck\Fields\Factory">
+        <arguments>
+            <argument name="fields" xsi:type="array">
+                <item name="housenumber" xsi:type="object">\TIG\PostNL\Plugin\Postcodecheck\Fields\Housenumber</item>
+                <item name="addition" xsi:type="object">\TIG\PostNL\Plugin\Postcodecheck\Fields\HousenumberAddition</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
