@@ -32,21 +32,24 @@
 namespace TIG\PostNL\Service\Framework;
 
 use Magento\Framework\App\ProductMetadataInterface;
-use Magento\Framework\Config\ValidationStateInterface;
-use Magento\Framework\App\State;
+use Magento\Framework\App\Arguments\ValidationState as MagentoValidationState;
 
-class ValidationState implements ValidationStateInterface
+class ValidationState extends MagentoValidationState
 {
+    /**
+     * @var ProductMetadataInterface
+     */
     private $productMetaData;
 
-    private $appMode;
-
+    /**
+     * ValidationState constructor.
+     *
+     * @param ProductMetadataInterface $productMetadata
+     */
     public function __construct(
-        ProductMetadataInterface $productMetadata,
-        State $state
+        ProductMetadataInterface $productMetadata
     ) {
         $this->productMetaData = $productMetadata;
-        $this->appMode = $state->getMode();
     }
 
     /**
@@ -60,7 +63,7 @@ class ValidationState implements ValidationStateInterface
     public function isValidationRequired()
     {
         if (!version_compare($this->productMetaData->getVersion(), '2.2.0', '<')) {
-            return $this->appMode == State::MODE_DEVELOPER;
+            return parent::isValidationRequired();
         }
 
         return false;
