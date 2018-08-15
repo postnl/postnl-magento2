@@ -65,12 +65,6 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
     private $quoteItemsCanBackorder;
 
     /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
-
-    /**
-     * @param ScopeConfigInterface          $scopeConfig
      * @param ShippingOptions               $shippingOptions
      * @param AccountConfiguration          $accountConfiguration
      * @param CheckIfQuoteItemsAreInStock   $quoteItemsAreInStock
@@ -78,14 +72,12 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
      * @param CheckIfQuoteItemsCanBackorder $quoteItemsCanBackorder
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig,
         ShippingOptions $shippingOptions,
         AccountConfiguration $accountConfiguration,
         CheckIfQuoteItemsAreInStock $quoteItemsAreInStock,
         CheckIfQuoteHasOption $quoteHasOption,
         CheckIfQuoteItemsCanBackorder $quoteItemsCanBackorder
     ) {
-        $this->scopeConfig = $scopeConfig;
         $this->shippingOptions = $shippingOptions;
         $this->quoteItemsAreInStock = $quoteItemsAreInStock;
         $this->accountConfiguration = $accountConfiguration;
@@ -118,8 +110,8 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
      */
     private function validateStockOptions()
     {
-        $manageStock = $this->scopeConfig->getValue('cataloginventory/item_options/manage_stock');
-
+        $manageStock = $this->shippingOptions->getManageStock();
+        
         if ($manageStock === false || $this->quoteItemsAreInStock->getValue()) {
             return true;
         }
