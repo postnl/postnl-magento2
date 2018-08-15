@@ -120,7 +120,7 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
     {
         $manageStock = $this->scopeConfig->getValue('cataloginventory/item_options/manage_stock');
 
-        if (!$manageStock || $this->quoteItemsAreInStock->getValue()) {
+        if ($manageStock === false || $this->quoteItemsAreInStock->getValue()) {
             return true;
         }
 
