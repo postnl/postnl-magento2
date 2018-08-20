@@ -160,7 +160,7 @@ class Mail extends AbstractTracking
         $billingAddress  = $order->getBillingAddress();
 
         return [
-            'order_id'        => $order,
+            'order'           => $order,
             'postnlShipment'  => $shipment,
             'shippingAddress' => $shippingAddress,
             'billingAddress'  => $billingAddress,
