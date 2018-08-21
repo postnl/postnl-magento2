@@ -75,6 +75,7 @@ class ShippingDuration
 
     /**
      * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function get()
     {
@@ -90,6 +91,7 @@ class ShippingDuration
      * @param MagentoQuote $quote
      *
      * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getProvidedByQuote($quote)
     {
