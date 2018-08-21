@@ -111,7 +111,7 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
     private function validateStockOptions()
     {
         $manageStock = $this->shippingOptions->getManageStock();
-        
+
         if ($manageStock === false || $this->quoteItemsAreInStock->getValue()) {
             return true;
         }
