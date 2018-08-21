@@ -87,9 +87,27 @@ class CollectionByItems
      * @param ShipmentItemInterface[]|OrderItemInterface[]|QuoteItem[] $items
      *
      * @return ProductInterface[]
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function get($items)
+    {
+        $this->setFilterGroups($this->mapSkus($items));
+        $this->searchCriteriaBuilder->setFilterGroups([$this->filterGroup]);
+        /** @var \Magento\Catalog\Api\Data\ProductSearchResultsInterface $products */
+        $products = $this->productRepository->getList($this->searchCriteriaBuilder->create());
+
+        return $products->getItems();
+    }
+
+    /**
+     * @param ShipmentItemInterface[]|OrderItemInterface[]|QuoteItem[] $items
+     *
+     * There is currently a known issue in the searchCriteriaBuilder which causes some data to get lost:
+     * https://github.com/magento/magento2/issues/13751
+     *
+     * @return ProductInterface[]
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getByIds($items)
     {
         $products = [];
         foreach ($items as $item) {
