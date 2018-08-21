@@ -40,7 +40,6 @@ use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Sales\Model\Order\ShipmentRepository;
 use Magento\Framework\Mail\TransportInterface;
 use Magento\Framework\Exception\MailException;
 use Magento\Sales\Model\Order\Shipment;
@@ -71,7 +70,6 @@ class Mail extends AbstractTracking
     /**
      * @param Context                  $context
      * @param SearchCriteriaBuilder    $searchCriteriaBuilder
-     * @param ShipmentRepository       $shipmentRepository
      * @param PostNLShipmentRepository $postNLShipmentRepository
      * @param TransportBuilder         $transportBuilder
      * @param PostNLHelper             $data
@@ -81,7 +79,6 @@ class Mail extends AbstractTracking
      */
     public function __construct(
         Context $context,
-        ShipmentRepository $shipmentRepository,
         PostNLShipmentRepository $postNLShipmentRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         TransportBuilder $transportBuilder,
@@ -96,7 +93,6 @@ class Mail extends AbstractTracking
 
         parent::__construct(
             $context,
-            $shipmentRepository,
             $postNLShipmentRepository,
             $searchCriteriaBuilder,
             $webshop,

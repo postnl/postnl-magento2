@@ -29,43 +29,37 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Framework;
+namespace TIG\PostNL\Config\Comment;
 
-use Magento\Framework\App\ProductMetadataInterface;
-use Magento\Framework\App\Arguments\ValidationState as MagentoValidationState;
+use Magento\Config\Model\Config\CommentInterface;
+use TIG\PostNL\Block\Adminhtml\Config\Comment\IdCheck as Block;
 
-class ValidationState extends MagentoValidationState
+class IdCheck implements CommentInterface
 {
     /**
-     * @var ProductMetadataInterface
+     * @var Block
      */
-    private $productMetaData;
+    private $block;
 
     /**
-     * ValidationState constructor.
-     *
-     * @param ProductMetadataInterface $productMetadata
+     * @param Block $block
      */
     public function __construct(
-        ProductMetadataInterface $productMetadata
+        Block $block
     ) {
-        $this->productMetaData = $productMetadata;
+        $this->block = $block;
     }
 
     /**
-     * Retrieve current validation state
+     * Retrieve element comment by element value
      *
-     * Magento 2.1.* uses xsd schemes that are not containing the listingToolbar component.
-     * When in developer mode these schemes are triggerd to validate the ui_definition.xml which will break the backend.
+     * @param string $elementValue
      *
-     * @return boolean
+     * @return string
      */
-    public function isValidationRequired()
+    // @codingStandardsIgnoreLine
+    public function getCommentText($elementValue)
     {
-        if (!version_compare($this->productMetaData->getVersion(), '2.2.0', '<')) {
-            return parent::isValidationRequired();
-        }
-
-        return false;
+        return $this->block->toHtml();
     }
 }

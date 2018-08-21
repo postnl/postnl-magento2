@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,16 +28,29 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="1.5.0">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Directory"/>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Quote"/>
-            <module name="Magento_Checkout"/>
-        </sequence>
-    </module>
-</config>
+ */
+namespace TIG\PostNL\Block\Adminhtml\Config\Comment;
+
+use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
+use Magento\Framework\View\Element\Template;
+
+class IdCheck extends Template implements RendererInterface
+{
+    // @codingStandardsIgnoreLine
+    protected $_template = 'TIG_PostNL::config/comment/idCheck.phtml';
+
+    /**
+     * Render form element as HTML
+     *
+     * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
+     *
+     * @return string
+     */
+    public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element)
+    {
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->setElement($element);
+
+        return $this->toHtml();
+    }
+}

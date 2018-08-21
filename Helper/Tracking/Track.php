@@ -62,9 +62,14 @@ class Track extends AbstractTracking
     private $trackAndTraceEmail;
 
     /**
+     * @var ShipmentRepository
+     */
+    private $shipmentRepository;
+
+    /**
      * @param Context                  $context
-     * @param TrackFactory             $trackFactory
      * @param ShipmentRepository       $shipmentRepository
+     * @param TrackFactory             $trackFactory
      * @param PostNLShipmentRepository $postNLShipmentRepository
      * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      * @param StatusFactory            $statusFactory
@@ -74,8 +79,8 @@ class Track extends AbstractTracking
      */
     public function __construct(
         Context $context,
-        TrackFactory $trackFactory,
         ShipmentRepository $shipmentRepository,
+        TrackFactory $trackFactory,
         PostNLShipmentRepository $postNLShipmentRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         StatusFactory $statusFactory,
@@ -86,10 +91,10 @@ class Track extends AbstractTracking
         $this->trackFactory             = $trackFactory;
         $this->trackStatusFactory       = $statusFactory;
         $this->trackAndTraceEmail       = $mail;
+        $this->shipmentRepository       = $shipmentRepository;
 
         parent::__construct(
             $context,
-            $shipmentRepository,
             $postNLShipmentRepository,
             $searchCriteriaBuilder,
             $webshop,
@@ -170,7 +175,7 @@ class Track extends AbstractTracking
          * @todo : Recalculate packages and set correct data.
          */
         $shipment->setPackages([]);
-        $this->shimpentRepository->save($shipment);
+        $this->shipmentRepository->save($shipment);
     }
 
     /**

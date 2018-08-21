@@ -39,17 +39,10 @@ use TIG\PostNL\Logging\Log;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Sales\Model\Order\ShipmentRepository;
 use Magento\Framework\Api\AbstractExtensibleObject;
 
 abstract class AbstractTracking extends AbstractHelper
 {
-    /**
-     * @var ShipmentRepository
-     */
-    //@codingStandardsIgnoreLine
-    protected $shimpentRepository;
-
     /**
      * @var PostNLShipmentRepository
      */
@@ -76,7 +69,6 @@ abstract class AbstractTracking extends AbstractHelper
 
     /**
      * @param Context                  $context
-     * @param ShipmentRepository       $shipmentRepository
      * @param PostNLShipmentRepository $postNLShipmentRepository
      * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      * @param Webshop                  $webshop
@@ -84,13 +76,11 @@ abstract class AbstractTracking extends AbstractHelper
      */
     public function __construct(
         Context $context,
-        ShipmentRepository $shipmentRepository,
         PostNLShipmentRepository $postNLShipmentRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         Webshop $webshop,
         Log $logging
     ) {
-        $this->shimpentRepository       = $shipmentRepository;
         $this->postNLShipmentRepository = $postNLShipmentRepository;
         $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
         $this->webshopConfig            = $webshop;
@@ -138,10 +128,8 @@ abstract class AbstractTracking extends AbstractHelper
     {
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLshipmentByTracking($trackingNumber);
-        /** @var \Magento\Sales\Model\Order\Shipment $shipment */
-        $shipment = $this->shimpentRepository->get($postNLShipment->getShipmentId());
         /** @var \Magento\Sales\Api\Data\OrderAddressInterface $address */
-        $address = $shipment->getShippingAddress();
+        $address = $postNLShipment->getShippingAddress();
 
         return $this->generateTrackAndTraceUrl($address, $trackingNumber, $type);
     }
@@ -161,7 +149,7 @@ abstract class AbstractTracking extends AbstractHelper
         $params = [
             'B=' . $trackingNumber,
             'D=' . $address->getCountryId(),
-            'P=' . $address->getPostcode(),
+            'P=' . str_replace(' ', '', $address->getPostcode()),
             'T=' . $type,
         ];
 
