@@ -87,15 +87,16 @@ class CollectionByItems
      * @param ShipmentItemInterface[]|OrderItemInterface[]|QuoteItem[] $items
      *
      * @return ProductInterface[]
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function get($items)
     {
-        $this->setFilterGroups($this->mapSkus($items));
-        $this->searchCriteriaBuilder->setFilterGroups([$this->filterGroup]);
-        /** @var \Magento\Catalog\Api\Data\ProductSearchResultsInterface $products */
-        $products = $this->productRepository->getList($this->searchCriteriaBuilder->create());
+        $products = [];
+        foreach ($items as $item) {
+            $products[] = $this->productRepository->getById($item->getProductId());
+        }
 
-        return $products->getItems();
+        return $products;
     }
 
     /**
