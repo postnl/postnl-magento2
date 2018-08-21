@@ -125,7 +125,7 @@ class CheckIfQuoteItemsAreInStock
 
         $minimumQuantity = $this->getMinimumQuantity($stockItem);
 
-        if ($stockItem->getId() && $stockItem->getManageStock() === false) {
+        if ($stockItem->getId() && $stockItem->getManageStock() == false) {
             return true;
         }
 
