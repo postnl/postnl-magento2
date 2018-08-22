@@ -94,9 +94,9 @@ class LayoutProcessor
 
         $shippingFields = $this->processAddress($shippingFields, 'shippingAddress', []);
 
-        $this->setFieldToClasses($shippingFields, 'postcode', true);
-        $this->setFieldToClasses($shippingFields, 'city');
-        $this->setFieldToClasses($shippingFields, 'street');
+        $this->setAdditionalClass($shippingFields, 'postcode', true);
+        $this->setAdditionalClass($shippingFields, 'city');
+        $this->setAdditionalClass($shippingFields, 'street');
 
         return $jsLayout;
     }
@@ -127,11 +127,9 @@ class LayoutProcessor
                 []
             );
 
-            $this->setFieldToClasses(
-                $billingForm['children']['form-fields']['children'], 'postcode', true
-            );
-            $this->setFieldToClasses($billingForm['children']['form-fields']['children'], 'city');
-            $this->setFieldToClasses($billingForm['children']['form-fields']['children'], 'street');
+            $this->setAdditionalClass($billingForm['children']['form-fields']['children'], 'postcode', true);
+            $this->setAdditionalClass($billingForm['children']['form-fields']['children'], 'city');
+            $this->setAdditionalClass($billingForm['children']['form-fields']['children'], 'street');
         }
         // @codingStandardsIgnoreEnd
 
@@ -158,9 +156,9 @@ class LayoutProcessor
             []
         );
 
-        $this->setFieldToClasses($billingFields['children']['form-fields']['children'], 'postcode', true);
-        $this->setFieldToClasses($billingFields['children']['form-fields']['children'], 'city');
-        $this->setFieldToClasses($billingFields['children']['form-fields']['children'], 'street');
+        $this->setAdditionalClass($billingFields['children']['form-fields']['children'], 'postcode', true);
+        $this->setAdditionalClass($billingFields['children']['form-fields']['children'], 'city');
+        $this->setAdditionalClass($billingFields['children']['form-fields']['children'], 'street');
 
         return $jsLayout;
     }
@@ -208,7 +206,7 @@ class LayoutProcessor
      * @param      $section
      * @param bool $disableRequired
      */
-    private function setFieldToClasses(&$fields, $section, $disableRequired = false)
+    private function setAdditionalClass(&$fields, $section, $disableRequired = false)
     {
         $additionalClass = null;
         if (isset($fields[$section]['config']['additionalClasses'])) {
