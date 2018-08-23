@@ -86,6 +86,7 @@
                 </argument>
             </action>
         </massaction>
+
     </listingToolbar>
     <columns name="sales_order_columns">
         <column name="tig_postnl_ship_at" class="TIG\PostNL\Block\Adminhtml\Grid\Order\ShippingDate">
@@ -97,12 +98,14 @@
                 </item>
             </argument>
         </column>
-        <column name="tig_postnl_product_code" class="TIG\PostNL\Block\Adminhtml\Grid\Order\ShipmentType">
+        <column name="tig_postnl_product_code"  class="TIG\PostNL\Block\Adminhtml\Grid\Order\ShipmentType">
             <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">\TIG\PostNL\Block\Adminhtml\Grid\Filter\ShipmentType</item>
                 <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">text</item>
-                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="filter" xsi:type="string">select</item>
+                    <item name="dataType" xsi:type="string">select</item>
                     <item name="label" xsi:type="string" translate="true">Shipment Type</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
                 </item>
             </argument>
         </column>

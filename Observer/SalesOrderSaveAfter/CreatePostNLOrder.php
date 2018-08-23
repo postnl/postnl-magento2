@@ -58,6 +58,7 @@ class CreatePostNLOrder implements ObserverInterface
      * @var Data
      */
     private $helper;
+
     /**
      * @var ProductCodeAndType
      */

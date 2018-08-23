@@ -29,44 +29,22 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Renderer;
+namespace TIG\PostNL\Block\Adminhtml\Grid\Filter;
 
-use TIG\PostNL\Config\Source\Options\ProductOptions;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class ShipmentType
+class ConfirmStatus implements OptionSourceInterface
 {
     /**
-     * @var ProductOptions
+     * @return array
      */
-    private $productOptions;
-
-    /**
-     * ShipmentType constructor.
-     *
-     * @param ProductOptions $productOptions
-     */
-    public function __construct(
-        ProductOptions $productOptions
-    ) {
-        $this->productOptions = $productOptions;
-    }
-
-    /**
-     * @param $code
-     * @param $type
-     *
-     * @return string
-     */
-    public function render($code, $type)
+    public function toOptionArray()
     {
-        $type   = $this->productOptions->getLabel($code, $type);
-        $output = (string)$type['label'];
-
-        $comment = $type['comment'];
-        $comment = strlen($comment) > 30 ? substr($comment, 0, 30) . '...' : $comment;
-
-        $output .= '<br><em style="font-size:9px;" title="'.$type['comment'].'">' . $comment . '</em>';
-
-        return $output;
+        return [
+            //@codingStandardsIgnoreStart
+            ['label' => __('Confirmed'), 'value' => '1'],
+            ['label' => __('Not confirmed'), 'value' => null]
+            //@codingStandardsIgnoreEnd
+        ];
     }
 }
