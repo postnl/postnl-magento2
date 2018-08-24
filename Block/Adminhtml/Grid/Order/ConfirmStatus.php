@@ -29,22 +29,42 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid\Filter;
+namespace TIG\PostNL\Block\Adminhtml\Grid\Order;
 
-use Magento\Framework\Data\OptionSourceInterface;
+use TIG\PostNL\Block\Adminhtml\Grid\AbstractGrid;
 
-class ConfirmStatus implements OptionSourceInterface
+class ConfirmStatus extends AbstractGrid
 {
     /**
-     * @return array
+     * @param $item
+     *
+     * @return string
      */
-    public function toOptionArray()
+    //@codingStandardsIgnoreLine
+    protected function getCellContents($item)
     {
-        return [
-            //@codingStandardsIgnoreStart
-            ['label' => __('Confirmed'), 'value' => 1],
-            ['label' => __('Not confirmed'), 'value' => 0]
-            //@codingStandardsIgnoreEnd
-        ];
+        $confirmedAt = $this->getIsConfirmed($item);
+
+        if (!$confirmedAt) {
+            return __('Not confirmed');
+        }
+
+        return __('Confirmed');
+    }
+
+    /**
+     * @param $item
+     *
+     * @return bool
+     */
+    private function getIsConfirmed($item)
+    {
+        $confirmedAt = $item['tig_postnl_confirmed'];
+
+        if ($confirmedAt === null) {
+            return false;
+        }
+
+        return (bool) $confirmedAt;
     }
 }

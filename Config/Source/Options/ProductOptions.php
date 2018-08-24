@@ -456,6 +456,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
 
         return [
             'label'   => $this->groupToLabel[$group],
+            'type'    => $this->typeToComment[$type],
             'comment' => $this->availableOptions[$code]['label']
         ];
     }

@@ -109,5 +109,16 @@
                 </item>
             </argument>
         </column>
+        <column name="tig_postnl_confirmed" class="TIG\PostNL\Block\Adminhtml\Grid\Order\ConfirmStatus">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">\TIG\PostNL\Block\Adminhtml\Grid\Filter\ConfirmStatus</item>
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">select</item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="label" xsi:type="string" translate="true">Confirm Status</item>
+                </item>
+            </argument>
+        </column>
     </columns>
 </listing>

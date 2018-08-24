@@ -62,6 +62,10 @@ class ShipmentType
         $type   = $this->productOptions->getLabel($code, $type);
         $output = (string)$type['label'];
 
+        if ($type['type']) {
+            $output .= ' <em>' . $type['type'] . '</em>';
+        }
+
         $comment = $type['comment'];
         $comment = strlen($comment) > 30 ? substr($comment, 0, 30) . '...' : $comment;
 

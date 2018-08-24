@@ -29,22 +29,31 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid\Filter;
+namespace TIG\PostNL\Setup\V151\Schema;
 
-use Magento\Framework\Data\OptionSourceInterface;
+use TIG\PostNL\Setup\AbstractColumnsInstaller;
 
-class ConfirmStatus implements OptionSourceInterface
+class SalesOrderGridColumns extends AbstractColumnsInstaller
 {
+    const TABLE_NAME = 'sales_order_grid';
+
+    // @codingStandardsIgnoreLine
+    protected $columns = [
+        'tig_postnl_confirmed',
+    ];
+
     /**
      * @return array
      */
-    public function toOptionArray()
+    public function installTigPostnlConfirmedColumn()
     {
         return [
-            //@codingStandardsIgnoreStart
-            ['label' => __('Confirmed'), 'value' => 1],
-            ['label' => __('Not confirmed'), 'value' => 0]
-            //@codingStandardsIgnoreEnd
+            // @codingStandardsIgnoreLine
+            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
+            'default' => 0,
+            'nullable' => false,
+            'comment' => 'PostNL Confirmed',
+            'after' => 'tig_postnl_product_code',
         ];
     }
 }

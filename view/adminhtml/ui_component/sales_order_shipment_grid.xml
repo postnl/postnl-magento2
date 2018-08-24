@@ -74,7 +74,7 @@
         </massaction>
     </listingToolbar>
     <columns name="sales_order_shipment_columns">
-        <column name="tig_postnl_confirmed_at" class="TIG\PostNL\Block\Adminhtml\Grid\Shipment\ConfirmStatus">
+        <column name="tig_postnl_confirmed" class="TIG\PostNL\Block\Adminhtml\Grid\Shipment\ConfirmStatus">
             <argument name="data" xsi:type="array">
                 <item name="options" xsi:type="object">\TIG\PostNL\Block\Adminhtml\Grid\Filter\ConfirmStatus</item>
                 <item name="config" xsi:type="array">

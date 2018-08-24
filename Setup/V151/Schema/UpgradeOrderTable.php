@@ -29,22 +29,28 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Grid\Filter;
+namespace TIG\PostNL\Setup\V151\Schema;
 
-use Magento\Framework\Data\OptionSourceInterface;
+use \TIG\PostNL\Setup\AbstractColumnsInstaller;
 
-class ConfirmStatus implements OptionSourceInterface
+class UpgradeOrderTable extends AbstractColumnsInstaller
 {
-    /**
-     * @return array
-     */
-    public function toOptionArray()
+    const TABLE_NAME = 'tig_postnl_order';
+
+    // @codingStandardsIgnoreLine
+    protected $columns = [
+        'confirmed'
+    ];
+
+    public function installConfirmedColumn()
     {
         return [
-            //@codingStandardsIgnoreStart
-            ['label' => __('Confirmed'), 'value' => 1],
-            ['label' => __('Not confirmed'), 'value' => 0]
-            //@codingStandardsIgnoreEnd
+            // @codingStandardsIgnoreLine
+            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
+            'default' => 0,
+            'nullable' => false,
+            'comment' => 'PostNL Confirmed',
+            'after' => 'confirmed_at',
         ];
     }
 }
