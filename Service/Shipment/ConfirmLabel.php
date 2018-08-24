@@ -32,6 +32,7 @@
  */
 namespace TIG\PostNL\Service\Shipment;
 
+use TIG\PostNL\Webservices\Api\Exception;
 use TIG\PostNL\Webservices\Endpoints\Confirming;
 use TIG\PostNL\Helper\Data as Helper;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
@@ -73,14 +74,22 @@ class ConfirmLabel
 
     /**
      * @param ShipmentInterface $shipment
-     * @param                   $number
+     * @param int               $number
+     *
+     * @throws Exception
      */
     public function confirm(ShipmentInterface $shipment, $number = 1)
     {
         $this->confirming->setParameters($shipment, $number);
-        $this->confirming->call();
+
+        try {
+            $this->confirming->call();
+        } catch (Exception $exception) {
+            throw new Exception(__($exception->getMessage()));
+        }
+
         $shipment->setConfirmedAt($this->helper->getDate());
-        $shipment->setConfirmedAt($this->helper->getDate());
+        $shipment->setConfirmed(true);
         $this->shipmentRepository->save($shipment);
     }
 }

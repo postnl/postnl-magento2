@@ -146,6 +146,7 @@ class ConfirmShipping extends Action
     {
         $postNLShipment = $this->postnlShipmentRepository->getByShipmentId($shipmentId);
         $postNLShipment->setConfirmedAt($this->helper->getDate());
+        $postNLShipment->setConfirmed(true);
         $this->postnlShipmentRepository->save($postNLShipment);
     }
 
