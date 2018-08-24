@@ -80,6 +80,7 @@ class ConfirmLabel
         $this->confirming->setParameters($shipment, $number);
         $this->confirming->call();
         $shipment->setConfirmedAt($this->helper->getDate());
+        $shipment->setConfirmedAt($this->helper->getDate());
         $this->shipmentRepository->save($shipment);
     }
 }

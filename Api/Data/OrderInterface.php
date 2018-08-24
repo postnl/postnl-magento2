@@ -289,4 +289,16 @@ interface OrderInterface
      * @return int
      */
     public function setShippingDuration($value);
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setConfirmed($value);
+
+    /**
+     * @return bool
+     */
+    public function getConfirmed();
 }
