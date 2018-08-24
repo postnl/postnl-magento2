@@ -163,6 +163,7 @@
                 <item name="tig_postnl_ship_at" xsi:type="string">tig_postnl_shipment.ship_at</item>
                 <item name="tig_postnl_product_code" xsi:type="string">tig_postnl_shipment.product_code</item>
                 <item name="tig_postnl_confirmed_at" xsi:type="string">tig_postnl_shipment.confirmed_at</item>
+                <item name="tig_postnl_confirmed" xsi:type="string">tig_postnl_shipment.confirmed</item>
             </argument>
         </arguments>
     </virtualType>
