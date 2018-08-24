@@ -32,7 +32,7 @@
  */
 namespace TIG\PostNL\Service\Shipment;
 
-use TIG\PostNL\Webservices\Api\Exception;
+use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Webservices\Endpoints\Confirming;
 use TIG\PostNL\Helper\Data as Helper;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
@@ -76,7 +76,7 @@ class ConfirmLabel
      * @param ShipmentInterface $shipment
      * @param int               $number
      *
-     * @throws Exception
+     * @throws LocalizedException
      */
     public function confirm(ShipmentInterface $shipment, $number = 1)
     {
@@ -84,8 +84,8 @@ class ConfirmLabel
 
         try {
             $this->confirming->call();
-        } catch (Exception $exception) {
-            throw new Exception(__($exception->getMessage()));
+        } catch (LocalizedException $exception) {
+            throw new LocalizedException(__($exception->getMessage()));
         }
 
         $shipment->setConfirmedAt($this->helper->getDate());
