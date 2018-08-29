@@ -142,10 +142,6 @@ class ConfirmStatus extends Command
      */
     private function updateShipment(PostNLShipment $shipment)
     {
-        if ($shipment->getConfirmed()) {
-            return;
-        }
-
         $shipment->setConfirmed(true);
         $this->shipmentRepository->save($shipment);
     }
