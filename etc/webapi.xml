@@ -45,12 +45,6 @@
             <resource ref="Magento_Sales::sales"/>
         </resources>
     </route>
-    <route url="/V1/postnl/orders/search" method="GET">
-        <service class="TIG\PostNL\Api\OrderRepositoryInterface" method="getList"/>
-        <resources>
-            <resource ref="Magento_Sales::sales"/>
-        </resources>
-    </route>
     <route url="/V1/postnl/orders/getByFieldWithValue" method="GET">
         <service class="TIG\PostNL\Api\OrderRepositoryInterface" method="getByFieldWithValue"/>
         <resources>
@@ -79,12 +73,6 @@
     <!-- Webapi description for the TIG PostNL Shipment model -->
     <route url="/V1/postnl/shipments/:id" method="GET">
         <service class="TIG\PostNL\Api\ShipmentRepositoryInterface" method="getById"/>
-        <resources>
-            <resource ref="Magento_Sales::sales"/>
-        </resources>
-    </route>
-    <route url="/V1/postnl/shipments/search" method="GET">
-        <service class="TIG\PostNL\Api\ShipmentRepositoryInterface" method="getList"/>
         <resources>
             <resource ref="Magento_Sales::sales"/>
         </resources>
