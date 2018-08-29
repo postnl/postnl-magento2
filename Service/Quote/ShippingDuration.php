@@ -75,6 +75,7 @@ class ShippingDuration
 
     /**
      * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function get()
     {
@@ -90,11 +91,12 @@ class ShippingDuration
      * @param MagentoQuote $quote
      *
      * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getProvidedByQuote($quote)
     {
         $store    = $quote->getStoreId();
-        $products = $this->productCollection->get($quote->getAllItems());
+        $products = $this->productCollection->getByIds($quote->getAllItems());
 
         $shippingDurations = array_map(function (ProductInterface $product) {
             $attribute = $product->getCustomAttribute(static::ATTRIBUTE_CODE);
