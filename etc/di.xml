@@ -147,6 +147,14 @@
         </arguments>
     </type>
 
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="postnlSyncConfirmStatus" xsi:type="object">TIG\PostNL\Console\Sync\ConfirmStatus</item>
+            </argument>
+        </arguments>
+    </type>
+
     <virtualType name="PostNLShipmentGridAggregator" type="Magento\Sales\Model\ResourceModel\Grid">
         <arguments>
             <argument name="mainTableName" xsi:type="string">sales_shipment</argument>
@@ -225,4 +233,5 @@
             </argument>
         </arguments>
     </type>
+
 </config>

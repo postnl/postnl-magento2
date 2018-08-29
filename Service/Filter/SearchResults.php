@@ -74,6 +74,7 @@ class SearchResults
 
         $collection->setCurPage($criteria->getCurrentPage());
         $collection->setPageSize($criteria->getPageSize());
+
         $objects = [];
         foreach ($collection as $objectModel) {
             $objects[] = $objectModel;
@@ -106,12 +107,7 @@ class SearchResults
         $fields     = [];
         $conditions = [];
 
-        /** @var Filter[] $filters */
-        $filters = array_filter($filterGroup->getFilters(), function ($filter) {
-            return !empty($filter->getValue());
-        });
-
-        foreach ($filters as $filter) {
+        foreach ($filterGroup->getFilters() as $filter) {
             $condition    = $filter->getConditionType() ? $filter->getConditionType() : 'eq';
             $fields[]     = $filter->getField();
             $conditions[] = [$condition => $filter->getValue()];
