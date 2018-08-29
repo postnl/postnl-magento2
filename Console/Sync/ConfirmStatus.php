@@ -44,8 +44,17 @@ use Magento\Setup\Module\Di\App\Task\OperationException;
 // @codingStandardsIgnoreFile
 class ConfirmStatus extends Command
 {
+    const POSTNLCLI_COMMAND = 'postnl:sync:confirm-status';
+    const POSTNLCLI_COMMENT = 'Synchronizes the order- and shipment grid confirmation column';
+
+    /**
+     * @var ShipmentRepository
+     */
     private $shipmentRepository;
 
+    /**
+     * @var SearchCriteriaBuilder
+     */
     private $searchCriteriaBuilder;
 
     /**
@@ -73,10 +82,8 @@ class ConfirmStatus extends Command
     // @codingStandardsIgnoreLine
     protected function configure()
     {
-        $this->setName('postnl:sync:confirm-status');
-        $this->setDescription(
-            'Synchronizes the order- and shipment grid confirmation column with correct confirm status'
-        );
+        $this->setName(static::POSTNLCLI_COMMAND);
+        $this->setDescription(static::POSTNLCLI_COMMENT);
     }
 
     /**
@@ -96,7 +103,6 @@ class ConfirmStatus extends Command
             return Cli::RETURN_FAILURE;
         }
 
-        $output->writeln('');
         $output->writeln('<info>Synchronization completed</info>');
 
         return Cli::RETURN_SUCCESS;
@@ -117,6 +123,10 @@ class ConfirmStatus extends Command
     private function startSync(OutputInterface $output)
     {
         $shipments = $this->getShipmentsToSync();
+        if (!$shipments) {
+            $output->writeln('<comment>Nothing to synchronize</comment>');
+            return;
+        }
 
         /** @var ProgressBar $progressBar */
         $progressBar = new ProgressBar($output, count($shipments));
@@ -135,6 +145,7 @@ class ConfirmStatus extends Command
         }
 
         $progressBar->finish();
+        $output->writeln('');
     }
 
     /**

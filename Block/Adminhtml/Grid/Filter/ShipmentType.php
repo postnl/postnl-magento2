@@ -52,6 +52,9 @@ class ShipmentType implements OptionSourceInterface
         $this->productOptions = $productOptions;
     }
 
+    /**
+     * @return array
+     */
     public function toOptionArray()
     {
         return $this->productOptions->toOptionArray();
