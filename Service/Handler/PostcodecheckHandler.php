@@ -41,7 +41,7 @@ class PostcodecheckHandler
     public function convertResponse($params)
     {
         if (is_string($params)) {
-            $params = json_decode($params, true);
+            $params = json_decode($params, true)[0];
         }
 
         if (!$this->validateParams($params, ['status', 'streetName', 'city'])) {

@@ -214,7 +214,7 @@ class LayoutProcessor
         }
 
         if ($section == 'street' || $section == 'city') {
-            $additionalClass = $additionalClass . ' ' . 'postnl';
+            $additionalClass = $additionalClass . ' ' . 'postnl_postcodecheck_disableable';
         }
 
         if ($disableRequired) {

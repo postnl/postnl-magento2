@@ -46,7 +46,7 @@ class Housenumber implements FieldInterface
                 'elementTmpl' => 'TIG_PostNL/form/element/input'
             ],
             'provider'   => 'checkoutProvider',
-            'dataScope'  => $scope . '.custom_attributes.tig_housenumber',
+            'dataScope'  => $scope . '.custom_attributes.postnl_housenumber',
             'label'      => __('House number'),
             'sortOrder'  => '115',
             'validation' => [
