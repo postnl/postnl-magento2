@@ -81,6 +81,7 @@ interface ShipmentRepositoryInterface
     /**
      * Retrieve a list of PostNL shipments.
      *
+     * @api
      * @param \Magento\Framework\Api\SearchCriteriaInterface $criteria
      * @return \Magento\Framework\Api\SearchResultsInterface
      */

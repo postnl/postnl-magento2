@@ -54,6 +54,7 @@ interface OrderRepositoryInterface
     /**
      * Retrieve a list of PostNL orders.
      *
+     * @api
      * @param \Magento\Framework\Api\SearchCriteriaInterface $criteria
      * @return \Magento\Framework\Api\SearchResultsInterface
      */
