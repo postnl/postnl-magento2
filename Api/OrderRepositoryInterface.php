@@ -87,6 +87,9 @@ interface OrderRepositoryInterface
     public function create();
 
     /**
+     * Get by field with value
+     *
+     * @api
      * @param string $field
      * @param string $value
      *

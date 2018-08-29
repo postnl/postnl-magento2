@@ -60,8 +60,11 @@ interface ShipmentRepositoryInterface
     public function getById($identifier);
 
     /**
-     * @param $field
-     * @param $value
+     * Find by field with value
+     *
+     * @api
+     * @param string $field
+     * @param string|int $value
      *
      * @return \TIG\PostNL\Api\Data\ShipmentInterface|null
      */
