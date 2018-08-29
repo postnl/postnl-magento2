@@ -89,6 +89,12 @@
     <type name="TIG\PostNL\Setup\UpgradeSchema">
         <arguments>
             <argument name="upgradeSchemaObjects" xsi:type="array">
+                <item name="v1.5.1" xsi:type="array">
+                    <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V151\Schema\SalesShipmentGridColumns</item>
+                    <item name="SalesOrderGridColumns" xsi:type="object">TIG\PostNL\Setup\V151\Schema\SalesOrderGridColumns</item>
+                    <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V151\Schema\UpgradeOrderTable</item>
+                    <item name="UpgradeShipmentTable" xsi:type="object">TIG\PostNL\Setup\V151\Schema\UpgradeShipmentTable</item>
+                </item>
                 <item name="v1.4.1" xsi:type="array">
                     <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V141\Schema\UpgradeOrderTable</item>
                 </item>
@@ -141,6 +147,14 @@
         </arguments>
     </type>
 
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="postnlSyncConfirmStatus" xsi:type="object">TIG\PostNL\Console\Sync\ConfirmStatus</item>
+            </argument>
+        </arguments>
+    </type>
+
     <virtualType name="PostNLShipmentGridAggregator" type="Magento\Sales\Model\ResourceModel\Grid">
         <arguments>
             <argument name="mainTableName" xsi:type="string">sales_shipment</argument>
@@ -158,6 +172,7 @@
                 <item name="tig_postnl_ship_at" xsi:type="string">tig_postnl_shipment.ship_at</item>
                 <item name="tig_postnl_product_code" xsi:type="string">tig_postnl_shipment.product_code</item>
                 <item name="tig_postnl_confirmed_at" xsi:type="string">tig_postnl_shipment.confirmed_at</item>
+                <item name="tig_postnl_confirmed" xsi:type="string">tig_postnl_shipment.confirmed</item>
             </argument>
         </arguments>
     </virtualType>
@@ -170,6 +185,12 @@
     </type>
 
     <type name="TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\UpdateOrderGrid">
+        <arguments>
+            <argument name="orderGrid" xsi:type="object">PostNLOrderGridAggregator</argument>
+        </arguments>
+    </type>
+
+    <type name="TIG\PostNL\Observer\SalesOrderSaveAfter\UpdateOrderGrid">
         <arguments>
             <argument name="orderGrid" xsi:type="object">PostNLOrderGridAggregator</argument>
         </arguments>
@@ -191,6 +212,7 @@
                 <item name="entity_id" xsi:type="string">sales_order.entity_id</item>
                 <item name="tig_postnl_ship_at" xsi:type="string">tig_postnl_order.ship_at</item>
                 <item name="tig_postnl_product_code" xsi:type="string">tig_postnl_order.product_code</item>
+                <item name="tig_postnl_confirmed" xsi:type="string">tig_postnl_order.confirmed</item>
             </argument>
         </arguments>
     </virtualType>
@@ -220,4 +242,5 @@
             </argument>
         </arguments>
     </type>
+
 </config>

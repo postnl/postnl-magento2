@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,16 +28,32 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="1.5.1">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Directory"/>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Quote"/>
-            <module name="Magento_Checkout"/>
-        </sequence>
-    </module>
-</config>
+ */
+namespace TIG\PostNL\Setup\V151\Schema;
+
+use TIG\PostNL\Setup\AbstractColumnsInstaller;
+
+class SalesShipmentGridColumns extends AbstractColumnsInstaller
+{
+    const TABLE_NAME = 'sales_shipment_grid';
+
+    // @codingStandardsIgnoreLine
+    protected $columns = [
+        'tig_postnl_confirmed',
+    ];
+
+    /**
+     * @return array
+     */
+    public function installTigPostnlConfirmedColumn()
+    {
+        return [
+            // @codingStandardsIgnoreLine
+            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
+            'default' => 0,
+            'nullable' => false,
+            'comment' => 'PostNL Confirmed',
+            'after' => 'tig_postnl_product_code',
+        ];
+    }
+}

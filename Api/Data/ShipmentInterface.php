@@ -206,9 +206,21 @@ interface ShipmentInterface
     public function setConfirmedAt($value);
 
     /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function setConfirmed($value);
+
+    /**
      * @return string|null
      */
     public function getConfirmedAt();
+
+    /**
+     * @return bool
+     */
+    public function getConfirmed();
 
     /**
      * @param string $value

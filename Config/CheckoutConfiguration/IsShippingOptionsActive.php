@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Config\CheckoutConfiguration;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Quote\CheckIfQuoteItemsAreInStock;
@@ -109,7 +110,9 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
      */
     private function validateStockOptions()
     {
-        if ($this->quoteItemsAreInStock->getValue()) {
+        $manageStock = $this->shippingOptions->getManageStock();
+
+        if ($manageStock === false || $this->quoteItemsAreInStock->getValue()) {
             return true;
         }
 

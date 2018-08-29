@@ -43,31 +43,33 @@ class ShipmentTypeTest extends TestCase
     public function returnsTheCorrectResultProvider()
     {
         return [
-            'Daytime' => ['3085', 'Daytime', 'Domestic', ''],
-            'Evening' => ['3090', 'Evening', 'Domestic', 'Evening'],
-            'Evening BE' => ['4941', 'Evening', 'EPS', 'Evening'],
-            'Extra@Home' => ['3790', 'ExtraAtHome', 'Extra@Home', ''],
-            'Sunday' => ['3385', 'Sunday', 'Domestic', 'Sunday'],
-            'Pickup Delivery' => ['3533', 'PG', 'Post office', ''],
-            'Pickup Delivery Early' => ['3543', 'PGE', 'Post office', 'Early morning pickup'],
-            'EPS' => ['4950', 'EPS', 'EPS', ''],
+            'Daytime' => ['3085', 'Daytime', 'Domestic', '', 'Standard shipment'],
+            'Evening' => ['3090', 'Evening', 'Domestic', 'Evening', 'Signature on delivery + Delivery to stated address only'],
+            'Evening BE' => ['4941', 'Evening', 'EPS', 'Evening', 'EU Pack Standard evening'],
+            'Extra@Home' => ['3790', 'ExtraAtHome', 'Extra@Home', '', 'Extra@Home Drempelservice 1 person delivery NL'],
+            'Sunday' => ['3385', 'Sunday', 'Domestic', 'Sunday', 'Deliver to stated address only'],
+            'Pickup Delivery' => ['3533', 'PG', 'Post office', '', 'Post Office + Signature on Delivery'],
+            'Pickup Delivery Early' => ['3543', 'PGE', 'Post office', 'Early morning pickup', 'Post Office + Signature on Delivery + Notification'],
+            'EPS' => ['4950', 'EPS', 'EPS', '', 'EU Pack Special'],
         ];
     }
 
     /**
      * @param $productCode
      * @param $shipmentType
+     * @param $expectedLabel
      * @param $expectedType
      * @param $expectedComment
      *
      * @dataProvider returnsTheCorrectResultProvider
      */
-    public function testReturnsTheCorrectResult($productCode, $shipmentType, $expectedType, $expectedComment)
+    public function testReturnsTheCorrectResult($productCode, $shipmentType, $expectedLabel, $expectedType, $expectedComment)
     {
         $optionsMock = $this->getFakeMock(ProductOptions::class)->getMock();
         $getLabel = $optionsMock->method('getLabel');
         $getLabel->willReturn([
-            'label' => $expectedType,
+            'label' => $expectedLabel,
+            'type' => $expectedType,
             'comment' => $expectedComment
         ]);
 
@@ -78,10 +80,10 @@ class ShipmentTypeTest extends TestCase
 
         $result = $instance->render($productCode, $shipmentType);
 
-        $this->assertContains($expectedType, $result);
+        $this->assertContains($expectedLabel, $result);
 
-        if ($expectedComment) {
-            $this->assertContains($expectedComment, $result);
+        if ($expectedType) {
+            $this->assertContains($expectedType, $result);
         }
     }
 }

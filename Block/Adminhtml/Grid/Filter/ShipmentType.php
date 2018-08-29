@@ -29,11 +29,12 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Renderer;
+namespace TIG\PostNL\Block\Adminhtml\Grid\Filter;
 
+use Magento\Framework\Data\OptionSourceInterface;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
 
-class ShipmentType
+class ShipmentType implements OptionSourceInterface
 {
     /**
      * @var ProductOptions
@@ -52,28 +53,10 @@ class ShipmentType
     }
 
     /**
-     * @param $code
-     * @param $type
-     *
-     * @return string
+     * @return array
      */
-    public function render($code, $type)
+    public function toOptionArray()
     {
-        $type   = $this->productOptions->getLabel($code, $type);
-        $output = (string)$type['label'];
-
-        if ($type['type']) {
-            $output .= ' <em>' . $type['type'] . '</em>';
-        }
-
-        $comment = $type['comment'];
-        if (!$comment) {
-            return $output;
-        }
-
-        $comment = strlen($comment) > 30 ? substr($comment, 0, 30) . '...' : $comment;
-        $output .= '<br><em style="font-size:9px;" title="'.$type['comment'].'">' . $comment . '</em>';
-
-        return $output;
+        return $this->productOptions->toOptionArray();
     }
 }

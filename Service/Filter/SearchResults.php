@@ -64,23 +64,21 @@ class SearchResults
     public function getCollectionItems(SearchCriteriaInterface $criteria, AbstractCollection $collection)
     {
         $searchResults = $this->getSearchResults($criteria);
-
         foreach ($criteria->getFilterGroups() as $filterGroup) {
             $this->handleFilterGroups($filterGroup, $collection);
         }
 
         $searchResults->setTotalCount($collection->getSize());
         $this->handleSortOrders($criteria, $collection);
-
         $collection->setCurPage($criteria->getCurrentPage());
         $collection->setPageSize($criteria->getPageSize());
+
         $objects = [];
         foreach ($collection as $objectModel) {
             $objects[] = $objectModel;
         }
 
         $searchResults->setItems($objects);
-
         return $searchResults;
     }
 
@@ -106,12 +104,7 @@ class SearchResults
         $fields     = [];
         $conditions = [];
 
-        /** @var Filter[] $filters */
-        $filters = array_filter($filterGroup->getFilters(), function ($filter) {
-            return !empty($filter->getValue());
-        });
-
-        foreach ($filters as $filter) {
+        foreach ($filterGroup->getFilters() as $filter) {
             $condition    = $filter->getConditionType() ? $filter->getConditionType() : 'eq';
             $fields[]     = $filter->getField();
             $conditions[] = [$condition => $filter->getValue()];

@@ -29,51 +29,42 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Block\Adminhtml\Renderer;
+namespace TIG\PostNL\Block\Adminhtml\Grid\Order;
 
-use TIG\PostNL\Config\Source\Options\ProductOptions;
+use TIG\PostNL\Block\Adminhtml\Grid\AbstractGrid;
 
-class ShipmentType
+class ConfirmStatus extends AbstractGrid
 {
     /**
-     * @var ProductOptions
-     */
-    private $productOptions;
-
-    /**
-     * ShipmentType constructor.
-     *
-     * @param ProductOptions $productOptions
-     */
-    public function __construct(
-        ProductOptions $productOptions
-    ) {
-        $this->productOptions = $productOptions;
-    }
-
-    /**
-     * @param $code
-     * @param $type
+     * @param $item
      *
      * @return string
      */
-    public function render($code, $type)
+    //@codingStandardsIgnoreLine
+    protected function getCellContents($item)
     {
-        $type   = $this->productOptions->getLabel($code, $type);
-        $output = (string)$type['label'];
+        $confirmedAt = $this->getIsConfirmed($item);
 
-        if ($type['type']) {
-            $output .= ' <em>' . $type['type'] . '</em>';
+        if (!$confirmedAt) {
+            return __('Not confirmed');
         }
 
-        $comment = $type['comment'];
-        if (!$comment) {
-            return $output;
+        return __('Confirmed');
+    }
+
+    /**
+     * @param $item
+     *
+     * @return bool
+     */
+    private function getIsConfirmed($item)
+    {
+        $confirmedAt = $item['tig_postnl_confirmed'];
+
+        if ($confirmedAt === null) {
+            return false;
         }
 
-        $comment = strlen($comment) > 30 ? substr($comment, 0, 30) . '...' : $comment;
-        $output .= '<br><em style="font-size:9px;" title="'.$type['comment'].'">' . $comment . '</em>';
-
-        return $output;
+        return (bool) $confirmedAt;
     }
 }

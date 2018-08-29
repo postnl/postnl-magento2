@@ -36,7 +36,6 @@ namespace TIG\PostNL\Config\Provider;
  */
 class ShippingOptions extends AbstractConfigProvider
 {
-
     const XPATH_SHIPPING_OPTION_ACITVE                    = 'tig_postnl/delivery_settings/shippingoptions_active';
     const XPATH_SHIPPING_OPTION_STOCK                     = 'tig_postnl/stock_settings/stockoptions';
     const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE       = 'tig_postnl/delivery_days/deliverydays_active';
@@ -54,6 +53,7 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE        = 'tig_postnl/track_and_trace/send_track_and_trace_email';
     const XPATH_SHIPPING_OPTION_DELIVERY_DELAY            = 'tig_postnl/track_and_trace/delivery_delay';
     const XPATH_SHIPPING_OPTION_IDCHECK_ACTIVE            = 'tig_postnl/id_check/idcheck_active';
+    const XPATH_ITEM_OPTIONS_MANAGE_STOCK                 = 'cataloginventory/item_options/manage_stock';
 
     private $defaultMaxDeliverydays = '5';
 
@@ -205,6 +205,14 @@ class ShippingOptions extends AbstractConfigProvider
     public function getDeliveryDelay()
     {
         return (int)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_DELIVERY_DELAY);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getManageStock()
+    {
+        return (bool)$this->getConfigFromXpath(self::XPATH_ITEM_OPTIONS_MANAGE_STOCK);
     }
 }
 /**

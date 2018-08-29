@@ -58,6 +58,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     const FIELD_FEE = 'fee';
     const FIELD_SHIP_AT = 'ship_at';
     const FIELD_CONFIRMED_AT = 'confirmed_at';
+    const FIELD_CONFIRMED = 'confirmed';
     const FIELD_PARCEL_COUNT = 'parcel_count';
     const FIELD_SHIPPING_DURATION = 'shipping_duration';
 
@@ -407,5 +408,23 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     public function getShippingDuration()
     {
         return $this->getData(static::FIELD_SHIPPING_DURATION);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setConfirmed($value)
+    {
+        return $this->setData(static::FIELD_CONFIRMED, $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfirmed()
+    {
+        return $this->getData(static::FIELD_CONFIRMED);
     }
 }
