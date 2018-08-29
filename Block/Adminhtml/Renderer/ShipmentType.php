@@ -67,8 +67,11 @@ class ShipmentType
         }
 
         $comment = $type['comment'];
-        $comment = strlen($comment) > 30 ? substr($comment, 0, 30) . '...' : $comment;
+        if (!$comment) {
+            return $output;
+        }
 
+        $comment = strlen($comment) > 30 ? substr($comment, 0, 30) . '...' : $comment;
         $output .= '<br><em style="font-size:9px;" title="'.$type['comment'].'">' . $comment . '</em>';
 
         return $output;
