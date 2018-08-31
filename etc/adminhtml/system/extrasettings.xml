@@ -49,6 +49,13 @@
                 <config_path>tig_postnl/extra_settings_printer/label_size</config_path>
                 <comment><model>TIG\PostNL\Config\Comment\LabelSize</model></comment>
             </field>
+
+            <field id="label_response" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Response</label>
+                <comment>Download or open the pdf in a new browser window.</comment>
+                <source_model>TIG\PostNL\Config\Source\Settings\LabelResponse</source_model>
+                <config_path>tig_postnl/extra_settings_printer/label_response</config_path>
+            </field>
         </group>
 
         <group id="advanced" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">

@@ -64,6 +64,7 @@
 
             <extra_settings_printer>
                 <label_size>A6</label_size>
+                <label_response>inline</label_response>
             </extra_settings_printer>
 
             <postnl_settings>

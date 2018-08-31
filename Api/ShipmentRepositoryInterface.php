@@ -60,7 +60,7 @@ interface ShipmentRepositoryInterface
     public function getById($identifier);
 
     /**
-     * Find by field with value
+     * Find one row by field with specific value.
      *
      * @api
      * @param string $field
