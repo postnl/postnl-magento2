@@ -68,11 +68,11 @@ class PostcodecheckHandlerTest extends TestCase
     {
         return [
             'Correct Response Data' => [
-                '{"status":1,"streetName":"Kabelweg","city":"Amsterdam"}',
+                '[{"status":1,"streetName":"Kabelweg","city":"Amsterdam"}]',
                 ['status' => 1, 'streetName' => 'Kabelweg', 'city' => 'Amsterdam'],
             ],
             'In correct Response Data' => [
-                '{"status":1,"city":"Amsterdam"}',
+                '[{"status":1,"city":"Amsterdam"}]',
                 false,
             ]
         ];

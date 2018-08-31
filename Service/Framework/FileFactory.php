@@ -34,7 +34,6 @@ namespace TIG\PostNL\Service\Framework;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Filesystem;
-use Magento\Framework\Phrase;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 
 // @codingStandardsIgnoreFile
@@ -91,7 +90,7 @@ class FileFactory
             ->setHeader('Pragma', 'public', true)
             ->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0', true)
             ->setHeader('Content-type', $contentType, true)
-            ->setHeader('Content-Length', $contentLength === null ? strlen($content) : $contentLength, true)
+            ->setHeader('Content-Length', $contentLength === null ? strlen((string)$content) : $contentLength, true)
             ->setHeader('Content-Disposition', $responseType.'; filename="' . $fileName . '"', true)
             ->setHeader('Last-Modified', date('r'), true);
 
@@ -150,7 +149,7 @@ class FileFactory
         $this->isFile = true;
         $this->file   = $content['value'];
         if (!$dir->isFile($this->file)) {
-            throw new \Exception((string)new Phrase('File not found'));
+            throw new \Exception(__('File not found'));
         }
 
         return $dir->stat($this->file)['size'];

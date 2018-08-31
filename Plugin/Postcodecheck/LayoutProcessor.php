@@ -36,6 +36,7 @@ use TIG\PostNL\Config\Provider\Webshop;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 
+// @codingStandardsIgnoreFile
 class LayoutProcessor
 {
     /**
@@ -69,7 +70,6 @@ class LayoutProcessor
      *
      * @return array
      */
-    // @codingStandardsIgnoreLine
     public function afterProcess($subject, array $jsLayout)
     {
         if (!$this->webshopConfig->getIsAddressCheckEnabled()) {
@@ -115,7 +115,6 @@ class LayoutProcessor
             return $this->processSingleBillingForm($jsLayout) ?: $jsLayout;
         }
 
-        // @codingStandardsIgnoreStart
         foreach ($billingFields as $key => &$billingForm) {
             if (strpos($key, '-form') === false) {
                 continue;
@@ -131,7 +130,6 @@ class LayoutProcessor
             $this->setAdditionalClass($billingForm['children']['form-fields']['children'], 'city');
             $this->setAdditionalClass($billingForm['children']['form-fields']['children'], 'street');
         }
-        // @codingStandardsIgnoreEnd
 
         return $jsLayout;
     }

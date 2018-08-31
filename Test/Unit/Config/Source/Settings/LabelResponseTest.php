@@ -29,31 +29,28 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Plugin\Postcodecheck\Fields;
+namespace TIG\PostNL\Test\Unit\Config\Source\Settings;
 
-class HousenumberAddition implements FieldInterface
+use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\Source\Settings\LabelResponse;
+
+class LabelResponseTest extends TestCase
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function get($scope)
+    protected $instanceClass = LabelResponse::class;
+
+    public function testToOptionArray()
     {
-        return [
-            'component'  => 'Magento_Ui/js/form/element/abstract',
-            'config'     => [
-                'customScope' => $scope . '.custom_attributes',
-                'template'    => 'ui/form/field',
-                'elementTmpl' => 'TIG_PostNL/form/element/input'
-            ],
-            'provider'   => 'checkoutProvider',
-            'dataScope'  => $scope . '.custom_attributes.postnl_housenumber_addition',
-            // @codingStandardsIgnorLine
-            'label'      => __('Addition'),
-            'sortOrder'  => '120',
-            'validation' => [
-                'required-entry' => false,
-            ],
-            'visible'    => true
-        ];
+        $instance = $this->getInstance();
+        $result = $instance->toOptionArray();
+
+        $this->assertCount(2, $result);
+
+        foreach ($result as $responseType) {
+            $this->assertArrayHasKey('label', $responseType);
+            $this->assertArrayHasKey('value', $responseType);
+
+            $inArray = in_array($responseType['value'], ['attachment', 'inline']);
+            $this->assertTrue($inArray);
+        }
     }
 }
