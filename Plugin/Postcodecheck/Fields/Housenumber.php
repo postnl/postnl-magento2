@@ -47,7 +47,7 @@ class Housenumber implements FieldInterface
             ],
             'provider'   => 'checkoutProvider',
             'dataScope'  => $scope . '.custom_attributes.postnl_housenumber',
-            // @codingStandardsIgnorLine
+            // @codingStandardsIgnoreLine
             'label'      => __('House number'),
             'sortOrder'  => '115',
             'validation' => [

@@ -28,13 +28,12 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-/* jshint ignore:start */
 define([
     'jquery',
     'Magento_Ui/js/form/components/group',
     'ko',
     'uiRegistry'
-], function(
+], function (
     $,
     uiComponent,
     ko,
@@ -63,24 +62,24 @@ define([
         },
 
         disableAddressFields : function () {
-            // TODO: Make this compatible with less than 3 address fields
+            // TO DO: Make this compatible with less than 3 address fields
             var streetfields = [
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.0',
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.city'
             ];
-            Registry.get(streetfields, function(element1, element2) {
+            Registry.get(streetfields, function (element1, element2) {
                 element1.disable();
                 element2.disable();
             });
         },
 
         enableAddressFields : function () {
-            // TODO: Make this compatible with less than 3 address fields
+            // TO DO: Make this compatible with less than 3 address fields
             var streetfields = [
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.0',
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.city'
             ];
-            Registry.get(streetfields, function(element1, element2) {
+            Registry.get(streetfields, function (element1, element2) {
                 element1.enable();
                 element2.enable();
             });
@@ -125,7 +124,7 @@ define([
             Registry.get([
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.housenumber',
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.postcode'
-                ], function(housenumberElement, postcodeElement) {
+                ], function (housenumberElement, postcodeElement) {
                 housenumber = housenumberElement.value();
                 postcode = postcodeElement.value();
             });
@@ -175,4 +174,3 @@ define([
         }
     });
 });
-/* jshint ignore:end */

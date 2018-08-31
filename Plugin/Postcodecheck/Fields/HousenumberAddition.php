@@ -47,7 +47,7 @@ class HousenumberAddition implements FieldInterface
             ],
             'provider'   => 'checkoutProvider',
             'dataScope'  => $scope . '.custom_attributes.postnl_housenumber_addition',
-            // @codingStandardsIgnorLine
+            // @codingStandardsIgnoreLine
             'label'      => __('Addition'),
             'sortOrder'  => '120',
             'validation' => [
