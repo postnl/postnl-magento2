@@ -35,7 +35,7 @@
 
     <!-- Extra at Home -->
 
-     <group id="extra_at_home" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+     <group id="extra_at_home" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Extra@Home</label>
             <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
             <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>

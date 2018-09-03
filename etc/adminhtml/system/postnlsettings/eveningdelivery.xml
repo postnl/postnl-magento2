@@ -35,7 +35,7 @@
 
     <!-- Evening Delivery -->
 
-     <group id="evening_delivery" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+     <group id="evening_delivery" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Evening Delivery</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>

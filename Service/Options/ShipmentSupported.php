@@ -77,7 +77,7 @@ class ShipmentSupported
     private function availableOptions($country)
     {
         // These are the options selected in the configuration by user.
-        $supportedOptions = explode(',', $this->optionsProvider->getSupportedProductOptions());
+        $supportedOptions = $this->optionsProvider->getSupportedProductOptions();
 
         $optionsAllowed = $this->getProductOptions($country);
         if (!in_array($country, $this->allowedCountries)) {

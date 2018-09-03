@@ -35,7 +35,7 @@
 
      <!-- Delivery Days -->
 
-    <group id="delivery_days" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="delivery_days" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Delivery Days</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>

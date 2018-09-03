@@ -99,8 +99,7 @@ class ConfigTest extends TestCase
     {
         /** @var ProductOptions $configProvider */
         $configProvider = $this->getObject(ProductOptions::class);
-        $value = $configProvider->getSupportedProductOptions();
-        $productOptions = explode(',', $value);
+        $productOptions = $configProvider->getSupportedProductOptions();
 
         $this->assertContains($productCode, $productOptions);
     }
@@ -131,8 +130,7 @@ class ConfigTest extends TestCase
     {
         /** @var ProductOptions $configProvider */
         $configProvider = $this->getObject(ProductOptions::class);
-        $value = $configProvider->getSupportedProductOptions();
-        $productOptions = explode(',', $value);
+        $productOptions = $configProvider->getSupportedProductOptions();
 
         $this->assertNotContains($productCode, $productOptions);
     }

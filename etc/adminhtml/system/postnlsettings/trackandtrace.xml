@@ -33,7 +33,7 @@
 -->
 
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="track_and_trace" translate="label" type="text" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="track_and_trace" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Track and Trace</label>
             <comment><![CDATA[Automatically send Track and Trace email to customer. Read more about the <a href="https://servicedesk.tig.nl/hc/nl/articles/115004148927" target="_blank" title="track and trace">Track and Trace</a> e-mails within the extension.]]></comment>
             <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>

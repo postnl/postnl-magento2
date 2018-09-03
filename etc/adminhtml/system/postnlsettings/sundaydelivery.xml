@@ -32,7 +32,7 @@
  *
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="sunday_delivery" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="sunday_delivery" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Sunday Delivery</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>

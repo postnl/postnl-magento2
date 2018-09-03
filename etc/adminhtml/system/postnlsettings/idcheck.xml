@@ -35,7 +35,7 @@
 
      <!-- ID Check -->
 
-    <group id="id_check" translate="label" type="text" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="id_check" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>ID Check</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>

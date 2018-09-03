@@ -35,7 +35,7 @@
 
      <!-- Post Offices -->
 
-    <group id="post_offices" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="post_offices" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Post Offices</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>

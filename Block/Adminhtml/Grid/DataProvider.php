@@ -87,7 +87,6 @@ class DataProvider extends Template implements BlockInterface
      */
     public function getProductOptions()
     {
-        $this->productOptions->setOptionsBySupportedType();
         $supportedTypes = $this->productOptions->get();
 
         $options = [];

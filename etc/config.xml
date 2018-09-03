@@ -89,7 +89,6 @@
             <delivery_settings>
                 <default_option>3085</default_option>
                 <use_alternative_default>0</use_alternative_default>
-                <supported_options>2928,3085,3087,3094,3089,3090,3096,3189,3385,3389,3533,3534,3543,3544,4938,4941,4950,4952</supported_options>
             </delivery_settings>
 
             <delivery_days>

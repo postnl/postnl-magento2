@@ -95,12 +95,13 @@
                 <config_path>tig_postnl/delivery_settings/shippingoptions_active</config_path>
             </field>
 
-            <field id="supported_options" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                <label>Select the available options</label>
-                <comment><![CDATA[Select the PostNL product that you want to use for your shipments.]]></comment>
-                <source_model>TIG\PostNL\Config\Source\Options\ProductOptions</source_model>
-                <config_path>tig_postnl/delivery_settings/supported_options</config_path>
-            </field>
+            <!-- Since 1.5.1 all product options are supported automaticly -->
+            <!--<field id="supported_options" translate="label" type="multiselect" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">-->
+                <!--<label>Select the available options</label>-->
+                <!--<comment><![CDATA[Select the PostNL product that you want to use for your shipments.]]></comment>-->
+                <!--<source_model>TIG\PostNL\Config\Source\Options\ProductOptions</source_model>-->
+                <!--<config_path>tig_postnl/delivery_settings/supported_options</config_path>-->
+            <!--</field>-->
 
              <field id="default_option" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Default delivery</label>
@@ -136,13 +137,13 @@
                 </depends>
             </field>
 
-            <include path="TIG_PostNL::system/postnlsettings/idcheck.xml"/>
-            <include path="TIG_PostNL::system/postnlsettings/stock.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/eveningdelivery.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/sundaydelivery.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/deliverydays.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/postoffices.xml"/>
-            <include path="TIG_PostNL::system/postnlsettings/eveningdelivery.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/stock.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/idcheck.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/extraathome.xml"/>
-            <include path="TIG_PostNL::system/postnlsettings/sundaydelivery.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/trackandtrace.xml"/>
 
         </group>
