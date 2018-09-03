@@ -125,14 +125,17 @@
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
             <field id="firstname" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>First name</label>
+                <validate>required-entry</validate>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/firstname</config_path>
             </field>
             <field id="lastname" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Last name</label>
+                <validate>required-entry</validate>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/lastname</config_path>
             </field>
             <field id="company" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Company</label>
+                <validate>required-entry</validate>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/company</config_path>
             </field>
             <field id="department" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -141,10 +144,12 @@
             </field>
             <field id="streetname" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Street name</label>
+                <validate>required-entry</validate>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/streetname</config_path>
             </field>
             <field id="housenumber" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>House number</label>
+                <validate>required-entry</validate>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/housenumber</config_path>
             </field>
             <field id="housenumber_addition" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -153,10 +158,12 @@
             </field>
             <field id="postcode" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Postcode</label>
+                <validate>required-entry</validate>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/postcode</config_path>
             </field>
             <field id="city" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>City</label>
+                <validate>required-entry</validate>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/city</config_path>
             </field>
         </group>
