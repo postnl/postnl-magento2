@@ -88,8 +88,8 @@ class WebshopTest extends AbstractConfigurationTest
 
     public function testGetTrackAndTraceEmailTemplate() {
         $instance = $this->getInstance();
-        $this->setXpath(Webshop::XPATH_TRACK_AND_TRACE_MAIL_TEMPLATE, 'tig_postnl_webshop_track_and_trace_template');
-        $this->assertEquals('tig_postnl_webshop_track_and_trace_template', $instance->getTrackAndTraceEmailTemplate());
+        $this->setXpath(Webshop::XPATH_TRACK_AND_TRACE_MAIL_TEMPLATE, 'tig_postnl_postnl_settings_delivery_settings_track_and_trace_template');
+        $this->assertEquals('tig_postnl_postnl_settings_delivery_settings_track_and_trace_template', $instance->getTrackAndTraceEmailTemplate());
     }
 
     public function testGetTrackAndTraceBccEmail() {

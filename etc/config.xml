@@ -76,7 +76,7 @@
             </postnl_settings>
 
             <track_and_trace>
-                <template>tig_postnl_webshop_track_and_trace_template</template>
+                <template>tig_postnl_postnl_settings_delivery_settings_track_and_trace_template</template>
                 <service_url>https://postnl.nl/tracktrace/?</service_url>
                 <delivery_delay>1</delivery_delay>
                 <email_enabled>1</email_enabled>

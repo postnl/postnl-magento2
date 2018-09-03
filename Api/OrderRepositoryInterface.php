@@ -46,10 +46,11 @@ interface OrderRepositoryInterface
      * Return a specific PostNL order.
      *
      * @api
-     * @param int $identifier
+     * @param int $id
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
-    public function getById($identifier);
+    // @codingStandardsIgnoreLine
+    public function getById($id);
 
     /**
      * Retrieve a list of PostNL orders.
@@ -73,10 +74,11 @@ interface OrderRepositoryInterface
      * Delete a PostNL order.
      *
      * @api
-     * @param int $identifier
+     * @param int $id
      * @return bool
      */
-    public function deleteById($identifier);
+    // @codingStandardsIgnoreLine
+    public function deleteById($id);
 
     /**
      * Create a PostNL order.
