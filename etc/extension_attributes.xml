@@ -33,7 +33,7 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
     <extension_attributes for="Magento\Quote\Api\Data\AddressInterface">
-        <attribute code="postnl_housenumber" type="string" />
-        <attribute code="postnl_housenumber_addition" type="string" />
+        <attribute code="tig_housenumber" type="string" />
+        <attribute code="tig_housenumber_addition" type="string" />
     </extension_attributes>
 </config>

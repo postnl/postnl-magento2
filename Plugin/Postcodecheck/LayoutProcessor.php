@@ -215,6 +215,15 @@ class LayoutProcessor
             $additionalClass = $additionalClass . ' ' . 'postnl_postcodecheck_disableable';
         }
 
+        if ($section == 'street') {
+            $fields[$section]['children'][1]['additionalClasses'] = 'postnl_hidden';
+            $fields[$section]['children'][2]['additionalClasses'] = 'postnl_hidden';
+        }
+
+        if ($section == 'postcode') {
+            $fields[$section]['visible'] = false;
+        }
+
         if ($disableRequired) {
             $fields[$section]['validation']['required-entry'] = false;
         }
