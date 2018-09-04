@@ -170,7 +170,7 @@ define([
                 self.handleResponse(data);
             }).fail(function (data) {
                 console.error("Error receiving response from SAM");
-                self.showAddressFields(true)
+                self.showAddressFields(true);
             }).always(function (data) {
                 self.isLoading(false);
             });
