@@ -29,6 +29,25 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 var config = {
+    config: {
+        mixins: {
+            'Magento_Checkout/js/action/set-shipping-information': {
+                'TIG_PostNL/js/action/set-shipping-information-mixin': true
+            },
+            'Magneto_Checkout/js/action/set-billing-address': {
+                'TIG_PostNL/js/action/set-billing-address': true
+            },
+            'Magento_Checkout/js/action/place-order': {
+                'TIG_PostNL/js/action/set-billing-address-mixin': true
+            },
+            'Magento_Checkout/js/action/create-billing-address': {
+                'TIG_PostNL/js/action/set-billing-address-mixin': true
+            },
+            'Magento_Checkout/js/action/set-payment-information': {
+                'TIG_PostNL/js/action/set-billing-address-mixin': true
+            }
+        }
+    },
     map: {
         '*': {
             "Magento_Checkout/template/shipping-address/shipping-method-item.html" :
