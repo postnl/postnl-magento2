@@ -179,7 +179,7 @@ define([
         handleResponse : function (data) {
             var self = this;
             if (data.status === false) {
-                // @todo when a wrong address is supplied, give an error message
+                // to do when a wrong address is supplied, give an error message
                 console.error(data.error);
                 self.showAddressFields(true);
             }
