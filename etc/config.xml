@@ -84,6 +84,7 @@
 
             <extra_settings_advanced>
                 <allowed_shipping_methods>tig_postnl_regular</allowed_shipping_methods>
+                <show_grid_toolbar>1</show_grid_toolbar>
             </extra_settings_advanced>
 
             <delivery_settings>

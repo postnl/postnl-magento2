@@ -54,6 +54,7 @@ class Webshop extends AbstractConfigProvider
     const XPATH_TRACK_AND_TRACE_MAIL_TEMPLATE = 'tig_postnl/track_and_trace/template';
 
     const XPATH_ADVANCED_ALLOWED_METHODS      = 'tig_postnl/extra_settings_advanced/allowed_shipping_methods';
+    const XPATH_SHOW_GRID_TOOLBAR             = 'tig_postnl/extra_settings_advanced/show_grid_toolbar';
 
     const XPATH_ADDRESS_CHECK_ENABLED         = 'tig_postnl/addresscheck/enable_postcodecheck';
     const XPATH_ADDRESS_CHECK_COMPATIBLE      = 'tig_postnl/addresscheck/checkout_compatible';
@@ -197,5 +198,15 @@ class Webshop extends AbstractConfigProvider
         }
 
         return explode(',', $shippingMethods);
+    }
+
+    /**
+     * @param null|int $storeId
+     *
+     * @return bool
+     */
+    public function getShowToolbar($storeId = null)
+    {
+        return $this->getConfigFromXpath(self::XPATH_SHOW_GRID_TOOLBAR, $storeId);
     }
 }

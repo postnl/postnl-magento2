@@ -35,10 +35,12 @@ use Magento\Backend\Block\Template;
 use Magento\Framework\View\Element\BlockInterface;
 use Magento\Framework\App\DeploymentConfig\Reader;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
+use TIG\PostNL\Config\Provider\Webshop as WebshopConfig;
 use TIG\PostNL\Config\Provider\ProductOptions as OptionConfig;
 
 class DataProvider extends Template implements BlockInterface
 {
+    const XPATH_SHOW_GRID_TOOLBAR = 'tig_postnl/extra_settings_advanced/show_grid_toolbar';
     /**
      * @var string
      */
@@ -61,12 +63,18 @@ class DataProvider extends Template implements BlockInterface
     private $optionConfig;
 
     /**
+     * @var WebshopConfig
+     */
+    private $webshopConfig;
+
+    /**
      * DataProvider constructor.
      *
      * @param Template\Context $context
      * @param Reader           $reader
      * @param ProductOptions   $productOptions
      * @param OptionConfig     $optionConfig
+     * @param WebshopConfig    $webshopConfig
      * @param array            $data
      */
     public function __construct(
@@ -74,11 +82,13 @@ class DataProvider extends Template implements BlockInterface
         Reader $reader,
         ProductOptions $productOptions,
         OptionConfig $optionConfig,
+        WebshopConfig $webshopConfig,
         array $data = []
     ) {
         $this->configReader = $reader;
         $this->productOptions = $productOptions;
         $this->optionConfig = $optionConfig;
+        $this->webshopConfig = $webshopConfig;
         parent::__construct($context, $data);
     }
 
@@ -113,5 +123,13 @@ class DataProvider extends Template implements BlockInterface
         $config = $this->configReader->load();
         $adminSuffix = $config['backend']['frontName'];
         return $this->getBaseUrl() . $adminSuffix . '/';
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowToolbar()
+    {
+        return $this->webshopConfig->getShowToolbar();
     }
 }
