@@ -37,6 +37,7 @@
     ], function(url, DataProvider) {
         DataProvider.setProductOptions('<?php /* @escapeNotVerified */ echo $block->getProductOptions();?>');
         DataProvider.setDefaultOption('<?php /* @escapeNotVerified */ echo $block->getDefaultProductOption();?>');
+        DataProvider.setShowToolbar('<?php /* @escapeNotVerified */ echo $block->getShowToolbar();?>');
         return url.setBaseUrl('<?php /* @escapeNotVerified */ echo $block->getAdminBaseUrl();?>');
     })
 </script>

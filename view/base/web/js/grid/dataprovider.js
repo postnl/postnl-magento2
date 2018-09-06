@@ -32,6 +32,7 @@
 define(['jquery', 'mage/url'], function ($, url) {
     var productOptions = '';
     var defaultOption = '3085';
+    var showGridToolbar = 1;
 
     return {
 
@@ -53,6 +54,14 @@ define(['jquery', 'mage/url'], function ($, url) {
             }
 
             return JSON.parse(productOptions);
+        },
+
+        setShowToolbar: function (showToolbar) {
+            showGridToolbar = showToolbar
+        },
+
+        getShowToolbar: function (showToolbar) {
+            return showGridToolbar;
         },
 
         getInputWarningMessage: function (option) {
