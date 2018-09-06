@@ -60,7 +60,7 @@ define(['jquery', 'mage/url'], function ($, url) {
             showGridToolbar = showToolbar
         },
 
-        getShowToolbar: function (showToolbar) {
+        getShowToolbar: function () {
             return showGridToolbar;
         },
 

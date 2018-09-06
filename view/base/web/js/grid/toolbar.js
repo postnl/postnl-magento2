@@ -60,7 +60,8 @@ define([
             optionList : ko.observableArray(
                 DataProvider.getProductOptions()
             ),
-            showToolbar : ko.observable(DataProvider.getShowToolbar())
+            showToolbar : ko.observable(DataProvider.getShowToolbar()),
+            jsLoaded : true
         },
 
         /**
