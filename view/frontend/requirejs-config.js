@@ -52,6 +52,13 @@ var config = {
         '*': {
             "Magento_Checkout/template/shipping-address/shipping-method-item.html" :
                 "TIG_PostNL/template/shipping-address/shipping-method-item.html",
+            //Postcodecheck housenumber & addition in shipping and billing fields
+            "Magento_Checkout/template/shipping-address/address-renderer/default.html" :
+                "TIG_PostNL/template/shipping-address/address-renderer/default.html",
+            "Magento_Checkout/template/shipping-information/address-renderer/default.html" :
+                "TIG_PostNL/template/shipping-information/address-renderer/default.html",
+            "Magento_Checkout/template/billing-address/details.html" :
+                "TIG_PostNL/template/billing-address/details.html",
             //Magento Backwards Compatibility
             "Magento_Checkout/template/shipping.html" :
                 "TIG_PostNL/template/shipping.html",
