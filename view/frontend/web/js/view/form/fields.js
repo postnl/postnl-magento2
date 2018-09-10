@@ -61,27 +61,20 @@ define([
             return this;
         },
 
-        showAddressFields : function (showFields) {
-            var shippingFields = [
+        enableAddressFields : function (showFields) {
+            var fields = [
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.0',
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.city'
             ];
-            var billingFields = [
-                'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.street.0',
-                'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.city'
-            ];
 
-            Registry.get(shippingFields, function (streetElement, cityElement) {
-                if (showFields === true) {
-                    streetElement.enable();
-                    cityElement.enable();
-                } else {
-                    streetElement.disable();
-                    cityElement.disable();
-                }
-            });
+            if (this.customScope === 'billingAddresscheckmo') {
+                fields = [
+                    'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.street.0',
+                    'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.city'
+                ];
+            }
 
-            Registry.get(billingFields, function (streetElement, cityElement) {
+            Registry.get(fields, function (streetElement, cityElement) {
                 if (showFields === true) {
                     streetElement.enable();
                     cityElement.enable();
@@ -102,7 +95,7 @@ define([
             }
 
             if (country !== 'NL') {
-                self.showAddressFields(true);
+                self.enableAddressFields(true);
                 $('.postnl_hidden').show();
                 return;
             } else {
@@ -125,8 +118,11 @@ define([
 
             if (formData !== false) {
                 self.isLoading(true);
-                self.showAddressFields(false);
+                self.enableAddressFields(false);
                 self.getAddressData(formData);
+            } else {
+                self.isLoading(false);
+                self.enableAddressFields(true);
             }
         },
 
@@ -136,10 +132,20 @@ define([
 
             var postcodeRegex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
             // Wait for the form to load, once loaded get the values of housenumber and postcode
-            Registry.get([
+
+            var fields = [
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.housenumber',
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.postcode'
-                ], function (housenumberElement, postcodeElement) {
+            ];
+
+            if (this.customScope === 'billingAddresscheckmo') {
+                fields = [
+                    'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.postcode-field-group.field-group.housenumber',
+                    'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.postcode-field-group.field-group.postcode'
+                ];
+            }
+
+            Registry.get(fields, function (housenumberElement, postcodeElement) {
                 housenumber = housenumberElement.value();
                 postcode = postcodeElement.value();
             });
@@ -170,7 +176,7 @@ define([
                 self.handleResponse(data);
             }).fail(function (data) {
                 console.error("Error receiving response from SAM");
-                self.showAddressFields(true);
+                self.enableAddressFields(true);
             }).always(function (data) {
                 self.isLoading(false);
             });
@@ -181,7 +187,7 @@ define([
             if (data.status === false) {
                 // to do when a wrong address is supplied, give an error message
                 console.error(data.error);
-                self.showAddressFields(true);
+                self.enableAddressFields(true);
             }
             // If the data is correct, set the streetname and city
             if (data.streetName && data.city) {
