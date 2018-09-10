@@ -29,31 +29,37 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Plugin\Postcodecheck\Fields;
+namespace TIG\PostNL\Plugin\Postcodecheck\Management;
 
-class Housenumber implements FieldInterface
+use Magento\Quote\Api\Data\AddressInterface;
+
+class Shipping
 {
     /**
-     * {@inheritDoc}
+     * @param                   $subject -> Magento\Quote\Model\ShippingAddressManagement
+     * @param                   $cartId
+     * @param AddressInterface  $address
+     *
+     * @return array
      */
-    public function get($scope)
+    // @codingStandardsIgnoreLine
+    public function beforeAssign($subject, $cartId, AddressInterface $address)
     {
-        return [
-            'component'  => 'Magento_Ui/js/form/element/abstract',
-            'config'     => [
-                'customScope' => $scope . '.custom_attributes',
-                'template'    => 'ui/form/field',
-                'elementTmpl' => 'TIG_PostNL/form/element/input'
-            ],
-            'provider'   => 'checkoutProvider',
-            'dataScope'  => $scope . '.custom_attributes.tig_housenumber',
-            // @codingStandardsIgnoreLine
-            'label'      => __('House number'),
-            'sortOrder'  => '115',
-            'validation' => [
-                'required-entry' => true,
-            ],
-            'visible'    => true
-        ];
+        $attributes = $address->getExtensionAttributes();
+        if (empty($attributes)) {
+            return [$cartId, $address];
+        }
+
+        if (!$attributes->getTigHousenumber()) {
+            return [$cartId, $address];
+        }
+
+        $address->setStreet(
+            $address->getStreet()[0] . ' ' .
+            $attributes->getTigHousenumber() . ' ' .
+            $attributes->getTigHousenumberAddition()
+        );
+
+        return [$cartId, $address];
     }
 }

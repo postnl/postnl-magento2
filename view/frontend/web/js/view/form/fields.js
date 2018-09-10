@@ -61,32 +61,46 @@ define([
             return this;
         },
 
-        disableAddressFields : function () {
-            // TO DO: Make this compatible with less than 3 address fields
-            var streetfields = [
+        enableAddressFields : function (showFields) {
+            var fields = [
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.0',
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.city'
             ];
-            Registry.get(streetfields, function (element1, element2) {
-                element1.disable();
-                element2.disable();
-            });
-        },
 
-        enableAddressFields : function () {
-            // TO DO: Make this compatible with less than 3 address fields
-            var streetfields = [
-                'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.0',
-                'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.city'
-            ];
-            Registry.get(streetfields, function (element1, element2) {
-                element1.enable();
-                element2.enable();
+            if (this.customScope === 'billingAddresscheckmo') {
+                fields = [
+                    'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.street.0',
+                    'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.city'
+                ];
+            }
+
+            Registry.get(fields, function (streetElement, cityElement) {
+                if (showFields === true) {
+                    streetElement.enable();
+                    cityElement.enable();
+                } else {
+                    streetElement.disable();
+                    cityElement.disable();
+                }
             });
         },
 
         updateFieldData : function () {
             var self = this;
+
+            // Only apply the postcode check for NL
+            var country = $("select[name*='country_id']").val();
+            if (this.customScope === 'billingAddresscheckmo') {
+                country = $("select[name*='country_id']").eq(1).val();
+            }
+
+            if (country !== 'NL') {
+                self.enableAddressFields(true);
+                $('.postnl_hidden').show();
+                return;
+            } else {
+                $('.postnl_hidden').hide();
+            }
 
             // Set a timer because we don't want to make a call at every change
             if (typeof this.timer !== 'undefined') {
@@ -100,18 +114,15 @@ define([
 
         setFieldData : function () {
             var self = this;
-
-            var results = false;
             var formData = self.getFormData();
 
             if (formData !== false) {
-                results = self.getAddressData(formData);
-            }
-
-            if (results !== false) {
-                self.disableAddressFields();
+                self.isLoading(true);
+                self.enableAddressFields(false);
+                self.getAddressData(formData);
             } else {
-                self.enableAddressFields();
+                self.isLoading(false);
+                self.enableAddressFields(true);
             }
         },
 
@@ -120,11 +131,21 @@ define([
             var housenumber;
 
             var postcodeRegex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
+            // Wait for the form to load, once loaded get the values of housenumber and postcode
 
-            Registry.get([
+            var fields = [
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.housenumber',
                 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.postcode'
-                ], function (housenumberElement, postcodeElement) {
+            ];
+
+            if (this.customScope === 'billingAddresscheckmo') {
+                fields = [
+                    'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.postcode-field-group.field-group.housenumber',
+                    'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.postcode-field-group.field-group.postcode'
+                ];
+            }
+
+            Registry.get(fields, function (housenumberElement, postcodeElement) {
                 housenumber = housenumberElement.value();
                 postcode = postcodeElement.value();
             });
@@ -143,6 +164,7 @@ define([
                 self.request.abort();
             }
 
+            // Make the request to get the streetname and city
             self.request = $.ajax({
                 method:'GET',
                 url: window.checkoutConfig.shipping.postnl.urls.address_postcode,
@@ -151,8 +173,37 @@ define([
                     postcode: formData[1]
                 }
             }).done(function (data) {
-                console.log(data);
+                self.handleResponse(data);
+            }).fail(function (data) {
+                console.error("Error receiving response from SAM");
+                self.enableAddressFields(true);
+            }).always(function (data) {
+                self.isLoading(false);
             });
+        },
+
+        handleResponse : function (data) {
+            var self = this;
+            if (data.status === false) {
+                // to do when a wrong address is supplied, give an error message
+                console.error(data.error);
+                self.enableAddressFields(true);
+            }
+            // If the data is correct, set the streetname and city
+            if (data.streetName && data.city) {
+                Registry.get(self.parentName + '.street.0').set('value', data.streetName);
+                Registry.get(self.parentName + '.city').set('value', data.city);
+
+                // Trigger change for subscripe methods.
+                $("input[name*='street[0]']").trigger('change');
+                $("input[name*='city']").trigger('change');
+            }
+        },
+
+        initObservable : function () {
+            this._super().observe(['isLoading']);
+
+            return this;
         },
 
         observeHousenumber : function (value) {
@@ -168,9 +219,7 @@ define([
         },
 
         observeCountry : function (value) {
-            if (value) {
-                this.updateFieldData();
-            }
+            this.updateFieldData();
         }
     });
 });

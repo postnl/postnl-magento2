@@ -29,10 +29,36 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 var config = {
+    config: {
+        mixins: {
+            'Magento_Checkout/js/action/set-shipping-information': {
+                'TIG_PostNL/js/action/set-shipping-information-mixin': true
+            },
+            'Magneto_Checkout/js/action/set-billing-address': {
+                'TIG_PostNL/js/action/set-billing-address': true
+            },
+            'Magento_Checkout/js/action/place-order': {
+                'TIG_PostNL/js/action/set-billing-address-mixin': true
+            },
+            'Magento_Checkout/js/action/create-billing-address': {
+                'TIG_PostNL/js/action/set-billing-address-mixin': true
+            },
+            'Magento_Checkout/js/action/set-payment-information': {
+                'TIG_PostNL/js/action/set-billing-address-mixin': true
+            }
+        }
+    },
     map: {
         '*': {
             "Magento_Checkout/template/shipping-address/shipping-method-item.html" :
                 "TIG_PostNL/template/shipping-address/shipping-method-item.html",
+            //Postcodecheck housenumber & addition in shipping and billing fields
+            "Magento_Checkout/template/shipping-address/address-renderer/default.html" :
+                "TIG_PostNL/template/shipping-address/address-renderer/default.html",
+            "Magento_Checkout/template/shipping-information/address-renderer/default.html" :
+                "TIG_PostNL/template/shipping-information/address-renderer/default.html",
+            "Magento_Checkout/template/billing-address/details.html" :
+                "TIG_PostNL/template/billing-address/details.html",
             //Magento Backwards Compatibility
             "Magento_Checkout/template/shipping.html" :
                 "TIG_PostNL/template/shipping.html",

@@ -46,7 +46,7 @@ class HousenumberAddition implements FieldInterface
                 'elementTmpl' => 'TIG_PostNL/form/element/input'
             ],
             'provider'   => 'checkoutProvider',
-            'dataScope'  => $scope . '.custom_attributes.postnl_housenumber_addition',
+            'dataScope'  => $scope . '.custom_attributes.tig_housenumber_addition',
             // @codingStandardsIgnoreLine
             'label'      => __('Addition'),
             'sortOrder'  => '120',
