@@ -142,6 +142,9 @@
                 <item name="v1.4.1" xsi:type="array">
                     <item name="InstallShippingDurationAttribute" xsi:type="object">TIG\PostNL\Setup\V141\Data\ShippingDurationAttribute</item>
                 </item>
+                <item name="v1.6.0" xsi:type="array">
+                    <item name="ConfigurationData" xsi:type="object">TIG\PostNL\Setup\V160\Data\ConfigurationData</item>
+                </item>
             </argument>
         </arguments>
     </type>
@@ -154,6 +157,9 @@
                 </item>
                 <item name="v1.4.1" xsi:type="array">
                     <item name="InstallShippingDurationAttribute" xsi:type="object">TIG\PostNL\Setup\V141\Data\ShippingDurationAttribute</item>
+                </item>
+                <item name="v1.6.0" xsi:type="array">
+                    <item name="ConfigurationData" xsi:type="object">TIG\PostNL\Setup\V160\Data\ConfigurationData</item>
                 </item>
             </argument>
         </arguments>
