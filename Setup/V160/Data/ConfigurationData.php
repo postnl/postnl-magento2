@@ -35,6 +35,7 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use TIG\PostNL\Setup\AbstractDataInstaller;
 
+// @codingStandardsIgnoreFile
 class ConfigurationData extends AbstractDataInstaller
 {
     /**
