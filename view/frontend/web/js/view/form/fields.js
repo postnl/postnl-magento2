@@ -63,16 +63,9 @@ define([
 
         enableAddressFields : function (showFields) {
             var fields = [
-                'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.0',
-                'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.city'
+                this.parentName + '.street.0',
+                this.parentName + '.city'
             ];
-
-            if (this.customScope === 'billingAddresscheckmo') {
-                fields = [
-                    'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.street.0',
-                    'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.city'
-                ];
-            }
 
             Registry.get(fields, function (streetElement, cityElement) {
                 if (showFields === true) {
@@ -131,19 +124,12 @@ define([
             var housenumber;
 
             var postcodeRegex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
+
             // Wait for the form to load, once loaded get the values of housenumber and postcode
-
             var fields = [
-                'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.housenumber',
-                'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.postcode'
+                this.parentName + '.postcode-field-group.field-group.housenumber',
+                this.parentName + '.postcode-field-group.field-group.postcode'
             ];
-
-            if (this.customScope === 'billingAddresscheckmo') {
-                fields = [
-                    'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.postcode-field-group.field-group.housenumber',
-                    'checkout.steps.billing-step.payment.payments-list.checkmo-form.form-fields.postcode-field-group.field-group.postcode'
-                ];
-            }
 
             Registry.get(fields, function (housenumberElement, postcodeElement) {
                 housenumber = housenumberElement.value();
