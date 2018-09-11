@@ -88,7 +88,7 @@ class ConfigurationData extends AbstractDataInstaller
 
             $setup->getConnection()->update(
                 'core_config_data', $data,
-                ["path = $oldPath"]
+                ["path = '$oldPath'"]
             );
         }
     }
