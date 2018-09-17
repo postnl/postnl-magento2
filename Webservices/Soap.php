@@ -141,7 +141,7 @@ class Soap
         // @codingStandardsIgnoreLine
         $stream_context = stream_context_create([
             'http' => [
-                'header' => 'apikey:' . $this->getApiKey() . "\r\n" . "SourceSystem:101\r\n"
+                'header' => 'apikey:' . $this->getApiKey() . "\r\n" . "SourceSystem:66\r\n"
             ]
         ]);
 

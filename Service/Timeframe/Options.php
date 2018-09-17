@@ -84,11 +84,20 @@ class Options
             $deliveryTimeframesOptions[] = self::EVENING_DELIVERY_OPTION;
         }
 
-        if ($this->shippingOptions->isSundayDeliveryActive() || $this->hasSaturdayAsShippingDay()) {
+        if ($this->shippingOptions->isSundayDeliveryActive() && $this->hasSaturdayAsShippingDay()) {
             $deliveryTimeframesOptions[] = self::SUNDAY_DELIVERY_OPTION;
         }
 
         return $deliveryTimeframesOptions;
+    }
+
+    /**
+     * @return string
+     */
+    public function isSundaySortingAllowed()
+    {
+        $shipmentDays = explode(',', $this->webshop->getShipmentDays());
+        return !empty(array_intersect(['0', '6'], $shipmentDays)) ? 'true' : 'false';
     }
 
     /**

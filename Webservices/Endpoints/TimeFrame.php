@@ -140,7 +140,7 @@ class TimeFrame extends AbstractEndpoint
                 'PostalCode'         => str_replace(' ', '', $address['postcode']),
                 'HouseNr'            => $address['housenumber'],
                 'StartDate'          => $startDate,
-                'SundaySorting'      => $this->postNLhelper->isSundaySortingAllowed(),
+                'SundaySorting'      => $this->timeframeOptions->isSundaySortingAllowed(),
                 'EndDate'            => $this->postNLhelper->getEndDate($startDate),
                 'Options'            => $this->timeframeOptions->get($address['country']),
             ],
