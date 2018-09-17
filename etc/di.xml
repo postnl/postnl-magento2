@@ -101,6 +101,9 @@
     <type name="TIG\PostNL\Setup\UpgradeSchema">
         <arguments>
             <argument name="upgradeSchemaObjects" xsi:type="array">
+                <item name="v1.5.2" xsi:type="array">
+                    <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V152\Schema\SalesShipmentGridColumns</item>
+                </item>
                 <item name="v1.5.1" xsi:type="array">
                     <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V151\Schema\SalesShipmentGridColumns</item>
                     <item name="SalesOrderGridColumns" xsi:type="object">TIG\PostNL\Setup\V151\Schema\SalesOrderGridColumns</item>
@@ -168,7 +171,7 @@
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="postnlSyncConfirmStatus" xsi:type="object">TIG\PostNL\Console\Sync\ConfirmStatus</item>
+                <item name="postnlSyncGrids" xsi:type="object">TIG\PostNL\Console\Sync\Grids</item>
             </argument>
         </arguments>
     </type>
@@ -191,6 +194,7 @@
                 <item name="tig_postnl_product_code" xsi:type="string">tig_postnl_shipment.product_code</item>
                 <item name="tig_postnl_confirmed_at" xsi:type="string">tig_postnl_shipment.confirmed_at</item>
                 <item name="tig_postnl_confirmed" xsi:type="string">tig_postnl_shipment.confirmed</item>
+                <item name="tig_postnl_barcode" xsi:type="string">tig_postnl_shipment.main_barcode</item>
             </argument>
         </arguments>
     </virtualType>

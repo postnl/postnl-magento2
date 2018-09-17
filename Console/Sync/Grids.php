@@ -42,10 +42,10 @@ use Magento\Framework\Console\Cli;
 use Magento\Setup\Module\Di\App\Task\OperationException;
 
 // @codingStandardsIgnoreFile
-class ConfirmStatus extends Command
+class Grids extends Command
 {
-    const POSTNLCLI_COMMAND = 'postnl:sync:confirm-status';
-    const POSTNLCLI_COMMENT = 'Synchronizes the order- and shipment grid confirmation column';
+    const POSTNLCLI_COMMAND = 'postnl:sync:grids';
+    const POSTNLCLI_COMMENT = 'Synchronizes the order- and shipment grid columns';
 
     /**
      * @var ShipmentRepository
