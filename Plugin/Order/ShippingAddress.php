@@ -70,7 +70,7 @@ class ShippingAddress
         }
 
         $postnlOrder = $this->orderRepository->getByOrderId($subject->getId());
-        if (!$postnlOrder) {
+        if (!$postnlOrder || !$this->isPostNLShipment($subject)) {
             return $result;
         }
 
@@ -84,5 +84,16 @@ class ShippingAddress
         }
 
         return $pgAddres;
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order $order
+     *
+     * @return bool
+     */
+    private function isPostNLShipment($order)
+    {
+        $method = $order->getShippingMethod();
+        return $method === 'tig_postnl_regular';
     }
 }

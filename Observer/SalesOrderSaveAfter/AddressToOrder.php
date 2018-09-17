@@ -93,7 +93,8 @@ class AddressToOrder implements ObserverInterface
         $pgAddress     = false;
         $postnlOrder   = $this->getPostNLOrder($order);
 
-        if ($quotePgAddres->getId() && !$this->addressAlreadyAdded($order, $postnlOrder)) {
+        if ($quotePgAddres->getId() && !$this->addressAlreadyAdded($order, $postnlOrder)
+            && $this->isPostNLShipment($order)) {
             /** @var Order\Address $orderPgAddress */
             $orderPgAddress = $this->quoteAddressToOrderAddress->convert($quotePgAddres);
             $pgAddress      = $this->createOrderAddress($orderPgAddress, $order);
@@ -140,6 +141,17 @@ class AddressToOrder implements ObserverInterface
         }
 
         return $postnlOrder;
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order $order
+     *
+     * @return bool
+     */
+    private function isPostNLShipment($order)
+    {
+        $method = $order->getShippingMethod();
+        return $method === 'tig_postnl_regular';
     }
 
     /**

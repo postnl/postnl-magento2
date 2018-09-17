@@ -138,7 +138,8 @@
             </field>
 
             <include path="TIG_PostNL::system/postnlsettings/eveningdelivery.xml"/>
-            <include path="TIG_PostNL::system/postnlsettings/sundaydelivery.xml"/>
+            <!-- Because PostNL has to update their getSentDate endpoint, we can not enable sundaydelivery.-->
+            <!--<include path="TIG_PostNL::system/postnlsettings/sundaydelivery.xml"/>-->
             <include path="TIG_PostNL::system/postnlsettings/deliverydays.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/postoffices.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/stock.xml"/>
