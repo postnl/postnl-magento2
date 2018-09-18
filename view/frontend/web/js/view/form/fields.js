@@ -61,14 +61,14 @@ define([
             return this;
         },
 
-        enableAddressFields : function (showFields) {
+        enableAddressFields : function (enableFields) {
             var fields = [
                 this.parentName + '.street.0',
                 this.parentName + '.city'
             ];
 
             Registry.get(fields, function (streetElement, cityElement) {
-                if (showFields === true) {
+                if (enableFields === true) {
                     streetElement.enable();
                     cityElement.enable();
                 } else {
@@ -78,21 +78,41 @@ define([
             });
         },
 
+        hideAddressFields : function (hideFields) {
+            var fields = [
+                this.parentName + '.street.1',
+                this.parentName + '.street.2',
+                this.parentName + '.street.3'
+            ];
+
+            // Hide or show every address line that's not the first address line, depending on the country settings.
+            for (var i=0; i < fields.length; i++) {
+                Registry.get(fields[i], function (addressLine) {
+                    if (hideFields === true) {
+                        addressLine.hide();
+                    } else {
+                        addressLine.show();
+                    }
+                });
+            }
+        },
+
         updateFieldData : function () {
             var self = this;
 
+            var country;
+
             // Only apply the postcode check for NL
-            var country = $("select[name*='country_id']").val();
-            if (this.customScope === 'billingAddresscheckmo') {
-                country = $("select[name*='country_id']").eq(1).val();
-            }
+            Registry.get([this.parentName + '.country_id'], function (countryElement) {
+                country = countryElement.value();
+            });
 
             if (country !== 'NL') {
                 self.enableAddressFields(true);
-                $('.postnl_hidden').show();
+                self.hideAddressFields(false);
                 return;
             } else {
-                $('.postnl_hidden').hide();
+                self.hideAddressFields(true);
             }
 
             // Set a timer because we don't want to make a call at every change
@@ -147,7 +167,7 @@ define([
             var self = this;
 
             if (self.request !== undefined) {
-                self.request.abort();
+                self.request.abort('avoidMulticall');
             }
 
             // Make the request to get the streetname and city
@@ -157,12 +177,14 @@ define([
                 data: {
                     housenumber: formData[0],
                     postcode: formData[1]
-                }
+                },
             }).done(function (data) {
                 self.handleResponse(data);
             }).fail(function (data) {
-                console.error("Error receiving response from SAM");
-                self.enableAddressFields(true);
+                if (data.statusText !== 'avoidMulticall') {
+                    console.error("Error receiving response from SAM");
+                    self.enableAddressFields(true);
+                }
             }).always(function (data) {
                 self.isLoading(false);
             });
