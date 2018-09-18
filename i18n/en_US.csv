@@ -382,3 +382,4 @@ Percent,Percent
 "Your global barcode range as supplied by PostNL. Must contain 4 digits.","Your global barcode range as supplied by PostNL. Must contain 4 digits."
 "PostNL grid Toolbar","PostNL grid Toolbar"
 "With this setting you can enable or disable the PostNL toolbar that is visible above the Magento order and shipment grids.","With this setting you can enable or disable the PostNL toolbar that is visible above the Magento order and shipment grids."
+"[POSTNL-0010] - An error occurred while processing this action.","[POSTNL-0010] - An error occurred while processing this action."

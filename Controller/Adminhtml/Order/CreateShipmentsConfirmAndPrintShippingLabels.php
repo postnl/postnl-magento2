@@ -135,6 +135,10 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
      */
     private function loadLabel($shipment)
     {
+        if (!$shipment) {
+            return;
+        }
+
         $address = $shipment->getShippingAddress();
         $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
         $this->setTracks($shipment);

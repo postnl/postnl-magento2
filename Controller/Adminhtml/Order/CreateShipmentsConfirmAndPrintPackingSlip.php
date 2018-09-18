@@ -117,14 +117,26 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
         $collection = $this->filter->getCollection($collection);
 
         foreach ($collection as $order) {
-            $shipment = $this->createShipment->create($order);
-            $address  = $shipment->getShippingAddress();
-            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
-            $this->setTracks($shipment);
-            $this->setPackingslip($shipment->getId());
+            $this->handleOrderToShipment($order);
         }
 
         return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
+    }
+
+    /**
+     * @param $order
+     */
+    private function handleOrderToShipment($order)
+    {
+        $shipment = $this->createShipment->create($order);
+        if (!$shipment) {
+            return;
+        }
+
+        $address  = $shipment->getShippingAddress();
+        $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+        $this->setTracks($shipment);
+        $this->setPackingslip($shipment->getId());
     }
 
     /**

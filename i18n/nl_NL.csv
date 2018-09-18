@@ -402,3 +402,4 @@ Percent,Percentage
 "Your global barcode range as supplied by PostNL. Must contain 4 digits.","Uw globaal barcode bereik zoals aangeleverd door PostNL. Moet bestaan uit 4 cijfers."
 "PostNL grid Toolbar","PostNL grid Toolbar"
 "With this setting you can enable or disable the PostNL toolbar that is visible above the Magento order and shipment grids.","Met deze instelling kunt u de PostNL toolbar, die boven de Magento order en shipment tabel zichtbaar is, aan of uit zetten."
+"[POSTNL-0010] - An error occurred while processing this action.","[POSTNL-0010] - Er is een fout opgetreden tijdens het verwerken van deze actie."
