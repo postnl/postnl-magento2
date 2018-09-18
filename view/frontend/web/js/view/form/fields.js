@@ -79,6 +79,7 @@ define([
         },
 
         hideAddressFields : function (hideFields) {
+            var self = this;
             var fields = [
                 this.parentName + '.street.1',
                 this.parentName + '.street.2',
@@ -87,14 +88,18 @@ define([
 
             // Hide or show every address line that's not the first address line, depending on the country settings.
             for (var i=0; i < fields.length; i++) {
-                Registry.get(fields[i], function (addressLine) {
-                    if (hideFields === true) {
-                        addressLine.hide();
-                    } else {
-                        addressLine.show();
-                    }
-                });
+                self.hideAddressField(hideFields, fields[i]);
             }
+        },
+
+        hideAddressField : function (hideFields, field) {
+            Registry.get(field, function (addressLine) {
+                if (hideFields === true) {
+                    addressLine.hide();
+                } else {
+                    addressLine.show();
+                }
+            });
         },
 
         updateFieldData : function () {
@@ -182,7 +187,8 @@ define([
                 self.handleResponse(data);
             }).fail(function (data) {
                 if (data.statusText !== 'avoidMulticall') {
-                    console.error("Error receiving response from SAM");
+                    var error = $('.tig-postnl-validation-message');
+                    error.html($.mage.__('Unexpected error occurred. Please fill in the address details manually.'));
                     self.enableAddressFields(true);
                 }
             }).always(function (data) {
@@ -192,10 +198,16 @@ define([
 
         handleResponse : function (data) {
             var self = this;
+            var error = $('.tig-postnl-validation-message');
+
             if (data.status === false) {
                 // to do when a wrong address is supplied, give an error message
                 console.error(data.error);
                 self.enableAddressFields(true);
+
+                error.html($.mage.__('Sorry, we couldn\'t find your address with the zipcode and housenumber combination. ' +
+                    'If you are sure that the zipcode and housenumber are correct, please fill in the address details manually.'));
+                return;
             }
             // If the data is correct, set the streetname and city
             if (data.streetName && data.city) {
@@ -205,7 +217,12 @@ define([
                 // Trigger change for subscripe methods.
                 $("input[name*='street[0]']").trigger('change');
                 $("input[name*='city']").trigger('change');
+
+                error.html('');
+                return;
             }
+            // In case the streetname nad city are incorrect
+            error.html($.mage.__('Unexpected error occurred. Please fill in the address details manually.'));
         },
 
         initObservable : function () {

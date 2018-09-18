@@ -44,7 +44,11 @@ class PostcodecheckHandler
             $params = json_decode($params, true);
         }
 
-        if (!isset($params['errors']) && $this->validateParams($params[0], ['status', 'streetName', 'city'])) {
+        if (isset($params['errors']) || !isset($params[0]) || $params[0]['status'] != 1) {
+            return false;
+        }
+
+        if ($this->validateParams($params[0], ['status', 'streetName', 'city'])) {
             return $params[0];
         }
 
