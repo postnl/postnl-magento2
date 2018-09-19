@@ -101,10 +101,10 @@
     <type name="TIG\PostNL\Setup\UpgradeSchema">
         <arguments>
             <argument name="upgradeSchemaObjects" xsi:type="array">
-                <item name="v1.5.2" xsi:type="array">
+                <item name="v1.5.3" xsi:type="array">
                     <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V152\Schema\SalesShipmentGridColumns</item>
                 </item>
-                <item name="v1.5.1" xsi:type="array">
+                <item name="v1.5.2" xsi:type="array">
                     <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V151\Schema\SalesShipmentGridColumns</item>
                     <item name="SalesOrderGridColumns" xsi:type="object">TIG\PostNL\Setup\V151\Schema\SalesOrderGridColumns</item>
                     <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V151\Schema\UpgradeOrderTable</item>
