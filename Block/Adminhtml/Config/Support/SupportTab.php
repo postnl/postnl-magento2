@@ -39,6 +39,8 @@ use TIG\PostNL\Config\Provider\PostNLConfiguration;
 
 class SupportTab extends Template implements RendererInterface
 {
+    const POSTNL_VERSION = '1.5.1';
+
     const XPATH_SUPPORTED_MAGENTO_VERSION = 'tig_postnl/supported_magento_version';
 
     // @codingStandardsIgnoreLine
@@ -94,9 +96,7 @@ class SupportTab extends Template implements RendererInterface
      */
     public function getVersionNumber()
     {
-        $version = $this->moduleContext->getDbVersion('TIG_PostNL');
-
-        return $version;
+        return static::POSTNL_VERSION;
     }
 
     /**
