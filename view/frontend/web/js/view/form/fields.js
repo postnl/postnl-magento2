@@ -50,7 +50,6 @@ define([
                 observeHousenumber : '${ $.parentName }.postcode-field-group.field-group.housenumber:value',
                 observeCountry     : '${ $.parentName }.country_id:value'
             },
-            sameCall  : false,
             timer     : undefined
         },
 
@@ -187,8 +186,8 @@ define([
                 self.handleResponse(data);
             }).fail(function (data) {
                 if (data.statusText !== 'avoidMulticall') {
-                    var error = $('.tig-postnl-validation-message');
-                    error.html($.mage.__('Unexpected error occurred. Please fill in the address details manually.'));
+                    var errorMessage = $.mage.__('Unexpected error occurred. Please fill in the address details manually.');
+                    self.handleError(errorMessage);
                     self.enableAddressFields(true);
                 }
             }).always(function (data) {
@@ -198,19 +197,18 @@ define([
 
         handleResponse : function (data) {
             var self = this;
-            var error = $('.tig-postnl-validation-message');
+            var errorMessage = $.mage.__('Unexpected error occurred. Please fill in the address details manually.');
 
             if (data.status === false) {
-                // to do when a wrong address is supplied, give an error message
+                // In case the streetname and city are incorrect
                 console.error(data.error);
                 self.enableAddressFields(true);
 
-                error.html($.mage.__('Sorry, we couldn\'t find your address with the zipcode and housenumber combination. ' +
-                    'If you are sure that the zipcode and housenumber are correct, please fill in the address details manually.'));
-                return;
+                errorMessage = $.mage.__('Sorry, we could not find your address with the zipcode and housenumber combination. If you are sure that the zipcode and housenumber are correct, please fill in the address details manually.');
             }
-            // If the data is correct, set the streetname and city
+
             if (data.streetName && data.city) {
+                // If the data is correct, set the streetname and city
                 Registry.get(self.parentName + '.street.0').set('value', data.streetName);
                 Registry.get(self.parentName + '.city').set('value', data.city);
 
@@ -218,11 +216,29 @@ define([
                 $("input[name*='street[0]']").trigger('change');
                 $("input[name*='city']").trigger('change');
 
-                error.html('');
-                return;
+                errorMessage = '';
             }
-            // In case the streetname nad city are incorrect
-            error.html($.mage.__('Unexpected error occurred. Please fill in the address details manually.'));
+
+            self.handleError(errorMessage);
+        },
+
+        handleError : function (errorMessage) {
+            var error = $('.tig-postnl-validation-message');
+
+            if (errorMessage) {
+                error.html(errorMessage).show();
+
+                var timer;
+                if (typeof timer !== 'undefined') {
+                    clearTimeout(timer);
+                }
+
+                timer = setTimeout(function () {
+                    error.hide(100);
+                }, 8000);
+            } else {
+                error.hide();
+            }
         },
 
         initObservable : function () {
