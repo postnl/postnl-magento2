@@ -29,7 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Setup\V151\Schema;
+namespace TIG\PostNL\Setup\V152\Schema;
 
 use TIG\PostNL\Setup\AbstractColumnsInstaller;
 
@@ -39,20 +39,19 @@ class SalesShipmentGridColumns extends AbstractColumnsInstaller
 
     // @codingStandardsIgnoreLine
     protected $columns = [
-        'tig_postnl_confirmed',
+        'tig_postnl_barcode',
     ];
 
     /**
      * @return array
      */
-    public function installTigPostnlConfirmedColumn()
+    public function installTigPostnlBarcodeColumn()
     {
         return [
             // @codingStandardsIgnoreLine
-            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
-            'default' => 0,
-            'nullable' => false,
-            'comment' => 'PostNL Confirmed',
+            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            'nullable' => true,
+            'comment' => 'PostNL Barcode',
             'after' => 'tig_postnl_product_code',
         ];
     }
