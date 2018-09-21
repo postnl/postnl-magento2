@@ -34,6 +34,9 @@ var config = {
             'Magento_Checkout/js/action/set-shipping-information': {
                 'TIG_PostNL/js/action/set-shipping-information-mixin': true
             },
+            'Amasty_Checkout/js/action/set-shipping-information' : {
+                'TIG_PostNL/js/action/set-shipping-information-mixin': true
+            },
             'Magneto_Checkout/js/action/set-billing-address': {
                 'TIG_PostNL/js/action/set-billing-address': true
             },
@@ -59,6 +62,8 @@ var config = {
                 "TIG_PostNL/template/shipping-information/address-renderer/default.html",
             "Magento_Checkout/template/billing-address/details.html" :
                 "TIG_PostNL/template/billing-address/details.html",
+            'Amasty_CustomerAttributes/js/action/set-shipping-information-mixin' :
+                'TIG_PostNL/js/action/set-shipping-information-mixin',
             //Magento Backwards Compatibility
             "Magento_Checkout/template/shipping.html" :
                 "TIG_PostNL/template/shipping.html",

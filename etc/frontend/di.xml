@@ -82,4 +82,7 @@
         <plugin name="postnlPostcodecheckGroupPlugin" type="TIG\PostNL\Plugin\Postcodecheck\LayoutProcessor" />
     </type>
 
+    <type name="Mageplaza\Osc\Helper\Address">
+        <plugin name="postcodeFieldGroupMagePlazaPlugin" type="TIG\PostNL\Plugin\Postcodecheck\Mageplaza\AddressHelper" />
+    </type>
 </config>

@@ -79,6 +79,9 @@ class LayoutProcessor
         $jsLayout = $this->processShippingFields($jsLayout);
         $jsLayout = $this->processBillingFields($jsLayout);
 
+        if ($this->webshopConfig->getCheckoutCompatibleForAddressCheck() == 'mageplaza') {
+            $jsLayout = $this->processMageplazaBillingFields($jsLayout);
+        }
         return $jsLayout;
     }
 
@@ -130,6 +133,20 @@ class LayoutProcessor
             $this->setAdditionalClass($billingForm['children']['form-fields']['children'], 'city');
             $this->setAdditionalClass($billingForm['children']['form-fields']['children'], 'street');
         }
+
+        return $jsLayout;
+    }
+
+    private function processMageplazaBillingFields($jsLayout)
+    {
+        $billingFields = &$jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']
+                          ['children']['billingAddress']['children']['billing-address-fieldset']['children'];
+
+        $billingFields             = $this->processAddress($billingFields, 'billingAddress', []);
+
+        $this->setAdditionalClass($billingFields, 'postcode', true);
+        $this->setAdditionalClass($billingFields, 'city');
+        $this->setAdditionalClass($billingFields, 'street');
 
         return $jsLayout;
     }
@@ -186,7 +203,7 @@ class LayoutProcessor
                     'component'   => 'uiComponent',
                     'displayArea' => 'field-group',
                     'children'  => [
-                        'postcode'             => $fieldset['postcode'],
+                        'postcode'             => $this->getPostcodeFieldset($fieldset),
                         'housenumber'          => $this->fieldFactory->get('housenumber', $scope),
                         'housenumber_addition' => $this->fieldFactory->get('addition', $scope)
                     ]
@@ -197,6 +214,31 @@ class LayoutProcessor
         ];
 
         return $fieldset;
+    }
+
+    private function getPostcodeFieldset($fieldset)
+    {
+        if (isset($fieldset['postcode']) && isset($fieldset['postcode']['dataScope'])) {
+            return $fieldset['postcode'];
+        }
+
+        return [
+            'component'  => 'Magento_Ui/js/form/element/post-code',
+            'config'     => [
+                'customScope' => 'billingAddress',
+                'template'    => 'ui/form/field',
+                'elementTmpl' => 'ui/form/element/input'
+            ],
+            'provider'   => 'checkoutProvider',
+            'dataScope'  => 'billingAddress.postcode',
+            // @codingStandardsIgnoreLine
+            'label'      => __('Zip/Postal Code'),
+            'sortOrder'  => '110',
+            'validation' => [
+                'required-entry' => true,
+            ],
+            'visible'    => true
+        ];
     }
 
     /**
