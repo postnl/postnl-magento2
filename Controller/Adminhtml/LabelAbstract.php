@@ -74,6 +74,12 @@ abstract class LabelAbstract extends Action
     protected $track;
 
     /**
+     * @var array
+     */
+    //@codingStandardsIgnoreLine
+    protected $stateToHandel = ['new', 'processing'];
+
+    /**
      * @var GetPackingslip
      */
     private $getPackingSlip;
