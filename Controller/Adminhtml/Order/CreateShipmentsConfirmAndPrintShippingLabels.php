@@ -33,6 +33,7 @@ namespace TIG\PostNL\Controller\Adminhtml\Order;
 
 use Magento\Framework\App\ResponseInterface;
 use Magento\Sales\Model\Order\Shipment;
+use Magento\Sales\Model\Order;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
@@ -125,16 +126,24 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         $collection = $this->filter->getCollection($collection);
 
         foreach ($collection as $order) {
-            $shipment = $this->createShipment->create($order);
-            $this->loadLabel($shipment);
+            $this->loadLabel($order);
         }
     }
 
     /**
-     * @param Shipment $shipment
+     * @param Order $order
      */
-    private function loadLabel($shipment)
+    private function loadLabel($order)
     {
+        if (!in_array($order->getState(), $this->stateToHandel)) {
+            $this->messageManager->addWarningMessage(
+            //@codingStandardsIgnoreLine
+                __('Can not process order %1, because it is not new or in processing', $order->getIncrementId())
+            );
+            return;
+        }
+
+        $shipment = $this->createShipment->create($order);
         if (!$shipment) {
             return;
         }
