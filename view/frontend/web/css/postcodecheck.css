@@ -21,6 +21,12 @@ aside .tig-postnl-field-group .field > .label {
 
 /* Default: Magento Luma checkout =================================================================================== */
 
+.tig-postnl-validation-message {
+    color: red;
+    font-size: 12px;
+    margin-bottom: 16px;
+}
+
 .tig-postnl-field-group {
     float: left;
     width: 100%;

@@ -212,6 +212,7 @@ class LayoutProcessor
             'dataScope' => '',
             'visible'   => true
         ];
+        $fieldset['country_id']['sortOrder'] = '64';
 
         return $fieldset;
     }

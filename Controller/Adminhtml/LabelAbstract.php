@@ -41,6 +41,7 @@ use TIG\PostNL\Service\Handler\BarcodeHandler;
 use TIG\PostNL\Helper\Tracking\Track;
 use \Magento\Sales\Model\Order\Shipment;
 
+//@codingStandardsIgnoreFile
 abstract class LabelAbstract extends Action
 {
     /**
@@ -72,6 +73,12 @@ abstract class LabelAbstract extends Action
      */
     //@codingStandardsIgnoreLine
     protected $track;
+
+    /**
+     * @var array
+     */
+    //@codingStandardsIgnoreLine
+    protected $stateToHandel = ['new', 'processing'];
 
     /**
      * @var GetPackingslip

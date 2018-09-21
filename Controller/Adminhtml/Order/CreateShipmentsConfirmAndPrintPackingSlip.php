@@ -35,6 +35,7 @@ use Magento\Framework\App\ResponseInterface;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\Shipment;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
@@ -124,10 +125,18 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
     }
 
     /**
-     * @param $order
+     * @param Order $order
      */
     private function handleOrderToShipment($order)
     {
+        if (!in_array($order->getState(), $this->stateToHandel)) {
+            $this->messageManager->addWarningMessage(
+                //@codingStandardsIgnoreLine
+                __('Can not process order %1, because it is not new or in processing', $order->getIncrementId())
+            );
+            return;
+        }
+
         $shipment = $this->createShipment->create($order);
         if (!$shipment) {
             return;
