@@ -54,7 +54,7 @@ class CheckoutManagement
         $shippingAddress = $addressInformation->getShippingAddress();
 
         $shippingAddress->setStreet(
-            $this->parseHousenumber($shippingAddress->getStreet(), $customerAttributes)
+            $this->parseStreet($shippingAddress->getStreet(), $customerAttributes)
         );
 
         $addressInformation->setShippingAddress($shippingAddress);
@@ -69,9 +69,9 @@ class CheckoutManagement
      */
     private function parseStreet($street, $customerAttributes)
     {
-//        if (is_array($street)) {
-//            $street = $street[0];
-//        }
+        if (is_array($street)) {
+            $street = $street[0];
+        }
         if (isset($customerAttributes['tig_housenumber_addition'])) {
             return $street . ' ' .
                 $customerAttributes['tig_housenumber'] . ' ' .
