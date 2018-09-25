@@ -29,6 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Service\Handler;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
@@ -37,6 +38,7 @@ use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Model\ShipmentBarcodeFactory;
 use TIG\PostNL\Webservices\Endpoints\Barcode as BarcodeEndpoint;
 use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory;
+use \Magento\Framework\Exception\LocalizedException;
 
 class BarcodeHandler
 {
@@ -143,7 +145,7 @@ class BarcodeHandler
     /**
      * CIF call to generate a new barcode
      *
-     * @return mixed
+     * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     private function generate()
@@ -154,12 +156,12 @@ class BarcodeHandler
 
         if (!is_object($response) || !isset($response->Barcode)) {
             // Should throw an exception otherwise the postnl flow will break.
-            throw new \Magento\Framework\Exception\LocalizedException(
+            throw new LocalizedException(
                 __('Invalid GenerateBarcode response: %1', var_export($response, true))
             );
         }
 
-        return $response->Barcode;
+        return (string) $response->Barcode;
     }
 
     /**
