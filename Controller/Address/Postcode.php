@@ -74,16 +74,20 @@ class Postcode extends Action
     {
         $params = $this->getRequest()->getParams();
         $params = $this->handler->convertRequest($params);
+
         if (!$params) {
             return $this->returnJson($this->getErrorResponse('error', __('Postcode request validation failed')));
         }
 
         $this->postcodeService->setRequestData($params);
         $result = $this->postcodeService->call();
+
         if ($result === false) {
-            return $this->returnJson($this->getErrorResponse(false, __('Zipcode and housenumber combination not found')));
+            return $this->returnJson(
+                $this->getErrorResponse(false, __('Zipcode and housenumber combination not found'))
+            );
         }
-        
+
         if ($result === 'error') {
             return $this->returnJson($this->getErrorResponse('error', __('Postcode response validation failed')));
         }
