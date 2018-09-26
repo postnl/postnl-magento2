@@ -387,3 +387,4 @@ Percent,Percent
 "Unexpected error occurred. Please fill in the address details manually.","Unexpected error occurred. Please fill in the address details manually."
 "Zipcode and housenumber combination not found","Zipcode and housenumber combination not found"
 "Postcode response validation failed","Postcode response validation failed"
+"Postcode request validation failed","Postcode request validation failed"

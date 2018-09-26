@@ -47,8 +47,7 @@ class PostcodecheckHandler
      */
     public function __construct(
         Log $logger
-    )
-    {
+    ) {
         $this->logger = $logger;
     }
 
@@ -68,6 +67,7 @@ class PostcodecheckHandler
         }
 
         if (isset($params['errors']) || isset($params['fault']) || !isset($params[0])) {
+            //@codingStandardsIgnoreLine
             $this->logger->critical(__('Error received getting postcode data from PostNL.'), $params);
             return 'error';
         }

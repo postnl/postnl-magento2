@@ -407,3 +407,4 @@ Percent,Percentage
 "Unexpected error occurred. Please fill in the address details manually.","Er is een onverwachte fout opgetreden. Vul s.v.p. handmatig uw adresgegevens in."
 "Zipcode and housenumber combination not found","Postcode en huisnummer combinatie niet gevonden"
 "Postcode response validation failed","Postcode response is niet valide"
+"Postcode request validation failed","Postcode aanvraag is niet valide"
