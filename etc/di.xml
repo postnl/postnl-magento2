@@ -265,4 +265,8 @@
         </arguments>
     </type>
 
+    <type name="\Mageplaza\Osc\Api\CheckoutManagementInterface">
+        <plugin name="postcodeMageplazaCheckoutInformation" type="TIG\PostNL\Plugin\Postcodecheck\Mageplaza\CheckoutManagement" />
+    </type>
+
 </config>
