@@ -32,15 +32,32 @@
 namespace TIG\PostNL\Plugin\Postcodecheck\Mageplaza;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
+use TIG\PostNL\Config\Provider\Webshop;
 
 class AddressHelper
 {
+    /**
+     * @var AccountConfiguration
+     */
     private $accountConfiguration;
 
+    /**
+     * @var Webshop
+     */
+    private $webshopConfig;
+
+    /**
+     * AddressHelper constructor.
+     *
+     * @param AccountConfiguration $accountConfiguration
+     * @param Webshop              $webshop
+     */
     public function __construct(
-        AccountConfiguration $accountConfiguration
+        AccountConfiguration $accountConfiguration,
+        Webshop $webshop
     ) {
         $this->accountConfiguration = $accountConfiguration;
+        $this->webshopConfig = $webshop;
     }
 
     /**
@@ -55,7 +72,7 @@ class AddressHelper
     // @codingStandardsIgnoreLine
     public function afterGetAddressFieldPosition($subject, $fieldPosition)
     {
-        if ($this->accountConfiguration->isModusOff()) {
+        if ($this->accountConfiguration->isModusOff() || !$this->webshopConfig->getIsAddressCheckEnabled()) {
             return $fieldPosition;
         }
 

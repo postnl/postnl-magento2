@@ -408,3 +408,4 @@ Percent,Percentage
 "Zipcode/housenumber combination not found","Postcode en huisnummer combinatie niet gevonden"
 "Postcode response validation failed","Postcode response is niet valide"
 "Postcode request validation failed","Postcode aanvraag is niet valide"
+"We can not guarantee that the entire PostNL extension is compatible with some of these checkouts.","We kunnen niet garanderen dat de volledige PostNL extensie compatibel is met sommige van deze checkouts."

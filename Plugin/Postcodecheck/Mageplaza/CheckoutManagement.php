@@ -63,6 +63,7 @@ class CheckoutManagement
     }
 
     /**
+     * @param $street
      * @param $customerAttributes
      *
      * @return string
