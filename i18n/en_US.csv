@@ -385,6 +385,6 @@ Percent,Percent
 "[POSTNL-0010] - An error occurred while processing this action.","[POSTNL-0010] - An error occurred while processing this action."
 "Sorry, we could not find your address with the zipcode and housenumber combination. If you are sure that the zipcode and housenumber are correct, please fill in the address details manually.","Sorry, we could not find your address with the zipcode and housenumber combination. If you are sure that the zipcode and housenumber are correct, please fill in the address details manually."
 "Unexpected error occurred. Please fill in the address details manually.","Unexpected error occurred. Please fill in the address details manually."
-"Zipcode and housenumber combination not found","Zipcode and housenumber combination not found"
+"Zipcode/housenumber combination not found","Zipcode/housenumber combination not found"
 "Postcode response validation failed","Postcode response validation failed"
 "Postcode request validation failed","Postcode request validation failed"
