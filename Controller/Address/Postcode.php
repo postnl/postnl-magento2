@@ -80,11 +80,10 @@ class Postcode extends Action
 
         $this->postcodeService->setRequestData($params);
         $result = $this->postcodeService->call();
-
         if ($result === false) {
             return $this->returnJson($this->getErrorResponse(false, __('Zipcode and housenumber combination not found')));
         }
-
+        
         if ($result === 'error') {
             return $this->returnJson($this->getErrorResponse('error', __('Postcode response validation failed')));
         }
@@ -104,7 +103,6 @@ class Postcode extends Action
             'status' => $status,
             'error'  => $error
         ];
-
         return $responseArray;
     }
 
