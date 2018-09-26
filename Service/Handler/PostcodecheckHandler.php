@@ -31,8 +31,27 @@
  */
 namespace TIG\PostNL\Service\Handler;
 
+use TIG\PostNL\Logging\Log;
+
 class PostcodecheckHandler
 {
+    /**
+     * @var Log
+     */
+    private $logger;
+
+    /**
+     * PostcodecheckHandler constructor.
+     *
+     * @param Log $logger
+     */
+    public function __construct(
+        Log $logger
+    )
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * @param $params
      *
@@ -44,8 +63,13 @@ class PostcodecheckHandler
             $params = json_decode($params, true);
         }
 
-        if (isset($params['errors']) || !isset($params[0]) || $params[0]['status'] != 1) {
+        if (isset($params['status']) && $params['status'] == 0) {
             return false;
+        }
+
+        if (isset($params['errors']) || isset($params['fault']) || !isset($params[0])) {
+            $this->logger->critical(__('Error received getting postcode data from PostNL.'), $params);
+            return 'error';
         }
 
         if ($this->validateParams($params[0], ['status', 'streetName', 'city'])) {

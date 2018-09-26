@@ -102,7 +102,7 @@ class Rest
             $response = $this->handler->convertResponse($response->getBody());
         } catch (\Zend_Http_Client_Exception $exception) {
             $response = [
-                'status' => false,
+                'status' => 'error',
                 'error'  => __('Address API exception : %1', $exception->getCode())
             ];
         }

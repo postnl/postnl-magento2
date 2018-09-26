@@ -83,10 +83,18 @@ class Postcode extends Action
 
         $this->postcodeService->setRequestData($params);
         $result = $this->postcodeService->call();
-        if (!$result) {
+
+        if ($result === false) {
             return $this->returnJson([
                 'status' => false,
-                'error'  => __('Response validation failed')
+                'error'  => __('Zipcode/housenumber not found')
+            ]);
+        }
+
+        if ($result === 'error') {
+            return $this->returnJson([
+                'status' => 'error',
+                'error' => __('Response validation failed')
             ]);
         }
 
