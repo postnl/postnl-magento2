@@ -87,14 +87,14 @@ class Postcode extends Action
         if ($result === false) {
             return $this->returnJson([
                 'status' => false,
-                'error'  => __('Zipcode/housenumber not found')
+                'error'  => __('Zipcode and housenumber combination not found')
             ]);
         }
 
         if ($result === 'error') {
             return $this->returnJson([
                 'status' => 'error',
-                'error' => __('Response validation failed')
+                'error' => __('Postcode response validation failed')
             ]);
         }
 
