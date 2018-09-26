@@ -33,7 +33,8 @@
 <script type="text/javascript">
     require([
         'mage/url',
-        'TIG_PostNL/js/grid/dataprovider'
+        'TIG_PostNL/js/grid/dataprovider',
+        'Magento_Ui/js/grid/toolbar'
     ], function(url, DataProvider) {
         DataProvider.setProductOptions('<?php /* @escapeNotVerified */ echo $block->getProductOptions();?>');
         DataProvider.setDefaultOption('<?php /* @escapeNotVerified */ echo $block->getDefaultProductOption();?>');
