@@ -95,7 +95,7 @@
                 <config_path>tig_postnl/delivery_settings/shippingoptions_active</config_path>
             </field>
 
-            <!-- Since 1.5.1 all product options are supported automaticly -->
+            <!-- Since 1.5.2 all product options are supported automaticly -->
             <!--<field id="supported_options" translate="label" type="multiselect" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">-->
                 <!--<label>Select the available options</label>-->
                 <!--<comment><![CDATA[Select the PostNL product that you want to use for your shipments.]]></comment>-->
@@ -109,7 +109,7 @@
                 <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
                 <config_path>tig_postnl/delivery_settings/default_option</config_path>
             </field>
-
+            
             <field id="use_alternative_default" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Activate alternative delivery</label>
                 <comment><![CDATA[Enable this to use an alternative default option when a shipment's total value reaches a certain amount.]]></comment>
