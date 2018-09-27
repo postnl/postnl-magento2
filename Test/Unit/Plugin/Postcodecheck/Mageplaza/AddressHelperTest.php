@@ -34,6 +34,7 @@ namespace TIG\PostNL\Test\Unit\Plugin\Postcodecheck\Mageplaza;
 use TIG\PostNL\Plugin\Postcodecheck\Mageplaza\AddressHelper;
 use TIG\PostNL\Test\TestCase;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
+use TIG\PostNL\Config\Provider\Webshop;
 
 class AddressHelperTest extends TestCase
 {
@@ -69,8 +70,14 @@ class AddressHelperTest extends TestCase
         $expectedConfig->method('isModusOff');
         $expectedConfig->willReturn($moduleOff);
 
+        $webshopConfigMock = $this->getFakeMock(Webshop::class)->getMock();
+        $expectedWebshopConfig = $webshopConfigMock->expects($this->any());
+        $expectedWebshopConfig->method('getIsAddressCheckEnabled');
+        $expectedWebshopConfig->willReturn(true);
+
         $instance = $this->getInstance([
-            'accountConfiguration' => $accountConfigurationMock
+            'accountConfiguration' => $accountConfigurationMock,
+            'webshop' => $webshopConfigMock
         ]);
 
         $result = $instance->afterGetAddressFieldPosition(null, $fields);
