@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Controller\Adminhtml;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\App\Response\Http\FileFactory;
+use TIG\PostNL\Service\Framework\FileFactory;
 use Magento\Framework\Message\ManagerInterface;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
@@ -143,8 +143,7 @@ class PdfDownload
         return $this->fileFactory->create(
             $filename . '.pdf',
             $pdfLabel,
-            DirectoryList::VAR_DIR,
-            'application/pdf'
+            $this->webshopConfig->getLabelResponse()
         );
     }
 

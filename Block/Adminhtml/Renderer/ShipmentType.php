@@ -59,12 +59,20 @@ class ShipmentType
      */
     public function render($code, $type)
     {
-        $type = $this->productOptions->getLabel($code, $type);
+        $type   = $this->productOptions->getLabel($code, $type);
         $output = (string)$type['label'];
 
-        if ($type['comment']) {
-            $output .= '<br><em>' . $type['comment'] . '</em>';
+        if ($type['type']) {
+            $output .= ' <em>' . $type['type'] . '</em>';
         }
+
+        $comment = $type['comment'];
+        if (!$comment) {
+            return $output;
+        }
+
+        $comment = strlen($comment) > 30 ? substr($comment, 0, 30) . '...' : $comment;
+        $output .= '<br><em style="font-size:9px;" title="'.$type['comment'].'">' . $comment . '</em>';
 
         return $output;
     }

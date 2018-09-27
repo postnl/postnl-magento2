@@ -33,7 +33,7 @@ namespace TIG\PostNL\Config\Provider;
 
 class LoggingConfiguration extends AbstractConfigProvider
 {
-    const XPATH_LOGGING_TYPE = 'tig_postnl/generalconfiguration_logging/types';
+    const XPATH_LOGGING_TYPE = 'tig_postnl/developer_settings/types';
 
     /**
      * @return mixed

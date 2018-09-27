@@ -108,6 +108,7 @@ class ChangeConfirmation extends Action
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->shipmentService->getPostNLShipment($this->postNLShipmentId);
         $postNLShipment->setConfirmedAt(null);
+        $postNLShipment->setConfirmed(false);
         $postNLShipment->setMainBarcode(null);
         $this->shipmentService->save($postNLShipment);
     }

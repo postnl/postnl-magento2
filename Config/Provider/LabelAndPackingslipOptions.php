@@ -38,6 +38,7 @@ use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Model\Order;
 use TIG\PostNL\Config\Source\LabelAndPackingslip\ReferenceType;
 use TIG\PostNL\Service\Wrapper\StoreInterface;
+use TIG\PostNL\Config\Source\Options\ProductOptions;
 
 class LabelAndPackingslipOptions extends AbstractConfigProvider
 {
@@ -55,15 +56,17 @@ class LabelAndPackingslipOptions extends AbstractConfigProvider
      * @param ScopeConfigInterface $scopeConfig
      * @param Manager              $moduleManager
      * @param Encryptor            $crypt
+     * @param ProductOptions       $productOptions,
      * @param StoreInterface       $storeWrapper
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         Manager $moduleManager,
         Encryptor $crypt,
+        ProductOptions $productOptions,
         StoreInterface $storeWrapper
     ) {
-        parent::__construct($scopeConfig, $moduleManager, $crypt);
+        parent::__construct($scopeConfig, $moduleManager, $crypt, $productOptions);
         $this->storeWrapper = $storeWrapper;
     }
 

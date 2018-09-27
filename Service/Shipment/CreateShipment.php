@@ -38,6 +38,7 @@ use Magento\Sales\Model\Convert\Order as ConvertOrder;
 use TIG\PostNL\Model\ShipmentRepository;
 use TIG\PostNL\Helper\Data;
 
+//@codingStandardsIgnoreFile
 class CreateShipment
 {
     /**
@@ -225,11 +226,31 @@ class CreateShipment
             $this->shipment->save();
             $order->save();
         } catch (\Exception $exception) {
-            $message = $exception->getMessage();
+            $message = $this->handleExceptionForPosibleSoapErrors($exception);
             $localizedErrorMessage = __($message)->render();
             $this->errors[] = $localizedErrorMessage;
+            $this->shipment = false;
         }
 
         return $this;
+    }
+
+    /**
+     * @param \Exception $exception
+     *
+     * @return \Magento\Framework\Phrase|string
+     */
+    private function handleExceptionForPosibleSoapErrors(\Exception $exception)
+    {
+        if (!$exception->getErrors() || !is_array($exception->getErrors())) {
+            return $exception->getMessage();
+        }
+
+        $message =  __('[POSTNL-0010] - An error occurred while processing this action.');
+        foreach ($exception->getErrors() as $error) {
+            $message .= ' '. (string) $error;
+        }
+
+        return $message;
     }
 }

@@ -88,12 +88,12 @@ class AddressToOrder implements ObserverInterface
     public function execute(Observer $observer)
     {
         /** @var Order $order */
-        $order = $observer->getData('order');
+        $order         = $observer->getData('order');
         $quotePgAddres = $this->pickupAddressHelper->getPakjeGemakAddressInQuote($order->getQuoteId());
         $pgAddress     = false;
         $postnlOrder   = $this->getPostNLOrder($order);
 
-        if ($quotePgAddres->getId() && !$this->addressAlreadyAdded($order, $postnlOrder)) {
+        if ($quotePgAddres->getId() && $this->shouldAdd($order, $postnlOrder)) {
             /** @var Order\Address $orderPgAddress */
             $orderPgAddress = $this->quoteAddressToOrderAddress->convert($quotePgAddres);
             $pgAddress      = $this->createOrderAddress($orderPgAddress, $order);
@@ -106,6 +106,25 @@ class AddressToOrder implements ObserverInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @param $order
+     * @param $postnlOrder
+     *
+     * @return bool
+     */
+    private function shouldAdd($order, $postnlOrder)
+    {
+        if (!$this->isPostNLShipment($order)) {
+            return false;
+        }
+
+        if ($this->addressAlreadyAdded($order, $postnlOrder)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -140,6 +159,17 @@ class AddressToOrder implements ObserverInterface
         }
 
         return $postnlOrder;
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order $order
+     *
+     * @return bool
+     */
+    private function isPostNLShipment($order)
+    {
+        $method = $order->getShippingMethod();
+        return $method === 'tig_postnl_regular';
     }
 
     /**

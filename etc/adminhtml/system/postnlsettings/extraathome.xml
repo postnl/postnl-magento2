@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ *
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+
+    <!-- Extra at Home -->
+
+     <group id="extra_at_home" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Extra@Home</label>
+            <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+            <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+
+            <field id="extraathome_active" translate="label comment" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Activate Extra@Home (BETA)</label>
+                <comment><![CDATA[Extra@Home can be used to ship large and heavy Products. Please consult your PostNL account manager for more information about activating this service for your account.]]></comment>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <config_path>tig_postnl/extra_at_home/extraathome_active</config_path>
+                <depends>
+                    <field id="shippingoptions_active">1</field>
+                </depends>
+            </field>
+
+            <field id="default_extraathome_option" translate="label" type="select" sortOrder="130" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                <label>Extra@Home delivery</label>
+                <comment><![CDATA[Select the default product option for Extra@Home shipments.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getExtraAtHomeOptions</source_model>
+                <config_path>tig_postnl/extra_at_home/default_extraathome_option</config_path>
+                <depends>
+                    <field id="tig_postnl/shippingoptions/extraathome_active">1</field>
+                </depends>
+            </field>
+     </group>
+
+</include>

@@ -99,42 +99,9 @@ class ConfigTest extends TestCase
     {
         /** @var ProductOptions $configProvider */
         $configProvider = $this->getObject(ProductOptions::class);
-        $value = $configProvider->getSupportedProductOptions();
-        $productOptions = explode(',', $value);
+        $productOptions = $configProvider->getSupportedProductOptions();
 
         $this->assertContains($productCode, $productOptions);
-    }
-
-    /**
-     * @return array
-     */
-    public function nonDefaultSupportedOptionsProvider()
-    {
-        return [
-            [3628],
-            [3629],
-            [3653],
-            [3783],
-            [3790],
-            [3791],
-            [3792],
-            [3793],
-        ];
-    }
-
-    /**
-     * @param $productCode
-     *
-     * @dataProvider nonDefaultSupportedOptionsProvider
-     */
-    public function testNonDefaultSupportedOptions($productCode)
-    {
-        /** @var ProductOptions $configProvider */
-        $configProvider = $this->getObject(ProductOptions::class);
-        $value = $configProvider->getSupportedProductOptions();
-        $productOptions = explode(',', $value);
-
-        $this->assertNotContains($productCode, $productOptions);
     }
 
     public function testGetDefaultExtraAtHomeProductOption()

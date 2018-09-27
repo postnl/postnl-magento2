@@ -37,6 +37,7 @@ class LabelsizeSettings implements ArrayInterface
 {
     const A4_LABELSIZE = 'A4';
     const A6_LABELSIZE = 'A6';
+
     /**
      * @return array
      */

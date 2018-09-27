@@ -34,6 +34,7 @@ namespace TIG\PostNL\Config\Provider;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Encryption\Encryptor;
 use Magento\Framework\Module\Manager;
+use TIG\PostNL\Config\Source\Options\ProductOptions;
 
 abstract class AbstractConfigProvider
 {
@@ -56,18 +57,27 @@ abstract class AbstractConfigProvider
     protected $crypt;
 
     /**
+     * @var ProductOptions
+     */
+    // @codingStandardsIgnoreLine
+    protected $productOptions;
+
+    /**
      * @param ScopeConfigInterface $scopeConfig
      * @param Manager $moduleManager
      * @param Encryptor            $crypt
+     * @param ProductOptions $productOptions
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         Manager $moduleManager,
-        Encryptor $crypt
+        Encryptor $crypt,
+        ProductOptions $productOptions
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->moduleManager = $moduleManager;
         $this->crypt = $crypt;
+        $this->productOptions = $productOptions;
     }
 
     /**

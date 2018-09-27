@@ -54,10 +54,11 @@ interface ShipmentBarcodeRepositoryInterface
      * Return a specific PostNL Shipment Barcode.
      *
      * @api
-     * @param int $identifier
+     * @param int $id
      * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
      */
-    public function getById($identifier);
+    // @codingStandardsIgnoreLine
+    public function getById($id);
 
     /**
      * Retrieve a list of PostNL Shipment Barcodes.

@@ -69,6 +69,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     const FIELD_PARCEL_COUNT = 'parcel_count';
     const FIELD_SHIP_AT = 'ship_at';
     const FIELD_CONFIRMED_AT = 'confirmed_at';
+    const FIELD_CONFIRMED = 'confirmed';
 
     /**
      * @var string
@@ -773,5 +774,23 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
          */
         // @codingStandardsIgnoreLine
         return new \DateTime($deliveryDate);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setConfirmed($value)
+    {
+        return $this->setData(static::FIELD_CONFIRMED, $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfirmed()
+    {
+        return $this->getData(static::FIELD_CONFIRMED);
     }
 }

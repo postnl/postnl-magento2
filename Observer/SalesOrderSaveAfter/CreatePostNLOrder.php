@@ -54,10 +54,12 @@ class CreatePostNLOrder implements ObserverInterface
      * @var ParcelCount
      */
     private $parcelCount;
+
     /**
      * @var Data
      */
     private $helper;
+
     /**
      * @var ProductCodeAndType
      */

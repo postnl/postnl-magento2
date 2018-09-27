@@ -55,6 +55,7 @@
                 <item name="eveningdelivery_fee" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\EveningDeliveryFee</item>
                 <item name="eveningdelivery_be_fee" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\EveningDeliveryBeFee</item>
                 <item name="is_deliverydays_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive</item>
+                <item name="is_postcodecheck_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsPostcodecheckActive</item>
             </argument>
         </arguments>
     </type>
@@ -77,4 +78,11 @@
         </arguments>
     </type>
 
+    <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
+        <plugin name="postnlPostcodecheckGroupPlugin" type="TIG\PostNL\Plugin\Postcodecheck\LayoutProcessor" />
+    </type>
+
+    <type name="Mageplaza\Osc\Helper\Address">
+        <plugin name="postcodeFieldGroupMagePlazaPlugin" type="TIG\PostNL\Plugin\Postcodecheck\Mageplaza\AddressHelper" />
+    </type>
 </config>

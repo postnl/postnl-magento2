@@ -30,7 +30,7 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 ?>
-<div id="section" class="tig-admin-col-set box">
+<div id="section" class="tig-admin-col-set box <?php echo $this->getModusClass(); ?>">
     <div class="col col-1">
         <strong><?php echo __('Test Mode')?></strong>
         <p><?php echo __('If you want to test the extension, but do not have any test mode credentials you can use the account credentials found <a href="%1" target="_blank">here</a>.', [$block->getInfoUrlForTestAccount()]);?></p>

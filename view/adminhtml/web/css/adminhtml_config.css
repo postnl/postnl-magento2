@@ -36,7 +36,6 @@
 * =================================================================================================================== */
 
 #section { float: left; width: 100%; clear: both; }
-#supporttab { margin-left: 4rem;  }
 #supporttab #section { border-bottom: 1px solid #cccccc; }
 #supporttab #section:last-child { border-bottom: none; }
 
@@ -95,35 +94,98 @@
 .postnl-config-page .section-config {
     box-sizing:border-box;
     padding-left: 20px;
-    margin-left: 10px;
     position: relative;
 }
 
-.section-config.tig_postnl-section.modus_live:before {
-    border-left: 5px solid #49AB43;
-    content: '';
-    position: absolute;
-    left: -15px;
-    height: calc(100% + 2px);
-}
 
-.section-config.tig_postnl-section.modus_test:before {
-    border-left: 5px solid #ffc107;
-    content: '';
-    position: absolute;
-    left: -15px;
-    height: calc(100% + 2px);
-}
 
-.section-config.tig_postnl-section.modus_off:before {
-    border-left: 5px solid #CCCCCC;
-    content: '';
-    position: absolute;
-    left: -15px;
-    height: calc(100% + 2px);
+
+
+
+
+.tig_postnl-section input,
+.tig_postnl-section select {
+    border-radius: 4px !important;
+    padding-left: 10px !important;
+}
+.tig_postnl-section select:not([multiple]) {
+    background-image: url(../images/arrows-bg.svg),
+    linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)),
+    linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)) !important;
 }
 
 
+
+
+.tig_postnl-general-section,
+.tig_postnl-postnl-section {
+    margin-top: 100px !important;
+}
+
+.tig_postnl-general-section:before {
+    content: 'Basic';
+    position: absolute;
+    left: 0;
+    color: #3440b6;
+    top: -44px;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.tig_postnl-general-section:after {
+    content: '';
+    position: absolute;
+    left: 60px;
+    right: 0;
+    border: 1px solid #ed8c00;
+    top: -28px;
+}
+
+.tig_postnl-postnl-section:before {
+    content: 'Extra';
+    position: absolute;
+    left: 0;
+    color: #3440b6;
+    top: -44px;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.tig_postnl-postnl-section:after {
+    content: '';
+    position: absolute;
+    left: 60px;
+    right: 0;
+    border: 1px solid #ed8c00;
+    top: -28px;
+}
+
+.section-config.tig_postnl-general-section.modus_live {
+    border: 1px solid #49AB43 !important;
+    background: #e9ffe7;
+}
+
+.section-config.tig_postnl-general-section.modus_test {
+    border: 1px solid #ffc107 !important;
+    background: #fffcf1;
+}
+
+.section-config.tig_postnl-general-section.modus_off {
+    border: 1px solid #343fb6 !important;
+    background: #eff0ff;
+}
+
+.tig-admin-col-set.modus_live {
+    background: #e9ffe7 !important;
+}
+
+.tig-admin-col-set.modus_test {
+    background: #fffcf1 !important;
+}
+
+.tig-admin-col-set.modus_off {
+    background: #eff0ff !important;
+}
 
 /* SupportTab - Legend ============================================================================================== */
 
@@ -159,7 +221,7 @@
 }
 
 .disabled{
-    border-left: 5px solid #CCCCCC;
+    border-left: 5px solid #343fb6;
     padding-left: 10px;
 }
 
@@ -191,7 +253,6 @@
 
 .block-version {
     padding:10px;
-    background: #F8F8F8;
     float:left;
     width: calc(100% - 20px);
     box-sizing: border-box;
@@ -341,38 +402,6 @@
     background-size: auto 29px;
 }
 
-/* Identity - Content =============================================================================================== */
-
-.postnl-config-page .entry-edit.form-inline {
-    padding-top: 80px;
-}
-
-.postnl-config-page .admin__scope-old:before {
-    background-image: url(../images/logo_tig.png) !important;
-    background-repeat: no-repeat;
-    content: ' ';
-
-    width: 50px;
-    float:right;
-    height: 50px;
-    background-size: auto 50px;
-}
-
-.postnl-config-page #container:before  {
-    background-image: url(../images/postnl_logo.png) !important;
-    background-repeat: no-repeat;
-    content: 'PostNL';
-    text-indent: 70px;
-    float: left;
-    height: 50px;
-    background-size: auto 50px;
-    width: 295px;
-    line-height: 49px;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-
 /* Shipment Methods ================================================================================================= */
 
 #carriers_tig_postnl-head:after  {
@@ -412,8 +441,6 @@ h4#carriers_tig_postnl_import_export_header {
 /* TIG Admin 2 Columns col-set ====================================================================================== */
 
 .tig-admin-col-set.box {
-    background: #F8F8F8;
-    padding: 10px;
     box-sizing:border-box;
 }
 
@@ -427,3 +454,44 @@ h4#carriers_tig_postnl_import_export_header {
     width: 50%;
     padding: 20px;
 }
+
+
+
+
+
+.section-config.tig_postnl-section,
+.section-config.tig_postnl-section:last-child {
+    margin-bottom: 20px;
+    border: 1px solid #e3e3e3 !important;
+    border-radius: 8px;
+    padding: 0 20px  !important;
+}
+
+.section-config.tig_postnl-sub-section,
+.section-config.tig_postnl-sub-sub-section {
+    border-radius: 8px;
+    border: 1px solid #e3e3e3 !important;
+    width: calc(100% - 20px);
+    margin-top: 20px;
+    margin-bottom: 0;
+    margin-left: 0;
+}
+
+.section-config.tig_postnl-sub-sub-sub-section {
+    border-radius: 8px;
+    border: 1px solid #e3e3e3 !important;
+    width: calc(100% - 20px);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 0;
+}
+
+.tig_postnl-sub-section.active {
+    padding-bottom: 30px !important;
+}
+
+.tig_postnl-sub-sub-section .active,
+.tig_postnl-sub-sub-section .open {
+    padding-bottom: 30px !important;
+}
+

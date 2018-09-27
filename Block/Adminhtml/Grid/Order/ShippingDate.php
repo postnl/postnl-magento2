@@ -105,8 +105,11 @@ class ShippingDate extends AbstractGrid
     protected function prepareData()
     {
         $orderIds = $this->collectIds();
-        $searchCriteria = $this->createIdInSearchCriteria($orderIds);
+        if (!$orderIds) {
+            return null;
+        }
 
+        $searchCriteria = $this->createIdInSearchCriteria($orderIds);
         $models = $this->loadShipments($searchCriteria);
         foreach ($models as $model) {
             $this->shipments[$model->getOrderId()][] = $model;

@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Timeframe;
 
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Helper\AddressEnhancer;
 
 class Options
@@ -51,15 +52,23 @@ class Options
     private $addressEnhancer;
 
     /**
+     * @var Webshop
+     */
+    private $webshop;
+
+    /**
      * @param ShippingOptions $shippingOptions
      * @param AddressEnhancer $addressEnhancer
+     * @param Webshop $webshop
      */
     public function __construct(
         ShippingOptions $shippingOptions,
-        AddressEnhancer $addressEnhancer
+        AddressEnhancer $addressEnhancer,
+        Webshop $webshop
     ) {
         $this->shippingOptions = $shippingOptions;
         $this->addressEnhancer = $addressEnhancer;
+        $this->webshop         = $webshop;
     }
 
     /**
@@ -75,10 +84,28 @@ class Options
             $deliveryTimeframesOptions[] = self::EVENING_DELIVERY_OPTION;
         }
 
-        if ($this->shippingOptions->isSundayDeliveryActive()) {
+        if ($this->shippingOptions->isSundayDeliveryActive() && $this->hasSaturdayAsShippingDay()) {
             $deliveryTimeframesOptions[] = self::SUNDAY_DELIVERY_OPTION;
         }
 
         return $deliveryTimeframesOptions;
+    }
+
+    /**
+     * @return string
+     */
+    public function isSundaySortingAllowed()
+    {
+        $shipmentDays = explode(',', $this->webshop->getShipmentDays());
+        return !empty(array_intersect(['0', '6'], $shipmentDays)) ? 'true' : 'false';
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasSaturdayAsShippingDay()
+    {
+        $shipmentDays = explode(',', $this->webshop->getShipmentDays());
+        return in_array('6', $shipmentDays);
     }
 }

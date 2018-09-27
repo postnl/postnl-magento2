@@ -95,6 +95,7 @@ class ResetPostNLShipment
 
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment->setConfirmedAt(null);
+        $postNLShipment->setConfirmed(false);
         $postNLShipment->setMainBarcode(null);
         $this->shipmentService->save($postNLShipment);
 
