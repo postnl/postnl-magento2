@@ -252,4 +252,18 @@ class ProductOptionsTest extends AbstractConfigurationTest
         $this->setXpath(ProductOptions::XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION, $value);
         $this->assertEquals($value, $instance->getDefaultSundayProductOption());
     }
+
+    public function testGetDefaultGuaranteedCargoDeliveryType()
+    {
+        $instance = $this->getInstance();
+        $this->setXpath(ProductOptions::XPATH_DEFAULT_CARGO_DELIVERY_TYPE, 1000);
+        $this->assertEquals('1000', $instance->getDefaultGuaranteedCargoDeliveryType());
+    }
+
+    public function testGetDefaultGuaranteedPackageDeliveryType()
+    {
+        $instance = $this->getInstance();
+        $this->setXpath(ProductOptions::XPATH_DEFAULT_PACKAGE_DELIVERY_TYPE, 1000);
+        $this->assertEquals('1000', $instance->getDefaultGuaranteedPackageDeliveryType());
+    }
 }

@@ -37,6 +37,7 @@ namespace TIG\PostNL\Config\Provider;
 class ShippingOptions extends AbstractConfigProvider
 {
     const XPATH_SHIPPING_OPTION_ACITVE                    = 'tig_postnl/delivery_settings/shippingoptions_active';
+    const XPATH_GUARANTEED_DELIVERY_ACTIVE                = 'tig_postnl/delivery_settings/guaranteed_delivery';
     const XPATH_SHIPPING_OPTION_STOCK                     = 'tig_postnl/stock_settings/stockoptions';
     const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE       = 'tig_postnl/delivery_days/deliverydays_active';
     const XPATH_SHIPPING_OPTION_MAX_DELIVERYDAYS          = 'tig_postnl/delivery_days/max_deliverydays';
@@ -63,6 +64,18 @@ class ShippingOptions extends AbstractConfigProvider
     public function isShippingoptionsActive()
     {
         return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_ACITVE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGuaranteedDeliveryActive()
+    {
+        if (!$this->isShippingoptionsActive()) {
+            return false;
+        }
+
+        return (bool) $this->getConfigFromXpath( static::XPATH_GUARANTEED_DELIVERY_ACTIVE);
     }
 
     /**
