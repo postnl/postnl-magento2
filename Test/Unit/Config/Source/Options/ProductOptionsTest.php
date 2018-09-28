@@ -38,156 +38,17 @@ class ProductOptionsTest extends TestCase
 {
     protected $instanceClass = ProductOptions::class;
 
-    protected $options = [
-        '3385' => [
-            'value'             => '3385',
-            'label'             => 'label',
-            'isEvening'         => true,
-            'isSunday'          => true,
-            'group'             => 'standard_options',
-        ],
-        '3087' => [
-            'value'             => '3087',
-            'label'             => 'label',
-            'isExtraCover'      => true,
-            'isEvening'         => true,
-            'isSunday'          => true,
-            'group'             => 'standard_options',
-        ],
-        '3094' => [
-            'value'             => '3094',
-            'label'             => 'label',
-            'isExtraCover'      => true,
-            'isEvening'         => true,
-            'isSunday'          => true,
-            'group'             => 'standard_options',
-        ],
-        // Pakjegemak Options
-        '3534' => [
-            'value'             => '3534',
-            'label'             => 'label',
-            'isExtraEarly'      => false,
-            'isSunday'          => false,
-            'group'             => 'pakjegemak_options',
-        ],
-        '3544' => [
-            'value'             => '3544',
-            'label'             => 'label',
-            'isExtraCover'      => true,
-            'isExtraEarly'      => true,
-            'group'             => 'pakjegemak_options',
-        ],
-        '3089' => [
-            'value'             => '3089',
-            'label'             => 'label',
-            'isEvening'         => true,
-            'isSunday'          => true,
-            'group'             => 'standard_options',
-        ],
-        //ID Check
-        '3437' => [
-            'value'             => '3437',
-            'label'             => 'label',
-            'isExtraCover'      => false,
-            'isEvening'         => true,
-            'isSunday'          => true,
-            'isSameDay'         => true,
-            'statedAddressOnly' => false,
-            'countryLimitation' => 'NL',
-            'group'             => 'id_check_options',
-        ],
-        '3438' => [
-            'value'             => '3438',
-            'label'             => 'label',
-            'isExtraCover'      => false,
-            'isEvening'         => true,
-            'isSunday'          => true,
-            'isSameDay'         => true,
-            'statedAddressOnly' => false,
-            'countryLimitation' => 'NL',
-            'group'             => 'id_check_options',
-        ],
-        '3443' => [
-            'value'             => '3443',
-            'label'             => 'label',
-            'isExtraCover'      => true,
-            'isEvening'         => true,
-            'isSunday'          => true,
-            'isSameDay'         => true,
-            'statedAddressOnly' => false,
-            'countryLimitation' => 'NL',
-            'group'             => 'id_check_options',
-        ],
-        '3446' => [
-            'value'             => '3446',
-            'label'             => 'label',
-            'isExtraCover'      => true,
-            'isEvening'         => true,
-            'isSunday'          => true,
-            'isSameDay'         => true,
-            'statedAddressOnly' => false,
-            'countryLimitation' => 'NL',
-            'group'             => 'id_check_options',
-        ],
-        '3449' => [
-            'value'             => '3449',
-            'label'             => 'label',
-            'isExtraCover'      => false,
-            'isEvening'         => true,
-            'isSunday'          => true,
-            'isSameDay'         => true,
-            'statedAddressOnly' => false,
-            'countryLimitation' => 'NL',
-            'group'             => 'id_check_options',
-        ],
-        // ID Check Pakje gemak
-        '3571' => [
-            'value'             => '3571',
-            'label'             => 'label',
-            'isExtraCover'      => false,
-            'pge'               => false,
-            'statedAddressOnly' => false,
-            'isSunday'          => false,
-            'countryLimitation' => 'NL',
-            'group'             => 'id_check_pakjegemak_options',
-        ],
-        '3574' => [
-            'value'             => '3574',
-            'label'             => 'label',
-            'isExtraCover'      => false,
-            'pge'               => true,
-            'statedAddressOnly' => false,
-            'isSunday'          => false,
-            'countryLimitation' => 'NL',
-            'group'             => 'id_check_pakjegemak_options',
-        ],
-        '3581' => [
-            'value'             => '3581',
-            'label'             => 'label',
-            'isExtraCover'      => true,
-            'pge'               => false,
-            'statedAddressOnly' => false,
-            'isSunday'          => false,
-            'countryLimitation' => 'NL',
-            'group'             => 'id_check_pakjegemak_options',
-        ],
-        '3584' => [
-            'value'             => '3584',
-            'label'             => 'label',
-            'isExtraCover'      => true,
-            'pge'               => true,
-            'statedAddressOnly' => false,
-            'isSunday'          => false,
-            'countryLimitation' => 'NL',
-            'group'             => 'id_check_pakjegemak_options',
-        ]
-    ];
-
     protected $groups = [
-        'standard_options'   => 'Domestic options',
-        'pakjegemak_options' => 'Post Office options',
-        'id_check_options'   => 'ID Check options',
-        'id_check_pakjegemak_options' => 'ID Check Post Office options',
+        'standard_options'              => 'Domestic options',
+        'pakjegemak_options'            => 'Post Office options',
+        'eu_options'                    => 'EU options',
+        'global_options'                => 'Global options',
+        'buspakje_options'              => 'Letter Box Parcel options',
+        'extra_at_home_options'         => 'Extra@Home options',
+        'id_check_options'              => 'ID Check options',
+        'id_check_pakjegemak_options'   => 'ID Check Post Office options',
+        'cargo_options'                 => 'Cargo options',
+        'package_options'               => 'Package options'
     ];
 
     /**
@@ -207,28 +68,31 @@ class ProductOptionsTest extends TestCase
     public function getProductoptionsProvider()
     {
         return [
-            [$this->options, ['isEvening' => true], false, ['3385', '3089', '3437', '3438', '3443', '3446', '3449']],
-            [$this->options, ['isSunday'  => false], false, ['3534', '3571', '3574', '3581', '3574']],
-            [$this->options, ['isEvening' => true], true, ['3089', '3437', '3438', '3443', '3446', '3449']],
-            [$this->options, ['isExtraCover' => true], true, ['3087', '3094', '3443', '3446', '3581', '3584']]
+            [['isSunday' => true], ['3087', '3094', '3089', '3096', '3385', '3437', '3438', '3443', '3446', '3449',]],
+            [['isEvening' => true],
+             ['3087', '3094', '3089', '3096', '3090', '3385', '4938', '4941', '3437', '3438', '3443', '3446', '3449',]],
+            [['isExtraCover' => true], ['3087', '3094', '3534', '3544', '3443', '3446', '3581', '3584',]],
+            [['isGuaranteedDelivery' => true], ['3085', '3087', '3089', '3090', '3094', '3096',
+                                                '3189', '3385', '3389', '3606', '3607',
+                                                '3608', '3609', '3610', '3630', '3657']],
         ];
     }
 
     /**
-     * @param $options
      * @param $filter
-     * @param $checkOnAvailable
      * @param $expected
      *
+     * @throws \Exception
      * @dataProvider getProductoptionsProvider
      */
-    public function testGetProductoptions($options, $filter, $checkOnAvailable, $expected)
+    public function testGetProductoptions($filter, $expected)
     {
         $instance = $this->getInstance();
 
+        $options = $instance->get();
         $this->setProperty('availableOptions', $options, $instance);
 
-        $result = $instance->getProductoptions($filter, $checkOnAvailable);
+        $result = $instance->getProductoptions($filter);
 
         $result = array_map(function ($value) {
             return $value['value'];
@@ -245,23 +109,30 @@ class ProductOptionsTest extends TestCase
     public function setGroupedOptionsProvider()
     {
         return [
-            [$this->options, $this->groups, ['Domestic options',
-                                             'Post Office options',
-                                             'ID Check options',
-                                             'ID Check Post Office options']]
+            [$this->groups, ['Domestic options',
+                             'Post Office options',
+                             'EU options',
+                             'Global options',
+                             'Letter Box Parcel options',
+                             'Extra@Home options',
+                             'ID Check options',
+                             'ID Check Post Office options',
+                             'Cargo options',
+                             'Package options']]
         ];
     }
 
     /**
-     * @param $options
      * @param $groups
      * @param $expected
      *
+     * @throws \Exception
      * @dataProvider setGroupedOptionsProvider
      */
-    public function testGetGroupedOptions($options, $groups, $expected)
+    public function testGetGroupedOptions($groups, $expected)
     {
         $instance = $this->getInstance();
+        $options = $instance->get();
         $instance->setGroupedOptions($options, $groups);
 
         $result = $instance->getGroupedOptions();
