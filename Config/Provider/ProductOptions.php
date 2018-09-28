@@ -50,6 +50,9 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_EVENING_BE_PRODUCT_OPTION       = 'tig_postnl/evening_delivery_be/default_evening_be_option';
     const XPATH_DEFAULT_PAKJEGEMAK_EARLY_PRODUCT_OPTION = 'tig_postnl/post_offices/default_pakjegemak_early_option';
     const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION           = 'tig_postnl/sunday_delivery/default_sunday_option';
+    const XPATH_GUARANTEED_DELIVERY_ACTIVE              = 'tig_postnl/delivery_settings/guaranteed_delivery';
+    const XPATH_DEFAULT_CARGO_DELIVERY_TYPE             = 'tig_postnl/delivery_settings/default_cargo_type';
+    const XPATH_DEFAULT_PACKAGE_DELIVERY_TYPE           = 'tig_postnl/delivery_settings/default_package_type';
 
     /**
      * Since 1.5.1 all product options are automaticly supported.
@@ -146,6 +149,30 @@ class ProductOptions extends AbstractConfigProvider
     public function getDefaultSundayProductOption()
     {
         return $this->getConfigFromXpath(self::XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGuaranteedDeliveryActive()
+    {
+        return (bool) $this->getConfigFromXpath( static::XPATH_GUARANTEED_DELIVERY_ACTIVE);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultGuaranteedPackageDeliveryType()
+    {
+        return (string) $this->getConfigFromXpath(static::XPATH_DEFAULT_PACKAGE_DELIVERY_TYPE);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultGuaranteedCargoDeliveryType()
+    {
+        return (string) $this->getConfigFromXpath(static::XPATH_DEFAULT_CARGO_DELIVERY_TYPE);
     }
 }
 /**
