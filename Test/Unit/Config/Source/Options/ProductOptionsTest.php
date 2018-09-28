@@ -48,7 +48,7 @@ class ProductOptionsTest extends TestCase
         'id_check_options'              => 'ID Check options',
         'id_check_pakjegemak_options'   => 'ID Check Post Office options',
         'cargo_options'                 => 'Cargo options',
-        'package_options'               => 'Package options'
+        'eps_package_options'           => 'Package options'
     ];
 
     /**

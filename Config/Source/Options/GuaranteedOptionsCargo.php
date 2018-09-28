@@ -39,6 +39,7 @@ class GuaranteedOptionsCargo implements ArrayInterface
      * @see \TIG\PostNL\Service\Shipment\GuaranteedOptions
      * @return array
      */
+    // @codingStandardsIgnoreStart
     public function toOptionArray()
     {
         return [
@@ -56,4 +57,5 @@ class GuaranteedOptionsCargo implements ArrayInterface
             ]
         ];
     }
+    // @codingStandardsIgnoreEnd
 }

@@ -559,7 +559,7 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => 'BE',
-            'group'                => 'package_options',
+            'group'                => 'eps_package_options',
         ],
         '4983' => [
             'value'                => '4983',
@@ -569,7 +569,7 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => false,
-            'group'                => 'package_options',
+            'group'                => 'eps_package_options',
         ],
         '4985' => [
             'value'                => '4985',
@@ -579,7 +579,7 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => false,
-            'group'                => 'package_options',
+            'group'                => 'eps_package_options',
         ],
         '4986' => [
             'value'                => '4986',
@@ -589,7 +589,7 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => 'BE',
-            'group'                => 'package_options',
+            'group'                => 'eps_package_options',
         ],
     ];
 
@@ -603,7 +603,7 @@ abstract class OptionsAbstract
         'id_check_options'              => 'ID Check options',
         'id_check_pakjegemak_options'   => 'ID Check Post Office options',
         'cargo_options'                 => 'Cargo options',
-        'package_options'               => 'Package options'
+        'eps_package_options'           => 'Package options'
     ];
 
     protected $groupToLabel = [
@@ -616,7 +616,7 @@ abstract class OptionsAbstract
         'id_check_options'              => 'ID Check',
         'id_check_pakjegemak_options'   => 'ID Check Post Office',
         'cargo_options'                 => 'Cargo',
-        'package_options'               => 'Package'
+        'eps_package_options'           => 'Package'
     ];
 
     protected $typeToComment = [

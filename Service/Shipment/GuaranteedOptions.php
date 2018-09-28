@@ -62,7 +62,8 @@ class GuaranteedOptions
      *
      * @return array|null
      */
-    public function get($time, $flat = false) {
+    public function get($time, $flat = false)
+    {
 
         if (!array_key_exists($time, $this->availableProductOptions)) {
             return null;
