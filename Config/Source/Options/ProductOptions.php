@@ -33,6 +33,7 @@ namespace TIG\PostNL\Config\Source\Options;
 
 use TIG\PostNL\Config\Source\OptionsAbstract;
 use Magento\Framework\Option\ArrayInterface;
+use TIG\PostNL\Service\Shipment\GuaranteedOptions;
 
 /**
  * As this class holds all the methods to retrieve correct product codes, it is too long for Code Sniffer to check.
@@ -171,5 +172,24 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     public function getExtraAtHomeOptions()
     {
         return $this->getProductoptions(['group' => 'extra_at_home_options']);
+    }
+
+    /**
+     * @param $code
+     *
+     * @return null|string
+     */
+    public function getGuaranteedType($code)
+    {
+        $productOption = $this->getOptionsByCode($code);
+        if (!$productOption) {
+            return null;
+        }
+
+        if ($productOption['group'] == 'cargo_options') {
+            return GuaranteedOptions::GUARANTEED_TYPE_CARGO;
+        }
+
+        return GuaranteedOptions::GUARANTEED_TYPE_PACKAGE;
     }
 }

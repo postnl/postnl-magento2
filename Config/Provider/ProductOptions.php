@@ -183,6 +183,39 @@ class ProductOptions extends AbstractConfigProvider
     {
         return (string) $this->getConfigFromXpath(static::XPATH_ALTERNATIVE_DEFAULT_CARGO_DELIVERY_TYPE);
     }
+
+    /**
+     * @param bool   $alternative
+     * @param string $type
+     *
+     * @return string
+     */
+    public function getGuaranteedDeliveryType($alternative = false, $type = 'package')
+    {
+        if ($alternative && $type == 'package') {
+            return $this->getDefaultAlternativeGuaranteedPackageDeliveryType();
+        }
+
+        if ($alternative) {
+            return $this->getDefaultAlternativeGuaranteedCargoDeliveryType();
+        }
+
+        if (!$alternative && $type == 'package') {
+            return $this->getDefaultGuaranteedPackageDeliveryType();
+        }
+
+        return $this->getDefaultGuaranteedCargoDeliveryType();
+    }
+
+    /**
+     * @param $code
+     *
+     * @return null|string
+     */
+    public function getGuaranteedType($code)
+    {
+        return $this->productOptions->getGuaranteedType($code);
+    }
 }
 /**
  * codingStandardsIgnoreEnd

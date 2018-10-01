@@ -31,8 +31,33 @@
  */
 namespace TIG\PostNL\Service\Shipment;
 
+use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
+use Magento\Sales\Api\OrderRepositoryInterface;
+
 class ProductOptions
 {
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
+
+    /**
+     * @var GuaranteedOptions
+     */
+    private $guaranteedOptions;
+
+    /**
+     * @var ProductOptionsConfiguration
+     */
+    private $productOptionsConfig;
+
+    /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
+
     /**
      * These shipment types need specific product options.
      *
@@ -62,17 +87,40 @@ class ProductOptions
         ];
 
     /**
-     * @param string $type
+     * ProductOptions constructor.
+     *
+     * @param ShippingOptions              $shippingOptions
+     * @param GuaranteedOptions            $guaranteedOptions
+     * @param ProductOptionsConfiguration  $productOptions
+     * @param OrderRepositoryInterface     $orderRepository
+     */
+    public function __construct(
+        ShippingOptions $shippingOptions,
+        GuaranteedOptions $guaranteedOptions,
+        ProductOptionsConfiguration $productOptions,
+        OrderRepositoryInterface $orderRepository
+    ) {
+        $this->shippingOptions      = $shippingOptions;
+        $this->guaranteedOptions    = $guaranteedOptions;
+        $this->productOptionsConfig = $productOptions;
+        $this->orderRepository      = $orderRepository;
+    }
+
+    /**
+     * @param ShipmentInterface $shipment
      * @param bool   $flat
      *
      * @return null
      */
-    public function get($type, $flat = false)
+    public function get($shipment, $flat = false)
     {
-        $type = strtolower($type);
+        $type = strtolower($shipment->getShipmentType());
+        if ($shipment->isIDCheck()) {
+            $type = 'idcheck';
+        }
 
         if (!array_key_exists($type, $this->availableProductOptions)) {
-            return null;
+            return $this->checkGuaranteedOptions($shipment);
         }
 
         if ($flat) {
@@ -81,4 +129,46 @@ class ProductOptions
 
         return ['ProductOption' => $this->availableProductOptions[$type]];
     }
+
+    /**
+     * @param ShipmentInterface $shipment
+     *
+     * @return null|array
+     */
+    private function checkGuaranteedOptions($shipment)
+    {
+        if (!$this->shippingOptions->isGuaranteedDeliveryActive()) {
+            return null;
+        }
+
+        $order = $this->orderRepository->get($shipment->getOrderId());
+        $guaranteedTime = $this->productOptionsConfig->getGuaranteedDeliveryType(
+            $this->isAlternative($order->getBaseGrandTotal()),
+            $this->productOptionsConfig->getGuaranteedType($shipment->getProductCode())
+        );
+
+        return $this->guaranteedOptions->get($guaranteedTime);
+    }
+
+    /**
+     * @param $totalAmount
+     *
+     * @return bool
+     */
+    private function isAlternative($totalAmount)
+    {
+        $alternativeActive = $this->productOptionsConfig->getUseAlternativeDefault();
+        if (!$alternativeActive) {
+            return false;
+        }
+
+        $alternativeMinAmount = $this->productOptionsConfig->getAlternativeDefaultMinAmount();
+        if ($totalAmount >= $alternativeMinAmount) {
+            return false;
+        }
+
+        return true;
+
+    }
+
 }
