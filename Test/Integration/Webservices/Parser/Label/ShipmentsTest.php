@@ -35,6 +35,7 @@ use \TIG\PostNL\Webservices\Parser\Label\Shipments;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
 use TIG\PostNL\Test\Integration\TestCase;
 use TIG\PostNL\Service\Shipment\Data as ShipmentData;
+use TIG\PostNL\Service\Shipment\ProductOptions;
 
 class ShipmentsTest extends TestCase
 {
@@ -62,15 +63,10 @@ class ShipmentsTest extends TestCase
     public function testGet()
     {
         $postNLShipment = $this->getPostNLShipment();
-
-        $shipmentData = $this->getObject(ShipmentData::class, [
-            'productOptions' => $this->getProductOptionsMock($postNLShipment)
-        ]);
+        $this->setProductOptionsMock($postNLShipment);
 
         /** @var Shipments $instance */
-        $instance = $this->getInstance([
-            'shipmentData' => $shipmentData
-        ]);
+        $instance = $this->getInstance();
 
         $result = $instance->get($postNLShipment, 1);
 
@@ -112,18 +108,22 @@ class ShipmentsTest extends TestCase
 
     /**
      * @param \TIG\PostNL\Model\Shipment $shipment
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    private function getProductOptionsMock($shipment)
+    private function setProductOptionsMock($shipment)
     {
-        $optionMock = $this->getFakeMock('TIG\PostNL\Service\Shipment\ProductOptions')->disableOriginalConstructor()
-            ->getMock();
-        $optionMockExpects = $optionMock->expects($this->once());
+        $optionMock = $this->getMockBuilder(ProductOptions::class);
+        $optionMock->disableOriginalConstructor();
+        $optionMock = $optionMock->getMock();
+
+        $this->objectManager->configure([
+            'preferences' => [
+                ProductOptions::class => get_class($optionMock)
+            ]
+        ]);
+
+        $optionMockExpects = $this->objectManager->get(ProductOptions::class);
         $optionMockExpects->method('get');
         $optionMockExpects->with($shipment);
         $optionMockExpects->willReturn(null);
-
-        return $optionMock;
     }
 }
