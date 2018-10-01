@@ -63,7 +63,7 @@ class ShipmentsTest extends TestCase
     public function testGet()
     {
         $postNLShipment = $this->getPostNLShipment();
-        $this->setProductOptionsMock($postNLShipment);
+        $this->setProductOptionsMock();
 
         /** @var Shipments $instance */
         $instance = $this->getInstance();
@@ -106,10 +106,7 @@ class ShipmentsTest extends TestCase
         return $postNLShipment;
     }
 
-    /**
-     * @param \TIG\PostNL\Model\Shipment $shipment
-     */
-    private function setProductOptionsMock($shipment)
+    private function setProductOptionsMock()
     {
         $optionMock = $this->getMockBuilder(ProductOptions::class);
         $optionMock->disableOriginalConstructor();
@@ -122,8 +119,6 @@ class ShipmentsTest extends TestCase
         ]);
 
         $optionMockExpects = $this->objectManager->get(ProductOptions::class);
-        $optionMockExpects->method('get');
-        $optionMockExpects->with($shipment);
-        $optionMockExpects->willReturn(null);
+        $optionMockExpects->method('get')->willReturn(null);
     }
 }
