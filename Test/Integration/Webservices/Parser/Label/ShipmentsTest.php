@@ -117,7 +117,8 @@ class ShipmentsTest extends TestCase
      */
     private function getProductOptionsMock($shipment)
     {
-        $optionMock = $this->getFakeMock('TIG\PostNL\Service\Shipment\ProductOptions')->getMock();
+        $optionMock = $this->getFakeMock('TIG\PostNL\Service\Shipment\ProductOptions')->disableOriginalConstructor()
+            ->getMock();
         $optionMockExpects = $optionMock->expects($this->once());
         $optionMockExpects->method('get');
         $optionMockExpects->with($shipment);
