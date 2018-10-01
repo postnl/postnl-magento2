@@ -120,7 +120,26 @@ class ProductOptions
         }
 
         if (!array_key_exists($type, $this->availableProductOptions)) {
-            return $this->checkGuaranteedOptions($shipment);
+            return $this->checkGuaranteedOptions($shipment, $flat);
+        }
+
+        if ($flat) {
+            return $this->availableProductOptions[$type];
+        }
+
+        return ['ProductOption' => $this->availableProductOptions[$type]];
+    }
+
+    /**
+     * @param      $type
+     * @param bool $flat
+     *
+     * @return array|null
+     */
+    public function getByType($type, $flat = false)
+    {
+        if (!array_key_exists($type, $this->availableProductOptions)) {
+            return $this->guaranteedOptions->get($type, $flat);
         }
 
         if ($flat) {
@@ -132,10 +151,11 @@ class ProductOptions
 
     /**
      * @param ShipmentInterface $shipment
+     * @param $flat
      *
      * @return null|array
      */
-    private function checkGuaranteedOptions($shipment)
+    private function checkGuaranteedOptions($shipment, $flat)
     {
         if (!$this->shippingOptions->isGuaranteedDeliveryActive()) {
             return null;
@@ -147,7 +167,7 @@ class ProductOptions
             $this->productOptionsConfig->getGuaranteedType($shipment->getProductCode())
         );
 
-        return $this->guaranteedOptions->get($guaranteedTime);
+        return $this->guaranteedOptions->get($guaranteedTime, $flat);
     }
 
     /**
@@ -168,7 +188,5 @@ class ProductOptions
         }
 
         return true;
-
     }
-
 }
