@@ -62,8 +62,6 @@ class ShipmentsTest extends TestCase
      */
     public function testGet()
     {
-        $this->markTestSkipped('Problem with contructor');
-
         $postNLShipment = $this->getPostNLShipment();
         $this->setProductOptionsMock();
 
