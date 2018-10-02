@@ -52,9 +52,9 @@ module.exports = function (grunt) {
 
             unitTests: 'cd ' + magento2path + ' && vendor/phpunit/phpunit/phpunit -c "' + phpunitXmlPath + '"',
 
-            integrationTests:
-                'cd ' + magento2path + 'dev/tests/integration &&' +
-                'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit --testsuite "TIG PostNL Integration Tests"',
+            // integrationTests:
+            //     'cd ' + magento2path + 'dev/tests/integration &&' +
+            //     'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit --testsuite "TIG PostNL Integration Tests"',
 
             ciTests:
                 'cd ' + magento2path + 'dev/tests/integration &&' +
