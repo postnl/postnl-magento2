@@ -47,7 +47,6 @@ matrix:
   include:
     - php: 7.1
       env: MAGENTO_VERSION=2.2.6 CODE_COVERAGE=true
-  include:
     - php: 7.2
       env: MAGENTO_VERSION=2.2.6
   allow_failures:
