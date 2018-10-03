@@ -30,7 +30,7 @@ env:
     # - MAGENTO_VERSION=2.1.10
     # - MAGENTO_VERSION=2.1.11
     # - MAGENTO_VERSION=2.1.12
-    - MAGENTO_VERSION=2.1.13
+    # - MAGENTO_VERSION=2.1.13
     - MAGENTO_VERSION=2.1.14
     - MAGENTO_VERSION=2.1.15
     # - MAGENTO_VERSION=2.2.0
@@ -57,6 +57,7 @@ before_script:
 script:
   - grunt phpcs
   - grunt lint
+  - grunt exec:pharseTest
   - grunt exec:ciTests
   - if [ "$CODE_COVERAGE" = "false" ]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
 

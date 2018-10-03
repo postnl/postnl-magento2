@@ -60,6 +60,9 @@ module.exports = function (grunt) {
                 'cd ' + magento2path + 'dev/tests/integration &&' +
                 'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit',
 
+            pharseTest:
+                'cd ' + magento2path + ' && php bin/magento i18n:collect-phrases vendor/tig/postnl',
+
             phplint: 'if find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l | grep -v "No syntax errors detected"; then exit 1; fi',
 
             codeCoverage:
@@ -102,6 +105,7 @@ module.exports = function (grunt) {
      * Register the available tasks
      */
     grunt.registerTask('lint', 'Lint all PHP al JavaScript files', ['exec:phplint', 'jshint:all']);
+    grunt.registerTask('phraseTest', 'Check if phrases are correct implemented.', ['exec:pharseTest']);
     grunt.registerTask('phpcs', 'Run the Code Sniffer: For all production code and for the test code', ['exec:phpcs', 'exec:phpcsTest']);
     grunt.registerTask('codeCoverage', 'Generate the code coverage report in build', ['exec:codeCoverage']);
     grunt.registerTask('runTests', 'Run all available tests: Unit and integration', ['exec:unitTests', 'exec:integrationTests']);
