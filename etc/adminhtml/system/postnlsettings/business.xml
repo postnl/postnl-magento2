@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+ *
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ *
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+
+    <!-- business to business -->
+    <group id="business" translate="label" type="text" sortOrder="115" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Business to business</label>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+        <depends>
+            <field id="shippingoptions_active">1</field>
+        </depends>
+        <field id="cargo_active" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Use Cargo products</label>
+            <comment><![CDATA[The confirmation has to be at PostNL Pakketten before 8.00 pm. In this case the pallet will be collected the same day. Otherwise the pallet will be collected the next day.]]></comment>
+            <tooltip><![CDATA[Cargo products allow you to send pallet shipments to several European countries. These products can only be used after consulting your PostNL Pakketten account manager.]]></tooltip>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/business/cargo_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+        </field>
+
+        <field id="eps_active" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Use EPS business</label>
+            <comment><![CDATA[This gives you the choice of multiple EPS products for company to business purpose.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/business/eps_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+        </field>
+    </group>
+</include>

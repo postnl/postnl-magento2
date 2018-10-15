@@ -205,7 +205,7 @@ abstract class OptionsAbstract
         ],
         '4938' => [
             'value'                => '4938',
-            'label'                => 'EU Pack Special evening',
+            'label'                => 'Evening Belgium + Deliver to stated address only + Signature on delivery',
             'isEvening'            => true,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -215,7 +215,7 @@ abstract class OptionsAbstract
         ],
         '4941' => [
             'value'                => '4941',
-            'label'                => 'EU Pack Standard evening',
+            'label'                => 'Evening Belgium + Deliver to stated address only',
             'isEvening'            => true,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -559,6 +559,16 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => 'BE',
+            'group'                => 'eps_package_options',
+        ],
+        '4940' => [
+            'value'                => '4940',
+            'label'                => 'EU Pack Special to business',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
             'group'                => 'eps_package_options',
         ],
         '4983' => [
