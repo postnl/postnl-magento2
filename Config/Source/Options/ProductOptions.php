@@ -34,6 +34,7 @@ namespace TIG\PostNL\Config\Source\Options;
 use TIG\PostNL\Config\Source\OptionsAbstract;
 use Magento\Framework\Option\ArrayInterface;
 use TIG\PostNL\Service\Shipment\GuaranteedOptions;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
 /**
  * As this class holds all the methods to retrieve correct product codes, it is too long for Code Sniffer to check.
@@ -41,6 +42,15 @@ use TIG\PostNL\Service\Shipment\GuaranteedOptions;
 // @codingStandardsIgnoreFile
 class ProductOptions extends OptionsAbstract implements ArrayInterface
 {
+
+    private $shippingOptions;
+
+    public function __construct(
+        ShippingOptions $shippingOptions
+    ) {
+        $this->shippingOptions = $shippingOptions;
+    }
+
     /**
      * @param $code
      * @param $type
@@ -137,8 +147,14 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     {
         $flags = [];
         $flags['groups'][] = ['group' => 'standard_options'];
-        $flags['groups'][] = ['group' => 'id_check_options'];
-        $flags['groups'][] = ['group' => 'cargo_options'];
+        if ($this->shippingOptions->isIDCheckActive()) {
+            $flags['groups'][] = ['group' => 'id_check_options'];
+        }
+
+        if ($this->shippingOptions->canUseCargoProducts()) {
+            $flags['groups'][] = ['group' => 'cargo_options'];
+        }
+
         return $this->getProductoptions($flags);
     }
 
