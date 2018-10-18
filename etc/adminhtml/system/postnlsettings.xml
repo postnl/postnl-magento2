@@ -114,10 +114,10 @@
                 </depends>
             </field>
 
-            <field id="default_option" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <field id="default_option" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Default delivery</label>
                 <comment><![CDATA[Select the default product option for domestic shipments.]]></comment>
-                <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
+                <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions</source_model>
                 <config_path>tig_postnl/delivery_settings/default_option</config_path>
             </field>
 
@@ -143,14 +143,14 @@
                 </depends>
             </field>
 
-            <field id="use_alternative_default" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <field id="use_alternative_default" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Activate alternative delivery</label>
                 <comment><![CDATA[Enable this to use an alternative default option when a shipment's total value reaches a certain amount.]]></comment>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <config_path>tig_postnl/delivery_settings/use_alternative_default</config_path>
             </field>
 
-            <field id="alternative_default_min_amount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+            <field id="alternative_default_min_amount" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Minimum amount</label>
                 <comment><![CDATA[The alternative default option will be used from this value.]]></comment>
                 <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
@@ -160,10 +160,10 @@
                 </depends>
             </field>
 
-            <field id="alternative_default_option" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+            <field id="alternative_default_option" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Alternative delivery</label>
                 <comment><![CDATA[This option will be used as default from the given amount.]]></comment>
-                <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getDefaultOptions</source_model>
+                <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions</source_model>
                 <config_path>tig_postnl/delivery_settings/alternative_default_option</config_path>
                 <depends>
                     <field id="use_alternative_default">1</field>
@@ -201,7 +201,8 @@
             <include path="TIG_PostNL::system/postnlsettings/postoffices.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/stock.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/idcheck.xml"/>
-            <include path="TIG_PostNL::system/postnlsettings/business.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/cargo.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/eps.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/extraathome.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/trackandtrace.xml"/>
 

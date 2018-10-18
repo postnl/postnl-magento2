@@ -223,6 +223,26 @@ abstract class OptionsAbstract
             'countryLimitation'    => 'BE',
             'group'                => 'eu_options',
         ],
+        '4646' => [
+            'value'                => '4646',
+            'label'                => 'EPS Standard BE',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'eu_options',
+        ],
+        '4986' => [
+            'value'                => '4986',
+            'label'                => 'EPS Standard BE (Mon/Fri)',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'eu_options',
+        ],
         // GlobalPack
         '4945' => [
             'value'                => '4945',
@@ -422,7 +442,7 @@ abstract class OptionsAbstract
         // Cargo
         '3606' => [
             'value'                => '3606',
-            'label'                => 'AVG Pallet Pharma&Care 2-8 C',
+            'label'                => 'AVG Pallet Pharma&Care 2-8 C (NL)',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -432,7 +452,7 @@ abstract class OptionsAbstract
         ],
         '3607' => [
             'value'                => '3607',
-            'label'                => 'AVG Pallet Pharma&Care 15-25 C',
+            'label'                => 'AVG Pallet Pharma&Care 15-25 C (NL)',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -442,7 +462,7 @@ abstract class OptionsAbstract
         ],
         '3608' => [
             'value'                => '3608',
-            'label'                => 'AVG Cargo Parcel Pharma&Care 2-8 C',
+            'label'                => 'AVG Cargo Parcel Pharma&Care 2-8 C (NL)',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -452,7 +472,7 @@ abstract class OptionsAbstract
         ],
         '3609' => [
             'value'                => '3609',
-            'label'                => 'AVG Cargo Parcel Pharma&Care 15-25 C',
+            'label'                => 'AVG Cargo Parcel Pharma&Care 15-25 C (NL)',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -551,16 +571,6 @@ abstract class OptionsAbstract
             'group'                => 'cargo_options',
         ],
         // Package EPS B2B
-        '4646' => [
-            'value'                => '4646',
-            'label'                => 'EPS Standard BE',
-            'isExtraCover'         => false,
-            'isEvening'            => false,
-            'isSunday'             => false,
-            'isGuaranteedDelivery' => false,
-            'countryLimitation'    => 'BE',
-            'group'                => 'eps_package_options',
-        ],
         '4940' => [
             'value'                => '4940',
             'label'                => 'EU Pack Special to business',
@@ -589,16 +599,6 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => false,
-            'group'                => 'eps_package_options',
-        ],
-        '4986' => [
-            'value'                => '4986',
-            'label'                => 'EPS Standard BE (Mon/Fri)',
-            'isExtraCover'         => false,
-            'isEvening'            => false,
-            'isSunday'             => false,
-            'isGuaranteedDelivery' => false,
-            'countryLimitation'    => 'BE',
             'group'                => 'eps_package_options',
         ],
     ];
@@ -672,7 +672,7 @@ abstract class OptionsAbstract
 
         return $this->getOptionArrayUsableForConfiguration();
     }
-
+    
     /**
      * @param $flags
      *

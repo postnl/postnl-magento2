@@ -32,30 +32,35 @@
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
 
-    <!-- business to business -->
-    <group id="business" translate="label" type="text" sortOrder="115" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Business to business</label>
+    <!-- Eps products -->
+    <group id="eps" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>EPS and Belgium</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
         <depends>
             <field id="shippingoptions_active">1</field>
         </depends>
-        <field id="cargo_active" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Use Cargo products</label>
-            <comment><![CDATA[The confirmation has to be at PostNL Pakketten before 8.00 pm. In this case the pallet will be collected the same day. Otherwise the pallet will be collected the next day.]]></comment>
-            <tooltip><![CDATA[Cargo products allow you to send pallet shipments to several European countries. These products can only be used after consulting your PostNL Pakketten account manager.]]></tooltip>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>tig_postnl/business/cargo_active</config_path>
-            <depends>
-                <field id="shippingoptions_active">1</field>
-            </depends>
+
+        <field id="default_be_option" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default BE delivery</label>
+            <comment><![CDATA[Select the default product option for BE shipments.]]></comment>
+            <tooltip><![CDATA[Evening BE delivery can be configured under the Evening Delivery tab.]]></tooltip>
+            <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getBeProducts</source_model>
+            <config_path>tig_postnl/delivery_settings/default_option</config_path>
         </field>
 
-        <field id="eps_active" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+        <field id="default_eps_option" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default EPS delivery</label>
+            <comment><![CDATA[Select the default product option for EPS shipments.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getEpsProducts</source_model>
+            <config_path>tig_postnl/delivery_settings/default_option</config_path>
+        </field>
+
+        <field id="business_active" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Use EPS business</label>
             <comment><![CDATA[This gives you the choice of multiple EPS products for company to business purpose.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>tig_postnl/business/eps_active</config_path>
+            <config_path>tig_postnl/eps/business_active</config_path>
             <depends>
                 <field id="shippingoptions_active">1</field>
             </depends>

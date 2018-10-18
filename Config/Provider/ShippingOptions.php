@@ -55,8 +55,8 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_DELIVERY_DELAY            = 'tig_postnl/track_and_trace/delivery_delay';
     const XPATH_SHIPPING_OPTION_IDCHECK_ACTIVE            = 'tig_postnl/id_check/idcheck_active';
     const XPATH_ITEM_OPTIONS_MANAGE_STOCK                 = 'cataloginventory/item_options/manage_stock';
-    const XPATH_SHIPPING_OPTION_CARGO_ACTIVE              = 'tig_postnl/business/cargo_active';
-    const XPATH_SHIPPING_OPTION_EPS_BUSINESS_ACTIVE       = 'tig_postnl/business/eps_active';
+    const XPATH_SHIPPING_OPTION_CARGO_ACTIVE              = 'tig_postnl/cargo/cargo_active';
+    const XPATH_SHIPPING_OPTION_EPS_BUSINESS_ACTIVE       = 'tig_postnl/eps/business_active';
 
     private $defaultMaxDeliverydays = '5';
 
