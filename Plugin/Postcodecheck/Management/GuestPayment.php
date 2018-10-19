@@ -52,6 +52,11 @@ class GuestPayment
     }
 
     /**
+     * This is to be Backward compatible with versions below 2.2.6
+     * In 2.2.6 the \TIG\PostNL\Plugin\Postcodecheck\Management\Billing Plugin is only called when logged in.
+     * This is because in 2.2.6 the assign method is removed within the QuestPaymentInformationManagement.
+     * Related to : MAGETWO-89222 - Commit : 4541e3a5fe8deb643bfacdfdc0900c504eba80f5
+     *
      * @param                       $subject -> Magento\Checkout\Model\PaymentInformationManagement
      * @param                       $cartId
      * @param                       $email
@@ -77,6 +82,10 @@ class GuestPayment
             return [$cartId, $email, $paymentMethod, $billingAddress];
         }
 
+        if ($this->isSetBeforeValidation($billingAddress->getStreet(), $attributes->getTigHousenumber())) {
+            return [$cartId, $email, $paymentMethod, $billingAddress];
+        }
+
         $billingAddress->setStreet(
             $billingAddress->getStreet()[0] . ' ' .
             $attributes->getTigHousenumber() . ' ' .
@@ -84,5 +93,16 @@ class GuestPayment
         );
 
         return [$cartId, $email, $paymentMethod, $billingAddress];
+    }
+
+    /**
+     * @param $street
+     * @param $housenumber
+     *
+     * @return bool
+     */
+    private function isSetBeforeValidation($street, $housenumber)
+    {
+        return strpos($street[0], $housenumber) === false;
     }
 }
