@@ -33,9 +33,24 @@ namespace TIG\PostNL\Plugin\Postcodecheck\Management;
 
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Quote\Api\Data\AddressInterface;
+use TIG\PostNL\Config\Provider\Webshop;
 
 class Payment
 {
+    /**
+     * @var Webshop
+     */
+    private $webshopConfig;
+
+    /**
+     * @param Webshop $webshopConfig
+     */
+    public function __construct(
+        Webshop $webshopConfig
+    ) {
+        $this->webshopConfig = $webshopConfig;
+    }
+
     /**
      * @param                       $subject -> Magento\Checkout\Model\PaymentInformationManagement
      * @param                       $cartId
@@ -52,7 +67,7 @@ class Payment
         AddressInterface $billingAddress = null
     ) {
         $attributes = $billingAddress->getExtensionAttributes();
-        if (empty($attributes)) {
+        if (empty($attributes) || !$this->webshopConfig->getIsAddressCheckEnabled()) {
             return [$cartId, $paymentMethod, $billingAddress];
         }
 
