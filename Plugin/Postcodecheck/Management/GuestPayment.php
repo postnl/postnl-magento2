@@ -34,6 +34,7 @@ namespace TIG\PostNL\Plugin\Postcodecheck\Management;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Helper\AddressEnhancer;
 
 class GuestPayment
 {
@@ -103,6 +104,12 @@ class GuestPayment
      */
     private function isSetBeforeValidation($street, $housenumber)
     {
-        return strpos($street[0], $housenumber) === false;
+        $street  = implode(' ', $street);
+        $matched = preg_match(AddressEnhancer::STREET_SPLIT_NAME_FROM_NUMBER, trim($street), $result);
+        if (!$matched) {
+            return false;
+        }
+
+        return $result['number'] == $housenumber;
     }
 }
