@@ -32,9 +32,24 @@
 namespace TIG\PostNL\Plugin\Postcodecheck\Management;
 
 use Magento\Quote\Api\Data\AddressInterface;
+use TIG\PostNL\Config\Provider\Webshop;
 
 class Shipping
 {
+    /**
+     * @var Webshop
+     */
+    private $webshopConfig;
+
+    /**
+     * @param Webshop $webshopConfig
+     */
+    public function __construct(
+        Webshop $webshopConfig
+    ) {
+        $this->webshopConfig = $webshopConfig;
+    }
+
     /**
      * @param                   $subject -> Magento\Quote\Model\ShippingAddressManagement
      * @param                   $cartId
@@ -46,7 +61,7 @@ class Shipping
     public function beforeAssign($subject, $cartId, AddressInterface $address)
     {
         $attributes = $address->getExtensionAttributes();
-        if (empty($attributes)) {
+        if (empty($attributes) || !$this->webshopConfig->getIsAddressCheckEnabled()) {
             return [$cartId, $address];
         }
 
