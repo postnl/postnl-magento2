@@ -34,6 +34,7 @@ namespace TIG\PostNL\Plugin\Postcodecheck\Management;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Helper\AddressEnhancer;
 
 class Payment
 {
