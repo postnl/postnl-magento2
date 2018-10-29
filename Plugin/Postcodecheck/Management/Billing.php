@@ -69,6 +69,10 @@ class Billing
             return [$cartId, $address, $shipping];
         }
 
+        if ($this->isSetBeforeValidation($address->getStreet(), $attributes->getTigHousenumber())) {
+            return [$cartId, $address, $shipping];
+        }
+
         $address->setStreet(
             $address->getStreet()[0] . ' ' .
             $attributes->getTigHousenumber() . ' ' .
@@ -76,5 +80,22 @@ class Billing
         );
 
         return [$cartId, $address, $shipping];
+    }
+
+    /**
+     * @param $street
+     * @param $housenumber
+     *
+     * @return bool
+     */
+    private function isSetBeforeValidation($street, $housenumber)
+    {
+        $street  = implode(' ', $street);
+        $matched = preg_match(AddressEnhancer::STREET_SPLIT_NAME_FROM_NUMBER, trim($street), $result);
+        if (!$matched) {
+            return false;
+        }
+
+        return $result['number'] == $housenumber;
     }
 }

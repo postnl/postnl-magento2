@@ -75,6 +75,10 @@ class Payment
             return [$cartId, $paymentMethod, $billingAddress];
         }
 
+        if ($this->isSetBeforeValidation($billingAddress->getStreet(), $attributes->getTigHousenumber())) {
+            return [$cartId, $paymentMethod, $billingAddress];
+        }
+
         $billingAddress->setStreet(
             $billingAddress->getStreet()[0] . ' ' .
             $attributes->getTigHousenumber() . ' ' .
@@ -82,5 +86,22 @@ class Payment
         );
 
         return [$cartId, $paymentMethod, $billingAddress];
+    }
+
+    /**
+     * @param $street
+     * @param $housenumber
+     *
+     * @return bool
+     */
+    private function isSetBeforeValidation($street, $housenumber)
+    {
+        $street  = implode(' ', $street);
+        $matched = preg_match(AddressEnhancer::STREET_SPLIT_NAME_FROM_NUMBER, trim($street), $result);
+        if (!$matched) {
+            return false;
+        }
+
+        return $result['number'] == $housenumber;
     }
 }
