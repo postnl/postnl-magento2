@@ -9,7 +9,7 @@
   "author": "TIG",
   "license": "CC-BY-NC-ND-3.0",
   "bugs": {
-    "url": "https://servicedesk.tig.nl/hc/nl/categories/115000341267-PostNL-Magento-2"
+    "url": "https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+extensie"
   },
   "homepage": "https://tig.nl/postnl-magento-2-extensie-community-edition/",
   "devDependencies": {

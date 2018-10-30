@@ -87,7 +87,7 @@
             <!--Test Fields-->
             <field id="customer_number_test" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Customer number test mode</label>
-                <comment><![CDATA[You can use the test account credentials found <a href="https://servicedesk.tig.nl/hc/nl/articles/115003510508" target="_blank" title="PostNL test account">here</a>.]]></comment>
+                <comment><![CDATA[You can use the test account credentials found <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+testgegevens" target="_blank" title="PostNL test account">here</a>.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/customer_number_test</config_path>
                 <depends>
                     <field id="modus">2</field>
@@ -95,7 +95,7 @@
             </field>
             <field id="customer_code_test" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Customer code test mode</label>
-                <comment><![CDATA[You can use the test account credentials found <a href="https://servicedesk.tig.nl/hc/nl/articles/115003510508" target="_blank" title="PostNL test account">here</a>.]]></comment>
+                <comment><![CDATA[You can use the test account credentials found <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+testgegevens" target="_blank" title="PostNL test account">here</a>.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/customer_code_test</config_path>
                 <depends>
                     <field id="modus">2</field>
@@ -103,7 +103,7 @@
             </field>
             <field id="api_key_test" translate="label comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Api Key test mode</label>
-                <comment><![CDATA[You can use the test account credentials found <a href="https://servicedesk.tig.nl/hc/nl/articles/115003510508" target="_blank" title="PostNL test account">here</a>.]]></comment>
+                <comment><![CDATA[You can use the test account credentials found <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+testgegevens" target="_blank" title="PostNL test account">here</a>.]]></comment>
                 <tooltip><![CDATA[This API key is used to send parcels with PostNL and to supplement and validate addresses. Keep this API key secret to prevent other parties from taking PostNL services on your account.]]></tooltip>
                 <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 <config_path>tig_postnl/generalconfiguration_extension_status/api_key_test</config_path>
@@ -113,7 +113,7 @@
             </field>
             <field id="bls_code_test" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>BLS location code test mode</label>
-                <comment><![CDATA[You can use the test account credentials found <a href="https://servicedesk.tig.nl/hc/nl/articles/115003510508" target="_blank" title="PostNL test account">here</a>.]]></comment>
+                <comment><![CDATA[You can use the test account credentials found <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+testgegevens" target="_blank" title="PostNL test account">here</a>.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/bls_code_test</config_path>
                 <depends>
                     <field id="modus">2</field>

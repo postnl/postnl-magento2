@@ -55,7 +55,7 @@
 
          <field id="pakjegemak_express_active" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Activate early delivery post office locations</label>
-            <comment><![CDATA[Activate early delivery locations for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004296048/" target="_blank" title="early delivery">early delivery</a>.]]></comment>
+            <comment><![CDATA[Activate early delivery locations for your customers. Read more about <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+extra+vroeg+postkantoor+locaties" target="_blank" title="early delivery">early delivery</a>.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/post_offices/pakjegemak_express_active</config_path>
             <depends>
