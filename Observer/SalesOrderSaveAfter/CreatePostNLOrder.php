@@ -150,7 +150,7 @@ class CreatePostNLOrder implements ObserverInterface
     }
 
     /**
-     * When the quote has more than one Magento Order, it could be that one is canceled. So when this canceld order
+     * When the quote has more than one Magento Order, it could be that one is canceled. So when this canceled order
      * gets an update from the PSP it will update the incorrect PostNL record because of the same quote ID. Thats why
      * we will create a new record.
      *

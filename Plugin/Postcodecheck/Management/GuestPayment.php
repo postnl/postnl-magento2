@@ -18,24 +18,25 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@totalinternetgroup.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 namespace TIG\PostNL\Plugin\Postcodecheck\Management;
 
+use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Helper\AddressEnhancer;
 
-class Billing
+class GuestPayment
 {
     /**
      * @var Webshop
@@ -52,35 +53,47 @@ class Billing
     }
 
     /**
-     * @param                  $subject -> Magento\Quote\Model\BillingAddressManagement
-     * @param                  $cartId
-     * @param AddressInterface $address
-     * @param bool             $shipping
+     * This is to be Backward compatible with versions below 2.2.6
+     * In 2.2.6 the \TIG\PostNL\Plugin\Postcodecheck\Management\Billing Plugin is only called when logged in.
+     * This is because in 2.2.6 the assign method is removed within the QuestPaymentInformationManagement.
+     * Related to : MAGETWO-89222 - Commit : 4541e3a5fe8deb643bfacdfdc0900c504eba80f5
+     *
+     * @param                       $subject -> Magento\Checkout\Model\PaymentInformationManagement
+     * @param                       $cartId
+     * @param                       $email
+     * @param PaymentInterface      $paymentMethod
+     * @param AddressInterface|null $billingAddress
      *
      * @return array
      */
     // @codingStandardsIgnoreLine
-    public function beforeAssign($subject, $cartId, AddressInterface $address, $shipping = false) {
-        $attributes = $address->getExtensionAttributes();
+    public function beforeSavePaymentInformation(
+        $subject,
+        $cartId,
+        $email,
+        PaymentInterface $paymentMethod,
+        AddressInterface $billingAddress = null
+    ) {
+        $attributes = $billingAddress->getExtensionAttributes();
         if (empty($attributes) || !$this->webshopConfig->getIsAddressCheckEnabled()) {
-            return [$cartId, $address, $shipping];
+            return [$cartId, $email, $paymentMethod, $billingAddress];
         }
 
         if (!$attributes->getTigHousenumber()) {
-            return [$cartId, $address, $shipping];
+            return [$cartId, $email, $paymentMethod, $billingAddress];
         }
 
-        if ($this->isSetBeforeValidation($address->getStreet(), $attributes->getTigHousenumber())) {
-            return [$cartId, $address, $shipping];
+        if ($this->isSetBeforeValidation($billingAddress->getStreet(), $attributes->getTigHousenumber())) {
+            return [$cartId, $email, $paymentMethod, $billingAddress];
         }
 
-        $address->setStreet(
-            $address->getStreet()[0] . ' ' .
+        $billingAddress->setStreet(
+            $billingAddress->getStreet()[0] . ' ' .
             $attributes->getTigHousenumber() . ' ' .
             $attributes->getTigHousenumberAddition()
         );
 
-        return [$cartId, $address, $shipping];
+        return [$cartId, $email, $paymentMethod, $billingAddress];
     }
 
     /**

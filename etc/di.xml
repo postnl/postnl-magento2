@@ -68,6 +68,10 @@
         <plugin name="postnlBillingAddressManagement" type="TIG\PostNL\Plugin\Postcodecheck\Management\Billing"/>
     </type>
 
+    <type name="Magento\Checkout\Model\GuestPaymentInformationManagement">
+        <plugin name="postcodeGuestPaymentInformationManagement" type="TIG\PostNL\Plugin\Postcodecheck\Management\GuestPayment"/>
+    </type>
+
     <type name="Magento\Checkout\Model\PaymentInformationManagement">
         <plugin name="postcodePaymentInformationManagement" type="TIG\PostNL\Plugin\Postcodecheck\Management\Payment" />
     </type>
