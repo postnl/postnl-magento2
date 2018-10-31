@@ -75,6 +75,10 @@ class DefaultOptions implements ArrayInterface
             $flags['groups'][] = ['group' => 'cargo_options'];
         }
 
+        if ($this->shippingOptions->canUseEpsBusinessProducts()) {
+            $flags['groups'][] = ['group' => 'eps_package_options'];
+        }
+
         return $this->productOptions->getProductoptions($flags);
     }
 
@@ -86,6 +90,10 @@ class DefaultOptions implements ArrayInterface
         return $this->productOptions->getProductoptions(['countryLimitation' => 'BE']);
     }
 
+    /**
+     * @todo Filter out BE options.
+     * @return array
+     */
     public function getEpsProducts()
     {
         if ($this->shippingOptions->canUseEpsBusinessProducts()) {
