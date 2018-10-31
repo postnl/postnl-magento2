@@ -33,7 +33,6 @@ namespace TIG\PostNL\Observer\SalesOrderSaveAfter;
 
 use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Api\Data\OrderInterface;
-use TIG\PostNL\Exception;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Service\Order\ProductCodeAndType;
@@ -113,6 +112,7 @@ class CreatePostNLOrder implements ObserverInterface
         $this->setProductCode($postnlOrder, $magentoOrder);
         $postnlOrder->setData('order_id', $magentoOrder->getId());
         $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
+
         $postnlOrder->setData('parcel_count', $this->parcelCount->get($magentoOrder));
 
         $this->orderRepository->save($postnlOrder);
@@ -133,12 +133,16 @@ class CreatePostNLOrder implements ObserverInterface
      */
     private function getPostNLOrder(MagentoOrder $magentoOrder)
     {
-        $postnlOrder = $this->orderRepository->getByQuoteId($magentoOrder->getQuoteId());
+        $postnlOrder = $this->orderRepository->getByOrderId($magentoOrder->getId());
         if (!$postnlOrder) {
-            $postnlOrder = $this->orderRepository->getByOrderId($magentoOrder->getId());
+            $postnlOrder = $this->orderRepository->getByQuoteWhereOrderIdIsNull($magentoOrder->getQuoteId());
         }
 
         if (!$postnlOrder) {
+            return null;
+        }
+
+        if ($postnlOrder->getOrderId() == null) {
             return $postnlOrder;
         }
 
@@ -146,7 +150,7 @@ class CreatePostNLOrder implements ObserverInterface
             return $postnlOrder;
         }
 
-        return $this->returnNewRecord($postnlOrder);
+        return null;
     }
 
     /**

@@ -40,6 +40,7 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
+use Magento\Framework\Api\FilterBuilder;
 
 class OrderRepository extends AbstractRepository implements OrderRepositoryInterface
 {
@@ -54,23 +55,32 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     private $quoteWrapper;
 
     /**
+     * @var FilterBuilder
+     */
+    private $filterBuilder;
+
+    /**
      * OrderRepository constructor.
      *
      * @param SearchResultsInterfaceFactory $searchResultsFactory
      * @param SearchCriteriaBuilder         $searchCriteriaBuilder
      * @param OrderFactory                  $orderFactory
      * @param CollectionFactory             $collectionFactory
+     * @param QuoteInterface                $quote
+     * @param FilterBuilder                 $filterBuilder
      */
     public function __construct(
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         OrderFactory $orderFactory,
         CollectionFactory $collectionFactory,
-        QuoteInterface $quote
+        QuoteInterface $quote,
+        FilterBuilder $filterBuilder
     ) {
         $this->quoteWrapper      = $quote;
         $this->orderFactory      = $orderFactory;
         $this->collectionFactory = $collectionFactory;
+        $this->filterBuilder     = $filterBuilder;
 
         parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
     }
@@ -175,5 +185,29 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         }
 
         return $this->getByFieldWithValue('quote_id', $quoteId);
+    }
+
+    /**
+     * @param null $quoteId
+     *
+     * @return \Magento\Framework\Api\ExtensibleDataInterface[]|null
+     */
+    public function getByQuoteWhereOrderIdIsNull($quoteId = null)
+    {
+        if ($quoteId === null) {
+            $quoteId = $this->quoteWrapper->getQuoteId();
+        }
+
+//        $filter1  = $this->filterBuilder->setField('quote_id')->setValue($quoteId)->create();
+        $filter2  = $this->filterBuilder->setField('order_id')->setValue(null)->setConditionType('null')->create();
+
+        $this->searchCriteriaBuilder->addFilters([$filter2]);
+
+        $list = $this->getList($this->searchCriteriaBuilder->create());
+        if (!$list->getTotalCount()) {
+            return null;
+        }
+
+        return array_values($list->getItems())[0];
     }
 }
