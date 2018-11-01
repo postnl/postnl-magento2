@@ -198,7 +198,8 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
             $quoteId = $this->quoteWrapper->getQuoteId();
         }
 
-        $filter = $this->filterBuilder->setField('quote_id')->setValue($quoteId);
+        $filter = $this->filterBuilder->setField('quote_id');
+        $filter->setValue($quoteId);
         $this->searchCriteriaBuilder->addFilters([$filter->create()]);
 
         $list = $this->getList($this->searchCriteriaBuilder->create());

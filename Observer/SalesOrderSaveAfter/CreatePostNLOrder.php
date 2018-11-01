@@ -150,7 +150,7 @@ class CreatePostNLOrder implements ObserverInterface
             return $postnlOrder;
         }
 
-        return null;
+        return $this->returnNewRecord($postnlOrder);
     }
 
     /**
