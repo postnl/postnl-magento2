@@ -198,16 +198,19 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
             $quoteId = $this->quoteWrapper->getQuoteId();
         }
 
-//        $filter1  = $this->filterBuilder->setField('quote_id')->setValue($quoteId)->create();
-        $filter2  = $this->filterBuilder->setField('order_id')->setValue(null)->setConditionType('null')->create();
-
-        $this->searchCriteriaBuilder->addFilters([$filter2]);
+        $filter = $this->filterBuilder->setField('quote_id')->setValue($quoteId);
+        $this->searchCriteriaBuilder->addFilters([$filter->create()]);
 
         $list = $this->getList($this->searchCriteriaBuilder->create());
         if (!$list->getTotalCount()) {
             return null;
         }
 
-        return array_values($list->getItems())[0];
+        $orders = array_filter(array_values($list->getItems()), function ($order) {
+             /** @var OrderInterface $order */
+             return !$order->getOrderId();
+        });
+
+        return array_values($orders)[0];
     }
 }
