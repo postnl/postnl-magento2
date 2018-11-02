@@ -149,12 +149,16 @@ class ProductCodeAndType
             return;
         }
 
-        $this->getDefaultProductOption();
+        $this->getDefaultProductOption($country);
     }
 
-    private function getDefaultProductOption()
+    private function getDefaultProductOption($country)
     {
         $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
+        if ($country == 'BE') {
+            $this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
+        }
+
         $this->type = static::SHIPMENT_TYPE_DAYTIME;
 
         /** @var Quote $magentoQuote */
@@ -187,10 +191,7 @@ class ProductCodeAndType
      */
     private function getEpsOption()
     {
-        $options = $this->productOptionsFinder->getEpsProductOptions();
-        $firstOption = array_shift($options);
-
-        $this->code = $firstOption['value'];
+        $this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
         $this->type = static::SHIPMENT_TYPE_EPS;
     }
 

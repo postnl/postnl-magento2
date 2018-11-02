@@ -87,7 +87,7 @@ class DefaultOptions implements ArrayInterface
      */
     public function getBeProducts()
     {
-        return $this->productOptions->getProductoptions(['countryLimitation' => 'BE']);
+        return $this->productOptions->getProductoptions(['isEvening' => false, 'countryLimitation' => 'BE']);
     }
 
     /**
@@ -96,12 +96,17 @@ class DefaultOptions implements ArrayInterface
      */
     public function getEpsProducts()
     {
+        $epsOptions = $this->productOptions->getProductoptions(
+            ['isEvening' => false, 'countryLimitation' => false, 'group' => 'eu_options']
+        );
+
+        $epsBusinessOptions = [];
         if ($this->shippingOptions->canUseEpsBusinessProducts()) {
-            $flags['groups'][] = ['group' => 'eps_package_options'];
+            $epsBusinessOptions = $this->productOptions->getProductoptions(
+                ['isEvening' => false, 'countryLimitation' => false, 'group' => 'eps_package_options']
+            );
         }
 
-        $flags['groups'][] = ['group' => 'eu_options'];
-
-        return $this->productOptions->getProductoptions($flags);
+        return array_merge($epsOptions, $epsBusinessOptions);
     }
 }

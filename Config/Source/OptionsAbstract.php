@@ -188,6 +188,7 @@ abstract class OptionsAbstract
         '4950' => [
             'value'                => '4950',
             'label'                => 'EU Pack Special',
+            'isEvening'            => false,
             'isExtraCover'         => false,
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
@@ -197,6 +198,7 @@ abstract class OptionsAbstract
         '4952' => [
             'value'                => '4952',
             'label'                => 'EU Pack Special Consumer (incl. signature)',
+            'isEvening'            => false,
             'isExtraCover'         => false,
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
@@ -247,6 +249,7 @@ abstract class OptionsAbstract
         '4945' => [
             'value'                => '4945',
             'label'                => 'GlobalPack',
+            'isEvening'            => false,
             'isExtraCover'         => false,
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
@@ -672,7 +675,7 @@ abstract class OptionsAbstract
 
         return $this->getOptionArrayUsableForConfiguration();
     }
-    
+
     /**
      * @param $flags
      *

@@ -48,12 +48,14 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_EXTRAATHOME_PRODUCT_OPTION         = 'tig_postnl/extra_at_home/default_extraathome_option';
     const XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION          = 'tig_postnl/post_offices/default_pakjegemak_option';
     const XPATH_DEFAULT_EVENING_BE_PRODUCT_OPTION          = 'tig_postnl/evening_delivery_be/default_evening_be_option';
+    const XPATH_DEFAULT_BE_PRODUCT_OPTION                  = 'tig_postnl/delivery_settings/default_be_option';
     const XPATH_DEFAULT_PAKJEGEMAK_EARLY_PRODUCT_OPTION    = 'tig_postnl/post_offices/default_pakjegemak_early_option';
     const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION              = 'tig_postnl/sunday_delivery/default_sunday_option';
     const XPATH_DEFAULT_CARGO_DELIVERY_TYPE                = 'tig_postnl/delivery_settings/default_cargo_type';
     const XPATH_ALTERNATIVE_DEFAULT_CARGO_DELIVERY_TYPE    = 'tig_postnl/delivery_settings/alternative_cargo_type';
     const XPATH_DEFAULT_PACKAGE_DELIVERY_TYPE              = 'tig_postnl/delivery_settings/default_package_type';
     const XPATH_ALTERNATIVE_DEFAULT_PACKAGE_DELIVERY_TYPE  = 'tig_postnl/delivery_settings/alternative_package_type';
+    const XPATH_DEFAULT_EPS_PRODUCT_OPTION                 = 'tig_postnl/delivery_settings/default_eps_option';
 
     /**
      * Since 1.5.1 all product options are automaticly supported.
@@ -126,6 +128,22 @@ class ProductOptions extends AbstractConfigProvider
     public function getDefaultEveningBeProductOption()
     {
         return $this->getConfigFromXpath(self::XPATH_DEFAULT_EVENING_BE_PRODUCT_OPTION);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultBeProductOption()
+    {
+        return $this->getConfigFromXpath(self::XPATH_DEFAULT_BE_PRODUCT_OPTION);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultEpsProductOption()
+    {
+        return $this->getConfigFromXpath(self::XPATH_DEFAULT_EPS_PRODUCT_OPTION);
     }
 
     /**
