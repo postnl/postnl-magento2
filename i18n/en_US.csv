@@ -401,3 +401,5 @@ Percent,Percent
 "Select the default guaranteed delivery type for the current <strong>cargo</strong> product you use as default delivery.","Select the default guaranteed delivery type for the current <strong>cargo</strong> product you use as default delivery."
 "Select the default guaranteed delivery type for the current product you use as default delivery.","Select the default guaranteed delivery type for the current product you use as default delivery."
 "Alternative guaranteed delivery default type","Alternative guaranteed delivery default type"
+"Please enter a valid zipcode and housenumber.","Please enter a valid zipcode and housenumber combination."
+
