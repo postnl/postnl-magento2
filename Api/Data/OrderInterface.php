@@ -170,6 +170,12 @@ interface OrderInterface
      */
     public function getPgOrderAddressId();
 
+
+    /**
+     * @return int
+     */
+    public function getOriginalShippingAddressId();
+
     /**
      * @param $value
      *
