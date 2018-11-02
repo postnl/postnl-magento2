@@ -326,11 +326,12 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     public function getBillingAddress()
     {
         $order = $this->orderRepository->get($this->getOrderId());
+        
         return $order->getBillingAddress();
     }
 
     /**
-     * @return \Magento\Sales\Api\Data\OrderAddressInterface;
+     * @return \Magento\Sales\Api\Data\OrderAddressInterface|null;
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -340,6 +341,8 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
             $order = $this->orderRepository->get($this->getOrderId());
             return $order->getShippingAddress();
         }
+
+        return null;
     }
 
     /**
