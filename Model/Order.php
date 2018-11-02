@@ -37,7 +37,7 @@ use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 
-use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\OrderRepository;
 use TIG\PostNL\Api\Data\OrderInterface;
 use Magento\Framework\DataObject\IdentityInterface;
 
@@ -76,13 +76,13 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     protected $_eventPrefix = 'tig_postnl_order';
 
     /**
-     * @var OrderFactory $orderFactory
+     * @var OrderRepository $orderRepository
      */
-    protected $orderFactory;
+    protected $orderRepository;
 
     /**
      * Order constructor.
-     * @param OrderFactory          $orderFactory
+     * @param OrderRepository       $orderRepository
      * @param Context               $context
      * @param Registry              $registry
      * @param DateTime              $dateTime
@@ -91,7 +91,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
      * @param array                 $data
      */
     public function __construct(
-        OrderFactory $orderFactory,
+        OrderRepository $orderRepository,
         Context $context,
         Registry $registry,
         DateTime $dateTime,
@@ -100,7 +100,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
         array $data = []
     )
     {
-        $this->orderFactory   = $orderFactory;
+        $this->orderRepository   = $orderRepository;
         parent::__construct($context, $registry, $dateTime, $resource, $resourceCollection, $data);
     }
 
@@ -304,16 +304,17 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
 
     /**
      * @return int
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getOriginalShippingAddressId()
     {
-        $order = $this->orderFactory->create();
-        $order = $order->load($this->getOrderId());
+        $order = $this->orderRepository->get($this->getOrderId());
 
         $addresses = $order->getAddresses();
         unset($addresses[$order->getBillingAddressId()]);
         unset($addresses[$this->getPgOrderAddressId()]);
-        
+
         return reset($addresses)->getEntityId();
     }
 
