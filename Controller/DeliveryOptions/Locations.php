@@ -32,14 +32,12 @@
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
-use TIG\PostNL\Exception;
-use TIG\PostNL\Model\OrderFactory;
+use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Service\Carrier\Price\Calculator;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Webservices\Endpoints\Locations as LocationsEndpoint;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
-use Magento\Framework\App\Response\Http;
 use Magento\Framework\App\Action\Context;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
@@ -64,7 +62,7 @@ class Locations extends AbstractDeliveryOptions
 
     /**
      * @param Context            $context
-     * @param OrderFactory       $orderFactory
+     * @param OrderRepository    $orderRepository
      * @param Session            $checkoutSession
      * @param QuoteToRateRequest $quoteToRateRequest
      * @param AddressEnhancer    $addressEnhancer
@@ -75,7 +73,7 @@ class Locations extends AbstractDeliveryOptions
      */
     public function __construct(
         Context $context,
-        OrderFactory $orderFactory,
+        OrderRepository $orderRepository,
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
         AddressEnhancer $addressEnhancer,
@@ -90,7 +88,7 @@ class Locations extends AbstractDeliveryOptions
 
         parent::__construct(
             $context,
-            $orderFactory,
+            $orderRepository,
             $checkoutSession,
             $quoteToRateRequest,
             $shippingDuration,
