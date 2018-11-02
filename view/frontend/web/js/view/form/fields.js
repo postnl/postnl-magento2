@@ -144,6 +144,7 @@ define([
         },
 
         getFormData : function () {
+            var self = this;
             var postcode;
             var housenumber;
 
@@ -163,6 +164,8 @@ define([
             if ($.isNumeric(housenumber) && postcodeRegex.test(postcode)) {
                 return [housenumber, postcode];
             }
+
+            self.handleError($.mage.__('Please enter a valid zipcode and housenumber.'));
 
             return false;
         },
@@ -235,7 +238,7 @@ define([
 
                 timer = setTimeout(function () {
                     error.hide(100);
-                }, 8000);
+                }, 16000);
             } else {
                 error.hide();
             }
