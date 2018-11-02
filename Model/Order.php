@@ -307,7 +307,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getOriginalShippingAddressId()
+    public function getShippingAddress()
     {
         $order = $this->orderRepository->get($this->getOrderId());
 
@@ -315,7 +315,31 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
         unset($addresses[$order->getBillingAddressId()]);
         unset($addresses[$this->getPgOrderAddressId()]);
 
-        return reset($addresses)->getEntityId();
+        return reset($addresses);
+    }
+
+    /**
+     * @return \Magento\Sales\Api\Data\OrderAddressInterface;
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getBillingAddress()
+    {
+        $order = $this->orderRepository->get($this->getOrderId());
+        return $order->getBillingAddress();
+    }
+
+    /**
+     * @return \Magento\Sales\Api\Data\OrderAddressInterface;
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getPgOrderAddress()
+    {
+        if ($this->getIsPakjegemak()) {
+            $order = $this->orderRepository->get($this->getOrderId());
+            return $order->getShippingAddress();
+        }
     }
 
     /**
