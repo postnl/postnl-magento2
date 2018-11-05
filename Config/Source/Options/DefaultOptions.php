@@ -91,7 +91,6 @@ class DefaultOptions implements ArrayInterface
     }
 
     /**
-     * @todo Filter out BE options.
      * @return array
      */
     public function getEpsProducts()

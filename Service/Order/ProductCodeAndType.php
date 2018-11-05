@@ -37,6 +37,7 @@ use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 
+// @codingStandardsIgnoreFile
 class ProductCodeAndType
 {
     /** @var int */
@@ -152,6 +153,9 @@ class ProductCodeAndType
         $this->getDefaultProductOption($country);
     }
 
+    /**
+     * @param $country
+     */
     private function getDefaultProductOption($country)
     {
         $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
@@ -188,6 +192,7 @@ class ProductCodeAndType
     }
 
     /**
+     * Parse EPS options.
      */
     private function getEpsOption()
     {
@@ -196,7 +201,7 @@ class ProductCodeAndType
     }
 
     /**
-     *
+     * Parse Globalpack options.
      */
     private function getGlobalPackOption()
     {
