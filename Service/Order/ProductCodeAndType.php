@@ -108,7 +108,7 @@ class ProductCodeAndType
         }
 
         // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
-        if ((empty($type) || $option == static::OPTION_DAYTIME) && $country != 'NL') {
+        if ((empty($type) || $option == static::OPTION_DAYTIME) && !in_array($country, ['BE', 'NL'])) {
             $this->getEpsOption();
             return $this->response();
         }
