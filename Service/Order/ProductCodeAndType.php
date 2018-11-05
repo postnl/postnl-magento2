@@ -103,7 +103,7 @@ class ProductCodeAndType
         $type    = strtolower($type);
         $option  = strtolower($option);
 
-        if (!in_array($country, EpsCountries::ALL) && $country != 'NL') {
+        if (!in_array($country, EpsCountries::ALL) && !in_array($country, ['BE', 'NL'])) {
             $this->getGlobalPackOption();
             return $this->response();
         }

@@ -121,7 +121,6 @@ class ShipmentsTest extends TestCase
             ->disableOriginalConstructor()
             ->disableOriginalClone()
             ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
             ->getMock();
 
         $optionMockExpects = $optionMock->expects($this->once());
