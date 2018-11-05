@@ -63,9 +63,7 @@ class ShipmentsTest extends TestCase
     {
         $postNLShipment = $this->getPostNLShipment();
 
-        $shipmentData = $this->getObject(ShipmentData::class, [
-            'productOptions' => $this->getProductOptionsMock($postNLShipment)
-        ]);
+        $shipmentData = $this->getObject(ShipmentData::class);
 
         /** @var Shipments $instance */
         $instance = $this->getInstance([
