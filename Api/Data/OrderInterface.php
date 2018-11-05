@@ -171,6 +171,21 @@ interface OrderInterface
     public function getPgOrderAddressId();
 
     /**
+     * @return \Magento\Sales\Api\Data\OrderAddressInterface;
+     */
+    public function getShippingAddress();
+
+    /**
+     * @return \Magento\Sales\Api\Data\OrderAddressInterface;
+     */
+    public function getBillingAddress();
+
+    /**
+     * @return \Magento\Sales\Api\Data\OrderAddressInterface;
+     */
+    public function getPgOrderAddress();
+
+    /**
      * @param $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
