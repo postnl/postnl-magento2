@@ -58,13 +58,13 @@ php bin/magento maintenance:disable
 The installation on your Staging Environment is now finished.
 
 ## User and Configuration Manual
-https://servicedesk.tig.nl/hc/nl/articles/115001935267
+https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+extensie+gebruikershandleiding
 
 ## Full installation Manual
-https://servicedesk.tig.nl/hc/nl/articles/115001631247
+https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+extensie+installatiehandleiding
 
 ## Knowledge Base
-https://servicedesk.tig.nl/hc/nl/categories/115000341267
+https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+extensie
 
 ## Running tests (advanced)
 

@@ -57,7 +57,7 @@
 
                  <field id="eveningdelivery_active" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Activate evening delivery</label>
-                    <comment><![CDATA[Activate evening delivery for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298488" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
+                    <comment><![CDATA[Activate evening delivery for your customers. Read more about <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+avondbezorging" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>tig_postnl/evening_delivery_nl/eveningdelivery_active</config_path>
                     <depends>
@@ -101,7 +101,7 @@
 
                 <field id="eveningdelivery_be_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Activate evening delivery for Belgium</label>
-                    <comment><![CDATA[Activate evening delivery to Belgium for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298488" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
+                    <comment><![CDATA[Activate evening delivery to Belgium for your customers. Read more about <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+avondbezorging" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>tig_postnl/evening_delivery_be/eveningdelivery_be_active</config_path>
                     <depends>
