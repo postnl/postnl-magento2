@@ -212,6 +212,6 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
              return !$order->getOrderId();
         });
 
-        return array_values($orders)[0];
+        return isset(array_values($orders)[0]) ? array_values($orders)[0] : null;
     }
 }
