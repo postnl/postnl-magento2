@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Controller;
 
-use TIG\PostNL\Model\OrderFactory;
+use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use Magento\Quote\Model\Quote\Address\RateRequest;
@@ -43,10 +43,10 @@ use Magento\Checkout\Model\Session;
 abstract class AbstractDeliveryOptions extends Action
 {
     /**
-     * @var OrderFactory
+     * @var OrderRepository
      */
     //@codingStandardsIgnoreLine
-    protected $orderFactory;
+    protected $orderRepository;
 
     /**
      * @var Session
@@ -85,7 +85,7 @@ abstract class AbstractDeliveryOptions extends Action
 
     /**
      * @param Context            $context
-     * @param OrderFactory       $orderFactory
+     * @param OrderRepository    $orderRepository
      * @param Session            $checkoutSession
      * @param QuoteToRateRequest $quoteToRateRequest
      * @param DeliveryDate       $deliveryDate
@@ -93,13 +93,13 @@ abstract class AbstractDeliveryOptions extends Action
      */
     public function __construct(
         Context $context,
-        OrderFactory $orderFactory,
+        OrderRepository $orderRepository,
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
         ShippingDuration $shippingDuration,
         DeliveryDate $deliveryDate = null
     ) {
-        $this->orderFactory       = $orderFactory;
+        $this->orderRepository    = $orderRepository;
         $this->checkoutSession    = $checkoutSession;
         $this->deliveryEndpoint   = $deliveryDate;
         $this->quoteToRateRequest = $quoteToRateRequest;
@@ -139,14 +139,15 @@ abstract class AbstractDeliveryOptions extends Action
     protected function getPostNLOrderByQuoteId($quoteId)
     {
         /** @var \TIG\PostNL\Model\Order $postnlOrder */
-        $postnlOrder = $this->orderFactory->create();
+        $postnlOrder = $this->orderRepository->getByQuoteId($quoteId);
+        if (!$postnlOrder) {
+            return $this->orderRepository->create();
+        }
 
-        /** @var \TIG\PostNL\Model\ResourceModel\Order\Collection $collection */
-        $collection = $postnlOrder->getCollection();
-        $collection->addFieldToFilter('quote_id', $quoteId);
-
-        // @codingStandardsIgnoreLine
-        $postnlOrder = $collection->setPageSize(1)->getFirstItem();
+        if ($postnlOrder->getOrderId()) {
+            // double quote, order probably canceled before. so add new record.
+            return $this->orderRepository->create();
+        }
 
         return $postnlOrder;
     }

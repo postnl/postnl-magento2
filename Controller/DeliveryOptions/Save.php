@@ -32,7 +32,6 @@
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
-use TIG\PostNL\Model\OrderFactory;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\DeliveryOptions\OrderParams;
 use TIG\PostNL\Helper\DeliveryOptions\PickupAddress;
@@ -56,13 +55,7 @@ class Save extends AbstractDeliveryOptions
     private $pickupAddress;
 
     /**
-     * @var OrderRepository
-     */
-    private $orderRepository;
-
-    /**
      * @param Context            $context
-     * @param OrderFactory       $orderFactory
      * @param OrderRepository    $orderRepository
      * @param QuoteToRateRequest $quoteToRateRequest
      * @param OrderParams        $orderParams
@@ -72,7 +65,6 @@ class Save extends AbstractDeliveryOptions
      */
     public function __construct(
         Context $context,
-        OrderFactory $orderFactory,
         OrderRepository $orderRepository,
         QuoteToRateRequest $quoteToRateRequest,
         OrderParams $orderParams,
@@ -82,7 +74,7 @@ class Save extends AbstractDeliveryOptions
     ) {
         parent::__construct(
             $context,
-            $orderFactory,
+            $orderRepository,
             $checkoutSession,
             $quoteToRateRequest,
             $shippingDuration
@@ -90,7 +82,6 @@ class Save extends AbstractDeliveryOptions
 
         $this->orderParams     = $orderParams;
         $this->pickupAddress   = $pickupAddress;
-        $this->orderRepository = $orderRepository;
     }
 
     /**
