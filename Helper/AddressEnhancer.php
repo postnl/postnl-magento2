@@ -37,6 +37,7 @@ class AddressEnhancer
 {
     // @codingStandardsIgnoreLine
     const STREET_SPLIT_NAME_FROM_NUMBER = '/^(?P<street>\d*[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\-\.]+)[,\s]+(?P<number>\d+)\s*(?P<addition>[\wäöüß\d\-\/]*)$/i';
+    const STREET_SPLIT_NUMBER_FROM_NAME = '/^(?P<number>\d+)\s*(?P<street>[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\-\.]*)$/i';
 
     /** @var array */
     // @codingStandardsIgnoreLine
@@ -92,8 +93,22 @@ class AddressEnhancer
     // @codingStandardsIgnoreLine
     protected function extractHousenumber($address)
     {
-        $street = implode(' ', $address['street']);
+        $street  = implode(' ', $address['street']);
         $matched = preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER, trim($street), $result);
+        if (!$matched) {
+            $result = $this->extractStreetFromNumber($street);
+        }
+
+        if (isset($result['error'])) {
+            return $result;
+        }
+
+        return $this->parseResult($result, $address);
+    }
+
+    protected function extractStreetFromNumber($street)
+    {
+        $matched = preg_match(self::STREET_SPLIT_NUMBER_FROM_NAME, trim($street), $result);
         if (!$matched) {
             return [
                 'error' => [
@@ -103,6 +118,11 @@ class AddressEnhancer
             ];
         }
 
+        return $result;
+    }
+
+    protected function parseResult($result, $address)
+    {
         if ($result['street']) {
             $address['street'][0] = trim($result['street']);
         }
