@@ -37,6 +37,7 @@ class AddressEnhancer
 {
     // @codingStandardsIgnoreLine
     const STREET_SPLIT_NAME_FROM_NUMBER = '/^(?P<street>\d*[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\-\.]+)[,\s]+(?P<number>\d+)\s*(?P<addition>[\wäöüß\d\-\/]*)$/i';
+    // @codingStandardsIgnoreLine
     const STREET_SPLIT_NUMBER_FROM_NAME = '/^(?P<number>\d+)\s*(?P<street>[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\-\.]*)$/i';
 
     /** @var array */
@@ -106,6 +107,12 @@ class AddressEnhancer
         return $this->parseResult($result, $address);
     }
 
+    /**
+     * @param $street
+     *
+     * @return array
+     */
+    // @codingStandardsIgnoreLine
     protected function extractStreetFromNumber($street)
     {
         $matched = preg_match(self::STREET_SPLIT_NUMBER_FROM_NAME, trim($street), $result);
@@ -121,6 +128,13 @@ class AddressEnhancer
         return $result;
     }
 
+    /**
+     * @param $result
+     * @param $address
+     *
+     * @return mixed
+     */
+    // @codingStandardsIgnoreLine
     protected function parseResult($result, $address)
     {
         if ($result['street']) {

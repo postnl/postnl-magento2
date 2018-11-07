@@ -35,6 +35,7 @@ use TIG\PostNL\Service\Shipment\Data as ShipmentData;
 use Magento\Sales\Model\Order\Address;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Helper\AddressEnhancer;
+use \Magento\Framework\Message\ManagerInterface;
 
 class Shipments
 {
@@ -49,15 +50,23 @@ class Shipments
     private $addressEnhancer;
 
     /**
+     * @var ManagerInterface
+     */
+    private $messageManager;
+
+    /**
      * @param ShipmentData $shipmentData
      * @param AddressEnhancer $addressEnhancer
+     * @param ManagerInterface $messageManager
      */
     public function __construct(
         ShipmentData $shipmentData,
-        AddressEnhancer $addressEnhancer
+        AddressEnhancer $addressEnhancer,
+        ManagerInterface $messageManager
     ) {
         $this->shipmentData = $shipmentData;
         $this->addressEnhancer = $addressEnhancer;
+        $this->messageManager = $messageManager;
     }
 
     /**
@@ -137,8 +146,11 @@ class Shipments
     {
         $this->addressEnhancer->set(['street' => $shippingAddress->getStreet()]);
         $streetData = $this->addressEnhancer->get();
-        if (isset($streetData['error'])) {
 
+        if (isset($streetData['error'])) {
+            $this->messageManager->addWarningMessage(
+                $streetData['error']['code'] . ' - ' . $streetData['error']['message']
+            );
         }
 
         return $streetData;
