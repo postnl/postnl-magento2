@@ -143,8 +143,8 @@
             <endpoints>
                 <api_base_url>https://api.postnl.nl/shipment/</api_base_url>
                 <test_api_base_url>https://api-sandbox.postnl.nl/shipment/</test_api_base_url>
-                <address_api_url>https://api.postnl.nl/address/national/basic/</address_api_url>
-                <address_test_api_url>https://api-sandbox.postnl.nl/address/national/basic/</address_test_api_url>
+                <address_api_url>https://api.postnl.nl/shipment/checkout/v1/postalcodecheck/</address_api_url>
+                <address_test_api_url>https://api-sandbox.postnl.nl/shipment/checkout/v1/postalcodecheck/</address_test_api_url>
             </endpoints>
 
             <globalpack>
