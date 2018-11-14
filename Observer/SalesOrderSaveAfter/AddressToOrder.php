@@ -134,12 +134,24 @@ class AddressToOrder implements ObserverInterface
      */
     private function getPostNLOrder(Order $order)
     {
-        $postnlOrder = $this->orderRepository->getByFieldWithValue('quote_id', $order->getQuoteId());
+        $postnlOrder = $this->orderRepository->getByOrderId($order->getId());
         if (!$postnlOrder) {
-            $postnlOrder = $this->orderRepository->create();
+            $postnlOrder = $this->orderRepository->getByQuoteWhereOrderIdIsNull($order->getQuoteId());
         }
 
-        return $postnlOrder;
+        if (!$postnlOrder) {
+            return null;
+        }
+
+        if ($postnlOrder->getOrderId() == null) {
+            return $postnlOrder;
+        }
+
+        if ($order->getId() == $postnlOrder->getOrderId()) {
+            return $postnlOrder;
+        }
+
+        return $this->orderRepository->create();
     }
 
     /**
