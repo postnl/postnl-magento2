@@ -62,17 +62,13 @@ class PostcodecheckHandler
             $params = json_decode($params, true);
         }
 
-        if (isset($params['status']) && $params['status'] == 0) {
-            return false;
-        }
-
         if (isset($params['errors']) || isset($params['fault']) || !isset($params[0])) {
             //@codingStandardsIgnoreLine
             $this->logger->critical(__('Error received getting postcode data from PostNL.'), $params);
             return 'error';
         }
 
-        if ($this->validateParams($params[0], ['status', 'streetName', 'city'])) {
+        if ($this->validateParams($params[0], ['streetName', 'city'])) {
             return $params[0];
         }
 

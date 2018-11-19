@@ -43,12 +43,12 @@ class Postalcode implements RestInterface
     /**
      * @var string
      */
-    private $endpoint = 'postalcode/';
+    private $endpoint = 'postalcodecheck/';
 
     /**
      * @var string
      */
-    private $method = 'GET';
+    private $method = 'POST';
 
     /**
      * @var string
