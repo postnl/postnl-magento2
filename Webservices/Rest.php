@@ -131,7 +131,7 @@ class Rest
         }
 
         if ($endpoint->getMethod() == ZendClient::POST) {
-            $this->zendClient->setParameterPost($params);
+            $this->zendClient->setRawData(json_encode($params), 'application/json');
         }
 
         $this->zendClient->setMethod($endpoint->getMethod());

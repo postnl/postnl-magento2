@@ -41,13 +41,13 @@ class PostalcodeTest extends TestCase
     public function testGetEndpoint()
     {
         $instance = $this->getInstance();
-        $this->assertEquals('postalcode/', $instance->getEndpoint());
+        $this->assertEquals('postalcodecheck/', $instance->getEndpoint());
     }
 
     public function testGetMethod()
     {
         $instance = $this->getInstance();
-        $this->assertEquals('GET', $instance->getMethod());
+        $this->assertEquals('POST', $instance->getMethod());
     }
 
     public function testGetVersion()
