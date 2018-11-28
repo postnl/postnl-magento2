@@ -390,3 +390,4 @@ Percent,Percent
 "Postcode request validation failed","Postcode request validation failed"
 "We can not guarantee that the entire PostNL extension is compatible with some of these checkouts.","We can not guarantee that the entire PostNL extension is compatible with some of these checkouts."
 "Please enter a valid zipcode and housenumber.","Please enter a valid zipcode and housenumber combination."
+"Contact your PostNL account manager to activate adrescheck. Note: Adrescheck only works if the plugin is in live mode.","Contact your PostNL account manager to activate adrescheck. Note: Adrescheck only works if the plugin is in live mode."

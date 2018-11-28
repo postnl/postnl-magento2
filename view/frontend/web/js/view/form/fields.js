@@ -50,7 +50,8 @@ define([
                 observeHousenumber : '${ $.parentName }.postcode-field-group.field-group.housenumber:value',
                 observeCountry     : '${ $.parentName }.country_id:value'
             },
-            timer     : undefined
+            timer : undefined,
+            value : ko.observable('')
         },
 
         initialize : function () {
@@ -161,11 +162,17 @@ define([
                 postcode = postcodeElement.value();
             });
 
+            if (!postcode || !housenumber) {
+                return false;
+            }
+
             if ($.isNumeric(housenumber) && postcodeRegex.test(postcode)) {
                 return [housenumber, postcode];
             }
 
-            self.handleError($.mage.__('Please enter a valid zipcode and housenumber.'));
+            if (self.request !== undefined || !postcodeRegex.test(postcode)) {
+                self.handleError($.mage.__('Please enter a valid zipcode and housenumber.'));
+            }
 
             return false;
         },
@@ -245,7 +252,7 @@ define([
         },
 
         initObservable : function () {
-            this._super().observe(['isLoading']);
+            this._super().observe(['isLoading', 'value']);
 
             return this;
         },
