@@ -35,6 +35,7 @@ use \TIG\PostNL\Webservices\Parser\Label\Shipments;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
 use TIG\PostNL\Test\Integration\TestCase;
 use TIG\PostNL\Service\Shipment\Data as ShipmentData;
+use TIG\PostNL\Helper\AddressEnhancer;
 
 class ShipmentsTest extends TestCase
 {
@@ -67,7 +68,8 @@ class ShipmentsTest extends TestCase
 
         /** @var Shipments $instance */
         $instance = $this->getInstance([
-            'shipmentData' => $shipmentData
+            'shipmentData' => $shipmentData,
+            'addressEnhancer' => $this->getAddressEnhancerMock()
         ]);
 
         $result = $instance->get($postNLShipment, 1);
@@ -96,6 +98,10 @@ class ShipmentsTest extends TestCase
         /** @var \Magento\Sales\Model\Order\Shipment $shipment */
         $shipment = $order->getShipmentsCollection()->getFirstItem();
 
+        $shippingAddress = $shipment->getShippingAddress();
+        $shippingAddress->setStreet('street 69 A');
+        $shippingAddress->save();
+
         $factory = $this->getObject(\TIG\PostNL\Model\ShipmentFactory::class);
 
         /** @var \TIG\PostNL\Model\Shipment $postNLShipment */
@@ -122,5 +128,26 @@ class ShipmentsTest extends TestCase
         $optionMockExpects->willReturn(null);
 
         return $optionMock;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getAddressEnhancerMock()
+    {
+        $return  = [
+            'street' => [
+                'street'
+            ],
+            'housenumber' => '69',
+            'housenumberExtension' => 'A'
+        ];
+
+        $enhancerMock = $this->getMock(AddressEnhancer::class);
+        $enhancerMockExpects = $enhancerMock->expects($this->any());
+        $enhancerMockExpects->method('set');
+        $enhancerMockExpects->willReturn($return);
+
+        return $enhancerMock;
     }
 }
