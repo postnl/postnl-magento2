@@ -127,6 +127,7 @@
                 <source_model>TIG\PostNL\Config\Source\Options\GuaranteedOptionsCargo</source_model>
                 <config_path>tig_postnl/delivery_settings/default_cargo_type</config_path>
                 <depends>
+                    <!-- Should match : \TIG\PostNL\Block\Adminhtml\Grid\DataProvider::CARGO_GUARANTEED_PRODUCTS-->
                     <field id="default_option" separator=",">3606,3607,3608,3609,3610,3630,3657</field>
                     <field id="guaranteed_delivery">1</field>
                 </depends>
@@ -138,6 +139,7 @@
                 <source_model>TIG\PostNL\Config\Source\Options\GuaranteedOptionsPackages</source_model>
                 <config_path>tig_postnl/delivery_settings/default_package_type</config_path>
                 <depends>
+                    <!-- Should match : \TIG\PostNL\Block\Adminhtml\Grid\DataProvider::DEFAULT_GUARANTEED_PRODUCTS -->
                     <field id="default_option" separator=",">3083,3084,3085,3087,3089,3090,3094,3096,3189,3385,3389,3390</field>
                     <field id="guaranteed_delivery">1</field>
                 </depends>

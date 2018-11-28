@@ -41,6 +41,14 @@ use TIG\PostNL\Config\Provider\ProductOptions as OptionConfig;
 class DataProvider extends Template implements BlockInterface
 {
     const XPATH_SHOW_GRID_TOOLBAR = 'tig_postnl/extra_settings_advanced/show_grid_toolbar';
+
+    /**
+     * @codingStandardsIgnoreLine
+     * @todo Implement selection in toolbar.
+     */
+    const CARGO_GUARANTEED_PRODUCTS   = '3606,3607,3608,3609,3610,3630,3657';
+    const DEFAULT_GUARANTEED_PRODUCTS = '3083,3084,3085,3087,3089,3090,3094,3096,3189,3385,3389,3390';
+
     /**
      * @var string
      */
