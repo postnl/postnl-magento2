@@ -153,7 +153,7 @@ class Data
             $shipmentData['Customs'] = $this->customsInfo->get($shipment);
         }
 
-        if ($shipment->isExtraCover()) {
+        if ($shipment->isExtraCover() && $currentShipmentNumber === 1) {
             $shipmentData['Amounts'] = $this->getAmount($shipment);
         }
 
