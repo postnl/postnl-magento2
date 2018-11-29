@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
-use TIG\PostNL\Model\OrderFactory;
+use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Service\Carrier\Price\Calculator;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
@@ -67,7 +67,7 @@ class Timeframes extends AbstractDeliveryOptions
 
     /**
      * @param Context             $context
-     * @param OrderFactory        $orderFactory
+     * @param OrderRepository     $orderRepository
      * @param Session             $checkoutSession
      * @param QuoteToRateRequest  $quoteToRateRequest
      * @param AddressEnhancer     $addressEnhancer
@@ -79,7 +79,7 @@ class Timeframes extends AbstractDeliveryOptions
      */
     public function __construct(
         Context $context,
-        OrderFactory $orderFactory,
+        OrderRepository $orderRepository,
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
         AddressEnhancer $addressEnhancer,
@@ -96,7 +96,7 @@ class Timeframes extends AbstractDeliveryOptions
 
         parent::__construct(
             $context,
-            $orderFactory,
+            $orderRepository,
             $checkoutSession,
             $quoteToRateRequest,
             $shippingDuration,

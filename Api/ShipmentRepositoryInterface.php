@@ -54,14 +54,18 @@ interface ShipmentRepositoryInterface
      * Retrieve a specific PostNL shipment.
      *
      * @api
-     * @param int $identifier
+     * @param int $id
      * @return \TIG\PostNL\Api\Data\ShipmentInterface
      */
-    public function getById($identifier);
+    // @codingStandardsIgnoreLine
+    public function getById($id);
 
     /**
-     * @param $field
-     * @param $value
+     * Find one row by field with specific value.
+     *
+     * @api
+     * @param string $field
+     * @param string|int $value
      *
      * @return \TIG\PostNL\Api\Data\ShipmentInterface|null
      */
@@ -70,10 +74,11 @@ interface ShipmentRepositoryInterface
     /**
      * Retrieve a specific PostNL shipment by the Magento Shipment ID.
      *
-     * @param int $identifier
+     * @param int $id
      * @return \TIG\PostNL\Api\Data\ShipmentInterface
      */
-    public function getByShipmentId($identifier);
+    // @codingStandardsIgnoreLine
+    public function getByShipmentId($id);
 
     /**
      * Retrieve a list of PostNL shipments.
@@ -96,8 +101,9 @@ interface ShipmentRepositoryInterface
      * Delete a PostNL shipment.
      *
      * @api
-     * @param $identifier
+     * @param $id
      * @return bool
      */
-    public function deleteById($identifier);
+    // @codingStandardsIgnoreLine
+    public function deleteById($id);
 }

@@ -34,25 +34,39 @@ namespace TIG\PostNL\Webservices\Parser\Label;
 use TIG\PostNL\Service\Shipment\Data as ShipmentData;
 use Magento\Sales\Model\Order\Address;
 use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Helper\AddressEnhancer;
+use \Magento\Framework\Message\ManagerInterface;
 
 class Shipments
 {
-    const PREG_MATCH_STREET = '/([^\d]+)\s?(.+)/i';
-
-    const PREG_MATCH_HOUSENR = '#^([\d]+)(.*)#s';
-
     /**
      * @var ShipmentData
      */
     private $shipmentData;
 
     /**
+     * @var AddressEnhancer
+     */
+    private $addressEnhancer;
+
+    /**
+     * @var ManagerInterface
+     */
+    private $messageManager;
+
+    /**
      * @param ShipmentData $shipmentData
+     * @param AddressEnhancer $addressEnhancer
+     * @param ManagerInterface $messageManager
      */
     public function __construct(
-        ShipmentData $shipmentData
+        ShipmentData $shipmentData,
+        AddressEnhancer $addressEnhancer,
+        ManagerInterface $messageManager
     ) {
         $this->shipmentData = $shipmentData;
+        $this->addressEnhancer = $addressEnhancer;
+        $this->messageManager = $messageManager;
     }
 
     /**
@@ -105,16 +119,15 @@ class Shipments
      */
     private function getAddressData($shippingAddress, $addressType = '01')
     {
-        $streetData = $this->getStreet($shippingAddress);
-
+        $streetData   = $this->getStreetData($shippingAddress);
         $addressArray = [
             'AddressType'      => $addressType,
             'FirstName'        => $this->getFirstName($shippingAddress),
             'Name'             => $shippingAddress->getLastname(),
             'CompanyName'      => $shippingAddress->getCompany(),
-            'Street'           => $streetData['Street'],
-            'HouseNr'          => $streetData['HouseNr'],
-            'HouseNrExt'       => $streetData['HouseNrExt'],
+            'Street'           => $streetData['street'][0],
+            'HouseNr'          => $streetData['housenumber'],
+            'HouseNrExt'       => $streetData['housenumberExtension'],
             'Zipcode'          => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode())),
             'City'             => $shippingAddress->getCity(),
             'Region'           => $shippingAddress->getRegion(),
@@ -129,27 +142,18 @@ class Shipments
      *
      * @return array
      */
-    private function getStreet($shippingAddress)
+    private function getStreetData($shippingAddress)
     {
-        $street = $shippingAddress->getStreet();
-        $fullStreet = implode(' ', $street);
+        $this->addressEnhancer->set(['street' => $shippingAddress->getStreet()]);
+        $streetData = $this->addressEnhancer->get();
 
-        if (empty($fullStreet)) {
-            return [
-                'Street'     => '',
-                'HouseNr'    => '',
-                'HouseNrExt' => '',
-            ];
+        if (isset($streetData['error'])) {
+            $this->messageManager->addWarningMessage(
+                $streetData['error']['code'] . ' - ' . $streetData['error']['message']
+            );
         }
 
-        preg_match(self::PREG_MATCH_STREET, $fullStreet, $streetMatches);
-        preg_match(self::PREG_MATCH_HOUSENR, $streetMatches[2], $houseNrMatches);
-
-        return [
-            'Street'     => trim($streetMatches[1]),
-            'HouseNr'    => isset($houseNrMatches[1]) ? trim($houseNrMatches[1]) : '',
-            'HouseNrExt' => isset($houseNrMatches[2]) ? trim($houseNrMatches[2]) : '',
-        ];
+        return $streetData;
     }
 
     /**

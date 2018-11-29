@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
+-->
+
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="track_and_trace" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Track and Trace</label>
+            <comment><![CDATA[Automatically send Track and Trace email to customer. Read more about the <a href="https://confluence.tig.nl/pages/viewpage.action?pageId=8553643" target="_blank" title="track and trace">Track and Trace</a> e-mails within the extension.]]></comment>
+            <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+
+            <field id="email_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Send Track and Trace email</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <config_path>tig_postnl/track_and_trace/email_enabled</config_path>
+            </field>
+            <field id="template" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>Template</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                <config_path>tig_postnl/track_and_trace/template</config_path>
+                <depends>
+                    <field id="email_enabled">1</field>
+                </depends>
+            </field>
+            <field id="email_bcc" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>BCC e-mail</label>
+                <comment><![CDATA[This e-mail address will be added as BCC to the Track And Trace template]]></comment>
+                <config_path>tig_postnl/track_and_trace/email_bcc</config_path>
+                <depends>
+                    <field id="email_enabled">1</field>
+                </depends>
+            </field>
+        </group>
+</include>

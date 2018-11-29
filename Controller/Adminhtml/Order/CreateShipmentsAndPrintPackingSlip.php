@@ -141,6 +141,11 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
             $this->messageManager->addErrorMessage($error);
         }
 
+        $shipmentErrors = $this->createShipment->getErrors();
+        foreach ($shipmentErrors as $error) {
+            $this->messageManager->addErrorMessage($error);
+        }
+
         return $this;
     }
 
@@ -149,6 +154,10 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
      */
     private function loadLabels($shipment)
     {
+        if (!$shipment) {
+            return;
+        }
+
         $address = $shipment->getShippingAddress();
         $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
         $this->setTracks($shipment);

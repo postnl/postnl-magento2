@@ -110,7 +110,8 @@ class UpdateOrderGridTest extends TestCase
 
         $data = [
             'ship_at' => '2016-11-19',
-            'product_code' => null
+            'product_code' => null,
+            'confirmed' => 0,
         ];
 
         $setDataExpects->with($data);

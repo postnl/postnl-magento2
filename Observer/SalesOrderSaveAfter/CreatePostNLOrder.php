@@ -33,7 +33,6 @@ namespace TIG\PostNL\Observer\SalesOrderSaveAfter;
 
 use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Api\Data\OrderInterface;
-use TIG\PostNL\Exception;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Service\Order\ProductCodeAndType;
@@ -54,10 +53,12 @@ class CreatePostNLOrder implements ObserverInterface
      * @var ParcelCount
      */
     private $parcelCount;
+
     /**
      * @var Data
      */
     private $helper;
+
     /**
      * @var ProductCodeAndType
      */
@@ -111,6 +112,7 @@ class CreatePostNLOrder implements ObserverInterface
         $this->setProductCode($postnlOrder, $magentoOrder);
         $postnlOrder->setData('order_id', $magentoOrder->getId());
         $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
+
         $postnlOrder->setData('parcel_count', $this->parcelCount->get($magentoOrder));
 
         $this->orderRepository->save($postnlOrder);
@@ -131,12 +133,16 @@ class CreatePostNLOrder implements ObserverInterface
      */
     private function getPostNLOrder(MagentoOrder $magentoOrder)
     {
-        $postnlOrder = $this->orderRepository->getByQuoteId($magentoOrder->getQuoteId());
+        $postnlOrder = $this->orderRepository->getByOrderId($magentoOrder->getId());
         if (!$postnlOrder) {
-            $postnlOrder = $this->orderRepository->getByOrderId($magentoOrder->getId());
+            $postnlOrder = $this->orderRepository->getByQuoteWhereOrderIdIsNull($magentoOrder->getQuoteId());
         }
 
         if (!$postnlOrder) {
+            return null;
+        }
+
+        if ($postnlOrder->getOrderId() == null) {
             return $postnlOrder;
         }
 
@@ -148,7 +154,7 @@ class CreatePostNLOrder implements ObserverInterface
     }
 
     /**
-     * When the quote has more than one Magento Order, it could be that one is canceled. So when this canceld order
+     * When the quote has more than one Magento Order, it could be that one is canceled. So when this canceled order
      * gets an update from the PSP it will update the incorrect PostNL record because of the same quote ID. Thats why
      * we will create a new record.
      *

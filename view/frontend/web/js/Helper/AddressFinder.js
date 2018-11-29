@@ -86,7 +86,8 @@ define([
         valueUpdateNotifier();
 
         var housenumber;
-        if (window.checkoutConfig.postcode !== undefined) {
+        if (window.checkoutConfig.postcode !== undefined ||
+            window.checkoutConfig.shipping.postnl.is_postcodecheck_active) {
             housenumber = $("input[name*='tig_housenumber']").val();
         }
 

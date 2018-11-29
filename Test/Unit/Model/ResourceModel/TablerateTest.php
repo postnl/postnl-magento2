@@ -179,7 +179,7 @@ class TablerateTest extends TestCase
 
         $expectsInsertArray = $connectionMock->expects($this->once())->method('insertArray');
         if (null !== $exceptionType) {
-            $expectsInsertArray->willThrowException(new $exceptionType(__('')));
+            $expectsInsertArray->willThrowException(new $exceptionType(''));
         }
 
         $resourceMock = $this->getFakeMock(ResourceConnection::class)->setMethods(['getConnection', 'getTableName']);

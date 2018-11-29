@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Test\Unit\Service\Timeframe;
 
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Test\TestCase;
 
@@ -62,9 +63,13 @@ class OptionsTest extends TestCase
         $this->mockFunction($shippingOptions, 'isEveningDeliveryActive', $eveningEnabled);
         $this->mockFunction($shippingOptions, 'isSundayDeliveryActive', $sundayEnabled);
 
+        $webshopSettings = $this->getFakeMock(Webshop::class, true);
+        $this->mockFunction($webshopSettings, 'getShipmentDays', '0,6');
+
         /** @var Options $instance */
         $instance = $this->getInstance([
             'shippingOptions' => $shippingOptions,
+            'webshop'         => $webshopSettings
         ]);
 
         $this->assertEquals($expected, $instance->get());

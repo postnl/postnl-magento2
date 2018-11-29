@@ -4,9 +4,9 @@
 
 ## Installation
 
-We strongly recommend you to use a Staging Environment for the installation and to make a backup of your environment.
+We strongly recommend that you use a Staging Environment for the installation, and to also make a backup of your environment.
 
-To install the extension login to your environment using SSH. Then navigate to the Magento 2 Root and run the following commands in the same order as described:
+To install the extension login to your environment using SSH. Then navigate to the Magento 2 Roo Directory and run the following commands in the same order as described:
  
 Enable maintenance mode:
 ~~~~
@@ -18,7 +18,7 @@ Install the extension:
 composer require tig/postnl-magento2
 ~~~~
 
-Empty the following folders if they exists (Make sure to not delete the folders):
+Empty the following folders if they exist (Make sure to not delete the folders):
 - var/cache
 - var/di
 - var/generation
@@ -58,18 +58,19 @@ php bin/magento maintenance:disable
 The installation on your Staging Environment is now finished.
 
 ## User and Configuration Manual
-https://servicedesk.tig.nl/hc/nl/articles/115001935267
+https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+extensie+gebruikershandleiding
 
 ## Full installation Manual
-https://servicedesk.tig.nl/hc/nl/articles/115001631247
+https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+extensie+installatiehandleiding
 
 ## Knowledge Base
-https://servicedesk.tig.nl/hc/nl/categories/115000341267
+https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+extensie
 
 ## Running tests (advanced)
 
-Place this code in a working Magento 2 installation in the folder app/code/TIG/PostNL (Case-sensitive). Install all the dependencies:
+Place this code in a working Magento 2 installation in the folder app/code/TIG/PostNL (Case-sensitive). 
 
+Install all the dependencies:
 - composer install
 - npm install
 - npm install -g grunt-cli

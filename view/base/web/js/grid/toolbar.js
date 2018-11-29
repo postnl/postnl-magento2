@@ -59,7 +59,9 @@ define([
             defaultOption : ko.observable(DataProvider.getDefaultOption()),
             optionList : ko.observableArray(
                 DataProvider.getProductOptions()
-            )
+            ),
+            showToolbar : ko.observable(DataProvider.getShowToolbar()),
+            jsLoaded : true
         },
 
         /**
@@ -85,7 +87,7 @@ define([
          * @returns {boolean}
          */
         showPostNLToolbarActions : function () {
-            return this.ns === 'sales_order_grid' || this.ns === 'sales_order_shipment_grid';
+            return this.showToolbar() == 1 && (this.ns === 'sales_order_grid' || this.ns === 'sales_order_shipment_grid');
         },
 
         /**

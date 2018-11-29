@@ -60,6 +60,22 @@
         <plugin name="TIG_PostNL_Address_RateRequest" type="TIG\PostNL\Plugin\Quote\Address\RateRequestPlugin" sortOrder="1"/>
     </type>
 
+    <type name="Magento\Quote\Model\ShippingAddressManagement">
+        <plugin name="postnlShippingAddressManagement" type="TIG\PostNL\Plugin\Postcodecheck\Management\Shipping"/>
+    </type>
+
+    <type name="Magento\Quote\Model\BillingAddressManagement">
+        <plugin name="postnlBillingAddressManagement" type="TIG\PostNL\Plugin\Postcodecheck\Management\Billing"/>
+    </type>
+
+    <type name="Magento\Checkout\Model\GuestPaymentInformationManagement">
+        <plugin name="postcodeGuestPaymentInformationManagement" type="TIG\PostNL\Plugin\Postcodecheck\Management\GuestPayment"/>
+    </type>
+
+    <type name="Magento\Checkout\Model\PaymentInformationManagement">
+        <plugin name="postcodePaymentInformationManagement" type="TIG\PostNL\Plugin\Postcodecheck\Management\Payment" />
+    </type>
+
     <type name="TIG\PostNL\Logging\Log">
         <arguments>
             <argument name="name" xsi:type="string">postnl_logging</argument>
@@ -89,6 +105,15 @@
     <type name="TIG\PostNL\Setup\UpgradeSchema">
         <arguments>
             <argument name="upgradeSchemaObjects" xsi:type="array">
+                <item name="v1.5.3" xsi:type="array">
+                    <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V153\Schema\SalesShipmentGridColumns</item>
+                </item>
+                <item name="v1.5.2" xsi:type="array">
+                    <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V152\Schema\SalesShipmentGridColumns</item>
+                    <item name="SalesOrderGridColumns" xsi:type="object">TIG\PostNL\Setup\V152\Schema\SalesOrderGridColumns</item>
+                    <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V152\Schema\UpgradeOrderTable</item>
+                    <item name="UpgradeShipmentTable" xsi:type="object">TIG\PostNL\Setup\V152\Schema\UpgradeShipmentTable</item>
+                </item>
                 <item name="v1.4.1" xsi:type="array">
                     <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V141\Schema\UpgradeOrderTable</item>
                 </item>
@@ -124,6 +149,9 @@
                 <item name="v1.4.1" xsi:type="array">
                     <item name="InstallShippingDurationAttribute" xsi:type="object">TIG\PostNL\Setup\V141\Data\ShippingDurationAttribute</item>
                 </item>
+                <item name="v1.6.0" xsi:type="array">
+                    <item name="ConfigurationData" xsi:type="object">TIG\PostNL\Setup\V160\Data\ConfigurationData</item>
+                </item>
             </argument>
         </arguments>
     </type>
@@ -137,6 +165,17 @@
                 <item name="v1.4.1" xsi:type="array">
                     <item name="InstallShippingDurationAttribute" xsi:type="object">TIG\PostNL\Setup\V141\Data\ShippingDurationAttribute</item>
                 </item>
+                <item name="v1.6.0" xsi:type="array">
+                    <item name="ConfigurationData" xsi:type="object">TIG\PostNL\Setup\V160\Data\ConfigurationData</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="postnlSyncGrids" xsi:type="object">TIG\PostNL\Console\Sync\Grids</item>
             </argument>
         </arguments>
     </type>
@@ -158,6 +197,8 @@
                 <item name="tig_postnl_ship_at" xsi:type="string">tig_postnl_shipment.ship_at</item>
                 <item name="tig_postnl_product_code" xsi:type="string">tig_postnl_shipment.product_code</item>
                 <item name="tig_postnl_confirmed_at" xsi:type="string">tig_postnl_shipment.confirmed_at</item>
+                <item name="tig_postnl_confirmed" xsi:type="string">tig_postnl_shipment.confirmed</item>
+                <item name="tig_postnl_barcode" xsi:type="string">tig_postnl_shipment.main_barcode</item>
             </argument>
         </arguments>
     </virtualType>
@@ -170,6 +211,12 @@
     </type>
 
     <type name="TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\UpdateOrderGrid">
+        <arguments>
+            <argument name="orderGrid" xsi:type="object">PostNLOrderGridAggregator</argument>
+        </arguments>
+    </type>
+
+    <type name="TIG\PostNL\Observer\SalesOrderSaveAfter\UpdateOrderGrid">
         <arguments>
             <argument name="orderGrid" xsi:type="object">PostNLOrderGridAggregator</argument>
         </arguments>
@@ -191,6 +238,7 @@
                 <item name="entity_id" xsi:type="string">sales_order.entity_id</item>
                 <item name="tig_postnl_ship_at" xsi:type="string">tig_postnl_order.ship_at</item>
                 <item name="tig_postnl_product_code" xsi:type="string">tig_postnl_order.product_code</item>
+                <item name="tig_postnl_confirmed" xsi:type="string">tig_postnl_order.confirmed</item>
             </argument>
         </arguments>
     </virtualType>
@@ -211,4 +259,18 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="TIG\PostNL\Plugin\Postcodecheck\Fields\Factory">
+        <arguments>
+            <argument name="fields" xsi:type="array">
+                <item name="housenumber" xsi:type="object">\TIG\PostNL\Plugin\Postcodecheck\Fields\Housenumber</item>
+                <item name="addition" xsi:type="object">\TIG\PostNL\Plugin\Postcodecheck\Fields\HousenumberAddition</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="\Mageplaza\Osc\Api\CheckoutManagementInterface">
+        <plugin name="postcodeMageplazaCheckoutInformation" type="TIG\PostNL\Plugin\Postcodecheck\Mageplaza\CheckoutManagement" />
+    </type>
+
 </config>

@@ -132,6 +132,7 @@ abstract class GenerateAbstract
 
         if ($confirm) {
             $shipment->setConfirmedAt($this->date);
+            $shipment->setConfirmed(true);
             $this->shipmentRepository->save($shipment);
         }
 

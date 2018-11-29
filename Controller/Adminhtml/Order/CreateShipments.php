@@ -40,6 +40,7 @@ use Magento\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Sales\Model\Convert\Order as ConvertOrder;
+use TIG\PostNL\Service\Shipment\CreateShipment;
 
 class CreateShipments extends Action
 {
@@ -64,6 +65,11 @@ class CreateShipments extends Action
     private $currentOrder;
 
     /**
+     * @var CreateShipment
+     */
+    private $createShipment;
+
+    /**
      * @var array
      */
     private $errors = [];
@@ -73,17 +79,20 @@ class CreateShipments extends Action
      * @param Filter                 $filter
      * @param OrderCollectionFactory $collectionFactory
      * @param ConvertOrder           $convertOrder
+     * @param CreateShipment $createShipment
      */
     public function __construct(
         Context $context,
         Filter $filter,
         OrderCollectionFactory $collectionFactory,
-        ConvertOrder $convertOrder
+        ConvertOrder $convertOrder,
+        CreateShipment $createShipment
     ) {
         parent::__construct($context);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->convertOrder = $convertOrder;
+        $this->createShipment = $createShipment;
     }
 
     /**
@@ -99,8 +108,7 @@ class CreateShipments extends Action
 
         /** @var Order $order */
         foreach ($collection as $order) {
-            $this->currentOrder = $order;
-            $this->createShipment();
+            $this->createShipment->create($order);
         }
 
         $this->handleErrors();
@@ -109,107 +117,16 @@ class CreateShipments extends Action
     }
 
     /**
-     * @return bool
-     */
-    private function orderHasShipment()
-    {
-        $collection = $this->currentOrder->getShipmentsCollection();
-        $size = $collection->getSize();
-
-        return $size !== 0;
-    }
-
-    /**
-     * @return $this
-     */
-    private function createShipment()
-    {
-        if (!$this->isValidOrder()) {
-            return $this;
-        }
-
-        $this->shipment = $this->convertOrder->toShipment($this->currentOrder);
-
-        /** @var OrderItem $item */
-        foreach ($this->currentOrder->getAllItems() as $item) {
-            $this->handleItem($item);
-        }
-
-        $this->saveShipment();
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    private function isValidOrder()
-    {
-        if ($this->orderHasShipment()) {
-            return false;
-        }
-
-        if (!$this->currentOrder->canShip()) {
-            return false;
-        }
-
-        if ($this->currentOrder->getShippingMethod() !== 'tig_postnl_regular') {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param OrderItem $item
-     *
-     * @return $this
-     */
-    private function handleItem(OrderItem $item)
-    {
-        if (!$item->getQtyToShip() || $item->getIsVirtual()) {
-            return $this;
-        }
-
-        $qtyShipped = $item->getQtyToShip();
-
-        $shipmentItem = $this->convertOrder->itemToShipmentItem($item);
-        $shipmentItem->setQty($qtyShipped);
-
-        $this->shipment->addItem($shipmentItem);
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    private function saveShipment()
-    {
-        $this->shipment->register();
-        $order = $this->shipment->getOrder();
-        $order->setState(Order::STATE_PROCESSING);
-        $order->setStatus('processing');
-
-        try {
-            $this->shipment->save();
-            $order->save();
-        } catch (\Exception $exception) {
-            $message = $exception->getMessage();
-            $localizedErrorMessage = __($message)->render();
-            $this->errors[] = $localizedErrorMessage;
-        }
-
-        return $this;
-    }
-
-    /**
      * @return $this
      */
     private function handleErrors()
     {
         foreach ($this->errors as $error) {
+            $this->messageManager->addErrorMessage($error);
+        }
+
+        $shipmentErrors = $this->createShipment->getErrors();
+        foreach ($shipmentErrors as $error) {
             $this->messageManager->addErrorMessage($error);
         }
 

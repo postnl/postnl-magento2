@@ -34,11 +34,15 @@ namespace TIG\PostNL\Config\Provider;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Encryption\Encryptor;
 use Magento\Framework\Module\Manager;
+use TIG\PostNL\Config\Source\Options\ProductOptions;
 
 class DefaultConfiguration extends AbstractConfigProvider
 {
     const XPATH_ENDPOINTS_API_BASE_URL = 'tig_postnl/endpoints/api_base_url';
     const XPATH_ENDPOINTS_TEST_API_BASE_URL = 'tig_postnl/endpoints/test_api_base_url';
+
+    const XPATH_ENDPOINTS_API_ADDRESS_URL = 'tig_postnl/endpoints/address_api_url';
+    const XPATH_ENDPOINTS_TEST_API_ADDRESS_URL = 'tig_postnl/endpoints/address_test_api_url';
 
     const XPATH_BARCODE_GLOBAL_TYPE  = 'postnl/barcode/global_type';
     const XPATH_BARCODE_GLOBAL_RANGE = 'postnl/barcode/global_range';
@@ -52,15 +56,17 @@ class DefaultConfiguration extends AbstractConfigProvider
      * @param ScopeConfigInterface $scopeConfig
      * @param Encryptor $crypt
      * @param AccountConfiguration $accountConfiguration
+     * @param ProductOptions $productOptions
      * @param Manager $moduleManager
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         Encryptor $crypt,
         AccountConfiguration $accountConfiguration,
+        ProductOptions $productOptions,
         Manager $moduleManager
     ) {
-        parent::__construct($scopeConfig, $moduleManager, $crypt);
+        parent::__construct($scopeConfig, $moduleManager, $crypt, $productOptions);
         $this->accountConfiguration = $accountConfiguration;
     }
 
@@ -83,6 +89,22 @@ class DefaultConfiguration extends AbstractConfigProvider
     /**
      * @return string
      */
+    public function getAddressApiUrl()
+    {
+        return $this->getConfigFromXpath(static::XPATH_ENDPOINTS_API_ADDRESS_URL);
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddressTestApiUrl()
+    {
+        return $this->getConfigFromXpath(static::XPATH_ENDPOINTS_TEST_API_ADDRESS_URL);
+    }
+
+    /**
+     * @return string
+     */
     public function getModusApiBaseUrl()
     {
         if ($this->accountConfiguration->isModusLive()) {
@@ -90,6 +112,18 @@ class DefaultConfiguration extends AbstractConfigProvider
         }
 
         return $this->getTestApiBaseUrl();
+    }
+
+    /**
+     * @return string
+     */
+    public function getModusAddressApiUrl()
+    {
+        if ($this->accountConfiguration->isModusLive()) {
+            return $this->getAddressApiUrl();
+        }
+
+        return $this->getAddressTestApiUrl();
     }
 
     /**

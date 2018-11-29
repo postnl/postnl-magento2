@@ -31,8 +31,15 @@
  */
 namespace TIG\PostNL\Model;
 
-use Magento\Framework\DataObject\IdentityInterface;
+use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
+use Magento\Framework\Stdlib\DateTime\DateTime;
+
+use Magento\Sales\Model\OrderRepository;
 use TIG\PostNL\Api\Data\OrderInterface;
+use Magento\Framework\DataObject\IdentityInterface;
 
 // @codingStandardsIgnoreFile
 /**
@@ -58,6 +65,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     const FIELD_FEE = 'fee';
     const FIELD_SHIP_AT = 'ship_at';
     const FIELD_CONFIRMED_AT = 'confirmed_at';
+    const FIELD_CONFIRMED = 'confirmed';
     const FIELD_PARCEL_COUNT = 'parcel_count';
     const FIELD_SHIPPING_DURATION = 'shipping_duration';
 
@@ -66,6 +74,35 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
      */
     // @codingStandardsIgnoreLine
     protected $_eventPrefix = 'tig_postnl_order';
+
+    /**
+     * @var OrderRepository $orderRepository
+     */
+    protected $orderRepository;
+
+    /**
+     * Order constructor.
+     * @param OrderRepository       $orderRepository
+     * @param Context               $context
+     * @param Registry              $registry
+     * @param DateTime              $dateTime
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null       $resourceCollection
+     * @param array                 $data
+     */
+    public function __construct(
+        OrderRepository $orderRepository,
+        Context $context,
+        Registry $registry,
+        DateTime $dateTime,
+        AbstractResource $resource = null,
+        AbstractDb $resourceCollection = null,
+        array $data = []
+    )
+    {
+        $this->orderRepository   = $orderRepository;
+        parent::__construct($context, $registry, $dateTime, $resource, $resourceCollection, $data);
+    }
 
     /**
      * Constructor
@@ -266,6 +303,49 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     }
 
     /**
+     * @return int
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getShippingAddress()
+    {
+        $order = $this->orderRepository->get($this->getOrderId());
+
+        $addresses = $order->getAddresses();
+        unset($addresses[$order->getBillingAddressId()]);
+        unset($addresses[$this->getPgOrderAddressId()]);
+
+        return reset($addresses);
+    }
+
+    /**
+     * @return \Magento\Sales\Api\Data\OrderAddressInterface;
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getBillingAddress()
+    {
+        $order = $this->orderRepository->get($this->getOrderId());
+        
+        return $order->getBillingAddress();
+    }
+
+    /**
+     * @return \Magento\Sales\Api\Data\OrderAddressInterface|null;
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getPgOrderAddress()
+    {
+        if ($this->getIsPakjegemak()) {
+            $order = $this->orderRepository->get($this->getOrderId());
+            return $order->getShippingAddress();
+        }
+
+        return null;
+    }
+
+    /**
      * @param $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
@@ -407,5 +487,23 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     public function getShippingDuration()
     {
         return $this->getData(static::FIELD_SHIPPING_DURATION);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setConfirmed($value)
+    {
+        return $this->setData(static::FIELD_CONFIRMED, $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfirmed()
+    {
+        return $this->getData(static::FIELD_CONFIRMED);
     }
 }
