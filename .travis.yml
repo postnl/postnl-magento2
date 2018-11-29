@@ -48,7 +48,7 @@ matrix:
 # And there wouldn't be support of PHP 7.1 in Magento 2.0 or 2.1
   include:
     - php: 7.1
-      env: MAGENTO_VERSION=2.2.6 CODE_COVERAGE=true
+      env: MAGENTO_VERSION=2.2.7 CODE_COVERAGE=true
     - php: 7.2
       env: MAGENTO_VERSION=2.3.0
   allow_failures:
