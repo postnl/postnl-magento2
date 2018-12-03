@@ -34,7 +34,7 @@ return [
     'db-user' => 'MAGENTO_DB_USER',
     'db-password' => 'MAGENTO_DB_PASS',
     'db-name' => 'MAGENTO_DB_NAME',
-    'db-prefix' => 'test',
+    'db-prefix' => '',
     'backend-frontname' => 'admin',
     'admin-user' => \Magento\TestFramework\Bootstrap::ADMIN_NAME,
     'admin-password' => \Magento\TestFramework\Bootstrap::ADMIN_PASSWORD,

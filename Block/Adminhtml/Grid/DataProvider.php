@@ -165,7 +165,7 @@ class DataProvider extends Template implements BlockInterface
             ];
         }, $cargoOptions);
 
-        return \Zend_Json::encode($options);
+        return $this->returnTimeOptions($options);
     }
 
     /**
@@ -182,6 +182,23 @@ class DataProvider extends Template implements BlockInterface
             ];
         }, $packagesOptions);
 
+        return $this->returnTimeOptions($options);
+    }
+
+    /**
+     * @param $options
+     *
+     * @return string
+     */
+    private function returnTimeOptions($options)
+    {
+        $noneValue = [
+            'value' => null,
+            // @codingStandardsIgnoreLine
+            'text'  => __('Not guaranteed')
+        ];
+
+        $options = array_merge([$noneValue], $options);
         return \Zend_Json::encode($options);
     }
 }

@@ -403,3 +403,4 @@ Percent,Percent
 "Alternative guaranteed delivery default type","Alternative guaranteed delivery default type"
 "Please enter a valid zipcode and housenumber.","Please enter a valid zipcode and housenumber combination."
 "Contact your PostNL account manager to activate adrescheck. Note: Adrescheck only works if the plugin is in live mode.","Contact your PostNL account manager to activate adrescheck. Note: Adrescheck only works if the plugin is in live mode."
+"Not guaranteed","Not guaranteed"
