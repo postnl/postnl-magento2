@@ -36,6 +36,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Ui\Component\MassAction\Filter;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface;
+use TIG\PostNL\Service\Shipment\GuaranteedOptions;
 use Magento\Sales\Model\Order;
 
 //@codingStandardsIgnoreFile
@@ -64,6 +65,12 @@ abstract class ToolbarAbstract extends Action
     protected $orderRepository;
 
     /**
+     * @var GuaranteedOptions
+     */
+    //@codingStandardsIgnoreLine
+    protected $guaranteedOptions;
+
+    /**
      * @var array
      */
     //@codingStandardsIgnoreLine
@@ -73,13 +80,15 @@ abstract class ToolbarAbstract extends Action
         Context $context,
         Filter $filter,
         ShipmentRepositoryInterface $shipmentRepository,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        GuaranteedOptions $guaranteedOptions
     ) {
         parent::__construct($context);
 
         $this->uiFilter = $filter;
         $this->shipmentRepository = $shipmentRepository;
         $this->orderRepository = $orderRepository;
+        $this->guaranteedOptions = $guaranteedOptions;
     }
 
     /**
@@ -96,30 +105,52 @@ abstract class ToolbarAbstract extends Action
             return;
         }
 
-        $shipments = $order->getShipmentsCollection();
-        $noError     = true;
+        $acSettings = $this->getAcSettings($timeOption);
+        $shipments  = $order->getShipmentsCollection();
+        $noError    = true;
 
         if ($shipments->getSize() > 0) {
-            $noError = $this->shipmentsChangeProductCode($shipments, $productCode, $timeOption);
+            $noError = $this->shipmentsChangeProductCode($shipments, $productCode, $acSettings);
         }
 
         if ($noError) {
             $postnlOrder->setProductCode($productCode);
+            $postnlOrder->setAcCharacteristic($acSettings['Characteristic']);
+            $postnlOrder->setAcOption($acSettings['Option']);
             $this->orderRepository->save($postnlOrder);
         }
     }
 
     /**
+     * @param $time
+     *
+     * @return array
+     */
+    private function getAcSettings($time)
+    {
+        $settings = $this->guaranteedOptions->get($time, true);
+        if (!$settings) {
+            $settings = [
+                'Characteristic' => null,
+                'Option'         => null
+            ];
+        }
+
+        return $settings;
+    }
+
+    /**
      * @param $shipments
      * @param $productCode
+     * @param $acSettings
      *
      * @return bool
      */
-    private function shipmentsChangeProductCode($shipments, $productCode, $timeOption = null)
+    private function shipmentsChangeProductCode($shipments, $productCode, $acSettings = null)
     {
         $error = false;
         foreach ($shipments as $shipment) {
-            $error = $this->shipmentChangeProductCode($shipment->getId(), $productCode, $ac_settings);
+            $error = $this->shipmentChangeProductCode($shipment->getId(), $productCode, $acSettings);
         }
 
         return $error;
@@ -128,11 +159,11 @@ abstract class ToolbarAbstract extends Action
     /**
      * @param $shipmentId
      * @param $productCode
-     * @param $ac_settings
+     * @param $acSettings
      *
      * @return bool
      */
-    private function shipmentChangeProductCode($shipmentId, $productCode, $ac_settings)
+    private function shipmentChangeProductCode($shipmentId, $productCode, $acSettings)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
         if (!$shipment->getId()) {
@@ -146,6 +177,8 @@ abstract class ToolbarAbstract extends Action
         }
 
         $shipment->setProductCode($productCode);
+        $shipment->setAcCharacteristic($acSettings['Characteristic']);
+        $shipment->setAcOption($acSettings['Option']);
         $this->shipmentRepository->save($shipment);
         return true;
     }

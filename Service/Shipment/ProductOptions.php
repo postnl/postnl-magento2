@@ -35,6 +35,7 @@ use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use TIG\PostNL\Api\OrderRepositoryInterface as PostNLOrderRepository;
 
 class ProductOptions
 {
@@ -57,6 +58,11 @@ class ProductOptions
      * @var OrderRepositoryInterface
      */
     private $orderRepository;
+
+    /**
+     * @var PostNLOrderRepository
+     */
+    private $postNLOrderRepository;
 
     /**
      * These shipment types need specific product options.
@@ -93,17 +99,20 @@ class ProductOptions
      * @param GuaranteedOptions            $guaranteedOptions
      * @param ProductOptionsConfiguration  $productOptions
      * @param OrderRepositoryInterface     $orderRepository
+     * @param PostNLOrderRepository        $postNLOrderRepository
      */
     public function __construct(
         ShippingOptions $shippingOptions,
         GuaranteedOptions $guaranteedOptions,
         ProductOptionsConfiguration $productOptions,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        PostNLOrderRepository $postNLOrderRepository
     ) {
-        $this->shippingOptions      = $shippingOptions;
-        $this->guaranteedOptions    = $guaranteedOptions;
-        $this->productOptionsConfig = $productOptions;
-        $this->orderRepository      = $orderRepository;
+        $this->shippingOptions       = $shippingOptions;
+        $this->guaranteedOptions     = $guaranteedOptions;
+        $this->productOptionsConfig  = $productOptions;
+        $this->orderRepository       = $orderRepository;
+        $this->postNLOrderRepository = $postNLOrderRepository;
     }
 
     /**
@@ -113,6 +122,29 @@ class ProductOptions
      * @return null
      */
     public function get($shipment, $flat = false)
+    {
+        if ($shipment->getAcCharacteristic()) {
+            return ['ProductOption' => [
+                'Characteristic' => $shipment->getAcCharacteristic(),
+                'Option'         => $shipment->getAcOption()
+            ]];
+        }
+
+        $acOptions = $this->getAcOptionsByOrderWithShipment($shipment);
+        if (!$acOptions) {
+            $acOptions = $this->getByShipment($shipment, $flat);
+        }
+
+        return $acOptions;
+    }
+
+    /**
+     * @param ShipmentInterface $shipment
+     * @param                   $flat
+     *
+     * @return array|mixed|null
+     */
+    public function getByShipment(ShipmentInterface $shipment, $flat)
     {
         $type = strtolower($shipment->getShipmentType());
         if ($shipment->isIDCheck()) {
@@ -147,6 +179,28 @@ class ProductOptions
         }
 
         return ['ProductOption' => $this->availableProductOptions[$type]];
+    }
+
+    /**
+     * @param ShipmentInterface $shipment
+     *
+     * @return array|bool
+     */
+    private function getAcOptionsByOrderWithShipment(ShipmentInterface $shipment)
+    {
+        $order = $this->postNLOrderRepository->getByOrderId($shipment->getOrderId());
+        if (!$order) {
+            return false;
+        }
+
+        if (!$order->getAcCharacteristic()) {
+            return false;
+        }
+
+        return ['ProductOption' => [
+            'Characteristic' => $order->getAcCharacteristic(),
+            'Option'         => $order->getAcOption()
+        ]];
     }
 
     /**

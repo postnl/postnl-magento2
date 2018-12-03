@@ -38,6 +38,7 @@ use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use TIG\PostNL\Service\Shipment\GuaranteedOptions;
 
 class MassChangeProduct extends ToolbarAbstract
 {
@@ -51,9 +52,10 @@ class MassChangeProduct extends ToolbarAbstract
         Filter $filter,
         ShipmentRepositoryInterface $shipmentRepository,
         OrderRepositoryInterface $orderRepository,
-        OrderCollectionFactory $collectionFactory
+        OrderCollectionFactory $collectionFactory,
+        GuaranteedOptions $guaranteedOptions
     ) {
-        parent::__construct($context, $filter, $shipmentRepository, $orderRepository);
+        parent::__construct($context, $filter, $shipmentRepository, $orderRepository, $guaranteedOptions);
 
         $this->collectionFactory = $collectionFactory;
     }
@@ -78,6 +80,7 @@ class MassChangeProduct extends ToolbarAbstract
     /**
      * @param AbstractDb $collection
      * @param $productCode
+     * @param $timeOption
      */
     private function changeProductCode($collection, $productCode, $timeOption)
     {

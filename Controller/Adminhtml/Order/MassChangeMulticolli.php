@@ -38,6 +38,7 @@ use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use TIG\PostNL\Service\Shipment\GuaranteedOptions;
 
 class MassChangeMulticolli extends ToolbarAbstract
 {
@@ -51,9 +52,10 @@ class MassChangeMulticolli extends ToolbarAbstract
         Filter $filter,
         ShipmentRepositoryInterface $shipmentRepository,
         OrderRepositoryInterface $orderRepository,
-        OrderCollectionFactory $collectionFactory
+        OrderCollectionFactory $collectionFactory,
+        GuaranteedOptions $guaranteedOptions
     ) {
-        parent::__construct($context, $filter, $shipmentRepository, $orderRepository);
+        parent::__construct($context, $filter, $shipmentRepository, $orderRepository, $guaranteedOptions);
 
         $this->collectionFactory = $collectionFactory;
     }
