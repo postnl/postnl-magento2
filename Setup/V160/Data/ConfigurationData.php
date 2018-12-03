@@ -84,11 +84,10 @@ class ConfigurationData extends AbstractDataInstaller
             'tig_postnl/productoptions/supported_options'               => 'tig_postnl/delivery_settings/supported_options'
         ];
 
+        $table = $setup->getTable('core_config_data');
         foreach ($configPaths as $oldPath => $newPath) {
-            $data = ['path' => $newPath];
-
             $setup->getConnection()->update(
-                'core_config_data', $data,
+                $table, ['path' => $newPath],
                 ["path = '$oldPath'"]
             );
         }

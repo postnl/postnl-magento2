@@ -61,7 +61,11 @@ define([
                 DataProvider.getProductOptions()
             ),
             showToolbar : ko.observable(DataProvider.getShowToolbar()),
-            jsLoaded : true
+            jsLoaded : true,
+            isGuaranteedActive : ko.observable(DataProvider.getGuaranteedIsActive()),
+            showTimeOptions : ko.observable(false),
+            timeOptions : ko.observable(DataProvider.getPackagesTimeOptions()),
+            timeOptionSelected : ko.observable('1000')
         },
 
         /**
@@ -71,14 +75,53 @@ define([
          */
         initObservable : function () {
             this._super().observe([
-                'currentSelected'
+                'currentSelected',
+                'showTimeOptions'
             ]);
 
             this.currentSelected.subscribe(function (value) {
-                // Selection is changed.
+                if (value === 'change_parcel') {
+                    self.showTimeOptions(false);
+                    return;
+                }
+
+                self.toggleTimeOptions(self.defaultOption());
+            });
+
+            this.toggleTimeOptions(DataProvider.getDefaultOption());
+
+            var self = this;
+            this.defaultOption.subscribe(function (value) {
+                self.toggleTimeOptions(value);
+            });
+
+            this.timeOptionSelected.subscribe(function (value) {
+                console.log(value);
+                // scan selection, nothing more.
             });
 
             return this;
+        },
+
+        toggleTimeOptions: function (value) {
+            if (!this.isGuaranteedActive) {
+                this.showTimeOptions(false);
+                return;
+            }
+
+            if (DataProvider.inCargoProducts(value)) {
+                this.showTimeOptions(true);
+                this.timeOptions(DataProvider.getCargoTimeOptions());
+                return;
+            }
+
+            if (DataProvider.inPackagesProducts(value)) {
+                this.showTimeOptions(true);
+                this.timeOptions(DataProvider.getPackagesTimeOptions());
+                return;
+            }
+
+            return this.showTimeOptions(false);
         },
 
         /**
@@ -104,6 +147,9 @@ define([
             }
 
             data[this.currentSelected()] = value;
+            if (this.isGuaranteedActive() && this.showTimeOptions()) {
+                data.time = this.timeOptionSelected();
+            }
 
             utils.submit({
                 url: DataProvider.getSubmitUrl(this.currentSelected(), this.ns),

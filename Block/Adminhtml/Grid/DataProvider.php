@@ -37,17 +37,11 @@ use Magento\Framework\App\DeploymentConfig\Reader;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Config\Provider\Webshop as WebshopConfig;
 use TIG\PostNL\Config\Provider\ProductOptions as OptionConfig;
+use TIG\PostNL\Service\Options\GuaranteedOptions;
 
 class DataProvider extends Template implements BlockInterface
 {
     const XPATH_SHOW_GRID_TOOLBAR = 'tig_postnl/extra_settings_advanced/show_grid_toolbar';
-
-    /**
-     * @codingStandardsIgnoreLine
-     * @todo Implement selection in toolbar.
-     */
-    const CARGO_GUARANTEED_PRODUCTS   = '3606,3607,3608,3609,3610,3630,3657';
-    const DEFAULT_GUARANTEED_PRODUCTS = '3083,3084,3085,3087,3089,3090,3094,3096,3189,3385,3389,3390';
 
     /**
      * @var string
@@ -76,14 +70,20 @@ class DataProvider extends Template implements BlockInterface
     private $webshopConfig;
 
     /**
+     * @var GuaranteedOptions
+     */
+    private $guaranteedOptions;
+
+    /**
      * DataProvider constructor.
      *
-     * @param Template\Context $context
-     * @param Reader           $reader
-     * @param ProductOptions   $productOptions
-     * @param OptionConfig     $optionConfig
-     * @param WebshopConfig    $webshopConfig
-     * @param array            $data
+     * @param Template\Context  $context
+     * @param Reader            $reader
+     * @param ProductOptions    $productOptions
+     * @param OptionConfig      $optionConfig
+     * @param WebshopConfig     $webshopConfig
+     * @param GuaranteedOptions $guaranteedOptions
+     * @param array             $data
      */
     public function __construct(
         Template\Context $context,
@@ -91,12 +91,14 @@ class DataProvider extends Template implements BlockInterface
         ProductOptions $productOptions,
         OptionConfig $optionConfig,
         WebshopConfig $webshopConfig,
+        GuaranteedOptions $guaranteedOptions,
         array $data = []
     ) {
         $this->configReader = $reader;
         $this->productOptions = $productOptions;
         $this->optionConfig = $optionConfig;
         $this->webshopConfig = $webshopConfig;
+        $this->guaranteedOptions = $guaranteedOptions;
         parent::__construct($context, $data);
     }
 
@@ -139,5 +141,47 @@ class DataProvider extends Template implements BlockInterface
     public function getShowToolbar()
     {
         return $this->webshopConfig->getShowToolbar();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGuaranteedDeliveryActive()
+    {
+        return $this->guaranteedOptions->isGuaranteedActive();
+    }
+
+    /**
+     * @return string
+     */
+    public function getCargoTimeOptions()
+    {
+        $cargoOptions = $this->guaranteedOptions->getCargoTimeOptions();
+
+        $options = array_map(function ($option) {
+            return [
+                'value' => $option['value'],
+                'text'  => $option['label']
+            ];
+        }, $cargoOptions);
+
+        return \Zend_Json::encode($options);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPackagesTimeOptions()
+    {
+        $packagesOptions = $this->guaranteedOptions->getPackagesTimeOptions();
+
+        $options = array_map(function ($option) {
+            return [
+                'value' => $option['value'],
+                'text'  => $option['label']
+            ];
+        }, $packagesOptions);
+
+        return \Zend_Json::encode($options);
     }
 }

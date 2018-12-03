@@ -43,6 +43,7 @@ abstract class ToolbarAbstract extends Action
 {
     const PARCELCOUNT_PARAM_KEY = 'change_parcel';
     const PRODUCTCODE_PARAM_KEY = 'change_product';
+    const PRODUCT_TIMEOPTION    = 'time';
 
     /**
      * @var Filter
@@ -84,9 +85,10 @@ abstract class ToolbarAbstract extends Action
     /**
      * @param Order $order
      * @param       $productCode
+     * @param $timeOption
      */
     //@codingStandardsIgnoreLine
-    protected function orderChangeProductCode(Order $order, $productCode)
+    protected function orderChangeProductCode(Order $order, $productCode, $timeOption = null)
     {
         $postnlOrder = $this->getPostNLOrder($order->getId());
         if (!$postnlOrder) {
@@ -98,7 +100,7 @@ abstract class ToolbarAbstract extends Action
         $noError     = true;
 
         if ($shipments->getSize() > 0) {
-            $noError = $this->shipmentsChangeProductCode($shipments, $productCode);
+            $noError = $this->shipmentsChangeProductCode($shipments, $productCode, $timeOption);
         }
 
         if ($noError) {
@@ -113,11 +115,11 @@ abstract class ToolbarAbstract extends Action
      *
      * @return bool
      */
-    private function shipmentsChangeProductCode($shipments, $productCode)
+    private function shipmentsChangeProductCode($shipments, $productCode, $timeOption = null)
     {
         $error = false;
         foreach ($shipments as $shipment) {
-            $error = $this->shipmentChangeProductCode($shipment->getId(), $productCode);
+            $error = $this->shipmentChangeProductCode($shipment->getId(), $productCode, $ac_settings);
         }
 
         return $error;
@@ -126,10 +128,11 @@ abstract class ToolbarAbstract extends Action
     /**
      * @param $shipmentId
      * @param $productCode
+     * @param $ac_settings
      *
      * @return bool
      */
-    private function shipmentChangeProductCode($shipmentId, $productCode)
+    private function shipmentChangeProductCode($shipmentId, $productCode, $ac_settings)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
         if (!$shipment->getId()) {
