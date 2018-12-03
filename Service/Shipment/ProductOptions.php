@@ -37,6 +37,7 @@ use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface as PostNLOrderRepository;
 
+// @codingStandardsIgnoreFile
 class ProductOptions
 {
     /**
