@@ -83,7 +83,7 @@ class IsPastCutOff
      */
     private function now()
     {
-        return $this->currentDate->date();
+        return $this->currentDate->date('now', null, false, false);
     }
 
     /**
