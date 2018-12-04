@@ -62,11 +62,11 @@ before_script:
   - bash Test/Script/Setup.sh
 
 script:
+  - if [ "$CODE_COVERAGE" = "false" ]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
   - grunt phpcs
   - grunt lint
   - grunt exec:phraseTest
   - grunt exec:ciTests
-  - if [ "$CODE_COVERAGE" = "false" ]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
 
 after_success:
   - bash Test/Script/AfterSuccess.sh
