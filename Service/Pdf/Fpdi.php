@@ -36,7 +36,7 @@ namespace TIG\PostNL\Service\Pdf;
  * Original:
  * http://www.fpdf.org/en/script/script2.php
  */
-class Fpdi extends \FPDI
+class Fpdi extends \setasign\Fpdi\Fpdi
 {
     const PAGE_SIZE_A6 = [105, 148];
     const PAGE_SIZE_A6_WIDTH = 105;
