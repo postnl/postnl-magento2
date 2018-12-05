@@ -234,6 +234,18 @@ class ProductOptions extends AbstractConfigProvider
     {
         return $this->productOptions->getGuaranteedType($code);
     }
+
+    /**
+     * @param $code
+     * @param $key
+     * @param $value
+     *
+     * @return bool|null
+     */
+    public function checkProductByFlags($code, $key, $value)
+    {
+        return $this->productOptions->doesProductMatchFlags($code, $key, $value);
+    }
 }
 /**
  * codingStandardsIgnoreEnd

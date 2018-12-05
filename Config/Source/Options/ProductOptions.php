@@ -193,4 +193,25 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
 
         return GuaranteedOptions::GUARANTEED_TYPE_PACKAGE;
     }
+
+    /**
+     * @param $code
+     * @param $key
+     * @param $value
+     *
+     * @return bool|null
+     */
+    public function doesProductMatchFlags($code, $key, $value)
+    {
+        $productOption = $this->getOptionsByCode($code);
+        if (!$productOption) {
+            return null;
+        }
+
+        if (!isset($productOption[$key])) {
+            return null;
+        }
+
+        return $productOption[$key] == $value;
+    }
 }

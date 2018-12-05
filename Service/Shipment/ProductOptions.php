@@ -216,10 +216,15 @@ class ProductOptions
             return null;
         }
 
+        $code = $shipment->getProductCode();
+        if (!$this->productOptionsConfig->checkProductByFlags($code, 'isGuaranteedDelivery', true)) {
+            return null;
+        }
+
         $order = $this->orderRepository->get($shipment->getOrderId());
         $guaranteedTime = $this->productOptionsConfig->getGuaranteedDeliveryType(
             $this->isAlternative($order->getBaseGrandTotal()),
-            $this->productOptionsConfig->getGuaranteedType($shipment->getProductCode())
+            $this->productOptionsConfig->getGuaranteedType($code)
         );
 
         return $this->guaranteedOptions->get($guaranteedTime, $flat);
