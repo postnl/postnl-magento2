@@ -44,10 +44,6 @@ class GuaranteedOptionsPackages implements ArrayInterface
     {
         return [
             [
-                'label' => __('Delivery before 09:00'),
-                'value' => '0900'
-            ],
-            [
                 'label' => __('Delivery before 10:00'),
                 'value' => '1000'
             ],

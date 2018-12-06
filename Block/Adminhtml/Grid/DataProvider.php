@@ -193,7 +193,7 @@ class DataProvider extends Template implements BlockInterface
     private function returnTimeOptions($options)
     {
         $noneValue = [
-            'value' => null,
+            'value' => 'none',
             // @codingStandardsIgnoreLine
             'text'  => __('Not guaranteed')
         ];

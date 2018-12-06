@@ -109,9 +109,6 @@
                 <tooltip><![CDATA[This service is available for the whole Netherlands, excluding the Wadden Islands. There is no guaranteed distribution on Saturday and Sunday. To be able to use guaranteed delivery, please contact your PostNL Pakketten account manager for more information.]]></tooltip>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <config_path>tig_postnl/delivery_settings/guaranteed_delivery</config_path>
-                <depends>
-                    <field id="shippingoptions_active">1</field>
-                </depends>
             </field>
 
             <field id="default_option" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
@@ -127,7 +124,7 @@
                 <source_model>TIG\PostNL\Config\Source\Options\GuaranteedOptionsCargo</source_model>
                 <config_path>tig_postnl/delivery_settings/default_cargo_type</config_path>
                 <depends>
-                    <!-- Should match : \TIG\PostNL\Block\Adminhtml\Grid\DataProvider::CARGO_GUARANTEED_PRODUCTS-->
+                    <!-- Should match : app/code/TIG/PostNL/view/base/web/js/grid/dataprovider.js::inCargoProducts-->
                     <field id="default_option" separator=",">3606,3607,3608,3609,3610,3630,3657</field>
                     <field id="guaranteed_delivery">1</field>
                 </depends>
@@ -139,7 +136,7 @@
                 <source_model>TIG\PostNL\Config\Source\Options\GuaranteedOptionsPackages</source_model>
                 <config_path>tig_postnl/delivery_settings/default_package_type</config_path>
                 <depends>
-                    <!-- Should match : \TIG\PostNL\Block\Adminhtml\Grid\DataProvider::DEFAULT_GUARANTEED_PRODUCTS -->
+                    <!-- Should match : app/code/TIG/PostNL/view/base/web/js/grid/dataprovider.js::inPackagesProducts -->
                     <field id="default_option" separator=",">3083,3084,3085,3087,3089,3090,3094,3096,3189,3385,3389,3390</field>
                     <field id="guaranteed_delivery">1</field>
                 </depends>
@@ -178,6 +175,7 @@
                 <source_model>TIG\PostNL\Config\Source\Options\GuaranteedOptionsCargo</source_model>
                 <config_path>tig_postnl/delivery_settings/default_cargo_type</config_path>
                 <depends>
+                    <!-- Should match : app/code/TIG/PostNL/view/base/web/js/grid/dataprovider.js::inCargoProducts-->
                     <field id="alternative_default_option" separator=",">3606,3607,3608,3609,3610,3630,3657</field>
                     <field id="guaranteed_delivery">1</field>
                     <field id="use_alternative_default">1</field>
@@ -190,6 +188,7 @@
                 <source_model>TIG\PostNL\Config\Source\Options\GuaranteedOptionsPackages</source_model>
                 <config_path>tig_postnl/delivery_settings/default_package_type</config_path>
                 <depends>
+                    <!-- Should match : app/code/TIG/PostNL/view/base/web/js/grid/dataprovider.js::inPackagesProducts -->
                     <field id="alternative_default_option" separator=",">3083,3084,3085,3087,3089,3090,3094,3096,3189,3385,3389,3390</field>
                     <field id="guaranteed_delivery">1</field>
                     <field id="use_alternative_default">1</field>

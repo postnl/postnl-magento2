@@ -73,10 +73,6 @@ class ShippingOptions extends AbstractConfigProvider
      */
     public function isGuaranteedDeliveryActive()
     {
-        if (!$this->isShippingoptionsActive()) {
-            return false;
-        }
-
         return (bool) $this->getConfigFromXpath( static::XPATH_GUARANTEED_DELIVERY_ACTIVE);
     }
 

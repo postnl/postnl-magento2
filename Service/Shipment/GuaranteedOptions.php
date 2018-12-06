@@ -37,10 +37,6 @@ class GuaranteedOptions
     const GUARANTEED_TYPE_PACKAGE = 'package';
 
     private $availableProductOptions = [
-        '0900' => [
-            'Characteristic' => '118',
-            'Option'         => '017',
-        ],
         '1000' => [
             'Characteristic' => '118',
             'Option'         => '007',
