@@ -43,7 +43,7 @@ class GuaranteedOptionsPackagesTest extends TestCase
         $instance = $this->getInstance();
         $options  = $instance->toOptionArray();
 
-        $this->assertCount(4, $options);
+        $this->assertCount(3, $options);
 
         foreach ($options as $option) {
             $this->assertArrayHasKey('label', $option);
