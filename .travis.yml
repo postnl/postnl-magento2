@@ -14,6 +14,7 @@ php: 7.0
 env:
   global:
     - CODE_COVERAGE=false
+    - DI_COMPILE=true
 
 # We have decided to only test the latest two of each major releases.
   matrix:
@@ -48,7 +49,7 @@ matrix:
 # And there wouldn't be support of PHP 7.1 in Magento 2.0 or 2.1
   include:
     - php: 7.1
-      env: MAGENTO_VERSION=2.3.0
+      env: MAGENTO_VERSION=2.3.0 DI_COMPILE=false
     - php: 7.2
       env: MAGENTO_VERSION=2.3.0 CODE_COVERAGE=true
 
@@ -59,7 +60,7 @@ before_script:
   - bash Test/Script/Setup.sh
 
 script:
-  - if [ "$CODE_COVERAGE" = "false" ]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
+  - if [ "$CODE_COVERAGE" = "false" || "$DI_COMPILE" = "true"]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
   - grunt phpcs
   - grunt lint
   - grunt exec:phraseTest
