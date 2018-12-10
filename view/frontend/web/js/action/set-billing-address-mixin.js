@@ -48,6 +48,10 @@ define([
                 return originalAction();
             }
 
+            if (billingAddress.customAttributes === undefined) {
+                return originalAction();
+            }
+
             if (billingAddress['extension_attributes'] === undefined) {
                 billingAddress['extension_attributes'] = {};
             }
