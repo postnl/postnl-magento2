@@ -157,10 +157,8 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
             return;
         }
 
-        $address = $shipment->getShippingAddress();
-        if ($address->getCountryId() == 'ES') {
-            $address = $this->canaryConverter->convert($address);
-        }
+        $address = $this->canaryConverter->convert($shipment->getShippingAddress());
+
         $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
         $this->setTracks($shipment);
         $this->setLabel($shipment->getId());

@@ -72,9 +72,7 @@ class ProductCodeAndType
     /** @var QuoteInterface */
     private $quote;
 
-    /**
-     * @var CanaryIslandToIC
-     */
+    /** @var CanaryIslandToIC */
     private $canaryConverter;
 
     /**
@@ -141,22 +139,19 @@ class ProductCodeAndType
      */
     private function getProductCode($option, $country)
     {
-        if ($option == static::OPTION_EVENING) {
-            $this->code = $this->getDefaultEveningProductOption($country);
-            $this->type = static::SHIPMENT_TYPE_EVENING;
-            return;
-        }
-
-        if ($option == static::OPTION_SUNDAY) {
-            $this->code = $this->productOptionsConfiguration->getDefaultSundayProductOption();
-            $this->type = static::SHIPMENT_TYPE_SUNDAY;
-            return;
-        }
-
-        if ($option == static::OPTION_EXTRAATHOME) {
-            $this->code = $this->productOptionsConfiguration->getDefaultExtraAtHomeProductOption();
-            $this->type = static::SHIPMENT_TYPE_EXTRAATHOME;
-            return;
+        switch ($option) {
+            case static::OPTION_EVENING:
+                $this->code = $this->getDefaultEveningProductOption($country);
+                $this->type = static::SHIPMENT_TYPE_EVENING;
+                return;
+            case static::OPTION_SUNDAY:
+                $this->code = $this->productOptionsConfiguration->getDefaultSundayProductOption();
+                $this->type = static::SHIPMENT_TYPE_SUNDAY;
+                return;
+            case static::OPTION_EXTRAATHOME:
+                $this->code = $this->productOptionsConfiguration->getDefaultExtraAtHomeProductOption();
+                $this->type = static::SHIPMENT_TYPE_EXTRAATHOME;
+                return;
         }
 
         $this->getDefaultProductOption();
@@ -193,8 +188,6 @@ class ProductCodeAndType
         $this->type = static::SHIPMENT_TYPE_PG;
     }
 
-    /**
-     */
     private function getEpsOption()
     {
         $options = $this->productOptionsFinder->getEpsProductOptions();
@@ -203,10 +196,7 @@ class ProductCodeAndType
         $this->code = $firstOption['value'];
         $this->type = static::SHIPMENT_TYPE_EPS;
     }
-
-    /**
-     *
-     */
+    
     private function getGlobalPackOption()
     {
         $options = $this->productOptionsFinder->getGlobalPackOptions();
