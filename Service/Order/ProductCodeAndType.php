@@ -34,6 +34,7 @@ namespace TIG\PostNL\Service\Order;
 use Magento\Quote\Model\Quote;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
+use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 
@@ -72,18 +73,26 @@ class ProductCodeAndType
     private $quote;
 
     /**
+     * @var CanaryIslandToIC
+     */
+    private $canaryConverter;
+
+    /**
      * @param ProductOptionsConfiguration $productOptionsConfiguration
      * @param ProductOptionsFinder        $productOptionsFinder
      * @param QuoteInterface              $quote
+     * @param CanaryIslandToIC            $canaryConverter
      */
     public function __construct(
         ProductOptionsConfiguration $productOptionsConfiguration,
         ProductOptionsFinder $productOptionsFinder,
-        QuoteInterface $quote
+        QuoteInterface $quote,
+        CanaryIslandToIC $canaryConverter
     ) {
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->productOptionsFinder = $productOptionsFinder;
         $this->quote = $quote;
+        $this->canaryConverter = $canaryConverter;
     }
 
     /**
@@ -102,7 +111,8 @@ class ProductCodeAndType
         $type    = strtolower($type);
         $option  = strtolower($option);
 
-        if (!in_array($country, EpsCountries::ALL) && $country != 'NL') {
+        if (!in_array($country, EpsCountries::ALL) && $country != 'NL'
+            || $this->canaryConverter->isCanaryIsland($this->quote->getQuote()->getShippingAddress())) {
             $this->getGlobalPackOption();
             return $this->response();
         }

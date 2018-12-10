@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Service\Shipment\Labelling\Generate;
 
+use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Service\Shipment\Labelling\GenerateAbstract;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Logging\Log;
@@ -50,6 +51,7 @@ class WithConfirm extends GenerateAbstract
         ShipmentRepositoryInterface $shipmentRepository,
         Log $logger,
         Handler $handler,
+        CanaryIslandToIC $canaryConverter,
         Labelling $labelling
     ) {
         parent::__construct(
@@ -58,7 +60,8 @@ class WithConfirm extends GenerateAbstract
             $shipmentLabelRepository,
             $shipmentRepository,
             $logger,
-            $handler
+            $handler,
+            $canaryConverter
         );
 
         $this->labelService = $labelling;

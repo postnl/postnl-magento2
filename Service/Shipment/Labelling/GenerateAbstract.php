@@ -40,6 +40,7 @@ use TIG\PostNL\Exception as PostNLException;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Model\ShipmentLabelFactory;
+use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Webservices\Endpoints\Labelling;
 use TIG\PostNL\Webservices\Endpoints\LabellingWithoutConfirm;
 
@@ -89,12 +90,18 @@ abstract class GenerateAbstract
     protected $handler;
 
     /**
-     * @param Data                              $helper
-     * @param ShipmentLabelFactory              $shipmentLabelFactory
-     * @param ShipmentLabelRepositoryInterface  $shipmentLabelRepository
-     * @param ShipmentRepositoryInterface       $shipmentRepository
-     * @param Log                               $logger
-     * @param Handler                        $handler
+     * @var CanaryIslandToIC
+     */
+    protected $canaryConverter;
+
+    /**
+     * @param Data                             $helper
+     * @param ShipmentLabelFactory             $shipmentLabelFactory
+     * @param ShipmentLabelRepositoryInterface $shipmentLabelRepository
+     * @param ShipmentRepositoryInterface      $shipmentRepository
+     * @param Log                              $logger
+     * @param Handler                          $handler
+     * @param CanaryIslandToIC                 $canaryConverter
      */
     public function __construct(
         Data $helper,
@@ -102,7 +109,8 @@ abstract class GenerateAbstract
         ShipmentLabelRepositoryInterface $shipmentLabelRepository,
         ShipmentRepositoryInterface $shipmentRepository,
         Log $logger,
-        Handler $handler
+        Handler $handler,
+        CanaryIslandToIC $canaryConverter
     ) {
         $this->logger = $logger;
         $this->date = $helper->getDate();
