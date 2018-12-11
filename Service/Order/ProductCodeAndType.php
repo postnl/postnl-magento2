@@ -32,9 +32,10 @@
 namespace TIG\PostNL\Service\Order;
 
 use Magento\Quote\Model\Quote;
+use Magento\Sales\Model\Order\Address as SalesAddress;
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
-use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 
@@ -72,25 +73,19 @@ class ProductCodeAndType
     /** @var QuoteInterface */
     private $quote;
 
-    /** @var CanaryIslandToIC */
-    private $canaryConverter;
-
     /**
      * @param ProductOptionsConfiguration $productOptionsConfiguration
      * @param ProductOptionsFinder        $productOptionsFinder
      * @param QuoteInterface              $quote
-     * @param CanaryIslandToIC            $canaryConverter
      */
     public function __construct(
         ProductOptionsConfiguration $productOptionsConfiguration,
         ProductOptionsFinder $productOptionsFinder,
-        QuoteInterface $quote,
-        CanaryIslandToIC $canaryConverter
+        QuoteInterface $quote
     ) {
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->productOptionsFinder = $productOptionsFinder;
         $this->quote = $quote;
-        $this->canaryConverter = $canaryConverter;
     }
 
     /**
@@ -98,26 +93,30 @@ class ProductCodeAndType
      *
      * @param string $type
      * @param string $option
-     * @param string $country
+     * @param SalesAddress|QuoteAddress $address
      *
      * @return array
      */
     // @codingStandardsIgnoreStart
-    public function get($type = '', $option = '', $country = null)
+    public function get($type = '', $option = '', $address = null)
     {
+        $country = null;
+        if ($address) {
+            $country = $address->getCountryId();
+        }
+
         $country = $country ?: $this->getCountryCode();
         $type    = strtolower($type);
         $option  = strtolower($option);
 
-        if (!in_array($country, EpsCountries::ALL) && $country != 'NL'
-            || $this->canaryConverter->isCanaryIsland($this->quote->getQuote()->getShippingAddress())) {
+        if (!in_array($country, EpsCountries::ALL) && $country != 'NL') {
             $this->getGlobalPackOption();
             return $this->response();
         }
 
         // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
         if ((empty($type) || $option == static::OPTION_DAYTIME) && $country != 'NL') {
-            $this->getEpsOption();
+            $this->getEpsOption($address);
             return $this->response();
         }
 
@@ -188,15 +187,19 @@ class ProductCodeAndType
         $this->type = static::SHIPMENT_TYPE_PG;
     }
 
-    private function getEpsOption()
+    private function getEpsOption($address)
     {
-        $options = $this->productOptionsFinder->getEpsProductOptions();
+        $options = $this->productOptionsFinder->getEpsProductOptions($address);
         $firstOption = array_shift($options);
 
         $this->code = $firstOption['value'];
         $this->type = static::SHIPMENT_TYPE_EPS;
+        // Force type Global Pack (mainly used for Canary Islands)
+        if (in_array('4945', $firstOption)) {
+            $this->type = static::SHIPMENT_TYPE_GP;
+        }
     }
-    
+
     private function getGlobalPackOption()
     {
         $options = $this->productOptionsFinder->getGlobalPackOptions();

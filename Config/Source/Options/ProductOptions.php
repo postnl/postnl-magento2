@@ -32,7 +32,11 @@
 namespace TIG\PostNL\Config\Source\Options;
 
 use TIG\PostNL\Config\Source\OptionsAbstract;
+use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use Magento\Framework\Option\ArrayInterface;
+
+use Magento\Sales\Model\Order\Address as SalesAddress;
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
 
 /**
  * As this class holds all the methods to retrieve correct product codes, it is too long for Code Sniffer to check.
@@ -40,6 +44,19 @@ use Magento\Framework\Option\ArrayInterface;
 // @codingStandardsIgnoreFile
 class ProductOptions extends OptionsAbstract implements ArrayInterface
 {
+    /**
+     * @var CanaryIslandToIC
+     */
+    private $canaryConverter;
+
+    /**
+     * @param CanaryIslandToIC $canaryConverter
+     */
+    public function __construct(CanaryIslandToIC $canaryConverter)
+    {
+        $this->canaryConverter = $canaryConverter;
+    }
+
     /**
      * @param $code
      * @param $type
@@ -149,10 +166,15 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     }
 
     /**
+     * @param SalesAddress|QuoteAddress|false $address
+     *
      * @return array
      */
-    public function getEpsProductOptions()
+    public function getEpsProductOptions($address = false)
     {
+        if ($address && $address->getCountryId() === 'ES' && $this->canaryConverter->isCanaryIsland($address)) {
+            return $this->getGlobalPackOptions();
+        }
         return $this->getProductoptions(['group' => 'eu_options']);
     }
 
