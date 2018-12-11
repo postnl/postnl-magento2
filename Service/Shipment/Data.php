@@ -92,7 +92,7 @@ class Data
      *
      * @return array
      */
-    public function get(ShipmentInterface $shipment, $address, $contact, $currentShipmentNumber = 0)
+    public function get(ShipmentInterface $shipment, $address, $contact, $currentShipmentNumber = 1)
     {
         $shipmentData = $this->getDefaultShipmentData($shipment, $address, $contact, $currentShipmentNumber);
         $shipmentData = $this->setMandatoryShipmentData($shipment, $currentShipmentNumber, $shipmentData);
@@ -153,7 +153,7 @@ class Data
             $shipmentData['Customs'] = $this->customsInfo->get($shipment);
         }
 
-        if ($shipment->isExtraCover()) {
+        if ($shipment->isExtraCover() && $currentShipmentNumber === 1) {
             $shipmentData['Amounts'] = $this->getAmount($shipment);
         }
 
