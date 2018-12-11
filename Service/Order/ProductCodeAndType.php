@@ -140,7 +140,7 @@ class ProductCodeAndType
     {
         switch ($option) {
             case static::OPTION_EVENING:
-                $this->code = $this->getDefaultEveningProductOption($country);
+                $this->code = $this->productOptionsConfiguration->getDefaultEveningProductOption($country);
                 $this->type = static::SHIPMENT_TYPE_EVENING;
                 return;
             case static::OPTION_SUNDAY:
@@ -187,6 +187,9 @@ class ProductCodeAndType
         $this->type = static::SHIPMENT_TYPE_PG;
     }
 
+    /**
+     * @param $address
+     */
     private function getEpsOption($address)
     {
         $options = $this->productOptionsFinder->getEpsProductOptions($address);
@@ -214,23 +217,7 @@ class ProductCodeAndType
      */
     private function response()
     {
-        return [
-            'code' => $this->code,
-            'type' => $this->type,
-        ];
-    }
-
-    /**
-     * @param $country
-     * @return int
-     */
-    private function getDefaultEveningProductOption($country)
-    {
-        if ($country === 'BE') {
-            return $this->productOptionsConfiguration->getDefaultEveningBeProductOption();
-        }
-
-        return $this->productOptionsConfiguration->getDefaultEveningProductOption();
+        return ['code' => $this->code, 'type' => $this->type];
     }
 
     /**

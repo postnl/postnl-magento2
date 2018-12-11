@@ -101,10 +101,16 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
+     * @param string $country
+     *
      * @return string|int
      */
-    public function getDefaultEveningProductOption()
+    public function getDefaultEveningProductOption($country = null)
     {
+        if ($country === 'BE') {
+            return $this->getDefaultEveningBeProductOption();
+        }
+
         return $this->getConfigFromXpath(self::XPATH_DEFAULT_EVENING_PRODUCT_OPTION);
     }
 
