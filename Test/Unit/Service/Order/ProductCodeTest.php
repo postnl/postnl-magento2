@@ -133,13 +133,15 @@ class ProductCodeTest extends TestCase
     public function testGetShippingOption($type, $option, $country, $expectedCode, $expectedType)
     {
         $productOptionsFinder = $this->getObject(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
+        $address = $this->getObject(\Magento\Sales\Model\Order\Address::class);
+        $address->setCountryId($country);
 
         $quoteMock = $this->getFakeMock(Quote::class, true);
         $this->quoteInterfaceMock->method('getQuote')->willReturn($quoteMock);
 
         $instance = $this->getInstance(['productOptionsFinder' => $productOptionsFinder]);
 
-        $result = $instance->get($type, $option, $country);
+        $result = $instance->get($type, $option, $address);
         $this->assertEquals($expectedCode, $result['code']);
         $this->assertEquals($expectedType, $result['type']);
     }
