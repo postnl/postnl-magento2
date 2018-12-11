@@ -73,7 +73,7 @@ class CanaryIslandToICTest extends TestCase
      */
     public function testConverter($country, $postcode, $expected)
     {
-        $address = $this->getObject(\Magento\Sales\Model\Order\Address::class);
+        $address = $this->getObject(Address::class);
         $address->setCountryId($country);
         $address->setPostcode($postcode);
 
@@ -95,7 +95,7 @@ class CanaryIslandToICTest extends TestCase
         $address = $this->getObject(Address::class);
         $address->setCountryId($country);
         $address->setPostcode($postcode);
-        
+
         $isCanary = $this->getInstance()->isCanaryIsland($address);
         $this->assertEquals($expected, $isCanary);
     }
