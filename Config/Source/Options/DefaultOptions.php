@@ -87,7 +87,21 @@ class DefaultOptions implements ArrayInterface
      */
     public function getBeProducts()
     {
-        return $this->productOptions->getProductoptions(['isEvening' => false, 'countryLimitation' => 'BE']);
+        $epsOptions = $this->productOptions->getProductoptions(
+            ['isEvening' => false, 'group' => 'eu_options']
+        );
+
+        $epsBusinessOptions = [];
+        if ($this->shippingOptions->canUseEpsBusinessProducts()) {
+            $epsBusinessOptions = $this->productOptions->getProductoptions(
+                ['isEvening' => false, 'group' => 'eps_package_options']
+            );
+        }
+
+        $options   = array_merge($epsOptions, $epsBusinessOptions);
+        $beOptions = $this->productOptions->getProductoptions(['isEvening' => false, 'countryLimitation' => 'BE']);
+
+        return array_merge($options, $beOptions);
     }
 
     /**

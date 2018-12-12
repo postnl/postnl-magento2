@@ -187,7 +187,7 @@ abstract class OptionsAbstract
         // EU Options
         '4950' => [
             'value'                => '4950',
-            'label'                => 'EU Pack Special',
+            'label'                => 'EU Pack Special Consumer',
             'isEvening'            => false,
             'isExtraCover'         => false,
             'isSunday'             => false,
