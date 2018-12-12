@@ -77,7 +77,8 @@ class CanaryIslandToICTest extends TestCase
         $address->setCountryId($country);
         $address->setPostcode($postcode);
 
-        $address = $this->getInstance()->convert($address);
+        $this->getInstance()->convert($address);
+
         $this->assertEquals($expected, $address->getCountryId());
     }
 
