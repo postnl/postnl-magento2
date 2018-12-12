@@ -48,6 +48,10 @@ define([
                 return originalAction();
             }
 
+            if (shippingAddress.customAttributes === undefined) {
+                return originalAction();
+            }
+
             if (shippingAddress['extension_attributes'] === undefined) {
                 shippingAddress['extension_attributes'] = {};
             }

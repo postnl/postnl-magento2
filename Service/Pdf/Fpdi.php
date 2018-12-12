@@ -115,7 +115,7 @@ class Fpdi extends \setasign\Fpdi\Fpdi
      * @param null|int $yPosition
      * @param int      $width
      */
-    function addMultiplePages($file, $xPosition = null, $yPosition = null, $width = 0)
+    function addMultiplePages($file, $xPosition = null, $yPosition = null, $width = null)
     {
         $pages = $this->setSourceFile($file);
 
