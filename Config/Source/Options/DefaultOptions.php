@@ -156,7 +156,7 @@ class DefaultOptions implements ArrayInterface
             ['group' => 'id_check_options', 'countryLimitation' => $country]
         );
 
-        $idKeys = array_map(function($option) {
+        $idKeys = array_map(function ($option) {
              return $option['value'];
         }, $idOptions);
 

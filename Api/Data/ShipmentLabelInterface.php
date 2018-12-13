@@ -31,6 +31,10 @@
  */
 namespace TIG\PostNL\Api\Data;
 
+// @codingStandardsIgnoreFile
+/**
+ * Too many public methods for the code inspection.
+ */
 interface ShipmentLabelInterface
 {
     const BARCODE_TYPE_LABEL = 'label';
