@@ -120,15 +120,12 @@ class ProductOptions
      * @param ShipmentInterface $shipment
      * @param bool   $flat
      *
-     * @return null
+     * @return array|bool
      */
     public function get($shipment, $flat = false)
     {
         if ($shipment->getAcCharacteristic() && $shipment->getAcCharacteristic() != '000') {
-            return ['ProductOption' => [
-                'Characteristic' => $shipment->getAcCharacteristic(),
-                'Option'         => $shipment->getAcOption()
-            ]];
+            return $this->returnOptionsFromShipment($shipment, $flat);
         }
 
         $acOptions = $this->getAcOptionsByOrderWithShipment($shipment);
@@ -136,11 +133,15 @@ class ProductOptions
             $acOptions = $this->getByShipment($shipment, $flat);
         }
 
-        if ($acOptions && $acOptions['ProductOption']['Characteristic'] === '000') {
-            return false;
+        if ($flat && $acOptions && $acOptions['Characteristic'] !== '000') {
+            return $acOptions;
         }
 
-        return $acOptions;
+        if ($acOptions && $acOptions['ProductOption']['Characteristic'] !== '000') {
+            return $acOptions;
+        }
+
+        return false;
     }
 
     /**
@@ -184,6 +185,27 @@ class ProductOptions
         }
 
         return ['ProductOption' => $this->availableProductOptions[$type]];
+    }
+
+    /**
+     * @param $shipment
+     * @param $flat
+     *
+     * @return array
+     */
+    private function returnOptionsFromShipment(ShipmentInterface $shipment, $flat)
+    {
+        if (!$flat) {
+            return ['ProductOption' => [
+                'Characteristic' => $shipment->getAcCharacteristic(),
+                'Option'         => $shipment->getAcOption()
+            ]];
+        }
+
+        return [
+            'Characteristic' => $shipment->getAcCharacteristic(),
+            'Option'         => $shipment->getAcOption()
+        ];
     }
 
     /**

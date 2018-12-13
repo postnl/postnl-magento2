@@ -98,7 +98,8 @@ class PrepareTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('the new label', $instance->label($labelMock));
+        $result = $instance->label($labelMock);
+        $this->assertEquals('the new label', $result['label']);
     }
 
     public function testDefaultsToDomestic()
@@ -125,7 +126,8 @@ class PrepareTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('the new label', $instance->label($labelMock));
+        $result = $instance->label($labelMock);
+        $this->assertEquals('the new label', $result['label']);
     }
 
     /**

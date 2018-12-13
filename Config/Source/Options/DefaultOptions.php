@@ -87,10 +87,6 @@ class DefaultOptions implements ArrayInterface
      */
     public function getBeProducts()
     {
-        $epsOptions = $this->productOptions->getProductoptions(
-            ['group' => 'eu_options']
-        );
-
         $epsBusinessOptions = [];
         if ($this->shippingOptions->canUseEpsBusinessProducts()) {
             $epsBusinessOptions = $this->productOptions->getProductoptions(
@@ -106,7 +102,7 @@ class DefaultOptions implements ArrayInterface
         }
 
         $epsBusinessOptions = array_merge($epsBusinessOptions, $cargoProducts);
-        return array_merge($epsOptions, $epsBusinessOptions);
+        return array_merge($this->productOptions->getProductoptions(['group' => 'eu_options']), $epsBusinessOptions);
     }
 
     /**
