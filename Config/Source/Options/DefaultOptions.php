@@ -88,7 +88,7 @@ class DefaultOptions implements ArrayInterface
     public function getBeProducts()
     {
         $epsOptions = $this->productOptions->getProductoptions(
-            ['isEvening' => false, 'group' => 'eu_options']
+            ['group' => 'eu_options']
         );
 
         $epsBusinessOptions = [];
@@ -98,10 +98,15 @@ class DefaultOptions implements ArrayInterface
             );
         }
 
-        $options   = array_merge($epsOptions, $epsBusinessOptions);
-        $beOptions = $this->productOptions->getProductoptions(['isEvening' => false, 'countryLimitation' => 'BE']);
+        $cargoProducts = [];
+        if ($this->shippingOptions->canUseCargoProducts()) {
+            $cargoProducts = $this->productOptions->getProductoptions(
+                ['countryLimitation' => 'BE', 'group' => 'cargo_options']
+            );
+        }
 
-        return array_merge($options, $beOptions);
+        $epsBusinessOptions = array_merge($epsBusinessOptions, $cargoProducts);
+        return array_merge($epsOptions, $epsBusinessOptions);
     }
 
     /**

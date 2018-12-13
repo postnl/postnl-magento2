@@ -185,19 +185,9 @@ abstract class OptionsAbstract
             'group'                => 'pakjegemak_options',
         ],
         // EU Options
-        '4950' => [
-            'value'                => '4950',
-            'label'                => 'EU Pack Special Consumer',
-            'isEvening'            => false,
-            'isExtraCover'         => false,
-            'isSunday'             => false,
-            'isGuaranteedDelivery' => false,
-            'countryLimitation'    => false,
-            'group'                => 'eu_options',
-        ],
         '4952' => [
             'value'                => '4952',
-            'label'                => 'EU Pack Special Consumer (incl. signature)',
+            'label'                => 'EU Pack Special Consumer',
             'isEvening'            => false,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -207,7 +197,7 @@ abstract class OptionsAbstract
         ],
         '4938' => [
             'value'                => '4938',
-            'label'                => 'Evening Belgium + Deliver to stated address only + Signature on delivery',
+            'label'                => 'Deliver to stated address only + Signature on delivery (BE)',
             'isEvening'            => true,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -217,7 +207,7 @@ abstract class OptionsAbstract
         ],
         '4941' => [
             'value'                => '4941',
-            'label'                => 'Evening Belgium + Deliver to stated address only',
+            'label'                => 'Deliver to stated address only (BE)',
             'isEvening'            => true,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -225,8 +215,8 @@ abstract class OptionsAbstract
             'countryLimitation'    => 'BE',
             'group'                => 'eu_options',
         ],
-        '4646' => [
-            'value'                => '4646',
+        '4946' => [
+            'value'                => '4946',
             'label'                => 'EPS Standard BE',
             'isExtraCover'         => false,
             'isEvening'            => false,

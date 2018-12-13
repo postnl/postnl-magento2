@@ -76,7 +76,8 @@ class Generate
     {
         $preparedLabels = [];
         foreach ($this->orderLabels($labels) as $label) {
-            $preparedLabels[] = $this->prepare->label($label);
+            $labelResult = $this->prepare->label($label);
+            $preparedLabels[] = $labelResult['label'];
         }
 
         return $this->merge->files($preparedLabels, $createNewPdf);

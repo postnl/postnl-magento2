@@ -52,6 +52,10 @@ class GuaranteedOptions
         '1700' => [
             'Characteristic' => '118',
             'Option'         => '012',
+        ],
+        'none' => [
+            'Characteristic' => '000',
+            'Option'         => '000',
         ]
     ];
 

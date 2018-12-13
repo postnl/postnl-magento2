@@ -124,7 +124,7 @@ class ProductOptions
      */
     public function get($shipment, $flat = false)
     {
-        if ($shipment->getAcCharacteristic()) {
+        if ($shipment->getAcCharacteristic() && $shipment->getAcCharacteristic() != '000') {
             return ['ProductOption' => [
                 'Characteristic' => $shipment->getAcCharacteristic(),
                 'Option'         => $shipment->getAcOption()
@@ -134,6 +134,10 @@ class ProductOptions
         $acOptions = $this->getAcOptionsByOrderWithShipment($shipment);
         if (!$acOptions) {
             $acOptions = $this->getByShipment($shipment, $flat);
+        }
+
+        if ($acOptions && $acOptions['ProductOption']['Characteristic'] === '000') {
+            return false;
         }
 
         return $acOptions;
