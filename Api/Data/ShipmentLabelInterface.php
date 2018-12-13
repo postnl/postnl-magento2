@@ -81,6 +81,17 @@ interface ShipmentLabelInterface
 
     /**
      * @param string $value
+     * @@return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setProductCode($value);
+
+    /**
+     * @return int
+     */
+    public function getProductCode();
+
+    /**
+     * @param string $value
      * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
      */
     public function setType($value);

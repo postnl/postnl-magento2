@@ -123,4 +123,47 @@ class DefaultOptions implements ArrayInterface
 
         return array_merge($epsOptions, $epsBusinessOptions);
     }
+
+    /**
+     * @return array
+     */
+    public function getEveningOptionsNL()
+    {
+        return $this->getEveningOptions('NL');
+    }
+
+    /**
+     * @return array
+     */
+    public function getEveningOptionsBE()
+    {
+        return $this->getEveningOptions('BE');
+    }
+
+    /**
+     * @param string $country
+     *
+     * @return array
+     */
+    public function getEveningOptions($country = 'NL')
+    {
+        $options = $this->productOptions->getProductoptions(['isEvening' => true, 'countryLimitation' => $country]);
+        if ($this->shippingOptions->isIDCheckActive()) {
+            return $options;
+        }
+
+        $idOptions = $this->productOptions->getProductoptions(
+            ['group' => 'id_check_options', 'countryLimitation' => $country]
+        );
+
+        $idKeys = array_map(function($option) {
+             return $option['value'];
+        }, $idOptions);
+
+        $options = array_filter($options, function ($option) use ($idKeys) {
+            return !in_array($option['value'], $idKeys);
+        });
+
+        return $options;
+    }
 }

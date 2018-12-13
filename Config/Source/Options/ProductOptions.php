@@ -91,24 +91,6 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     }
 
     /**
-     * Returns options if evening is true
-     * @return array
-     */
-    public function getIsEveningOptions()
-    {
-        return $this->getProductoptions(['isEvening' => true, 'countryLimitation' => 'NL']);
-    }
-
-    /**
-     * Returns options if evening is true
-     * @return array
-     */
-    public function getIsEveningOptionsBe()
-    {
-        return $this->getProductoptions(['isEvening' => true, 'countryLimitation' => 'BE']);
-    }
-
-    /**
      * Returns options if group equals pakjegemak_options
      * @return array
      */

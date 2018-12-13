@@ -200,7 +200,7 @@ abstract class GenerateAbstract
         $labelItemHandle = $this->handler->handle($shipment, $labelItem->Labels->Label);
 
         foreach ($labelItemHandle['labels'] as $Label) {
-            $labelModel    = $this->save($shipment, $currentShipmentNumber, $Label, $labelItemHandle['type']);
+            $labelModel    = $this->save($shipment, $currentShipmentNumber, $Label, $labelItemHandle['type'], $labelItem->ProductCodeDelivery);
             $labelModels[] = $labelModel;
             $this->shipmentLabelRepository->save($labelModel);
         }
@@ -214,10 +214,11 @@ abstract class GenerateAbstract
      * @param int                        $number
      * @param string                     $label
      * @param null|string                $type
+     * @param int                        $productCode
      *
      * @return ShipmentLabelInterface
      */
-    public function save(ShipmentInterface $shipment, $number, $label, $type)
+    public function save(ShipmentInterface $shipment, $number, $label, $type, $productCode)
     {
         /** @var ShipmentLabelInterface $labelModel */
         $labelModel = $this->shipmentLabelFactory->create();
@@ -225,6 +226,7 @@ abstract class GenerateAbstract
         $labelModel->setNumber($number);
         $labelModel->setLabel(base64_encode($label));
         $labelModel->setType($type ?: ShipmentLabelInterface::BARCODE_TYPE_LABEL);
+        $labelModel->setProductCode($productCode);
 
         return $labelModel;
     }
