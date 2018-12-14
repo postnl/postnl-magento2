@@ -148,7 +148,8 @@ class SentDate extends AbstractEndpoint
                 'DeliveryDate'       => $this->getDeliveryDate($address, $postNLOrder),
                 'ShippingDuration'   => '1', // Request by PostNL not to use $postNLOrder->getShippingDuration()
                 'AllowSundaySorting' => $this->timeframeOptions->isSundaySortingAllowed(),
-//                'CutOffTimes'        => $this->cutoffTimes->get(),
+                // @codingStandardsIgnoreLine
+                //'CutOffTimes'      => $this->cutoffTimes->get(),
                 'Options'            => $this->timeframeOptions->get($this->getCountryId())
             ],
             'Message' => $this->message
