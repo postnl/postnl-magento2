@@ -127,6 +127,7 @@
             <sunday_delivery>
                 <sundaydelivery_active>0</sundaydelivery_active>
                 <sundaydelivery_fee>2</sundaydelivery_fee>
+                <default_sunday_option>3385</default_sunday_option>
             </sunday_delivery>
 
             <labelandpackingslipoptions>

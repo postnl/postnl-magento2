@@ -31,7 +31,6 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
-use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Customer\Model\Address\AbstractAddress as Address;
 use TIG\PostNL\Api\Data\OrderInterface as PostNLOrder;
 use TIG\PostNL\Service\Timeframe\Options;
@@ -39,6 +38,7 @@ use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Webservices\Soap;
 use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
+use TIG\PostNL\Webservices\Api\CutoffTimes;
 
 class SentDate extends AbstractEndpoint
 {
@@ -73,9 +73,9 @@ class SentDate extends AbstractEndpoint
     private $message;
 
     /**
-     * @var TimezoneInterface
+     * @var CutoffTimes
      */
-    private $timezone;
+    private $cutoffTimes;
 
     /**
      * @var Options
@@ -89,21 +89,21 @@ class SentDate extends AbstractEndpoint
 
     /**
      * @param Soap                 $soap
-     * @param TimezoneInterface    $timezone
+     * @param CutoffTimes          $cutoffTimes
      * @param Options              $timeframeOptions
      * @param Message              $message
      * @param DeliveryDateFallback $dateFallback
      */
     public function __construct(
         Soap $soap,
-        TimezoneInterface $timezone,
+        CutoffTimes $cutoffTimes,
         Options $timeframeOptions,
         Message $message,
         DeliveryDateFallback $dateFallback
     ) {
         $this->soap = $soap;
         $this->message = $message->get('');
-        $this->timezone = $timezone;
+        $this->cutoffTimes = $cutoffTimes;
         $this->timeframeOptions = $timeframeOptions;
         $this->dateFallback = $dateFallback;
     }
@@ -148,7 +148,8 @@ class SentDate extends AbstractEndpoint
                 'DeliveryDate'       => $this->getDeliveryDate($address, $postNLOrder),
                 'ShippingDuration'   => '1', // Request by PostNL not to use $postNLOrder->getShippingDuration()
                 'AllowSundaySorting' => $this->timeframeOptions->isSundaySortingAllowed(),
-                'Options'            => $this->timeframeOptions->get($this->getCountryId()),
+//                'CutOffTimes'        => $this->cutoffTimes->get(),
+                'Options'            => $this->timeframeOptions->get($this->getCountryId())
             ],
             'Message' => $this->message
         ];
@@ -198,21 +199,9 @@ class SentDate extends AbstractEndpoint
         $deliveryDate = $postNLOrder->getDeliveryDate();
         if (in_array($address->getCountryId(), ['NL', 'BE'])
             || ($address->getCountryId() === null && !empty($deliveryDate))) {
-            return $this->formatDate($deliveryDate);
+            return $this->dateFallback->getDate($deliveryDate);
         }
 
         return $this->dateFallback->get();
-    }
-
-    /**
-     * @param $deliveryDate
-     *
-     * @return string
-     */
-    private function formatDate($deliveryDate)
-    {
-        $date = $this->timezone->date(strtotime($deliveryDate));
-
-        return $date->format('d-m-Y');
     }
 }

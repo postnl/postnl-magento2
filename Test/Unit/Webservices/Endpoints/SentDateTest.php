@@ -89,11 +89,9 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
 
         $orderMock = $this->getMock(OrderInterface::class);
         $this->mockFunction($orderMock, 'getDeliveryDate', $input['delivery_date']);
-        $timezoneMock = $this->timezoneInterfaceMock();
         $falbackMock  = $this->deliveryDateFallbackMock();
 
         $instance = $this->getInstance([
-            'timezone' => $timezoneMock,
             'dateFallback' => $falbackMock
         ]);
         $instance->setParameters($address, 1, $orderMock);
