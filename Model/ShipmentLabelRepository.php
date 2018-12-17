@@ -171,7 +171,19 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
      */
     public function getByShipment(\TIG\PostNL\Api\Data\ShipmentInterface $shipment)
     {
-        $this->searchCriteriaBuilder->addFilter('parent_id', $shipment->getId());
+        return $this->getByShipmentId($shipment->getId());
+    }
+
+    /**
+     * Return a label that belongs to a shipment.
+     *
+     * @param $shipmentId
+     *
+     * @return \Magento\Framework\Api\ExtensibleDataInterface[]|null|\TIG\PostNL\Api\Data\ShipmentLabelInterface[]
+     */
+    public function getByShipmentId($shipmentId)
+    {
+        $this->searchCriteriaBuilder->addFilter('parent_id', $shipmentId);
 
         $searchCriteria = $this->searchCriteriaBuilder->create();
         $list = $this->getList($searchCriteria);

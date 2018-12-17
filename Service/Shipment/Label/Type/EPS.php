@@ -39,7 +39,7 @@ class EPS extends Domestic
     /**
      * These are combiLabel products, these codes are returned by PostNL in the label response (ProductCodeDelivery)
      */
-    private $shouldRotate = [4940, 4950, 4983, 4985, 4986];
+    private $shouldRotate = [4940, 4950, 4983, 4985, 4986, 3622, 3642, 3659];
 
     /**
      * @var bool
