@@ -39,12 +39,16 @@ class CanaryIslandToIC
 {
     /**
      * @param SalesAddress|QuoteAddress $address
+     *
+     * @return QuoteAddress|SalesAddress
      */
     public function convert($address)
     {
         if ($this->isCanaryIsland($address)) {
             $address->setCountryId('IC');
         }
+
+        return $address;
     }
 
     /**

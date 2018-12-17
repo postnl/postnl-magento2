@@ -125,7 +125,7 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
         $shipment = $this->getShipment();
         $shippingAddress = $shipment->getShippingAddress();
         if ($shippingAddress->getCountryId() === 'ES') {
-            $this->canaryConverter->convert($shippingAddress);
+            $shippingAddress = $this->canaryConverter->convert($shippingAddress);
         }
 
         $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
