@@ -32,6 +32,8 @@
 namespace TIG\PostNL\Service\Order;
 
 use Magento\Quote\Model\Quote;
+use Magento\Sales\Model\Order\Address as SalesAddress;
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
@@ -91,13 +93,18 @@ class ProductCodeAndType
      *
      * @param string $type
      * @param string $option
-     * @param string $country
+     * @param SalesAddress|QuoteAddress $address
      *
      * @return array
      */
     // @codingStandardsIgnoreStart
-    public function get($type = '', $option = '', $country = null)
+    public function get($type = '', $option = '', $address = null)
     {
+        $country = null;
+        if ($address) {
+            $country = $address->getCountryId();
+        }
+
         $country = $country ?: $this->getCountryCode();
         $type    = strtolower($type);
         $option  = strtolower($option);
@@ -109,7 +116,7 @@ class ProductCodeAndType
 
         // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
         if ((empty($type) || $option == static::OPTION_DAYTIME) && $country != 'NL') {
-            $this->getEpsOption();
+            $this->getEpsOption($address);
             return $this->response();
         }
 
@@ -131,22 +138,19 @@ class ProductCodeAndType
      */
     private function getProductCode($option, $country)
     {
-        if ($option == static::OPTION_EVENING) {
-            $this->code = $this->getDefaultEveningProductOption($country);
-            $this->type = static::SHIPMENT_TYPE_EVENING;
-            return;
-        }
-
-        if ($option == static::OPTION_SUNDAY) {
-            $this->code = $this->productOptionsConfiguration->getDefaultSundayProductOption();
-            $this->type = static::SHIPMENT_TYPE_SUNDAY;
-            return;
-        }
-
-        if ($option == static::OPTION_EXTRAATHOME) {
-            $this->code = $this->productOptionsConfiguration->getDefaultExtraAtHomeProductOption();
-            $this->type = static::SHIPMENT_TYPE_EXTRAATHOME;
-            return;
+        switch ($option) {
+            case static::OPTION_EVENING:
+                $this->code = $this->productOptionsConfiguration->getDefaultEveningProductOption($country);
+                $this->type = static::SHIPMENT_TYPE_EVENING;
+                return;
+            case static::OPTION_SUNDAY:
+                $this->code = $this->productOptionsConfiguration->getDefaultSundayProductOption();
+                $this->type = static::SHIPMENT_TYPE_SUNDAY;
+                return;
+            case static::OPTION_EXTRAATHOME:
+                $this->code = $this->productOptionsConfiguration->getDefaultExtraAtHomeProductOption();
+                $this->type = static::SHIPMENT_TYPE_EXTRAATHOME;
+                return;
         }
 
         $this->getDefaultProductOption();
@@ -184,19 +188,21 @@ class ProductCodeAndType
     }
 
     /**
+     * @param $address
      */
-    private function getEpsOption()
+    private function getEpsOption($address)
     {
-        $options = $this->productOptionsFinder->getEpsProductOptions();
+        $options = $this->productOptionsFinder->getEpsProductOptions($address);
         $firstOption = array_shift($options);
 
         $this->code = $firstOption['value'];
         $this->type = static::SHIPMENT_TYPE_EPS;
+        // Force type Global Pack (mainly used for Canary Islands)
+        if (in_array('4945', $firstOption)) {
+            $this->type = static::SHIPMENT_TYPE_GP;
+        }
     }
 
-    /**
-     *
-     */
     private function getGlobalPackOption()
     {
         $options = $this->productOptionsFinder->getGlobalPackOptions();
@@ -211,23 +217,7 @@ class ProductCodeAndType
      */
     private function response()
     {
-        return [
-            'code' => $this->code,
-            'type' => $this->type,
-        ];
-    }
-
-    /**
-     * @param $country
-     * @return int
-     */
-    private function getDefaultEveningProductOption($country)
-    {
-        if ($country === 'BE') {
-            return $this->productOptionsConfiguration->getDefaultEveningBeProductOption();
-        }
-
-        return $this->productOptionsConfiguration->getDefaultEveningProductOption();
+        return ['code' => $this->code, 'type' => $this->type];
     }
 
     /**
