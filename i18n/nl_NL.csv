@@ -424,3 +424,4 @@ Percent,Percentage
 "Please enter a valid zipcode and housenumber.","Vul s.v.p. een valide postcode en huisnummer in."
 "Contact your PostNL account manager to activate adrescheck. Note: Adrescheck only works if the plugin is in live mode.","Neem contact op met uw PostNL accountmanager om adrescheck te activeren. Let op: Adrescheck werkt alleen als de plugin in de live modus staat."
 "Not guaranteed","Niet gegarandeerd"
+"Printing a custom (such as Fooman) packing slip always results an PDF with the label on a separate page.","Het afdrukken van een aangepaste (zoals Fooman) pakbon resulteert altijd in een PDF met het label op een aparte pagina."
