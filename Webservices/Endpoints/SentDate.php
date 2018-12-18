@@ -198,6 +198,10 @@ class SentDate extends AbstractEndpoint
     private function getDeliveryDate($address, PostNLOrder $postNLOrder)
     {
         $deliveryDate = $postNLOrder->getDeliveryDate();
+        if ($deliveryDate == null) {
+            return $this->dateFallback->get();
+        }
+
         if (in_array($address->getCountryId(), ['NL', 'BE'])
             || ($address->getCountryId() === null && !empty($deliveryDate))) {
             return $this->dateFallback->getDate($deliveryDate);

@@ -37,6 +37,7 @@ use Magento\Ui\Component\MassAction\Filter;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface;
 use TIG\PostNL\Service\Shipment\GuaranteedOptions;
+use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 use Magento\Sales\Model\Order;
 
 //@codingStandardsIgnoreFile
@@ -71,6 +72,12 @@ abstract class ToolbarAbstract extends Action
     protected $guaranteedOptions;
 
     /**
+     * @var ResetPostNLShipment
+     */
+    //@codingStandardsIgnoreLine
+    protected $resetService;
+
+    /**
      * @var array
      */
     //@codingStandardsIgnoreLine
@@ -81,7 +88,8 @@ abstract class ToolbarAbstract extends Action
         Filter $filter,
         ShipmentRepositoryInterface $shipmentRepository,
         OrderRepositoryInterface $orderRepository,
-        GuaranteedOptions $guaranteedOptions
+        GuaranteedOptions $guaranteedOptions,
+        ResetPostNLShipment $resetPostNLShipment
     ) {
         parent::__construct($context);
 
@@ -89,6 +97,7 @@ abstract class ToolbarAbstract extends Action
         $this->shipmentRepository = $shipmentRepository;
         $this->orderRepository = $orderRepository;
         $this->guaranteedOptions = $guaranteedOptions;
+        $this->resetService = $resetPostNLShipment;
     }
 
     /**
@@ -170,10 +179,8 @@ abstract class ToolbarAbstract extends Action
             return false;
         }
 
-        if ($shipment->getConfirmedAt()) {
-            $magentoShipment = $shipment->getShipment();
-            $this->errors[]  = __('First change the confirmation of shipment %1 before changing the product code.', $magentoShipment->getIncrementId());
-            return false;
+        if ($shipment->getMainBarcode()) {
+            $this->resetService->resetShipment($shipmentId);
         }
 
         $shipment->setProductCode($productCode);
@@ -238,10 +245,8 @@ abstract class ToolbarAbstract extends Action
             return false;
         }
 
-        if (!$shipment->canChangeParcelCount()) {
-            $magentoShipment = $shipment->getShipment();
-            $this->errors[]  = __('Can not change the parcel count for shipment %1', $magentoShipment->getIncrementId());
-            return false;
+        if ($shipment->getMainBarcode()) {
+            $this->resetService->resetShipment($shipmentId);
         }
 
         $shipment->setParcelCount($parcelCount);

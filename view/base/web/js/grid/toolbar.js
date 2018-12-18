@@ -35,14 +35,16 @@ define([
     'underscore',
     'Magento_Ui/js/grid/toolbar',
     'mageUtils',
-    'TIG_PostNL/js/grid/dataprovider'
+    'TIG_PostNL/js/grid/dataprovider',
+    'Magento_Ui/js/modal/confirm'
 ], function (
     $,
     ko,
     _,
     Toolbar,
     utils,
-    DataProvider
+    DataProvider,
+    Confirm
 ) {
     'use strict';
     return Toolbar.extend({
@@ -139,6 +141,7 @@ define([
          * - MassChangeProduct
          */
         submit : function () {
+            var self = this;
             var data = this.getSelectedItems();
             var value = $('#'+this.currentSelected())[0].value;
             if (isNaN(parseInt(value))) {
@@ -146,14 +149,24 @@ define([
                 return;
             }
 
-            data[this.currentSelected()] = value;
-            if (this.isGuaranteedActive() && this.showTimeOptions()) {
-                data.time = this.timeOptionSelected();
-            }
+            Confirm({
+                content: $.mage.__('This action will remove all labels and barcodes if they exist.'),
+                title: $.mage.__('Are you sure ?'),
+                actions: {
+                    confirm: function(){
+                        data[self.currentSelected()] = value;
+                        if (self.isGuaranteedActive() && self.showTimeOptions()) {
+                            data.time = self.timeOptionSelected();
+                        }
 
-            utils.submit({
-                url: DataProvider.getSubmitUrl(this.currentSelected(), this.ns),
-                data: data
+                        utils.submit({
+                            url: DataProvider.getSubmitUrl(self.currentSelected(), self.ns),
+                            data: data
+                        });
+                    },
+                    cancel: function(){},
+                    always: function(){}
+                }
             });
         },
 

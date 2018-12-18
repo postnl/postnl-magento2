@@ -39,6 +39,7 @@ use TIG\PostNL\Api\OrderRepositoryInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 use TIG\PostNL\Service\Shipment\GuaranteedOptions;
+use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 use Magento\Sales\Model\Order\Shipment;
 
 class MassChangeMulticolli extends ToolbarAbstract
@@ -54,9 +55,12 @@ class MassChangeMulticolli extends ToolbarAbstract
         ShipmentRepositoryInterface $shipmentRepository,
         OrderRepositoryInterface $orderRepository,
         ShipmentCollectionFactory $collectionFactory,
-        GuaranteedOptions $guaranteedOptions
+        GuaranteedOptions $guaranteedOptions,
+        ResetPostNLShipment $resetPostNLShipment
     ) {
-        parent::__construct($context, $filter, $shipmentRepository, $orderRepository, $guaranteedOptions);
+        parent::__construct(
+            $context, $filter, $shipmentRepository, $orderRepository, $guaranteedOptions, $resetPostNLShipment
+        );
 
         $this->collectionFactory = $collectionFactory;
     }

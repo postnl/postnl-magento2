@@ -435,7 +435,7 @@ abstract class OptionsAbstract
         // Cargo
         '3606' => [
             'value'                => '3606',
-            'label'                => 'AVG Pallet Pharma&Care 2-8 C (NL)',
+            'label'                => 'Pharma&Care Pallet 2-8 C (NL)',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -445,7 +445,7 @@ abstract class OptionsAbstract
         ],
         '3607' => [
             'value'                => '3607',
-            'label'                => 'AVG Pallet Pharma&Care 15-25 C (NL)',
+            'label'                => 'Pharma&Care Pallet 15-25 C (NL)',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -455,7 +455,7 @@ abstract class OptionsAbstract
         ],
         '3608' => [
             'value'                => '3608',
-            'label'                => 'AVG Cargo Parcel Pharma&Care 2-8 C (NL)',
+            'label'                => 'Pharma&Care Stukgoed 2-8 C (NL)',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -465,7 +465,7 @@ abstract class OptionsAbstract
         ],
         '3609' => [
             'value'                => '3609',
-            'label'                => 'AVG Cargo Parcel Pharma&Care 15-25 C (NL)',
+            'label'                => 'Pharma&Care Stukgoed 15-25 C (NL)',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -475,7 +475,7 @@ abstract class OptionsAbstract
         ],
         '3610' => [
             'value'                => '3610',
-            'label'                => 'AVG Pallet NL',
+            'label'                => 'Cargo Pallet NL',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -485,7 +485,7 @@ abstract class OptionsAbstract
         ],
         '3630' => [
             'value'                => '3630',
-            'label'                => 'AVG Parcel Plus NL',
+            'label'                => 'Cargo Stukgoed NL',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -495,7 +495,7 @@ abstract class OptionsAbstract
         ],
         '3657' => [
             'value'                => '3657',
-            'label'                => 'AVG Half Europallet NL',
+            'label'                => 'Cargo Halve Europallet NL',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -505,7 +505,7 @@ abstract class OptionsAbstract
         ],
         '3618' => [
             'value'                => '3618',
-            'label'                => 'AVG Pallet BE',
+            'label'                => 'Cargo Pallet BE',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -515,7 +515,7 @@ abstract class OptionsAbstract
         ],
         '3638' => [
             'value'                => '3638',
-            'label'                => 'AVG Parcel Plus BE',
+            'label'                => 'Cargo Stukgoed BE',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -525,7 +525,7 @@ abstract class OptionsAbstract
         ],
         '3658' => [
             'value'                => '3658',
-            'label'                => 'AVG Half Europallet BE',
+            'label'                => 'Cargo Halve Europallet BE',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -535,7 +535,7 @@ abstract class OptionsAbstract
         ],
         '3622' => [
             'value'                => '3622',
-            'label'                => 'AVG Pallet LU',
+            'label'                => 'Cargo Pallet LU',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -545,7 +545,7 @@ abstract class OptionsAbstract
         ],
         '3642' => [
             'value'                => '3642',
-            'label'                => 'AVG Parcel Plus LU',
+            'label'                => 'Cargo Stukgoed LU',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -555,7 +555,7 @@ abstract class OptionsAbstract
         ],
         '3659' => [
             'value'                => '3659',
-            'label'                => 'AVG Half Europallet LU',
+            'label'                => 'Cargo Halve Europallet LU',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
