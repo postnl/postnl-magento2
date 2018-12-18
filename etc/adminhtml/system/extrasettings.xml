@@ -70,9 +70,10 @@
                 <config_path>tig_postnl/extra_settings_advanced/allowed_shipping_methods</config_path>
             </field>
 
-            <field id="show_grid_toolbar" translate="label" type="select" sortOrder="15" showInDefault="1">
+            <field id="show_grid_toolbar" translate="label tooltip comment" type="select" sortOrder="15" showInDefault="1">
                 <label>PostNL grid Toolbar</label>
                 <tooltip>With this setting you can enable or disable the PostNL toolbar that is visible above the Magento order and shipment grids.</tooltip>
+                <comment>Already generated labels and barcodes for the selected orders are deleted when using the toolbar actions.</comment>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <config_path>tig_postnl/extra_settings_advanced/show_grid_toolbar</config_path>
             </field>

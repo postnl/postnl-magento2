@@ -75,7 +75,7 @@ abstract class CountAbstract
     protected function calculate($weight, $items)
     {
         $this->products = $this->getProducts($items);
-        if (empty($this->products) || !$this->shippingOptions->isExtraAtHomeActive()) {
+        if (empty($this->products)) {
             $remainingParcelCount = ceil($weight / self::WEIGHT_PER_PARCEL);
             return $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
         }
@@ -120,12 +120,9 @@ abstract class CountAbstract
     // @codingStandardsIgnoreLine
     protected function getProducts($items)
     {
-        /**
-         * @codingStandardsIgnoreLine
-         * @todo : In future maybe more product types are requiring the parcel_count attribute.
-         *         So build within the de backend configuration an multiselect and read it out when using this method.
-         */
-        return $this->productDictionary->get($items, [PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME]);
+        return $this->productDictionary->get(
+            $items, [PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME, PostNLType::PRODUCT_TYPE_REGULAR]
+        );
     }
 
     /**

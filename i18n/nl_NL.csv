@@ -425,5 +425,5 @@ Percent,Percentage
 "Contact your PostNL account manager to activate adrescheck. Note: Adrescheck only works if the plugin is in live mode.","Neem contact op met uw PostNL accountmanager om adrescheck te activeren. Let op: Adrescheck werkt alleen als de plugin in de live modus staat."
 "Not guaranteed","Niet gegarandeerd"
 "Printing a custom (such as Fooman) packing slip always results an PDF with the label on a separate page.","Het afdrukken van een aangepaste (zoals Fooman) pakbon resulteert altijd in een PDF met het label op een aparte pagina."
-"This action will remove all labels and barcodes if they exist.","Deze actie zal alle labels en barcodes verwijderen indien deze bestaan."
+"Already generated labels and barcodes for the selected orders are deleted when using the toolbar actions.","Reeds gegenereerde labels en barcodes voor de geselecteerde orders worden verwijderd bij gebruik van de toolbar acties."
 "Are you sure ?","Weet u het zeker ?"
