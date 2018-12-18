@@ -147,7 +147,7 @@ define([
                 content: $.mage.__('This action will remove all labels and barcodes if they exist.'),
                 title: $.mage.__('Are you sure ?'),
                 actions: {
-                    confirm: function(){
+                    confirm: function () {
                         data[self.currentSelected()] = value;
                         if (self.isGuaranteedActive() && self.showTimeOptions()) {
                             data.time = self.timeOptionSelected();
@@ -158,8 +158,8 @@ define([
                             data: data
                         });
                     },
-                    cancel: function(){},
-                    always: function(){}
+                    cancel: function () {},
+                    always: function () {}
                 }
             });
         },

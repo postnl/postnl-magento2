@@ -58,7 +58,12 @@ class MassChangeMulticolli extends ToolbarAbstract
         ResetPostNLShipment $resetPostNLShipment
     ) {
         parent::__construct(
-            $context, $filter, $shipmentRepository, $orderRepository, $guaranteedOptions, $resetPostNLShipment
+            $context,
+            $filter,
+            $shipmentRepository,
+            $orderRepository,
+            $guaranteedOptions,
+            $resetPostNLShipment
         );
 
         $this->collectionFactory = $collectionFactory;
