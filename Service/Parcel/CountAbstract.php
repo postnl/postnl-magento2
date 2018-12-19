@@ -75,6 +75,9 @@ abstract class CountAbstract
     protected function calculate($weight, $items)
     {
         $this->products = $this->getProducts($items);
+        if (empty($this->products)) {
+            return $this->getBasedOnWeight($weight, 0);
+        }
 
         /**
          * If there are more items the count start with one for the items without parcel_count
@@ -86,12 +89,24 @@ abstract class CountAbstract
         }
 
         if (!$this->shippingOptions->isExtraAtHomeActive()) {
-            $remainingParcelCount = ceil($weight / self::WEIGHT_PER_PARCEL);
-            $weightCount = $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
-            $parcelCount = ($weightCount < $parcelCount) ? $parcelCount : $weightCount;
+            $parcelCount = $this->getBasedOnWeight($weight, $parcelCount);
         }
 
         return $parcelCount < 1 ? 1 : $parcelCount;
+    }
+
+    /**
+     * @param $weight
+     * @param $parcelCount
+     *
+     * @return float|int
+     */
+    // @codingStandardsIgnoreLine
+    protected function getBasedOnWeight($weight, $parcelCount)
+    {
+        $remainingParcelCount = ceil($weight / self::WEIGHT_PER_PARCEL);
+        $weightCount = $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
+        return ($weightCount < $parcelCount) ? $parcelCount : $weightCount;
     }
 
     /**
