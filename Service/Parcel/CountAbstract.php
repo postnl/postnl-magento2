@@ -138,7 +138,8 @@ abstract class CountAbstract
     protected function getProducts($items)
     {
         return $this->productDictionary->get(
-            $items, [PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME, PostNLType::PRODUCT_TYPE_REGULAR]
+            $items,
+            [PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME, PostNLType::PRODUCT_TYPE_REGULAR]
         );
     }
 
