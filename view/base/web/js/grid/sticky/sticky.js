@@ -134,6 +134,11 @@ define([
          */
         submit : function () {
             var data = this.getSelectedItems();
+            if (!data.selected) {
+                alert($.mage.__('Please select item(s)'));
+                return;
+            }
+
             var value = $('#'+this.currentSelected())[0].value;
             if (isNaN(parseInt(value))) {
                 alert(DataProvider.getInputWarningMessage(this.currentSelected()));

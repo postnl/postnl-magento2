@@ -75,10 +75,6 @@ abstract class CountAbstract
     protected function calculate($weight, $items)
     {
         $this->products = $this->getProducts($items);
-        if (empty($this->products)) {
-            $remainingParcelCount = ceil($weight / self::WEIGHT_PER_PARCEL);
-            return $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
-        }
 
         /**
          * If there are more items the count start with one for the items without parcel_count
@@ -87,6 +83,12 @@ abstract class CountAbstract
         $parcelCount = $this->getStartCount($items);
         foreach ($items as $item) {
             $parcelCount += $this->getParcelCount($item);
+        }
+
+        if (!$this->shippingOptions->isExtraAtHomeActive()) {
+            $remainingParcelCount = ceil($weight / self::WEIGHT_PER_PARCEL);
+            $weightCount = $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
+            $parcelCount = ($weightCount < $parcelCount) ? $parcelCount : $weightCount;
         }
 
         return $parcelCount < 1 ? 1 : $parcelCount;

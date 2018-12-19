@@ -63,7 +63,7 @@
             <comment><![CDATA[These settings are intended for advanced users only! If you're not 100% sure what you're doing, please do not touch these settings.]]></comment>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
 
-            <field id="allowed_shipping_methods" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <field id="allowed_shipping_methods" translate="label tooltip" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>PostNL shippingmethods</label>
                 <tooltip>Please select the shipping methods that will be considered to be 'PostNL' by this extension. Orders placed using one of these shipping methods may be processed using the PostNL extension.</tooltip>
                 <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
