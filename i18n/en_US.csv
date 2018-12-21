@@ -256,7 +256,7 @@ Percent,Percent
 "Parcel count", "Parcel count"
 "Type", "Type"
 "Regular", "Regular"
-"When sending Extra@Home types, this value is used to calculate the coli amount. When using other types this value will be ignored.", "When sending Extra@Home types, this value is used to calculate the coli amount. When using other types this value will be ignored."
+"When sending Extra@Home types, this value is used to calculate the coli amount. When using other types this value will be ignored.", "When sending Extra@Home types, this value is used to calculate the colli amount. When using other types this value will be ignored if the weight determines a different colli number"
 "This e-mail address will be added as BCC to the Track And Trace template","This e-mail address will be added as BCC to the Track And Trace template"
 "Track & Trace information","Track & Trace information"
 "Click here to track your order","Click here to track your order"
