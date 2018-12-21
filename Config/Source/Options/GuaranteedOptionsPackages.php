@@ -29,16 +29,33 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-return [
-    'db-host' => 'MAGENTO_DB_HOST',
-    'db-user' => 'MAGENTO_DB_USER',
-    'db-password' => 'MAGENTO_DB_PASS',
-    'db-name' => 'MAGENTO_DB_NAME',
-    'db-prefix' => '',
-    'backend-frontname' => 'admin',
-    'admin-user' => \Magento\TestFramework\Bootstrap::ADMIN_NAME,
-    'admin-password' => \Magento\TestFramework\Bootstrap::ADMIN_PASSWORD,
-    'admin-email' => \Magento\TestFramework\Bootstrap::ADMIN_EMAIL,
-    'admin-firstname' => \Magento\TestFramework\Bootstrap::ADMIN_FIRSTNAME,
-    'admin-lastname' => \Magento\TestFramework\Bootstrap::ADMIN_LASTNAME,
-];
+namespace TIG\PostNL\Config\Source\Options;
+
+use Magento\Framework\Option\ArrayInterface;
+
+class GuaranteedOptionsPackages implements ArrayInterface
+{
+    /**
+     * @see \TIG\PostNL\Service\Shipment\GuaranteedOptions
+     * @return array
+     */
+    // @codingStandardsIgnoreStart
+    public function toOptionArray()
+    {
+        return [
+            [
+                'label' => __('Delivery before 10:00'),
+                'value' => '1000'
+            ],
+            [
+                'label' => __('Delivery before 12:00'),
+                'value' => '1200'
+            ],
+            [
+                'label' => __('Delivery before 17:00'),
+                'value' => '1700'
+            ]
+        ];
+    }
+    // @codingStandardsIgnoreEnd
+}

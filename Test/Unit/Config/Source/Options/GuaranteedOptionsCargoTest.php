@@ -29,16 +29,25 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-return [
-    'db-host' => 'MAGENTO_DB_HOST',
-    'db-user' => 'MAGENTO_DB_USER',
-    'db-password' => 'MAGENTO_DB_PASS',
-    'db-name' => 'MAGENTO_DB_NAME',
-    'db-prefix' => '',
-    'backend-frontname' => 'admin',
-    'admin-user' => \Magento\TestFramework\Bootstrap::ADMIN_NAME,
-    'admin-password' => \Magento\TestFramework\Bootstrap::ADMIN_PASSWORD,
-    'admin-email' => \Magento\TestFramework\Bootstrap::ADMIN_EMAIL,
-    'admin-firstname' => \Magento\TestFramework\Bootstrap::ADMIN_FIRSTNAME,
-    'admin-lastname' => \Magento\TestFramework\Bootstrap::ADMIN_LASTNAME,
-];
+namespace TIG\PostNL\Unit\Config\Source\Options;
+
+use TIG\PostNL\Config\Source\Options\GuaranteedOptionsCargo;
+use TIG\PostNL\Test\TestCase;
+
+class GuaranteedOptionsCargoTest extends TestCase
+{
+    protected $instanceClass = GuaranteedOptionsCargo::class;
+
+    public function testToOptionArray()
+    {
+        $instance = $this->getInstance();
+        $options  = $instance->toOptionArray();
+
+        $this->assertCount(3, $options);
+
+        foreach ($options as $option) {
+            $this->assertArrayHasKey('label', $option);
+            $this->assertArrayHasKey('value', $option);
+        }
+    }
+}

@@ -153,7 +153,7 @@ class Data
             $shipmentData['Customs'] = $this->customsInfo->get($shipment);
         }
 
-        if ($shipment->isExtraCover() && $currentShipmentNumber === 1) {
+        if ($shipment->isExtraCover() && $currentShipmentNumber <= 1) {
             $shipmentData['Amounts'] = $this->getAmount($shipment);
         }
 
@@ -161,13 +161,7 @@ class Data
             $shipmentData['Groups'] = $this->getGroupData($shipment, $currentShipmentNumber);
         }
 
-        $shipmentType = $shipment->getShipmentType();
-
-        if ($shipment->isIDCheck()) {
-            $shipmentType = 'idcheck';
-        }
-
-        $productOptions = $this->productOptions->get($shipmentType);
+        $productOptions = $this->productOptions->get($shipment);
         if ($productOptions) {
             $shipmentData['ProductOptions'] = $productOptions;
         }

@@ -34,6 +34,7 @@ namespace TIG\PostNL\Config\Source\Options;
 use TIG\PostNL\Config\Source\OptionsAbstract;
 use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use Magento\Framework\Option\ArrayInterface;
+use TIG\PostNL\Service\Shipment\GuaranteedOptions;
 
 use Magento\Sales\Model\Order\Address as SalesAddress;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
@@ -107,24 +108,6 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     }
 
     /**
-     * Returns options if evening is true
-     * @return array
-     */
-    public function getIsEveningOptions()
-    {
-        return $this->getProductoptions(['isEvening' => true, 'countryLimitation' => 'NL']);
-    }
-
-    /**
-     * Returns options if evening is true
-     * @return array
-     */
-    public function getIsEveningOptionsBe()
-    {
-        return $this->getProductoptions(['isEvening' => true, 'countryLimitation' => 'BE']);
-    }
-
-    /**
      * Returns options if group equals pakjegemak_options
      * @return array
      */
@@ -154,6 +137,8 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         $flags = [];
         $flags['groups'][] = ['group' => 'standard_options'];
         $flags['groups'][] = ['group' => 'id_check_options'];
+        $flags['groups'][] = ['group' => 'cargo_options'];
+
         return $this->getProductoptions($flags);
     }
 
@@ -192,5 +177,45 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     public function getExtraAtHomeOptions()
     {
         return $this->getProductoptions(['group' => 'extra_at_home_options']);
+    }
+
+    /**
+     * @param $code
+     *
+     * @return null|string
+     */
+    public function getGuaranteedType($code)
+    {
+        $productOption = $this->getOptionsByCode($code);
+        if (!$productOption) {
+            return null;
+        }
+
+        if ($productOption['group'] == 'cargo_options') {
+            return GuaranteedOptions::GUARANTEED_TYPE_CARGO;
+        }
+
+        return GuaranteedOptions::GUARANTEED_TYPE_PACKAGE;
+    }
+
+    /**
+     * @param $code
+     * @param $key
+     * @param $value
+     *
+     * @return bool|null
+     */
+    public function doesProductMatchFlags($code, $key, $value)
+    {
+        $productOption = $this->getOptionsByCode($code);
+        if (!$productOption) {
+            return null;
+        }
+
+        if (!isset($productOption[$key])) {
+            return null;
+        }
+
+        return $productOption[$key] == $value;
     }
 }

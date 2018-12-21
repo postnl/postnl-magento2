@@ -39,6 +39,7 @@ use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 
+// @codingStandardsIgnoreFile
 class ProductCodeAndType
 {
     /** @var int */
@@ -109,13 +110,13 @@ class ProductCodeAndType
         $type    = strtolower($type);
         $option  = strtolower($option);
 
-        if (!in_array($country, EpsCountries::ALL) && $country != 'NL') {
+        if (!in_array($country, EpsCountries::ALL) && !in_array($country, ['BE', 'NL'])) {
             $this->getGlobalPackOption();
             return $this->response();
         }
 
         // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
-        if ((empty($type) || $option == static::OPTION_DAYTIME) && $country != 'NL') {
+        if ((empty($type) || $option == static::OPTION_DAYTIME) && !in_array($country, ['BE', 'NL'])) {
             $this->getEpsOption($address);
             return $this->response();
         }
@@ -153,12 +154,19 @@ class ProductCodeAndType
                 return;
         }
 
-        $this->getDefaultProductOption();
+        $this->getDefaultProductOption($country);
     }
 
-    private function getDefaultProductOption()
+    /**
+     * @param $country
+     */
+    private function getDefaultProductOption($country)
     {
         $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
+        if ($country == 'BE') {
+            $this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
+        }
+
         $this->type = static::SHIPMENT_TYPE_DAYTIME;
 
         /** @var Quote $magentoQuote */
@@ -188,6 +196,7 @@ class ProductCodeAndType
     }
 
     /**
+     * Parse EPS options.
      * @param $address
      */
     private function getEpsOption($address)
@@ -195,14 +204,18 @@ class ProductCodeAndType
         $options = $this->productOptionsFinder->getEpsProductOptions($address);
         $firstOption = array_shift($options);
 
-        $this->code = $firstOption['value'];
+        $this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
         $this->type = static::SHIPMENT_TYPE_EPS;
         // Force type Global Pack (mainly used for Canary Islands)
         if (in_array('4945', $firstOption)) {
+            $this->code = $firstOption;
             $this->type = static::SHIPMENT_TYPE_GP;
         }
     }
 
+    /**
+     * Parse Globalpack options.
+     */
     private function getGlobalPackOption()
     {
         $options = $this->productOptionsFinder->getGlobalPackOptions();

@@ -31,6 +31,10 @@
  */
 namespace TIG\PostNL\Api\Data;
 
+// @codingStandardsIgnoreFile
+/**
+ * Too many public methods for the code inspection.
+ */
 interface ShipmentLabelInterface
 {
     const BARCODE_TYPE_LABEL = 'label';
@@ -78,6 +82,17 @@ interface ShipmentLabelInterface
      * @return string
      */
     public function getType();
+
+    /**
+     * @param string $value
+     * @@return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setProductCode($value);
+
+    /**
+     * @return int
+     */
+    public function getProductCode();
 
     /**
      * @param string $value

@@ -29,16 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-return [
-    'db-host' => 'MAGENTO_DB_HOST',
-    'db-user' => 'MAGENTO_DB_USER',
-    'db-password' => 'MAGENTO_DB_PASS',
-    'db-name' => 'MAGENTO_DB_NAME',
-    'db-prefix' => '',
-    'backend-frontname' => 'admin',
-    'admin-user' => \Magento\TestFramework\Bootstrap::ADMIN_NAME,
-    'admin-password' => \Magento\TestFramework\Bootstrap::ADMIN_PASSWORD,
-    'admin-email' => \Magento\TestFramework\Bootstrap::ADMIN_EMAIL,
-    'admin-firstname' => \Magento\TestFramework\Bootstrap::ADMIN_FIRSTNAME,
-    'admin-lastname' => \Magento\TestFramework\Bootstrap::ADMIN_LASTNAME,
-];
+namespace TIG\PostNL\Setup\V161\Schema;
+
+use \TIG\PostNL\Setup\AbstractColumnsInstaller;
+
+class UpgradeShipmentLabelTable extends AbstractColumnsInstaller
+{
+    const TABLE_NAME = 'tig_postnl_shipment_label';
+
+    // @codingStandardsIgnoreLine
+    protected $columns = [
+        'product_code'
+    ];
+
+    public function installProductCodeColumn()
+    {
+        return [
+            // @codingStandardsIgnoreLine
+            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            'length' => 4,
+            'nullable' => true,
+            'default' => null,
+            'comment' => 'Product Code',
+            'after' => 'type',
+        ];
+    }
+}

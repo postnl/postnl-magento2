@@ -37,6 +37,7 @@ use TIG\PostNL\Service\Import\ParseErrors;
 use TIG\PostNL\Service\Import\Csv\FileParser;
 use TIG\PostNL\Service\Import\Csv\RowParser;
 use TIG\PostNL\Test\TestCase;
+use \PHPUnit\Framework\MockObject\Stub\ConsecutiveCalls;
 
 class FileParserTest extends TestCase
 {
@@ -155,8 +156,14 @@ class FileParserTest extends TestCase
         $csvRows[] = false;
 
         $readInterfaceMock = $this->getFakeMock(ReadInterface::class)->getMock();
+
+        $class = ConsecutiveCalls::class;
+        if (class_exists('PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls')) {
+            $class = '\PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls';
+        }
+
         $readInterfaceMock->expects($this->atLeastOnce())->method('readCsv')->will(
-            new \PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls($csvRows)
+            new $class($csvRows)
         );
 
         $instance = $this->getInstance(['rowParser' => $rowParser, 'parserErrors' => $parserErrors]);

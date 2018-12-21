@@ -213,7 +213,7 @@ class DataTest extends TestCase
      */
     private function addProductOptions($response)
     {
-        $productOptions = $this->getMock(ProductOptions::class);
+        $productOptions = $this->getFakeMock(ProductOptions::class, true);
         $this->mockFunction($productOptions, 'get', $response);
 
         $address = $this->getAddress();

@@ -41,6 +41,7 @@ use TIG\PostNL\Config\Provider\Globalpack;
 use TIG\PostNL\Config\Provider\LoggingConfiguration;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Test\TestCase;
+use \PHPUnit\Framework\MockObject\Stub\ConsecutiveCalls;
 
 abstract class AbstractConfigurationTest extends TestCase
 {
@@ -99,8 +100,14 @@ abstract class AbstractConfigurationTest extends TestCase
         $getValueExpects = $this->scopeConfigMock->expects($this->any());
         $getValueExpects->method('getValue');
         $getValueExpects->withConsecutive($this->onConsecutiveCalls($xpaths));
+
+        $class = ConsecutiveCalls::class;
+        if (class_exists('PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls')) {
+            $class = '\PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls';
+        }
+
         $getValueExpects->will(
-            new \PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls($returns)
+            new $class($returns)
         );
     }
 }

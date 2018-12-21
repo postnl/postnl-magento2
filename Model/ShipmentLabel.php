@@ -49,6 +49,7 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, Iden
     const FIELD_NUMBER = 'number';
     const FIELD_LABEL = 'label';
     const FIELD_TYPE = 'type';
+    const FIELD_PRODUCT_CODE = 'product_code';
 
     /**
      * @var string
@@ -161,6 +162,24 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, Iden
     public function setType($value)
     {
         return $this->setData(static::FIELD_TYPE, $value);
+    }
+
+    /**
+     * @return int
+     */
+    public function getProductCode()
+    {
+        return $this->getData(static::FIELD_PRODUCT_CODE);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setProductCode($value)
+    {
+        return $this->setData(static::FIELD_PRODUCT_CODE, $value);
     }
 
     /**

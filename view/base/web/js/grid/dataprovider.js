@@ -33,6 +33,9 @@ define(['jquery', 'mage/url'], function ($, url) {
     var productOptions = '';
     var defaultOption = '3085';
     var showGridToolbar = 1;
+    var isGuaranteedActive = 0;
+    var cargoOptions = '';
+    var packageOptions = '';
 
     return {
 
@@ -56,8 +59,32 @@ define(['jquery', 'mage/url'], function ($, url) {
             return JSON.parse(productOptions);
         },
 
+        setCargoTimeOptions: function (options) {
+            cargoOptions = options;
+        },
+
+        getCargoTimeOptions: function () {
+            if (!cargoOptions) {
+                return null;
+            }
+
+            return JSON.parse(cargoOptions);
+        },
+
+        setPackagesTimeOptions: function (options) {
+            packageOptions = options;
+        },
+
+        getPackagesTimeOptions: function () {
+            if (!packageOptions) {
+                return null;
+            }
+
+            return JSON.parse(packageOptions);
+        },
+
         setShowToolbar: function (showToolbar) {
-            showGridToolbar = showToolbar
+            showGridToolbar = showToolbar;
         },
 
         getShowToolbar: function () {
@@ -107,6 +134,33 @@ define(['jquery', 'mage/url'], function ($, url) {
             if (grid === 'sales_order_shipment_grid') {
                 return 'shipment';
             }
+        },
+
+        /**
+         * @param value
+         */
+        setGuaranteedIsActive : function (value) {
+            isGuaranteedActive = value;
+        },
+
+        /**
+         * Returns true or false.
+         *
+         * @returns {number}
+         */
+        getGuaranteedIsActive : function () {
+            return isGuaranteedActive;
+        },
+
+        inCargoProducts: function (code) {
+            var array = ['3606','3607','3608','3609','3610','3630','3657'];
+            return $.inArray(code, array) >= 0;
+        },
+
+        inPackagesProducts: function (code) {
+            var array = ['3083','3084','3085','3087','3089','3090','3094','3096','3189','3385','3389','3390'];
+            return $.inArray(code, array) >= 0;
         }
+
     };
 });

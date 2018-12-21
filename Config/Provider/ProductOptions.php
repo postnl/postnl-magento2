@@ -40,16 +40,22 @@ namespace TIG\PostNL\Config\Provider;
 class ProductOptions extends AbstractConfigProvider
 {
 //    const XPATH_SUPPORTED_PRODUCT_OPTIONS               = 'tig_postnl/delivery_settings/supported_options';
-    const XPATH_DEFAULT_PRODUCT_OPTION                  = 'tig_postnl/delivery_settings/default_option';
-    const XPATH_USE_ALTERNATIVE_DEFAULT_OPTION          = 'tig_postnl/delivery_settings/use_alternative_default';
-    const XPATH_ALTERNATIVE_DEFAULT_MIN_AMOUNT          = 'tig_postnl/delivery_settings/alternative_default_min_amount';
-    const XPATH_ALTERNATIVE_DEFAULT_PRODUCT_OPTION      = 'tig_postnl/delivery_settings/alternative_default_option';
-    const XPATH_DEFAULT_EVENING_PRODUCT_OPTION          = 'tig_postnl/evening_delivery_nl/default_evening_option';
-    const XPATH_DEFAULT_EXTRAATHOME_PRODUCT_OPTION      = 'tig_postnl/extra_at_home/default_extraathome_option';
-    const XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION       = 'tig_postnl/post_offices/default_pakjegemak_option';
-    const XPATH_DEFAULT_EVENING_BE_PRODUCT_OPTION       = 'tig_postnl/evening_delivery_be/default_evening_be_option';
-    const XPATH_DEFAULT_PAKJEGEMAK_EARLY_PRODUCT_OPTION = 'tig_postnl/post_offices/default_pakjegemak_early_option';
-    const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION           = 'tig_postnl/sunday_delivery/default_sunday_option';
+    const XPATH_DEFAULT_PRODUCT_OPTION                     = 'tig_postnl/delivery_settings/default_option';
+    const XPATH_USE_ALTERNATIVE_DEFAULT_OPTION             = 'tig_postnl/delivery_settings/use_alternative_default';
+    const XPATH_ALTERNATIVE_DEFAULT_MIN_AMOUNT             = 'tig_postnl/delivery_settings/alternative_default_min_amount';
+    const XPATH_ALTERNATIVE_DEFAULT_PRODUCT_OPTION         = 'tig_postnl/delivery_settings/alternative_default_option';
+    const XPATH_DEFAULT_EVENING_PRODUCT_OPTION             = 'tig_postnl/evening_delivery_nl/default_evening_option';
+    const XPATH_DEFAULT_EXTRAATHOME_PRODUCT_OPTION         = 'tig_postnl/extra_at_home/default_extraathome_option';
+    const XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION          = 'tig_postnl/post_offices/default_pakjegemak_option';
+    const XPATH_DEFAULT_EVENING_BE_PRODUCT_OPTION          = 'tig_postnl/evening_delivery_be/default_evening_be_option';
+    const XPATH_DEFAULT_BE_PRODUCT_OPTION                  = 'tig_postnl/delivery_settings/default_be_option';
+    const XPATH_DEFAULT_PAKJEGEMAK_EARLY_PRODUCT_OPTION    = 'tig_postnl/post_offices/default_pakjegemak_early_option';
+    const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION              = 'tig_postnl/sunday_delivery/default_sunday_option';
+    const XPATH_DEFAULT_CARGO_DELIVERY_TYPE                = 'tig_postnl/delivery_settings/default_cargo_type';
+    const XPATH_ALTERNATIVE_DEFAULT_CARGO_DELIVERY_TYPE    = 'tig_postnl/delivery_settings/alternative_cargo_type';
+    const XPATH_DEFAULT_PACKAGE_DELIVERY_TYPE              = 'tig_postnl/delivery_settings/default_package_type';
+    const XPATH_ALTERNATIVE_DEFAULT_PACKAGE_DELIVERY_TYPE  = 'tig_postnl/delivery_settings/alternative_package_type';
+    const XPATH_DEFAULT_EPS_PRODUCT_OPTION                 = 'tig_postnl/delivery_settings/default_eps_option';
 
     /**
      * Since 1.5.1 all product options are automaticly supported.
@@ -133,6 +139,22 @@ class ProductOptions extends AbstractConfigProvider
     /**
      * @return mixed
      */
+    public function getDefaultBeProductOption()
+    {
+        return $this->getConfigFromXpath(self::XPATH_DEFAULT_BE_PRODUCT_OPTION);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultEpsProductOption()
+    {
+        return $this->getConfigFromXpath(self::XPATH_DEFAULT_EPS_PRODUCT_OPTION);
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDefaultPakjeGemakProductOption()
     {
         return $this->getConfigFromXpath(self::XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION);
@@ -152,6 +174,83 @@ class ProductOptions extends AbstractConfigProvider
     public function getDefaultSundayProductOption()
     {
         return $this->getConfigFromXpath(self::XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultGuaranteedPackageDeliveryType()
+    {
+        return (string) $this->getConfigFromXpath(static::XPATH_DEFAULT_PACKAGE_DELIVERY_TYPE);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultGuaranteedCargoDeliveryType()
+    {
+        return (string) $this->getConfigFromXpath(static::XPATH_DEFAULT_CARGO_DELIVERY_TYPE);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultAlternativeGuaranteedPackageDeliveryType()
+    {
+        return (string) $this->getConfigFromXpath(static::XPATH_ALTERNATIVE_DEFAULT_PACKAGE_DELIVERY_TYPE);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultAlternativeGuaranteedCargoDeliveryType()
+    {
+        return (string) $this->getConfigFromXpath(static::XPATH_ALTERNATIVE_DEFAULT_CARGO_DELIVERY_TYPE);
+    }
+
+    /**
+     * @param bool   $alternative
+     * @param string $type
+     *
+     * @return string
+     */
+    public function getGuaranteedDeliveryType($alternative = false, $type = 'package')
+    {
+        if ($alternative && $type == 'package') {
+            return $this->getDefaultAlternativeGuaranteedPackageDeliveryType();
+        }
+
+        if ($alternative) {
+            return $this->getDefaultAlternativeGuaranteedCargoDeliveryType();
+        }
+
+        if (!$alternative && $type == 'package') {
+            return $this->getDefaultGuaranteedPackageDeliveryType();
+        }
+
+        return $this->getDefaultGuaranteedCargoDeliveryType();
+    }
+
+    /**
+     * @param $code
+     *
+     * @return null|string
+     */
+    public function getGuaranteedType($code)
+    {
+        return $this->productOptions->getGuaranteedType($code);
+    }
+
+    /**
+     * @param $code
+     * @param $key
+     * @param $value
+     *
+     * @return bool|null
+     */
+    public function checkProductByFlags($code, $key, $value)
+    {
+        return $this->productOptions->doesProductMatchFlags($code, $key, $value);
     }
 }
 /**
