@@ -69,7 +69,7 @@ class BarcodeHandler
     private $productOptionsConfiguration;
 
     /**
-     * $var int
+     * $var string
      */
     private $storeId;
 

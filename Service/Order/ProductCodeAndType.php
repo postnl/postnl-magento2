@@ -208,8 +208,7 @@ class ProductCodeAndType
         $this->type = static::SHIPMENT_TYPE_EPS;
         // Force type Global Pack (mainly used for Canary Islands)
         if (in_array('4945', $firstOption)) {
-            $this->code = $firstOption;
-            $this->type = static::SHIPMENT_TYPE_GP;
+            $this->getGlobalPackOption();
         }
     }
 

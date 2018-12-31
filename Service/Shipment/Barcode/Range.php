@@ -136,23 +136,25 @@ class Range
     {
         $this->response['type']  = '3S';
         $this->response['range'] = $this->accountConfiguration->getCustomerCode($this->storeId);
+        // @codingStandardsIgnoreStart
         switch (strtoupper($type)) {
-            case 'NL' :
+            case 'NL':
                 $this->setNlSerie();
                 break;
-            case 'EU' :
+            case 'EU':
                 $this->setEuSerie();
                 break;
-            case 'GLOBAL' :
+            case 'GLOBAL':
                 $this->setGlobalPackOptions();
                 break;
-            case 'PEPS' :
+            case 'PEPS':
                 $this->setPepsOptions();
                 break;
             default:
                 $this->noBarcodeDataError($type);
                 break;
         }
+        // @codingStandardsIgnoreEnd
     }
 
     private function setNlSerie()
