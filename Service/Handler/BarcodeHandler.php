@@ -64,19 +64,19 @@ class BarcodeHandler
     private $shipmentRepository;
 
     /**
-     * @var string
-     */
-    private $countryId;
-
-    /**
      * @var ProductOptionsConfiguration
      */
     private $productOptionsConfiguration;
 
     /**
-     * $var null|int
+     * $var int
      */
     private $storeId;
+
+    /**
+     * @var string
+     */
+    private $countryId;
 
     /**
      * @param BarcodeEndpoint             $barcodeEndpoint
@@ -145,7 +145,9 @@ class BarcodeHandler
 
         $parcelCount = $shipment->getParcelCount();
         for ($count = 2; $count <= $parcelCount; $count++) {
-            $barcodeModelCollection->addItem($this->createBarcode($shipment->getId(), $count, $this->generate($shipment)));
+            $barcodeModelCollection->addItem(
+                $this->createBarcode($shipment->getId(), $count, $this->generate($shipment))
+            );
         }
 
         $barcodeModelCollection->save();
