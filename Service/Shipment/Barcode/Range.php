@@ -33,7 +33,7 @@ namespace TIG\PostNL\Service\Shipment\Barcode;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\Globalpack;
-
+use TIG\PostNL\Config\Provider\PepsConfiguration;
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 
@@ -59,6 +59,11 @@ class Range
     private $globalpackConfiguration;
 
     /**
+     * @var PepsConfiguration
+     */
+    private $pepsConfiguration;
+
+    /**
      * @var int
      */
     private $storeId;
@@ -66,13 +71,16 @@ class Range
     /**
      * @param AccountConfiguration  $accountConfiguration
      * @param Globalpack            $globalpack
+     * @param PepsConfiguration     $pepsConfiguration
      */
     public function __construct(
         AccountConfiguration $accountConfiguration,
-        Globalpack $globalpack
+        Globalpack $globalpack,
+        PepsConfiguration $pepsConfiguration
     ) {
         $this->accountConfiguration    = $accountConfiguration;
         $this->globalpackConfiguration = $globalpack;
+        $this->pepsConfiguration       = $pepsConfiguration;
     }
 
     /**
@@ -97,12 +105,17 @@ class Range
     /**
      * @param $countryId
      * @param $storeId
+     * @param $type
      *
      * @return array
      */
-    public function getByCountryId($countryId, $storeId = null)
+    public function getByCountryId($countryId, $storeId = null, $type = '')
     {
         $this->storeId = $storeId;
+
+        if ($type && $type == 'PEPS') {
+            return $this->get('PEPS');
+        }
 
         if ($countryId == 'NL') {
             return $this->get('NL');
@@ -172,6 +185,22 @@ class Range
     }
 
     /**
+     * @return array
+     */
+    private function getPepsBarcode()
+    {
+        $type  = $this->pepsConfiguration->getBarcodeType();
+        $range = $this->pepsConfiguration->getBarcodeRange();
+        $serie = static::EU_BARCODE_SERIE_LONG;
+
+        return [
+            'type' => $type,
+            'range' => $range,
+            'serie' => $serie,
+        ];
+    }
+
+    /**
      * @param $barcodeData
      * @throws PostnlException
      */
@@ -203,6 +232,10 @@ class Range
 
         if ($barcodeType == 'GLOBAL') {
             return $this->getGlobalBarcode();
+        }
+
+        if ($barcodeType == 'PEPS') {
+            return $this->getPepsBarcode();
         }
 
         $this->noBarcodeDataError($barcodeType);

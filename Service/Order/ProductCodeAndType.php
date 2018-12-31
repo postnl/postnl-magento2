@@ -218,10 +218,7 @@ class ProductCodeAndType
      */
     private function getGlobalPackOption()
     {
-        $options = $this->productOptionsFinder->getGlobalPackOptions();
-        $firstOption = array_shift($options);
-
-        $this->code = $firstOption['value'];
+        $this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
         $this->type = static::SHIPMENT_TYPE_GP;
     }
 

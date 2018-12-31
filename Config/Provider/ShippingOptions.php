@@ -57,6 +57,7 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_ITEM_OPTIONS_MANAGE_STOCK                 = 'cataloginventory/item_options/manage_stock';
     const XPATH_SHIPPING_OPTION_CARGO_ACTIVE              = 'tig_postnl/cargo/cargo_active';
     const XPATH_SHIPPING_OPTION_EPS_BUSINESS_ACTIVE       = 'tig_postnl/eps/business_active';
+    const XPATH_SHIPPING_OPTIONS_PEPS_ACTIVE              = 'tig_postnl/peps/active';
 
     private $defaultMaxDeliverydays = '5';
 
@@ -240,6 +241,14 @@ class ShippingOptions extends AbstractConfigProvider
     public function canUseEpsBusinessProducts()
     {
         return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_EPS_BUSINESS_ACTIVE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canUsePepsProducts()
+    {
+        return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTIONS_PEPS_ACTIVE);
     }
 }
 /**

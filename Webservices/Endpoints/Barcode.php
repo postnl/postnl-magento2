@@ -81,6 +81,11 @@ class Barcode extends AbstractEndpoint
     private $countryId;
 
     /**
+     * @var string
+     */
+    private $type = '';
+
+    /**
      * @param Soap         $soap
      * @param BarcodeRange $barcodeRange
      * @param Customer     $customer
@@ -105,7 +110,7 @@ class Barcode extends AbstractEndpoint
     {
         $this->validateRequiredValues();
 
-        $barcode = $this->barcodeRange->getByCountryId($this->countryId, $this->storeId);
+        $barcode = $this->barcodeRange->getByCountryId($this->countryId, $this->storeId, $this->type);
 
         $parameters = [
             'Message'  => $this->message->get(''),
@@ -136,6 +141,14 @@ class Barcode extends AbstractEndpoint
     public function setCountryId($countryId)
     {
         $this->countryId = $countryId;
+    }
+
+    /**
+     * @param $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 
     /**

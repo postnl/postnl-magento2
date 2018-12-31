@@ -594,6 +594,47 @@ abstract class OptionsAbstract
             'countryLimitation'    => false,
             'group'                => 'eps_package_options',
         ],
+        // PEPS Products
+        '6350' => [
+            'value'                => '6350',
+            'label'                => 'Priority product 1',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'peps_options',
+        ],
+        '6550' => [
+            'value'                => '6550',
+            'label'                => 'Priority product 2',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'peps_options',
+        ],
+        '6940' => [
+            'value'                => '6940',
+            'label'                => 'Priority product 3',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'peps_options',
+        ],
+        '6942' => [
+            'value'                => '6942',
+            'label'                => 'Priority product 4',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'peps_options',
+        ]
     ];
 
     protected $groups = [
@@ -606,7 +647,8 @@ abstract class OptionsAbstract
         'id_check_options'              => 'ID Check options',
         'id_check_pakjegemak_options'   => 'ID Check Post Office options',
         'cargo_options'                 => 'Cargo options',
-        'eps_package_options'           => 'Package options'
+        'eps_package_options'           => 'Package options',
+        'peps_products'                 => 'Priority EPS'
     ];
 
     protected $groupToLabel = [
@@ -619,7 +661,8 @@ abstract class OptionsAbstract
         'id_check_options'              => 'ID Check',
         'id_check_pakjegemak_options'   => 'ID Check Post Office',
         'cargo_options'                 => 'Cargo',
-        'eps_package_options'           => 'Package'
+        'eps_package_options'           => 'Package',
+        'peps_products'                 => 'Priority (EPS / Globalpack)'
     ];
 
     protected $typeToComment = [

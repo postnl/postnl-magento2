@@ -114,14 +114,33 @@ class DefaultOptions implements ArrayInterface
             ['isEvening' => false, 'countryLimitation' => false, 'group' => 'eu_options']
         );
 
-        $epsBusinessOptions = [];
+        if ($this->shippingOptions->canUsePepsProducts()) {
+            $pepsOptions = $this->productOptions->getProductoptions(['group' => 'peps_options']);
+            $epsOptions = array_merge($epsOptions, $pepsOptions);
+        }
+
         if ($this->shippingOptions->canUseEpsBusinessProducts()) {
             $epsBusinessOptions = $this->productOptions->getProductoptions(
                 ['isEvening' => false, 'countryLimitation' => false, 'group' => 'eps_package_options']
             );
+            $epsOptions = array_merge($epsOptions, $epsBusinessOptions);
         }
 
-        return array_merge($epsOptions, $epsBusinessOptions);
+        return $epsOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGlobalProducts()
+    {
+        $globalOptions = $this->productOptions->getProductoptions(['group' => 'global_options']);
+        if ($this->shippingOptions->canUsePepsProducts()) {
+            $pepsOptions = $this->productOptions->getProductoptions(['group' => 'peps_options']);
+            $globalOptions = array_merge($globalOptions, $pepsOptions);
+        }
+
+        return $globalOptions;
     }
 
     /**

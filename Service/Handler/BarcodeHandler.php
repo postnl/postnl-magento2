@@ -39,6 +39,7 @@ use TIG\PostNL\Model\ShipmentBarcodeFactory;
 use TIG\PostNL\Webservices\Endpoints\Barcode as BarcodeEndpoint;
 use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory;
 use \Magento\Framework\Exception\LocalizedException;
+use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 
 class BarcodeHandler
 {
@@ -68,6 +69,11 @@ class BarcodeHandler
     private $countryId;
 
     /**
+     * @var ProductOptionsConfiguration
+     */
+    private $productOptionsConfiguration;
+
+    /**
      * $var null|int
      */
     private $storeId;
@@ -77,17 +83,20 @@ class BarcodeHandler
      * @param ShipmentRepositoryInterface $shipmentRepository
      * @param ShipmentBarcodeFactory      $shipmentBarcodeFactory
      * @param CollectionFactory           $shipmentBarcodeCollectionFactory
+     * @param ProductOptionsConfiguration $productOptionsConfiguration
      */
     public function __construct(
         BarcodeEndpoint $barcodeEndpoint,
         ShipmentRepositoryInterface $shipmentRepository,
         ShipmentBarcodeFactory $shipmentBarcodeFactory,
-        CollectionFactory $shipmentBarcodeCollectionFactory
+        CollectionFactory $shipmentBarcodeCollectionFactory,
+        ProductOptionsConfiguration $productOptionsConfiguration
     ) {
         $this->barcodeEndpoint = $barcodeEndpoint;
         $this->shipmentBarcodeCollectionFactory = $shipmentBarcodeCollectionFactory;
         $this->shipmentBarcodeFactory = $shipmentBarcodeFactory;
         $this->shipmentRepository = $shipmentRepository;
+        $this->productOptionsConfiguration = $productOptionsConfiguration;
     }
 
     /**
@@ -106,7 +115,7 @@ class BarcodeHandler
         $magentoShipment = $shipment->getShipment();
         $this->storeId = $magentoShipment->getStoreId();
 
-        $mainBarcode = $this->generate();
+        $mainBarcode = $this->generate($shipment);
         $shipment->setMainBarcode($mainBarcode);
         $this->shipmentRepository->save($shipment);
 
@@ -136,7 +145,7 @@ class BarcodeHandler
 
         $parcelCount = $shipment->getParcelCount();
         for ($count = 2; $count <= $parcelCount; $count++) {
-            $barcodeModelCollection->addItem($this->createBarcode($shipment->getId(), $count, $this->generate()));
+            $barcodeModelCollection->addItem($this->createBarcode($shipment->getId(), $count, $this->generate($shipment)));
         }
 
         $barcodeModelCollection->save();
@@ -145,13 +154,16 @@ class BarcodeHandler
     /**
      * CIF call to generate a new barcode
      *
+     * @param ShipmentInterface $shipment
+     *
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function generate()
+    private function generate(ShipmentInterface $shipment)
     {
         $this->barcodeEndpoint->setCountryId($this->countryId);
         $this->barcodeEndpoint->setStoreId($this->storeId);
+        $this->setTypeByProductCode($shipment->getProductCode());
         $response = $this->barcodeEndpoint->call();
 
         if (!is_object($response) || !isset($response->Barcode)) {
@@ -162,6 +174,18 @@ class BarcodeHandler
         }
 
         return (string) $response->Barcode;
+    }
+
+    /**
+     * @param $code
+     */
+    private function setTypeByProductCode($code)
+    {
+        if ($this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'peps_options')) {
+            $this->barcodeEndpoint->setType('PEPS');
+        }
+
+        $this->barcodeEndpoint->setType('');
     }
 
     /**
