@@ -99,7 +99,7 @@ class Range
      */
     public function get($barcodeType)
     {
-        $this->set($barcodeType);
+        $this->set(strtoupper($barcodeType));
         return $this->response;
     }
 
@@ -136,25 +136,23 @@ class Range
     {
         $this->response['type']  = '3S';
         $this->response['range'] = $this->accountConfiguration->getCustomerCode($this->storeId);
-        // @codingStandardsIgnoreStart
-        switch (strtoupper($type)) {
+        switch ($type) {
             case 'NL':
                 $this->setNlSerie();
-                break;
+                return;
             case 'EU':
                 $this->setEuSerie();
-                break;
+                return;
             case 'GLOBAL':
                 $this->setGlobalPackOptions();
-                break;
+                return;
             case 'PEPS':
                 $this->setPepsOptions();
-                break;
+                return;
             default:
                 $this->noBarcodeDataError($type);
-                break;
+                return;
         }
-        // @codingStandardsIgnoreEnd
     }
 
     private function setNlSerie()

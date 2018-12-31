@@ -69,11 +69,6 @@ class BarcodeHandler
     private $productOptionsConfiguration;
 
     /**
-     * $var string
-     */
-    private $storeId;
-
-    /**
      * @var string
      */
     private $countryId;
@@ -111,9 +106,6 @@ class BarcodeHandler
         if (!$shipment || $shipment->getMainBarcode() !== null || $shipment->getConfirmedAt() !== null) {
             return;
         }
-
-        $magentoShipment = $shipment->getShipment();
-        $this->storeId = $magentoShipment->getStoreId();
 
         $mainBarcode = $this->generate($shipment);
         $shipment->setMainBarcode($mainBarcode);
@@ -163,8 +155,10 @@ class BarcodeHandler
      */
     private function generate(ShipmentInterface $shipment)
     {
+        $magentoShipment = $shipment->getShipment();
+
         $this->barcodeEndpoint->setCountryId($this->countryId);
-        $this->barcodeEndpoint->setStoreId($this->storeId);
+        $this->barcodeEndpoint->setStoreId($magentoShipment->getStoreId());
         $this->setTypeByProductCode($shipment->getProductCode());
         $response = $this->barcodeEndpoint->call();
 
