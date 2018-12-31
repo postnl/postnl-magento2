@@ -149,10 +149,9 @@ class Range
             case 'PEPS':
                 $this->setPepsOptions();
                 return;
-            default:
-                $this->noBarcodeDataError($type);
-                return;
         }
+
+        $this->noBarcodeDataError($type);
     }
 
     private function setNlSerie()

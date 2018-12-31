@@ -91,8 +91,12 @@ class BarcodeHandlerTest extends TestCase
 
     protected function getShippmentMock()
     {
+        $magentoShipmentMock = $this->getFakeMock('\Magento\Sales\Api\Data\ShipmentInterface')->getMock();
+        $magentoShipmentMock->method('getStoreId')->willReturn(0);
+
         $shipmentMock = $this->getFakeMock(ShipmentInterface::class)->getMock();
         $shipmentMock->method('getProductCode')->willReturn('3085');
+        $shipmentMock->method('getShipment')->willReturn($magentoShipmentMock);
 
         return $shipmentMock;
     }
