@@ -102,8 +102,12 @@ class ProductCodeAndType
     public function get($type = '', $option = '', $address = null)
     {
         $country = null;
-        if ($address) {
+        if ($address && is_object($address)) {
             $country = $address->getCountryId();
+        }
+
+        if (is_string($address)) {
+            $country = $address;
         }
 
         $country = $country ?: $this->getCountryCode();
