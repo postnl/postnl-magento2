@@ -99,6 +99,10 @@ class GetLabels
             return [];
         }
 
+        if (!$this->labelValidator->canRequest($shipment)) {
+            return ['errors' => $this->labelValidator->getErrors()];
+        }
+
         $labels = $this->getLabels($shipment, $confirm);
         $labels = $this->labelValidator->validate($labels);
 

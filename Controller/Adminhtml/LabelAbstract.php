@@ -118,6 +118,10 @@ abstract class LabelAbstract extends Action
     protected function setLabel($shipmentId)
     {
         $labels = $this->getLabels->get($shipmentId);
+        if (isset($labels['errors'])) {
+            $this->handelRequestErrors($labels['errors']);
+            return;
+        }
 
         if (empty($labels)) {
             return;
@@ -151,6 +155,17 @@ abstract class LabelAbstract extends Action
     {
         if (!$shipment->getTracks()) {
             $this->track->set($shipment);
+        }
+    }
+
+    /**
+     * @param $errors
+     */
+    //@codingStandardsIgnoreLine
+    protected function handelRequestErrors($errors)
+    {
+        foreach ($errors as $error) {
+            $this->messageManager->addWarningMessage($error);
         }
     }
 }

@@ -85,6 +85,10 @@ class PrintShippingLabel extends LabelAbstract
     public function execute()
     {
         $labels = $this->getLabels();
+        if (isset($labels['errors'])) {
+            $this->handelRequestErrors($labels['errors']);
+            return $this->_redirect($this->_redirect->getRefererUrl());
+        }
 
         if (empty($labels)) {
             $this->messageManager->addErrorMessage(

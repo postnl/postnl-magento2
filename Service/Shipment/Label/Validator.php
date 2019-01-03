@@ -32,9 +32,41 @@
 namespace TIG\PostNL\Service\Shipment\Label;
 
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
+use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Config\Provider\ProductOptions;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
 class Validator
 {
+    /**
+     * @var ProductOptions
+     */
+    private $productOptions;
+
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
+
+    /**
+     * @var array
+     */
+    private $errors = [];
+
+    /**
+     * Validator constructor.
+     *
+     * @param ProductOptions  $productOptions
+     * @param ShippingOptions $shippingOptions
+     */
+    public function __construct(
+        ProductOptions $productOptions,
+        ShippingOptions $shippingOptions
+    ) {
+        $this->productOptions = $productOptions;
+        $this->shippingOptions = $shippingOptions;
+    }
+
     /**
      * Removes all labels that are empty or not a string. If a shipment has no valid labels, the shipment will be
      * removed from the stack.
@@ -51,6 +83,72 @@ class Validator
         $filtered = array_filter($input, [$this, 'filterInput']);
 
         return array_values($filtered);
+    }
+
+    /**
+     * @param ShipmentInterface $shipment
+     *
+     * @return bool
+     */
+    public function canRequest(ShipmentInterface $shipment)
+    {
+        if ($shipment->isGlobalPack()) {
+            return $this->validateGlobalPack($shipment);
+        }
+
+        return $this->validateProductCode($shipment);
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @param $shipment
+     *
+     * @return bool
+     */
+    private function validateGlobalPack(ShipmentInterface $shipment)
+    {
+        if (!$this->shippingOptions->canUseGlobalPack()) {
+            $magentoShipment = $shipment->getShipment();
+            // @codingStandardsIgnoreLine
+            $this->errors[] = __('Could not print labels for shipment %1. Worldwide (Globalpack) Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
+            return false;
+        }
+
+        return $this->validateProductCode($shipment);
+    }
+
+    /**
+     * @param $shipment
+     *
+     * @return bool
+     */
+    private function validateProductCode(ShipmentInterface $shipment)
+    {
+        $code = $shipment->getProductCode();
+        $isPeps = $this->productOptions->checkProductByFlags($code, 'group', 'peps_options');
+
+        if ($isPeps && !$this->shippingOptions->canUsePepsProducts()) {
+            $magentoShipment = $shipment->getShipment();
+            // @codingStandardsIgnoreLine
+            $this->errors[] = __('Could not print labels for shipment %1. Priority Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
+            return false;
+        }
+
+        if ($isPeps && $shipment->getParcelCount() < 5) {
+            $magentoShipment = $shipment->getShipment();
+            // @codingStandardsIgnoreLine
+            $this->errors[] = __('Could not print labels for shipment %1. Priority Delivery requires a minimum of parcels/colli.', $magentoShipment->getIncrementId());
+            return false;
+        }
+
+        return true;
     }
 
     /**
