@@ -64,9 +64,7 @@ class ShipmentsTest extends TestCase
     {
         $postNLShipment = $this->getPostNLShipment();
 
-        $shipmentData = $this->getObject(ShipmentData::class, [
-            'productOptions' => $this->getProductOptionsMock($postNLShipment)
-        ]);
+        $shipmentData = $this->getObject(ShipmentData::class);
 
         /** @var Shipments $instance */
         $instance = $this->getInstance([
@@ -123,10 +121,10 @@ class ShipmentsTest extends TestCase
      */
     private function getProductOptionsMock($shipment)
     {
-        $optionMock = $this->getFakeMock('TIG\PostNL\Service\Shipment\ProductOptions')->getMock();
+        $optionMock = $this->getFakeMock(\TIG\PostNL\Service\Shipment\ProductOptions::class, true);
         $optionMockExpects = $optionMock->expects($this->once());
         $optionMockExpects->method('get');
-        $optionMockExpects->with($shipment->getShipmentType());
+        $optionMockExpects->with($shipment);
         $optionMockExpects->willReturn(null);
 
         return $optionMock;

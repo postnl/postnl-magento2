@@ -65,7 +65,7 @@ class OrderParamsTest extends TestCase
         $feeCalculatorMock->expects($this->once())->method('get')->willReturn(0.0);
 
         $productOptionsMock = $this->getFakeMock(ProductOptions::class)->getMock();
-        $productOptionsMock->expects($this->once())->method('get')->willReturn(null);
+        $productOptionsMock->expects($this->once())->method('getByType')->willReturn(null);
 
         $instance = $this->getInstance([
             'feeCalculator' => $feeCalculatorMock,

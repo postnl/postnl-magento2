@@ -208,8 +208,8 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         }
 
         $orders = array_filter(array_values($list->getItems()), function ($order) {
-             /** @var OrderInterface $order */
-             return !$order->getOrderId();
+            /** @var OrderInterface $order */
+            return !$order->getOrderId();
         });
 
         return isset(array_values($orders)[0]) ? array_values($orders)[0] : null;

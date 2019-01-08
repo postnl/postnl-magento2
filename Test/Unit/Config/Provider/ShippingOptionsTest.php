@@ -336,4 +336,43 @@ class ShippingOptionsTest extends AbstractConfigurationTest
         $this->setXpath(ShippingOptions::XPATH_SHIPPING_OPTION_DELIVERY_DELAY, $value);
         $this->assertEquals($value, $instance->getDeliveryDelay());
     }
+
+    /**
+     * @return array
+     */
+    public function guaranteedProvider()
+    {
+        return [
+            'shipping options active' => [true, true],
+            'shipping options not active' => [false, false],
+        ];
+    }
+
+    /**
+     * @dataProvider guaranteedProvider
+     * @param $shippingActive
+     * @param $expected
+     */
+    public function testIsGuaranteedDeliveryActive($shippingActive, $expected)
+    {
+        $instance = $this->getInstance();
+
+        $xpaths = [
+            [
+                ShippingOptions::XPATH_SHIPPING_OPTION_ACITVE,
+                ScopeInterface::SCOPE_STORE,
+                null
+            ],
+            [
+                ShippingOptions::XPATH_GUARANTEED_DELIVERY_ACTIVE,
+                ScopeInterface::SCOPE_STORE,
+                null
+            ]
+        ];
+
+        $this->setXpathConsecutive($xpaths, [$shippingActive, $expected]);
+
+        $this->assertEquals($expected, $instance->isGuaranteedDeliveryActive());
+
+    }
 }

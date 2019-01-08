@@ -33,23 +33,17 @@ namespace TIG\PostNL\Block\Adminhtml\Config\Support;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
-use Magento\Framework\Module\ModuleResource;
 use Magento\Framework\View\Element\Template;
 use TIG\PostNL\Config\Provider\PostNLConfiguration;
 
 class SupportTab extends Template implements RendererInterface
 {
-    const POSTNL_VERSION = '1.6.0';
+    const POSTNL_VERSION = '1.7.0';
 
     const XPATH_SUPPORTED_MAGENTO_VERSION = 'tig_postnl/supported_magento_version';
 
     // @codingStandardsIgnoreLine
     protected $_template = 'TIG_PostNL::config/support/supportTab.phtml';
-
-    /**
-     * @var \Magento\Framework\Setup\ModuleContextInterface
-     */
-    private $moduleContext;
 
     /**
      * @var PostNLConfiguration
@@ -60,19 +54,15 @@ class SupportTab extends Template implements RendererInterface
      * Override the parent constructor to require our own dependencies.
      *
      * @param Template\Context    $context
-     * @param ModuleResource      $moduleContext
      * @param PostNLConfiguration $configuration
      * @param array               $data
      */
     public function __construct(
         Template\Context $context,
-        ModuleResource $moduleContext,
         PostNLConfiguration $configuration,
         array $data = []
     ) {
         parent::__construct($context, $data);
-
-        $this->moduleContext = $moduleContext;
         $this->configuration = $configuration;
     }
 

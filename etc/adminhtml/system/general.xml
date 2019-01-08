@@ -125,12 +125,10 @@
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
             <field id="firstname" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>First name</label>
-                <validate>required-entry</validate>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/firstname</config_path>
             </field>
             <field id="lastname" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Last name</label>
-                <validate>required-entry</validate>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/lastname</config_path>
             </field>
             <field id="company" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">

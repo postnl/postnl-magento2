@@ -62,7 +62,7 @@ class ShippingDateTest extends TestCase
     {
         $todayDate = new \DateTime('19 november 2016');
         $todayDateMock = $this->getMock(TimezoneInterface::class);
-        $this->mockFunction($todayDateMock, 'date', $todayDate, ['today', null, false]);
+        $this->mockFunction($todayDateMock, 'date', $todayDate, ['today', null, false, false]);
 
         $shipAtDate = new \DateTime($shippingDate);
         $shipAtDateMock = $this->getMock(TimezoneInterface::class);

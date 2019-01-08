@@ -84,12 +84,12 @@ class DeliveryDateFallback
     }
 
     /**
-     * @param $nextDay
+     * @param $day
      * @return string
      */
-    private function getDate($nextDay)
+    public function getDate($day)
     {
-        $date = $this->timeZone->date(strtotime($nextDay));
+        $date = $this->timeZone->date(strtotime($day));
         return $date->format('d-m-Y');
     }
 }

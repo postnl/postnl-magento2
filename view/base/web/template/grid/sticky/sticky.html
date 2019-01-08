@@ -35,6 +35,14 @@
                             optionsText: 'text', optionsValue: 'value', value: $data.defaultOption">
                             </select>
                         </div>
+                        <!-- ko if: $data.isGuaranteedActive() -->
+                        <div class="sub-select-holder" data-bind="visible: $data.showTimeOptions()">
+                            <select class="action-select admin__control-select" id="time_option"
+                                    data-bind="options:$data.timeOptions,
+                            optionsText: 'text', optionsValue: 'value'">
+                            </select>
+                        </div>
+                        <!-- /ko -->
                     </div>
                     <div class="col-xs-2">
                         <button class="action-secondary" type="button" click="submit">

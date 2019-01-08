@@ -39,6 +39,8 @@ use TIG\PostNL\Api\OrderRepositoryInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 use Magento\Sales\Model\Order\Shipment;
+use TIG\PostNL\Service\Shipment\GuaranteedOptions;
+use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 
 class MassChangeProduct extends ToolbarAbstract
 {
@@ -52,9 +54,18 @@ class MassChangeProduct extends ToolbarAbstract
         Filter $filter,
         ShipmentRepositoryInterface $shipmentRepository,
         OrderRepositoryInterface $orderRepository,
-        ShipmentCollectionFactory $collectionFactory
+        ShipmentCollectionFactory $collectionFactory,
+        GuaranteedOptions $guaranteedOptions,
+        ResetPostNLShipment $resetPostNLShipment
     ) {
-        parent::__construct($context, $filter, $shipmentRepository, $orderRepository);
+        parent::__construct(
+            $context,
+            $filter,
+            $shipmentRepository,
+            $orderRepository,
+            $guaranteedOptions,
+            $resetPostNLShipment
+        );
 
         $this->collectionFactory = $collectionFactory;
     }
@@ -67,8 +78,9 @@ class MassChangeProduct extends ToolbarAbstract
         $collection     = $this->collectionFactory->create();
         $collection     = $this->uiFilter->getCollection($collection);
         $newParcelCount = $this->getRequest()->getParam(self::PRODUCTCODE_PARAM_KEY);
+        $timeOption     = $this->getRequest()->getParam(self::PRODUCT_TIMEOPTION);
 
-        $this->changeProductCode($collection, $newParcelCount);
+        $this->changeProductCode($collection, $newParcelCount, $timeOption);
 
         $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setPath('sales/shipment/index');
@@ -78,12 +90,13 @@ class MassChangeProduct extends ToolbarAbstract
     /**
      * @param AbstractDb $collection
      * @param $newParcelCount
+     * @param $timeOption
      */
-    private function changeProductCode($collection, $newParcelCount)
+    private function changeProductCode($collection, $newParcelCount, $timeOption)
     {
         /** @var Shipment $shipment */
         foreach ($collection as $shipment) {
-            $this->orderChangeProductCode($shipment->getOrder(), $newParcelCount);
+            $this->orderChangeProductCode($shipment->getOrder(), $newParcelCount, $timeOption);
         }
 
         $this->handelErrors();

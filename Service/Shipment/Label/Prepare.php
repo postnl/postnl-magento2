@@ -71,7 +71,7 @@ class Prepare
     /**
      * @param ShipmentLabelInterface $label
      *
-     * @return \FPDF
+     * @return array
      * @throws PostNLException
      */
     public function label(ShipmentLabelInterface $label)
@@ -92,7 +92,7 @@ class Prepare
         $result = $instance->process($label);
         $instance->cleanup();
 
-        return $result;
+        return ['label' => $result, 'shipment' => $shipment];
     }
 
     /**
