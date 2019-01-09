@@ -139,6 +139,10 @@ abstract class LabelAbstract extends Action
     protected function setPackingslip($shipmentId, $withLabels = true, $confirm = true)
     {
         $packingslip = $this->getPackingSlip->get($shipmentId, $withLabels, $confirm);
+        if (is_array($packingslip) && isset($packingslip['errors'])) {
+            $this->handelRequestErrors($packingslip['errors']);
+            return;
+        }
 
         if (strlen($packingslip) <= 0) {
             return;

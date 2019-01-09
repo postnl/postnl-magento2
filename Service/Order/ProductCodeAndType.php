@@ -101,16 +101,7 @@ class ProductCodeAndType
     // @codingStandardsIgnoreStart
     public function get($type = '', $option = '', $address = null)
     {
-        $country = null;
-        if ($address && is_object($address)) {
-            $country = $address->getCountryId();
-        }
-
-        if (is_string($address)) {
-            $country = $address;
-        }
-
-        $country = $country ?: $this->getCountryCode();
+        $country = $this->getCountryCode($address);
         $type    = strtolower($type);
         $option  = strtolower($option);
 
@@ -234,10 +225,23 @@ class ProductCodeAndType
     }
 
     /**
+     * @param SalesAddress|QuoteAddress|string $address
      * @return string
      */
-    private function getCountryCode()
+    private function getCountryCode($address)
     {
+        if ($address && is_object($address)) {
+            return $address->getCountryId();
+        }
+
+        /**
+         * \TIG\PostNL\Helper\DeliveryOptions\OrderParams::formatParamData
+         * Request is done with country code only.
+         */
+        if (is_string($address)) {
+            return $address;
+        }
+
         $address = $this->quote->getShippingAddress();
         return $address->getCountryId();
     }
