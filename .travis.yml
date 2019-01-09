@@ -51,6 +51,8 @@ matrix:
     - php: 7.1
       env: MAGENTO_VERSION=2.3.0 DI_COMPILE=false
     - php: 7.2
+      env: MAGENTO_VERSION=2.3.0 DI_COMPILE=true
+    - php: 7.2
       env: MAGENTO_VERSION=2.3.0 CODE_COVERAGE=true
 
 before_script:
