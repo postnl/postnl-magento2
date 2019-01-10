@@ -43,6 +43,8 @@ use TIG\PostNL\Test\TestCase;
 class ProductCodeTest extends TestCase
 {
     const PRODUCT_OPTION_DEFAULT = 'default_product_option';
+    const PRODUCT_OPTION_BE_DEFAULT = 'default_be_product_option';
+    const PRODUCT_OPTION_EPS_DEFAULT = 'default_eps_product_option';
     const PRODUCT_OPTION_ALTERNATIVE_DEFAULT = 'alternative_default_product_option';
     const PRODUCT_OPTION_EVENING = 'evening_product_option';
     const PRODUCT_OPTION_EXTRAATHOME = 'extraathome_product_option';
@@ -70,6 +72,8 @@ class ProductCodeTest extends TestCase
         $this->quoteInterfaceMock = $this->getFakeMock(QuoteInterface::class)->getMockForAbstractClass();
 
         $this->addProductOptionsMockFunction('getDefaultProductOption', static::PRODUCT_OPTION_DEFAULT);
+        $this->addProductOptionsMockFunction('getDefaultBeProductOption', static::PRODUCT_OPTION_BE_DEFAULT);
+        $this->addProductOptionsMockFunction('getDefaultEpsProductOption', static::PRODUCT_OPTION_EPS_DEFAULT);
         $this->addProductOptionsMockFunction('getDefaultEveningProductOption', static::PRODUCT_OPTION_EVENING);
         $this->addProductOptionsMockFunction('getDefaultExtraAtHomeProductOption', static::PRODUCT_OPTION_EXTRAATHOME);
         $this->addProductOptionsMockFunction('getDefaultPakjeGemakProductOption', static::PRODUCT_OPTION_PAKJEGEMAK);
@@ -107,9 +111,9 @@ class ProductCodeTest extends TestCase
     {
         return [
             'default options' => ['', '', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
-            'default options BE' => ['', '', 'BE', '4950', 'EPS'],
-            'default options DE' => ['', '', 'DE', '4950', 'EPS'],
-            'default options ES' => ['', '', 'ES', '4950', 'EPS'],
+            'default options BE' => ['', '', 'BE', static::PRODUCT_OPTION_BE_DEFAULT, 'Daytime'],
+            'default options DE' => ['', '', 'DE', static::PRODUCT_OPTION_EPS_DEFAULT, 'EPS'],
+            'default options ES' => ['', '', 'ES', static::PRODUCT_OPTION_EPS_DEFAULT, 'EPS'],
             'no option' => ['delivery', '', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
             'default' => ['delivery', 'default', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
             'evening' => ['delivery', 'evening', 'NL', static::PRODUCT_OPTION_EVENING, 'Evening'],
@@ -133,13 +137,15 @@ class ProductCodeTest extends TestCase
     public function testGetShippingOption($type, $option, $country, $expectedCode, $expectedType)
     {
         $productOptionsFinder = $this->getObject(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
+        $address = $this->getObject(\Magento\Sales\Model\Order\Address::class);
+        $address->setCountryId($country);
 
         $quoteMock = $this->getFakeMock(Quote::class, true);
         $this->quoteInterfaceMock->method('getQuote')->willReturn($quoteMock);
 
         $instance = $this->getInstance(['productOptionsFinder' => $productOptionsFinder]);
 
-        $result = $instance->get($type, $option, $country);
+        $result = $instance->get($type, $option, $address);
         $this->assertEquals($expectedCode, $result['code']);
         $this->assertEquals($expectedType, $result['type']);
     }
@@ -195,7 +201,7 @@ class ProductCodeTest extends TestCase
         $this->productOptionsMock->method('getAlternativeDefaultMinAmount')->willReturn($alternativeMinAmount);
 
         $instance = $this->getInstance();
-        $this->invoke('getDefaultProductOption', $instance);
+        $this->invokeArgs('getDefaultProductOption', ['country' => 'NL'], $instance);
 
         $resultCode = $this->getProperty('code', $instance);
         $resultType = $this->getProperty('type', $instance);

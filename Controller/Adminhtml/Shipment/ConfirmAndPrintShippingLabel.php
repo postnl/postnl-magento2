@@ -36,6 +36,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\Order\ShipmentRepository;
 
+use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
@@ -50,6 +51,11 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     private $shipmentRepository;
 
     /**
+     * @var CanaryIslandToIC
+     */
+    private $canaryConverter;
+
+    /**
      * @param Context            $context
      * @param GetLabels          $getLabels
      * @param GetPdf             $getPdf
@@ -57,6 +63,7 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
      * @param Track              $track
      * @param BarcodeHandler     $barcodeHandler
      * @param GetPackingslip     $pdfShipment
+     * @param CanaryIslandToIC   $canaryConverter
      */
     public function __construct(
         Context $context,
@@ -65,7 +72,8 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
         ShipmentRepository $shipmentRepository,
         Track $track,
         BarcodeHandler $barcodeHandler,
-        GetPackingslip $pdfShipment
+        GetPackingslip $pdfShipment,
+        CanaryIslandToIC $canaryConverter
     ) {
         parent::__construct(
             $context,
@@ -75,7 +83,7 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
             $barcodeHandler,
             $track
         );
-
+        $this->canaryConverter = $canaryConverter;
         $this->shipmentRepository = $shipmentRepository;
     }
 
@@ -116,6 +124,10 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     {
         $shipment = $this->getShipment();
         $shippingAddress = $shipment->getShippingAddress();
+        if ($shippingAddress->getCountryId() === 'ES') {
+            $shippingAddress = $this->canaryConverter->convert($shippingAddress);
+        }
+
         $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
 
         if (!$shipment->getTracks()) {

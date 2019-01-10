@@ -36,6 +36,8 @@ use Magento\Backend\App\Action\Context;
 use Magento\Ui\Component\MassAction\Filter;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface;
+use TIG\PostNL\Service\Shipment\GuaranteedOptions;
+use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 use Magento\Sales\Model\Order;
 
 //@codingStandardsIgnoreFile
@@ -43,6 +45,7 @@ abstract class ToolbarAbstract extends Action
 {
     const PARCELCOUNT_PARAM_KEY = 'change_parcel';
     const PRODUCTCODE_PARAM_KEY = 'change_product';
+    const PRODUCT_TIMEOPTION    = 'time';
 
     /**
      * @var Filter
@@ -63,6 +66,18 @@ abstract class ToolbarAbstract extends Action
     protected $orderRepository;
 
     /**
+     * @var GuaranteedOptions
+     */
+    //@codingStandardsIgnoreLine
+    protected $guaranteedOptions;
+
+    /**
+     * @var ResetPostNLShipment
+     */
+    //@codingStandardsIgnoreLine
+    protected $resetService;
+
+    /**
      * @var array
      */
     //@codingStandardsIgnoreLine
@@ -72,21 +87,26 @@ abstract class ToolbarAbstract extends Action
         Context $context,
         Filter $filter,
         ShipmentRepositoryInterface $shipmentRepository,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        GuaranteedOptions $guaranteedOptions,
+        ResetPostNLShipment $resetPostNLShipment
     ) {
         parent::__construct($context);
 
         $this->uiFilter = $filter;
         $this->shipmentRepository = $shipmentRepository;
         $this->orderRepository = $orderRepository;
+        $this->guaranteedOptions = $guaranteedOptions;
+        $this->resetService = $resetPostNLShipment;
     }
 
     /**
      * @param Order $order
      * @param       $productCode
+     * @param $timeOption
      */
     //@codingStandardsIgnoreLine
-    protected function orderChangeProductCode(Order $order, $productCode)
+    protected function orderChangeProductCode(Order $order, $productCode, $timeOption = null)
     {
         $postnlOrder = $this->getPostNLOrder($order->getId());
         if (!$postnlOrder) {
@@ -94,30 +114,52 @@ abstract class ToolbarAbstract extends Action
             return;
         }
 
-        $shipments = $order->getShipmentsCollection();
-        $noError     = true;
+        $acSettings = $this->getAcSettings($timeOption);
+        $shipments  = $order->getShipmentsCollection();
+        $noError    = true;
 
         if ($shipments->getSize() > 0) {
-            $noError = $this->shipmentsChangeProductCode($shipments, $productCode);
+            $noError = $this->shipmentsChangeProductCode($shipments, $productCode, $acSettings);
         }
 
         if ($noError) {
             $postnlOrder->setProductCode($productCode);
+            $postnlOrder->setAcCharacteristic($acSettings['Characteristic']);
+            $postnlOrder->setAcOption($acSettings['Option']);
             $this->orderRepository->save($postnlOrder);
         }
     }
 
     /**
+     * @param $time
+     *
+     * @return array
+     */
+    private function getAcSettings($time)
+    {
+        $settings = $this->guaranteedOptions->get($time, true);
+        if (!$settings) {
+            $settings = [
+                'Characteristic' => null,
+                'Option'         => null
+            ];
+        }
+
+        return $settings;
+    }
+
+    /**
      * @param $shipments
      * @param $productCode
+     * @param $acSettings
      *
      * @return bool
      */
-    private function shipmentsChangeProductCode($shipments, $productCode)
+    private function shipmentsChangeProductCode($shipments, $productCode, $acSettings = null)
     {
         $error = false;
         foreach ($shipments as $shipment) {
-            $error = $this->shipmentChangeProductCode($shipment->getId(), $productCode);
+            $error = $this->shipmentChangeProductCode($shipment->getId(), $productCode, $acSettings);
         }
 
         return $error;
@@ -126,23 +168,24 @@ abstract class ToolbarAbstract extends Action
     /**
      * @param $shipmentId
      * @param $productCode
+     * @param $acSettings
      *
      * @return bool
      */
-    private function shipmentChangeProductCode($shipmentId, $productCode)
+    private function shipmentChangeProductCode($shipmentId, $productCode, $acSettings)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
         if (!$shipment->getId()) {
             return false;
         }
 
-        if ($shipment->getConfirmedAt()) {
-            $magentoShipment = $shipment->getShipment();
-            $this->errors[]  = __('First change the confirmation of shipment %1 before changing the product code.', $magentoShipment->getIncrementId());
-            return false;
+        if ($shipment->getMainBarcode()) {
+            $this->resetService->resetShipment($shipmentId);
         }
 
         $shipment->setProductCode($productCode);
+        $shipment->setAcCharacteristic($acSettings['Characteristic']);
+        $shipment->setAcOption($acSettings['Option']);
         $this->shipmentRepository->save($shipment);
         return true;
     }
@@ -202,10 +245,8 @@ abstract class ToolbarAbstract extends Action
             return false;
         }
 
-        if (!$shipment->canChangeParcelCount()) {
-            $magentoShipment = $shipment->getShipment();
-            $this->errors[]  = __('Can not change the parcel count for shipment %1', $magentoShipment->getIncrementId());
-            return false;
+        if ($shipment->getMainBarcode()) {
+            $this->resetService->resetShipment($shipmentId);
         }
 
         $shipment->setParcelCount($parcelCount);

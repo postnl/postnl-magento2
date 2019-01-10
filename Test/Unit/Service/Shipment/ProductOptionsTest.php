@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Test\Unit\Service\Shipment;
 
-use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Service\Shipment\ProductOptions;
 use TIG\PostNL\Test\TestCase;
 
@@ -42,12 +42,12 @@ class ProductOptionsTest extends TestCase
     public function returnsTheCorrectDataProvider()
     {
         return [
-            ['pge', false, ['Characteristic' => '118', 'Option' => '002']],
-            ['evening', false, ['Characteristic' => '118', 'Option' => '006']],
-            ['sunday', false, ['Characteristic' => '101', 'Option' => '008']],
-            ['pge', true, ['Characteristic' => '118', 'Option' => '002']],
-            ['evening', true, ['Characteristic' => '118', 'Option' => '006']],
-            ['sunday', true, ['Characteristic' => '101', 'Option' => '008']],
+            ['pge', false, false, ['Characteristic' => '118', 'Option' => '002']],
+            ['evening', false, false, ['Characteristic' => '118', 'Option' => '006']],
+            ['sunday', false, false, ['Characteristic' => '101', 'Option' => '008']],
+            ['pge', true, false, ['Characteristic' => '118', 'Option' => '002']],
+            ['evening', true, false, ['Characteristic' => '118', 'Option' => '006']],
+            ['sunday', true, false, ['Characteristic' => '101', 'Option' => '008']],
         ];
     }
 
@@ -56,16 +56,22 @@ class ProductOptionsTest extends TestCase
      *
      * @param $type
      * @param $flat
+     * @param $isIdCheck
      * @param $expected
      *
      * @throws \Exception
      */
-    public function testReturnsTheCorrectData($type, $flat, $expected)
+    public function testReturnsTheCorrectData($type, $flat, $isIdCheck, $expected)
     {
+        /** @var ShipmentInterface|\PHPUnit_Framework_MockObject_MockObject$shipmentMock */
+        $shipmentMock = $this->getFakeMock(ShipmentInterface::class)->getMock();
+        $shipmentMock->method('getShipmentType')->willReturn($type);
+        $shipmentMock->method('isIDCheck')->willReturn($isIdCheck);
+
         /** @var ProductOptions $instance */
         $instance = $this->getInstance();
 
-        $result = $instance->get($type, $flat);
+        $result = $instance->get($shipmentMock, $flat);
         if (!$flat) {
             $result = $result['ProductOption'];
         }

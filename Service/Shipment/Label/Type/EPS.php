@@ -36,7 +36,10 @@ use TIG\PostNL\Service\Pdf\Fpdi;
 
 class EPS extends Domestic
 {
-    const COMBI_LABEL_REGEX = '~ Page size: ([0-9\.]+) x ([0-9\.]+) pts ~';
+    /**
+     * These are combiLabel products, these codes are returned by PostNL in the label response (ProductCodeDelivery)
+     */
+    private $shouldRotate = [4940, 4950, 4983, 4985, 4986, 3622, 3642, 3659];
 
     /**
      * @var bool
@@ -56,7 +59,7 @@ class EPS extends Domestic
         $this->pdf->AddPage('P', Fpdi::PAGE_SIZE_A6);
         $this->pdf->setSourceFile($filename);
 
-        if ($this->isRotated()) {
+        if ($this->isRotated() || in_array($label->getProductCode(), $this->shouldRotate)) {
             $this->insertRotated();
         }
 

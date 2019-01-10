@@ -75,9 +75,8 @@ abstract class CountAbstract
     protected function calculate($weight, $items)
     {
         $this->products = $this->getProducts($items);
-        if (empty($this->products) || !$this->shippingOptions->isExtraAtHomeActive()) {
-            $remainingParcelCount = ceil($weight / self::WEIGHT_PER_PARCEL);
-            return $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
+        if (empty($this->products)) {
+            return $this->getBasedOnWeight($weight, 0);
         }
 
         /**
@@ -89,7 +88,25 @@ abstract class CountAbstract
             $parcelCount += $this->getParcelCount($item);
         }
 
+        if (!$this->shippingOptions->isExtraAtHomeActive()) {
+            $parcelCount = $this->getBasedOnWeight($weight, $parcelCount);
+        }
+
         return $parcelCount < 1 ? 1 : $parcelCount;
+    }
+
+    /**
+     * @param $weight
+     * @param $parcelCount
+     *
+     * @return float|int
+     */
+    // @codingStandardsIgnoreLine
+    protected function getBasedOnWeight($weight, $parcelCount)
+    {
+        $remainingParcelCount = ceil($weight / self::WEIGHT_PER_PARCEL);
+        $weightCount = $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
+        return ($weightCount < $parcelCount) ? $parcelCount : $weightCount;
     }
 
     /**
@@ -120,12 +137,10 @@ abstract class CountAbstract
     // @codingStandardsIgnoreLine
     protected function getProducts($items)
     {
-        /**
-         * @codingStandardsIgnoreLine
-         * @todo : In future maybe more product types are requiring the parcel_count attribute.
-         *         So build within the de backend configuration an multiselect and read it out when using this method.
-         */
-        return $this->productDictionary->get($items, [PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME]);
+        return $this->productDictionary->get(
+            $items,
+            [PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME, PostNLType::PRODUCT_TYPE_REGULAR]
+        );
     }
 
     /**

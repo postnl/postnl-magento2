@@ -89,11 +89,9 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
 
         $orderMock = $this->getMock(OrderInterface::class);
         $this->mockFunction($orderMock, 'getDeliveryDate', $input['delivery_date']);
-        $timezoneMock = $this->timezoneInterfaceMock();
         $falbackMock  = $this->deliveryDateFallbackMock();
 
         $instance = $this->getInstance([
-            'timezone' => $timezoneMock,
             'dateFallback' => $falbackMock
         ]);
         $instance->setParameters($address, 1, $orderMock);
@@ -108,28 +106,17 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    private function timezoneInterfaceMock()
-    {
-        /** @var SentDate $instance */
-        $postNLHelperMock = $this->getMock(TimezoneInterface::class);
-
-        $dateTime = new \DateTime('19-11-2016');
-        $getDate = $postNLHelperMock->expects($this->any());
-        $getDate->method('date');
-        $getDate->willReturn($dateTime);
-
-        return $postNLHelperMock;
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
     private function deliveryDateFallbackMock()
     {
         $fallbackMock = $this->getFakeMock(DeliveryDateFallback::class)->getMock();
         $getFalback = $fallbackMock->expects($this->any());
         $getFalback->method('get');
         $getFalback->willReturn('19-11-2016');
+
+        $getFalback2 = $fallbackMock->expects($this->any());
+        $getFalback2->method('getDate');
+        $getFalback2->willReturn('19-11-2016');
+
 
         return $fallbackMock;
     }

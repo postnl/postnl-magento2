@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+ *
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ *
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+
+    <!-- Eps products -->
+    <group id="eps" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>EPS and Belgium</label>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+
+        <field id="default_be_option" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default BE delivery</label>
+            <comment><![CDATA[Select the default product option for BE shipments.]]></comment>
+            <tooltip><![CDATA[Evening BE delivery can be configured under the Evening Delivery tab.]]></tooltip>
+            <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getBeProducts</source_model>
+            <config_path>tig_postnl/delivery_settings/default_be_option</config_path>
+        </field>
+
+        <field id="default_eps_option" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default EPS delivery</label>
+            <comment><![CDATA[Select the default product option for EPS shipments.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getEpsProducts</source_model>
+            <config_path>tig_postnl/delivery_settings/default_eps_option</config_path>
+        </field>
+
+        <field id="business_active" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Use EPS business</label>
+            <comment><![CDATA[This gives you the choice of multiple EPS products for company to business purpose.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/eps/business_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+        </field>
+    </group>
+</include>

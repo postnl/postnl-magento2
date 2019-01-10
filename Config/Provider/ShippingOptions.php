@@ -37,6 +37,7 @@ namespace TIG\PostNL\Config\Provider;
 class ShippingOptions extends AbstractConfigProvider
 {
     const XPATH_SHIPPING_OPTION_ACITVE                    = 'tig_postnl/delivery_settings/shippingoptions_active';
+    const XPATH_GUARANTEED_DELIVERY_ACTIVE                = 'tig_postnl/delivery_settings/guaranteed_delivery';
     const XPATH_SHIPPING_OPTION_STOCK                     = 'tig_postnl/stock_settings/stockoptions';
     const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE       = 'tig_postnl/delivery_days/deliverydays_active';
     const XPATH_SHIPPING_OPTION_MAX_DELIVERYDAYS          = 'tig_postnl/delivery_days/max_deliverydays';
@@ -54,6 +55,8 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_DELIVERY_DELAY            = 'tig_postnl/track_and_trace/delivery_delay';
     const XPATH_SHIPPING_OPTION_IDCHECK_ACTIVE            = 'tig_postnl/id_check/idcheck_active';
     const XPATH_ITEM_OPTIONS_MANAGE_STOCK                 = 'cataloginventory/item_options/manage_stock';
+    const XPATH_SHIPPING_OPTION_CARGO_ACTIVE              = 'tig_postnl/cargo/cargo_active';
+    const XPATH_SHIPPING_OPTION_EPS_BUSINESS_ACTIVE       = 'tig_postnl/eps/business_active';
 
     private $defaultMaxDeliverydays = '5';
 
@@ -63,6 +66,14 @@ class ShippingOptions extends AbstractConfigProvider
     public function isShippingoptionsActive()
     {
         return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_ACITVE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGuaranteedDeliveryActive()
+    {
+        return (bool) $this->getConfigFromXpath( static::XPATH_GUARANTEED_DELIVERY_ACTIVE);
     }
 
     /**
@@ -213,6 +224,22 @@ class ShippingOptions extends AbstractConfigProvider
     public function getManageStock()
     {
         return (bool)$this->getConfigFromXpath(self::XPATH_ITEM_OPTIONS_MANAGE_STOCK);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canUseCargoProducts()
+    {
+        return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_CARGO_ACTIVE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canUseEpsBusinessProducts()
+    {
+        return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_EPS_BUSINESS_ACTIVE);
     }
 }
 /**

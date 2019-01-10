@@ -38,6 +38,8 @@ use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use TIG\PostNL\Service\Shipment\GuaranteedOptions;
+use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 
 class MassChangeProduct extends ToolbarAbstract
 {
@@ -51,9 +53,18 @@ class MassChangeProduct extends ToolbarAbstract
         Filter $filter,
         ShipmentRepositoryInterface $shipmentRepository,
         OrderRepositoryInterface $orderRepository,
-        OrderCollectionFactory $collectionFactory
+        OrderCollectionFactory $collectionFactory,
+        GuaranteedOptions $guaranteedOptions,
+        ResetPostNLShipment $resetPostNLShipment
     ) {
-        parent::__construct($context, $filter, $shipmentRepository, $orderRepository);
+        parent::__construct(
+            $context,
+            $filter,
+            $shipmentRepository,
+            $orderRepository,
+            $guaranteedOptions,
+            $resetPostNLShipment
+        );
 
         $this->collectionFactory = $collectionFactory;
     }
@@ -65,9 +76,10 @@ class MassChangeProduct extends ToolbarAbstract
     {
         $collection     = $this->collectionFactory->create();
         $collection     = $this->uiFilter->getCollection($collection);
-        $newParcelCount = $this->getRequest()->getParam(self::PRODUCTCODE_PARAM_KEY);
+        $newProductCode = $this->getRequest()->getParam(self::PRODUCTCODE_PARAM_KEY);
+        $timeOption     = $this->getRequest()->getParam(self::PRODUCT_TIMEOPTION);
 
-        $this->changeProductCode($collection, $newParcelCount);
+        $this->changeProductCode($collection, $newProductCode, $timeOption);
 
         $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setPath('sales/*/');
@@ -77,11 +89,12 @@ class MassChangeProduct extends ToolbarAbstract
     /**
      * @param AbstractDb $collection
      * @param $productCode
+     * @param $timeOption
      */
-    private function changeProductCode($collection, $productCode)
+    private function changeProductCode($collection, $productCode, $timeOption)
     {
         foreach ($collection as $order) {
-            $this->orderChangeProductCode($order, $productCode);
+            $this->orderChangeProductCode($order, $productCode, $timeOption);
         }
 
         $this->handelErrors();

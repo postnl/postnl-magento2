@@ -95,4 +95,21 @@ class MagentoOrder
 
         return $address->getCountryId();
     }
+
+    /**
+     * @param $identifier
+     * @param string $type
+     *
+     * @return \Magento\Sales\Model\Order\Address|null
+     */
+    public function getShippingAddress($identifier, $type = 'order')
+    {
+        /** @var \Magento\Sales\Model\Order $order */
+        $order = $this->get($identifier, $type);
+        if (!$order) {
+            return null;
+        }
+
+        return $order->getShippingAddress();
+    }
 }

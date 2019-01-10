@@ -36,7 +36,7 @@ namespace TIG\PostNL\Service\Pdf;
  * Original:
  * http://www.fpdf.org/en/script/script2.php
  */
-class Fpdi extends \FPDI
+class Fpdi extends \setasign\Fpdi\Fpdi
 {
     const PAGE_SIZE_A6 = [105, 148];
     const PAGE_SIZE_A6_WIDTH = 105;
@@ -115,7 +115,7 @@ class Fpdi extends \FPDI
      * @param null|int $yPosition
      * @param int      $width
      */
-    function addMultiplePages($file, $xPosition = null, $yPosition = null, $width = 0)
+    function addMultiplePages($file, $xPosition = null, $yPosition = null, $width = null)
     {
         $pages = $this->setSourceFile($file);
 

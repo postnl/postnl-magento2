@@ -103,7 +103,7 @@ class GetPackingslip
         }
 
         $magentoShipment = $shipment->getShipment();
-        $packingSlip = $this->pdfShipment->create($magentoShipment, $withLabels);
+        $packingSlip = $this->pdfShipment->create($magentoShipment);
         $packingSlip = $this->barcodeMerger->add($packingSlip, $magentoShipment);
 
         $pdfShipment = $this->pdfShipment;
