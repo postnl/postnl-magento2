@@ -153,8 +153,12 @@ class Matrixrate
      * Filter the data by the various available fields. The preferred way would be to do this using the database, but
      * with using SearchCriteriaFilters this is not possible. We need to complex filters to get our results, and
      * Magento does not support them. Example; ((country = 'NL' OR country = '*') AND ('region' = 157 OR region = '*')
+     *
+     * @param $data
+     *
+     * @return array
      */
-    private function filterData()
+    private function filterData($data)
     {
         $data = $this->countryFilter->filter($this->request, $data);
 
