@@ -60,17 +60,12 @@ class Matrixrate
     private $countryFilter;
 
     /**
-     * @var Config $taxConfig
-     */
-    private $taxConfig;
-
-    /**
-     * @var Data $taxHelper
+     * @var Data
      */
     private $taxHelper;
 
     /**
-     * @var boolean $shippingVatEnabled
+     * @var boolean
      */
     private $shippingVatEnabled;
 
@@ -79,28 +74,17 @@ class Matrixrate
      *
      * @param Collection           $matrixrateCollection
      * @param Filter\CountryFilter $countryFilter
-     * @param Config               $taxConfig
      * @param Data                 $taxHelper
      */
     public function __construct(
         Collection $matrixrateCollection,
         Filter\CountryFilter $countryFilter,
-        Config $taxConfig,
         Data $taxHelper
     ) {
         $this->matrixrateCollection = $matrixrateCollection;
         $this->countryFilter = $countryFilter;
-        $this->taxConfig = $taxConfig;
         $this->taxHelper = $taxHelper;
     }
-
-
-
-
-
-
-
-
 
     /**
      * @param RateRequest $request
@@ -112,7 +96,7 @@ class Matrixrate
      */
     public function getRate(RateRequest $request, $parcelType, $store = null, $includeVat = false)
     {
-        $this->shippingVatEnabled = $this->taxConfig->shippingPriceIncludesTax($store);
+        $this->shippingVatEnabled = $this->taxHelper->shippingPriceIncludesTax($store);
         $parcelType               = $parcelType ?: 'regular';
         $collection               = $this->matrixrateCollection->toArray();
         $this->parcelType         = $parcelType;
@@ -146,6 +130,7 @@ class Matrixrate
             return $result;
         }
         $result['price'] = $this->taxHelper->getShippingPrice($result['price'], true);
+
         return $result;
     }
 
