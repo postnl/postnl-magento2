@@ -34,7 +34,6 @@ namespace TIG\PostNL\Service\Carrier\Price;
 
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection;
-use Magento\Tax\Model\Config;
 use Magento\Tax\Helper\Data;
 
 class Matrixrate
