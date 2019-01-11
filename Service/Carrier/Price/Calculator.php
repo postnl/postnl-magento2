@@ -32,6 +32,7 @@
 
 namespace TIG\PostNL\Service\Carrier\Price;
 
+use MEQP2\Tests\NamingConventions\true\bool;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
 use TIG\PostNL\Config\Source\Carrier\RateType;
@@ -98,14 +99,15 @@ class Calculator
      * @param RateRequest $request
      * @param null        $parcelType
      * @param             $store
+     * @param bool        $includeVat
      *
      * @return array
      */
-    public function price(RateRequest $request, $parcelType = null, $store = null)
+    public function price(RateRequest $request, $parcelType = null, $store = null, $includeVat = false)
     {
         $this->store = $store;
-        $price = $this->getConfigData('price');
-        $cost = $price;
+        $price       = $this->getConfigData('price');
+        $cost        = $price;
 
         if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
             return $this->priceResponse('0.00', '0.00');
@@ -113,10 +115,13 @@ class Calculator
 
         if ($this->getConfigData('rate_type') == RateType::CARRIER_RATE_TYPE_TABLE) {
             $ratePrice = $this->getTableratePrice($request);
+
             return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
         }
 
-        $ratePrice = $this->matrixratePrice->getRate($request, $parcelType ?: $this->parcelTypeFinder->get());
+        $ratePrice = $this->matrixratePrice->getRate(
+            $request, $parcelType ?: $this->parcelTypeFinder->get(), $store, $includeVat
+        );
         if ($this->getConfigData('rate_type') == RateType::CARRIER_RATE_TYPE_MATRIX && $ratePrice !== false) {
             return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
         }

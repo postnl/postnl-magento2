@@ -34,6 +34,8 @@ namespace TIG\PostNL\Service\Carrier\Price;
 
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection;
+use Magento\Tax\Model\Config;
+use Magento\Tax\Helper\Data;
 
 class Matrixrate
 {
@@ -63,29 +65,52 @@ class Matrixrate
     private $countryFilter;
 
     /**
+     * @var Config $taxConfig
+     */
+    private $taxConfig;
+
+    /**
+     * @var Data $taxHelper
+     */
+    private $taxHelper;
+
+    /**
+     * @var boolean $shippingVatEnabled
+     */
+    private $shippingVatEnabled;
+
+    /**
      * Matrixrate constructor.
      *
      * @param Collection           $matrixrateCollection
      * @param Filter\CountryFilter $countryFilter
+     * @param Config               $taxConfig
+     * @param Data                 $taxHelper
      */
     public function __construct(
         Collection $matrixrateCollection,
-        Filter\CountryFilter $countryFilter
+        Filter\CountryFilter $countryFilter,
+        Config $taxConfig,
+        Data $taxHelper
     ) {
         $this->matrixrateCollection = $matrixrateCollection;
         $this->countryFilter = $countryFilter;
+        $this->taxConfig = $taxConfig;
+        $this->taxHelper = $taxHelper;
     }
 
     /**
      * @param RateRequest $request
      * @param             $parcelType
+     * @param int|null    $store
+     * @param bool        $includeVat
      *
      * @return array|bool
      */
-    public function getRate(RateRequest $request, $parcelType)
+    public function getRate(RateRequest $request, $parcelType, $store = null, $includeVat = false)
     {
-        $parcelType = $parcelType ?: 'regular';
-
+        $this->shippingVatEnabled = $this->taxConfig->shippingPriceIncludesTax($store);
+        $parcelType               = $parcelType ?: 'regular';
         $collection       = $this->matrixrateCollection->toArray();
         $this->parcelType = $parcelType;
         $this->request    = $request;
@@ -98,11 +123,28 @@ class Matrixrate
         }
 
         $result = array_shift($this->data);
+        $result = $includeVat ? $this->handleVat($result) : $result;
 
         return [
             'price' => $result['price'],
-            'cost' => 0,
+            'cost'  => 0,
         ];
+    }
+
+    /**
+     * Used to include the vat in the timeframes and locations call
+     *
+     * @param array    $result
+     *
+     * @return mixed
+     */
+    private function handleVat($result)
+    {
+        if (!$this->shippingVatEnabled) {
+            return $result;
+        }
+        $result['price'] = $this->taxHelper->getShippingPrice($result['price'], true);
+        return $result;
     }
 
     /**
@@ -148,7 +190,12 @@ class Matrixrate
      */
     private function bySubtotal($row)
     {
-        return $row['subtotal'] <= $this->request->getPackageValue();
+        $subtotal = $this->request->getBaseSubtotalInclTax();
+        if (!$subtotal) {
+            $subtotal = $this->request->getPackageValue();
+        }
+
+        return $row['subtotal'] <= $subtotal;
     }
 
     /**

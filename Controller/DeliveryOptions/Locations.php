@@ -107,7 +107,7 @@ class Locations extends AbstractDeliveryOptions
         }
 
         $this->addressEnhancer->set($params['address']);
-        $price = $this->priceCalculator->price($this->getRateRequest(), 'pakjegemak');
+        $price = $this->priceCalculator->price($this->getRateRequest(), 'pakjegemak', null, true);
 
         try {
             return $this->jsonResponse([
