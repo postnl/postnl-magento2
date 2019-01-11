@@ -103,7 +103,7 @@ class ShippingDate
      */
     private function formatShippingDate($shipAt)
     {
-        $now = $this->todayDate->date('today', null, false);
+        $now = $this->todayDate->date('today', null, false, false);
         $whenToShip = $this->shipAtDate->date(strtotime($shipAt), null, false);
         $difference = $now->diff($whenToShip);
         $days = $difference->days;

@@ -183,8 +183,7 @@ class CreatePostNLOrder implements ObserverInterface
         if (!$postnlOrder->getProductCode()) {
             $option          = $this->itemsToOption->get($magentoOrder->getItems());
             $shippingAddress = $magentoOrder->getShippingAddress();
-            $country         = $shippingAddress->getCountryId();
-            $productInfo     = $this->productCode->get('', $option, $country);
+            $productInfo     = $this->productCode->get('', $option, $shippingAddress);
             $postnlOrder->setProductCode($productInfo['code']);
             $postnlOrder->setType($productInfo['type']);
         }

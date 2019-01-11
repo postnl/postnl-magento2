@@ -60,7 +60,11 @@ define([
             optionList : ko.observableArray(
                 DataProvider.getProductOptions()
             ),
-            showToolbar : ko.observable(DataProvider.getShowToolbar())
+            showToolbar : ko.observable(DataProvider.getShowToolbar()),
+            jsLoaded : true,
+            isGuaranteedActive : ko.observable(DataProvider.getGuaranteedIsActive()),
+            showTimeOptions : ko.observable(false),
+            timeOptions : ko.observable(DataProvider.getPackagesTimeOptions())
         },
 
         /**
@@ -70,14 +74,48 @@ define([
          */
         initObservable : function () {
             this._super().observe([
-                'currentSelected'
+                'currentSelected',
+                'showTimeOptions'
             ]);
 
+            var self = this;
             this.currentSelected.subscribe(function (value) {
-                // Selection is changed.
+                if (value === 'change_parcel') {
+                    self.showTimeOptions(false);
+                    return;
+                }
+
+                self.toggleTimeOptions(self.defaultOption());
+            });
+
+            this.toggleTimeOptions(DataProvider.getDefaultOption());
+
+            this.defaultOption.subscribe(function (value) {
+                self.toggleTimeOptions(value);
             });
 
             return this;
+        },
+
+        toggleTimeOptions: function (value) {
+            if (!this.isGuaranteedActive) {
+                this.showTimeOptions(false);
+                return;
+            }
+
+            if (DataProvider.inCargoProducts(value)) {
+                this.showTimeOptions(true);
+                this.timeOptions(DataProvider.getCargoTimeOptions());
+                return;
+            }
+
+            if (DataProvider.inPackagesProducts(value)) {
+                this.showTimeOptions(true);
+                this.timeOptions(DataProvider.getPackagesTimeOptions());
+                return;
+            }
+
+            return this.showTimeOptions(false);
         },
 
         /**
@@ -96,6 +134,11 @@ define([
          */
         submit : function () {
             var data = this.getSelectedItems();
+            if (!data.selected) {
+                alert($.mage.__('Please select item(s)'));
+                return;
+            }
+
             var value = $('#'+this.currentSelected())[0].value;
             if (isNaN(parseInt(value))) {
                 alert(DataProvider.getInputWarningMessage(this.currentSelected()));
@@ -103,6 +146,10 @@ define([
             }
 
             data[this.currentSelected()] = value;
+            if (this.isGuaranteedActive() && this.showTimeOptions()) {
+                data.time = this.timeOptionSelected();
+            }
+
             utils.submit({
                 url: DataProvider.getSubmitUrl(this.currentSelected(), this.ns),
                 data: data

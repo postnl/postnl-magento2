@@ -36,7 +36,6 @@ use Magento\Backend\App\Action\Context;
 
 use TIG\PostNL\Service\Shipment\ShipmentService;
 use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
-use TIG\PostNL\Model\Shipment as PostNLShipment;
 
 class ChangeConfirmation extends Action
 {
@@ -88,7 +87,6 @@ class ChangeConfirmation extends Action
         $this->postNLShipmentId = $this->getRequest()->getParam('postnl_shipment_id');
         $this->shipmentId       = $this->getRequest()->getParam('shipment_id');
 
-        $this->resetShipment();
         $this->resetService->resetShipment($this->shipmentId);
 
         $resultDirect = $this->resultRedirectFactory->create();
@@ -96,20 +94,5 @@ class ChangeConfirmation extends Action
             'sales/shipment/view',
             ['shipment_id' => $this->shipmentId]
         );
-    }
-
-    /**
-     * Resets the confirmation date to null.
-     *
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     */
-    private function resetShipment()
-    {
-        /** @var PostNLShipment $postNLShipment */
-        $postNLShipment = $this->shipmentService->getPostNLShipment($this->postNLShipmentId);
-        $postNLShipment->setConfirmedAt(null);
-        $postNLShipment->setConfirmed(false);
-        $postNLShipment->setMainBarcode(null);
-        $this->shipmentService->save($postNLShipment);
     }
 }

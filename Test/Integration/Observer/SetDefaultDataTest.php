@@ -42,7 +42,7 @@ use TIG\PostNL\Service\Order\ProductCodeAndType;
 use Magento\Framework\Event\Observer;
 use TIG\PostNL\Service\Order\MagentoOrder;
 use TIG\PostNL\Service\Quote\ShippingDuration;
-
+use Magento\Sales\Model\Order\Address;
 /**
  * @magentoDbIsolation enabled
  */
@@ -94,6 +94,12 @@ class SetDefaultDataTest extends TestCase
 
         $magentoService = $this->objectManager->get(MagentoOrder::class);
         $magentoService->method('getCountry')->willReturn('NL');
+
+        $address = $this->getObject(Address::class);
+        $address->setCountryId('NL');
+
+        $magentoServiceGetAddress = $this->objectManager->get(MagentoOrder::class);
+        $magentoServiceGetAddress->method('getShippingAddress')->willReturn($address);
 
         $getFromQuote = $this->objectManager->get(ItemsToOption::class);
         $getFromQuote->method('getFromQuote')->willReturn(ProductCodeAndType::OPTION_EXTRAATHOME);

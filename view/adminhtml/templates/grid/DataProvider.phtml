@@ -30,6 +30,7 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 ?>
+<?php /** @var \TIG\PostNL\Block\Adminhtml\Grid\DataProvider $block */ ?>
 <script type="text/javascript">
     require([
         'mage/url',
@@ -39,6 +40,9 @@
         DataProvider.setProductOptions('<?php /* @escapeNotVerified */ echo $block->getProductOptions();?>');
         DataProvider.setDefaultOption('<?php /* @escapeNotVerified */ echo $block->getDefaultProductOption();?>');
         DataProvider.setShowToolbar('<?php /* @escapeNotVerified */ echo $block->getShowToolbar();?>');
+        DataProvider.setGuaranteedIsActive('<?php /* @escapeNotVerified */ echo $block->isGuaranteedDeliveryActive();?>');
+        DataProvider.setCargoTimeOptions('<?php /* @escapeNotVerified */ echo $block->getCargoTimeOptions();?>');
+        DataProvider.setPackagesTimeOptions('<?php /* @escapeNotVerified */ echo $block->getPackagesTimeOptions();?>');
         return url.setBaseUrl('<?php /* @escapeNotVerified */ echo $block->getAdminBaseUrl();?>');
     })
 </script>

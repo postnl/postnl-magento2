@@ -104,7 +104,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
      */
     private function addPageToPdf($templateId, $templateSize, $count)
     {
-        $orientation = $templateSize['w'] > $templateSize['h'] ? 'L' :'P';
+        $orientation = $templateSize['width'] > $templateSize['height'] ? 'L' :'P';
 
         if ($this->shouldAddNewPage($orientation) || $this->isNewLabelType()) {
             $this->labelCounter = $this->isNewLabelType() ? 1 : 0;
@@ -184,7 +184,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
      */
     private function setCurrentLabelType($templateSize)
     {
-        if ($templateSize['w'] > 210 && $templateSize['h'] > 297) {
+        if ($templateSize['width'] > 210 && $templateSize['height'] > 297) {
             // Globalpack
             $this->currentLabelType = 'GP';
             return;

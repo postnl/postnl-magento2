@@ -40,6 +40,7 @@ use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollection
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
 use TIG\PostNL\Service\Shipment\CreateShipment;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
@@ -68,6 +69,11 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
     private $errors = [];
 
     /**
+     * @var CanaryIslandToIC
+     */
+    private $canaryConverter;
+
+    /**
      * @param Context                $context
      * @param GetLabels              $getLabels
      * @param GetPdf                 $getPdf
@@ -77,6 +83,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
      * @param Track                  $track
      * @param BarcodeHandler         $barcodeHandler
      * @param GetPackingslip         $getPackingSlip
+     * @param CanaryIslandToIC       $canaryConverter
      */
     public function __construct(
         Context $context,
@@ -87,12 +94,14 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         CreateShipment $createShipment,
         Track $track,
         BarcodeHandler $barcodeHandler,
-        GetPackingslip $getPackingSlip
+        GetPackingslip $getPackingSlip,
+        CanaryIslandToIC $canaryConverter
     ) {
         parent::__construct($context, $getLabels, $getPdf, $getPackingSlip, $barcodeHandler, $track);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->createShipment = $createShipment;
+        $this->canaryConverter = $canaryConverter;
     }
 
     /**
@@ -148,7 +157,8 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
             return;
         }
 
-        $address = $shipment->getShippingAddress();
+        $address = $this->canaryConverter->convert($shipment->getShippingAddress());
+
         $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
         $this->setTracks($shipment);
         $this->setLabel($shipment->getId());

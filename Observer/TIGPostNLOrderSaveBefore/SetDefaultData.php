@@ -139,8 +139,8 @@ class SetDefaultData implements ObserverInterface
     private function setData(OrderInterface $order)
     {
         $option      = $this->getOptionFromQuote();
-        $country     = $this->checkByAddressData($order);
-        $productInfo = $this->productCodeAndType->get('', $option, $country);
+        $address     = $this->checkByAddressData($order);
+        $productInfo = $this->productCodeAndType->get('', $option, $address);
         $duration    = $this->shippingDuration->get();
 
         if (!$order->getProductCode() || $this->canUpdate($order->getProductCode(), $productInfo['code'], $option)) {
@@ -196,7 +196,7 @@ class SetDefaultData implements ObserverInterface
     /**
      * @param OrderInterface $order
      *
-     * @return null|string
+     * @return \Magento\Sales\Model\Order\Address|null
      */
     private function checkByAddressData(OrderInterface $order)
     {
@@ -206,17 +206,17 @@ class SetDefaultData implements ObserverInterface
         /** @noinspection PhpUndefinedMethodInspection */
         $address = $order->getPgAddress();
         if ($address) {
-            $country = isset($address['Countrycode']) ? $address['Countrycode'] : null;
+            return $address;
         }
 
-        if (!$country && $order->getOrderId()) {
-            $country = $this->magentoOrder->getCountry($order->getOrderId());
+        if (!$address && $order->getOrderId()) {
+            $address = $this->magentoOrder->getShippingAddress($order->getOrderId());
         }
 
-        if (!$country && $order->getQuoteId()) {
-            $country = $this->magentoOrder->getCountry($order->getQuoteId(), 'quote');
+        if (!$address && $order->getQuoteId()) {
+            $address = $this->magentoOrder->getShippingAddress($order->getQuoteId(), 'quote');
         }
 
-        return $country;
+        return $address;
     }
 }
