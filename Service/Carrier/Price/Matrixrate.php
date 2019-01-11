@@ -94,6 +94,14 @@ class Matrixrate
         $this->taxHelper = $taxHelper;
     }
 
+
+
+
+
+
+
+
+
     /**
      * @param RateRequest $request
      * @param             $parcelType
@@ -106,12 +114,11 @@ class Matrixrate
     {
         $this->shippingVatEnabled = $this->taxConfig->shippingPriceIncludesTax($store);
         $parcelType               = $parcelType ?: 'regular';
-        $collection       = $this->matrixrateCollection->toArray();
-        $this->parcelType = $parcelType;
-        $this->request    = $request;
-        $data       = $collection['items'];
-
-        $data = $this->filterData($data);
+        $collection               = $this->matrixrateCollection->toArray();
+        $this->parcelType         = $parcelType;
+        $this->request            = $request;
+        $data                     = $collection['items'];
+        $data                     = $this->filterData($data);
 
         if (empty($data)) {
             return false;
