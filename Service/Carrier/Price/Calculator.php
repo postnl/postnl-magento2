@@ -32,7 +32,6 @@
 
 namespace TIG\PostNL\Service\Carrier\Price;
 
-use MEQP2\Tests\NamingConventions\true\bool;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
 use TIG\PostNL\Config\Source\Carrier\RateType;
