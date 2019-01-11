@@ -40,11 +40,6 @@ use Magento\Tax\Helper\Data;
 class Matrixrate
 {
     /**
-     * @var array
-     */
-    private $data = [];
-
-    /**
      * @var string
      */
     private $parcelType;
@@ -114,15 +109,15 @@ class Matrixrate
         $collection       = $this->matrixrateCollection->toArray();
         $this->parcelType = $parcelType;
         $this->request    = $request;
-        $this->data       = $collection['items'];
+        $data       = $collection['items'];
 
-        $this->filterData();
+        $data = $this->filterData($data);
 
-        if (empty($this->data)) {
+        if (empty($data)) {
             return false;
         }
 
-        $result = array_shift($this->data);
+        $result = array_shift($data);
         $result = $includeVat ? $this->handleVat($result) : $result;
 
         return [
@@ -154,13 +149,15 @@ class Matrixrate
      */
     private function filterData()
     {
-        $this->data = $this->countryFilter->filter($this->request, $this->data);
+        $data = $this->countryFilter->filter($this->request, $data);
 
-        $this->data = array_filter($this->data, [$this, 'byWebsite']);
-        $this->data = array_filter($this->data, [$this, 'byWeight']);
-        $this->data = array_filter($this->data, [$this, 'bySubtotal']);
-        $this->data = array_filter($this->data, [$this, 'byQuantity']);
-        $this->data = array_filter($this->data, [$this, 'byParcelType']);
+        $data = array_filter($data, [$this, 'byWebsite']);
+        $data = array_filter($data, [$this, 'byWeight']);
+        $data = array_filter($data, [$this, 'bySubtotal']);
+        $data = array_filter($data, [$this, 'byQuantity']);
+        $data = array_filter($data, [$this, 'byParcelType']);
+
+        return $data;
     }
 
     /**
