@@ -70,6 +70,8 @@ class MassAction
             return strtolower($typeStart) != 'postnl';
         });
 
+        $config['actions'] = array_values($config['actions']);
+
         $massAction->setData('config', $config);
     }
 }
