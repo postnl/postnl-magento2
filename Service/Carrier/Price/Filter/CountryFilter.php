@@ -65,8 +65,9 @@ class CountryFilter
         $rowRegion     = $row['destiny_region_id'];
         $rowZipCode    = $this->normalizeZipCode($row['destiny_zip_code']) ?: '*';
         $rowHasCountry = strpos($rowCountry, $this->request->getDestCountryId()) !== false;
-        $rowHasRegion  = $rowRegion == $this->request->getDestRegionId();
-        $rowHasZipCode = $rowZipCode == $this->normalizeZipCode($this->request->getDestPostcode());
+        $requestRegion = $this->request->getDestRegionId() ?: 0;
+        $rowHasRegion  = $rowRegion == $requestRegion;
+        $rowHasZipCode = $this->hasRowZipCode($this->request->getDestPostcode(), $rowZipCode);
 
         return
             ($rowHasCountry && $rowHasRegion && $rowHasZipCode) ||
@@ -78,12 +79,26 @@ class CountryFilter
     }
 
     /**
-     * @param $getDestPostcode
+     * @param $destPostcode
+     * @param $rowPostcode
+     *
+     * @return bool
+     */
+    private function hasRowZipCode($destPostcode, $rowPostcode)
+    {
+        $destPostcode = $this->normalizeZipCode($destPostcode);
+        $destPostcode = substr($destPostcode, 0, strlen($rowPostcode));
+
+        return $rowPostcode == $destPostcode;
+    }
+
+    /**
+     * @param $postcode
      *
      * @return mixed
      */
-    private function normalizeZipCode($getDestPostcode)
+    private function normalizeZipCode($postcode)
     {
-        return str_replace(' ', '', $getDestPostcode);
+        return str_replace(' ', '', $postcode);
     }
 }
