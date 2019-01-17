@@ -100,8 +100,7 @@ class Matrixrate
         $collection               = $this->matrixrateCollection->toArray();
         $this->parcelType         = $parcelType;
         $this->request            = $request;
-        $data                     = $collection['items'];
-        $data                     = $this->filterData($data);
+        $data                     = $this->filterData($collection['items']);
 
         if (empty($data)) {
             return false;
