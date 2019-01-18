@@ -87,7 +87,7 @@
 
             <delivery_settings>
                 <default_option>3085</default_option>
-                <default_be_option>4646</default_be_option>
+                <default_be_option>4946</default_be_option>
                 <default_eps_option>4950</default_eps_option>
                 <use_alternative_default>0</use_alternative_default>
             </delivery_settings>
