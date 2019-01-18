@@ -597,7 +597,7 @@ abstract class OptionsAbstract
         // PEPS Products
         '6350' => [
             'value'                => '6350',
-            'label'                => 'Priority product 1',
+            'label'                => 'Priority packets tracked',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -607,7 +607,7 @@ abstract class OptionsAbstract
         ],
         '6550' => [
             'value'                => '6550',
-            'label'                => 'Priority product 2',
+            'label'                => 'Priority packets tracked bulk',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -617,7 +617,7 @@ abstract class OptionsAbstract
         ],
         '6940' => [
             'value'                => '6940',
-            'label'                => 'Priority product 3',
+            'label'                => 'Priority packets tracked sorted',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -627,7 +627,7 @@ abstract class OptionsAbstract
         ],
         '6942' => [
             'value'                => '6942',
-            'label'                => 'Priority product 4',
+            'label'                => 'Priority packets tracked boxable',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
