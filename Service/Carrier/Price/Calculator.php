@@ -98,30 +98,55 @@ class Calculator
      * @param RateRequest $request
      * @param null        $parcelType
      * @param             $store
+     * @param bool        $includeVat
      *
      * @return array
      */
-    public function price(RateRequest $request, $parcelType = null, $store = null)
+    public function price(RateRequest $request, $parcelType = null, $store = null, $includeVat = false)
     {
         $this->store = $store;
-        $price = $this->getConfigData('price');
-        $cost = $price;
+        $price       = $this->getConfigData('price');
 
         if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
             return $this->priceResponse('0.00', '0.00');
         }
 
-        if ($this->getConfigData('rate_type') == RateType::CARRIER_RATE_TYPE_TABLE) {
+        $ratePrice = $this->getRatePrice($this->getConfigData('rate_type'), $request, $parcelType, $includeVat);
+
+        if ($ratePrice) {
+            return $ratePrice;
+        }
+
+        return $this->priceResponse($price, $price);
+    }
+
+    /**
+     * @param $rateType
+     * @param $request
+     * @param $parcelType
+     * @param $includeVat
+     *
+     * @return array|bool
+     */
+    private function getRatePrice($rateType, $request, $parcelType, $includeVat)
+    {
+        if ($rateType == RateType::CARRIER_RATE_TYPE_TABLE) {
             $ratePrice = $this->getTableratePrice($request);
+
             return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
         }
 
-        $ratePrice = $this->matrixratePrice->getRate($request, $parcelType ?: $this->parcelTypeFinder->get());
+        $ratePrice = $this->matrixratePrice->getRate(
+            $request,
+            $parcelType ?: $this->parcelTypeFinder->get(),
+            $this->store,
+            $includeVat
+        );
         if ($this->getConfigData('rate_type') == RateType::CARRIER_RATE_TYPE_MATRIX && $ratePrice !== false) {
             return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
         }
 
-        return $this->priceResponse($price, $cost);
+        return false;
     }
 
     /**
