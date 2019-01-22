@@ -36,6 +36,7 @@ use Magento\Sales\Model\Order\Address as SalesAddress;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
+use TIG\PostNL\Service\Shipment\PepsCountries;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 
@@ -107,22 +108,22 @@ class ProductCodeAndType
 
         if (!in_array($country, EpsCountries::ALL) && !in_array($country, ['BE', 'NL'])) {
             $this->getGlobalPackOption();
-            return $this->response();
+            return $this->response($country);
         }
 
         // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
         if ((empty($type) || $option == static::OPTION_DAYTIME) && !in_array($country, ['BE', 'NL'])) {
             $this->getEpsOption($address);
-            return $this->response();
+            return $this->response($country);
         }
 
         if ($type == static::TYPE_PICKUP) {
             $this->getPakjegemakProductOption($option);
-            return $this->response();
+            return $this->response($country);
         }
 
         $this->getProductCode($option, $country);
-        return $this->response();
+        return $this->response($country);
     }
     // @codingStandardsIgnoreEnd
 
@@ -217,11 +218,27 @@ class ProductCodeAndType
     }
 
     /**
+     * @param $countryId
      * @return array
      */
-    private function response()
+    private function response($countryId)
     {
+        if ($this->productOptionsConfiguration->checkProductByFlags($this->code, 'group', 'peps_options')) {
+            $this->setPepsTypeByCountryId($countryId);
+        }
+
         return ['code' => $this->code, 'type' => $this->type];
+    }
+
+    /**
+     * @param $country
+     */
+    private function setPepsTypeByCountryId($country)
+    {
+        $this->type = static::SHIPMENT_TYPE_EPS;
+        if (in_array($country, PepsCountries::GLOBALPACK)) {
+            $this->type = static::SHIPMENT_TYPE_GP;
+        }
     }
 
     /**
