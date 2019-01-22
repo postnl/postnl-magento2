@@ -118,6 +118,7 @@ class MergeWithLabels
      *
      * @return string
      */
+    // @codingStandardsIgnoreStart
     public function merge($shipmentId, $packingslip, $mergeFirstLabel = false, $confirm = true)
     {
         $labels = $this->getLabels->get($shipmentId, $confirm);
@@ -131,14 +132,18 @@ class MergeWithLabels
 
         if ($mergeFirstLabel && $this->canMergeFirstLabel($labels[0])) {
             $firstLabel = array_shift($labels);
-            // @codingStandardsIgnoreLine
             $label = base64_decode($firstLabel->getLabel());
             $packingslip = $this->mergeFirstLabel($label, $packingslip, $firstLabel->getType());
+        }
+
+        if (empty($labels)) {
+            return $packingslip;
         }
 
         $packingslipPdf = $this->addLabelsToPackingslip($packingslip, $labels);
         return $packingslipPdf;
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * @param ShipmentLabelInterface $firstLabel
