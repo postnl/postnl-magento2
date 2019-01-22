@@ -58,11 +58,10 @@ class MassAction
      */
     public function afterPrepare(UiComponentMassAction $massAction)
     {
-        if (!$this->accountConfiguration->isModusOff()) {
+        $config = $massAction->getData('config');
+        if (!$this->accountConfiguration->isModusOff() || !isset($config['actions'])) {
             return;
         }
-
-        $config = $massAction->getData('config');
 
         $config['actions'] = array_filter($config['actions'], function ($action) {
             $typeStart = substr($action['type'], 0, 6);
