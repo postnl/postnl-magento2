@@ -33,7 +33,7 @@ namespace TIG\PostNL\Service\Shipment\Barcode;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\Globalpack;
-
+use TIG\PostNL\Config\Provider\PepsConfiguration;
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 
@@ -59,50 +59,64 @@ class Range
     private $globalpackConfiguration;
 
     /**
+     * @var PepsConfiguration
+     */
+    private $pepsConfiguration;
+
+    /**
      * @var int
      */
     private $storeId;
 
     /**
+     * @var array
+     */
+    private $response = [
+        'type'  => '',
+        'range' => '',
+        'serie' => ''
+    ];
+
+    /**
      * @param AccountConfiguration  $accountConfiguration
      * @param Globalpack            $globalpack
+     * @param PepsConfiguration     $pepsConfiguration
      */
     public function __construct(
         AccountConfiguration $accountConfiguration,
-        Globalpack $globalpack
+        Globalpack $globalpack,
+        PepsConfiguration $pepsConfiguration
     ) {
         $this->accountConfiguration    = $accountConfiguration;
         $this->globalpackConfiguration = $globalpack;
+        $this->pepsConfiguration       = $pepsConfiguration;
     }
 
     /**
-     * Gets data for the barcode that's requested. Depending on the destination of the shipment several barcode types
-     * may be requested.
+     * @param $barcodeType
      *
-     * @param string $barcodeType
      * @return array
-     * @throws PostnlException
      */
     public function get($barcodeType)
     {
-        $barcodeType = strtoupper($barcodeType);
-
-        $barcodeData = $this->getBarcodeData($barcodeType);
-
-        $this->validateBarcodeData($barcodeData);
-
-        return $barcodeData;
+        $this->set(strtoupper($barcodeType));
+        return $this->response;
     }
 
     /**
-     * @param $countryId
-     * @param $storeId
+     * @param        $countryId
+     * @param null   $storeId
+     * @param string $type
      *
-     * @return array
+     * @return array|string
      */
-    public function getByCountryId($countryId, $storeId = null)
+    public function getByCountryId($countryId, $storeId = null, $type = '')
     {
         $this->storeId = $storeId;
+
+        if ($type) {
+            return $this->get($type);
+        }
 
         if ($countryId == 'NL') {
             return $this->get('NL');
@@ -112,100 +126,62 @@ class Range
             return $this->get('EU');
         }
 
-        return $this->get('global');
+        return $this->get('GLOBAL');
     }
 
     /**
-     * @return array
+     * @param $type
      */
-    private function getNlBarcode()
+    public function set($type)
     {
-        $type  = '3S';
-        $range = $this->accountConfiguration->getCustomerCode($this->storeId);
-        $serie = static::NL_BARCODE_SERIE_LONG;
-
-        if (strlen($range) > 3) {
-            $serie = static::NL_BARCODE_SERIE_SHORT;
+        $this->response['type']  = '3S';
+        $this->response['range'] = $this->accountConfiguration->getCustomerCode($this->storeId);
+        switch ($type) {
+            case 'NL':
+                $this->setNlSerie();
+                return;
+            case 'EU':
+                $this->setEuSerie();
+                return;
+            case 'GLOBAL':
+                $this->setGlobalPackOptions();
+                return;
+            case 'PEPS':
+                $this->setPepsOptions();
+                return;
         }
 
-        return [
-            'type' => $type,
-            'range' => $range,
-            'serie' => $serie,
-        ];
+        $this->noBarcodeDataError($type);
     }
 
-    /**
-     * @return array
-     */
-    private function getEuBarcode()
+    private function setNlSerie()
     {
-        $type  = '3S';
-        $range = $this->accountConfiguration->getCustomerCode($this->storeId);
-        $serie = static::EU_BARCODE_SERIE_LONG;
-
-        if (strlen($range) > 3) {
-            $serie = static::EU_BARCODE_SERIE_SHORT;
-        }
-
-        return [
-            'type' => $type,
-            'range' => $range,
-            'serie' => $serie,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function getGlobalBarcode()
-    {
-        $type  = $this->globalpackConfiguration->getBarcodeType();
-        $range = $this->globalpackConfiguration->getBarcodeRange();
-        $serie = static::GLOBAL_BARCODE_SERIE;
-
-        return [
-            'type' => $type,
-            'range' => $range,
-            'serie' => $serie,
-        ];
-    }
-
-    /**
-     * @param $barcodeData
-     * @throws PostnlException
-     */
-    private function validateBarcodeData($barcodeData)
-    {
-        if (!$barcodeData['type'] || !$barcodeData['range']) {
-            throw new PostnlException(
-                // @codingStandardsIgnoreLine
-                __('Unable to retrieve barcode data.'),
-                'POSTNL-0111'
-            );
+        $this->response['serie'] = static::NL_BARCODE_SERIE_LONG;
+        if (strlen($this->response['range']) > 3) {
+            $this->response['serie'] = static::NL_BARCODE_SERIE_SHORT;
         }
     }
 
-    /**
-     * @param $barcodeType
-     * @return array
-     * @throws PostnlException
-     */
-    private function getBarcodeData($barcodeType)
+    private function setEuSerie()
     {
-        if ($barcodeType == 'NL') {
-            return $this->getNlBarcode();
+        $this->response['serie'] = static::EU_BARCODE_SERIE_LONG;
+        if (strlen($this->response['range']) > 3) {
+            $this->response['serie'] = static::EU_BARCODE_SERIE_SHORT;
         }
+    }
 
-        if ($barcodeType == 'EU') {
-            return $this->getEuBarcode();
-        }
+    private function setGlobalPackOptions()
+    {
+        $this->response['type']  = $this->globalpackConfiguration->getBarcodeType();
+        $this->response['range'] = $this->globalpackConfiguration->getBarcodeRange();
+        $this->response['serie'] = static::GLOBAL_BARCODE_SERIE;
+    }
 
-        if ($barcodeType == 'GLOBAL') {
-            return $this->getGlobalBarcode();
-        }
-
-        $this->noBarcodeDataError($barcodeType);
+    private function setPepsOptions()
+    {
+        $this->response['type']  = $this->pepsConfiguration->getBarcodeType();
+        $this->response['range'] = $this->pepsConfiguration->getBarcodeRange();
+        $this->response['serie'] = static::EU_BARCODE_SERIE_LONG;
     }
 
     /**

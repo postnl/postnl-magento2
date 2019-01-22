@@ -41,10 +41,20 @@
             <frontend_model>\TIG\PostNL\Block\Adminhtml\Config\Globalpack\UsingGlobalpack</frontend_model>
         </group>
         <field id="enabled" translate="label comment tooltip" sortOrder="20" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Use Worldwide shipping</label>
+            <label>Use worldwide shipping</label>
             <comment>Worldwide shipping uses the PostNL GlobalPack product.</comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/globalpack/enabled</config_path>
+        </field>
+
+        <field id="default_gp_option" translate="label comment" type="select" sortOrder="25" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default worldwide delivery</label>
+            <comment><![CDATA[Select the default product option for Globalpack shipments.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getGlobalProducts</source_model>
+            <config_path>tig_postnl/globalpack/default_gp_option</config_path>
+            <depends>
+                <field id="tig_postnl/globalpack/enabled">1</field>
+            </depends>
         </field>
 
         <group id="barcode_settings" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">

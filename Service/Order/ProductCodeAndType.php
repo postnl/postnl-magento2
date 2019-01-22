@@ -36,6 +36,7 @@ use Magento\Sales\Model\Order\Address as SalesAddress;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
+use TIG\PostNL\Service\Shipment\PepsCountries;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 
@@ -101,37 +102,28 @@ class ProductCodeAndType
     // @codingStandardsIgnoreStart
     public function get($type = '', $option = '', $address = null)
     {
-        $country = null;
-        if ($address && is_object($address)) {
-            $country = $address->getCountryId();
-        }
-
-        if (is_string($address)) {
-            $country = $address;
-        }
-
-        $country = $country ?: $this->getCountryCode();
+        $country = $this->getCountryCode($address);
         $type    = strtolower($type);
         $option  = strtolower($option);
 
         if (!in_array($country, EpsCountries::ALL) && !in_array($country, ['BE', 'NL'])) {
             $this->getGlobalPackOption();
-            return $this->response();
+            return $this->response($country);
         }
 
         // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
         if ((empty($type) || $option == static::OPTION_DAYTIME) && !in_array($country, ['BE', 'NL'])) {
             $this->getEpsOption($address);
-            return $this->response();
+            return $this->response($country);
         }
 
         if ($type == static::TYPE_PICKUP) {
             $this->getPakjegemakProductOption($option);
-            return $this->response();
+            return $this->response($country);
         }
 
         $this->getProductCode($option, $country);
-        return $this->response();
+        return $this->response($country);
     }
     // @codingStandardsIgnoreEnd
 
@@ -212,8 +204,7 @@ class ProductCodeAndType
         $this->type = static::SHIPMENT_TYPE_EPS;
         // Force type Global Pack (mainly used for Canary Islands)
         if (in_array('4945', $firstOption)) {
-            $this->code = $firstOption;
-            $this->type = static::SHIPMENT_TYPE_GP;
+            $this->getGlobalPackOption();
         }
     }
 
@@ -222,26 +213,52 @@ class ProductCodeAndType
      */
     private function getGlobalPackOption()
     {
-        $options = $this->productOptionsFinder->getGlobalPackOptions();
-        $firstOption = array_shift($options);
-
-        $this->code = $firstOption['value'];
+        $this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
         $this->type = static::SHIPMENT_TYPE_GP;
     }
 
     /**
+     * @param $countryId
      * @return array
      */
-    private function response()
+    private function response($countryId)
     {
+        if ($this->productOptionsConfiguration->checkProductByFlags($this->code, 'group', 'peps_options')) {
+            $this->setPepsTypeByCountryId($countryId);
+        }
+
         return ['code' => $this->code, 'type' => $this->type];
     }
 
     /**
+     * @param $country
+     */
+    private function setPepsTypeByCountryId($country)
+    {
+        $this->type = static::SHIPMENT_TYPE_EPS;
+        if (in_array($country, PepsCountries::GLOBALPACK)) {
+            $this->type = static::SHIPMENT_TYPE_GP;
+        }
+    }
+
+    /**
+     * @param SalesAddress|QuoteAddress|string $address
      * @return string
      */
-    private function getCountryCode()
+    private function getCountryCode($address)
     {
+        if ($address && is_object($address)) {
+            return $address->getCountryId();
+        }
+
+        /**
+         * \TIG\PostNL\Helper\DeliveryOptions\OrderParams::formatParamData
+         * Request is done with country code only.
+         */
+        if (is_string($address)) {
+            return $address;
+        }
+
         $address = $this->quote->getShippingAddress();
         return $address->getCountryId();
     }

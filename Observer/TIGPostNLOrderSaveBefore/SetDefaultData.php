@@ -201,7 +201,6 @@ class SetDefaultData implements ObserverInterface
     private function checkByAddressData(OrderInterface $order)
     {
         $address = null;
-        $country = null;
 
         /** @noinspection PhpUndefinedMethodInspection */
         $address = $order->getPgAddress();

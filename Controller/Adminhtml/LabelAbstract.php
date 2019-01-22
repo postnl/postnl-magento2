@@ -118,6 +118,10 @@ abstract class LabelAbstract extends Action
     protected function setLabel($shipmentId)
     {
         $labels = $this->getLabels->get($shipmentId);
+        if (isset($labels['errors'])) {
+            $this->handelRequestErrors($labels['errors']);
+            return;
+        }
 
         if (empty($labels)) {
             return;
@@ -135,6 +139,10 @@ abstract class LabelAbstract extends Action
     protected function setPackingslip($shipmentId, $withLabels = true, $confirm = true)
     {
         $packingslip = $this->getPackingSlip->get($shipmentId, $withLabels, $confirm);
+        if (is_array($packingslip) && isset($packingslip['errors'])) {
+            $this->handelRequestErrors($packingslip['errors']);
+            return;
+        }
 
         if (strlen($packingslip) <= 0) {
             return;
@@ -151,6 +159,17 @@ abstract class LabelAbstract extends Action
     {
         if (!$shipment->getTracks()) {
             $this->track->set($shipment);
+        }
+    }
+
+    /**
+     * @param $errors
+     */
+    //@codingStandardsIgnoreLine
+    protected function handelRequestErrors($errors)
+    {
+        foreach ($errors as $error) {
+            $this->messageManager->addWarningMessage($error);
         }
     }
 }
