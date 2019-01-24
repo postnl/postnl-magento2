@@ -87,7 +87,7 @@ class FpdiFactory
         return $this->objectManager->create(Fpdi::class, [
             'orientation' => 'P',
             'unit' => 'mm',
-            'format' => 'A4',
+            'size' => 'A4',
             'unicode' => true,
             'encoding' => 'UTF-8',
             'diskcache' => false,
