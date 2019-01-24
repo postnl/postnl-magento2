@@ -42,6 +42,7 @@ class PepsCountries
      * https://jira.tig.nl/browse/POSTNLM2-741
      */
 
+    // ROW
     const GLOBALPACK = [
         'AU',
         'BR',
@@ -66,6 +67,7 @@ class PepsCountries
         'US'
     ];
 
+    // NOT ROW
     const EPS = [
         'AT',
         'BE',
