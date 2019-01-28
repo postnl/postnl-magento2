@@ -101,6 +101,7 @@ class AddressEnhancer
         }
 
         if (isset($result['error'])) {
+            $result = $this->extractIndividual($address, $result);
             return $result;
         }
 
@@ -126,6 +127,37 @@ class AddressEnhancer
         }
 
         return $result;
+    }
+
+    /**
+     * POC FALLBACK !!!!
+     *
+     * @param $address
+     * @param $result
+     *
+     * @return mixed
+     */
+    protected function extractIndividual($address, $result)
+    {
+        if (count($address['street']) == 3) {
+            $result['street']     = $address['street'][0];
+            $result['number']     = $address['street'][1];
+            $result['addition']   = $address['street'][2];
+            $address['street'][1] = '';
+            $address['street'][2] = '';
+            unset($result['error']);
+        }
+
+        if (count($address['street']) == 2) {
+            $tmpAddress = $this->extractHousenumber(['street' => [$address['street'][0]]]);
+            $result['street']     = $address['street'][0];
+            $result['number']     = $tmpAddress['housenumber'];
+            $result['addition']   = $address['street'][1];
+            $address['street'][1] = '';
+            unset($result['error']);
+        }
+
+        return !isset($result['error']) ? $this->parseResult($result, $address) : $result;
     }
 
     /**
