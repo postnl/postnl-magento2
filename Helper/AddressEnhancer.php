@@ -137,6 +137,7 @@ class AddressEnhancer
      *
      * @return mixed
      */
+    // @codingStandardsIgnoreLine
     protected function extractIndividual($address, $result)
     {
         if (count($address['street']) == 3) {
