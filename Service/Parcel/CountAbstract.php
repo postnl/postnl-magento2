@@ -76,21 +76,18 @@ abstract class CountAbstract
     {
         $this->products = $this->getProducts($items);
         if (empty($this->products)) {
-            return $this->getBasedOnWeight($weight, 0);
+            return $this->getBasedOnWeight($weight);
         }
 
         /**
-         * If there are more items the count start with one for the items without parcel_count
-         * If there is one item it should start with zero parcels because only the parcel_count should be added.
+         * We start counting at zero and first add up all items which contain a parcel count. Afterwards we
+         * add the rest of the parcels calculated by weight.
          */
-        $parcelCount = $this->getStartCount($items);
+        $parcelCount = 0;
         foreach ($items as $item) {
             $parcelCount += $this->getParcelCount($item);
         }
-
-        if (!$this->shippingOptions->isExtraAtHomeActive()) {
-            $parcelCount = $this->getBasedOnWeight($weight, $parcelCount);
-        }
+        $parcelCount += $this->getBasedOnWeight($weight);
 
         return $parcelCount < 1 ? 1 : $parcelCount;
     }
@@ -102,11 +99,11 @@ abstract class CountAbstract
      * @return float|int
      */
     // @codingStandardsIgnoreLine
-    protected function getBasedOnWeight($weight, $parcelCount)
+    protected function getBasedOnWeight($weight)
     {
         $remainingParcelCount = ceil($weight / self::WEIGHT_PER_PARCEL);
         $weightCount = $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
-        return ($weightCount < $parcelCount) ? $parcelCount : $weightCount;
+        return $weightCount;
     }
 
     /**
@@ -124,7 +121,13 @@ abstract class CountAbstract
         /** @var ProductInterface $product */
         $product = $this->products[$item->getProductId()];
         $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
-        return ($productParcelCount->getValue() * $this->getQty($item));
+
+        /** If Parcel Count isn't set, it's value will be null. Which can't be multiplied. */
+        if ($productParcelCount) {
+            return ($productParcelCount->getValue() * $this->getQty($item));
+        }
+
+        return 0;
     }
 
     /**
@@ -170,50 +173,5 @@ abstract class CountAbstract
     protected function getQty($item)
     {
         return $item->getQty() ?: $item->getQtyOrdered();
-    }
-
-    /**
-     * @param ShipmentItemInterface[]|OrderItemInterface[]|QuoteItem[] $items
-     *
-     * @return int
-     */
-    //@codingStandardsIgnoreLine
-    protected function getStartCount($items)
-    {
-        /** In most situations */
-        $startCount = count($items) == 1 ? 0 : 1;
-
-        /** But for a configurable the parent is also added to items so the start should be 0 */
-        foreach ($items as $item) {
-            $startCount = $this->getStartCountBasedOnType($item, $startCount);
-        }
-
-        return $startCount;
-    }
-
-    /**
-     * @param ShipmentItemInterface|OrderItemInterface|QuoteItem $item
-     * @param int $startCount
-     *
-     * @return int;
-     */
-    //@codingStandardsIgnoreLine
-    protected function getStartCountBasedOnType($item, $startCount)
-    {
-        if ($item->getProductType() !== 'simple') {
-            $startCount = 0;
-        }
-
-        $productId = $this->productDictionary->getProductId($item);
-
-        /**
-         * In cases where there are extra at home products (configurable and simpel types) in combination with
-         * regular products, the start count should be one.
-         */
-        if (!$item->getParentId() && !isset($this->products[$productId])) {
-            $startCount = 1;
-        }
-
-        return $startCount;
     }
 }
