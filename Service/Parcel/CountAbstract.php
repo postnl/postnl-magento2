@@ -37,6 +37,7 @@ use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use TIG\PostNL\Config\Provider\ProductType as PostNLType;
 use TIG\PostNL\Service\Options\ProductDictionary;
+use TIG\PostNL\Service\Product\CollectionByAttributeValue;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
 abstract class CountAbstract
@@ -46,6 +47,9 @@ abstract class CountAbstract
 
     // @codingStandardsIgnoreLine
     protected $productDictionary;
+
+    // @codingStandardsIgnoreLine
+    protected $collectionByAttributeValue;
 
     // @codingStandardsIgnoreLine
     protected $shippingOptions;
@@ -59,10 +63,12 @@ abstract class CountAbstract
      */
     public function __construct(
         ProductDictionary $productDictionary,
+        CollectionByAttributeValue $collectionByAttributeValue,
         ShippingOptions $shippingOptions
     ) {
-        $this->productDictionary = $productDictionary;
-        $this->shippingOptions   = $shippingOptions;
+        $this->productDictionary          = $productDictionary;
+        $this->collectionByAttributeValue = $collectionByAttributeValue;
+        $this->shippingOptions            = $shippingOptions;
     }
 
     /**
@@ -74,20 +80,22 @@ abstract class CountAbstract
     // @codingStandardsIgnoreLine
     protected function calculate($weight, $items)
     {
-        $this->products = $this->getProducts($items);
+        $this->products = $this->getProductsByType($items);
         if (empty($this->products)) {
             return $this->getBasedOnWeight($weight);
         }
 
-        /**
-         * We start counting at zero and first add up all items which contain a parcel count. Afterwards we
-         * add the rest of the parcels calculated by weight.
-         */
+        /** Walk through all order items and add it up if a parcel count is specified */
         $parcelCount = 0;
         foreach ($items as $item) {
             $parcelCount += $this->getParcelCount($item);
         }
-        $parcelCount += $this->getBasedOnWeight($weight);
+
+        /** Only get parcel count based on weight if order contains item without a specified parcel count */
+        $productsWithoutParcelCount = $this->getProductsWithoutParcelCount($items);
+        if ($productsWithoutParcelCount) {
+            $parcelCount += $this->getBasedOnWeight($weight);
+        }
 
         return $parcelCount < 1 ? 1 : $parcelCount;
     }
@@ -131,18 +139,37 @@ abstract class CountAbstract
     }
 
     /**
-     * Parcel count is only needed if a specific product type is found within the items.
+     * Returns a collection of products specified as PostNL product types.
      *
      * @param $items
      *
      * @return ProductInterface[]
      */
     // @codingStandardsIgnoreLine
-    protected function getProducts($items)
+    protected function getProductsByType($items)
     {
         return $this->productDictionary->get(
             $items,
             [PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME, PostNLType::PRODUCT_TYPE_REGULAR]
+        );
+    }
+
+    /**
+     * If an order contains products with AND without a parcel count specified, we need to
+     * collect items without a parcel count separately so we can calculate the parcel count
+     * based on weight.
+     *
+     * @param $items
+     *
+     * @return array|\Magento\Catalog\Api\Data\ProductInterface[]
+     */
+    // @codingStandardsIgnoreLine
+    protected function getProductsWithoutParcelCount($items)
+    {
+        return $this->collectionByAttributeValue->get(
+            $items,
+            self::ATTRIBUTE_PARCEL_COUNT,
+            [null, 0, false]
         );
     }
 
