@@ -45,6 +45,9 @@ class LabelAndPackingslipOptions extends AbstractConfigProvider
     const XPATH_LABEL_PACKINGSLIP_REFERENCE_TYPE   = 'tig_postnl/labelandpackingslipoptions/reference_type';
     const XPATH_LABEL_PACKINGSLIP_CUSTOM_REFERENCE = 'tig_postnl/labelandpackingslipoptions/custom_shipment_reference';
     const XPATH_LABEL_PACKINGSLIP_SHOW_LABEL       = 'tig_postnl/labelandpackingslipoptions/show_label';
+    const XPATH_LABEL_PACKINGSLIP_CALCULATE_LABELS = 'tig_postnl/labelandpackingslipoptions/calculate_labels';
+    const XPATH_LABEL_PACKINGSLIP_MAX_WEIGHT       = 'tig_postnl/labelandpackingslipoptions/calculate_labels_max_weight';
+
     /**
      * @var StoreInterface
      */
@@ -136,5 +139,21 @@ class LabelAndPackingslipOptions extends AbstractConfigProvider
     public function getShowLabel()
     {
         return $this->getConfigFromXpath(self::XPATH_LABEL_PACKINGSLIP_SHOW_LABEL);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCalculateLabels()
+    {
+        return $this->getConfigFromXpath(self::XPATH_LABEL_PACKINGSLIP_CALCULATE_LABELS);
+    }
+
+    /**
+     * @return int
+     */
+    public function getCalculateLabelsMaxWeight()
+    {
+        return $this->getConfigFromXpath(self::XPATH_LABEL_PACKINGSLIP_MAX_WEIGHT);
     }
 }
