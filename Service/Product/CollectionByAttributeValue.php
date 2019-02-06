@@ -68,13 +68,33 @@ class CollectionByAttributeValue
      *
      * @return array|\Magento\Catalog\Api\Data\ProductInterface[]
      */
-    public function get($items, string $code, array $matchedValue)
+    public function getByValue($items, string $code, array $matchedValue)
     {
         $products = $this->collectionByItems->get($items);
         return array_filter($products, function (ProductInterface $product) use ($code, $matchedValue) {
             $attribute = $product->getCustomAttribute($code);
             $value = $attribute !== null ? $attribute->getValue() : false;
             return in_array($value, $matchedValue);
+        });
+    }
+
+    /**
+     * Returns a collection of products containing the minimum value for the
+     * specified attribute.
+     *
+     * @param $items
+     * @param string $code
+     * @param int $minValue
+     *
+     * @return array|\Magento\Catalog\Api\Data\ProductInterface[]
+     */
+    public function getByMinValue($items, string $code, int $minValue)
+    {
+        $products = $this->collectionByItems->get($items);
+        return array_filter($products, function (ProductInterface $product) use ($code, $minValue) {
+            $attribute = $product->getCustomAttribute($code);
+            $value = $attribute !== null ? $attribute->getValue() : false;
+            return ($value > $minValue);
         });
     }
 }
