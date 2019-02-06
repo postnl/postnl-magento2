@@ -58,9 +58,6 @@ abstract class CountAbstract extends CollectAbstract
     protected $products;
 
     // @codingStandardsIgnoreLine
-    protected $order;
-
-    // @codingStandardsIgnoreLine
     protected $quantities;
 
     /**
@@ -97,13 +94,12 @@ abstract class CountAbstract extends CollectAbstract
     protected function calculate($weight, $items)
     {
         $this->products = $this->getProductsByType($items);
-        $this->order = $items;
         /** If no PostNL Product Types are found, default to calculation by weight. */
         if (empty($this->products)) {
             return $this->getBasedOnWeight($weight);
         }
 
-        foreach ($this->order as $orderItem) {
+        foreach ($items as $orderItem) {
             /** @var $orderItem OrderItemInterface */
             $this->quantities[$orderItem->getProductId()] = $orderItem->getQtyOrdered();
         }
@@ -129,24 +125,20 @@ abstract class CountAbstract extends CollectAbstract
     protected function calculateByParcelCount($weight, $items)
     {
         $parcelCount = 0;
-
         $productsWithParcelCount = $this->getProductsWithParcelCount($items);
         if (!$productsWithParcelCount) {
-            return $parcelCount;
+            return $this->getBasedOnWeight($weight);
         }
 
+        $subtractWeight = 0;
         foreach ($productsWithParcelCount as $item) {
-            $parcelCount += $this->getBasedOnParcelCount($item);
+            $parcelCount    += $this->getBasedOnParcelCount($item);
+            $subtractWeight += $item->getWeight();
         }
 
         $productsWithoutParcelCount = $this->getProductsWithoutParcelCount($items);
         if (!$productsWithoutParcelCount) {
             return $parcelCount;
-        }
-
-        $subtractWeight = 0;
-        foreach ($productsWithoutParcelCount as $item) {
-            $subtractWeight += $item->getWeight();
         }
         $parcelCount += $this->getBasedOnWeight($weight - $subtractWeight);
 
@@ -163,18 +155,21 @@ abstract class CountAbstract extends CollectAbstract
      * @return int
      */
     // @codingStandardsIgnoreLine
-    protected function calculateByWeight($items, $weight)
+    protected function calculateByWeight($weight, $items)
     {
-        $parcelCount = $this->getBasedOnWeight($weight);
-
         $extraAtHomeProducts = $this->getExtraAtHomeProducts($items);
         if (!$extraAtHomeProducts) {
-            return $parcelCount;
+            return $this->getBasedOnWeight($weight);
         }
 
+        $parcelCount = 0;
+        $subtractWeight = 0;
         foreach ($extraAtHomeProducts as $item) {
-            $parcelCount += $this->getBasedOnParcelCount($item);
+            $parcelCount    += $this->getBasedOnParcelCount($item);
+            $subtractWeight += $item->getWeight();
         }
+
+        $parcelCount += $this->getBasedOnWeight($weight - $subtractWeight);
 
         return $parcelCount;
     }
@@ -189,7 +184,9 @@ abstract class CountAbstract extends CollectAbstract
     // @codingStandardsIgnoreLine
     protected function getBasedOnWeight($weight)
     {
-        $maxWeight = $this->labelOptions->getCalculateLabelsMaxWeight() ?: 20000;
+        $labelOption = $this->labelOptions->getCalculateLabels();
+        /** Only use the defined Maximum Weight if 'weight' is selected to calculate parcel count. Defaults to 20000. */
+        $maxWeight = ($labelOption == self::CALCULATE_LABELS_WEIGHT) ? $this->labelOptions->getCalculateLabelsMaxWeight() : 20000;
         $remainingParcelCount = ceil($weight / $maxWeight);
         $weightCount = $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
         return $weightCount;
