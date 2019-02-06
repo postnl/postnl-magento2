@@ -33,7 +33,6 @@
 namespace TIG\PostNL\Service\Parcel;
 
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions as LabelOptions;
@@ -185,7 +184,7 @@ abstract class CountAbstract extends CollectAbstract
     protected function getBasedOnWeight($weight)
     {
         $labelOption = $this->labelOptions->getCalculateLabels();
-        /** Only use the defined Maximum Weight if 'weight' is selected to calculate parcel count. Defaults to 20000. */
+        // @codingStandardsIgnoreLine
         $maxWeight = ($labelOption == self::CALCULATE_LABELS_WEIGHT) ? $this->labelOptions->getCalculateLabelsMaxWeight() : 20000;
         $remainingParcelCount = ceil($weight / $maxWeight);
         $weightCount = $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
@@ -193,6 +192,8 @@ abstract class CountAbstract extends CollectAbstract
     }
 
     /**
+     * Get parcel count of current item.
+     *
      * @param ProductInterface $item
      *
      * @return float|int
@@ -204,11 +205,11 @@ abstract class CountAbstract extends CollectAbstract
             return 0;
         }
 
-        /** @var ProductInterface $product */
+        // @var ProductInterface $product
         $product = $this->products[$item->getId()];
         $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
 
-        /** If Parcel Count isn't set, it's value will be null. Which can't be multiplied. */
+        // If Parcel Count isn't set, it's value will be null. Which can't be multiplied.
         if ($productParcelCount) {
             return ($productParcelCount->getValue() * $this->quantities[$item->getId()]);
         }
@@ -217,6 +218,8 @@ abstract class CountAbstract extends CollectAbstract
     }
 
     /**
+     * Return weight of current item.
+     *
      * @param $items
      *
      * @return int
@@ -225,9 +228,8 @@ abstract class CountAbstract extends CollectAbstract
     protected function getWeight($items)
     {
         $weight = 0;
-        /** @var QuoteItem $item */
+
         foreach ($items as $item) {
-            /** @noinspection PhpUndefinedMethodInspection */
             $weight += $item->getWeight();
         }
 

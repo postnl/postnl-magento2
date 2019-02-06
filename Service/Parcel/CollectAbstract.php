@@ -41,9 +41,11 @@ abstract class CollectAbstract
     const ATTRIBUTE_PARCEL_COUNT = 'postnl_parcel_count';
 
     /** @var \TIG\PostNL\Service\Options\ProductDictionary $productDictionary */
+    // @codingStandardsIgnoreLine
     protected $productDictionary;
 
     /** @var \TIG\PostNL\Service\Product\CollectionByAttributeValue $collectionByAttributeValue */
+    // @codingStandardsIgnoreLine
     protected $collectionByAttributeValue;
 
     /**
@@ -109,6 +111,7 @@ abstract class CollectAbstract
      *
      * @return array|\Magento\Catalog\Api\Data\ProductInterface[]
      */
+    // @codingStandardsIgnoreLine
     protected function getExtraAtHomeProducts($items)
     {
         return $this->collectionByAttributeValue->getByValue(

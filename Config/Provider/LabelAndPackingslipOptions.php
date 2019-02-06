@@ -46,6 +46,7 @@ class LabelAndPackingslipOptions extends AbstractConfigProvider
     const XPATH_LABEL_PACKINGSLIP_CUSTOM_REFERENCE = 'tig_postnl/labelandpackingslipoptions/custom_shipment_reference';
     const XPATH_LABEL_PACKINGSLIP_SHOW_LABEL       = 'tig_postnl/labelandpackingslipoptions/show_label';
     const XPATH_LABEL_PACKINGSLIP_CALCULATE_LABELS = 'tig_postnl/labelandpackingslipoptions/calculate_labels';
+    // @codingStandardsIgnoreLine
     const XPATH_LABEL_PACKINGSLIP_MAX_WEIGHT       = 'tig_postnl/labelandpackingslipoptions/calculate_labels_max_weight';
 
     /**
