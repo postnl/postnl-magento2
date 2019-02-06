@@ -79,7 +79,8 @@ abstract class CountAbstract extends CollectAbstract
         $this->labelOptions               = $labelOptions;
         parent::__construct(
             $productDictionary,
-            $collectionByAttributeValue
+            $collectionByAttributeValue,
+            $shippingOptions
         );
     }
 

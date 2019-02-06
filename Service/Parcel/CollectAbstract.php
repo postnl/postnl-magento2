@@ -35,6 +35,7 @@ namespace TIG\PostNL\Service\Parcel;
 use TIG\PostNL\Config\Provider\ProductType as PostNLType;
 use TIG\PostNL\Service\Options\ProductDictionary;
 use TIG\PostNL\Service\Product\CollectionByAttributeValue;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
 abstract class CollectAbstract
 {
@@ -48,6 +49,9 @@ abstract class CollectAbstract
     // @codingStandardsIgnoreLine
     protected $collectionByAttributeValue;
 
+    // @codingStandardsIgnoreLine
+    protected $shippingOptions;
+
     /**
      * CollectAbstract constructor.
      *
@@ -56,10 +60,12 @@ abstract class CollectAbstract
      */
     public function __construct(
         ProductDictionary $productDictionary,
-        CollectionByAttributeValue $collectionByAttributeValue
+        CollectionByAttributeValue $collectionByAttributeValue,
+        ShippingOptions $shippingOptions
     ) {
         $this->productDictionary = $productDictionary;
         $this->collectionByAttributeValue = $collectionByAttributeValue;
+        $this->shippingOptions = $shippingOptions;
     }
 
     /**
@@ -109,11 +115,15 @@ abstract class CollectAbstract
     /**
      * @param $items
      *
-     * @return array|\Magento\Catalog\Api\Data\ProductInterface[]
+     * @return array|\Magento\Catalog\Api\Data\ProductInterface[]|null
      */
     // @codingStandardsIgnoreLine
     protected function getExtraAtHomeProducts($items)
     {
+        if (!$this->shippingOptions->isExtraAtHomeActive()) {
+            return null;
+        }
+
         return $this->collectionByAttributeValue->getByValue(
             $items,
             PostNLType::POSTNL_PRODUCT_TYPE,
