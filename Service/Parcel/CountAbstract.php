@@ -94,7 +94,6 @@ abstract class CountAbstract extends CollectAbstract
     protected function calculate($weight, $items)
     {
         $this->products = $this->getProductsByType($items);
-        /** If no PostNL Product Types are found, default to calculation by weight. */
         if (empty($this->products)) {
             return $this->getBasedOnWeight($weight);
         }
@@ -209,13 +208,9 @@ abstract class CountAbstract extends CollectAbstract
             return 0;
         }
 
-        /**
-         * @var ProductInterface $product
-         */
+        /** @var ProductInterface $product */
         $product = $this->products[$item->getId()];
         $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
-
-        // If Parcel Count isn't set, it's value will be null. Which can't be multiplied.
         if ($productParcelCount) {
             return ($productParcelCount->getValue() * $this->quantities[$item->getId()]);
         }
@@ -234,14 +229,10 @@ abstract class CountAbstract extends CollectAbstract
     protected function getWeight($items)
     {
         $weight = 0;
-
         foreach ($items as $item) {
-            /**
-             * @var ProductInterface $item
-             */
+            /** @var ProductInterface $item */
             $weight += $item->getWeight();
         }
-
         return $weight;
     }
 }
