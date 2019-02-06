@@ -137,12 +137,20 @@ class AddressEnhancer
     // @codingStandardsIgnoreLine
     protected function parseResult($result, $address)
     {
+        if (!is_array($result)) {
+            return $address;
+        }
+
         if ($result['street']) {
             $address['street'][0] = trim($result['street']);
         }
 
         if ($result['number']) {
             $address['housenumber'] = trim($result['number']);
+        }
+
+        $address['housenumberExtension'] = '';
+        if ($result['addition']) {
             $address['housenumberExtension'] = trim($result['addition']);
         }
 
