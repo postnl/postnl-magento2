@@ -169,7 +169,10 @@ abstract class CountAbstract extends CollectAbstract
             $subtractWeight += $item->getWeight();
         }
 
-        $parcelCount += $this->getBasedOnWeight($weight - $subtractWeight);
+        $weight = $weight - $subtractWeight;
+        if ($weight > 0) {
+            $parcelCount += $this->getBasedOnWeight($weight);
+        }
 
         return $parcelCount;
     }
@@ -206,7 +209,7 @@ abstract class CountAbstract extends CollectAbstract
             return 0;
         }
 
-        // @var ProductInterface $product
+        //** @var ProductInterface $product */
         $product = $this->products[$item->getId()];
         $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
 
