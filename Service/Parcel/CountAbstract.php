@@ -209,7 +209,9 @@ abstract class CountAbstract extends CollectAbstract
             return 0;
         }
 
-        //** @var ProductInterface $product */
+        /**
+         * @var ProductInterface $product
+         */
         $product = $this->products[$item->getId()];
         $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
 
@@ -234,6 +236,9 @@ abstract class CountAbstract extends CollectAbstract
         $weight = 0;
 
         foreach ($items as $item) {
+            /**
+             * @var ProductInterface $item
+             */
             $weight += $item->getWeight();
         }
 
