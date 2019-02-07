@@ -29,121 +29,198 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Service\Parcel;
 
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Sales\Api\Data\ShipmentItemInterface;
-use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
-use TIG\PostNL\Config\Provider\ProductType as PostNLType;
-use TIG\PostNL\Service\Options\ProductDictionary;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions as LabelOptions;
+use TIG\PostNL\Service\Options\ProductDictionary;
+use TIG\PostNL\Service\Product\CollectionByAttributeValue;
 
-abstract class CountAbstract
+abstract class CountAbstract extends CollectAbstract
 {
-    const ATTRIBUTE_PARCEL_COUNT = 'postnl_parcel_count';
-    const WEIGHT_PER_PARCEL      = 20000;
+    const CALCULATE_LABELS_WEIGHT       = 'weight';
+    const CALCULATE_LABELS_PARCEL_COUNT = 'parcel_count';
 
     // @codingStandardsIgnoreLine
-    protected $productDictionary;
+    protected $collectionByAttributeValue;
 
     // @codingStandardsIgnoreLine
     protected $shippingOptions;
 
     // @codingStandardsIgnoreLine
+    protected $labelOptions;
+
+    // @codingStandardsIgnoreLine
     protected $products;
 
+    // @codingStandardsIgnoreLine
+    protected $quantities;
+
     /**
-     * @param ProductDictionary $productDictionary
-     * @param ShippingOptions $shippingOptions
+     * CountAbstract constructor.
+     *
+     * @param \TIG\PostNL\Service\Options\ProductDictionary $productDictionary
+     * @param \TIG\PostNL\Service\Product\CollectionByAttributeValue $collectionByAttributeValue
+     * @param \TIG\PostNL\Config\Provider\ShippingOptions $shippingOptions
+     * @param \TIG\PostNL\Config\Provider\LabelAndPackingslipOptions $labelOptions
      */
     public function __construct(
         ProductDictionary $productDictionary,
-        ShippingOptions $shippingOptions
+        CollectionByAttributeValue $collectionByAttributeValue,
+        ShippingOptions $shippingOptions,
+        LabelOptions $labelOptions
     ) {
-        $this->productDictionary = $productDictionary;
-        $this->shippingOptions   = $shippingOptions;
-    }
-
-    /**
-     * @param int $weight
-     * @param ShipmentItemInterface[]|OrderItemInterface[]|QuoteItem[] $items
-     *
-     * @return int|\Magento\Framework\Api\AttributeInterface|null
-     */
-    // @codingStandardsIgnoreLine
-    protected function calculate($weight, $items)
-    {
-        $this->products = $this->getProducts($items);
-        if (empty($this->products)) {
-            return $this->getBasedOnWeight($weight, 0);
-        }
-
-        /**
-         * If there are more items the count start with one for the items without parcel_count
-         * If there is one item it should start with zero parcels because only the parcel_count should be added.
-         */
-        $parcelCount = $this->getStartCount($items);
-        foreach ($items as $item) {
-            $parcelCount += $this->getParcelCount($item);
-        }
-
-        if (!$this->shippingOptions->isExtraAtHomeActive()) {
-            $parcelCount = $this->getBasedOnWeight($weight, $parcelCount);
-        }
-
-        return $parcelCount < 1 ? 1 : $parcelCount;
-    }
-
-    /**
-     * @param $weight
-     * @param $parcelCount
-     *
-     * @return float|int
-     */
-    // @codingStandardsIgnoreLine
-    protected function getBasedOnWeight($weight, $parcelCount)
-    {
-        $remainingParcelCount = ceil($weight / self::WEIGHT_PER_PARCEL);
-        $weightCount = $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
-        return ($weightCount < $parcelCount) ? $parcelCount : $weightCount;
-    }
-
-    /**
-     * @param ShipmentItemInterface|OrderItemInterface|QuoteItem $item
-     *
-     * @return mixed
-     */
-    // @codingStandardsIgnoreLine
-    protected function getParcelCount($item)
-    {
-        if (!isset($this->products[$item->getProductId()])) {
-            return 0;
-        }
-
-        /** @var ProductInterface $product */
-        $product = $this->products[$item->getProductId()];
-        $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
-        return ($productParcelCount->getValue() * $this->getQty($item));
-    }
-
-    /**
-     * Parcel count is only needed if a specific product type is found within the items.
-     *
-     * @param $items
-     *
-     * @return ProductInterface[]
-     */
-    // @codingStandardsIgnoreLine
-    protected function getProducts($items)
-    {
-        return $this->productDictionary->get(
-            $items,
-            [PostNLType::PRODUCT_TYPE_EXTRA_AT_HOME, PostNLType::PRODUCT_TYPE_REGULAR]
+        $this->productDictionary          = $productDictionary;
+        $this->collectionByAttributeValue = $collectionByAttributeValue;
+        $this->shippingOptions            = $shippingOptions;
+        $this->labelOptions               = $labelOptions;
+        parent::__construct(
+            $productDictionary,
+            $collectionByAttributeValue,
+            $shippingOptions
         );
     }
 
     /**
+     * @param $weight
+     * @param $items
+     *
+     * @return int
+     */
+    // @codingStandardsIgnoreLine
+    protected function calculate($weight, $items)
+    {
+        $this->products = $this->getProductsByType($items);
+        if (empty($this->products)) {
+            return $this->getBasedOnWeight($weight);
+        }
+
+        foreach ($items as $orderItem) {
+            /** @var $orderItem OrderItemInterface */
+            $this->quantities[$orderItem->getProductId()] = $orderItem->getQtyOrdered();
+        }
+
+        $labelOption = $this->labelOptions->getCalculateLabels();
+        if ($labelOption == self::CALCULATE_LABELS_PARCEL_COUNT) {
+            return $this->calculateByParcelCount($weight, $items);
+        }
+
+        return $this->calculateByWeight($weight, $items);
+    }
+
+    /**
+     * When 'parcel_count' is selected to calculate parcel count. Products without a
+     * specified 'parcel_count' will still be calculated by weight.
+     *
+     * @param $items
+     * @param $weight
+     *
+     * @return int
+     */
+    // @codingStandardsIgnoreLine
+    protected function calculateByParcelCount($weight, $items)
+    {
+        $parcelCount = 0;
+        $productsWithParcelCount = $this->getProductsWithParcelCount($items);
+        if (!$productsWithParcelCount) {
+            return $this->getBasedOnWeight($weight);
+        }
+
+        $subtractWeight = 0;
+        foreach ($productsWithParcelCount as $item) {
+            $parcelCount    += $this->getBasedOnParcelCount($item);
+            $subtractWeight += $item->getWeight();
+        }
+
+        $productsWithoutParcelCount = $this->getProductsWithoutParcelCount($items);
+        if (!$productsWithoutParcelCount) {
+            return $parcelCount;
+        }
+        $parcelCount += $this->getBasedOnWeight($weight - $subtractWeight);
+
+        return $parcelCount;
+    }
+
+    /**
+     * When 'weight' is selected to calculate parcel count. The total parcel count for
+     * Extra@Home products is calculated separately.
+     *
+     * @param $items
+     * @param $weight
+     *
+     * @return int
+     */
+    // @codingStandardsIgnoreLine
+    protected function calculateByWeight($weight, $items)
+    {
+        $extraAtHomeProducts = $this->getExtraAtHomeProducts($items);
+        if (!$extraAtHomeProducts) {
+            return $this->getBasedOnWeight($weight);
+        }
+
+        $parcelCount = 0;
+        $subtractWeight = 0;
+        foreach ($extraAtHomeProducts as $item) {
+            $parcelCount    += $this->getBasedOnParcelCount($item);
+            $subtractWeight += $item->getWeight();
+        }
+
+        $weight = $weight - $subtractWeight;
+        if ($weight > 0) {
+            $parcelCount += $this->getBasedOnWeight($weight);
+        }
+
+        return $parcelCount;
+    }
+
+    /**
+     * When 'weight' is selected to calculate parcel count.
+     *
+     * @param $weight
+     *
+     * @return float|int
+     */
+    // @codingStandardsIgnoreLine
+    protected function getBasedOnWeight($weight)
+    {
+        $labelOption = $this->labelOptions->getCalculateLabels();
+        // @codingStandardsIgnoreLine
+        $maxWeight = ($labelOption == self::CALCULATE_LABELS_WEIGHT) ? $this->labelOptions->getCalculateLabelsMaxWeight() : 20000;
+        $remainingParcelCount = ceil($weight / $maxWeight);
+        $weightCount = $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
+        return $weightCount;
+    }
+
+    /**
+     * Get parcel count of current item.
+     *
+     * @param ProductInterface $item
+     *
+     * @return float|int
+     */
+    // @codingStandardsIgnoreLine
+    protected function getBasedOnParcelCount($item)
+    {
+        if (!isset($this->products[$item->getId()])) {
+            return 0;
+        }
+
+        /** @var ProductInterface $product */
+        $product = $this->products[$item->getId()];
+        $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
+        if ($productParcelCount) {
+            return ($productParcelCount->getValue() * $this->quantities[$item->getId()]);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Return weight of current item.
+     *
      * @param $items
      *
      * @return int
@@ -152,68 +229,10 @@ abstract class CountAbstract
     protected function getWeight($items)
     {
         $weight = 0;
-        /** @var QuoteItem $item */
         foreach ($items as $item) {
-            /** @noinspection PhpUndefinedMethodInspection */
+            /** @var ProductInterface $item */
             $weight += $item->getWeight();
         }
-
         return $weight;
-    }
-
-    /**
-     * @param ShipmentItemInterface|OrderItemInterface|QuoteItem $item
-     *
-     * @return mixed
-     */
-    // @codingStandardsIgnoreLine
-    protected function getQty($item)
-    {
-        return $item->getQty() ?: $item->getQtyOrdered();
-    }
-
-    /**
-     * @param ShipmentItemInterface[]|OrderItemInterface[]|QuoteItem[] $items
-     *
-     * @return int
-     */
-    //@codingStandardsIgnoreLine
-    protected function getStartCount($items)
-    {
-        /** In most situations */
-        $startCount = count($items) == 1 ? 0 : 1;
-
-        /** But for a configurable the parent is also added to items so the start should be 0 */
-        foreach ($items as $item) {
-            $startCount = $this->getStartCountBasedOnType($item, $startCount);
-        }
-
-        return $startCount;
-    }
-
-    /**
-     * @param ShipmentItemInterface|OrderItemInterface|QuoteItem $item
-     * @param int $startCount
-     *
-     * @return int;
-     */
-    //@codingStandardsIgnoreLine
-    protected function getStartCountBasedOnType($item, $startCount)
-    {
-        if ($item->getProductType() !== 'simple') {
-            $startCount = 0;
-        }
-
-        $productId = $this->productDictionary->getProductId($item);
-
-        /**
-         * In cases where there are extra at home products (configurable and simpel types) in combination with
-         * regular products, the start count should be one.
-         */
-        if (!$item->getParentId() && !isset($this->products[$productId])) {
-            $startCount = 1;
-        }
-
-        return $startCount;
     }
 }

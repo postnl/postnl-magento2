@@ -49,9 +49,9 @@ class GlobalPack extends AbstractType implements TypeInterface
         for ($pageNo = 1; $pageNo <= $count; $pageNo++) {
             $templateId   = $this->pdf->importPage($pageNo);
             $templateSize = $this->pdf->getTemplateSize($templateId);
-            $orientation  = $templateSize['w'] > $templateSize['h'] ? 'L' :'P';
+            $orientation  = $templateSize['width'] > $templateSize['height'] ? 'L' :'P';
 
-            $this->pdf->AddPage($orientation, [$templateSize['w'], $templateSize['h']]);
+            $this->pdf->AddPage($orientation, [$templateSize['width'], $templateSize['height']]);
             $this->pdf->useTemplate($templateId);
         }
 

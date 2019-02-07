@@ -133,6 +133,8 @@
             <labelandpackingslipoptions>
                 <reference_type>shipment_increment_id</reference_type>
                 <show_label>together</show_label>
+                <calculate_labels>weight</calculate_labels>
+                <calculate_labels_max_weight>20000</calculate_labels_max_weight>
                 <enable_barcode>0</enable_barcode>
                 <barcode_value>order_increment_id</barcode_value>
                 <barcode_position>360,750,550,790</barcode_position>
