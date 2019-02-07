@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,21 +28,28 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="1.7.2">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Directory"/>
-            <module name="Magento_Backend"/>
-            <module name="Magento_Catalog"/>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Quote"/>
-            <module name="Magento_Checkout"/>
-            <module name="Magento_Store"/>
-            <module name="Magento_Ui"/>
-            <module name="Magento_Config"/>
-        </sequence>
-    </module>
-</config>
+ */
+namespace TIG\PostNL\Config\Source\LabelAndPackingslip;
+
+use Magento\Framework\Option\ArrayInterface;
+
+class CalculateLabels implements ArrayInterface
+{
+    const CALCULATE_LABELS_WEIGHT = 'weight';
+    const CALCULATE_LABELS_PARCEL_COUNT = 'parcel_count';
+
+    /**
+     * @return array
+     */
+    public function toOptionArray()
+    {
+        // @codingStandardsIgnoreStart
+        $options = [
+            ['value' => self::CALCULATE_LABELS_WEIGHT, 'label' => __("Based on weight")],
+            ['value' => self::CALCULATE_LABELS_PARCEL_COUNT, 'label' => __("Based on predefined parcel count")],
+        ];
+        // @codingStandardsIgnoreEnd
+
+        return $options;
+    }
+}
