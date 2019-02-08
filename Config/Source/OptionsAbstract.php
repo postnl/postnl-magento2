@@ -648,7 +648,7 @@ abstract class OptionsAbstract
         'id_check_pakjegemak_options'   => 'ID Check Post Office options',
         'cargo_options'                 => 'Cargo options',
         'eps_package_options'           => 'Package options',
-        'peps_products'                 => 'Priority EPS'
+        'peps_options'                 => 'Priority EPS'
     ];
 
     protected $groupToLabel = [
@@ -662,7 +662,7 @@ abstract class OptionsAbstract
         'id_check_pakjegemak_options'   => 'ID Check Post Office',
         'cargo_options'                 => 'Cargo',
         'eps_package_options'           => 'Package',
-        'peps_products'                 => 'Priority (EPS / Globalpack)'
+        'peps_options'                 => 'Priority (EPS / Globalpack)'
     ];
 
     protected $typeToComment = [
