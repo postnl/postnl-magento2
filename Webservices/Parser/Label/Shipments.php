@@ -127,7 +127,7 @@ class Shipments
             'CompanyName'      => $shippingAddress->getCompany(),
             'Street'           => $streetData['street'][0],
             'HouseNr'          => $streetData['housenumber'],
-            'HouseNrExt'       => isset($streetData['housenumberExtension']) ?: '',
+            'HouseNrExt'       => isset($streetData['housenumberExtension']) ? $streetData['housenumberExtension'] : '',
             'Zipcode'          => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode())),
             'City'             => $shippingAddress->getCity(),
             'Region'           => $shippingAddress->getRegion(),
