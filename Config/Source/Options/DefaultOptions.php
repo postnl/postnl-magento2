@@ -126,7 +126,7 @@ class DefaultOptions implements ArrayInterface
             $this->getPepsOptions(),
         ];
 
-        return call_user_func_array("array_merge" ,$globalOptions);
+        return call_user_func_array("array_merge", $globalOptions);
     }
 
     /**
