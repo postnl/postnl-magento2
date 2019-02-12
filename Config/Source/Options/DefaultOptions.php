@@ -92,11 +92,15 @@ class DefaultOptions implements ArrayInterface
      */
     public function getBeProducts()
     {
+        $pepsOptions = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPepsOptions() : [];
+        $epsBusinessOptions = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
+        $cargoOptions = $this->shippingOptions->canUseCargoProducts() ? $this->productOptions->getCargoOptions() : [];
+
         $beProducts = [
-            $this->getEuOptions(),
-            $this->getEpsBusinessOptions(),
-            $this->getPepsOptions(),
-            $this->getCargoOptions()
+            $this->productOptions->getEuOptions(),
+            $pepsOptions,
+            $epsBusinessOptions,
+            $cargoOptions
         ];
 
         return call_user_func_array("array_merge", $beProducts);
@@ -107,10 +111,13 @@ class DefaultOptions implements ArrayInterface
      */
     public function getEpsProducts()
     {
+        $pepsOptions = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPepsOptions() : [];
+        $epsBusinessOptions = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
+
         $epsProducts = [
-            $this->getEpsOptions(),
-            $this->getPepsOptions(),
-            $this->getEpsBusinessOptions()
+            $this->productOptions->getEpsOptions(),
+            $pepsOptions,
+            $epsBusinessOptions
         ];
 
         return call_user_func_array("array_merge", $epsProducts);
@@ -121,76 +128,14 @@ class DefaultOptions implements ArrayInterface
      */
     public function getGlobalProducts()
     {
-        $globalOptions = [
-            $this->productOptions->getProductoptions(['group' => 'global_options']),
-            $this->getPepsOptions(),
+        $pepsOptions = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPepsOptions() : [];
+
+        $globalProducts = [
+            $this->productOptions->getGlobalPackOptions(),
+            $pepsOptions,
         ];
 
-        return call_user_func_array("array_merge", $globalOptions);
-    }
-
-    /**
-     * @return array
-     */
-    public function getEuOptions()
-    {
-        $euOptions = $this->productOptions->getProductoptions(['group' => 'eu_options']) ?: [];
-
-        return $euOptions;
-    }
-
-    /**
-     * @return array
-     */
-    public function getEpsOptions()
-    {
-        $epsOptions = $this->productOptions->getProductoptions(
-            ['isEvening' => false, 'countryLimitation' => false, 'group' => 'eu_options']
-        ) ?: [];
-        return $epsOptions;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPepsOptions()
-    {
-        $pepsOptions = [];
-        if ($this->shippingOptions->canUsePepsProducts()) {
-            $pepsOptions = $this->productOptions->getProductoptions(['group' => 'peps_options']);
-        }
-        return $pepsOptions;
-    }
-
-    /**
-     * @return array
-     */
-    public function getEpsBusinessOptions()
-    {
-        $epsBusinessOptions = [];
-        if ($this->shippingOptions->canUseEpsBusinessProducts()) {
-            $epsBusinessOptions = $this->productOptions->getProductoptions(
-                [
-                    'isEvening' => false,
-                    'group' => 'eps_package_options'
-                ]
-            );
-        }
-        return $epsBusinessOptions;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCargoOptions()
-    {
-        $cargoProducts = [];
-        if ($this->shippingOptions->canUseCargoProducts()) {
-            $cargoProducts = $this->productOptions->getProductoptions(
-                ['countryLimitation' => 'BE', 'group' => 'cargo_options']
-            );
-        }
-        return $cargoProducts;
+        return call_user_func_array("array_merge", $globalProducts);
     }
 
     /**
