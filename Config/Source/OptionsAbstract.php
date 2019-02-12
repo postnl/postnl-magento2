@@ -680,7 +680,7 @@ abstract class OptionsAbstract
     /**
      * Property for filterd product options matched by account type and flags.
      */
-    private $filterdOptions;
+    private $filteredOptions;
 
     /**
      * Group options by group types
@@ -703,7 +703,7 @@ abstract class OptionsAbstract
     public function getProductoptions($flags = false)
     {
         if (false !== $flags && is_array($flags)) {
-            $this->setFilterdOptions($flags);
+            $this->setFilteredOptions($flags);
         }
 
         return $this->getOptionArrayUsableForConfiguration();
@@ -714,9 +714,9 @@ abstract class OptionsAbstract
      *
      * @codingStandardsIgnoreLine
      */
-    public function setFilterdOptions($flags)
+    public function setFilteredOptions($flags)
     {
-        $this->filterdOptions = [];
+        $this->filteredOptions = [];
 
         // Filter availableOptions on flags
         foreach ($this->availableOptions as $key => $option) {
@@ -743,7 +743,7 @@ abstract class OptionsAbstract
         }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
         if (count($filterFlags) == count($flags)) {
-            $this->filterdOptions[$productCode] = $this->availableOptions[$productCode];
+            $this->filteredOptions[$productCode] = $this->availableOptions[$productCode];
         }
     }
 
@@ -763,7 +763,7 @@ abstract class OptionsAbstract
             }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
             if (count($filterFlags) == count($flags)) {
-                $this->filterdOptions[$productCode] = $this->availableOptions[$productCode];
+                $this->filteredOptions[$productCode] = $this->availableOptions[$productCode];
             }
         }
     }
@@ -773,13 +773,13 @@ abstract class OptionsAbstract
      */
     public function getOptionArrayUsableForConfiguration()
     {
-        if (count($this->filterdOptions) == 0) {
+        if (count($this->filteredOptions) == 0) {
             // @codingStandardsIgnoreLine
             return [['value' => 0, 'label' => __('There are no available options')]];
         }
 
         $options = [];
-        foreach ($this->filterdOptions as $key => $option) {
+        foreach ($this->filteredOptions as $key => $option) {
             // @codingStandardsIgnoreLine
             $options[] = ['value' => $option['value'], 'label' => __($option['label'])];
         }
