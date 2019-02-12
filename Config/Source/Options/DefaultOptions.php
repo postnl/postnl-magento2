@@ -34,6 +34,11 @@ namespace TIG\PostNL\Config\Source\Options;
 use Magento\Framework\Option\ArrayInterface;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
+/**
+ * @todo we need to move the getOption-methods to the ProductOptions class without
+ *      creating a circular dependency. For now we allow CS to ignore this file.
+ */
+// @codingStandardsIgnoreFile
 class DefaultOptions implements ArrayInterface
 {
     /**
@@ -87,22 +92,14 @@ class DefaultOptions implements ArrayInterface
      */
     public function getBeProducts()
     {
-        $epsBusinessOptions = [];
-        if ($this->shippingOptions->canUseEpsBusinessProducts()) {
-            $epsBusinessOptions = $this->productOptions->getProductoptions(
-                ['isEvening' => false, 'group' => 'eps_package_options']
-            );
-        }
+        $beProducts = [
+            $this->getEuOptions(),
+            $this->getEpsBusinessOptions(),
+            $this->getPepsOptions(),
+            $this->getCargoOptions()
+        ];
 
-        $cargoProducts = [];
-        if ($this->shippingOptions->canUseCargoProducts()) {
-            $cargoProducts = $this->productOptions->getProductoptions(
-                ['countryLimitation' => 'BE', 'group' => 'cargo_options']
-            );
-        }
-
-        $epsBusinessOptions = array_merge($epsBusinessOptions, $cargoProducts);
-        return array_merge($this->productOptions->getProductoptions(['group' => 'eu_options']), $epsBusinessOptions);
+        return call_user_func_array("array_merge", $beProducts);
     }
 
     /**
@@ -110,23 +107,13 @@ class DefaultOptions implements ArrayInterface
      */
     public function getEpsProducts()
     {
-        $epsOptions = $this->productOptions->getProductoptions(
-            ['isEvening' => false, 'countryLimitation' => false, 'group' => 'eu_options']
-        );
+        $epsProducts = [
+            $this->getEpsOptions(),
+            $this->getPepsOptions(),
+            $this->getEpsBusinessOptions()
+        ];
 
-        if ($this->shippingOptions->canUsePepsProducts()) {
-            $pepsOptions = $this->productOptions->getProductoptions(['group' => 'peps_options']);
-            $epsOptions = array_merge($epsOptions, $pepsOptions);
-        }
-
-        if ($this->shippingOptions->canUseEpsBusinessProducts()) {
-            $epsBusinessOptions = $this->productOptions->getProductoptions(
-                ['isEvening' => false, 'countryLimitation' => false, 'group' => 'eps_package_options']
-            );
-            $epsOptions = array_merge($epsOptions, $epsBusinessOptions);
-        }
-
-        return $epsOptions;
+        return call_user_func_array("array_merge", $epsProducts);
     }
 
     /**
@@ -134,13 +121,76 @@ class DefaultOptions implements ArrayInterface
      */
     public function getGlobalProducts()
     {
-        $globalOptions = $this->productOptions->getProductoptions(['group' => 'global_options']);
+        $globalOptions = [
+            $this->productOptions->getProductoptions(['group' => 'global_options']),
+            $this->getPepsOptions(),
+        ];
+
+        return call_user_func_array("array_merge" ,$globalOptions);
+    }
+
+    /**
+     * @return array
+     */
+    public function getEuOptions()
+    {
+        $euOptions = $this->productOptions->getProductoptions(['group' => 'eu_options']) ?: [];
+
+        return $euOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEpsOptions()
+    {
+        $epsOptions = $this->productOptions->getProductoptions(
+            ['isEvening' => false, 'countryLimitation' => false, 'group' => 'eu_options']
+        ) ?: [];
+        return $epsOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPepsOptions()
+    {
+        $pepsOptions = [];
         if ($this->shippingOptions->canUsePepsProducts()) {
             $pepsOptions = $this->productOptions->getProductoptions(['group' => 'peps_options']);
-            $globalOptions = array_merge($globalOptions, $pepsOptions);
         }
+        return $pepsOptions;
+    }
 
-        return $globalOptions;
+    /**
+     * @return array
+     */
+    public function getEpsBusinessOptions()
+    {
+        $epsBusinessOptions = [];
+        if ($this->shippingOptions->canUseEpsBusinessProducts()) {
+            $epsBusinessOptions = $this->productOptions->getProductoptions(
+                [
+                    'isEvening' => false,
+                    'group' => 'eps_package_options'
+                ]
+            );
+        }
+        return $epsBusinessOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCargoOptions()
+    {
+        $cargoProducts = [];
+        if ($this->shippingOptions->canUseCargoProducts()) {
+            $cargoProducts = $this->productOptions->getProductoptions(
+                ['countryLimitation' => 'BE', 'group' => 'cargo_options']
+            );
+        }
+        return $cargoProducts;
     }
 
     /**
