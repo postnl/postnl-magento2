@@ -32,11 +32,13 @@ define([
     'ko',
     'Magento_Checkout/js/model/quote',
     'jquery',
+    'uiRegistry',
     'Magento_Customer/js/model/customer'
 ], function (
     ko,
     quote,
     $,
+    registry,
     customer
 ) {
     'use strict';
@@ -118,37 +120,65 @@ define([
             }
         });
 
-        if (!allFieldsExists) {
+        var hasPostcodeNLFields = $("input[name*='postcodenl']").length;
+
+        if (!allFieldsExists && !hasPostcodeNLFields) {
             return null;
         }
 
-        /**
-         * Unfortunately Magento does not always fill all fields, so get them ourselves.
-         */
-        address.street = {
-            0 : $("input[name*='street[0]']").val(),
-            1 : $("input[name*='street[1]']").val()
-        };
+        if (hasPostcodeNLFields) {
+            if (!$("#shipping-postcodenl-house").val() || !$("shipping-postcodenl-postcode").val()) {
+                return null;
+            }
 
-        if (housenumber !== undefined) {
-            address.housenumber = housenumber;
-        }
+            address.street = {
+                0 : registry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.0').get('value'),
+                1 : registry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.1').get('value')
+            };
 
-        address.postcode   = $("input[name*='postcode']").val();
-        address.firstname  = $("input[name*='firstname']").val();
-        address.lastname   = $("input[name*='lastname']").val();
-        address.telephone  = $("input[name*='telephone']").val();
+            address.postcode   = registry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode').get('value');
+            address.firstname  = $("input[name*='firstname']").val();
+            address.lastname   = $("input[name*='lastname']").val();
+            address.telephone  = $("input[name*='telephone']").val();
 
-        if (!address.country || address.country !== countryCode) {
-            address.country = $("select[name*='country_id']").val();
-        }
+            if (!address.country || address.country !== countryCode) {
+                address.country = registry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.country_id').get('value');
+            }
 
-        if (!address.country || !address.postcode || !address.street[0]) {
-            return false;
+            if (!address.country || !address.postcode || !address.street[0]) {
+                return false;
+            }
+
+        } else {
+            /**
+             * Unfortunately Magento does not always fill all fields, so get them ourselves.
+             */
+            address.street = {
+                0 : $("input[name*='street[0]']").val(),
+                1 : $("input[name*='street[1]']").val()
+            };
+
+            if (housenumber !== undefined) {
+                address.housenumber = housenumber;
+            }
+
+            address.postcode   = $("input[name*='postcode']").val();
+            address.firstname  = $("input[name*='firstname']").val();
+            address.lastname   = $("input[name*='lastname']").val();
+            address.telephone  = $("input[name*='telephone']").val();
+
+            if (!address.country || address.country !== countryCode) {
+                address.country = $("select[name*='country_id']").val();
+            }
+
+            if (!address.country || !address.postcode || !address.street[0]) {
+                return false;
+            }
+
+
         }
 
         return address;
-
 
     }.bind(this));
 });
