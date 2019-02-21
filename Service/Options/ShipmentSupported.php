@@ -119,7 +119,7 @@ class ShipmentSupported
     {
         $options = $this->productOptions->get();
         return array_filter($options, function ($value) use ($country) {
-            return (!$value['countryLimitation'] || $value['countryLimitation'] == $country);
+            return ($value['countryLimitation'] == $country);
         });
     }
 }
