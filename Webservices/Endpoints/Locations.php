@@ -139,7 +139,7 @@ class Locations extends AbstractEndpoint
             return $startDate;
         }
 
-        return $this->postNLhelper->getTommorowsDate();
+        return $this->postNLhelper->getTomorrowsDate();
     }
 
     /**
