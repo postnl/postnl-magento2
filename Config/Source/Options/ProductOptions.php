@@ -160,7 +160,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         if ($address && $address->getCountryId() === 'ES' && $this->canaryConverter->isCanaryIsland($address)) {
             return $this->getGlobalPackOptions();
         }
-        return $this->getProductoptions(['group' => 'eu_options']);
+        return $this->getProductoptions(['isEvening' => false, 'countryLimitation' => false, 'group' => 'eu_options']);
     }
 
     /**
