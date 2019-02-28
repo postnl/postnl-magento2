@@ -201,7 +201,7 @@ class ProductCodeTest extends TestCase
         $this->productOptionsMock->method('getAlternativeDefaultMinAmount')->willReturn($alternativeMinAmount);
 
         $instance = $this->getInstance();
-        $this->invokeArgs('getDefaultProductOption', ['country' => 'NL'], $instance);
+        $this->invokeArgs('setDefaultProductOption', ['country' => 'NL'], $instance);
 
         $resultCode = $this->getProperty('code', $instance);
         $resultType = $this->getProperty('type', $instance);
