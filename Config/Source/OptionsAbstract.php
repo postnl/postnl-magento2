@@ -188,6 +188,7 @@ abstract class OptionsAbstract
         '4952' => [
             'value'                => '4952',
             'label'                => 'EU Pack Special Consumer',
+            'isDefault'            => 1,
             'isEvening'            => false,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -239,6 +240,7 @@ abstract class OptionsAbstract
         '4945' => [
             'value'                => '4945',
             'label'                => 'GlobalPack',
+            'isDefault'            => 1,
             'isEvening'            => false,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -648,7 +650,7 @@ abstract class OptionsAbstract
         'id_check_pakjegemak_options'   => 'ID Check Post Office options',
         'cargo_options'                 => 'Cargo options',
         'eps_package_options'           => 'Package options',
-        'peps_options'                 => 'Priority EPS'
+        'peps_options'                  => 'Priority EPS'
     ];
 
     protected $groupToLabel = [
@@ -662,7 +664,7 @@ abstract class OptionsAbstract
         'id_check_pakjegemak_options'   => 'ID Check Post Office',
         'cargo_options'                 => 'Cargo',
         'eps_package_options'           => 'Package',
-        'peps_options'                 => 'Priority (EPS / Globalpack)'
+        'peps_options'                  => 'Priority (EPS / Globalpack)'
     ];
 
     protected $typeToComment = [
@@ -678,7 +680,7 @@ abstract class OptionsAbstract
     ];
 
     /**
-     * Property for filterd product options matched by account type and flags.
+     * Property for filtered product options matched by account type and flags.
      */
     private $filteredOptions;
 
@@ -700,7 +702,7 @@ abstract class OptionsAbstract
      *
      * @return array $availableOptions
      */
-    public function getProductoptions($flags = false)
+    public function getProductOptions($flags = false)
     {
         if (false !== $flags && is_array($flags)) {
             $this->setFilteredOptions($flags);

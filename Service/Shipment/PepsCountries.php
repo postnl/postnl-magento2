@@ -36,11 +36,8 @@ class PepsCountries
     /**
      * PEPS uses his own EPS and Globalpack countries. Which is different than
      * \TIG\PostNL\Service\Shipment\EpsCountries
-     *
-     * @codingStandardsIgnoreStart
-     * @todo : If the country code is not in one of the arrays PEPS should / can not be used ?
-     * @todo: remove todo.
-     * @codingStandardsIgnoreEnd
+     * If country does not exist in both arrays a fallback to Regular Globalpack
+     * is provided.
      *
      * https://jira.tig.nl/browse/POSTNLM2-741
      */
