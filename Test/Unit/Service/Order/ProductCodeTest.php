@@ -44,7 +44,7 @@ class ProductCodeTest extends TestCase
 {
     const PRODUCT_OPTION_DEFAULT = 'default_product_option';
     const PRODUCT_OPTION_BE_DEFAULT = 'default_be_product_option';
-    const PRODUCT_OPTION_EPS_DEFAULT = 'default_eps_product_option';
+    const PRODUCT_OPTION_EPS_DEFAULT = '4952';
     const PRODUCT_OPTION_ALTERNATIVE_DEFAULT = 'alternative_default_product_option';
     const PRODUCT_OPTION_EVENING = 'evening_product_option';
     const PRODUCT_OPTION_EXTRAATHOME = 'extraathome_product_option';
