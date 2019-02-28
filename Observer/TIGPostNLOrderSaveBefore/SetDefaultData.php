@@ -34,7 +34,7 @@ namespace TIG\PostNL\Observer\TIGPostNLOrderSaveBefore;
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Service\Order\ShipAt;
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Order\FirstDeliveryDate;
 use TIG\PostNL\Service\Options\ItemsToOption;
 use TIG\PostNL\Service\Order\MagentoOrder;
@@ -46,9 +46,9 @@ use TIG\PostNL\Service\Quote\ShippingDuration;
 class SetDefaultData implements ObserverInterface
 {
     /**
-     * @var ProductCodeAndType
+     * @var ProductInfo
      */
-    private $productCodeAndType;
+    private $productInfo;
 
     /**
      * @var FirstDeliveryDate
@@ -84,22 +84,22 @@ class SetDefaultData implements ObserverInterface
      * @var array
      */
     private $shouldUpdateByOption = [
-        ProductCodeAndType::OPTION_EXTRAATHOME
+        ProductInfo::OPTION_EXTRAATHOME
     ];
 
     /**
      * SetDefaultData constructor.
      *
-     * @param ProductCodeAndType $productCodeAndType
-     * @param FirstDeliveryDate  $firstDeliveryDate
-     * @param ShipAt             $shipAt
-     * @param Log                $log
-     * @param ItemsToOption      $itemsToOption
-     * @param MagentoOrder       $magentoOrder
-     * @param ShippingDuration   $shippingDuration
+     * @param ProductInfo       $productInfo
+     * @param FirstDeliveryDate $firstDeliveryDate
+     * @param ShipAt            $shipAt
+     * @param Log               $log
+     * @param ItemsToOption     $itemsToOption
+     * @param MagentoOrder      $magentoOrder
+     * @param ShippingDuration  $shippingDuration
      */
     public function __construct(
-        ProductCodeAndType $productCodeAndType,
+        ProductInfo $productInfo,
         FirstDeliveryDate $firstDeliveryDate,
         ShipAt $shipAt,
         Log $log,
@@ -107,13 +107,13 @@ class SetDefaultData implements ObserverInterface
         MagentoOrder $magentoOrder,
         ShippingDuration $shippingDuration
     ) {
-        $this->productCodeAndType = $productCodeAndType;
-        $this->firstDeliveryDate  = $firstDeliveryDate;
-        $this->shipAt             = $shipAt;
-        $this->log                = $log;
-        $this->itemsToOption      = $itemsToOption;
-        $this->magentoOrder       = $magentoOrder;
-        $this->shippingDuration   = $shippingDuration;
+        $this->productInfo       = $productInfo;
+        $this->firstDeliveryDate = $firstDeliveryDate;
+        $this->shipAt            = $shipAt;
+        $this->log               = $log;
+        $this->itemsToOption     = $itemsToOption;
+        $this->magentoOrder      = $magentoOrder;
+        $this->shippingDuration  = $shippingDuration;
     }
 
     /**
@@ -132,15 +132,17 @@ class SetDefaultData implements ObserverInterface
             $this->log->critical($exception->getTraceAsString());
         }
     }
-
-    /**
-     * @param $order
-     */
+	
+	/**
+	 * @param \TIG\PostNL\Api\Data\OrderInterface $order
+	 *
+	 * @throws \Magento\Framework\Exception\NoSuchEntityException
+	 */
     private function setData(OrderInterface $order)
     {
         $option      = $this->getOptionFromQuote();
         $address     = $this->checkByAddressData($order);
-        $productInfo = $this->productCodeAndType->get('', $option, $address);
+        $productInfo = $this->productInfo->get('', $option, $address);
         $duration    = $this->shippingDuration->get();
 
         if (!$order->getProductCode() || $this->canUpdate($order->getProductCode(), $productInfo['code'], $option)) {

@@ -33,7 +33,7 @@ namespace TIG\PostNL\Test\Unit\Service\Order;
 
 use Magento\Quote\Model\Quote;
 use TIG\PostNL\Config\Provider\ProductOptions;
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Test\TestCase;
 
@@ -62,7 +62,7 @@ class ProductCodeTest extends TestCase
      */
     private $quoteInterfaceMock;
 
-    public $instanceClass = ProductCodeAndType::class;
+    public $instanceClass = ProductInfo::class;
 
     public function setUp()
     {

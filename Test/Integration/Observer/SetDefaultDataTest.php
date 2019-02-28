@@ -38,7 +38,7 @@ use TIG\PostNL\Observer\TIGPostNLOrderSaveBefore\SetDefaultData;
 use TIG\PostNL\Webservices\Endpoints\SentDate;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Service\Options\ItemsToOption;
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 use Magento\Framework\Event\Observer;
 use TIG\PostNL\Service\Order\MagentoOrder;
 use TIG\PostNL\Service\Quote\ShippingDuration;
@@ -71,9 +71,9 @@ class SetDefaultDataTest extends TestCase
         $itemsToOptions->disableOriginalConstructor();
         $itemsToOptions = $itemsToOptions->getMock();
 
-        $productCodeAndType = $this->getMockBuilder(ProductCodeAndType::class);
-        $productCodeAndType->disableOriginalConstructor();
-        $productCodeAndType = $productCodeAndType->getMock();
+        $productInfo = $this->getMockBuilder(ProductInfo::class);
+        $productInfo->disableOriginalConstructor();
+        $productInfo = $productInfo->getMock();
 
         $magentoOrderService = $this->getMockBuilder(MagentoOrder::class);
         $magentoOrderService->disableOriginalConstructor();
@@ -85,9 +85,9 @@ class SetDefaultDataTest extends TestCase
 
         $this->objectManager->configure([
             'preferences' => [
-                ProductCodeAndType::class => get_class($productCodeAndType),
-                ItemsToOption::class => get_class($itemsToOptions),
-                MagentoOrder::class => get_class($magentoOrderService),
+                ProductInfo::class      => get_class($productInfo),
+                ItemsToOption::class    => get_class($itemsToOptions),
+                MagentoOrder::class     => get_class($magentoOrderService),
                 ShippingDuration::class => get_class($shippingDuration)
             ],
         ]);
@@ -102,11 +102,11 @@ class SetDefaultDataTest extends TestCase
         $magentoServiceGetAddress->method('getShippingAddress')->willReturn($address);
 
         $getFromQuote = $this->objectManager->get(ItemsToOption::class);
-        $getFromQuote->method('getFromQuote')->willReturn(ProductCodeAndType::OPTION_EXTRAATHOME);
+        $getFromQuote->method('getFromQuote')->willReturn(ProductInfo::OPTION_EXTRAATHOME);
 
-        $getProductInfo = $this->objectManager->get(ProductCodeAndType::class);
+        $getProductInfo = $this->objectManager->get(ProductInfo::class);
         $getProductInfo->method('get')->willReturn([
-            'type' => ProductCodeAndType::SHIPMENT_TYPE_EXTRAATHOME,
+            'type' => ProductInfo::SHIPMENT_TYPE_EXTRAATHOME,
             'code' => 3085
         ]);
 
@@ -123,7 +123,7 @@ class SetDefaultDataTest extends TestCase
         $this->getInstance()->execute($observer);
 
         $this->assertEquals(3085, $postNLOrder->getProductCode());
-        $this->assertEquals(ProductCodeAndType::SHIPMENT_TYPE_EXTRAATHOME, $postNLOrder->getType());
+        $this->assertEquals(ProductInfo::SHIPMENT_TYPE_EXTRAATHOME, $postNLOrder->getType());
     }
 
     /**
@@ -138,7 +138,7 @@ class SetDefaultDataTest extends TestCase
         if (!$postNLOrder) {
             $postNLOrder = $orderRepository->create();
             $postNLOrder->setProductCode(3085);
-            $postNLOrder->setType(ProductCodeAndType::SHIPMENT_TYPE_DAYTIME);
+            $postNLOrder->setType(ProductInfo::SHIPMENT_TYPE_DAYTIME);
         }
 
         $postNLOrder->setDeliveryDate('2017-11-06 01:00:00');
