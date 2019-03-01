@@ -33,7 +33,7 @@ namespace TIG\PostNL\Test\Unit\Service\Order;
 
 use Magento\Quote\Model\Quote;
 use TIG\PostNL\Config\Provider\ProductOptions;
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Test\TestCase;
 
@@ -44,7 +44,7 @@ class ProductCodeTest extends TestCase
 {
     const PRODUCT_OPTION_DEFAULT = 'default_product_option';
     const PRODUCT_OPTION_BE_DEFAULT = 'default_be_product_option';
-    const PRODUCT_OPTION_EPS_DEFAULT = 'default_eps_product_option';
+    const PRODUCT_OPTION_EPS_DEFAULT = '4952';
     const PRODUCT_OPTION_ALTERNATIVE_DEFAULT = 'alternative_default_product_option';
     const PRODUCT_OPTION_EVENING = 'evening_product_option';
     const PRODUCT_OPTION_EXTRAATHOME = 'extraathome_product_option';
@@ -62,7 +62,7 @@ class ProductCodeTest extends TestCase
      */
     private $quoteInterfaceMock;
 
-    public $instanceClass = ProductCodeAndType::class;
+    public $instanceClass = ProductInfo::class;
 
     public function setUp()
     {
@@ -201,7 +201,7 @@ class ProductCodeTest extends TestCase
         $this->productOptionsMock->method('getAlternativeDefaultMinAmount')->willReturn($alternativeMinAmount);
 
         $instance = $this->getInstance();
-        $this->invokeArgs('getDefaultProductOption', ['country' => 'NL'], $instance);
+        $this->invokeArgs('setDefaultProductOption', ['country' => 'NL'], $instance);
 
         $resultCode = $this->getProperty('code', $instance);
         $resultType = $this->getProperty('type', $instance);

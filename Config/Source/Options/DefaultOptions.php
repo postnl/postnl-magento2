@@ -84,7 +84,7 @@ class DefaultOptions implements ArrayInterface
             $flags['groups'][] = ['group' => 'eps_package_options'];
         }
 
-        return $this->productOptions->getProductoptions($flags);
+        return $this->productOptions->getProductOptions($flags);
     }
 
     /**
@@ -161,12 +161,12 @@ class DefaultOptions implements ArrayInterface
      */
     public function getEveningOptions($country = 'NL')
     {
-        $options = $this->productOptions->getProductoptions(['isEvening' => true, 'countryLimitation' => $country]);
+        $options = $this->productOptions->getProductOptions(['isEvening' => true, 'countryLimitation' => $country]);
         if ($this->shippingOptions->isIDCheckActive()) {
             return $options;
         }
 
-        $idOptions = $this->productOptions->getProductoptions(
+        $idOptions = $this->productOptions->getProductOptions(
             ['group' => 'id_check_options', 'countryLimitation' => $country]
         );
 

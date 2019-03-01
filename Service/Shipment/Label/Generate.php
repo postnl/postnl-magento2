@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Service\Shipment\Label;
 
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 
 class Generate
@@ -92,7 +92,7 @@ class Generate
     {
         $otherLabels = array_filter($labels, function ($label) {
             /** @var ShipmentLabelInterface $label */
-            if (strtoupper($label->getType()) == ProductCodeAndType::SHIPMENT_TYPE_GP) {
+            if (strtoupper($label->getType()) == ProductInfo::SHIPMENT_TYPE_GP) {
                 $this->globalPackLabels[] = $label;
                 return false;
             }
