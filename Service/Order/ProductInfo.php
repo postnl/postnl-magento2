@@ -192,9 +192,10 @@ class ProductInfo {
 		$this->type = static::SHIPMENT_TYPE_EPS;
 		
 		// Force type Global Pack (mainly used for Canary Islands)
-		$options     = $this->productOptionsFinder->getEpsProductOptions($address);
-		$firstOption = array_shift($options);
-		if (in_array('4945', $firstOption)) {
+		$options          = $this->productOptionsFinder->getEpsProductOptions($address);
+		$firstOption      = array_shift($options);
+		$globalPackOption = $this->productOptionsFinder->getDefaultGPOption()['value'];
+		if (in_array($globalPackOption, $firstOption)) {
 			$this->setGlobalPackOption();
 			
 			return;
