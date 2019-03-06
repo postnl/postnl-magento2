@@ -150,7 +150,7 @@ class AddressEnhancer
         }
 
         $address['housenumberExtension'] = '';
-        if ($result['addition']) {
+        if (isset($result['addition']) && $result['addition']) {
             $address['housenumberExtension'] = trim($result['addition']);
         }
 
