@@ -22,6 +22,12 @@ Issues with outdated version will be rejected.
 
 ---
 
+### If your issue contains security sensitive information
+** If your issue may contain sensitive information, please send us an e-mail at security@tig.nl.**
+- [ ] This issue does not contain any security sensitive information
+
+---
+
 ### If the purpose of your issue is a *feature request*
 - As a *..certain type of user..* I’d like to *..describe what you want..* in order to *..write goal(s)..*
 - Suggestions and background: 
