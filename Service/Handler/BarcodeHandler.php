@@ -179,6 +179,8 @@ class BarcodeHandler
     {
         if ($this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'peps_options')) {
             $this->barcodeEndpoint->setType('PEPS');
+            
+            return;
         }
 
         $this->barcodeEndpoint->setType('');
