@@ -142,10 +142,8 @@ class Validator
         }
 
         if ($isPeps && $shipment->getParcelCount() < 5) {
-            $magentoShipment = $shipment->getShipment();
             // @codingStandardsIgnoreLine
-            $this->errors[] = __('Could not print labels for shipment %1. Priority Delivery requires a minimum of parcels/colli.', $magentoShipment->getIncrementId());
-            return false;
+            $this->errors[] = __('A Priority Delivery requires a minimum of 5 parcels/packages.');
         }
 
         return true;
