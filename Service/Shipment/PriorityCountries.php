@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Service\Shipment;
 
-class PepsCountries
+class PriorityCountries
 {
     /**
      * PEPS uses his own EPS and Globalpack countries. Which is different than
@@ -68,9 +68,12 @@ class PepsCountries
     ];
 
     // NOT ROW
+	/**
+	 * Belgium does't have to be enlisted in priority, because regular EPS
+	 * can already deliver to BE in one day.
+	 */
     const EPS = [
         'AT',
-        'BE',
         'CY',
         'DE',
         'DK',
