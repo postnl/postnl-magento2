@@ -189,7 +189,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getPriorityOptions()
     {
-        $priorityOptions = $this->getProductOptions(['group' => 'peps_options']);
+        $priorityOptions = $this->getProductOptions(['group' => 'priority_options']);
 
         return $priorityOptions;
     }

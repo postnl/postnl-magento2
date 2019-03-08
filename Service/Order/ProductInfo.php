@@ -219,7 +219,7 @@ class ProductInfo {
 	 * @return bool|null
 	 */
 	private function isPriorityProduct($code) {
-		return $this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'peps_options');
+		return $this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'priority_options');
 	}
 	
 	/**
