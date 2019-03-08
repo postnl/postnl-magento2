@@ -98,7 +98,7 @@ class ShipmentSupported
         return $availableOptions;
     }
     
-    // phpcs:disable
+    // @codingStandardsIgnoreStart
     private function getProductOptionsByCountry($country)
     {
         $options = [];
@@ -122,7 +122,8 @@ class ShipmentSupported
         
         return $options;
     }
-    // phpcs:enable
+    // @codingStandardsIgnoreEnd
+    
     
     /**
      * @param $country
