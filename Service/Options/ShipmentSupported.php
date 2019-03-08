@@ -101,21 +101,20 @@ class ShipmentSupported
     // @codingStandardsIgnoreStart
     private function getProductOptionsByCountry($country)
     {
-        $options = [];
         if (in_array($country, $this->allowedCountries)) {
-            $options[] = array_merge($options, $this->getProductOptions($country));
+            $options[] = $this->getProductOptions($country);
         }
         
         if (in_array($country, EpsCountries::ALL)) {
-            $options[] = array_merge($options, $this->productOptions->getEpsProductOptions());
+            $options[] = $this->productOptions->getEpsProductOptions();
         }
         
         if (in_array($country, array_merge(PriorityCountries::GLOBALPACK, PriorityCountries::EPS))) {
-            $options[] = array_merge($options, $this->productOptions->getPriorityOptions());
+            $options[] = $this->productOptions->getPriorityOptions();
         }
         
         if (!in_array($country, EpsCountries::ALL)) {
-            $options[] = array_merge($options, $this->productOptions->getGlobalPackOptions());
+            $options[] = $this->productOptions->getGlobalPackOptions();
         }
         
         $options = call_user_func_array("array_merge", $options);
