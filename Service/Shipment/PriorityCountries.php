@@ -32,7 +32,8 @@
 
 namespace TIG\PostNL\Service\Shipment;
 
-class PriorityCountries {
+class PriorityCountries
+{
     /**
      * PEPS uses his own EPS and Globalpack countries. Which is different than
      * \TIG\PostNL\Service\Shipment\EpsCountries

@@ -37,7 +37,8 @@ use TIG\PostNL\Config\Provider\ProductOptions as OptionsProvider;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipment\PriorityCountries;
 
-class ShipmentSupported {
+class ShipmentSupported
+{
     /**
      * @var ProductOptions
      */
@@ -66,7 +67,8 @@ class ShipmentSupported {
      *
      * @return array
      */
-    public function get($order) {
+    public function get($order)
+    {
         $address = $order->getShippingAddress();
         
         return $this->availableOptions($address->getCountryId());
@@ -77,14 +79,14 @@ class ShipmentSupported {
      *
      * @return array
      */
-    private function availableOptions($country) {
+    private function availableOptions($country)
+    {
         // These are the options selected in the configuration by user.
         $supportedOptions = $this->optionsProvider->getSupportedProductOptions();
         
         $optionsAllowed = $this->getProductOptionsByCountry($country);
         
-        $availableOptions = array_filter($supportedOptions, function ($value) use ($optionsAllowed)
-        {
+        $availableOptions = array_filter($supportedOptions, function ($value) use ($optionsAllowed) {
             $available = false;
             foreach ($optionsAllowed as $option) {
                 $available = ($available || (isset($option['value']) && $option['value'] == $value));
@@ -96,7 +98,8 @@ class ShipmentSupported {
         return $availableOptions;
     }
     
-    private function getProductOptionsByCountry($country) {
+    private function getProductOptionsByCountry($country)
+    {
         $options = [];
         if (in_array($country, $this->allowedCountries)) {
             $options[] = array_merge($options, $this->getProductOptions($country));
@@ -113,7 +116,9 @@ class ShipmentSupported {
         if (!in_array($country, EpsCountries::ALL)) {
             $options[] = array_merge($options, $this->productOptions->getGlobalPackOptions());
         }
+        // phpcs:disable
         $options = call_user_func_array("array_merge", $options);
+        // phpcs:enable
         
         return $options;
     }
@@ -123,11 +128,11 @@ class ShipmentSupported {
      *
      * @return array
      */
-    private function getProductOptions($country) {
+    private function getProductOptions($country)
+    {
         $options = $this->productOptions->get();
         
-        return array_filter($options, function ($value) use ($country)
-        {
+        return array_filter($options, function ($value) use ($country) {
             return ($value['countryLimitation'] == $country);
         });
     }
