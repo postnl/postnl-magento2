@@ -98,6 +98,7 @@ class ShipmentSupported
         return $availableOptions;
     }
     
+    // phpcs:disable
     private function getProductOptionsByCountry($country)
     {
         $options = [];
@@ -116,12 +117,12 @@ class ShipmentSupported
         if (!in_array($country, EpsCountries::ALL)) {
             $options[] = array_merge($options, $this->productOptions->getGlobalPackOptions());
         }
-        // phpcs:disable
+        
         $options = call_user_func_array("array_merge", $options);
-        // phpcs:enable
         
         return $options;
     }
+    // phpcs:enable
     
     /**
      * @param $country
