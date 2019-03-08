@@ -34,6 +34,7 @@ namespace TIG\PostNL\Service\Options;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Config\Provider\ProductOptions as OptionsProvider;
 use TIG\PostNL\Service\Shipment\EpsCountries;
+use TIG\PostNL\Service\Shipment\PriorityCountries;
 
 class ShipmentSupported
 {
@@ -96,17 +97,24 @@ class ShipmentSupported
 
     private function getProductOptionsByCountry($country)
     {
+    	$options = [];
         if (in_array($country, $this->allowedCountries)) {
-            $options = $this->getProductOptions($country);
-            return $options;
+            $options[] = array_merge($options, $this->getProductOptions($country));
         }
-
+        
         if (in_array($country, EpsCountries::ALL)) {
-            $options = $this->productOptions->getEpsProductOptions();
-            return $options;
+            $options[] = array_merge($options, $this->productOptions->getEpsProductOptions());
         }
-
-        $options = $this->productOptions->getGlobalPackOptions();
+        
+        if (in_array($country, array_merge(PriorityCountries::GLOBALPACK, PriorityCountries::EPS))) {
+        	$options[] = array_merge($options, $this->productOptions->getPriorityOptions());
+        }
+	    
+        if (!in_array($country, EpsCountries::ALL)) {
+	        $options[] = array_merge($options, $this->productOptions->getGlobalPackOptions());
+        }
+        
+        $options = call_user_func_array("array_merge", $options);
         return $options;
     }
 
