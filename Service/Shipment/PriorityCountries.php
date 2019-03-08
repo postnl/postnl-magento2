@@ -29,10 +29,10 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Service\Shipment;
 
-class PriorityCountries
-{
+class PriorityCountries {
     /**
      * PEPS uses his own EPS and Globalpack countries. Which is different than
      * \TIG\PostNL\Service\Shipment\EpsCountries
@@ -41,7 +41,7 @@ class PriorityCountries
      *
      * https://jira.tig.nl/browse/POSTNLM2-741
      */
-
+    
     // ROW
     const GLOBALPACK = [
         'AU',
@@ -66,12 +66,13 @@ class PriorityCountries
         'TR',
         'US'
     ];
-
+    
     // NOT ROW
-	/**
-	 * Belgium does't have to be enlisted in priority, because regular EPS
-	 * can already deliver to BE in one day.
-	 */
+    
+    /**
+     * Belgium does't have to be enlisted in priority, because regular EPS
+     * can already deliver to BE in one day.
+     */
     const EPS = [
         'AT',
         'CY',
