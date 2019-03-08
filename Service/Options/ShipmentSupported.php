@@ -124,7 +124,6 @@ class ShipmentSupported
     }
     // @codingStandardsIgnoreEnd
     
-    
     /**
      * @param $country
      *
