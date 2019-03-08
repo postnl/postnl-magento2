@@ -92,17 +92,11 @@ class DefaultOptions implements ArrayInterface
      */
     public function getBeProducts()
     {
-        $pepsOptions = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPriorityOptions() : [];
-        $epsBusinessOptions = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
-        $cargoOptions = $this->shippingOptions->canUseCargoProducts() ? $this->productOptions->getCargoOptions() : [];
-
-        $beProducts = [
-            $this->productOptions->getEuOptions(),
-            $pepsOptions,
-            $epsBusinessOptions,
-            $cargoOptions
-        ];
-
+        $beProducts[] = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPriorityOptions() : [];
+        $beProducts[] = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
+        $beProducts[] = $this->shippingOptions->canUseCargoProducts() ? $this->productOptions->getCargoOptions() : [];
+        $beProducts[] = $this->productOptions->getEuOptions();
+        
         return call_user_func_array("array_merge", $beProducts);
     }
 
@@ -111,29 +105,20 @@ class DefaultOptions implements ArrayInterface
      */
     public function getEpsProducts()
     {
-        $pepsOptions = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPriorityOptions() : [];
-        $epsBusinessOptions = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
-
-        $epsProducts = [
-            $this->productOptions->getEpsOptions(),
-            $pepsOptions,
-            $epsBusinessOptions
-        ];
-
+        $epsProducts[] = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPriorityOptions() : [];
+        $epsProducts[] = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
+        $epsProducts[] = $this->productOptions->getEpsOptions();
+        
         return call_user_func_array("array_merge", $epsProducts);
     }
-
+    
     /**
      * @return array
      */
     public function getGlobalProducts()
     {
-        $pepsOptions = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPriorityOptions() : [];
-
-        $globalProducts = [
-            $this->productOptions->getGlobalPackOptions(),
-            $pepsOptions,
-        ];
+        $globalProducts[] = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPriorityOptions() : [];
+        $globalProducts[] = $this->productOptions->getGlobalPackOptions();
 
         return call_user_func_array("array_merge", $globalProducts);
     }
