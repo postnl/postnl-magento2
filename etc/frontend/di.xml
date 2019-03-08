@@ -67,8 +67,7 @@
             <argument name="dayFilters" xsi:type="array">
                 <item name="sunday" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\Sunday</item>
                 <item name="sameday" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\SameDay</item>
-                <!-- deprecated since 1.4.2-->
-                <!--<item name="shipmentdays" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\ShipmentDays</item>-->
+                <item name="shipmentdays" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\ShipmentDays</item>
                 <item name="cutoff" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\CutOffTimes</item>
             </argument>
             <argument name="optionsFilters" xsi:type="array">
