@@ -92,7 +92,7 @@ class DefaultOptions implements ArrayInterface
      */
     public function getBeProducts()
     {
-        $pepsOptions = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPepsOptions() : [];
+        $pepsOptions = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPriorityOptions() : [];
         $epsBusinessOptions = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
         $cargoOptions = $this->shippingOptions->canUseCargoProducts() ? $this->productOptions->getCargoOptions() : [];
 
@@ -111,7 +111,7 @@ class DefaultOptions implements ArrayInterface
      */
     public function getEpsProducts()
     {
-        $pepsOptions = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPepsOptions() : [];
+        $pepsOptions = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPriorityOptions() : [];
         $epsBusinessOptions = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
 
         $epsProducts = [
@@ -128,7 +128,7 @@ class DefaultOptions implements ArrayInterface
      */
     public function getGlobalProducts()
     {
-        $pepsOptions = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPepsOptions() : [];
+        $pepsOptions = $this->shippingOptions->canUsePepsProducts() ? $this->productOptions->getPriorityOptions() : [];
 
         $globalProducts = [
             $this->productOptions->getGlobalPackOptions(),
