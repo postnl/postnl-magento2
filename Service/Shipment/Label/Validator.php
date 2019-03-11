@@ -132,7 +132,7 @@ class Validator
     private function validateProductCode(ShipmentInterface $shipment)
     {
         $code = $shipment->getProductCode();
-        $isPeps = $this->productOptions->checkProductByFlags($code, 'group', 'peps_options');
+        $isPeps = $this->productOptions->checkProductByFlags($code, 'group', 'priority_options');
 
         if ($isPeps && !$this->shippingOptions->canUsePepsProducts()) {
             $magentoShipment = $shipment->getShipment();

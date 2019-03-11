@@ -605,7 +605,7 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => false,
-            'group'                => 'peps_options',
+            'group'                => 'priority_options',
         ],
         '6550' => [
             'value'                => '6550',
@@ -615,7 +615,7 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => false,
-            'group'                => 'peps_options',
+            'group'                => 'priority_options',
         ],
         '6940' => [
             'value'                => '6940',
@@ -625,7 +625,7 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => false,
-            'group'                => 'peps_options',
+            'group'                => 'priority_options',
         ],
         '6942' => [
             'value'                => '6942',
@@ -635,36 +635,36 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => false,
-            'group'                => 'peps_options',
+            'group'                => 'priority_options',
         ]
     ];
 
     protected $groups = [
-        'standard_options'              => 'Domestic options',
-        'pakjegemak_options'            => 'Post Office options',
-        'eu_options'                    => 'EU options',
-        'global_options'                => 'Global options',
-        'buspakje_options'              => 'Letter Box Parcel options',
-        'extra_at_home_options'         => 'Extra@Home options',
-        'id_check_options'              => 'ID Check options',
-        'id_check_pakjegemak_options'   => 'ID Check Post Office options',
-        'cargo_options'                 => 'Cargo options',
-        'eps_package_options'           => 'Package options',
-        'peps_options'                  => 'Priority EPS'
+	    'standard_options'            => 'Domestic options',
+	    'pakjegemak_options'          => 'Post Office options',
+	    'eu_options'                  => 'EU options',
+	    'global_options'              => 'Global options',
+	    'buspakje_options'            => 'Letter Box Parcel options',
+	    'extra_at_home_options'       => 'Extra@Home options',
+	    'id_check_options'            => 'ID Check options',
+	    'id_check_pakjegemak_options' => 'ID Check Post Office options',
+	    'cargo_options'               => 'Cargo options',
+	    'eps_package_options'         => 'Package options',
+	    'priority_options'            => 'Priority EPS'
     ];
-
-    protected $groupToLabel = [
-        'standard_options'              => 'Domestic',
-        'pakjegemak_options'            => 'Post Office',
-        'eu_options'                    => 'EPS',
-        'global_options'                => 'Global Pack',
-        'buspakje_options'              => 'Letter Box',
-        'extra_at_home_options'         => 'Extra@Home',
-        'id_check_options'              => 'ID Check',
-        'id_check_pakjegemak_options'   => 'ID Check Post Office',
-        'cargo_options'                 => 'Cargo',
-        'eps_package_options'           => 'Package',
-        'peps_options'                  => 'Priority (EPS / Globalpack)'
+	
+	protected $groupToLabel = [
+		'standard_options'            => 'Domestic',
+		'pakjegemak_options'          => 'Post Office',
+		'eu_options'                  => 'EPS',
+		'global_options'              => 'Global Pack',
+		'buspakje_options'            => 'Letter Box',
+		'extra_at_home_options'       => 'Extra@Home',
+		'id_check_options'            => 'ID Check',
+		'id_check_pakjegemak_options' => 'ID Check Post Office',
+		'cargo_options'               => 'Cargo',
+		'eps_package_options'         => 'Package',
+		'priority_options'            => 'Priority (EPS / Globalpack)'
     ];
 
     protected $typeToComment = [

@@ -177,7 +177,7 @@ class BarcodeHandler
      */
     private function setTypeByProductCode($code)
     {
-        if ($this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'peps_options')) {
+        if ($this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'priority_options')) {
             $this->barcodeEndpoint->setType('PEPS');
             
             return;

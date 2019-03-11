@@ -38,7 +38,7 @@ use Magento\Sales\Model\Order\Address as SalesAddress;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Shipment\EpsCountries;
-use TIG\PostNL\Service\Shipment\PepsCountries;
+use TIG\PostNL\Service\Shipment\PriorityCountries;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 
 // @codingStandardsIgnoreFile
@@ -175,7 +175,7 @@ class ProductInfo {
 		$this->type = static::SHIPMENT_TYPE_GP;
 		$this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
 		
-		if (in_array($country, PepsCountries::GLOBALPACK)
+		if (in_array($country, PriorityCountries::GLOBALPACK)
 		    && $this->isPriorityProduct($this->code)
 		) {
 			return;
@@ -202,7 +202,7 @@ class ProductInfo {
 		}
 		
 		$this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
-		if (in_array($country, PepsCountries::EPS)
+		if (in_array($country, PriorityCountries::EPS)
 		    && $this->isPriorityProduct($this->code)
 		) {
 			return;
@@ -219,7 +219,7 @@ class ProductInfo {
 	 * @return bool|null
 	 */
 	private function isPriorityProduct($code) {
-		return $this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'peps_options');
+		return $this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'priority_options');
 	}
 	
 	/**
