@@ -74,7 +74,6 @@ class EpsCountries
         'FI', // Finland
         'FR', // France (Including orsica. Excluding Andorra)
         'DE', // Germany
-        'GB', // Great Britain (Including Northern Ireland. Excluding Gibraltar and the Channel Islands)
         'GR', // Greece
         'HU', // Hungary
         'IE', // Ireland
