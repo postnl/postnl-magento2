@@ -145,15 +145,15 @@ class View extends MagentoView
     }
 
     /**
-     * Add the PostNL change confirmation button.
+     * Add the PostNL cancel confirmation button.
      */
-    private function setPostNLChangeConfirmButton()
+    private function setPostNLCancelConfirmButton()
     {
         /** @codingStandardsIgnoreStart */
         $this->buttonList->add(
-            'postnl_change_confirm',
+            'postnl_cancel_confirm',
             [
-                'label'   => __('PostNL - Change Confirmation'),
+                'label'   => __('PostNL - Cancel Confirmation'),
                 'class'   => 'delete primary',
                 'onclick' =>
                     'deleteConfirm(\'' . __(
@@ -216,7 +216,7 @@ class View extends MagentoView
         $confirmedAt = $postNLShipment->getConfirmedAt();
         if (!empty($confirmedAt)) {
             $this->buttonList->remove('postnl_print');
-            $this->setPostNLChangeConfirmButton();
+            $this->setPostNLCancelConfirmButton();
         }
 
         if (empty($confirmedAt) && $postNLShipment->getMainBarcode()) {
@@ -274,13 +274,14 @@ class View extends MagentoView
         $postNLShipment = $this->getPostNLShipment();
 
         return $this->getUrl(
-            'postnl/shipment/ChangeConfirmation',
+            'postnl/shipment/CancelConfirmation',
             [
                 'postnl_shipment_id' => $postNLShipment->getId(),
                 'shipment_id'        => $this->getShipment()->getId(),
             ]
         );
     }
+    
     /**
      * @return \TIG\PostNL\Api\Data\ShipmentInterface|null
      */
