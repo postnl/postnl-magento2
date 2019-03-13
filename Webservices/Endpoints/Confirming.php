@@ -60,7 +60,7 @@ class Confirming extends AbstractEndpoint
     /**
      * @var string
      */
-    private $version = 'v1_10';
+    private $version = 'v2';
 
     /**
      * @var string
