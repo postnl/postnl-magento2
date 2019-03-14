@@ -38,7 +38,7 @@ use Magento\Ui\Component\MassAction\Filter;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 
-class MassChangeConfirmation extends Action
+class MassCancelConfirmation extends Action
 {
     /**
      * @var Filter
@@ -77,11 +77,13 @@ class MassChangeConfirmation extends Action
         $this->collectionFactory = $collectionFactory;
         $this->resetService = $resetService;
     }
-
+    
     /**
      * Dispatch request
      *
-     * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Redirect|\Magento\Framework\Controller\ResultInterface
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function execute()
