@@ -49,12 +49,13 @@ abstract class CollectAbstract
 
     /** @var \TIG\PostNL\Config\Provider\ShippingOptions $shippingOptions */
     private $shippingOptions;
-
+    
     /**
      * CollectAbstract constructor.
      *
-     * @param \TIG\PostNL\Service\Options\ProductDictionary $productDictionary
+     * @param \TIG\PostNL\Service\Options\ProductDictionary          $productDictionary
      * @param \TIG\PostNL\Service\Product\CollectionByAttributeValue $collectionByAttributeValue
+     * @param \TIG\PostNL\Config\Provider\ShippingOptions            $shippingOptions
      */
     public function __construct(
         ProductDictionary $productDictionary,
