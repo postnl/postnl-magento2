@@ -71,8 +71,7 @@ abstract class CollectAbstract
      *
      * @return \Magento\Catalog\Api\Data\ProductInterface[]
      */
-    // @codingStandardsIgnoreLine
-    protected function getProductsByType($items)
+    public function getProductsByType($items)
     {
         return $this->productDictionary->get(
             $items,
@@ -85,8 +84,7 @@ abstract class CollectAbstract
      *
      * @return array|\Magento\Catalog\Api\Data\ProductInterface[]
      */
-    // @codingStandardsIgnoreLine
-    protected function getProductsWithoutParcelCount($items)
+    public function getProductsWithoutParcelCount($items)
     {
         return $this->collectionByAttributeValue->getByValue(
             $items,
@@ -100,8 +98,7 @@ abstract class CollectAbstract
      *
      * @return array|\Magento\Catalog\Api\Data\ProductInterface[]
      */
-    // @codingStandardsIgnoreLine
-    protected function getProductsWithParcelCount($items)
+    public function getProductsWithParcelCount($items)
     {
         return $this->collectionByAttributeValue->getByMinValue(
             $items,
@@ -115,8 +112,7 @@ abstract class CollectAbstract
      *
      * @return array|\Magento\Catalog\Api\Data\ProductInterface[]|null
      */
-    // @codingStandardsIgnoreLine
-    protected function getExtraAtHomeProducts($items)
+    public function getExtraAtHomeProducts($items)
     {
         if (!$this->shippingOptions->isExtraAtHomeActive()) {
             return null;
