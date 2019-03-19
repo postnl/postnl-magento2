@@ -42,15 +42,13 @@ abstract class CollectAbstract
     const ATTRIBUTE_PARCEL_COUNT = 'postnl_parcel_count';
 
     /** @var \TIG\PostNL\Service\Options\ProductDictionary $productDictionary */
-    // @codingStandardsIgnoreLine
-    protected $productDictionary;
+    private $productDictionary;
 
     /** @var \TIG\PostNL\Service\Product\CollectionByAttributeValue $collectionByAttributeValue */
-    // @codingStandardsIgnoreLine
-    protected $collectionByAttributeValue;
+    private $collectionByAttributeValue;
 
-    // @codingStandardsIgnoreLine
-    protected $shippingOptions;
+    /** @var \TIG\PostNL\Config\Provider\ShippingOptions $shippingOptions */
+    private $shippingOptions;
 
     /**
      * CollectAbstract constructor.
