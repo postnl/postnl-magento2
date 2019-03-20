@@ -161,7 +161,7 @@ class View extends MagentoView
                         . ' You will need to confirm this shipment with PostNL again before you can send it.'
                         .' This action will remove all barcodes'
                         . ' and labels associated with this shipment. You can not undo this action.'
-                    ) . '\', \'' . $this->getAlterUrl() . '\')'
+                    ) . '\', \'' . $this->getCancelConfirmationUrl() . '\')'
             ]
         );
         /** @codingStandardsIgnoreEnd */
@@ -268,7 +268,7 @@ class View extends MagentoView
     /**
      * @return string
      */
-    private function getAlterUrl()
+    private function getCancelConfirmationUrl()
     {
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLShipment();
