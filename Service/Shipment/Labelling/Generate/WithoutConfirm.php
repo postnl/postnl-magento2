@@ -43,6 +43,9 @@ use TIG\PostNL\Service\Shipment\Labelling\Handler;
 
 class WithoutConfirm extends GenerateAbstract
 {
+    /** @var \TIG\PostNL\Webservices\Endpoints\LabellingWithoutConfirm $labelling */
+    private $labelling;
+    
     /**
      * WithoutConfirm constructor.
      *
@@ -72,7 +75,7 @@ class WithoutConfirm extends GenerateAbstract
             $shipmentRepository
         );
 
-        $this->labelService = $labelling;
+        $this->labelling = $labelling;
     }
 
     /**
@@ -83,6 +86,8 @@ class WithoutConfirm extends GenerateAbstract
      */
     public function get(ShipmentInterface $shipment, $currentNumber)
     {
+        $this->setLabelService($this->labelling);
+        
         return $this->getLabel($shipment, $currentNumber, false);
     }
 }

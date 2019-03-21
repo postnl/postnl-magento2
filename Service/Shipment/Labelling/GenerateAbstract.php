@@ -41,44 +41,29 @@ use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Model\ShipmentLabelFactory;
-use TIG\PostNL\Webservices\Endpoints\Labelling;
-use TIG\PostNL\Webservices\Endpoints\LabellingWithoutConfirm;
 
+// @codingStandardsIgnoreFile
 abstract class GenerateAbstract
 {
-    /**
-     * @var Labelling|LabellingWithoutConfirm
-     */
-    public $labelService;
+    /** @var $labelling */
+    private $labelling;
     
-    /**
-     * @var Log
-     */
+    /** @var \TIG\PostNL\Logging\Log $logger */
     private $logger;
     
-    /**
-     * @var ShipmentLabelFactory
-     */
+    /** @var \TIG\PostNL\Model\ShipmentLabelFactory $shipmentLabelFactory */
     private $shipmentLabelFactory;
     
-    /**
-     * @var ShipmentRepositoryInterface
-     */
+    /** @var \TIG\PostNL\Api\ShipmentRepositoryInterface $shipmentRepository */
     private $shipmentRepository;
     
-    /**
-     * @var ShipmentLabelRepositoryInterface
-     */
+    /** @var \TIG\PostNL\Api\ShipmentLabelRepositoryInterface $shipmentLabelRepository */
     private $shipmentLabelRepository;
     
-    /**
-     * @var string
-     */
+    /** @var string $date */
     private $date;
     
-    /**
-     * @var Handler
-     */
+    /** @var \TIG\PostNL\Service\Shipment\Labelling\Handler $handler */
     private $handler;
     
     /**
@@ -165,8 +150,8 @@ abstract class GenerateAbstract
      */
     private function callEndpoint(ShipmentInterface $postNlShipment, $currentShipmentNumber)
     {
-        $this->labelService->setParameters($postNlShipment, $currentShipmentNumber);
-        $response          = $this->labelService->call();
+        $this->labelling->setParameters($postNlShipment, $currentShipmentNumber);
+        $response          = $this->labelling->call();
         $responseShipments = null;
         
         if (isset($response->ResponseShipments)) {
@@ -178,6 +163,14 @@ abstract class GenerateAbstract
         }
         
         return $responseShipments->ResponseShipment;
+    }
+    
+    /**
+     * @param $labelService
+     */
+    public function setLabelService($labelService)
+    {
+        $this->labelling = $labelService;
     }
     
     /**
@@ -208,7 +201,6 @@ abstract class GenerateAbstract
      *
      * @return array
      */
-    //@codingStandardsIgnoreStart
     private function getLabelModels($labelItem, ShipmentInterface $shipment, $currentShipmentNumber)
     {
         $labelModels     = [];
@@ -219,7 +211,7 @@ abstract class GenerateAbstract
             $labelModels[] = $labelModel;
             $this->shipmentLabelRepository->save($labelModel);
         }
-    
+        
         /**
          * If SAM returned different product code during generation, override
          * it in PostNL Shipment table.
@@ -231,7 +223,6 @@ abstract class GenerateAbstract
         
         return $labelModels;
     }
-    //@codingStandardsIgnoreEnd
     
     /**
      * @param ShipmentInterface|Shipment $shipment

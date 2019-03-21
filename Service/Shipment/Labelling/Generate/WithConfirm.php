@@ -43,6 +43,9 @@ use TIG\PostNL\Service\Shipment\Labelling\Handler;
 
 class WithConfirm extends GenerateAbstract
 {
+    /** @var \TIG\PostNL\Webservices\Endpoints\Labelling $labelling */
+    private $labelling;
+    
     /**
      * WithConfirm constructor.
      *
@@ -72,7 +75,7 @@ class WithConfirm extends GenerateAbstract
             $shipmentRepository
         );
 
-        $this->labelService = $labelling;
+        $this->labelling = $labelling;
     }
 
     /**
@@ -83,6 +86,8 @@ class WithConfirm extends GenerateAbstract
      */
     public function get(ShipmentInterface $shipment, $currentNumber)
     {
+        $this->setLabelService($this->labelling);
+        
         return $this->getLabel($shipment, $currentNumber, true);
     }
 }
