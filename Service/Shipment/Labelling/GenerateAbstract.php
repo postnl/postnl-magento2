@@ -45,7 +45,10 @@ use TIG\PostNL\Model\ShipmentLabelFactory;
 // @codingStandardsIgnoreFile
 abstract class GenerateAbstract
 {
-    /** @var $labelling */
+    /**
+     * @var \TIG\PostNL\Webservices\Endpoints\Labelling|\TIG\PostNL\Webservices\Endpoints\LabellingWithoutConfirm
+     * $labelling
+     */
     private $labelling;
     
     /** @var \TIG\PostNL\Logging\Log $logger */
