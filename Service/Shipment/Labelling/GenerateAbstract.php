@@ -219,6 +219,15 @@ abstract class GenerateAbstract
             $labelModels[] = $labelModel;
             $this->shipmentLabelRepository->save($labelModel);
         }
+    
+        /**
+         * If SAM returned different product code during generation, override
+         * it in PostNL Shipment table.
+         */
+        if ($labelItem->ProductCodeDelivery !== $shipment->getProductCode()) {
+            $shipment->setProductCode($labelItem->ProductCodeDelivery);
+            $this->shipmentRepository->save($shipment);
+        }
         
         return $labelModels;
     }
@@ -242,15 +251,6 @@ abstract class GenerateAbstract
         $labelModel->setLabel(base64_encode($label));
         $labelModel->setType($type ?: ShipmentLabelInterface::BARCODE_TYPE_LABEL);
         $labelModel->setProductCode($productCode);
-    
-        /**
-         * If SAM returned different product code during generation, override
-         * it in PostNL Shipment table.
-         */
-        if ($productCode !== $shipment->getProductCode()) {
-            $shipment->setProductCode($productCode);
-            $this->shipmentRepository->save($shipment);
-        }
         
         return $labelModel;
     }
