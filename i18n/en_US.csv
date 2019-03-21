@@ -176,6 +176,7 @@ Percent,Percent
 "PostNL - Cancel Confirmation","PostNL - Cancel Confirmation"
 "Are you sure that you wish to reset the confirmation status of this shipment? You will need to confirm this shipment with PostNL again before you can send it. This action will remove all barcodes and labels associated with this shipment. You can not undo this action.","Are you sure that you wish to reset the confirmation status of this shipment? You will need to confirm this shipment with PostNL again before you can send it. This action will remove all barcodes and labels associated with this shipment. You can not undo this action."
 "PostNL - Print label","PostNL - Print label"
+"PostNL - Generate Label","PostNL - Generate Label"
 "Default postoffice early pickup option","Default postoffice early pickup option"
 "Post office delivery","Post office delivery"
 "Post office early delivery","Post office early delivery"
