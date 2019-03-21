@@ -51,23 +51,23 @@ abstract class GenerateAbstract
      */
     private $labelling;
     
+    /** @var \TIG\PostNL\Service\Shipment\Labelling\Handler $handler */
+    private $handler;
+    
     /** @var \TIG\PostNL\Logging\Log $logger */
     private $logger;
     
     /** @var \TIG\PostNL\Model\ShipmentLabelFactory $shipmentLabelFactory */
     private $shipmentLabelFactory;
     
-    /** @var \TIG\PostNL\Api\ShipmentRepositoryInterface $shipmentRepository */
-    private $shipmentRepository;
-    
     /** @var \TIG\PostNL\Api\ShipmentLabelRepositoryInterface $shipmentLabelRepository */
     private $shipmentLabelRepository;
     
+    /** @var \TIG\PostNL\Api\ShipmentRepositoryInterface $shipmentRepository */
+    private $shipmentRepository;
+    
     /** @var string $date */
     private $date;
-    
-    /** @var \TIG\PostNL\Service\Shipment\Labelling\Handler $handler */
-    private $handler;
     
     /**
      * GenerateAbstract constructor.
