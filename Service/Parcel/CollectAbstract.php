@@ -42,21 +42,20 @@ abstract class CollectAbstract
     const ATTRIBUTE_PARCEL_COUNT = 'postnl_parcel_count';
 
     /** @var \TIG\PostNL\Service\Options\ProductDictionary $productDictionary */
-    // @codingStandardsIgnoreLine
-    protected $productDictionary;
+    private $productDictionary;
 
     /** @var \TIG\PostNL\Service\Product\CollectionByAttributeValue $collectionByAttributeValue */
-    // @codingStandardsIgnoreLine
-    protected $collectionByAttributeValue;
+    private $collectionByAttributeValue;
 
-    // @codingStandardsIgnoreLine
-    protected $shippingOptions;
-
+    /** @var \TIG\PostNL\Config\Provider\ShippingOptions $shippingOptions */
+    private $shippingOptions;
+    
     /**
      * CollectAbstract constructor.
      *
-     * @param \TIG\PostNL\Service\Options\ProductDictionary $productDictionary
+     * @param \TIG\PostNL\Service\Options\ProductDictionary          $productDictionary
      * @param \TIG\PostNL\Service\Product\CollectionByAttributeValue $collectionByAttributeValue
+     * @param \TIG\PostNL\Config\Provider\ShippingOptions            $shippingOptions
      */
     public function __construct(
         ProductDictionary $productDictionary,
@@ -73,8 +72,7 @@ abstract class CollectAbstract
      *
      * @return \Magento\Catalog\Api\Data\ProductInterface[]
      */
-    // @codingStandardsIgnoreLine
-    protected function getProductsByType($items)
+    public function getProductsByType($items)
     {
         return $this->productDictionary->get(
             $items,
@@ -87,8 +85,7 @@ abstract class CollectAbstract
      *
      * @return array|\Magento\Catalog\Api\Data\ProductInterface[]
      */
-    // @codingStandardsIgnoreLine
-    protected function getProductsWithoutParcelCount($items)
+    public function getProductsWithoutParcelCount($items)
     {
         return $this->collectionByAttributeValue->getByValue(
             $items,
@@ -102,8 +99,7 @@ abstract class CollectAbstract
      *
      * @return array|\Magento\Catalog\Api\Data\ProductInterface[]
      */
-    // @codingStandardsIgnoreLine
-    protected function getProductsWithParcelCount($items)
+    public function getProductsWithParcelCount($items)
     {
         return $this->collectionByAttributeValue->getByMinValue(
             $items,
@@ -117,8 +113,7 @@ abstract class CollectAbstract
      *
      * @return array|\Magento\Catalog\Api\Data\ProductInterface[]|null
      */
-    // @codingStandardsIgnoreLine
-    protected function getExtraAtHomeProducts($items)
+    public function getExtraAtHomeProducts($items)
     {
         if (!$this->shippingOptions->isExtraAtHomeActive()) {
             return null;
