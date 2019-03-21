@@ -29,97 +29,84 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Service\Shipment\Labelling;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
-use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Exception as PostNLException;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Logging\Log;
+use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Model\ShipmentLabelFactory;
-use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Webservices\Endpoints\Labelling;
 use TIG\PostNL\Webservices\Endpoints\LabellingWithoutConfirm;
 
-// @codingStandardsIgnoreFile
 abstract class GenerateAbstract
 {
     /**
      * @var Labelling|LabellingWithoutConfirm
      */
-    // @codingStandardsIgnoreLine
-    protected $labelService;
-
+    public $labelService;
+    
     /**
      * @var Log
      */
-    //@codingStandardsIgnoreLine
-    protected $logger;
-
+    private $logger;
+    
     /**
      * @var ShipmentLabelFactory
      */
-    //@codingStandardsIgnoreLine
-    protected $shipmentLabelFactory;
-
+    private $shipmentLabelFactory;
+    
     /**
      * @var ShipmentRepositoryInterface
      */
-    //@codingStandardsIgnoreLine
-    protected $shipmentRepository;
-
+    private $shipmentRepository;
+    
     /**
      * @var ShipmentLabelRepositoryInterface
      */
-    //@codingStandardsIgnoreLine
-    protected $shipmentLabelRepository;
-
+    private $shipmentLabelRepository;
+    
     /**
      * @var string
      */
-    //@codingStandardsIgnoreLine
-    protected $date;
-
+    private $date;
+    
     /**
      * @var Handler
      */
-    //@codingStandardsIgnoreLine
-    protected $handler;
-
+    private $handler;
+    
     /**
-     * @var CanaryIslandToIC
-     */
-    protected $canaryConverter;
-
-    /**
-     * @param Data                             $helper
-     * @param ShipmentLabelFactory             $shipmentLabelFactory
-     * @param ShipmentLabelRepositoryInterface $shipmentLabelRepository
-     * @param ShipmentRepositoryInterface      $shipmentRepository
-     * @param Log                              $logger
-     * @param Handler                          $handler
-     * @param CanaryIslandToIC                 $canaryConverter
+     * GenerateAbstract constructor.
+     *
+     * @param \TIG\PostNL\Helper\Data                          $helper
+     * @param \TIG\PostNL\Model\ShipmentLabelFactory           $shipmentLabelFactory
+     * @param \TIG\PostNL\Api\ShipmentLabelRepositoryInterface $shipmentLabelRepository
+     * @param \TIG\PostNL\Api\ShipmentRepositoryInterface      $shipmentRepository
+     * @param \TIG\PostNL\Logging\Log                          $logger
+     * @param \TIG\PostNL\Service\Shipment\Labelling\Handler   $handler
      */
     public function __construct(
         Data $helper,
+        Handler $handler,
+        Log $logger,
         ShipmentLabelFactory $shipmentLabelFactory,
         ShipmentLabelRepositoryInterface $shipmentLabelRepository,
-        ShipmentRepositoryInterface $shipmentRepository,
-        Log $logger,
-        Handler $handler,
-        CanaryIslandToIC $canaryConverter
+        ShipmentRepositoryInterface $shipmentRepository
     ) {
-        $this->logger = $logger;
-        $this->date = $helper->getDate();
-        $this->shipmentRepository = $shipmentRepository;
-        $this->shipmentLabelFactory = $shipmentLabelFactory;
+        $this->handler                 = $handler;
+        $this->logger                  = $logger;
+        $this->shipmentLabelFactory    = $shipmentLabelFactory;
         $this->shipmentLabelRepository = $shipmentLabelRepository;
-        $this->handler = $handler;
+        $this->shipmentRepository      = $shipmentRepository;
+        $this->date                    = $helper->getDate();
     }
-
+    
     /**
      * @param ShipmentInterface $shipment
      * @param                   $currentShipmentNumber
@@ -133,67 +120,87 @@ abstract class GenerateAbstract
             $responseShipments = $this->callEndpoint($shipment, $currentShipmentNumber);
         } catch (\Exception $exception) {
             $this->logger->debug($exception->getMessage());
+            
             return null;
         }
-
+        
+        if ($responseShipments) {
+            $this->saveDownpartnerData($shipment, $responseShipments);
+        }
+        
         $labelModels = $this->handleLabels($shipment, $responseShipments, $currentShipmentNumber);
-
+        
         if ($confirm) {
             $shipment->setConfirmedAt($this->date);
             $shipment->setConfirmed(true);
             $this->shipmentRepository->save($shipment);
         }
-
+        
         return $labelModels;
     }
-
+    
     /**
-     * @param ShipmentInterface $postnlShipment
-     * @param                   $currentShipmentNumber
+     * @param \TIG\PostNL\Api\Data\ShipmentInterface $shipment
+     * @param                                        $response
+     */
+    private function saveDownpartnerData(ShipmentInterface $shipment, $response)
+    {
+        $downPartnerBarcode  = $response[0]->DownPartnerBarcode;
+        $downPartnerId       = $response[0]->DownPartnerID;
+        $downPartnerLocation = $response[0]->DownPartnerLocation;
+        
+        $shipment->setDownpartnerBarcode($downPartnerBarcode);
+        $shipment->setDownpartnerId($downPartnerId);
+        $shipment->setDownpartnerLocation($downPartnerLocation);
+        $this->shipmentRepository->save($shipment);
+    }
+    
+    /**
+     * @param \TIG\PostNL\Api\Data\ShipmentInterface $postNlShipment
+     * @param                                        $currentShipmentNumber
      *
      * @return mixed
-     * @throws PostNLException
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Exception
      */
-    //@codingStandardsIgnoreLine
-    protected function callEndpoint(ShipmentInterface $postnlShipment, $currentShipmentNumber)
+    private function callEndpoint(ShipmentInterface $postNlShipment, $currentShipmentNumber)
     {
-        $this->labelService->setParameters($postnlShipment, $currentShipmentNumber);
+        $this->labelService->setParameters($postNlShipment, $currentShipmentNumber);
         $response          = $this->labelService->call();
         $responseShipments = null;
-
+        
         if (isset($response->ResponseShipments)) {
             $responseShipments = $response->ResponseShipments;
         }
-
+        
         if (!is_object($response) || !isset($responseShipments->ResponseShipment)) {
             throw new PostNLException(sprintf('Invalid generateLabel response: %1', var_export($response, true)));
         }
-
+        
         return $responseShipments->ResponseShipment;
     }
-
+    
     /**
      * @param $shipment
-     * @param $responsShipments
+     * @param $responseShipments
      * @param $currentShipmentNumber
      *
      * @return ShipmentLabelInterface[]
      */
-    //@codingStandardsIgnoreLine
-    protected function handleLabels($shipment, $responsShipments, $currentShipmentNumber)
+    private function handleLabels($shipment, $responseShipments, $currentShipmentNumber)
     {
         $labelModels = [];
-        foreach ($responsShipments as $labelItem) {
+        foreach ($responseShipments as $labelItem) {
             $labelModels = array_merge(
                 $labelModels,
                 $this->getLabelModels($labelItem, $shipment, $currentShipmentNumber)
             );
             $currentShipmentNumber++;
         }
-
+        
         return $labelModels;
     }
-
+    
     /**
      * @param $labelItem
      * @param $shipment
@@ -206,17 +213,17 @@ abstract class GenerateAbstract
     {
         $labelModels     = [];
         $labelItemHandle = $this->handler->handle($shipment, $labelItem->Labels->Label);
-
+        
         foreach ($labelItemHandle['labels'] as $Label) {
             $labelModel    = $this->save($shipment, $currentShipmentNumber, $Label, $labelItemHandle['type'], $labelItem->ProductCodeDelivery);
             $labelModels[] = $labelModel;
             $this->shipmentLabelRepository->save($labelModel);
         }
-
+        
         return $labelModels;
     }
     //@codingStandardsIgnoreEnd
-
+    
     /**
      * @param ShipmentInterface|Shipment $shipment
      * @param int                        $number
@@ -235,7 +242,7 @@ abstract class GenerateAbstract
         $labelModel->setLabel(base64_encode($label));
         $labelModel->setType($type ?: ShipmentLabelInterface::BARCODE_TYPE_LABEL);
         $labelModel->setProductCode($productCode);
-
+        
         return $labelModel;
     }
 }
