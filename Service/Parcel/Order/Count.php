@@ -44,6 +44,6 @@ class Count extends CountAbstract
     public function get(OrderInterface $order)
     {
         $items = $order->getItems();
-        return $this->calculate($this->getWeight($items), $items);
+        return $this->calculate($order->getWeight(), $items);
     }
 }

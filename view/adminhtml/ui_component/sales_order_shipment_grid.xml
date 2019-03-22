@@ -62,12 +62,12 @@
                     </item>
                 </argument>
             </action>
-            <action name="postnl_mass_change_confirmation">
+            <action name="postnl_mass_cancel_confirmation">
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
-                        <item name="type" xsi:type="string">postnl_mass_change_confirmation</item>
-                        <item name="label" xsi:type="string" translate="true">PostNL - Change Confirmation</item>
-                        <item name="url" xsi:type="url" path="postnl/shipment/MassChangeConfirmation"/>
+                        <item name="type" xsi:type="string">postnl_mass_cancel_confirmation</item>
+                        <item name="label" xsi:type="string" translate="true">PostNL - Cancel Confirmation</item>
+                        <item name="url" xsi:type="url" path="postnl/shipment/MassCancelConfirmation"/>
                     </item>
                 </argument>
             </action>
