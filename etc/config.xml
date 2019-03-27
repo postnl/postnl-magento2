@@ -47,7 +47,7 @@
         </carriers>
         <tig_postnl>
             <stability/>
-            <supported_magento_version>2.1.0 - 2.1.16, 2.2.0 - 2.2.7, 2.3.0</supported_magento_version>
+            <supported_magento_version>2.1.0 - 2.1.16, 2.2.0 - 2.2.7, 2.3.0 - 2.3.1</supported_magento_version>
             <generalconfiguration_extension_status>
                 <modus>0</modus>
                 <customer_number_test>11223344</customer_number_test>
@@ -88,7 +88,7 @@
             <delivery_settings>
                 <default_option>3085</default_option>
                 <default_be_option>4946</default_be_option>
-                <default_eps_option>4950</default_eps_option>
+                <default_eps_option>4952</default_eps_option>
                 <use_alternative_default>0</use_alternative_default>
             </delivery_settings>
 

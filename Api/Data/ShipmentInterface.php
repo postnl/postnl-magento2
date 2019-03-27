@@ -221,6 +221,36 @@ interface ShipmentInterface
      * @return bool
      */
     public function getConfirmed();
+    
+    /**
+     * @return string|null
+     */
+    public function setDownpartnerId($value);
+    
+    /**
+     * @return string|null
+     */
+    public function getDownpartnerId();
+    
+    /**
+     * @return string|null
+     */
+    public function setDownpartnerLocation($value);
+    
+    /**
+     * @return string|null
+     */
+    public function getDownpartnerLocation();
+    
+    /**
+     * @return string|null
+     */
+    public function setDownpartnerBarcode($value);
+    
+    /**
+     * @return string|null
+     */
+    public function getDownpartnerBarcode();
 
     /**
      * @param string $value

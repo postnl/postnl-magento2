@@ -34,10 +34,14 @@ namespace TIG\PostNL\Test\Integration\Service\Shipment\Confirming;
 use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 use TIG\PostNL\Test\Integration\TestCase;
 
-class ChangeConfirmationTest extends TestCase
+class CancelConfirmationTest extends TestCase
 {
     public $instanceClass = ResetPostNLShipment::class;
-
+    
+    /**
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     */
     public function testResetPostNLShipment()
     {
         $postNLShipment = require realpath(__DIR__ . '/../../../../Fixtures/Shipments/PostNLShipment.php');
