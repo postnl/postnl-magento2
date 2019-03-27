@@ -13,13 +13,13 @@
     "authors": [
         {
             "name": "TIG",
-            "email": "servicedesk@tig.nl",
+            "email": "support@tig.nl",
             "homepage": "http://tig.nl"
         }
     ],
     "support": {
-        "email": "servicedesk@tig.nl",
-        "issues": "http://servicedesk.tig.nl/hc/nl/requests/new"
+        "email": "support@tig.nl",
+        "issues": "https://portal.tig.nl/"
     },
     "homepage": "https://tig.nl/postnl",
     "keywords": ["PostNL", "Official PostNL extension", "Magento 2"],
