@@ -105,6 +105,9 @@
     <type name="TIG\PostNL\Setup\UpgradeSchema">
         <arguments>
             <argument name="upgradeSchemaObjects" xsi:type="array">
+                <item name="v1.7.4" xsi:type="array">
+                    <item name="InstallDownpartnerAttributes" xsi:type="object">TIG\PostNL\Setup\V174\Schema\InstallDownpartnerAttributes</item>
+                </item>
                 <item name="v1.6.1" xsi:type="array">
                     <item name="UpgradeShipmentLabelTable" xsi:type="object">TIG\PostNL\Setup\V161\Schema\UpgradeShipmentLabelTable</item>
                 </item>
