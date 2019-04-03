@@ -43,6 +43,7 @@
             <directory>../../../app/code/TIG/PostNL/Test</directory>
             <directory>../../../vendor/tig/postnl/Test</directory>
             <exclude>../../../app/code/Magento</exclude>
+            <exclude>../../../vendor/magento</exclude>
         </testsuite>
     </testsuites>
     <!-- Code coverage filters -->
