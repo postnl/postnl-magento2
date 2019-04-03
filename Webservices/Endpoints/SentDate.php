@@ -142,6 +142,7 @@ class SentDate extends AbstractEndpoint
      * @param                                     $storeId
      * @param \TIG\PostNL\Api\Data\OrderInterface $postNLOrder
      */
+    // @codingStandardsIgnoreMethod
     public function setParameters($address, $storeId, PostNLOrder $postNLOrder)
     {
         $this->soap->updateApiKey($storeId);
