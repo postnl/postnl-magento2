@@ -121,6 +121,7 @@ class SentDate extends AbstractEndpoint
     /**
      * @return mixed
      * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     public function call()
     {
@@ -142,7 +143,6 @@ class SentDate extends AbstractEndpoint
      * @param                                     $storeId
      * @param \TIG\PostNL\Api\Data\OrderInterface $postNLOrder
      */
-    // @codingStandardsIgnoreMethod
     public function setParameters($address, $storeId, PostNLOrder $postNLOrder)
     {
         $this->soap->updateApiKey($storeId);
@@ -156,11 +156,8 @@ class SentDate extends AbstractEndpoint
                 'Street'             => '',
                 'City'               => $address->getCity(),
                 'DeliveryDate'       => $this->getDeliveryDate($address, $postNLOrder),
-                'ShippingDuration'   => '1',
-                // Request by PostNL not to use $postNLOrder->getShippingDuration()
+                'ShippingDuration'   => '1', // Request by PostNL not to use $postNLOrder->getShippingDuration()
                 'AllowSundaySorting' => $this->timeframeOptions->isSundaySortingAllowed(),
-                // @codingStandardsIgnoreLine
-                //'CutOffTimes'      => $this->cutoffTimes->get(),
                 'Options'            => $this->timeframeOptions->get($this->getCountryId())
             ],
             'Message'   => $this->message
