@@ -71,13 +71,7 @@ class Confirming extends AbstractEndpoint
      * @var array
      */
     private $requestParams;
-
-    /**
-     * @var ShipmentData
-     */
-    private $shipmentData;
-
-
+    
     /**
      * @param Soap           $soap
      * @param Customer       $customer
@@ -93,7 +87,9 @@ class Confirming extends AbstractEndpoint
         $this->soap = $soap;
         $this->customer = $customer;
         $this->message = $message;
-        $this->shipmentData = $shipmentData;
+        parent::__construct(
+            $shipmentData
+        );
     }
 
     /**
@@ -123,21 +119,5 @@ class Confirming extends AbstractEndpoint
     public function getLocation()
     {
         return $this->version . '/' . $this->endpoint;
-    }
-
-    /**
-     * @param Shipment|ShipmentInterface $shipment
-     * @param $currentShipmentNumber
-     *
-     * @return array
-     */
-    private function getShipments($shipment, $currentShipmentNumber)
-    {
-        $shipments = [];
-        for ($number = $currentShipmentNumber; $number <= $shipment->getParcelCount(); $number++) {
-            $shipments[] = $this->shipmentData->get($shipment, $number);
-        }
-
-        return ['Shipment' => $shipments];
     }
 }
