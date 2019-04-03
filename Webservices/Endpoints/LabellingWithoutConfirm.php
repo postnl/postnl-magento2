@@ -31,12 +31,12 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
-use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Api\Data\ShipmentInterface;
-use TIG\PostNL\Webservices\Parser\Label\Shipments as ShipmentData;
+use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Webservices\AbstractEndpoint;
-use TIG\PostNL\Webservices\Parser\Label\Customer;
 use TIG\PostNL\Webservices\Api\Message;
+use TIG\PostNL\Webservices\Parser\Label\Customer;
+use TIG\PostNL\Webservices\Parser\Label\Shipments as ShipmentData;
 use TIG\PostNL\Webservices\Soap;
 
 // @codingStandardsIgnoreFile
@@ -71,12 +71,14 @@ class LabellingWithoutConfirm extends AbstractEndpoint
      * @var array
      */
     private $requestParams;
-
+    
     /**
-     * @param Soap           $soap
-     * @param Customer       $customer
-     * @param Message        $message
-     * @param ShipmentData   $shipmentData
+     * LabellingWithoutConfirm constructor.
+     *
+     * @param \TIG\PostNL\Webservices\Soap                   $soap
+     * @param \TIG\PostNL\Webservices\Parser\Label\Customer  $customer
+     * @param \TIG\PostNL\Webservices\Api\Message            $message
+     * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
      */
     public function __construct(
         Soap $soap,

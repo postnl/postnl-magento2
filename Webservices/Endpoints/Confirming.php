@@ -73,10 +73,12 @@ class Confirming extends AbstractEndpoint
     private $requestParams;
     
     /**
-     * @param Soap           $soap
-     * @param Customer       $customer
-     * @param Message        $message
-     * @param ShipmentData   $shipmentData
+     * Confirming constructor.
+     *
+     * @param \TIG\PostNL\Webservices\Soap                   $soap
+     * @param \TIG\PostNL\Webservices\Parser\Label\Customer  $customer
+     * @param \TIG\PostNL\Webservices\Api\Message            $message
+     * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
      */
     public function __construct(
         Soap $soap,
@@ -87,6 +89,7 @@ class Confirming extends AbstractEndpoint
         $this->soap = $soap;
         $this->customer = $customer;
         $this->message = $message;
+        
         parent::__construct(
             $shipmentData
         );

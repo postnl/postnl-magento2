@@ -29,6 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Webservices\Endpoints;
 
 use TIG\PostNL\Model\Shipment;
@@ -46,37 +47,39 @@ class Labelling extends AbstractEndpoint
      * @var Soap
      */
     private $soap;
-
+    
     /**
      * @var Customer
      */
     private $customer;
-
+    
     /**
      * @var Message
      */
     private $message;
-
+    
     /**
      * @var string
      */
     private $version = 'v2_1';
-
+    
     /**
      * @var string
      */
     private $endpoint = 'label';
-
+    
     /**
      * @var array
      */
     private $requestParams;
-
+    
     /**
-     * @param Soap           $soap
-     * @param Customer       $customer
-     * @param Message        $message
-     * @param ShipmentData   $shipmentData
+     * Labelling constructor.
+     *
+     * @param \TIG\PostNL\Webservices\Soap                   $soap
+     * @param \TIG\PostNL\Webservices\Parser\Label\Customer  $customer
+     * @param \TIG\PostNL\Webservices\Api\Message            $message
+     * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
      */
     public function __construct(
         Soap $soap,
@@ -84,14 +87,15 @@ class Labelling extends AbstractEndpoint
         Message $message,
         ShipmentData $shipmentData
     ) {
-        $this->soap = $soap;
+        $this->soap     = $soap;
         $this->customer = $customer;
-        $this->message = $message;
+        $this->message  = $message;
+        
         parent::__construct(
             $shipmentData
         );
     }
-
+    
     /**
      * {@inheritdoc}
      */
@@ -99,7 +103,7 @@ class Labelling extends AbstractEndpoint
     {
         return $this->soap->call($this, 'GenerateLabel', $this->requestParams);
     }
-
+    
     /**
      * @param Shipment|ShipmentInterface $shipment
      * @param int                        $currentShipmentNumber
@@ -109,18 +113,18 @@ class Labelling extends AbstractEndpoint
         $storeId = $shipment->getShipment()->getStoreId();
         $this->soap->updateApiKey($storeId);
         $this->customer->setStoreId($storeId);
-
-        $barcode = $shipment->getMainBarcode();
+        
+        $barcode     = $shipment->getMainBarcode();
         $printerType = ['Printertype' => 'GraphicFile|PDF'];
-        $message = $this->message->get($barcode, $printerType);
-
+        $message     = $this->message->get($barcode, $printerType);
+        
         $this->requestParams = [
             'Message'   => $message,
             'Customer'  => $this->customer->get(),
             'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
     }
-
+    
     /**
      * {@inheritdoc}
      */

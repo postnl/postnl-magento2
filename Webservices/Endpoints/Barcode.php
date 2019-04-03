@@ -36,6 +36,7 @@ use TIG\PostNL\Service\Shipment\Barcode\Range as BarcodeRange;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Customer;
 use TIG\PostNL\Webservices\Api\Message;
+use TIG\PostNL\Webservices\Parser\Label\Shipments as ShipmentData;
 use TIG\PostNL\Webservices\Soap;
 
 class Barcode extends AbstractEndpoint
@@ -79,27 +80,37 @@ class Barcode extends AbstractEndpoint
      * @var string
      */
     private $countryId;
-
+    
     /**
-     * @param Soap         $soap
-     * @param BarcodeRange $barcodeRange
-     * @param Customer     $customer
-     * @param Message      $message
+     * Barcode constructor.
+     *
+     * @param \TIG\PostNL\Webservices\Soap                   $soap
+     * @param \TIG\PostNL\Service\Shipment\Barcode\Range     $barcodeRange
+     * @param \TIG\PostNL\Webservices\Api\Customer           $customer
+     * @param \TIG\PostNL\Webservices\Api\Message            $message
+     * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
      */
     public function __construct(
         Soap $soap,
         BarcodeRange $barcodeRange,
         Customer $customer,
-        Message $message
+        Message $message,
+        ShipmentData $shipmentData
     ) {
         $this->soap = $soap;
         $this->barcodeRange = $barcodeRange;
         $this->customer = $customer;
         $this->message = $message;
+        
+        parent::__construct(
+            $shipmentData
+        );
     }
-
+    
     /**
-     * {@inheritDoc}
+     * @return mixed|\stdClass
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Exception
      */
     public function call()
     {
@@ -147,9 +158,9 @@ class Barcode extends AbstractEndpoint
         $this->soap->updateApiKey($storeId);
         $this->customer->setStoreId($storeId);
     }
-
+    
     /**
-     * @throws PostNLException
+     * @throws \TIG\PostNL\Exception
      */
     private function validateRequiredValues()
     {
