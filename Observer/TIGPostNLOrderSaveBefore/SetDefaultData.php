@@ -208,6 +208,10 @@ class SetDefaultData implements ObserverInterface
             return $address;
         }
 
+        /**
+         * Added try-catch wrapper to prevent 500-error in \Magento\Sales\Model\OrderRepository::get()
+         * which occurred since Magento 2.2.8/2.3.1.
+         */
         try {
             return $this->magentoOrder->getShippingAddress($order->getOrderId());
         } catch (\Error $e) {
