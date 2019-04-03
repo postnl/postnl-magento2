@@ -48,6 +48,7 @@ class InstallDownpartnerAttributes extends AbstractColumnsInstaller
     public function installDownpartnerIdColumn()
     {
         return [
+            // @codingStandardsIgnoreLine
             'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
             'length'   => 32,
             'nullable' => true,
@@ -60,6 +61,7 @@ class InstallDownpartnerAttributes extends AbstractColumnsInstaller
     public function installDownpartnerLocationColumn()
     {
         return [
+            // @codingStandardsIgnoreLine
             'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
             'length'   => 16,
             'nullable' => true,
@@ -72,6 +74,7 @@ class InstallDownpartnerAttributes extends AbstractColumnsInstaller
     public function installDownpartnerBarcodeColumn()
     {
         return [
+            // @codingStandardsIgnoreLine
             'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
             'length'   => 32,
             'nullable' => true,

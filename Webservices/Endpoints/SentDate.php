@@ -138,10 +138,9 @@ class SentDate extends AbstractEndpoint
     }
     
     /**
-     * @param Address     $address
-     * @param             $storeId
-     * @param PostNLOrder $postNLOrder
-     *
+     * @param                                     $address
+     * @param                                     $storeId
+     * @param \TIG\PostNL\Api\Data\OrderInterface $postNLOrder
      */
     public function setParameters($address, $storeId, PostNLOrder $postNLOrder)
     {
