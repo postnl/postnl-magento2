@@ -47,7 +47,7 @@ script:
   - grunt phpcs
   - grunt lint
   - grunt exec:phraseTest
-  - grunt exec:ciTests
+  - grunt exec:integrationTests
 
 after_success:
   - bash Test/Script/AfterSuccess.sh
