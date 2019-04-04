@@ -12,7 +12,7 @@ language: php
 env:
   global:
     - CODE_COVERAGE=false
-    - DI_COMPILE=true
+    - DI_COMPILE=false
 
 matrix:
 # PHP 7 is only supported in Magento 2.0.x and 2.1.x
@@ -29,10 +29,8 @@ matrix:
       env: MAGENTO_VERSION=2.2.8
     - php: 7.1
       env: MAGENTO_VERSION=2.3.0
-    - php: 7.2
-      env: MAGENTO_VERSION=2.3.1
     - php: 7.1
-      env: MAGENTO_VERSION=2.3.1 DI_COMPILE=false
+      env: MAGENTO_VERSION=2.3.1 # DI_COMPILE=true
     - php: 7.2
       env: MAGENTO_VERSION=2.3.1 CODE_COVERAGE=true
 
@@ -43,7 +41,7 @@ before_script:
   - bash Test/Script/Setup.sh
 
 script:
-  - if [ "$CODE_COVERAGE" = "false" && "$DI_COMPILE" = "true"]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
+  - if [ $CODE_COVERAGE == false ] && [ $DI_COMPILE == true ]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
   - grunt phpcs
   - grunt lint
   - grunt exec:phraseTest
