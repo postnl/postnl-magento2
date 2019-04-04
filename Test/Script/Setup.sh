@@ -87,10 +87,10 @@ sed -i "s/^memory_limit =.*$/memory_limit = 4096M/" $(php -i | grep 'Additional 
 mysql -u${MAGENTO_DB_USER} ${MYSQLPASS} -h${MAGENTO_DB_HOST} -P${MAGENTO_DB_PORT} -e "DROP DATABASE IF EXISTS \`${MAGENTO_DB_NAME}\`; CREATE DATABASE \`${MAGENTO_DB_NAME}\`;"
 mysql -u${MAGENTO_DB_USER} ${MYSQLPASS} -h${MAGENTO_DB_HOST} -P${MAGENTO_DB_PORT} ${MAGENTO_DB_NAME} < Test/Fixtures/tig-postnl-fixture.sql
 
-chmod -R 777 "${BUILD_DIR}/var/"
-chmod -R 777 "${BUILD_DIR}/pub/"
-chmod -R 777 "${BUILD_DIR}/dev/"
-chmod -R 777 "${BUILD_DIR}/generated/"
-chmod -R 777 "${BUILD_DIR}/vendor/phpunit/phpunit/phpunit"
+chmod -R 6777 "${BUILD_DIR}/var/"
+chmod -R 6777 "${BUILD_DIR}/pub/"
+chmod -R 6777 "${BUILD_DIR}/dev/"
+chmod -R 6777 "${BUILD_DIR}/generated/"
+chmod -R 6777 "${BUILD_DIR}/vendor/phpunit/phpunit/phpunit"
 
 ( cd ${BUILD_DIR} && php -d memory_limit=2048M bin/magento setup:upgrade )

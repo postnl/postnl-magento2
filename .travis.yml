@@ -29,17 +29,10 @@ matrix:
       env: MAGENTO_VERSION=2.2.8
     - php: 7.1
       env: MAGENTO_VERSION=2.3.0
+    - php: 7.1
+      env: MAGENTO_VERSION=2.3.1 # DI_COMPILE=true
     - php: 7.2
-      env: MAGENTO_VERSION=2.3.0 DI_COMPILE=true
-    - php: 7.2
-      env: MAGENTO_VERSION=2.3.0 CODE_COVERAGE=true
-    # Temporarily disabled due to bug: https://github.com/magento/magento2/issues/19590
-    # - php: 7.2
-    #   env: MAGENTO_VERSION=2.3.1
-    # - php: 7.1
-    #   env: MAGENTO_VERSION=2.3.1 DI_COMPILE=true
-    # - php: 7.2
-    #   env: MAGENTO_VERSION=2.3.1 CODE_COVERAGE=true
+      env: MAGENTO_VERSION=2.3.1 CODE_COVERAGE=true
 
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
