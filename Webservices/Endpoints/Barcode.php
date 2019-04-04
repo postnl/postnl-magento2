@@ -150,6 +150,14 @@ class Barcode extends AbstractEndpoint
     }
 
     /**
+     * @param $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
      * @param int $storeId
      */
     public function setStoreId($storeId)
