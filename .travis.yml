@@ -33,7 +33,7 @@ matrix:
       env: MAGENTO_VERSION=2.3.0 DI_COMPILE=true
     - php: 7.2
       env: MAGENTO_VERSION=2.3.0 CODE_COVERAGE=true
-      # Temporarily disabled due to bug: https://github.com/magento/magento2/issues/19590
+    # Temporarily disabled due to bug: https://github.com/magento/magento2/issues/19590
     # - php: 7.2
     #   env: MAGENTO_VERSION=2.3.1
     # - php: 7.1
@@ -48,7 +48,7 @@ before_script:
   - bash Test/Script/Setup.sh
 
 script:
-  - if [ $CODE_COVERAGE == "false" && $DI_COMPILE == "true" ]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
+  - if [ $CODE_COVERAGE == false ] && [ $DI_COMPILE == true ]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
   - grunt phpcs
   - grunt lint
   - grunt exec:phraseTest
