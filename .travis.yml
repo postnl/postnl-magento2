@@ -9,53 +9,30 @@ addons:
 
 language: php
 
-php: 7.0
-
 env:
   global:
     - CODE_COVERAGE=false
-    - DI_COMPILE=true
-
-# We have decided to only test the latest two of each major releases.
-  matrix:
-    # - MAGENTO_VERSION=2.1.0
-    # - MAGENTO_VERSION=2.1.1
-    # - MAGENTO_VERSION=2.1.2
-    # - MAGENTO_VERSION=2.1.3
-    # - MAGENTO_VERSION=2.1.4
-    # - MAGENTO_VERSION=2.1.5
-    # - MAGENTO_VERSION=2.1.6
-    # - MAGENTO_VERSION=2.1.7
-    # - MAGENTO_VERSION=2.1.8
-    # - MAGENTO_VERSION=2.1.9
-    # - MAGENTO_VERSION=2.1.10
-    # - MAGENTO_VERSION=2.1.11
-    # - MAGENTO_VERSION=2.1.12
-    # - MAGENTO_VERSION=2.1.13
-    # - MAGENTO_VERSION=2.1.14
-    - MAGENTO_VERSION=2.1.15
-    - MAGENTO_VERSION=2.1.16
-    # - MAGENTO_VERSION=2.2.0
-    # - MAGENTO_VERSION=2.2.1
-    # - MAGENTO_VERSION=2.2.2
-    # - MAGENTO_VERSION=2.2.3
-    # - MAGENTO_VERSION=2.2.4
-    # - MAGENTO_VERSION=2.2.5
-    - MAGENTO_VERSION=2.2.6
-    # - MAGENTO_VERSION=2.2.7
+    - DI_COMPILE=false
 
 matrix:
-# PHP 7.1 would be supported in Magento since Magento 2.2
-# And there wouldn't be support of PHP 7.1 in Magento 2.0 or 2.1
+# PHP 7 is only supported in Magento 2.0.x and 2.1.x
+# PHP 7.1 is only supported in Magento 2.2.x
+# PHP 7.2 is only supported in Magento 2.3.x
   include:
-    - php: 7.1
+    - php: 7.0
+      env: MAGENTO_VERSION=2.1.16
+    - php: 7.0
+      env: MAGENTO_VERSION=2.1.17
+    - php: 7.0
       env: MAGENTO_VERSION=2.2.7
-    - php: 7.2
+    - php: 7.1
+      env: MAGENTO_VERSION=2.2.8
+    - php: 7.1
       env: MAGENTO_VERSION=2.3.0
     - php: 7.1
-      env: MAGENTO_VERSION=2.3.0 DI_COMPILE=false
+      env: MAGENTO_VERSION=2.3.1 # DI_COMPILE=true
     - php: 7.2
-      env: MAGENTO_VERSION=2.3.0 CODE_COVERAGE=true
+      env: MAGENTO_VERSION=2.3.1 CODE_COVERAGE=true
 
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
@@ -64,7 +41,7 @@ before_script:
   - bash Test/Script/Setup.sh
 
 script:
-  - if [ "$CODE_COVERAGE" = "false" && "$DI_COMPILE" = "true"]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
+  - if [ $CODE_COVERAGE == false ] && [ $DI_COMPILE == true ]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
   - grunt phpcs
   - grunt lint
   - grunt exec:phraseTest

@@ -177,7 +177,7 @@ class Data extends AbstractHelper
          */
         $maximumNumberOfDeliveryDays = $this->shippingOptions->getMaxAmountOfDeliverydays() - 1;
 
-        $endDate = $this->dateTime->date($startDate);
+        $endDate = $this->dateTime->date($startDate, 'nl_NL');
         // @codingStandardsIgnoreLine
         $endDate->add(new \DateInterval("P{$maximumNumberOfDeliveryDays}D"));
 

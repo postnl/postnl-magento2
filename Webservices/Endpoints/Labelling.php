@@ -51,37 +51,34 @@ class Labelling extends AbstractEndpoint
      * @var Customer
      */
     private $customer;
-
+    
     /**
      * @var Message
      */
     private $message;
-
+    
     /**
      * @var string
      */
-    private $version = 'v2_2';
+    private $version = 'v2_1';
 
     /**
      * @var string
      */
     private $endpoint = 'label';
-
+    
     /**
      * @var array
      */
     private $requestParams;
-
+    
     /**
-     * @var ShipmentData
-     */
-    private $shipmentData;
-
-    /**
-     * @param Soap           $soap
-     * @param Customer       $customer
-     * @param Message        $message
-     * @param ShipmentData   $shipmentData
+     * Labelling constructor.
+     *
+     * @param \TIG\PostNL\Webservices\Soap                   $soap
+     * @param \TIG\PostNL\Webservices\Parser\Label\Customer  $customer
+     * @param \TIG\PostNL\Webservices\Api\Message            $message
+     * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
      */
     public function __construct(
         Soap $soap,
@@ -89,12 +86,15 @@ class Labelling extends AbstractEndpoint
         Message $message,
         ShipmentData $shipmentData
     ) {
-        $this->soap = $soap;
+        $this->soap     = $soap;
         $this->customer = $customer;
-        $this->message = $message;
-        $this->shipmentData = $shipmentData;
+        $this->message  = $message;
+        
+        parent::__construct(
+            $shipmentData
+        );
     }
-
+    
     /**
      * {@inheritdoc}
      */
@@ -102,7 +102,7 @@ class Labelling extends AbstractEndpoint
     {
         return $this->soap->call($this, 'GenerateLabel', $this->requestParams);
     }
-
+    
     /**
      * @param Shipment|ShipmentInterface $shipment
      * @param int                        $currentShipmentNumber
@@ -112,39 +112,23 @@ class Labelling extends AbstractEndpoint
         $storeId = $shipment->getShipment()->getStoreId();
         $this->soap->updateApiKey($storeId);
         $this->customer->setStoreId($storeId);
-
-        $barcode = $shipment->getMainBarcode();
+        
+        $barcode     = $shipment->getMainBarcode();
         $printerType = ['Printertype' => 'GraphicFile|PDF'];
-        $message = $this->message->get($barcode, $printerType);
-
+        $message     = $this->message->get($barcode, $printerType);
+        
         $this->requestParams = [
             'Message'   => $message,
             'Customer'  => $this->customer->get(),
             'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
     }
-
+    
     /**
      * {@inheritdoc}
      */
     public function getLocation()
     {
         return $this->version . '/' . $this->endpoint;
-    }
-
-    /**
-     * @param Shipment|ShipmentInterface $shipment
-     * @param $currentShipmentNumber
-     *
-     * @return array
-     */
-    private function getShipments($shipment, $currentShipmentNumber)
-    {
-        $shipments = [];
-        for ($number = $currentShipmentNumber; $number <= $shipment->getParcelCount(); $number++) {
-            $shipments[] = $this->shipmentData->get($shipment, $number);
-        }
-
-        return ['Shipment' => $shipments];
     }
 }

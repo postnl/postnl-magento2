@@ -54,7 +54,7 @@ module.exports = function (grunt) {
 
             integrationTests:
                 'cd ' + magento2path + 'dev/tests/integration &&' +
-                'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit --testsuite "TIG PostNL Integration Tests"',
+                'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit --testsuite "TIG PostNL Tests"',
 
             ciTests:
                 'cd ' + magento2path + 'dev/tests/integration &&' +

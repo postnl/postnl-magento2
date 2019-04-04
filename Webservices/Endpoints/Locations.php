@@ -29,13 +29,15 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Webservices\Soap;
 use TIG\PostNL\Webservices\AbstractEndpoint;
-use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Webservices\Api\Message;
-use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Webservices\Parser\Label\Shipments as ShipmentData;
 
 class Locations extends AbstractEndpoint
 {
@@ -43,55 +45,63 @@ class Locations extends AbstractEndpoint
      * @var string
      */
     private $version = 'v2_1';
-
+    
     /**
      * @var string
      */
     private $endpoint = 'locations';
-
+    
     /**
      * @var Soap
      */
     private $soap;
-
+    
     /**
      * @var array
      */
     private $requestParams;
-
+    
     /**
      * @var ShippingOptions
      */
     private $shippingOptions;
-
+    
     /**
      * @var Data
      */
     private $postNLhelper;
-
+    
     /**
      * @var  Message
      */
     private $message;
-
+    
     /**
-     * @param Soap            $soap
-     * @param Data            $postNLhelper
-     * @param ShippingOptions $shippingOptions
-     * @param Message         $message
+     * Locations constructor.
+     *
+     * @param \TIG\PostNL\Webservices\Soap                   $soap
+     * @param \TIG\PostNL\Helper\Data                        $postNLhelper
+     * @param \TIG\PostNL\Config\Provider\ShippingOptions    $shippingOptions
+     * @param \TIG\PostNL\Webservices\Api\Message            $message
+     * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
      */
     public function __construct(
         Soap $soap,
         Data $postNLhelper,
         ShippingOptions $shippingOptions,
-        Message $message
+        Message $message,
+        ShipmentData $shipmentData
     ) {
-        $this->soap = $soap;
+        $this->soap            = $soap;
         $this->shippingOptions = $shippingOptions;
-        $this->postNLhelper  = $postNLhelper;
-        $this->message = $message;
+        $this->postNLhelper    = $postNLhelper;
+        $this->message         = $message;
+        
+        parent::__construct(
+            $shipmentData
+        );
     }
-
+    
     /**
      * @return mixed
      * @throws \Magento\Framework\Webapi\Exception
@@ -100,7 +110,7 @@ class Locations extends AbstractEndpoint
     {
         return $this->soap->call($this, 'GetNearestLocations', $this->requestParams);
     }
-
+    
     /**
      * @param $address
      * @param $startDate
@@ -108,7 +118,7 @@ class Locations extends AbstractEndpoint
     public function setParameters($address, $startDate = false)
     {
         $this->requestParams = [
-            'Location' => [
+            'Location'    => [
                 'DeliveryOptions'    => $this->postNLhelper->getAllowedDeliveryOptions(),
                 'DeliveryDate'       => $this->getDeliveryDate($startDate),
                 'Postalcode'         => str_replace(' ', '', $address['postcode']),
@@ -119,15 +129,15 @@ class Locations extends AbstractEndpoint
             'Message'     => $this->message->get('')
         ];
     }
-
+    
     /**
      * @return string
      */
     public function getLocation()
     {
-        return $this->version .'/'. $this->endpoint;
+        return $this->version . '/' . $this->endpoint;
     }
-
+    
     /**
      * @param $startDate
      *
@@ -138,10 +148,10 @@ class Locations extends AbstractEndpoint
         if ($startDate !== false) {
             return $startDate;
         }
-
+        
         return $this->postNLhelper->getTomorrowsDate();
     }
-
+    
     /**
      * @param int $storeId
      */
