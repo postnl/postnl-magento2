@@ -90,7 +90,7 @@ mysql -u${MAGENTO_DB_USER} ${MYSQLPASS} -h${MAGENTO_DB_HOST} -P${MAGENTO_DB_PORT
 chmod -R 6777 "${BUILD_DIR}/var/"
 chmod -R 6777 "${BUILD_DIR}/pub/"
 chmod -R 6777 "${BUILD_DIR}/dev/"
-if [ $MAGENTO_VERSION == "2.2"* ]; then chmod -R 6777 "${BUILD_DIR}/generated/"; fi
+if [ $MAGENTO_VERSION != "2.1"* ]; then chmod -R 6777 "${BUILD_DIR}/generated/"; fi
 chmod -R 6777 "${BUILD_DIR}/vendor/phpunit/phpunit/phpunit"
 
 ( cd ${BUILD_DIR} && php -d memory_limit=2048M bin/magento setup:upgrade )
