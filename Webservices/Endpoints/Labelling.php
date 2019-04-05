@@ -60,7 +60,7 @@ class Labelling extends AbstractEndpoint
     /**
      * @var string
      */
-    private $version = 'v2_1';
+    private $version = 'v2_2';
 
     /**
      * @var string
@@ -96,7 +96,9 @@ class Labelling extends AbstractEndpoint
     }
     
     /**
-     * {@inheritdoc}
+     * @return mixed
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     public function call()
     {
@@ -125,7 +127,7 @@ class Labelling extends AbstractEndpoint
     }
     
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getLocation()
     {

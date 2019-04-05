@@ -94,9 +94,11 @@ class LabellingWithoutConfirm extends AbstractEndpoint
             $shipmentData
         );
     }
-
+    
     /**
-     * {@inheritdoc}
+     * @return mixed
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     public function call()
     {
@@ -119,9 +121,9 @@ class LabellingWithoutConfirm extends AbstractEndpoint
             'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
     }
-
+    
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getLocation()
     {

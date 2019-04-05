@@ -74,6 +74,11 @@ class BarcodeHandler
     private $countryId;
 
     /**
+     * $var null|int
+     */
+    private $storeId;
+
+    /**
      * @param BarcodeEndpoint             $barcodeEndpoint
      * @param ShipmentRepositoryInterface $shipmentRepository
      * @param ShipmentBarcodeFactory      $shipmentBarcodeFactory
@@ -106,6 +111,9 @@ class BarcodeHandler
         if (!$shipment || $shipment->getMainBarcode() !== null || $shipment->getConfirmedAt() !== null) {
             return;
         }
+
+        $magentoShipment = $shipment->getShipment();
+        $this->storeId = $magentoShipment->getStoreId();
 
         $mainBarcode = $this->generate($shipment);
         $shipment->setMainBarcode($mainBarcode);

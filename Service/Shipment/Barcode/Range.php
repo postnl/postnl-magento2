@@ -91,11 +91,12 @@ class Range
         $this->globalpackConfiguration = $globalpack;
         $this->pepsConfiguration       = $pepsConfiguration;
     }
-
+    
     /**
      * @param $barcodeType
      *
      * @return array
+     * @throws \TIG\PostNL\Exception
      */
     public function get($barcodeType)
     {
@@ -128,9 +129,11 @@ class Range
 
         return $this->get('GLOBAL');
     }
-
+    
     /**
      * @param $type
+     *
+     * @throws \TIG\PostNL\Exception
      */
     public function set($type)
     {

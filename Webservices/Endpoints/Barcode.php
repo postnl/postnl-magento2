@@ -82,6 +82,11 @@ class Barcode extends AbstractEndpoint
     private $countryId;
 
     /**
+     * @var string
+     */
+    private $type = '';
+    
+    /**
      * Barcode constructor.
      *
      * @param \TIG\PostNL\Webservices\Soap                   $soap
@@ -116,7 +121,7 @@ class Barcode extends AbstractEndpoint
     {
         $this->validateRequiredValues();
 
-        $barcode = $this->barcodeRange->getByCountryId($this->countryId, $this->storeId);
+        $barcode = $this->barcodeRange->getByCountryId($this->countryId, $this->storeId, $this->type);
 
         $parameters = [
             'Message'  => $this->message->get(''),
