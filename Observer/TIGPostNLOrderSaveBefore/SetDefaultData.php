@@ -213,7 +213,9 @@ class SetDefaultData implements ObserverInterface
          * which occurred since Magento 2.2.8/2.3.1.
          */
         try {
-            return $this->magentoOrder->getShippingAddress($order->getOrderId());
+            if ($order->getOrderId()) {
+                return $this->magentoOrder->getShippingAddress($order->getOrderId());
+            }
         } catch (\Error $e) {
             if ($order->getQuoteId()) {
                 return $address = $this->magentoOrder->getShippingAddress($order->getQuoteId(), 'quote');
