@@ -41,6 +41,7 @@ use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory;
 use \Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 
+// @codingStandardsIgnoreFile
 class BarcodeHandler
 {
     /**
