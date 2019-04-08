@@ -3,13 +3,14 @@
     "description": "TIG Magento 2 PostNL extension",
     "require": {
         "php": "~7.0|~7.1|~7.2",
+        "ext-soap": "*",
         "magento/framework": ">=100.1.0,<=100.1.17|>=101.0.0,<=101.0.8|>=102.0.0,<=102.0.1",
         "setasign/fpdi-fpdf": "2.1",
         "zendframework/zend-barcode" : "2.7"
     },
     "type": "magento2-module",
     "license": "CC-BY-NC-ND-3.0",
-    "version": "1.7.4-RC1",
+    "version": "1.7.4",
     "authors": [
         {
             "name": "TIG",
@@ -23,7 +24,6 @@
     },
     "homepage": "https://tig.nl/postnl",
     "keywords": ["PostNL", "Official PostNL extension", "Magento 2"],
-    "minimum-stability": "RC",
     "autoload": {
         "files": [
             "registration.php"

@@ -38,11 +38,11 @@
         >
     <!-- Test suites definition -->
     <testsuites>
-        <!-- Memory tests run first to prevent influence of other tests on accuracy of memory measurements -->
         <testsuite name="TIG PostNL Tests">
             <directory>../../../app/code/TIG/PostNL/Test</directory>
             <directory>../../../vendor/tig/postnl/Test</directory>
             <exclude>../../../app/code/Magento</exclude>
+            <exclude>../../../vendor/magento</exclude>
         </testsuite>
     </testsuites>
     <!-- Code coverage filters -->

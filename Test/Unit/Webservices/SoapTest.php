@@ -72,7 +72,7 @@ class SoapTest extends TestCase
     public function setUp()
     {
         $this->soapClient = $this->getMock(\Zend\Soap\Client::class);
-        $this->endpointMock = $this->getMock(\TIG\PostNL\Webservices\AbstractEndpoint::class);
+        $this->endpointMock = $this->getFakeMock(\TIG\PostNL\Webservices\AbstractEndpoint::class, true);
         $this->accountConfiguration = $this->getFakeMock(\TIG\PostNL\Config\Provider\AccountConfiguration::class, true);
         $this->defaultConfiguration = $this->getFakeMock(\TIG\PostNL\Config\Provider\DefaultConfiguration::class, true);
         $this->exceptionHandler = $this->getFakeMock(\TIG\PostNL\Webservices\ExceptionHandler::class, true);

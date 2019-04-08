@@ -200,7 +200,6 @@ class SetDefaultData implements ObserverInterface
      */
     private function checkByAddressData(OrderInterface $order)
     {
-        $address = null;
         $country = null;
 
         /** @noinspection PhpUndefinedMethodInspection */
@@ -209,14 +208,24 @@ class SetDefaultData implements ObserverInterface
             return $address;
         }
 
-        if (!$address && $order->getOrderId()) {
-            $address = $this->magentoOrder->getShippingAddress($order->getOrderId());
+        /**
+         * Added try-catch wrapper to prevent 500-error in \Magento\Sales\Model\OrderRepository::get()
+         * which occurred since Magento 2.2.8/2.3.1.
+         */
+        try {
+            if ($order->getOrderId()) {
+                return $this->magentoOrder->getShippingAddress($order->getOrderId());
+            }
+        } catch (\Error $e) {
+            if ($order->getQuoteId()) {
+                return $address = $this->magentoOrder->getShippingAddress($order->getQuoteId(), 'quote');
+            }
         }
 
-        if (!$address && $order->getQuoteId()) {
-            $address = $this->magentoOrder->getShippingAddress($order->getQuoteId(), 'quote');
+        if ($order->getQuoteId()) {
+            return $this->magentoOrder->getShippingAddress($order->getQuoteId(), 'quote');
         }
 
-        return $address;
+        return null;
     }
 }
