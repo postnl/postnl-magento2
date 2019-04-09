@@ -41,32 +41,32 @@ use TIG\PostNL\Plugin\Postcodecheck\Fields\Factory;
 class LayoutProcessor
 {
     /**
-     * @var \TIG\PostNL\Plugin\Postcodecheck\Fields\Factory
+     * @var Factory
      */
     private $fieldFactory;
     
     /**
-     * @var \TIG\PostNL\Config\Provider\AccountConfiguration
+     * @var AccountConfiguration
      */
     private $accountConfig;
     
     /**
-     * @var \TIG\PostNL\Config\Provider\Webshop
+     * @var Webshop
      */
     private $webshopConfig;
     
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var ScopeConfigInterface
      */
     private $scopeConfig;
     
     /**
      * LayoutProcessor constructor.
      *
-     * @param \TIG\PostNL\Plugin\Postcodecheck\Fields\Factory    $factory
-     * @param \TIG\PostNL\Config\Provider\AccountConfiguration   $accountConfig
-     * @param \TIG\PostNL\Config\Provider\Webshop                $webshop
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param Factory              $factory
+     * @param AccountConfiguration $accountConfig
+     * @param Webshop              $webshop
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         Factory $factory,
