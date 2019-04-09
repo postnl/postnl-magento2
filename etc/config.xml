@@ -102,13 +102,13 @@
             </stock_settings>
 
             <evening_delivery_nl>
-                <default_evening_option>3089</default_evening_option>
+                <default_evening_option>3385</default_evening_option>
                 <eveningdelivery_active>1</eveningdelivery_active>
                 <eveningdelivery_fee>2</eveningdelivery_fee>
             </evening_delivery_nl>
 
             <evening_delivery_be>
-                <default_evening_be_option>4938</default_evening_be_option>
+                <default_evening_be_option>4941</default_evening_be_option>
                 <eveningdelivery_be_active>0</eveningdelivery_be_active>
                 <eveningdelivery_be_fee>2</eveningdelivery_be_fee>
             </evening_delivery_be>
@@ -142,6 +142,7 @@
                 <background_color>#FFFFFF</background_color>
                 <barcode_color>#000000</barcode_color>
                 <barcode_height>40</barcode_height>
+                <barcode_type>code39</barcode_type>
                 <barcode_type>code39</barcode_type>
                 <barcode_numberinclude>1</barcode_numberinclude>
             </labelandpackingslipoptions>
