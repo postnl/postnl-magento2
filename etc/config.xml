@@ -143,7 +143,6 @@
                 <barcode_color>#000000</barcode_color>
                 <barcode_height>40</barcode_height>
                 <barcode_type>code39</barcode_type>
-                <barcode_type>code39</barcode_type>
                 <barcode_numberinclude>1</barcode_numberinclude>
             </labelandpackingslipoptions>
 
