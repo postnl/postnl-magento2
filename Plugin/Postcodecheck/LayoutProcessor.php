@@ -31,10 +31,11 @@
  */
 namespace TIG\PostNL\Plugin\Postcodecheck;
 
-use TIG\PostNL\Plugin\Postcodecheck\Fields\Factory;
-use TIG\PostNL\Config\Provider\Webshop;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
+use TIG\PostNL\Config\Provider\AccountConfiguration;
+use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Plugin\Postcodecheck\Fields\Factory;
 
 // @codingStandardsIgnoreFile
 class LayoutProcessor
@@ -43,23 +44,38 @@ class LayoutProcessor
      * @var Factory
      */
     private $fieldFactory;
-
+    
+    /**
+     * @var AccountConfiguration
+     */
+    private $accountConfig;
+    
     /**
      * @var Webshop
      */
     private $webshopConfig;
-
+    
     /**
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
-
+    
+    /**
+     * LayoutProcessor constructor.
+     *
+     * @param Factory              $factory
+     * @param AccountConfiguration $accountConfig
+     * @param Webshop              $webshop
+     * @param ScopeConfigInterface $scopeConfig
+     */
     public function __construct(
         Factory $factory,
+        AccountConfiguration $accountConfig,
         Webshop $webshop,
         ScopeConfigInterface $scopeConfig
     ) {
         $this->fieldFactory  = $factory;
+        $this->accountConfig = $accountConfig;
         $this->webshopConfig = $webshop;
         $this->scopeConfig   = $scopeConfig;
     }
@@ -72,7 +88,7 @@ class LayoutProcessor
      */
     public function afterProcess($subject, array $jsLayout)
     {
-        if (!$this->webshopConfig->getIsAddressCheckEnabled()) {
+        if (!$this->webshopConfig->getIsAddressCheckEnabled() || $this->accountConfig->isModusOff()) {
             return $jsLayout;
         }
 
