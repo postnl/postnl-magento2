@@ -31,35 +31,51 @@
  */
 namespace TIG\PostNL\Plugin\Postcodecheck;
 
-use TIG\PostNL\Plugin\Postcodecheck\Fields\Factory;
-use TIG\PostNL\Config\Provider\Webshop;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
+use TIG\PostNL\Config\Provider\AccountConfiguration;
+use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Plugin\Postcodecheck\Fields\Factory;
 
 // @codingStandardsIgnoreFile
 class LayoutProcessor
 {
     /**
-     * @var Factory
+     * @var \TIG\PostNL\Plugin\Postcodecheck\Fields\Factory
      */
     private $fieldFactory;
-
+    
     /**
-     * @var Webshop
+     * @var \TIG\PostNL\Config\Provider\AccountConfiguration
+     */
+    private $accountConfig;
+    
+    /**
+     * @var \TIG\PostNL\Config\Provider\Webshop
      */
     private $webshopConfig;
-
+    
     /**
-     * @var ScopeConfigInterface
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     private $scopeConfig;
-
+    
+    /**
+     * LayoutProcessor constructor.
+     *
+     * @param \TIG\PostNL\Plugin\Postcodecheck\Fields\Factory    $factory
+     * @param \TIG\PostNL\Config\Provider\AccountConfiguration   $accountConfig
+     * @param \TIG\PostNL\Config\Provider\Webshop                $webshop
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     */
     public function __construct(
         Factory $factory,
+        AccountConfiguration $accountConfig,
         Webshop $webshop,
         ScopeConfigInterface $scopeConfig
     ) {
         $this->fieldFactory  = $factory;
+        $this->accountConfig = $accountConfig;
         $this->webshopConfig = $webshop;
         $this->scopeConfig   = $scopeConfig;
     }
@@ -72,7 +88,7 @@ class LayoutProcessor
      */
     public function afterProcess($subject, array $jsLayout)
     {
-        if (!$this->webshopConfig->getIsAddressCheckEnabled()) {
+        if (!$this->webshopConfig->getIsAddressCheckEnabled() || $this->accountConfig->isModusOff()) {
             return $jsLayout;
         }
 
