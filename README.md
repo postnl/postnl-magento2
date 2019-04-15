@@ -13,11 +13,6 @@ Enable maintenance mode:
 php bin/magento maintenance:enable
 ~~~~
 
-Install the extension:
-~~~~
-composer require tig/postnl-magento2
-~~~~
-
 Empty the following folders if they exist (Make sure to not delete the folders):
 - var/cache
 - var/di
@@ -30,12 +25,18 @@ Flush the cache:
 php bin/magento cache:flush
 ~~~~
 
-Update the Magento 2 environment:
+Install the extension:
 ~~~~
-php bin/magento setup:upgrade
+composer require tig/postnl-magento2
 ~~~~
 
-Compile DI:
+Update the Magento 2 environment and enable the extension:
+~~~~
+php bin/magento setup:upgrade
+php bin/magento module:enable TIG_PostNL
+~~~~
+
+Compile DI (optional):
 ~~~~
 php bin/magento setup:di:compile
 ~~~~
@@ -45,7 +46,7 @@ Deploy static content:
 php bin/magento setup:static-content:deploy
 ~~~~
 
-Re-index the Magento 2 environment:
+Re-index the Magento 2 environment (needs complete reindex for new attributes):
 ~~~~
 php bin/magento indexer:reindex
 ~~~~
