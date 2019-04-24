@@ -32,11 +32,19 @@
 
 namespace TIG\PostNL\Service\Shipment\Label\Type;
 
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Service\Pdf\Fpdi;
 
 class GlobalPack extends EPS
 {
+    /**
+     * The labels of these Priority GP countries are not supposed to be rotated.
+     *
+     * @var array
+     */
+    private $excludedCountries = ["US"];
+    
     /**
      * @param ShipmentLabelInterface $label
      *
@@ -49,22 +57,24 @@ class GlobalPack extends EPS
      */
     public function process(ShipmentLabelInterface $label)
     {
-        $filename    = $this->saveTempLabel($label);
         $productCode = $label->getProductCode();
+        $shipment    = $label->getShipment();
+        $filename    = $this->saveTempLabel($label);
         
         $this->createPdf();
         $count = $this->pdf->setSourceFile($filename);
         
         for ($pageNo = 1; $pageNo <= $count; $pageNo++) {
-            $this->processLabels($pageNo, $productCode);
+            $this->processLabels($shipment, $pageNo, $productCode);
         }
         
         return $this->pdf;
     }
     
     /**
-     * @param $page
-     * @param $code
+     * @param ShipmentInterface $shipment
+     * @param                   $page
+     * @param                   $code
      *
      * @throws \setasign\Fpdi\PdfParser\CrossReference\CrossReferenceException
      * @throws \setasign\Fpdi\PdfParser\Filter\FilterException
@@ -72,17 +82,28 @@ class GlobalPack extends EPS
      * @throws \setasign\Fpdi\PdfParser\Type\PdfTypeException
      * @throws \setasign\Fpdi\PdfReader\PdfReaderException
      */
-    private function processLabels($page, $code)
+    private function processLabels(ShipmentInterface $shipment, $page, $code)
     {
         if (!$this->isRotatedProduct($code)
             && $this->isPriorityProduct($code)
         ) {
-            $this->insertRotated($page);
+            $countryId = $shipment->getShipmentCountry();
+            $this->insertRotated($page, $countryId);
         }
-    
+        
         if (!$this->getTemplateInserted()) {
             $this->insertRegular($page);
         }
+    }
+    
+    /**
+     * @param $country string
+     *
+     * @return bool
+     */
+    private function isExcludedCountry($country)
+    {
+        return in_array($country, $this->excludedCountries);
     }
     
     /**
@@ -95,16 +116,22 @@ class GlobalPack extends EPS
      * @throws \setasign\Fpdi\PdfParser\Type\PdfTypeException
      * @throws \setasign\Fpdi\PdfReader\PdfReaderException
      */
-    private function insertRotated($page)
+    private function insertRotated($page, $countryId)
     {
         $this->setTemplateInserted(true);
         $this->pdf->AddPage('P', Fpdi::PAGE_SIZE_A6);
         
         $pageId = $this->pdf->importPage($page);
         
-        $this->pdf->Rotate(90);
-        $this->pdf->useTemplate($pageId, -130, 0, 150, 210);
-        $this->pdf->Rotate(0);
+        if (!$this->isExcludedCountry($countryId)) {
+            $this->pdf->Rotate(90);
+            $this->pdf->useTemplate($pageId, -130, 0, 150, 210);
+            $this->pdf->Rotate(0);
+            
+            return;
+        }
+        
+        $this->pdf->useTemplate($pageId, 0, 0, 103, 150);
     }
     
     /**
