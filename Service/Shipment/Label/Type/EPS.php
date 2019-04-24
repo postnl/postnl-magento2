@@ -51,7 +51,7 @@ class EPS extends Domestic
     /**
      * @var bool
      */
-    public $templateInserted = false;
+    private $templateInserted = false;
     
     /**
      * @param ShipmentLabelInterface $label
@@ -79,7 +79,7 @@ class EPS extends Domestic
             $this->insertRotated();
         }
 
-        if (!$this->templateInserted) {
+        if (!$this->getTemplateInserted()) {
             $this->insertRegular();
         }
 
@@ -109,7 +109,7 @@ class EPS extends Domestic
      */
     private function insertRotated()
     {
-        $this->templateInserted = true;
+        $this->setTemplateInserted(true);
         $pageId = $this->pdf->importPage(1);
         $this->pdf->Rotate(90);
         $this->pdf->useTemplate($pageId, - 130, 0);
@@ -127,7 +127,7 @@ class EPS extends Domestic
      */
     private function insertRegular()
     {
-        $this->templateInserted = true;
+        $this->setTemplateInserted(true);
         $pageId = $this->pdf->importPage(1);
         $this->pdf->useTemplate($pageId, 0, 0, Fpdi::PAGE_SIZE_A6_WIDTH, Fpdi::PAGE_SIZE_A6_HEIGHT);
     }
@@ -160,5 +160,21 @@ class EPS extends Domestic
         }
 
         return false;
+    }
+    
+    /**
+     * @param $value
+     */
+    public function setTemplateInserted($value)
+    {
+        $this->templateInserted = $value;
+    }
+    
+    /**
+     * @return bool
+     */
+    public function getTemplateInserted()
+    {
+        return $this->templateInserted;
     }
 }

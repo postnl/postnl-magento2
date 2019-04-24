@@ -40,7 +40,7 @@ class GlobalPack extends EPS
     /**
      * @param ShipmentLabelInterface $label
      *
-     * @return \FPDF|mixed|\TIG\PostNL\Service\Pdf\Fpdi
+     * @return \FPDF|Fpdi
      * @throws \setasign\Fpdi\PdfParser\CrossReference\CrossReferenceException
      * @throws \setasign\Fpdi\PdfParser\Filter\FilterException
      * @throws \setasign\Fpdi\PdfParser\PdfParserException
@@ -56,18 +56,33 @@ class GlobalPack extends EPS
         $count = $this->pdf->setSourceFile($filename);
         
         for ($pageNo = 1; $pageNo <= $count; $pageNo++) {
-            if (!$this->isRotatedProduct($productCode)
-                && $this->isPriorityProduct($productCode)
-            ) {
-                $this->insertRotated($pageNo);
-            }
-            
-            if (!$this->templateInserted) {
-                $this->insertRegular($pageNo);
-            }
+            $this->processLabels($pageNo, $productCode);
         }
         
         return $this->pdf;
+    }
+    
+    /**
+     * @param $page
+     * @param $code
+     *
+     * @throws \setasign\Fpdi\PdfParser\CrossReference\CrossReferenceException
+     * @throws \setasign\Fpdi\PdfParser\Filter\FilterException
+     * @throws \setasign\Fpdi\PdfParser\PdfParserException
+     * @throws \setasign\Fpdi\PdfParser\Type\PdfTypeException
+     * @throws \setasign\Fpdi\PdfReader\PdfReaderException
+     */
+    private function processLabels($page, $code)
+    {
+        if (!$this->isRotatedProduct($code)
+            && $this->isPriorityProduct($code)
+        ) {
+            $this->insertRotated($page);
+        }
+    
+        if (!$this->getTemplateInserted()) {
+            $this->insertRegular($page);
+        }
     }
     
     /**
@@ -82,7 +97,7 @@ class GlobalPack extends EPS
      */
     private function insertRotated($page)
     {
-        $this->templateInserted = true;
+        $this->setTemplateInserted(true);
         $this->pdf->AddPage('P', Fpdi::PAGE_SIZE_A6);
         
         $pageId = $this->pdf->importPage($page);
@@ -105,7 +120,7 @@ class GlobalPack extends EPS
      */
     private function insertRegular($page)
     {
-        $this->templateInserted = true;
+        $this->setTemplateInserted(true);
         
         $templateId   = $this->pdf->importPage($page);
         $templateSize = $this->pdf->getTemplateSize($templateId);
