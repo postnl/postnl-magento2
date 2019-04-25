@@ -101,7 +101,7 @@ class GlobalPack extends EPS
      *
      * @return bool
      */
-    private function isExcludedCountry($country)
+    public function isExcludedCountry($country)
     {
         return in_array($country, $this->excludedCountries);
     }
