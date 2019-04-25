@@ -596,7 +596,7 @@ abstract class OptionsAbstract
             'countryLimitation'    => false,
             'group'                => 'eps_package_options',
         ],
-        // PEPS Products
+        // Priority Products
         '6350' => [
             'value'                => '6350',
             'label'                => 'Priority packets tracked',

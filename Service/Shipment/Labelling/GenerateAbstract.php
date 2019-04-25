@@ -114,15 +114,17 @@ abstract class GenerateAbstract
         
         if ($responseShipments) {
             $this->saveDownpartnerData($shipment, $responseShipments);
+            $this->saveCountryId($shipment);
         }
-        
-        $labelModels = $this->handleLabels($shipment, $responseShipments, $currentShipmentNumber);
         
         if ($confirm) {
             $shipment->setConfirmedAt($this->date);
             $shipment->setConfirmed(true);
-            $this->shipmentRepository->save($shipment);
         }
+        
+        $labelModels = $this->handleLabels($shipment, $responseShipments, $currentShipmentNumber);
+    
+        $this->shipmentRepository->save($shipment);
         
         return $labelModels;
     }
@@ -140,7 +142,17 @@ abstract class GenerateAbstract
         $shipment->setDownpartnerBarcode($downPartnerBarcode);
         $shipment->setDownpartnerId($downPartnerId);
         $shipment->setDownpartnerLocation($downPartnerLocation);
-        $this->shipmentRepository->save($shipment);
+    }
+    
+    /**
+     * @param ShipmentInterface $shipment
+     */
+    private function saveCountryId(ShipmentInterface $shipment)
+    {
+        $shippingAddress = $shipment->getShippingAddress();
+        $countryId       = $shippingAddress->getCountryId();
+        
+        $shipment->setShipmentCountry($countryId);
     }
     
     /**
@@ -221,7 +233,6 @@ abstract class GenerateAbstract
          */
         if ($labelItem->ProductCodeDelivery !== $shipment->getProductCode()) {
             $shipment->setProductCode($labelItem->ProductCodeDelivery);
-            $this->shipmentRepository->save($shipment);
         }
         
         return $labelModels;

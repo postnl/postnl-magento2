@@ -86,6 +86,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '1.7.4', '<')) {
             $this->upgradeSchemas($this->upgradeSchemaObjects['v1.7.4'], $setup, $context);
         }
+        
+        if (version_compare($context->getVersion(), '1.8.0', '<')) {
+            $this->upgradeSchemas($this->upgradeSchemaObjects['v1.8.0'], $setup, $context);
+        }
 
         $setup->endSetup();
     }

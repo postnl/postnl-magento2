@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,21 +28,31 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="1.8.0">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Directory"/>
-            <module name="Magento_Backend"/>
-            <module name="Magento_Catalog"/>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Quote"/>
-            <module name="Magento_Checkout"/>
-            <module name="Magento_Store"/>
-            <module name="Magento_Ui"/>
-            <module name="Magento_Config"/>
-        </sequence>
-    </module>
-</config>
+ */
+
+namespace TIG\PostNL\Setup\V180\Schema;
+
+use \TIG\PostNL\Setup\AbstractColumnsInstaller;
+
+class InstallPriorityAttribute extends AbstractColumnsInstaller
+{
+    const TABLE_NAME = 'tig_postnl_shipment';
+    
+    // @codingStandardsIgnoreLine
+    protected $columns = [
+        'shipment_country'
+    ];
+    
+    public function installShipmentCountryColumn()
+    {
+        return [
+            // @codingStandardsIgnoreLine
+            'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            'length'   => 12,
+            'nullable' => true,
+            'default'  => null,
+            'comment'  => 'Country',
+            'after'    => 'shipment_type'
+        ];
+    }
+}
