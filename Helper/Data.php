@@ -159,10 +159,10 @@ class Data extends AbstractHelper
     /**
      * @return bool|string
      */
-    public function getTommorowsDate()
+    public function getTomorrowsDate()
     {
         $dateTime = $this->dateTime->date($this->getCurrentDate());
-        return date('Y-m-d ' . $dateTime->format('H:i:s'), strtotime('tommorow'));
+        return date('Y-m-d ' . $dateTime->format('H:i:s'), strtotime('tomorrow'));
     }
 
     /**
@@ -177,7 +177,7 @@ class Data extends AbstractHelper
          */
         $maximumNumberOfDeliveryDays = $this->shippingOptions->getMaxAmountOfDeliverydays() - 1;
 
-        $endDate = $this->dateTime->date($startDate);
+        $endDate = $this->dateTime->date($startDate, 'nl_NL');
         // @codingStandardsIgnoreLine
         $endDate->add(new \DateInterval("P{$maximumNumberOfDeliveryDays}D"));
 

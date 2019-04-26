@@ -33,6 +33,7 @@ namespace TIG\PostNL\Service\Options;
 
 use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Config\Provider\ProductOptions as OptionsProvider;
+use TIG\PostNL\Service\Shipment\EpsCountries;
 
 class ShipmentSupported
 {
@@ -79,16 +80,34 @@ class ShipmentSupported
         // These are the options selected in the configuration by user.
         $supportedOptions = $this->optionsProvider->getSupportedProductOptions();
 
-        $optionsAllowed = $this->getProductOptions($country);
-        if (!in_array($country, $this->allowedCountries)) {
-            $optionsAllowed = $this->productOptions->getEpsProductOptions();
-        }
+        $optionsAllowed = $this->getProductOptionsByCountry($country);
 
         $availableOptions = array_filter($supportedOptions, function ($value) use ($optionsAllowed) {
-            return isset($optionsAllowed[$value]);
+            $available = false;
+            foreach ($optionsAllowed as $option) {
+                $available = ($available || (isset($option['value']) && $option['value'] == $value));
+            }
+
+            return $available;
         });
 
         return $availableOptions;
+    }
+
+    private function getProductOptionsByCountry($country)
+    {
+        if (in_array($country, $this->allowedCountries)) {
+            $options = $this->getProductOptions($country);
+            return $options;
+        }
+
+        if (in_array($country, EpsCountries::ALL)) {
+            $options = $this->productOptions->getEpsProductOptions();
+            return $options;
+        }
+
+        $options = $this->productOptions->getGlobalPackOptions();
+        return $options;
     }
 
     /**
@@ -100,7 +119,7 @@ class ShipmentSupported
     {
         $options = $this->productOptions->get();
         return array_filter($options, function ($value) use ($country) {
-            return (!$value['countryLimitation'] || $value['countryLimitation'] == $country);
+            return ($value['countryLimitation'] == $country);
         });
     }
 }

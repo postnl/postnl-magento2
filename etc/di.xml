@@ -105,6 +105,9 @@
     <type name="TIG\PostNL\Setup\UpgradeSchema">
         <arguments>
             <argument name="upgradeSchemaObjects" xsi:type="array">
+                <item name="v1.7.4" xsi:type="array">
+                    <item name="InstallDownpartnerAttributes" xsi:type="object">TIG\PostNL\Setup\V174\Schema\InstallDownpartnerAttributes</item>
+                </item>
                 <item name="v1.6.1" xsi:type="array">
                     <item name="UpgradeShipmentLabelTable" xsi:type="object">TIG\PostNL\Setup\V161\Schema\UpgradeShipmentLabelTable</item>
                 </item>
@@ -143,9 +146,6 @@
     <type name="TIG\PostNL\Setup\InstallData">
         <arguments>
             <argument name="installDataObjects" xsi:type="array">
-                <item name="v1.1.0" xsi:type="array">
-                    <item name="InstallApiKey" xsi:type="object">TIG\PostNL\Setup\V110\Data\ApiKeyConfiguration</item>
-                </item>
                 <item name="v1.2.0" xsi:type="array">
                     <item name="InstallCustomProductAttributes" xsi:type="object">TIG\PostNL\Setup\V120\Data\CustomProductAttributes</item>
                 </item>
@@ -170,6 +170,9 @@
                 </item>
                 <item name="v1.6.0" xsi:type="array">
                     <item name="ConfigurationData" xsi:type="object">TIG\PostNL\Setup\V160\Data\ConfigurationData</item>
+                </item>
+                <item name="v1.7.2" xsi:type="array">
+                    <item name="UpdateCustomProductAttributes" xsi:type="object">TIG\PostNL\Setup\V172\Data\UpdateCustomProductAttributes</item>
                 </item>
             </argument>
         </arguments>

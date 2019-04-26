@@ -80,13 +80,17 @@ fi
 
 ( cd "${BUILD_DIR}/" && composer config minimum-stability dev )
 ( cd "${BUILD_DIR}/" && composer config repositories.postnl "${REPOSITORY_CONFIG}" )
+sed -i "s/^memory_limit =.*$/memory_limit = 4096M/" $(php -i | grep 'Loaded Configuration File' |  sed 's/^.*=> //')
+sed -i "s/^memory_limit =.*$/memory_limit = 4096M/" $(php -i | grep 'Additional .ini files parsed' |  sed 's/^.*=> //' | tr -d ,)
 ( cd "${BUILD_DIR}/" && composer require tig/postnl --ignore-platform-reqs )
 
 mysql -u${MAGENTO_DB_USER} ${MYSQLPASS} -h${MAGENTO_DB_HOST} -P${MAGENTO_DB_PORT} -e "DROP DATABASE IF EXISTS \`${MAGENTO_DB_NAME}\`; CREATE DATABASE \`${MAGENTO_DB_NAME}\`;"
 mysql -u${MAGENTO_DB_USER} ${MYSQLPASS} -h${MAGENTO_DB_HOST} -P${MAGENTO_DB_PORT} ${MAGENTO_DB_NAME} < Test/Fixtures/tig-postnl-fixture.sql
 
-chmod 777 "${BUILD_DIR}/var/"
-chmod 777 "${BUILD_DIR}/pub/"
-chmod 777 "${BUILD_DIR}/vendor/phpunit/phpunit/phpunit"
+chmod -R 6777 "${BUILD_DIR}/var/"
+chmod -R 6777 "${BUILD_DIR}/pub/"
+chmod -R 6777 "${BUILD_DIR}/dev/"
+if [[ $MAGENTO_VERSION != "2.1"* ]]; then chmod -R 6777 "${BUILD_DIR}/generated/"; fi
+chmod -R 6777 "${BUILD_DIR}/vendor/phpunit/phpunit/phpunit"
 
 ( cd ${BUILD_DIR} && php -d memory_limit=2048M bin/magento setup:upgrade )

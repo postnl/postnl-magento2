@@ -123,8 +123,9 @@ class Data
                     )
                 ],
             'DeliveryDate'             => $shipment->getDeliveryDateFormatted(),
-            'DownPartnerID'            => $shipment->getPgRetailNetworkId(),
-            'DownPartnerLocation'      => $shipment->getPgLocationCode(),
+            'DownPartnerID'            => $shipment->getDownpartnerId(),
+            'DownPartnerLocation'      => $shipment->getDownpartnerLocation(),
+            'DownPartnerBarcode'       => $shipment->getDownpartnerBarcode(),
             'ProductCodeDelivery'      => $shipment->getProductCode(),
             'Reference'                => $this->labelAndPackingslipOptions->getReference($shipment->getShipment())
         ];

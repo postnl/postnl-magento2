@@ -37,6 +37,7 @@ use TIG\PostNL\Config\Provider\PackingslipBarcode;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Source\LabelAndPackingslip\BarcodeValue;
 use \Magento\Sales\Api\OrderRepositoryInterface;
+use Zend\Barcode\Barcode as ZendBarcode;
 
 class Barcode implements ItemsInterface
 {
@@ -136,7 +137,7 @@ class Barcode implements ItemsInterface
     {
         $this->createBarcode();
 
-        $postion      = $this->barcodeSettings->getPosition($this->storeId);
+        $postion = $this->barcodeSettings->getPosition($this->storeId);
         // @codingStandardsIgnoreLine
         $barcodeImage = \Zend_Pdf_Image::imageWithPath($this->fileName);
         $page->drawImage($barcodeImage, $postion[0], $postion[1], $postion[2], $postion[3]);
@@ -159,7 +160,7 @@ class Barcode implements ItemsInterface
 
         $type = $this->barcodeSettings->getType($this->storeId);
         // @codingStandardsIgnoreLine
-        $imageResource = \Zend_Barcode::draw($type, 'image', $barcodeOptions, []);
+        $imageResource = ZendBarcode::draw($type, 'image', $barcodeOptions, []);
         // @codingStandardsIgnoreLine
         imagejpeg($imageResource, $this->fileName, 100);
         // @codingStandardsIgnoreLine

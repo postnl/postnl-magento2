@@ -37,8 +37,12 @@ use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Model\ShipmentFactory;
 use TIG\PostNL\Model\ShipmentRepository;
 
-class ChangeConfirmationTest extends AbstractBackendController
+class CancelConfirmationTest extends AbstractBackendController
 {
+    /**
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function testResetsTheMainBarcode()
     {
         if (getenv('TRAVIS') !== false) {
@@ -59,7 +63,7 @@ class ChangeConfirmationTest extends AbstractBackendController
         $this->_objectManager->get('Magento\Backend\Model\UrlInterface')->turnOffSecretKey();
 
         $this->dispatch(
-            'backend/postnl/shipment/ChangeConfirmation/postnl_shipment_id/' . $model->getId() . '/shipment_id/'
+            'backend/postnl/shipment/CancelConfirmation/postnl_shipment_id/' . $model->getId() . '/shipment_id/'
             . $shipment->getId()
         );
 
