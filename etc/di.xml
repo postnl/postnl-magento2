@@ -146,9 +146,6 @@
     <type name="TIG\PostNL\Setup\InstallData">
         <arguments>
             <argument name="installDataObjects" xsi:type="array">
-                <item name="v1.1.0" xsi:type="array">
-                    <item name="InstallApiKey" xsi:type="object">TIG\PostNL\Setup\V110\Data\ApiKeyConfiguration</item>
-                </item>
                 <item name="v1.2.0" xsi:type="array">
                     <item name="InstallCustomProductAttributes" xsi:type="object">TIG\PostNL\Setup\V120\Data\CustomProductAttributes</item>
                 </item>
