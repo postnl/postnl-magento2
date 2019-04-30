@@ -52,6 +52,7 @@ class Tablerate
     /**
      * @param TablerateFactory $tablerateFactory
      * @param GetFreeBoxes     $getFreeBoxes
+     * @param CheckoutSession  $checkoutSession
      */
     public function __construct(
         TablerateFactory $tablerateFactory,
@@ -171,7 +172,7 @@ class Tablerate
         $oldWeight = $request->getPackageWeight();
         $oldQty = $request->getPackageQty();
 
-        $request->setPackageWeight($request->getFreeMethodWeight());
+        $request->setPackageWeight($request->getFreeMethodWeight() ?: $oldWeight);
         $request->setPackageQty($oldQty - $this->getFreeBoxes->get($request));
 
         /** @var TablerateModel $tablerate */
