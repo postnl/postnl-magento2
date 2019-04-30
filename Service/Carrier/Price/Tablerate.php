@@ -52,7 +52,6 @@ class Tablerate
     /**
      * @param TablerateFactory $tablerateFactory
      * @param GetFreeBoxes     $getFreeBoxes
-     * @param CheckoutSession  $checkoutSession
      */
     public function __construct(
         TablerateFactory $tablerateFactory,
