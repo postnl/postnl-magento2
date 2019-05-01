@@ -45,7 +45,10 @@ class Generate
      * @var Merge
      */
     private $merge;
-
+    
+    /**
+     * @var array
+     */
     private $globalPackLabels = [];
 
     /**
@@ -91,12 +94,14 @@ class Generate
     public function orderLabels($labels)
     {
         $otherLabels = array_filter($labels, function ($label) {
-            /** @var ShipmentLabelInterface $label */
+            /** @var array|ShipmentLabelInterface $label */
+            if (is_array($label)) {
+                return false;
+            }
             if (strtoupper($label->getType()) == ProductInfo::SHIPMENT_TYPE_GP) {
                 $this->globalPackLabels[] = $label;
                 return false;
             }
-
             return true;
         });
 
