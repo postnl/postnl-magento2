@@ -30,6 +30,7 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
+// @codingStandardsIgnoreFile
 namespace TIG\PostNL\Helper\DeliveryOptions;
 
 use TIG\PostNL\Exception as PostnlException;
@@ -126,9 +127,7 @@ class OrderParams
         
         if (!empty($requiredOrderParams)) {
             throw new PostnlException(
-            // @codingStandardsIgnoreLine
             // @todo POSTNL-XXX toevoegen
-            // @codingStandardsIgnoreLine
                 __('Missing required parameters: %1', implode(', ', $requiredOrderParams))
             );
         }
@@ -242,7 +241,6 @@ class OrderParams
         
         if (!isset($params['customerData'])) {
             throw new PostnlException(
-            // @codingStandardsIgnoreLine
                 __('Missing required parameters: customerData')
             );
         }
