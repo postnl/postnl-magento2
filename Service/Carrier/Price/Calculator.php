@@ -177,7 +177,7 @@ class Calculator
 
         return [
             'price' => $ratePrice['price'],
-            'cost' => $ratePrice['cost'],
+            'cost' => $ratePrice['price'],
         ];
     }
 
