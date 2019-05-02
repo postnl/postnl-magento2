@@ -33,7 +33,7 @@
 <script type="text/javascript">
     /**
      * This function opens the URL in a new window or tab and refreshes the
-     * current page when this tab or window is closed.
+     * current page when this tab or window is closed or loses focus.
      *
      * @param downloadUrl
      * @returns {Window}
@@ -43,7 +43,7 @@
         var newWindow = window.open(downloadUrl)
         
         var monitorInterval = window.setInterval(function() {
-            if(newWindow === null || newWindow.closed) {
+            if(newWindow === null || newWindow.closed || document.hasFocus()) {
                 window.location.reload()
                 window.clearInterval(monitorInterval)
             }
