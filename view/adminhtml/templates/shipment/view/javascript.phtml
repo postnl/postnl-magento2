@@ -31,8 +31,24 @@
  */
 ?>
 <script type="text/javascript">
-    function download(download_url) {
-        window.open(download_url, '_blank');
-        location.reload();
+    /**
+     * This function opens the URL in a new window or tab and refreshes the
+     * current page when this tab or window is closed.
+     *
+     * @param downloadUrl
+     * @returns {Window}
+     */
+    function download(downloadUrl)
+    {
+        var newWindow = window.open(downloadUrl)
+        
+        var monitorInterval = window.setInterval(function() {
+            if(newWindow === null || newWindow.closed) {
+                window.location.reload()
+                window.clearInterval(monitorInterval)
+            }
+        }, 500)
+        
+        return newWindow
     }
 </script>
