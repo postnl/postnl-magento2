@@ -119,8 +119,7 @@ abstract class LabelAbstract extends Action
     {
         $labels = $this->getLabels->get($shipmentId);
         if (isset($labels['errors'])) {
-            $this->handelRequestErrors($labels['errors']);
-            return;
+            $this->handleRequestErrors($labels['errors']);
         }
 
         if (empty($labels)) {
@@ -140,7 +139,7 @@ abstract class LabelAbstract extends Action
     {
         $packingslip = $this->getPackingSlip->get($shipmentId, $withLabels, $confirm);
         if (is_array($packingslip) && isset($packingslip['errors'])) {
-            $this->handelRequestErrors($packingslip['errors']);
+            $this->handleRequestErrors($packingslip['errors']);
             return;
         }
 
@@ -166,7 +165,7 @@ abstract class LabelAbstract extends Action
      * @param $errors
      */
     //@codingStandardsIgnoreLine
-    protected function handelRequestErrors($errors)
+    protected function handleRequestErrors($errors)
     {
         foreach ($errors as $error) {
             $this->messageManager->addWarningMessage($error);

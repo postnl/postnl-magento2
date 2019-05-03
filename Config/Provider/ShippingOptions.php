@@ -247,7 +247,7 @@ class ShippingOptions extends AbstractConfigProvider
     /**
      * @return bool
      */
-    public function canUsePepsProducts()
+    public function canUsePriority()
     {
         return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTIONS_PEPS_ACTIVE);
     }

@@ -84,21 +84,30 @@ class Validator
 
         return array_values($filtered);
     }
-
+    
     /**
-     * @param ShipmentInterface $shipment
+     * @param ShipmentLabelInterface|null $model
      *
      * @return bool
      */
-    public function canRequest(ShipmentInterface $shipment)
+    private function filterInput(ShipmentLabelInterface $model = null)
     {
-        if ($shipment->isGlobalPack()) {
-            return $this->validateGlobalPack($shipment);
+        if ($model === null) {
+            return false;
         }
-
-        return $this->validateProductCode($shipment);
+        
+        $label = $model->getLabel();
+        
+        if (!is_string($label) || empty($label)) {
+            return false;
+        }
+        
+        $start = substr($label, 0, strlen('invalid'));
+        $start = strtolower($start);
+        
+        return $start != 'invalid';
     }
-
+    
     /**
      * @return array
      */
@@ -106,7 +115,21 @@ class Validator
     {
         return $this->errors;
     }
+    
+    /**
+     * @param ShipmentInterface $shipment
+     *
+     * @return bool
+     */
+    public function validateProduct(ShipmentInterface $shipment)
+    {
+        if ($shipment->isGlobalPack()) {
+            return $this->validateGlobalPack($shipment);
+        }
 
+        return $this->validatePriority($shipment);
+    }
+    
     /**
      * @param $shipment
      *
@@ -121,54 +144,32 @@ class Validator
             return false;
         }
 
-        return $this->validateProductCode($shipment);
+        return $this->validatePriority($shipment);
     }
-
+    
     /**
      * @param $shipment
      *
      * @return bool
      */
-    private function validateProductCode(ShipmentInterface $shipment)
+    private function validatePriority(ShipmentInterface $shipment)
     {
         $code = $shipment->getProductCode();
-        $isPeps = $this->productOptions->checkProductByFlags($code, 'group', 'priority_options');
+        $isPriority = $this->productOptions->checkProductByFlags($code, 'group', 'priority_options');
 
-        if ($isPeps && !$this->shippingOptions->canUsePepsProducts()) {
+        if ($isPriority && !$this->shippingOptions->canUsePriority()) {
             $magentoShipment = $shipment->getShipment();
             // @codingStandardsIgnoreLine
             $this->errors[] = __('Could not print labels for shipment %1. Priority Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
             return false;
         }
 
-        if ($isPeps && $shipment->getParcelCount() < 5) {
+        /** We want to show this notification for every Priority Shipment */
+        if ($isPriority) {
             // @codingStandardsIgnoreLine
-            $this->errors[] = __('A Priority Delivery requires a minimum of 5 parcels/packages.');
+            $this->errors[] = __('Tracked Parcels can only be used if 5 packages or more are delivered in a domestic mail bag with an attached bag label specific for priority parcels.');
         }
 
         return true;
-    }
-
-    /**
-     * @param ShipmentLabelInterface|null $model
-     *
-     * @return bool
-     */
-    private function filterInput(ShipmentLabelInterface $model = null)
-    {
-        if ($model === null) {
-            return false;
-        }
-
-        $label = $model->getLabel();
-
-        if (!is_string($label) || empty($label)) {
-            return false;
-        }
-
-        $start = substr($label, 0, strlen('invalid'));
-        $start = strtolower($start);
-
-        return $start != 'invalid';
     }
 }
