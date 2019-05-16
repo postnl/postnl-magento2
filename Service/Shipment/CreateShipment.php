@@ -31,16 +31,28 @@
  */
 namespace TIG\PostNL\Service\Shipment;
 
+use Magento\InventoryShipping\Plugin\Sales\Shipment\AssignSourceCodeToShipmentPlugin;
+use Magento\Sales\Model\Convert\Order as ConvertOrder;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\Convert\Order as ConvertOrder;
-use TIG\PostNL\Model\ShipmentRepository;
+use Magento\Sales\Model\Order\ShipmentFactory;
 use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Model\ShipmentRepository;
 
 //@codingStandardsIgnoreFile
 class CreateShipment
 {
+    /**
+     * @var ShipmentFactory
+     */
+    private $shipmentFactory;
+
+    /**
+     * @var AssignSourceCodeToShipmentPlugin
+     */
+    private $assignSourceCodePlugin;
+
     /**
      * @var ConvertOrder
      */
@@ -72,18 +84,24 @@ class CreateShipment
     private $errors = [];
 
     /**
-     * @param ConvertOrder                         $convertOrder
-     * @param ShipmentRepository $shipmentRepository
-     * @param Data  $postnlHelper
+     * @param ConvertOrder                     $convertOrder
+     * @param ShipmentRepository               $shipmentRepository
+     * @param Data                             $postnlHelper
+     * @param ShipmentFactory                  $shipmentFactory
+     * @param AssignSourceCodeToShipmentPlugin $assignSourceCodePlugin
      */
     public function __construct(
         ConvertOrder $convertOrder,
         ShipmentRepository $shipmentRepository,
-        Data $postnlHelper
+        Data $postnlHelper,
+        ShipmentFactory $shipmentFactory,
+        AssignSourceCodeToShipmentPlugin $assignSourceCodePlugin
     ) {
         $this->convertOrder = $convertOrder;
         $this->shipmentRepository = $shipmentRepository;
         $this->postNLHelper = $postnlHelper;
+        $this->shipmentFactory = $shipmentFactory;
+        $this->assignSourceCodePlugin = $assignSourceCodePlugin;
     }
 
     /**
@@ -219,6 +237,7 @@ class CreateShipment
     {
         $this->shipment->register();
         $order = $this->shipment->getOrder();
+        $this->assignSourceCodePlugin->afterCreate($this->shipmentFactory, $this->shipment, $order);
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus('processing');
 
@@ -242,13 +261,16 @@ class CreateShipment
      */
     private function handleExceptionForPosibleSoapErrors(\Exception $exception)
     {
-        if (!$exception->getErrors() || !is_array($exception->getErrors())) {
+        if (!method_exists($exception, 'getErrors')
+            || !$exception->getErrors()
+            || !is_array($exception->getErrors())
+        ) {
             return $exception->getMessage();
         }
 
         $message =  __('[POSTNL-0010] - An error occurred while processing this action.');
         foreach ($exception->getErrors() as $error) {
-            $message .= ' '. (string) $error;
+            $message .= ' ' . (string) $error;
         }
 
         return $message;
