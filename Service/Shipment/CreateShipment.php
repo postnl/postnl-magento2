@@ -31,12 +31,12 @@
  */
 namespace TIG\PostNL\Service\Shipment;
 
+use Magento\Sales\Model\Convert\Order as ConvertOrder;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\Convert\Order as ConvertOrder;
-use TIG\PostNL\Model\ShipmentRepository;
 use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Model\ShipmentRepository;
 
 //@codingStandardsIgnoreFile
 class CreateShipment
@@ -242,13 +242,13 @@ class CreateShipment
      */
     private function handleExceptionForPosibleSoapErrors(\Exception $exception)
     {
-        if (!$exception->getErrors() || !is_array($exception->getErrors())) {
+        if (!method_exists($exception, 'getErrors') || !$exception->getErrors() || !is_array($exception->getErrors())) {
             return $exception->getMessage();
         }
 
         $message =  __('[POSTNL-0010] - An error occurred while processing this action.');
         foreach ($exception->getErrors() as $error) {
-            $message .= ' '. (string) $error;
+            $message .= ' ' . (string) $error;
         }
 
         return $message;

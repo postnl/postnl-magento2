@@ -162,4 +162,69 @@ class CreateShipmentTest extends TestCase
         $result = $this->invoke('orderHasShipment', $instance);
         $this->assertEquals($expected, $result);
     }
+
+    /**
+     * @return array
+     */
+    public function handleExceptionForPosibleSoapErrorsProvider()
+    {
+        return [
+            'no errors, no message' => [
+                null,
+                null,
+                ''
+            ],
+            'no errors, has message' => [
+                null,
+                'exception message',
+                'exception message'
+            ],
+            'string errors, no message' => [
+                'error by string',
+                null,
+                ''
+            ],
+            'string errors, has message' => [
+                'error by string',
+                'exception message',
+                'exception message'
+            ],
+            'array errors, no message' => [
+                ['first error by array.', 'another error.'],
+                null,
+                '[POSTNL-0010] - An error occurred while processing this action. first error by array. another error.'
+            ],
+            'array errors, has message' => [
+                ['first error by array.', 'another error.'],
+                'exception message',
+                '[POSTNL-0010] - An error occurred while processing this action. first error by array. another error.'
+            ],
+        ];
+    }
+
+    /**
+     * @param $errors
+     * @param $message
+     * @param $expected
+     *
+     * @dataProvider handleExceptionForPosibleSoapErrorsProvider
+     */
+    public function testHandleExceptionForPosibleSoapErrors($errors, $message, $expected)
+    {
+        $exceptionMockBuilder = $this->getMockBuilder(\Exception::class)->setConstructorArgs([$message]);
+
+        if (null !== $errors) {
+            $exceptionMockBuilder->setMethods(['getErrors']);
+        }
+
+        $exceptionMock = $exceptionMockBuilder->getMock();
+
+        if (null !== $errors) {
+            $exceptionMock->method('getErrors')->willReturn($errors);
+        }
+
+        $instance = $this->getInstance();
+        $result = $this->invokeArgs('handleExceptionForPosibleSoapErrors', [$exceptionMock], $instance);
+        $this->assertEquals($expected, $result);
+    }
 }
