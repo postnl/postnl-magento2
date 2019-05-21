@@ -166,7 +166,7 @@ class CreateShipmentTest extends TestCase
     /**
      * @return array
      */
-    public function handleExceptionForPosibleSoapErrorsProvider()
+    public function handleExceptionForPossibleSoapErrorsProvider()
     {
         return [
             'no errors, no message' => [
@@ -207,9 +207,9 @@ class CreateShipmentTest extends TestCase
      * @param $message
      * @param $expected
      *
-     * @dataProvider handleExceptionForPosibleSoapErrorsProvider
+     * @dataProvider handleExceptionForPossibleSoapErrorsProvider
      */
-    public function testHandleExceptionForPosibleSoapErrors($errors, $message, $expected)
+    public function testHandleExceptionForPossibleSoapErrors($errors, $message, $expected)
     {
         $exceptionMockBuilder = $this->getMockBuilder(\Exception::class)->setConstructorArgs([$message]);
 
@@ -224,7 +224,7 @@ class CreateShipmentTest extends TestCase
         }
 
         $instance = $this->getInstance();
-        $result = $this->invokeArgs('handleExceptionForPosibleSoapErrors', [$exceptionMock], $instance);
+        $result = $this->invokeArgs('handleExceptionForPossibleSoapErrors', [$exceptionMock], $instance);
         $this->assertEquals($expected, $result);
     }
 }
