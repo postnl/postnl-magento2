@@ -261,10 +261,7 @@ class CreateShipment
      */
     private function handleExceptionForPosibleSoapErrors(\Exception $exception)
     {
-        if (!method_exists($exception, 'getErrors')
-            || !$exception->getErrors()
-            || !is_array($exception->getErrors())
-        ) {
+        if (!$exception->getErrors() || !is_array($exception->getErrors())) {
             return $exception->getMessage();
         }
 
