@@ -62,8 +62,9 @@ class Handler
     /**
      * Handler constructor.
      *
-     * @param Type $type
-     * @param array $handlers
+     * @param Type              $type
+     * @param GlobalpackFactory $globalpackFactory
+     * @param array             $handlers
      */
     public function __construct(
         Type $type,
