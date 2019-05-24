@@ -71,6 +71,7 @@ class Handler
         $handlers = []
     ) {
         $this->typeConverter = $type;
+        $this->globalpackFactory = $globalpackFactory;
         $this->handlers = $handlers;
     }
 
