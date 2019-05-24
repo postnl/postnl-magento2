@@ -55,6 +55,11 @@ class Handler
     private $typeConverter;
 
     /**
+     * @var GlobalpackFactory
+     */
+    private $globalpackFactory;
+
+    /**
      * Handler constructor.
      *
      * @param Type $type
@@ -62,8 +67,8 @@ class Handler
      */
     public function __construct(
         Type $type,
-        $handlers = [],
-        GlobalpackFactory $globalpackFactory
+        GlobalpackFactory $globalpackFactory,
+        $handlers = []
     ) {
         $this->typeConverter = $type;
         $this->handlers = $handlers;

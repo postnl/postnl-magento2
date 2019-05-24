@@ -58,7 +58,25 @@ class Prepare
     private $isValidated = false;
 
     /**
+     * @var DomesticFactory
+     */
+    private $domesticFactory;
+
+    /**
+     * @var EPSFactory
+     */
+    private $epsFactory;
+
+    /**
+     * @var GlobalPackFactory
+     */
+    private $globalPackFactory;
+
+    /**
      * @param Type  $typeConverter
+     * @param DomesticFactory $domesticFactory
+     * @param EPSFactory $epsFactory
+     * @param GlobalPackFactory $globalPackFactory
      * @param array $types
      *
      * @throws PostNLException
@@ -71,6 +89,9 @@ class Prepare
         $types = []
     ) {
         $this->typeConverter = $typeConverter;
+        $this->domesticFactory = $domesticFactory;
+        $this->epsFactory = $epsFactory;
+        $this->globalPackFactory = $globalPackFactory;
         $this->types = $types;
     }
 
