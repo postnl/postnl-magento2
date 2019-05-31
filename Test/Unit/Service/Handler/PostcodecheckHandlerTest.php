@@ -74,7 +74,23 @@ class PostcodecheckHandlerTest extends TestCase
             'In correct Response Data' => [
                 '[{"status":1,"city":"Amsterdam"}]',
                 false,
-            ]
+            ],
+            'errors param set' => [
+                '{"0":{"status":1,"streetName":"Kabelweg","city":"Amsterdam"},"errors":"error message"}',
+                'error',
+            ],
+            'fault param set' => [
+                '{"0":{"status":1,"streetName":"Kabelweg","city":"Amsterdam"},"fault":"fault message"}',
+                'error',
+            ],
+            'no error, fault or 0 param set' => [
+                '{"random":"different params than expected"}',
+                'error',
+            ],
+            'empty param set' => [
+                '[]',
+                false,
+            ],
         ];
     }
 

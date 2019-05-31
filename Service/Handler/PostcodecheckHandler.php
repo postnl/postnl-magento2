@@ -62,6 +62,10 @@ class PostcodecheckHandler
             $params = json_decode($params, true);
         }
 
+        if (is_array($params) && empty($params)) {
+            return false;
+        }
+
         if (isset($params['errors']) || isset($params['fault']) || !isset($params[0])) {
             //@codingStandardsIgnoreLine
             $this->logger->critical(__('Error received getting postcode data from PostNL.'), $params);
