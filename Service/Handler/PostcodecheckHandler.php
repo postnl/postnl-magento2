@@ -62,7 +62,11 @@ class PostcodecheckHandler
             $params = json_decode($params, true);
         }
 
-        if (is_array($params) && empty($params)) {
+        if (!is_array($params)) {
+            $params = [$params];
+        }
+
+        if (empty($params)) {
             return false;
         }
 

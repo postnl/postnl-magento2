@@ -87,10 +87,14 @@ class PostcodecheckHandlerTest extends TestCase
                 '{"random":"different params than expected"}',
                 'error',
             ],
-            'empty param set' => [
+            'empty param array' => [
                 '[]',
                 false,
             ],
+            'empty params' => [
+                '',
+                'error',
+            ]
         ];
     }
 
