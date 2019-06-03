@@ -58,13 +58,7 @@ class PostcodecheckHandler
      */
     public function convertResponse($params)
     {
-        if (is_string($params)) {
-            $params = json_decode($params, true);
-        }
-
-        if (!is_array($params)) {
-            $params = [$params];
-        }
+        $params = $this->formatParams($params);
 
         if (empty($params)) {
             return false;
@@ -81,6 +75,24 @@ class PostcodecheckHandler
         }
 
         return false;
+    }
+
+    /**
+     * @param $params
+     *
+     * @return array
+     */
+    private function formatParams($params)
+    {
+        if (is_string($params)) {
+            $params = json_decode($params, true);
+        }
+
+        if (!is_array($params)) {
+            $params = [$params];
+        }
+
+        return $params;
     }
 
     /**
