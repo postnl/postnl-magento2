@@ -31,19 +31,19 @@
  */
 namespace TIG\PostNL\Helper\Tracking;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\MailException;
+use Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Framework\Mail\TransportInterface;
+use Magento\Framework\View\Asset\Repository as AssetRepository;
+use Magento\Sales\Model\Order\Shipment;
+use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Helper\AbstractTracking;
 use TIG\PostNL\Helper\Data as PostNLHelper;
-use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
-use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Logging\Log;
-use Magento\Framework\App\Helper\Context;
-use Magento\Framework\Mail\Template\TransportBuilder;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Mail\TransportInterface;
-use Magento\Framework\Exception\MailException;
-use Magento\Sales\Model\Order\Shipment;
-use Magento\Framework\View\Asset\Repository as AssetRepository;
+use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 
 class Mail extends AbstractTracking
 {
@@ -69,8 +69,8 @@ class Mail extends AbstractTracking
 
     /**
      * @param Context                  $context
-     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      * @param PostNLShipmentRepository $postNLShipmentRepository
+     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      * @param TransportBuilder         $transportBuilder
      * @param PostNLHelper             $data
      * @param Webshop                  $webshop
@@ -115,8 +115,10 @@ class Mail extends AbstractTracking
 
     /**
      * @param Shipment $shipment
-     * @param string $url
+     * @param string   $url
      *
+     * @throws LocalizedException
+     * @throws MailException
      */
     // @codingStandardsIgnoreStart
     public function set($shipment, $url)
@@ -135,10 +137,14 @@ class Mail extends AbstractTracking
         );
 
         $transport->setFrom('general');
+        if (method_exists($transport, 'setFromByScope')) {
+            $transport->setFromByScope('general', $shipment->getStoreId());
+        }
+
         $address = $shipment->getShippingAddress();
-        $transport->addTo($address->getEmail(), $address->getFirstname() . ' '. $address->getLastname());
+        $transport->addTo($address->getEmail(), $address->getFirstname() . ' ' . $address->getLastname());
         $transport = $this->addBccEmail($transport);
-        $this->logging->addInfo('Track And Trace email build for :'. $address->getEmail());
+        $this->logging->addInfo('Track And Trace email build for :' . $address->getEmail());
         $this->trackAndTraceEmail = $transport->getTransport();
     }
     // @codingStandardsIgnoreEnd
