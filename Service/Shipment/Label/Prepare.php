@@ -33,6 +33,9 @@ namespace TIG\PostNL\Service\Shipment\Label;
 
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Exception as PostNLException;
+use TIG\PostNL\Service\Shipment\Label\Type\DomesticFactory;
+use TIG\PostNL\Service\Shipment\Label\Type\EPSFactory;
+use TIG\PostNL\Service\Shipment\Label\Type\GlobalPackFactory;
 use TIG\PostNL\Service\Shipment\Type;
 use TIG\PostNL\Service\Shipment\Label\Type\TypeInterface;
 use TIG\PostNL\Service\Shipment\Label\Type\TypeInterfaceFactory;
@@ -55,16 +58,40 @@ class Prepare
     private $isValidated = false;
 
     /**
+     * @var DomesticFactory
+     */
+    private $domesticFactory;
+
+    /**
+     * @var EPSFactory
+     */
+    private $epsFactory;
+
+    /**
+     * @var GlobalPackFactory
+     */
+    private $globalPackFactory;
+
+    /**
      * @param Type  $typeConverter
+     * @param DomesticFactory $domesticFactory
+     * @param EPSFactory $epsFactory
+     * @param GlobalPackFactory $globalPackFactory
      * @param array $types
      *
      * @throws PostNLException
      */
     public function __construct(
         Type $typeConverter,
+        DomesticFactory $domesticFactory,
+        EPSFactory $epsFactory,
+        GlobalPackFactory $globalPackFactory,
         $types = []
     ) {
         $this->typeConverter = $typeConverter;
+        $this->domesticFactory = $domesticFactory;
+        $this->epsFactory = $epsFactory;
+        $this->globalPackFactory = $globalPackFactory;
         $this->types = $types;
     }
 
