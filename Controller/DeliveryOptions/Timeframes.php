@@ -132,7 +132,7 @@ class Timeframes extends AbstractDeliveryOptions
      *
      * @return array|\Magento\Framework\Phrase
      */
-    private function getPosibleDeliveryDays($address)
+    private function getPossibleDeliveryDays($address)
     {
         $startDate  = $this->getDeliveryDay($address);
 
@@ -158,7 +158,7 @@ class Timeframes extends AbstractDeliveryOptions
 
         return [
             'price'      => $price,
-            'timeframes' => $this->getPosibleDeliveryDays($address)
+            'timeframes' => $this->getPossibleDeliveryDays($address)
         ];
     }
 
