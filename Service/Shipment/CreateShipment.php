@@ -31,12 +31,10 @@
  */
 namespace TIG\PostNL\Service\Shipment;
 
-use Magento\InventoryShipping\Plugin\Sales\Shipment\AssignSourceCodeToShipmentPlugin;
 use Magento\Sales\Model\Convert\Order as ConvertOrder;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\Order\ShipmentFactory;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Model\ShipmentRepository;
 
@@ -44,14 +42,9 @@ use TIG\PostNL\Model\ShipmentRepository;
 class CreateShipment
 {
     /**
-     * @var ShipmentFactory
+     * @var InventorySource
      */
-    private $shipmentFactory;
-
-    /**
-     * @var AssignSourceCodeToShipmentPlugin
-     */
-    private $assignSourceCodePlugin;
+    private $inventorySource;
 
     /**
      * @var ConvertOrder
@@ -84,24 +77,21 @@ class CreateShipment
     private $errors = [];
 
     /**
-     * @param ConvertOrder                     $convertOrder
-     * @param ShipmentRepository               $shipmentRepository
-     * @param Data                             $postnlHelper
-     * @param ShipmentFactory                  $shipmentFactory
-     * @param AssignSourceCodeToShipmentPlugin $assignSourceCodePlugin
+     * @param ConvertOrder       $convertOrder
+     * @param ShipmentRepository $shipmentRepository
+     * @param Data               $postnlHelper
+     * @param InventorySource    $inventorySource
      */
     public function __construct(
         ConvertOrder $convertOrder,
         ShipmentRepository $shipmentRepository,
         Data $postnlHelper,
-        ShipmentFactory $shipmentFactory,
-        AssignSourceCodeToShipmentPlugin $assignSourceCodePlugin
+        InventorySource $inventorySource
     ) {
-        $this->convertOrder = $convertOrder;
+        $this->convertOrder       = $convertOrder;
         $this->shipmentRepository = $shipmentRepository;
-        $this->postNLHelper = $postnlHelper;
-        $this->shipmentFactory = $shipmentFactory;
-        $this->assignSourceCodePlugin = $assignSourceCodePlugin;
+        $this->postNLHelper       = $postnlHelper;
+        $this->inventorySource    = $inventorySource;
     }
 
     /**
@@ -237,7 +227,7 @@ class CreateShipment
     {
         $this->shipment->register();
         $order = $this->shipment->getOrder();
-        $this->assignSourceCodePlugin->afterCreate($this->shipmentFactory, $this->shipment, $order);
+        $this->inventorySource->setSource($this->shipment, $order);
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus('processing');
 
