@@ -109,13 +109,11 @@ define([
                 State.currentSelectedShipmentType('delivery');
                 State.selectShippingMethod();
 
-                if (value.fallback) {
-                    return;
-                }
-
                 var fee = null;
-                if (value.hasFee()) {
-                    fee = value.getFee();
+                if (!value.fallback) {
+                    if (value.hasFee()) {
+                        fee = value.getFee();
+                    }
                 }
 
                 State.fee(fee);
@@ -126,12 +124,13 @@ define([
                     method : 'POST',
                     url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
                     data   : {
-                        type   : 'delivery',
+                        address: AddressFinder(),
+                        type   : (typeof value.fallback !== 'undefined') ? 'fallback' : 'delivery',
                         date   : value.date,
                         option : value.option,
                         from   : value.from,
                         to     : value.to,
-                        country: value.address.country
+                        country: (typeof value.address !== 'undefined') ? value.address.country : AddressFinder().country
                     }
                 }).done(function (response) {
                     $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
