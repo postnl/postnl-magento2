@@ -31,12 +31,12 @@
  */
 namespace TIG\PostNL\Service\Shipment;
 
+use Magento\Sales\Model\Convert\Order as ConvertOrder;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\Convert\Order as ConvertOrder;
-use TIG\PostNL\Model\ShipmentRepository;
 use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Model\ShipmentRepository;
 
 //@codingStandardsIgnoreFile
 class CreateShipment
@@ -226,7 +226,7 @@ class CreateShipment
             $this->shipment->save();
             $order->save();
         } catch (\Exception $exception) {
-            $message = $this->handleExceptionForPosibleSoapErrors($exception);
+            $message = $this->handleExceptionForPossibleSoapErrors($exception);
             $localizedErrorMessage = __($message)->render();
             $this->errors[] = $localizedErrorMessage;
             $this->shipment = false;
@@ -240,15 +240,15 @@ class CreateShipment
      *
      * @return \Magento\Framework\Phrase|string
      */
-    private function handleExceptionForPosibleSoapErrors(\Exception $exception)
+    private function handleExceptionForPossibleSoapErrors(\Exception $exception)
     {
-        if (!$exception->getErrors() || !is_array($exception->getErrors())) {
+        if (!method_exists($exception, 'getErrors') || !$exception->getErrors() || !is_array($exception->getErrors())) {
             return $exception->getMessage();
         }
 
         $message =  __('[POSTNL-0010] - An error occurred while processing this action.');
         foreach ($exception->getErrors() as $error) {
-            $message .= ' '. (string) $error;
+            $message .= ' ' . (string) $error;
         }
 
         return $message;
