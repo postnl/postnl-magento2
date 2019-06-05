@@ -32,6 +32,7 @@
  */
 namespace TIG\PostNL\Service\Shipment\InventorySource;
 
+//@codingStandardsIgnoreFile
 class Factory
 {
     private $objectManager;
@@ -54,6 +55,7 @@ class Factory
         $instanceName = '\Magento\InventoryShipping\Plugin\Sales\Shipment\AssignSourceCodeToShipmentPlugin';
         $instance = null;
         try {
+
             $instance = $this->objectManager->create($instanceName, $data);
         } catch (\Exception $exception) {
             // Silent failure, the AssignSourceCodeToShipmentPlugin doesn't exist

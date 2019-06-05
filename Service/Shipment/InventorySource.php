@@ -58,12 +58,14 @@ class InventorySource
         Factory $inventorySourceFactory
     ) {
         $this->shipmentFactory = $shipmentFactory;
-        $this->inventorySourceFactory = $inventorySourceFactory->create();
+        $this->inventorySourceFactory = $inventorySourceFactory;
     }
 
     public function setSource($shipment, $order)
     {
-        if ($this->inventorySourceFactory) {
+        $inventorySourceFactory = $this->inventorySourceFactory->create();
+        
+        if ($inventorySourceFactory) {
             $shipment = $this->inventorySourceFactory->afterCreate($this->shipmentFactory, $shipment, $order);
         }
 
