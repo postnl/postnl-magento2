@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *          ..::..
@@ -29,44 +30,31 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment;
+namespace TIG\PostNL\Service\Shipment\InventorySource;
 
-use Magento\InventoryShipping\Plugin\Sales\Shipment\AssignSourceCodeToShipmentPlugin;
-use Magento\Sales\Model\Order\ShipmentFactory;
-use TIG\PostNL\Service\Shipment\InventorySource\Factory;
-
-class InventorySource
+class Factory
 {
-    /**
-     * @var AssignSourceCodeToShipmentPlugin
-     */
-    private $inventorySourceFactory;
+    protected $moduleManager;
+    protected $objectManager;
 
-    /**
-     * @var ShipmentFactory
-     */
-    private $shipmentFactory;
-
-    /**
-     * InventorySource constructor.
-     *
-     * @param ShipmentFactory $shipmentFactory
-     * @param Factory         $inventorySourceFactory
-     */
     public function __construct(
-        ShipmentFactory $shipmentFactory,
-        Factory $inventorySourceFactory
+        \Magento\Framework\Module\Manager $moduleManager,
+        \Magento\Framework\ObjectManagerInterface $objectManager
     ) {
-        $this->shipmentFactory = $shipmentFactory;
-        $this->inventorySourceFactory = $inventorySourceFactory->create();
+        $this->moduleManager = $moduleManager;
+        $this->objectManager = $objectManager;
     }
 
-    public function setSource($shipment, $order)
+    public function create(array $data = [])
     {
-        if ($this->inventorySourceFactory) {
-            $shipment = $this->inventorySourceFactory->afterCreate($this->shipmentFactory, $shipment, $order);
+        $instanceName = '\Magento\InventoryShipping\Plugin\Sales\Shipment\AssignSourceCodeToShipmentPlugin';
+        $instance = null;
+        try {
+            $instance = $this->objectManager->create($instanceName, $data);
+        } catch (\Exception $exception) {
+            // Silent failure, the AssignSourceCodeToShipmentPlugin doesn't exist
         }
 
-        return $shipment;
+        return $instance;
     }
 }
