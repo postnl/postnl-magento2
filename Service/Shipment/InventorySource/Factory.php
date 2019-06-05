@@ -34,17 +34,21 @@ namespace TIG\PostNL\Service\Shipment\InventorySource;
 
 class Factory
 {
-    protected $moduleManager;
-    protected $objectManager;
+    private $objectManager;
 
     public function __construct(
-        \Magento\Framework\Module\Manager $moduleManager,
         \Magento\Framework\ObjectManagerInterface $objectManager
     ) {
-        $this->moduleManager = $moduleManager;
         $this->objectManager = $objectManager;
     }
 
+    /**
+     * The InventoryShipping plugin doesn't exist in Magento 2.2.*, but we need it for 2.3.* to set the inventory source
+     *
+     * @param array $data
+     *
+     * @return mixed|null
+     */
     public function create(array $data = [])
     {
         $instanceName = '\Magento\InventoryShipping\Plugin\Sales\Shipment\AssignSourceCodeToShipmentPlugin';
