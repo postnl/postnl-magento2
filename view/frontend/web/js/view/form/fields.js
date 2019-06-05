@@ -222,32 +222,25 @@ define([
                 $("input[name*='street[0]']").trigger('change');
                 $("input[name*='city']").trigger('change');
 
-                return;
+                errorMessage = null;
             }
 
-            console.error(data.error);
+            if (data.error) {
+                console.error(data.error);
+            }
+
             self.handleError(errorMessage);
         },
 
         handleError : function (errorMessage) {
             var self = this;
             var error = $('.tig-postnl-validation-message');
+            error.hide();
 
             if (errorMessage) {
                 self.enableAddressFields(true);
 
                 error.html(errorMessage).show();
-
-                var timer;
-                if (typeof timer !== 'undefined') {
-                    clearTimeout(timer);
-                }
-
-                timer = setTimeout(function () {
-                    error.hide(100);
-                }, 16000);
-            } else {
-                error.hide();
             }
         },
 
