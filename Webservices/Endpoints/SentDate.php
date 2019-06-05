@@ -47,7 +47,7 @@ class SentDate extends AbstractEndpoint
     /**
      * @var string
      */
-    private $version = 'v2_1';
+    private $version = 'v2_2';
     
     /**
      * @var string
