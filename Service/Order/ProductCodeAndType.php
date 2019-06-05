@@ -166,12 +166,14 @@ class ProductCodeAndType
      */
     private function getDefaultProductOption($country)
     {
-        $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
+        $this->type = static::SHIPMENT_TYPE_DAYTIME;
+
         if ($country == 'BE') {
             $this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
+            return;
         }
 
-        $this->type = static::SHIPMENT_TYPE_DAYTIME;
+        $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
 
         /** @var Quote $magentoQuote */
         $magentoQuote = $this->quote->getQuote();
