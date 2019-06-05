@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Shipment\Labelling;
 
 use TIG\PostNL\Service\Shipment\Labelling\Handler\HandlerInterfaceFactory;
+use TIG\PostNL\Service\Shipment\Labelling\Handler\GlobalpackFactory;
 use TIG\PostNL\Service\Shipment\Labelling\Handler\HandlerInterface;
 use TIG\PostNL\Service\Shipment\Type;
 use TIG\PostNL\Exception as PostNLException;
@@ -54,16 +55,24 @@ class Handler
     private $typeConverter;
 
     /**
+     * @var GlobalpackFactory
+     */
+    private $globalpackFactory;
+
+    /**
      * Handler constructor.
      *
-     * @param Type $type
-     * @param array $handlers
+     * @param Type              $type
+     * @param GlobalpackFactory $globalpackFactory
+     * @param array             $handlers
      */
     public function __construct(
         Type $type,
+        GlobalpackFactory $globalpackFactory,
         $handlers = []
     ) {
         $this->typeConverter = $type;
+        $this->globalpackFactory = $globalpackFactory;
         $this->handlers = $handlers;
     }
 
