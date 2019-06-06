@@ -35,7 +35,7 @@ namespace TIG\PostNL\Helper\DeliveryOptions;
 
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Service\Order\FeeCalculator;
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Shipment\ProductOptions;
 
 class OrderParams
@@ -86,30 +86,30 @@ class OrderParams
      * @var FeeCalculator
      */
     private $feeCalculator;
-    
+
     /**
-     * @var ProductCodeAndType
+     * @var ProductInfo
      */
-    private $productCodeAndType;
-    
+    private $productInfo;
+
     /**
      * @var ProductOptions
      */
     private $productOptions;
     
     /**
-     * @param FeeCalculator      $feeCalculator
-     * @param ProductCodeAndType $productCodeAndType
-     * @param ProductOptions     $productOptions
+     * @param FeeCalculator  $feeCalculator
+     * @param ProductInfo    $productInfo
+     * @param ProductOptions $productOptions
      */
     public function __construct(
         FeeCalculator $feeCalculator,
-        ProductCodeAndType $productCodeAndType,
+        ProductInfo $productInfo,
         ProductOptions $productOptions
     ) {
-        $this->feeCalculator      = $feeCalculator;
-        $this->productCodeAndType = $productCodeAndType;
-        $this->productOptions     = $productOptions;
+        $this->feeCalculator  = $feeCalculator;
+        $this->productInfo    = $productInfo;
+        $this->productOptions = $productOptions;
     }
     
     /**
@@ -181,7 +181,7 @@ class OrderParams
     private function formatParamData($params)
     {
         $option      = isset($params['option']) ? $params['option'] : 'Daytime';
-        $productInfo = $this->productCodeAndType->get($params['type'], $option, $params['country']);
+        $productInfo = $this->productInfo->get($params['type'], $option, $params['country']);
         
         return [
             'quote_id'                     => isset($params['quote_id']) ? $params['quote_id'] : '',

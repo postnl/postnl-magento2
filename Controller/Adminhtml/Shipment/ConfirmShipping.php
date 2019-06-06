@@ -104,7 +104,7 @@ class ConfirmShipping extends Action
         $this->setConfirmedAt($shipmentId);
         $this->setTrack($shipmentId);
 
-        $this->messageManager->addComplexSuccessMessage(
+        $this->messageManager->addSuccessMessage(
         // @codingStandardsIgnoreLine
             __('Shipment successfully confirmed')->getText()
         );
@@ -123,7 +123,7 @@ class ConfirmShipping extends Action
         } catch (Exception $exception) {
             $this->messageManager->addErrorMessage(
             // @codingStandardsIgnoreLine
-                __('Could not confirm shipment : %1', $exception->getLogMessage())->getText()
+                __('Could not confirm shipment: %1', $exception->getLogMessage())->getText()
             );
             return $this->_redirect($this->_redirect->getRefererUrl());
         }

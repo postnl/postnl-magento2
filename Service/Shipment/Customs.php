@@ -56,7 +56,7 @@ class Customs
         'Invoice'                => 'false',
         'Certificate'            => 'false',
         'License'                => 'false',
-        'Currency'               => 'EUR',
+        'Currency'               => 'EUR'
     ];
 
     /**

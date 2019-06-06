@@ -67,6 +67,8 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     
     const FIELD_SHIPMENT_TYPE        = 'shipment_type';
     
+    const FIELD_SHIPMENT_COUNTRY     = 'shipment_country';
+    
     const FIELD_AC_CHARACTERISTIC    = 'ac_characteristic';
     
     const FIELD_AC_OPTION            = 'ac_option';
@@ -443,6 +445,24 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function getShipmentType()
     {
         return $this->getData(static::FIELD_SHIPMENT_TYPE);
+    }
+    
+    /**
+     * @return string
+     */
+    public function getShipmentCountry()
+    {
+        return $this->getData(static::FIELD_SHIPMENT_COUNTRY);
+    }
+    
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function setShipmentCountry($value)
+    {
+        return $this->setData(static::FIELD_SHIPMENT_COUNTRY, $value);
     }
     
     /**

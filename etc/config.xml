@@ -164,6 +164,12 @@
 
             </address_validation>
 
+            <peps>
+                <active>0</active>
+                <barcode_type>LA</barcode_type>
+                <barcode_range>NL</barcode_range>
+            </peps>
+
         </tig_postnl>
     </default>
 </config>
