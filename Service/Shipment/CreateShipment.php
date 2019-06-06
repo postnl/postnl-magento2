@@ -42,6 +42,11 @@ use TIG\PostNL\Model\ShipmentRepository;
 class CreateShipment
 {
     /**
+     * @var InventorySource
+     */
+    private $inventorySource;
+
+    /**
      * @var ConvertOrder
      */
     private $convertOrder;
@@ -72,18 +77,21 @@ class CreateShipment
     private $errors = [];
 
     /**
-     * @param ConvertOrder                         $convertOrder
+     * @param ConvertOrder       $convertOrder
      * @param ShipmentRepository $shipmentRepository
-     * @param Data  $postnlHelper
+     * @param Data               $postnlHelper
+     * @param InventorySource    $inventorySource
      */
     public function __construct(
         ConvertOrder $convertOrder,
         ShipmentRepository $shipmentRepository,
-        Data $postnlHelper
+        Data $postnlHelper,
+        InventorySource $inventorySource
     ) {
-        $this->convertOrder = $convertOrder;
+        $this->convertOrder       = $convertOrder;
         $this->shipmentRepository = $shipmentRepository;
-        $this->postNLHelper = $postnlHelper;
+        $this->postNLHelper       = $postnlHelper;
+        $this->inventorySource    = $inventorySource;
     }
 
     /**
@@ -219,6 +227,7 @@ class CreateShipment
     {
         $this->shipment->register();
         $order = $this->shipment->getOrder();
+        $this->inventorySource->setSource($this->shipment, $order);
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus('processing');
 
