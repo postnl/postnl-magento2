@@ -88,6 +88,6 @@ class EpsCountries
         'SI', // Slovenia
         'ES', // Spain (Including Balearic Islands. Excluding Canary Islands, Melilla and Ceuta)
         'SE', // Sweden
-        'MC', // Monaco (Is it's own country, Is EPS because France is EPS)
+        'MC', // Monaco (Is its own country, Is EPS because France is EPS)
     ];
 }
