@@ -31,17 +31,10 @@
  */
 namespace TIG\PostNL\Service\Shipment;
 
-use Magento\InventoryShipping\Plugin\Sales\Shipment\AssignSourceCodeToShipmentPlugin;
 use Magento\Sales\Model\Order\ShipmentFactory;
-use TIG\PostNL\Service\Shipment\InventorySource\Factory;
 
 class InventorySource
 {
-    /**
-     * @var AssignSourceCodeToShipmentPlugin
-     */
-    private $inventorySourceFactory;
-
     /**
      * @var ShipmentFactory
      */
@@ -51,23 +44,30 @@ class InventorySource
      * InventorySource constructor.
      *
      * @param ShipmentFactory $shipmentFactory
-     * @param Factory         $inventorySourceFactory
      */
     public function __construct(
-        ShipmentFactory $shipmentFactory,
-        Factory $inventorySourceFactory
+        ShipmentFactory $shipmentFactory
     ) {
         $this->shipmentFactory = $shipmentFactory;
-        $this->inventorySourceFactory = $inventorySourceFactory;
     }
 
-    public function setSource($shipment, $order)
+    /**
+     * Magento uses an afterCreate plugin on the shipmentFactory to set the SourceCode. In the default flow Magento
+     * runs this code when you open the Create Shipment page. This behaviour doesn't occur in this flow, so we force
+     * that flow to happen here.
+     *
+     * @param $order
+     * @param $shipmentItems
+     *
+     * @return Shipment
+     */
+    public function setSource($order, $shipmentItems)
     {
-        $inventorySourceFactory = $this->inventorySourceFactory->create();
-        
-        if ($inventorySourceFactory) {
-            $shipment = $this->inventorySourceFactory->afterCreate($this->shipmentFactory, $shipment, $order);
-        }
+        /** @var Shipment $shipment */
+        $shipment = $this->shipmentFactory->create(
+            $order,
+            $shipmentItems
+        );
 
         return $shipment;
     }

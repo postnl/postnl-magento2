@@ -227,7 +227,8 @@ class CreateShipment
     {
         $this->shipment->register();
         $order = $this->shipment->getOrder();
-        $this->inventorySource->setSource($this->shipment, $order);
+        $this->inventorySource->setSource($order, $this->getShippingItems());
+
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus('processing');
 
@@ -242,6 +243,17 @@ class CreateShipment
         }
 
         return $this;
+    }
+
+    private function getShippingItems()
+    {
+        $shippingItems = [];
+
+        foreach ($this->shipment->getItems() as $shipmentItem) {
+            $shippingItems[$shipmentItem->getProductId()] = (string)$shipmentItem->getQty();
+        }
+
+        return $shippingItems;
     }
 
     /**
