@@ -236,7 +236,7 @@ class CreateShipment
             $this->shipment->save();
             $order->save();
         } catch (\Exception $exception) {
-            $message = $this->handleExceptionForPosibleSoapErrors($exception);
+            $message = $this->handleExceptionForPossibleSoapErrors($exception);
             $localizedErrorMessage = __($message)->render();
             $this->errors[] = $localizedErrorMessage;
             $this->shipment = false;
@@ -261,9 +261,9 @@ class CreateShipment
      *
      * @return \Magento\Framework\Phrase|string
      */
-    private function handleExceptionForPosibleSoapErrors(\Exception $exception)
+    private function handleExceptionForPossibleSoapErrors(\Exception $exception)
     {
-        if (!$exception->getErrors() || !is_array($exception->getErrors())) {
+        if (!method_exists($exception, 'getErrors') || !$exception->getErrors() || !is_array($exception->getErrors())) {
             return $exception->getMessage();
         }
 

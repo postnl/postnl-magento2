@@ -34,7 +34,7 @@ namespace TIG\PostNL\Test\Integration\Service\Options;
 use TIG\PostNL\Test\Integration\TestCase;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
 use TIG\PostNL\Service\Options\ItemsToOption;
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 
 class ItemsToOptionTest extends TestCase
 {
@@ -48,7 +48,7 @@ class ItemsToOptionTest extends TestCase
         $order  = $this->getOrder();
         $result = $this->getInstance()->get($order->getItems());
 
-        $this->assertEquals(ProductCodeAndType::OPTION_EXTRAATHOME, $result);
+        $this->assertEquals(ProductInfo::OPTION_EXTRAATHOME, $result);
     }
 
     public function testReqularOrder()

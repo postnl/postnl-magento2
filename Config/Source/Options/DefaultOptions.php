@@ -34,6 +34,11 @@ namespace TIG\PostNL\Config\Source\Options;
 use Magento\Framework\Option\ArrayInterface;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
+/**
+ * @todo we need to move the getOption-methods to the ProductOptions class without
+ *      creating a circular dependency. For now we allow CS to ignore this file.
+ */
+// @codingStandardsIgnoreFile
 class DefaultOptions implements ArrayInterface
 {
     /**
@@ -79,7 +84,7 @@ class DefaultOptions implements ArrayInterface
             $flags['groups'][] = ['group' => 'eps_package_options'];
         }
 
-        return $this->productOptions->getProductoptions($flags);
+        return $this->productOptions->getProductOptions($flags);
     }
 
     /**
@@ -87,22 +92,12 @@ class DefaultOptions implements ArrayInterface
      */
     public function getBeProducts()
     {
-        $epsBusinessOptions = [];
-        if ($this->shippingOptions->canUseEpsBusinessProducts()) {
-            $epsBusinessOptions = $this->productOptions->getProductoptions(
-                ['isEvening' => false, 'group' => 'eps_package_options']
-            );
-        }
-
-        $cargoProducts = [];
-        if ($this->shippingOptions->canUseCargoProducts()) {
-            $cargoProducts = $this->productOptions->getProductoptions(
-                ['countryLimitation' => 'BE', 'group' => 'cargo_options']
-            );
-        }
-
-        $epsBusinessOptions = array_merge($epsBusinessOptions, $cargoProducts);
-        return array_merge($this->productOptions->getProductoptions(['group' => 'eu_options']), $epsBusinessOptions);
+        $beProducts[] = $this->shippingOptions->canUsePriority() ? $this->productOptions->getPriorityOptions() : [];
+        $beProducts[] = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
+        $beProducts[] = $this->shippingOptions->canUseCargoProducts() ? $this->productOptions->getCargoOptions() : [];
+        $beProducts[] = $this->productOptions->getEuOptions();
+        
+        return call_user_func_array("array_merge", $beProducts);
     }
 
     /**
@@ -110,18 +105,22 @@ class DefaultOptions implements ArrayInterface
      */
     public function getEpsProducts()
     {
-        $epsOptions = $this->productOptions->getProductoptions(
-            ['isEvening' => false, 'countryLimitation' => false, 'group' => 'eu_options']
-        );
+        $epsProducts[] = $this->shippingOptions->canUsePriority() ? $this->productOptions->getPriorityOptions() : [];
+        $epsProducts[] = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
+        $epsProducts[] = $this->productOptions->getEpsOptions();
+        
+        return call_user_func_array("array_merge", $epsProducts);
+    }
+    
+    /**
+     * @return array
+     */
+    public function getGlobalProducts()
+    {
+        $globalProducts[] = $this->shippingOptions->canUsePriority() ? $this->productOptions->getPriorityOptions() : [];
+        $globalProducts[] = $this->productOptions->getGlobalPackOptions();
 
-        $epsBusinessOptions = [];
-        if ($this->shippingOptions->canUseEpsBusinessProducts()) {
-            $epsBusinessOptions = $this->productOptions->getProductoptions(
-                ['isEvening' => false, 'countryLimitation' => false, 'group' => 'eps_package_options']
-            );
-        }
-
-        return array_merge($epsOptions, $epsBusinessOptions);
+        return call_user_func_array("array_merge", $globalProducts);
     }
 
     /**
@@ -147,12 +146,12 @@ class DefaultOptions implements ArrayInterface
      */
     public function getEveningOptions($country = 'NL')
     {
-        $options = $this->productOptions->getProductoptions(['isEvening' => true, 'countryLimitation' => $country]);
+        $options = $this->productOptions->getProductOptions(['isEvening' => true, 'countryLimitation' => $country]);
         if ($this->shippingOptions->isIDCheckActive()) {
             return $options;
         }
 
-        $idOptions = $this->productOptions->getProductoptions(
+        $idOptions = $this->productOptions->getProductOptions(
             ['group' => 'id_check_options', 'countryLimitation' => $country]
         );
 

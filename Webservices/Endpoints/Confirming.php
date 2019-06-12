@@ -60,7 +60,7 @@ class Confirming extends AbstractEndpoint
     /**
      * @var string
      */
-    private $version = 'v1_10';
+    private $version = 'v2';
 
     /**
      * @var string
@@ -94,9 +94,11 @@ class Confirming extends AbstractEndpoint
             $shipmentData
         );
     }
-
+    
     /**
-     * {@inheritdoc}
+     * @return mixed
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     public function call()
     {
@@ -115,9 +117,9 @@ class Confirming extends AbstractEndpoint
             'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
     }
-
+    
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getLocation()
     {

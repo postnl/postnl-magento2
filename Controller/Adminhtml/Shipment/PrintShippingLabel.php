@@ -85,6 +85,9 @@ class PrintShippingLabel extends LabelAbstract
     public function execute()
     {
         $labels = $this->getLabels();
+        if (isset($labels['errors'])) {
+            $this->handleRequestErrors($labels['errors']);
+        }
 
         if (empty($labels)) {
             $this->messageManager->addErrorMessage(

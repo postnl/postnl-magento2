@@ -92,7 +92,7 @@ class GetPackingslip
      * @param bool $withLabels
      * @param bool $confirm
      *
-     * @return string
+     * @return string|array
      */
     public function get($shipmentId, $withLabels = true, $confirm = true)
     {
