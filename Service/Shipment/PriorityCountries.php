@@ -35,7 +35,7 @@ namespace TIG\PostNL\Service\Shipment;
 class PriorityCountries
 {
     /**
-     * PEPS uses his own EPS and Globalpack countries. Which is different than
+     * Priority uses his own EPS and Globalpack countries. Which is different than
      * \TIG\PostNL\Service\Shipment\EpsCountries
      * If country does not exist in both arrays a fallback to Regular Globalpack
      * is provided.
@@ -69,7 +69,6 @@ class PriorityCountries
     ];
     
     // NOT ROW
-    
     /**
      * Belgium does't have to be enlisted in priority, because regular EPS
      * can already deliver to BE in one day.
