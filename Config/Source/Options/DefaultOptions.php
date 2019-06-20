@@ -92,7 +92,6 @@ class DefaultOptions implements ArrayInterface
      */
     public function getBeProducts()
     {
-        $beProducts[] = $this->shippingOptions->canUsePriority() ? $this->productOptions->getPriorityOptions() : [];
         $beProducts[] = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
         $beProducts[] = $this->shippingOptions->canUseCargoProducts() ? $this->productOptions->getCargoOptions() : [];
         $beProducts[] = $this->productOptions->getEuOptions();
