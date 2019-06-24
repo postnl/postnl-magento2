@@ -204,7 +204,8 @@
             <include path="TIG_PostNL::system/postnlsettings/idcheck.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/cargo.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/eps.xml"/>
-            <include path="TIG_PostNL::system/postnlsettings/peps.xml"/>
+            <!-- Temporarily hide priority settings, because UX adjustments need to be implemented first -->
+            <!-- <include path="TIG_PostNL::system/postnlsettings/peps.xml"/> -->
             <include path="TIG_PostNL::system/postnlsettings/extraathome.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/trackandtrace.xml"/>
 
