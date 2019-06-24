@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Service\Options;
 
 use TIG\PostNL\Config\Provider\ProductType;
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use Magento\Sales\Api\Data\ShipmentItemInterface;
 use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
@@ -41,7 +41,7 @@ use Magento\Sales\Api\Data\OrderItemInterface;
 class ItemsToOption
 {
     private $typeToOption = [
-        ProductType::PRODUCT_TYPE_EXTRA_AT_HOME => ProductCodeAndType::OPTION_EXTRAATHOME,
+        ProductType::PRODUCT_TYPE_EXTRA_AT_HOME => ProductInfo::OPTION_EXTRAATHOME,
         ProductType::PRODUCT_TYPE_REGULAR       => '',
     ];
 

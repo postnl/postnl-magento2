@@ -56,6 +56,7 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_PACKAGE_DELIVERY_TYPE              = 'tig_postnl/delivery_settings/default_package_type';
     const XPATH_ALTERNATIVE_DEFAULT_PACKAGE_DELIVERY_TYPE  = 'tig_postnl/delivery_settings/alternative_package_type';
     const XPATH_DEFAULT_EPS_PRODUCT_OPTION                 = 'tig_postnl/delivery_settings/default_eps_option';
+    const XPATH_DEFAULT_GP_PRODUCT_OPTION                  = 'tig_postnl/globalpack/default_gp_option';
 
     /**
      * Since 1.5.1 all product options are automaticly supported.
@@ -71,7 +72,7 @@ class ProductOptions extends AbstractConfigProvider
      */
     public function getDefaultProductOption()
     {
-        return $this->getConfigFromXpath(self::XPATH_DEFAULT_PRODUCT_OPTION);
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_PRODUCT_OPTION);
     }
 
     /**
@@ -79,7 +80,7 @@ class ProductOptions extends AbstractConfigProvider
      */
     public function getUseAlternativeDefault()
     {
-        return $this->getConfigFromXpath(self::XPATH_USE_ALTERNATIVE_DEFAULT_OPTION);
+        return $this->getConfigFromXpath(static::XPATH_USE_ALTERNATIVE_DEFAULT_OPTION);
     }
 
     /**
@@ -91,7 +92,7 @@ class ProductOptions extends AbstractConfigProvider
             return '0';
         }
 
-        return $this->getConfigFromXpath(self::XPATH_ALTERNATIVE_DEFAULT_MIN_AMOUNT);
+        return $this->getConfigFromXpath(static::XPATH_ALTERNATIVE_DEFAULT_MIN_AMOUNT);
     }
 
     /**
@@ -103,7 +104,7 @@ class ProductOptions extends AbstractConfigProvider
             return false;
         }
 
-        return $this->getConfigFromXpath(self::XPATH_ALTERNATIVE_DEFAULT_PRODUCT_OPTION);
+        return $this->getConfigFromXpath(static::XPATH_ALTERNATIVE_DEFAULT_PRODUCT_OPTION);
     }
 
     /**
@@ -117,7 +118,7 @@ class ProductOptions extends AbstractConfigProvider
             return $this->getDefaultEveningBeProductOption();
         }
 
-        return $this->getConfigFromXpath(self::XPATH_DEFAULT_EVENING_PRODUCT_OPTION);
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_EVENING_PRODUCT_OPTION);
     }
 
     /**
@@ -125,7 +126,7 @@ class ProductOptions extends AbstractConfigProvider
      */
     public function getDefaultExtraAtHomeProductOption()
     {
-        return $this->getConfigFromXpath(self::XPATH_DEFAULT_EXTRAATHOME_PRODUCT_OPTION);
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_EXTRAATHOME_PRODUCT_OPTION);
     }
 
     /**
@@ -133,7 +134,7 @@ class ProductOptions extends AbstractConfigProvider
      */
     public function getDefaultEveningBeProductOption()
     {
-        return $this->getConfigFromXpath(self::XPATH_DEFAULT_EVENING_BE_PRODUCT_OPTION);
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_EVENING_BE_PRODUCT_OPTION);
     }
 
     /**
@@ -141,7 +142,7 @@ class ProductOptions extends AbstractConfigProvider
      */
     public function getDefaultBeProductOption()
     {
-        return $this->getConfigFromXpath(self::XPATH_DEFAULT_BE_PRODUCT_OPTION);
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_BE_PRODUCT_OPTION);
     }
 
     /**
@@ -149,7 +150,15 @@ class ProductOptions extends AbstractConfigProvider
      */
     public function getDefaultEpsProductOption()
     {
-        return $this->getConfigFromXpath(self::XPATH_DEFAULT_EPS_PRODUCT_OPTION);
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_EPS_PRODUCT_OPTION);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultGlobalpackOption()
+    {
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_GP_PRODUCT_OPTION);
     }
 
     /**
@@ -157,7 +166,7 @@ class ProductOptions extends AbstractConfigProvider
      */
     public function getDefaultPakjeGemakProductOption()
     {
-        return $this->getConfigFromXpath(self::XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION);
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION);
     }
 
     /**
@@ -165,7 +174,7 @@ class ProductOptions extends AbstractConfigProvider
      */
     public function getDefaultPakjeGemakEarlyProductOption()
     {
-        return $this->getConfigFromXpath(self::XPATH_DEFAULT_PAKJEGEMAK_EARLY_PRODUCT_OPTION);
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_PAKJEGEMAK_EARLY_PRODUCT_OPTION);
     }
 
     /**
@@ -173,7 +182,7 @@ class ProductOptions extends AbstractConfigProvider
      */
     public function getDefaultSundayProductOption()
     {
-        return $this->getConfigFromXpath(self::XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION);
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION);
     }
 
     /**

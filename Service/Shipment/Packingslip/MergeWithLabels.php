@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Service\Shipment\Packingslip;
 
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Pdf\Fpdi;
 use TIG\PostNL\Service\Pdf\FpdiFactory;
 use TIG\PostNL\Service\Shipment\Label\File;
@@ -118,6 +118,7 @@ class MergeWithLabels
      *
      * @return string
      */
+    // @codingStandardsIgnoreStart
     public function merge($shipmentId, $packingslip, $mergeFirstLabel = false, $confirm = true)
     {
         $labels = $this->getLabels->get($shipmentId, $confirm);
@@ -125,9 +126,12 @@ class MergeWithLabels
             return $packingslip;
         }
 
+        if (isset($labels['errors'])) {
+            return $labels['errors'];
+        }
+
         if ($mergeFirstLabel && $this->canMergeFirstLabel($labels[0])) {
             $firstLabel = array_shift($labels);
-            // @codingStandardsIgnoreLine
             $label = base64_decode($firstLabel->getLabel());
             $packingslip = $this->mergeFirstLabel($label, $packingslip, $firstLabel->getType());
         }
@@ -139,6 +143,7 @@ class MergeWithLabels
         $packingslipPdf = $this->addLabelsToPackingslip($packingslip, $labels);
         return $packingslipPdf;
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * @param ShipmentLabelInterface $firstLabel
@@ -147,7 +152,7 @@ class MergeWithLabels
      */
     private function canMergeFirstLabel($firstLabel)
     {
-        $labelTypeGP = strtolower(ProductCodeAndType::SHIPMENT_TYPE_GP);
+        $labelTypeGP = strtolower(ProductInfo::SHIPMENT_TYPE_GP);
         if ($this->packingslipYPos <= 400 || $firstLabel->getType() == $labelTypeGP) {
             return false;
         }
@@ -199,7 +204,7 @@ class MergeWithLabels
      */
     private function addLabelToPdf($labelFile, Fpdi $pdf, $type)
     {
-        if ($type == strtolower(ProductCodeAndType::SHIPMENT_TYPE_EPS)) {
+        if ($type == strtolower(ProductInfo::SHIPMENT_TYPE_EPS)) {
             $this->setEpsPosition();
         }
 
