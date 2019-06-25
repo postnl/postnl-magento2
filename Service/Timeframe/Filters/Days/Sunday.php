@@ -69,7 +69,7 @@ class Sunday implements DaysFilterInterface
             $date = $day->Date;
             $dayOfWeek = $this->helper->getDayOrWeekNumber($date, 'w');
 
-            return $dayOfWeek !== 0;
+            return $dayOfWeek !== 7;
         });
 
         return array_values($filtered);
