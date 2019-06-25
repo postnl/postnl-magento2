@@ -790,25 +790,18 @@ class DataProvider
                 ]
             ],
             (object)[ // Sunday
-                      'Date' => '27-11-2016',
-                      'Timeframes' => (object)[
-                          'TimeframeTimeFrame' => [
-                              (object)[
-                                  'From' => '13:00:00',
-                                  'Options' => (object)[
-                                      'string' => ['Sunday']
-                                  ],
-                                  'To' => '15:30:00'
-                              ],
-                              (object)[
-                                  'From' => '18:00:00',
-                                  'Options' => (object)[
-                                      'string' => ['Sunday']
-                                  ],
-                                  'To' => '22:30:00'
-                              ]
-                          ]
+                'Date' => '27-11-2016',
+                'Timeframes' => (object)[
+                  'TimeframeTimeFrame' => [
+                      (object)[
+                          'From' => '13:00:00',
+                          'Options' => (object)[
+                              'string' => ['Sunday']
+                          ],
+                          'To' => '15:30:00'
                       ]
+                  ]
+                ]
             ],
             (object)[ // Monday
                 'Date' => '28-11-2016',
