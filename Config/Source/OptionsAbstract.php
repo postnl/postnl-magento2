@@ -188,6 +188,7 @@ abstract class OptionsAbstract
         '4952' => [
             'value'                => '4952',
             'label'                => 'EU Pack Special Consumer',
+            'isDefault'            => 1,
             'isEvening'            => false,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -239,6 +240,7 @@ abstract class OptionsAbstract
         '4945' => [
             'value'                => '4945',
             'label'                => 'GlobalPack',
+            'isDefault'            => 1,
             'isEvening'            => false,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -594,32 +596,75 @@ abstract class OptionsAbstract
             'countryLimitation'    => false,
             'group'                => 'eps_package_options',
         ],
+        // Priority Products
+        '6350' => [
+            'value'                => '6350',
+            'label'                => 'Priority packets tracked',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'priority_options',
+        ],
+        '6550' => [
+            'value'                => '6550',
+            'label'                => 'Priority packets tracked bulk',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'priority_options',
+        ],
+        '6940' => [
+            'value'                => '6940',
+            'label'                => 'Priority packets tracked sorted',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'priority_options',
+        ],
+        '6942' => [
+            'value'                => '6942',
+            'label'                => 'Priority packets tracked boxable',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'priority_options',
+        ]
     ];
 
     protected $groups = [
-        'standard_options'              => 'Domestic options',
-        'pakjegemak_options'            => 'Post Office options',
-        'eu_options'                    => 'EU options',
-        'global_options'                => 'Global options',
-        'buspakje_options'              => 'Letter Box Parcel options',
-        'extra_at_home_options'         => 'Extra@Home options',
-        'id_check_options'              => 'ID Check options',
-        'id_check_pakjegemak_options'   => 'ID Check Post Office options',
-        'cargo_options'                 => 'Cargo options',
-        'eps_package_options'           => 'Package options'
+	    'standard_options'            => 'Domestic options',
+	    'pakjegemak_options'          => 'Post Office options',
+	    'eu_options'                  => 'EU options',
+	    'global_options'              => 'Global options',
+	    'buspakje_options'            => 'Letter Box Parcel options',
+	    'extra_at_home_options'       => 'Extra@Home options',
+	    'id_check_options'            => 'ID Check options',
+	    'id_check_pakjegemak_options' => 'ID Check Post Office options',
+	    'cargo_options'               => 'Cargo options',
+	    'eps_package_options'         => 'Package options',
+	    'priority_options'            => 'Priority EPS'
     ];
-
-    protected $groupToLabel = [
-        'standard_options'              => 'Domestic',
-        'pakjegemak_options'            => 'Post Office',
-        'eu_options'                    => 'EPS',
-        'global_options'                => 'Global Pack',
-        'buspakje_options'              => 'Letter Box',
-        'extra_at_home_options'         => 'Extra@Home',
-        'id_check_options'              => 'ID Check',
-        'id_check_pakjegemak_options'   => 'ID Check Post Office',
-        'cargo_options'                 => 'Cargo',
-        'eps_package_options'           => 'Package'
+	
+	protected $groupToLabel = [
+		'standard_options'            => 'Domestic',
+		'pakjegemak_options'          => 'Post Office',
+		'eu_options'                  => 'EPS',
+		'global_options'              => 'Global Pack',
+		'buspakje_options'            => 'Letter Box',
+		'extra_at_home_options'       => 'Extra@Home',
+		'id_check_options'            => 'ID Check',
+		'id_check_pakjegemak_options' => 'ID Check Post Office',
+		'cargo_options'               => 'Cargo',
+		'eps_package_options'         => 'Package',
+		'priority_options'            => 'Priority (EPS / Globalpack)'
     ];
 
     protected $typeToComment = [
@@ -635,9 +680,9 @@ abstract class OptionsAbstract
     ];
 
     /**
-     * Property for filterd product options matched by account type and flags.
+     * Property for filtered product options matched by account type and flags.
      */
-    private $filterdOptions;
+    private $filteredOptions;
 
     /**
      * Group options by group types
@@ -657,10 +702,10 @@ abstract class OptionsAbstract
      *
      * @return array $availableOptions
      */
-    public function getProductoptions($flags = false)
+    public function getProductOptions($flags = false)
     {
         if (false !== $flags && is_array($flags)) {
-            $this->setFilterdOptions($flags);
+            $this->setFilteredOptions($flags);
         }
 
         return $this->getOptionArrayUsableForConfiguration();
@@ -671,9 +716,9 @@ abstract class OptionsAbstract
      *
      * @codingStandardsIgnoreLine
      */
-    public function setFilterdOptions($flags)
+    public function setFilteredOptions($flags)
     {
-        $this->filterdOptions = [];
+        $this->filteredOptions = [];
 
         // Filter availableOptions on flags
         foreach ($this->availableOptions as $key => $option) {
@@ -700,7 +745,7 @@ abstract class OptionsAbstract
         }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
         if (count($filterFlags) == count($flags)) {
-            $this->filterdOptions[$productCode] = $this->availableOptions[$productCode];
+            $this->filteredOptions[$productCode] = $this->availableOptions[$productCode];
         }
     }
 
@@ -720,7 +765,7 @@ abstract class OptionsAbstract
             }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
             if (count($filterFlags) == count($flags)) {
-                $this->filterdOptions[$productCode] = $this->availableOptions[$productCode];
+                $this->filteredOptions[$productCode] = $this->availableOptions[$productCode];
             }
         }
     }
@@ -730,13 +775,13 @@ abstract class OptionsAbstract
      */
     public function getOptionArrayUsableForConfiguration()
     {
-        if (count($this->filterdOptions) == 0) {
+        if (count($this->filteredOptions) == 0) {
             // @codingStandardsIgnoreLine
             return [['value' => 0, 'label' => __('There are no available options')]];
         }
 
         $options = [];
-        foreach ($this->filterdOptions as $key => $option) {
+        foreach ($this->filteredOptions as $key => $option) {
             // @codingStandardsIgnoreLine
             $options[] = ['value' => $option['value'], 'label' => __($option['label'])];
         }

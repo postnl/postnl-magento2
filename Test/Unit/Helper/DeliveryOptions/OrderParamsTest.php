@@ -34,7 +34,7 @@ namespace TIG\PostNL\Test\Unit\Helper\DeliveryOptions;
 use TIG\PostNL\Test\TestCase;
 use TIG\PostNL\Helper\DeliveryOptions\OrderParams;
 use TIG\PostNL\Service\Order\FeeCalculator;
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Shipment\ProductOptions;
 
 class OrderParamsTest extends TestCase
@@ -53,13 +53,13 @@ class OrderParamsTest extends TestCase
 
     public function testGet()
     {
-        $productInfo = [
+        $productMock = [
             'code' => '3085',
             'type' => 'Daytime',
         ];
 
-        $productCodeAndTypeMock = $this->getFakeMock(ProductCodeAndType::class)->getMock();
-        $productCodeAndTypeMock->expects($this->once())->method('get')->willReturn($productInfo);
+        $productInfoMock = $this->getFakeMock(ProductInfo::class)->getMock();
+        $productInfoMock->expects($this->once())->method('get')->willReturn($productMock);
 
         $feeCalculatorMock = $this->getFakeMock(FeeCalculator::class)->getMock();
         $feeCalculatorMock->expects($this->once())->method('get')->willReturn(0.0);
@@ -69,7 +69,7 @@ class OrderParamsTest extends TestCase
 
         $instance = $this->getInstance([
             'feeCalculator' => $feeCalculatorMock,
-            'productCodeAndType' => $productCodeAndTypeMock,
+            'productInfo' => $productInfoMock,
             'productOptions' => $productOptionsMock
         ]);
 

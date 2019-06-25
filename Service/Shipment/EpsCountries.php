@@ -51,8 +51,6 @@ class EpsCountries
      * 'GL', // Greenland
      *
      * ==== SPAIN ====
-     * @codingStandardsIgnoreLine
-     * @todo: Not in the Magento Country list, customer will use ES which will cause the shipment to be EPS.
      * 'IC', // Las Palmas, Santa Cruz and Melilla
      *
      * ==== Italy ====
@@ -90,6 +88,6 @@ class EpsCountries
         'SI', // Slovenia
         'ES', // Spain (Including Balearic Islands. Excluding Canary Islands, Melilla and Ceuta)
         'SE', // Sweden
-        'MC', // Monaco (Is it's own country, Is EPS because France is EPS)
+        'MC', // Monaco (Is its own country, Is EPS because France is EPS)
     ];
 }

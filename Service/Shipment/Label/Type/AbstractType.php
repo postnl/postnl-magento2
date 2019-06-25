@@ -92,10 +92,9 @@ abstract class AbstractType
     }
 
     /**
-     * This function prevents that the fpdi->create() method is called multiple times.
+     * This function prevents that the $fpdi->create() method is called multiple times.
      */
-    // @codingStandardsIgnoreLine
-    protected function createPdf()
+    public function createPdf()
     {
         if ($this->pdf) {
             return;
