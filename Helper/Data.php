@@ -150,10 +150,28 @@ class Data extends AbstractHelper
         }
 
         if ($format === 'w') {
-            return $number % 7;
+            return $this->formatDayNumber($number);
         }
 
         return $number;
+    }
+
+    /**
+     * Make sure that day 7 (Sunday) is actually returned as 7 rather than 0
+     *
+     * @param $number
+     *
+     * @return int
+     */
+    private function formatDayNumber($number)
+    {
+        $formattedNumber = $number % 7;
+
+        if ($formattedNumber == 0) {
+            $formattedNumber = 7;
+        }
+
+        return $formattedNumber;
     }
 
     /**

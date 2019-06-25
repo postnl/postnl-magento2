@@ -133,11 +133,10 @@ class Webshop extends AbstractConfigProvider
     {
         switch ($day) {
             case '7':
-            case '0':
                 return $this->getSundayCutOffTime();
             case '6':
                 return $this->getSaturdayCutOffTime();
-            default :
+            default:
                 return $this->getCutOffTime();
         }
     }

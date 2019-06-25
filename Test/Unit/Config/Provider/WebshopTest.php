@@ -118,9 +118,6 @@ class WebshopTest extends AbstractConfigurationTest
     public function cutoffTimeForDayProvider()
     {
         return [
-            'CutoffTime for sundays, day number 0' => [
-                '0', Webshop::XPATH_WEBSHOP_SUNDAY_CUTOFFTIME, '10:00:00'
-            ],
             'CutoffTime for sundays, day number 7' => [
                 '7', Webshop::XPATH_WEBSHOP_SUNDAY_CUTOFFTIME, '10:00:00'
             ],
