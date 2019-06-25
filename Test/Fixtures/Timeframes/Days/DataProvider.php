@@ -96,7 +96,7 @@ class DataProvider
     {
         return [
             'Wednesday is not a shippingday' => [
-                '0,1,2,4,5,6',
+                '1,2,4,5,6,7',
                 $this->getDaysForTwoWeeks(),
                 '1',
                 $this->getDaysForTwoWeeksWednesdayDisabled()
