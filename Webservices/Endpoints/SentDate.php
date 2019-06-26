@@ -158,7 +158,9 @@ class SentDate extends AbstractEndpoint
                 'DeliveryDate'       => $this->getDeliveryDate($address, $postNLOrder),
                 'ShippingDuration'   => '1', // Request by PostNL not to use $postNLOrder->getShippingDuration()
                 'AllowSundaySorting' => $this->timeframeOptions->isSundaySortingAllowed(),
-                'Options'            => $this->timeframeOptions->get($this->getCountryId())
+                // GetSentDate 2.2 doesn't support multiple options for requests. That's why we send
+                // along the option actually selected.
+                'Options'            => [$postNLOrder->getType()]
             ],
             'Message'   => $this->message
         ];
