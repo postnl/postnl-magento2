@@ -161,7 +161,7 @@ class SentDate extends AbstractEndpoint
                 'AllowSundaySorting' => $this->timeframeOptions->isSundaySortingAllowed(),
                 // GetSentDate 2.2 doesn't support multiple options for requests. That's why we send
                 // along the option actually selected.
-                'Options'            => $this->getOptions($postNLOrder)
+                'Options'            => [$this->getOptions($postNLOrder)]
             ],
             'Message'   => $this->message
         ];
