@@ -126,7 +126,7 @@ class MergeWithLabels
             return $packingslip;
         }
 
-        if (isset($labels['errors'])) {
+        if (isset($labels['errors']) && count($labels['errors']) > 0) {
             return $labels['errors'];
         }
 
