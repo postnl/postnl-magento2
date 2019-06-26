@@ -154,6 +154,11 @@ class PdfDownload
     private function filterLabel($labels)
     {
         return array_filter($labels, function ($label) {
+            
+            if (is_array($label)) {
+                return false;
+            }
+            
             /** @var ShipmentLabelInterface $label */
             if (strtoupper($label->getType()) == ProductInfo::SHIPMENT_TYPE_GP) {
                 $this->filteredLabels[] = $label->getParentId();

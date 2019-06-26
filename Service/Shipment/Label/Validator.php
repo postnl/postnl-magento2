@@ -52,6 +52,11 @@ class Validator
      * @var array
      */
     private $errors = [];
+    
+    /**
+     * @var bool
+     */
+    private $priorityError = false;
 
     /**
      * Validator constructor.
@@ -165,9 +170,10 @@ class Validator
         }
 
         /** We want to show this notification for every Priority Shipment */
-        if ($isPriority) {
+        if ($isPriority && $this->priorityError == false) {
             // @codingStandardsIgnoreLine
             $this->errors[] = __('Tracked Parcels can only be used if 5 packages or more are delivered in a domestic mail bag with an attached bag label specific for priority parcels.');
+            $this->priorityError = true;
         }
 
         return true;
