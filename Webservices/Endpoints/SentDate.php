@@ -159,20 +159,21 @@ class SentDate extends AbstractEndpoint
                 'DeliveryDate'       => $this->getDeliveryDate($address, $postNLOrder),
                 'ShippingDuration'   => '1', // Request by PostNL not to use $postNLOrder->getShippingDuration()
                 'AllowSundaySorting' => $this->timeframeOptions->isSundaySortingAllowed(),
-                // GetSentDate 2.2 doesn't support multiple options for requests. That's why we send
-                // along the option actually selected.
-                'Options'            => [$this->getOptions($postNLOrder)]
+                'Options'            => [$this->getOption($postNLOrder)]
             ],
             'Message'   => $this->message
         ];
     }
     
     /**
+     * GetSentDate 2.2 doesn't support multiple options for requests. That's why we send
+     * along the option actually selected.
+     *
      * @param PostNLOrder $postNLOrder
      *
-     * @return array|string
+     * @return string
      */
-    private function getOptions(PostNLOrder $postNLOrder)
+    private function getOption(PostNLOrder $postNLOrder)
     {
         $availableOptions = $this->timeframeOptions->get($this->getCountryId());
         $currentType      = $postNLOrder->getType();
