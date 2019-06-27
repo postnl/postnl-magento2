@@ -239,7 +239,7 @@ class OrderParams
         
         $params['address']['Name'] = isset($params['name']) ? $params['name'] : '';
         
-        if ($params['type'] == 'pickup' && !isset($params['customerData'])) {
+        if ($params['type'] == ProductInfo::TYPE_PICKUP && !isset($params['customerData'])) {
             throw new PostnlException(
                 __('Missing required parameters: customerData')
             );
