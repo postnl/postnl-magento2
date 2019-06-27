@@ -43,13 +43,13 @@ use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
 class SentDateTest extends \TIG\PostNL\Test\TestCase
 {
     public $instanceClass = SentDate::class;
-    
+
     public function theParametersAreSetCorrectlyProvider()
     {
         /**
          * Today = 18-11-2016
          */
-        
+
         return [
             'Random address NL' => [
                 ['country' => 'NL', 'postcode' => '1014 BA', 'delivery_date' => '19-11-2016'],
@@ -69,7 +69,7 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
             ],
         ];
     }
-    
+
     /**
      * @dataProvider theParametersAreSetCorrectlyProvider
      *
@@ -84,41 +84,41 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
         $address = $this->getObject(Address::class);
         $address->setCountryId($input['country']);
         $address->setPostcode($input['postcode']);
-        
+
         $shipmentMock = $this->getFakeMock(Shipment::class, true);
         $this->mockFunction($shipmentMock, 'getShippingAddress', $address);
-        
+
         $orderMock = $this->getMock(OrderInterface::class);
         $this->mockFunction($orderMock, 'getDeliveryDate', $input['delivery_date']);
         $fallbackMock = $this->deliveryDateFallbackMock();
-        $optionsMock  = $this->optionsFallbackMock();
-        
+        $optionsMock  = $this->optionsMock();
+
         $instance = $this->getInstance([
             'dateFallback'     => $fallbackMock,
             'timeframeOptions' => $optionsMock
         ]);
         $instance->setParameters($address, 1, $orderMock);
-        
+
         $result = $this->getProperty('requestParams', $instance);
-        
+
         $this->assertEquals($expected['country'], $result['GetSentDate']['CountryCode']);
         $this->assertEquals($expected['postcode'], $result['GetSentDate']['PostalCode']);
         $this->assertEquals($expected['delivery_date'], $result['GetSentDate']['DeliveryDate']);
     }
-    
+
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    private function optionsFallbackMock()
+    private function optionsMock()
     {
         $optionsMock     = $this->getFakeMock(\TIG\PostNL\Service\Timeframe\Options::class)->getMock();
         $optionsExpected = $optionsMock->expects($this->any());
         $optionsExpected->method('get');
         $optionsExpected->willReturn(['Daytime']);
-        
+
         return $optionsMock;
     }
-    
+
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
@@ -128,11 +128,11 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
         $getFalback   = $fallbackMock->expects($this->any());
         $getFalback->method('get');
         $getFalback->willReturn('19-11-2016');
-        
+
         $getFalback2 = $fallbackMock->expects($this->any());
         $getFalback2->method('getDate');
         $getFalback2->willReturn('19-11-2016');
-        
+
         return $fallbackMock;
     }
 }
