@@ -129,9 +129,9 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
         $getFallback->method('get');
         $getFallback->willReturn('19-11-2016');
 
-        $getFalback2 = $fallbackMock->expects($this->any());
-        $getFalback2->method('getDate');
-        $getFalback2->willReturn('19-11-2016');
+        $getFallback2 = $fallbackMock->expects($this->any());
+        $getFallback2->method('getDate');
+        $getFallback2->willReturn('19-11-2016');
 
         return $fallbackMock;
     }
