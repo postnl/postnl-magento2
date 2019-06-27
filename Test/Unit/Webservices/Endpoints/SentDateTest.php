@@ -106,6 +106,9 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
         $this->assertEquals($expected['delivery_date'], $result['GetSentDate']['DeliveryDate']);
     }
     
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
     private function optionsFallbackMock()
     {
         $optionsMock     = $this->getFakeMock(\TIG\PostNL\Service\Timeframe\Options::class)->getMock();
