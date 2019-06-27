@@ -34,6 +34,7 @@ namespace TIG\PostNL\Webservices\Endpoints;
 
 use Magento\Customer\Model\Address\AbstractAddress as Address;
 use TIG\PostNL\Api\Data\OrderInterface as PostNLOrder;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Message;
@@ -158,10 +159,34 @@ class SentDate extends AbstractEndpoint
                 'DeliveryDate'       => $this->getDeliveryDate($address, $postNLOrder),
                 'ShippingDuration'   => '1', // Request by PostNL not to use $postNLOrder->getShippingDuration()
                 'AllowSundaySorting' => $this->timeframeOptions->isSundaySortingAllowed(),
-                'Options'            => $this->timeframeOptions->get($this->getCountryId())
+                'Options'            => [$this->getOption($postNLOrder)]
             ],
             'Message'   => $this->message
         ];
+    }
+    
+    /**
+     * GetSentDate 2.2 doesn't support multiple options for requests. That's why we send
+     * along the option actually selected.
+     *
+     * @param PostNLOrder $postNLOrder
+     *
+     * @return string
+     */
+    private function getOption(PostNLOrder $postNLOrder)
+    {
+        $availableOptions = $this->timeframeOptions->get($this->getCountryId());
+        $currentType      = $postNLOrder->getType();
+        
+        if (in_array($currentType, $availableOptions)) {
+            return $currentType;
+        }
+        
+        if ($currentType == ProductInfo::SHIPMENT_TYPE_PG) {
+            return ucfirst(ProductInfo::TYPE_PICKUP);
+        }
+        
+        return ProductInfo::SHIPMENT_TYPE_DAYTIME;
     }
     
     /**
