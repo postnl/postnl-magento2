@@ -33,11 +33,11 @@
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
 
-    <group id="labelandpackingslipoptions" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="labelandpackingslipoptions" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Label and packingslip options</label>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
 
-        <field id="reference_type" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+        <field id="reference_type" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Shipment reference type</label>
             <comment><![CDATA[Select what to use as a shipment's reference. This will be printed on the shipping label.]]></comment>
             <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\ReferenceType</source_model>

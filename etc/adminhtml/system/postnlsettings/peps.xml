@@ -40,7 +40,7 @@
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
         <field id="active" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Use Priority products</label>
-            <comment>These products can only be used for an order which contains five or more parcels (colli). Each of these parcels should have a maximum weight of 2kg.</comment>
+            <comment>Priority parcels can only be used if 5 parcels or more are handed over to PostNL in a domestic mail bag which has a specific priority package bag label attached to it.</comment>
             <tooltip><![CDATA[This allows you the use of the priority parcel products. After you enable this setting the products can be selected in the default EPS and Globalpack selection.]]></tooltip>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/peps/active</config_path>

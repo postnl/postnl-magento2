@@ -32,7 +32,7 @@
  *
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="sunday_delivery" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="sunday_delivery" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Sunday Delivery</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
@@ -40,7 +40,7 @@
             <field id="shippingoptions_active">1</field>
         </depends>
 
-        <field id="sundaydelivery_active" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+        <field id="sundaydelivery_active" translate="label comment" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Activate sunday delivery</label>
             <comment><![CDATA[Activate sunday delivery for your customers. Read more about <a href="https://servicedesk.tig.nl/hc/nl/articles/115004298588" target="_blank" title="sunday delivery">sunday delivery</a>.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -50,7 +50,7 @@
             </depends>
         </field>
 
-        <field id="default_sunday_option" translate="label" type="select" sortOrder="130" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+        <field id="default_sunday_option" translate="label comment" type="select" sortOrder="130" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default Sunday delivery</label>
             <comment><![CDATA[Select the default product option for Sunday shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsSundayOptions</source_model>

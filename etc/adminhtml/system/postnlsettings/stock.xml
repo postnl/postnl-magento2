@@ -35,7 +35,7 @@
 
      <!-- Stock -->
 
-    <group id="stock_settings" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="stock_settings" translate="label comment" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Stock Settings</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
@@ -43,7 +43,7 @@
             <field id="shippingoptions_active">1</field>
         </depends>
 
-         <field id="stockoptions" translate="label" type="radios" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+         <field id="stockoptions" translate="label comment" type="radios" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Stock options</label>
             <comment><![CDATA[Select for which products PostNL delivery options should be available.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\StockOptions</source_model>
