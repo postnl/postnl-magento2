@@ -42,7 +42,7 @@
         </group>
 
         <field id="enabled" translate="label comment tooltip" sortOrder="20" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Use Worldwide shipping</label>
+            <label>Use worldwide shipping</label>
             <comment>Worldwide shipping uses the PostNL GlobalPack product.</comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/globalpack/enabled</config_path>

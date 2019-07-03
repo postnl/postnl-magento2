@@ -33,7 +33,7 @@
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
 
     <!-- Eps products -->
-    <group id="eps" translate="label comment" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="eps" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>EPS and Belgium</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
