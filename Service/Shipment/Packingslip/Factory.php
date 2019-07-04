@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Service\Shipment\Packingslip;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
 use Magento\Framework\Module\Manager;
 use Magento\Framework\ObjectManagerInterface;
@@ -74,23 +75,31 @@ class Factory
     private $yCoordinate = 0;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
      * Factory constructor.
      *
      * @param Manager                  $manager
      * @param ObjectManagerInterface   $objectManager
      * @param PdfShipment              $pdfShipment
      * @param OrderRepositoryInterface $orderRepository
+     * @param ScopeConfigInterface     $scopeConfig
      */
     public function __construct(
         Manager $manager,
         ObjectManagerInterface $objectManager,
         PdfShipment $pdfShipment,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->moduleManager   = $manager;
         $this->objectManager   = $objectManager;
         $this->magentoPdf      = $pdfShipment;
         $this->orderRepository = $orderRepository;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -101,29 +110,37 @@ class Factory
      */
     public function create($magentoShipment, $forceMagento = false)
     {
-        if (!$this->moduleManager->isEnabled('Fooman_PrintOrderPdf') || $forceMagento) {
+        if (!$this->moduleManager->isEnabled('Fooman_PdfCustomiser') || $forceMagento) {
             $renderer = $this->magentoPdf->getPdf([$magentoShipment]);
             // @codingStandardsIgnoreLine
             $this->setY($this->magentoPdf->y);
             return $renderer->render();
         }
 
-        return $this->getFoomanPdf($magentoShipment->getOrderId());
+        return $this->getFoomanPdf($magentoShipment);
     }
 
     /**
-     * @param $orderId
+     * @param ShipmentInterface $magentoShipment
      *
      * @return string
      * @throws NotFoundException
      */
-    private function getFoomanPdf($orderId)
+    private function getFoomanPdf($magentoShipment)
     {
-        $order = $this->orderRepository->get($orderId);
-        /** @var \Fooman\PdfCustomiser\Block\OrderShipmentFactory $documentManager */
-        // @codingStandardsIgnoreLine
-        $documentManager = $this->objectManager->create('\Fooman\PdfCustomiser\Block\OrderShipmentFactory');
-        $document = $documentManager->create(['data' => ['order' => $order]]);
+        if ($this->scopeConfig->isSetFlag('sales_pdf/shipment/shipmentuseorder')) {
+            $orderId = $magentoShipment->getOrderId();
+            $order = $this->orderRepository->get($orderId);
+            /** @var \Fooman\PdfCustomiser\Block\OrderShipmentFactory $documentManager */
+            // @codingStandardsIgnoreLine
+            $documentManager = $this->objectManager->create('\Fooman\PdfCustomiser\Block\OrderShipmentFactory');
+            $document = $documentManager->create(['data' => ['order' => $order]]);
+        } else {
+            /** @var \Fooman\PdfCustomiser\Block\ShipmentFactory $documentManager */
+            // @codingStandardsIgnoreLine
+            $documentManager = $this->objectManager->create('\Fooman\PdfCustomiser\Block\ShipmentFactory');
+            $document = $documentManager->create(['data' => ['shipment' => $magentoShipment]]);
+        }
 
         /** @var \Fooman\PdfCore\Model\PdfRenderer $foomanRenderer */
         // @codingStandardsIgnoreLine
