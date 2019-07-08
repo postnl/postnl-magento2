@@ -33,6 +33,7 @@ namespace TIG\PostNL\Service\Shipment\Packingslip\Compatibility;
 
 use Magento\Framework\ObjectManagerInterface;
 
+// @codingStandardsIgnoreFile
 class PdfRendererFactoryProxy
 {
 
@@ -49,6 +50,7 @@ class PdfRendererFactoryProxy
     /**
      * @param ObjectManagerInterface $objectManager
      */
+    // @codingStandardsIgnoreLine
     public function __construct(ObjectManagerInterface $objectManager)
     {
         $this->objectManager = $objectManager;

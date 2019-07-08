@@ -29,6 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Service\Shipment\Packingslip\Compatibility;
 
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -87,13 +88,7 @@ class FoomanPdfCustomiser
      */
     public function getPdf(Factory $factory, ShipmentInterface $magentoShipment)
     {
-        if ($this->scopeConfig->isSetFlag('sales_pdf/shipment/shipmentuseorder')) {
-            $orderId = $magentoShipment->getOrderId();
-            $order = $this->orderRepository->get($orderId);
-            $document = $this->orderShipmentFactoryProxy->create(['data' => ['order' => $order]]);
-        } else {
-            $document = $this->shipmentFactoryProxy->create(['data' => ['shipment' => $magentoShipment]]);
-        }
+        $document = $this->getPdfDocument($magentoShipment);
         /** @var \Fooman\PdfCore\Model\PdfRenderer $pdfRenderer */
         $pdfRenderer = $this->pdfRendererFactoryProxy->create();
 
@@ -106,5 +101,20 @@ class FoomanPdfCustomiser
         $factory->setY(500);
 
         return $pdfRenderer->getPdfAsString();
+    }
+
+    /**
+     * @param ShipmentInterface $magentoShipment
+     *
+     * @return \Fooman\PdfCustomiser\Block\OrderShipment|\Fooman\PdfCustomiser\Block\Shipment
+     */
+    private function getPdfDocument(ShipmentInterface $magentoShipment)
+    {
+        if ($this->scopeConfig->isSetFlag('sales_pdf/shipment/shipmentuseorder')) {
+            $orderId = $magentoShipment->getOrderId();
+            $order = $this->orderRepository->get($orderId);
+            return $this->orderShipmentFactoryProxy->create(['data' => ['order' => $order]]);
+        }
+        return $this->shipmentFactoryProxy->create(['data' => ['shipment' => $magentoShipment]]);
     }
 }

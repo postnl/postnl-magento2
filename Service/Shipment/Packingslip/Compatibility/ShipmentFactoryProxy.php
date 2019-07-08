@@ -33,6 +33,7 @@ namespace TIG\PostNL\Service\Shipment\Packingslip\Compatibility;
 
 use Magento\Framework\ObjectManagerInterface;
 
+// @codingStandardsIgnoreFile
 class ShipmentFactoryProxy
 {
 
