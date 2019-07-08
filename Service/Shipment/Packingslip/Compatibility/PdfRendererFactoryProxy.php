@@ -50,7 +50,6 @@ class PdfRendererFactoryProxy
     /**
      * @param ObjectManagerInterface $objectManager
      */
-    // @codingStandardsIgnoreLine
     public function __construct(ObjectManagerInterface $objectManager)
     {
         $this->objectManager = $objectManager;
