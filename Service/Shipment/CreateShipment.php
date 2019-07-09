@@ -227,7 +227,10 @@ class CreateShipment
     {
         $this->shipment->register();
         $order = $this->shipment->getOrder();
-        $this->inventorySource->setSource($order, $this->getShippingItems());
+
+        $shipmentAttributes = $this->shipment->getExtensionAttributes();
+        $shipmentAttributes->setSourceCode($this->inventorySource->getSource($order, $this->getShippingItems()));
+        $this->shipment->setExtensionAttributes($shipmentAttributes);
 
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus('processing');
