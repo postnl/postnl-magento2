@@ -78,17 +78,17 @@
         <group id="customs" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Customs settings</label>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
-            <field id="license_number" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="license_number" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>License number</label>
                 <comment>If you do not own a customs license, leave this field empty.</comment>
                 <config_path>tig_postnl/globalpack/license_number</config_path>
             </field>
-            <field id="certificate_number" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="certificate_number" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Certificate number</label>
                 <comment>If you do not own a certificate, leave this field empty.</comment>
                 <config_path>tig_postnl/globalpack/certificate_number</config_path>
             </field>
-            <field id="shipment_type" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="shipment_type" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Default shipment type</label>
                 <comment>Please select the default shipment type.</comment>
                 <source_model>TIG\PostNL\Config\Source\Globalpack\ShipmentType</source_model>

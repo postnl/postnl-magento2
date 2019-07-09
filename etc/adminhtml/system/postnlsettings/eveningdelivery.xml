@@ -55,9 +55,9 @@
                 <field id="deliverydays_active">1</field>
             </depends>
 
-                 <field id="eveningdelivery_active" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                 <field id="eveningdelivery_active" translate="label comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Activate evening delivery</label>
-                    <comment><![CDATA[Activate evening delivery for your customers. Read more about <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+avondbezorging" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
+                    <comment><![CDATA[Activate evening delivery for your customers. Read more about <a href="https://confluence.tig.nl/x/qYSC" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>tig_postnl/evening_delivery_nl/eveningdelivery_active</config_path>
                     <depends>
@@ -66,7 +66,7 @@
                     </depends>
                 </field>
 
-                <field id="eveningdelivery_fee" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="eveningdelivery_fee" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Evening delivery fee</label>
                     <comment><![CDATA[Additional costs for evening delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
                     <config_path>tig_postnl/evening_delivery_nl/eveningdelivery_fee</config_path>
@@ -78,7 +78,7 @@
                     </depends>
                 </field>
 
-               <field id="default_evening_option" translate="label" type="select" sortOrder="95" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+               <field id="default_evening_option" translate="label comment" type="select" sortOrder="95" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Evening delivery the Netherlands</label>
                     <comment><![CDATA[Select the default product option for evening delivery shipments.]]></comment>
                     <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getEveningOptionsNL</source_model>
@@ -99,9 +99,9 @@
                  <field id="deliverydays_active">1</field>
              </depends>
 
-                <field id="eveningdelivery_be_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="eveningdelivery_be_active" translate="label comment" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Activate evening delivery for Belgium</label>
-                    <comment><![CDATA[Activate evening delivery to Belgium for your customers. Read more about <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+avondbezorging" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
+                    <comment><![CDATA[Activate evening delivery to Belgium for your customers. Read more about <a href="https://confluence.tig.nl/x/qYSC" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>tig_postnl/evening_delivery_be/eveningdelivery_be_active</config_path>
                     <depends>
@@ -110,7 +110,7 @@
                     </depends>
                 </field>
 
-                <field id="eveningdelivery_be_fee" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="eveningdelivery_be_fee" translate="label comment" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Evening delivery for Belgium fee</label>
                     <comment><![CDATA[Additional costs for evening delivery to Belgium in the store's base currency. This fee will be added to the shipping costs.]]></comment>
                     <config_path>tig_postnl/evening_delivery_be/eveningdelivery_be_fee</config_path>
@@ -122,9 +122,9 @@
                     </depends>
                 </field>
 
-                <field id="default_evening_be_option" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                <field id="default_evening_be_option" translate="label comment" type="select" sortOrder="120" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Evening delivery Belgium</label>
-                    <comment><![CDATA[Select the default product option for evening delivery to Belgium shipments.]]></comment>
+                    <comment><![CDATA[Select the default product option for evening delivery to Belgium.]]></comment>
                     <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getEveningOptionsBE</source_model>
                     <config_path>tig_postnl/evening_delivery_be/default_evening_be_option</config_path>
                     <depends>
