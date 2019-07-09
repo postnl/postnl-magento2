@@ -69,6 +69,8 @@ class InventorySource
             $shipmentItems
         );
 
-        return $shipment->getExtensionAttributes()->getSourceCode();
+        $extensionAttributes = $shipment->getExtensionAttributes();
+
+        return $extensionAttributes->getSourceCode();
     }
 }
