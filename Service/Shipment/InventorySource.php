@@ -61,7 +61,7 @@ class InventorySource
      *
      * @return Shipment
      */
-    public function setSource($order, $shipmentItems)
+    public function getSource($order, $shipmentItems)
     {
         /** @var Shipment $shipment */
         $shipment = $this->shipmentFactory->create(
@@ -69,6 +69,8 @@ class InventorySource
             $shipmentItems
         );
 
-        return $shipment;
+        $extensionAttributes = $shipment->getExtensionAttributes();
+
+        return $extensionAttributes->getSourceCode();
     }
 }
