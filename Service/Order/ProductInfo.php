@@ -174,7 +174,14 @@ class ProductInfo {
 	private function setGlobalPackOption($country = null) {
 		$this->type = static::SHIPMENT_TYPE_GP;
 		$this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
-		
+
+		if ($this->makeExceptionForMalta($country)) {
+            $this->type = static::SHIPMENT_TYPE_EPS;
+            $this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
+
+            return;
+        }
+
 		if (in_array($country, PriorityCountries::GLOBALPACK)
 		    && $this->isPriorityProduct($this->code)
 		) {
@@ -183,7 +190,28 @@ class ProductInfo {
 		
 		$this->code = $this->productOptionsFinder->getDefaultGPOption()['value'];
 	}
-	
+
+    /**
+     * Malta is a Global Pack country and a PEPS country. That's why we need a
+     * method specifically to switch back to PEPS if it is enabled for EPS.
+     *
+     * @param null $country
+     *
+     * @return bool
+     */
+	private function makeExceptionForMalta($country = null)
+    {
+        $epsCode = $this->productOptionsConfiguration->getDefaultEpsProductOption();
+
+        if ($country == 'MT'
+            && $this->isPriorityProduct($epsCode)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
 	/**
 	 * @param $address
 	 * @param $country
