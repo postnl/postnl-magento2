@@ -60,34 +60,22 @@ class SentDate extends AbstractEndpoint
      */
     private $type = 'GetSentDate';
 
-    /**
-     * Array
-     */
+    /** Array */
     private $requestParams;
 
-    /**
-     * @var Soap
-     */
+    /** @var Soap */
     private $soap;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $message;
 
-    /**
-     * @var CutoffTimes
-     */
+    /** @var CutoffTimes */
     private $cutoffTimes;
 
-    /**
-     * @var Options
-     */
+    /** @var Options */
     private $timeframeOptions;
 
-    /**
-     * @var DeliveryDateFallback
-     */
+    /** @var DeliveryDateFallback */
     private $dateFallback;
 
     /**
@@ -170,7 +158,6 @@ class SentDate extends AbstractEndpoint
      * along the option actually selected.
      *
      * @param PostNLOrder $postNLOrder
-     *
      * @return string
      */
     private function getOption(PostNLOrder $postNLOrder)
