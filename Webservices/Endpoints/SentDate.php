@@ -206,7 +206,7 @@ class SentDate extends AbstractEndpoint
 
     /**
      * The sent date webservice can only work with NL and BE addresses. That's why we default use the PostNL Pakketten
-     * office postcode for addresses outside the Netherlands.
+     * office postcode for addresses outside the Netherlands or Belgium.
      *
      * @param Address $address
      *
