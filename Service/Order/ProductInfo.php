@@ -42,154 +42,143 @@ use TIG\PostNL\Service\Shipment\PriorityCountries;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 
 // @codingStandardsIgnoreFile
-class ProductInfo {
-	/** @var int */
-	private $code = null;
+class ProductInfo
+{
+    /** @var int */
+    private $code = null;
 
-	/** @var string */
-	private $type = null;
+    /** @var string */
+    private $type = null;
 
-	const TYPE_PICKUP               = 'pickup';
+    const TYPE_PICKUP               = 'pickup';
+    const TYPE_DELIVERY             = 'delivery';
+    const OPTION_PG                 = 'pg';
+    const OPTION_PGE                = 'pge';
+    const OPTION_SUNDAY             = 'sunday';
+    const OPTION_DAYTIME            = 'daytime';
+    const OPTION_EVENING            = 'evening';
+    const OPTION_EXTRAATHOME        = 'extra@home';
+    const SHIPMENT_TYPE_PG          = 'PG';
+    const SHIPMENT_TYPE_PGE         = 'PGE';
+    const SHIPMENT_TYPE_EPS         = 'EPS';
+    const SHIPMENT_TYPE_GP          = 'GP';
+    const SHIPMENT_TYPE_SUNDAY      = 'Sunday';
+    const SHIPMENT_TYPE_EVENING     = 'Evening';
+    const SHIPMENT_TYPE_DAYTIME     = 'Daytime';
+    const SHIPMENT_TYPE_EXTRAATHOME = 'Extra@Home';
 
-	const TYPE_DELIVERY             = 'delivery';
+    /** @var ProductOptionsConfiguration */
+    private $productOptionsConfiguration;
 
-	const OPTION_PG                 = 'pg';
+    /** @var ProductOptionsFinder */
+    private $productOptionsFinder;
 
-	const OPTION_PGE                = 'pge';
+    /** @var QuoteInterface */
+    private $quote;
 
-	const OPTION_SUNDAY             = 'sunday';
+    /**
+     * @param ProductOptionsConfiguration $productOptionsConfiguration
+     * @param ProductOptionsFinder        $productOptionsFinder
+     * @param QuoteInterface              $quote
+     */
+    public function __construct(
+        ProductOptionsConfiguration $productOptionsConfiguration,
+        ProductOptionsFinder $productOptionsFinder,
+        QuoteInterface $quote
+    ) {
+        $this->productOptionsConfiguration = $productOptionsConfiguration;
+        $this->productOptionsFinder        = $productOptionsFinder;
+        $this->quote                       = $quote;
+    }
 
-	const OPTION_DAYTIME            = 'daytime';
+    /**
+     * This function translates the chosen option to the correct product code for the shipment.
+     *
+     * @param string                    $type
+     * @param string                    $option
+     * @param SalesAddress|QuoteAddress $address
+     *
+     * @return array
+     */
+    public function get($type = '', $option = '', $address = null)
+    {
+        $country = $this->getCountryCode($address);
+        $type    = strtolower($type);
+        $option  = strtolower($option);
 
-	const OPTION_EVENING            = 'evening';
+        if (!in_array($country, EpsCountries::ALL)
+            && !in_array($country, ['BE', 'NL'])) {
+            $this->setGlobalPackOption($country);
 
-	const OPTION_EXTRAATHOME        = 'extra@home';
+            return $this->getInfo();
+        }
 
-	const SHIPMENT_TYPE_PG          = 'PG';
+        // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
+        if ((empty($type) || $option == static::OPTION_DAYTIME)
+            && !in_array($country, ['BE', 'NL'])) {
+            $this->setEpsOption($address, $country);
 
-	const SHIPMENT_TYPE_PGE         = 'PGE';
+            return $this->getInfo();
+        }
 
-	const SHIPMENT_TYPE_EPS         = 'EPS';
+        if ($type == static::TYPE_PICKUP) {
+            $this->setPakjegemakProductOption($option);
 
-	const SHIPMENT_TYPE_GP          = 'GP';
+            return $this->getInfo();
+        }
 
-	const SHIPMENT_TYPE_SUNDAY      = 'Sunday';
+        $this->setProductCode($option, $country);
 
-	const SHIPMENT_TYPE_EVENING     = 'Evening';
+        return $this->getInfo();
+    }
 
-	const SHIPMENT_TYPE_DAYTIME     = 'Daytime';
+    /**
+     * @param SalesAddress|QuoteAddress|string $address
+     *
+     * @return string
+     */
+    private function getCountryCode($address)
+    {
+        if ($address && is_object($address)) {
+            return $address->getCountryId();
+        }
 
-	const SHIPMENT_TYPE_EXTRAATHOME = 'Extra@Home';
+        /**
+         * \TIG\PostNL\Helper\DeliveryOptions\OrderParams::formatParamData
+         * Request is done with country code only.
+         */
+        if (is_string($address)) {
+            return $address;
+        }
 
-	/** @var ProductOptionsConfiguration */
-	private $productOptionsConfiguration;
+        $address = $this->quote->getShippingAddress();
 
-	/** @var ProductOptionsFinder */
-	private $productOptionsFinder;
+        return $address->getCountryId();
+    }
 
-	/** @var QuoteInterface */
-	private $quote;
+    /**
+     * @param null $country
+     */
+    private function setGlobalPackOption($country = null)
+    {
+        $this->type = static::SHIPMENT_TYPE_GP;
+        $this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
 
-	/**
-	 * @param ProductOptionsConfiguration $productOptionsConfiguration
-	 * @param ProductOptionsFinder        $productOptionsFinder
-	 * @param QuoteInterface              $quote
-	 */
-	public function __construct(
-		ProductOptionsConfiguration $productOptionsConfiguration,
-		ProductOptionsFinder $productOptionsFinder,
-		QuoteInterface $quote
-	) {
-		$this->productOptionsConfiguration = $productOptionsConfiguration;
-		$this->productOptionsFinder        = $productOptionsFinder;
-		$this->quote                       = $quote;
-	}
-
-	/**
-	 * This function translates the chosen option to the correct product code for the shipment.
-	 *
-	 * @param string                    $type
-	 * @param string                    $option
-	 * @param SalesAddress|QuoteAddress $address
-	 *
-	 * @return array
-	 */
-	public function get($type = '', $option = '', $address = null) {
-		$country = $this->getCountryCode($address);
-		$type    = strtolower($type);
-		$option  = strtolower($option);
-
-		if (!in_array($country, EpsCountries::ALL)
-		    && !in_array($country, ['BE', 'NL'])) {
-			$this->setGlobalPackOption($country);
-
-			return $this->getInfo();
-		}
-
-		// EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
-		if ((empty($type) || $option == static::OPTION_DAYTIME)
-		    && !in_array($country, ['BE', 'NL'])) {
-			$this->setEpsOption($address, $country);
-
-			return $this->getInfo();
-		}
-
-		if ($type == static::TYPE_PICKUP) {
-			$this->setPakjegemakProductOption($option);
-
-			return $this->getInfo();
-		}
-
-		$this->setProductCode($option, $country);
-
-		return $this->getInfo();
-	}
-
-	/**
-	 * @param SalesAddress|QuoteAddress|string $address
-	 *
-	 * @return string
-	 */
-	private function getCountryCode($address) {
-		if ($address && is_object($address)) {
-			return $address->getCountryId();
-		}
-
-		/**
-		 * \TIG\PostNL\Helper\DeliveryOptions\OrderParams::formatParamData
-		 * Request is done with country code only.
-		 */
-		if (is_string($address)) {
-			return $address;
-		}
-
-		$address = $this->quote->getShippingAddress();
-
-		return $address->getCountryId();
-	}
-
-	/**
-	 * @param null $country
-	 */
-	private function setGlobalPackOption($country = null) {
-		$this->type = static::SHIPMENT_TYPE_GP;
-		$this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
-
-		if ($this->makeExceptionForEUPriority($country)) {
+        if ($this->makeExceptionForEUPriority($country)) {
             $this->type = static::SHIPMENT_TYPE_EPS;
             $this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
 
             return;
         }
 
-		if (in_array($country, PriorityCountries::GLOBALPACK)
-		    && $this->isPriorityProduct($this->code)
-		) {
-			return;
-		}
+        if (in_array($country, PriorityCountries::GLOBALPACK)
+            && $this->isPriorityProduct($this->code)
+        ) {
+            return;
+        }
 
-		$this->code = $this->productOptionsFinder->getDefaultGPOption()['value'];
-	}
+        $this->code = $this->productOptionsFinder->getDefaultGPOption()['value'];
+    }
 
     /**
      * Malta, Cyprus, Serbia and Croatia are Global Pack countries and EU PEPS countries. That's why
@@ -199,7 +188,7 @@ class ProductInfo {
      *
      * @return bool
      */
-	private function makeExceptionForEUPriority($country = null)
+    private function makeExceptionForEUPriority($country = null)
     {
         $epsCode = $this->productOptionsConfiguration->getDefaultEpsProductOption();
         $EUPriorityCountries = array_diff(PriorityCountries::EPS, EpsCountries::ALL);
@@ -213,113 +202,120 @@ class ProductInfo {
         return false;
     }
 
-	/**
-	 * @param $address
-	 * @param $country
-	 */
-	private function setEpsOption($address, $country) {
-		$this->type = static::SHIPMENT_TYPE_EPS;
+    /**
+     * @param $address
+     * @param $country
+     */
+    private function setEpsOption($address, $country)
+    {
+        $this->type = static::SHIPMENT_TYPE_EPS;
 
-		// Force type Global Pack (mainly used for Canary Islands)
-		$options          = $this->productOptionsFinder->getEpsProductOptions($address);
-		$firstOption      = array_shift($options);
-		$globalPackOption = $this->productOptionsFinder->getDefaultGPOption()['value'];
-		if (in_array($globalPackOption, $firstOption)) {
-			$this->setGlobalPackOption();
+        // Force type Global Pack (mainly used for Canary Islands)
+        $options          = $this->productOptionsFinder->getEpsProductOptions($address);
+        $firstOption      = array_shift($options);
+        $globalPackOption = $this->productOptionsFinder->getDefaultGPOption()['value'];
+        if (in_array($globalPackOption, $firstOption)) {
+            $this->setGlobalPackOption();
 
-			return;
-		}
+            return;
+        }
 
-		$this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
-		if (in_array($country, PriorityCountries::EPS)
-		    && $this->isPriorityProduct($this->code)
-		) {
-			return;
-		}
+        $this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
+        if (in_array($country, PriorityCountries::EPS)
+            && $this->isPriorityProduct($this->code)
+        ) {
+            return;
+        }
 
-		$this->code = $this->productOptionsFinder->getDefaultEUOption()['value'];
-	}
+        $this->code = $this->productOptionsFinder->getDefaultEUOption()['value'];
+    }
 
-	/**
-	 * Check whether current product code is a Priority (GlobalPack|EPS) Product
-	 *
-	 * @param $code
-	 *
-	 * @return bool|null
-	 */
-	private function isPriorityProduct($code) {
-		return $this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'priority_options');
-	}
+    /**
+     * Check whether current product code is a Priority (GlobalPack|EPS) Product
+     *
+     * @param $code
+     *
+     * @return bool|null
+     */
+    private function isPriorityProduct($code)
+    {
+        return $this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'priority_options');
+    }
 
-	/**
-	 * @param string $option
-	 */
-	private function setPakjegemakProductOption($option) {
-		if ($option == static::OPTION_PGE) {
-			$this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakEarlyProductOption();
-			$this->type = static::SHIPMENT_TYPE_PGE;
+    /**
+     * @param string $option
+     */
+    private function setPakjegemakProductOption($option)
+    {
+        if ($option == static::OPTION_PGE) {
+            $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakEarlyProductOption();
+            $this->type = static::SHIPMENT_TYPE_PGE;
 
-			return;
-		}
+            return;
+        }
 
-		$this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
-		$this->type = static::SHIPMENT_TYPE_PG;
-	}
+        $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
+        $this->type = static::SHIPMENT_TYPE_PG;
+    }
 
-	/**
-	 * Set the product code for the delivery options.
-	 *
-	 * @param string $option
-	 * @param string $country
-	 */
-	private function setProductCode($option, $country) {
-		switch ($option) {
-			case static::OPTION_EVENING:
-				$this->code = $this->productOptionsConfiguration->getDefaultEveningProductOption($country);
-				$this->type = static::SHIPMENT_TYPE_EVENING;
+    /**
+     * Set the product code for the delivery options.
+     *
+     * @param string $option
+     * @param string $country
+     */
+    private function setProductCode($option, $country)
+    {
+        switch ($option) {
+            case static::OPTION_EVENING:
+                $this->code = $this->productOptionsConfiguration->getDefaultEveningProductOption($country);
+                $this->type = static::SHIPMENT_TYPE_EVENING;
 
-				return;
-			case static::OPTION_SUNDAY:
-				$this->code = $this->productOptionsConfiguration->getDefaultSundayProductOption();
-				$this->type = static::SHIPMENT_TYPE_SUNDAY;
+                return;
+            case static::OPTION_SUNDAY:
+                $this->code = $this->productOptionsConfiguration->getDefaultSundayProductOption();
+                $this->type = static::SHIPMENT_TYPE_SUNDAY;
 
-				return;
-			case static::OPTION_EXTRAATHOME:
-				$this->code = $this->productOptionsConfiguration->getDefaultExtraAtHomeProductOption();
-				$this->type = static::SHIPMENT_TYPE_EXTRAATHOME;
+                return;
+            case static::OPTION_EXTRAATHOME:
+                $this->code = $this->productOptionsConfiguration->getDefaultExtraAtHomeProductOption();
+                $this->type = static::SHIPMENT_TYPE_EXTRAATHOME;
 
-				return;
-		}
+                return;
+        }
 
-		$this->setDefaultProductOption($country);
-	}
+        $this->setDefaultProductOption($country);
+    }
 
-	/**
-	 * @param $country
-	 */
-	private function setDefaultProductOption($country) {
-		$this->code = $this->productOptionsConfiguration->getDefaultProductOption();
-		if ($country == 'BE') {
-			$this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
-		}
+    /**
+     * @param $country
+     */
+    private function setDefaultProductOption($country)
+    {
+        $this->type = static::SHIPMENT_TYPE_DAYTIME;
+        if ($country == 'BE') {
+            $this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
+            return;
+        }
 
-		$this->type = static::SHIPMENT_TYPE_DAYTIME;
+        $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
 
-		/** @var Quote $magentoQuote */
-		$magentoQuote         = $this->quote->getQuote();
-		$quoteTotal           = $magentoQuote->getBaseGrandTotal();
-		$alternativeActive    = $this->productOptionsConfiguration->getUseAlternativeDefault();
-		$alternativeMinAmount = $this->productOptionsConfiguration->getAlternativeDefaultMinAmount();
+        /** @var Quote $magentoQuote */
+        $magentoQuote         = $this->quote->getQuote();
+        $quoteTotal           = $magentoQuote->getBaseGrandTotal();
+        $alternativeActive    = $this->productOptionsConfiguration->getUseAlternativeDefault();
+        $alternativeMinAmount = $this->productOptionsConfiguration->getAlternativeDefaultMinAmount();
 
-		if ($alternativeActive && $quoteTotal >= $alternativeMinAmount) {
-			$this->code = $this->productOptionsConfiguration->getAlternativeDefaultProductOption();
-		}
-	}
+        if ($alternativeActive && $quoteTotal >= $alternativeMinAmount) {
+            $this->code = $this->productOptionsConfiguration->getAlternativeDefaultProductOption();
+        }
+    }
 
-	/**
-	 * @return array
-	 */
-	private function getInfo() {
-		return ['code' => $this->code, 'type' => $this->type];
-	}
+    /**
+     * @return array
+     */
+    private function getInfo()
+    {
+        return ['code' => $this->code, 'type' => $this->type];
+    }
 }
