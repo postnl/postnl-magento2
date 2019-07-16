@@ -60,22 +60,34 @@ class SentDate extends AbstractEndpoint
      */
     private $type = 'GetSentDate';
 
-    /** Array */
+    /**
+     * @var array
+     */
     private $requestParams;
 
-    /** @var Soap */
+    /**
+     * @var Soap
+     */
     private $soap;
 
-    /** @var array */
+    /**
+     * @var Message
+     */
     private $message;
 
-    /** @var CutoffTimes */
+    /**
+     * @var CutoffTimes
+     */
     private $cutoffTimes;
 
-    /** @var Options */
+    /**
+     * @var Options
+     */
     private $timeframeOptions;
 
-    /** @var DeliveryDateFallback */
+    /**
+     * @var DeliveryDateFallback
+     */
     private $dateFallback;
 
     /**
@@ -128,9 +140,9 @@ class SentDate extends AbstractEndpoint
     }
 
     /**
-     * @param                                     $address
-     * @param                                     $storeId
-     * @param \TIG\PostNL\Api\Data\OrderInterface $postNLOrder
+     * @param             $address
+     * @param             $storeId
+     * @param PostNLOrder $postNLOrder
      */
     public function setParameters($address, $storeId, PostNLOrder $postNLOrder)
     {
@@ -148,8 +160,7 @@ class SentDate extends AbstractEndpoint
                 'ShippingDuration'   => '1', // Request by PostNL not to use $postNLOrder->getShippingDuration()
                 'AllowSundaySorting' => $this->timeframeOptions->isSundaySortingAllowed(),
                 'Options'            => [$this->getOption($postNLOrder)]
-            ],
-            'Message'   => $this->message
+            ], 'Message'   => $this->message
         ];
     }
 
