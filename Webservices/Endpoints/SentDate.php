@@ -49,47 +49,47 @@ class SentDate extends AbstractEndpoint
      * @var string
      */
     private $version = 'v2_2';
-    
+
     /**
      * @var string
      */
     private $endpoint = 'calculate/date';
-    
+
     /**
      * @var string
      */
     private $type = 'GetSentDate';
-    
+
     /**
      * Array
      */
     private $requestParams;
-    
+
     /**
      * @var Soap
      */
     private $soap;
-    
+
     /**
      * @var array
      */
     private $message;
-    
+
     /**
      * @var CutoffTimes
      */
     private $cutoffTimes;
-    
+
     /**
      * @var Options
      */
     private $timeframeOptions;
-    
+
     /**
      * @var DeliveryDateFallback
      */
     private $dateFallback;
-    
+
     /**
      * SentDate constructor.
      *
@@ -113,12 +113,12 @@ class SentDate extends AbstractEndpoint
         $this->cutoffTimes      = $cutoffTimes;
         $this->timeframeOptions = $timeframeOptions;
         $this->dateFallback     = $dateFallback;
-        
+
         parent::__construct(
             $shipmentData
         );
     }
-    
+
     /**
      * @return mixed
      * @throws \Magento\Framework\Webapi\Exception
@@ -127,10 +127,10 @@ class SentDate extends AbstractEndpoint
     public function call()
     {
         $response = $this->soap->call($this, $this->type, $this->requestParams);
-        
+
         return $response->SentDate;
     }
-    
+
     /**
      * @return string
      */
@@ -138,7 +138,7 @@ class SentDate extends AbstractEndpoint
     {
         return $this->version . '/' . $this->endpoint;
     }
-    
+
     /**
      * @param                                     $address
      * @param                                     $storeId
@@ -147,10 +147,10 @@ class SentDate extends AbstractEndpoint
     public function setParameters($address, $storeId, PostNLOrder $postNLOrder)
     {
         $this->soap->updateApiKey($storeId);
-        
+
         $this->requestParams = [
             $this->type => [
-                'CountryCode'        => $this->getCountryId(),
+                'CountryCode'        => $this->getCountryId($postNLOrder),
                 'PostalCode'         => $this->getPostcode($address),
                 'HouseNr'            => '',
                 'HouseNrExt'         => '',
@@ -164,7 +164,7 @@ class SentDate extends AbstractEndpoint
             'Message'   => $this->message
         ];
     }
-    
+
     /**
      * GetSentDate 2.2 doesn't support multiple options for requests. That's why we send
      * along the option actually selected.
@@ -175,31 +175,35 @@ class SentDate extends AbstractEndpoint
      */
     private function getOption(PostNLOrder $postNLOrder)
     {
-        $availableOptions = $this->timeframeOptions->get($this->getCountryId());
+        $availableOptions = $this->timeframeOptions->get($this->getCountryId($postNLOrder));
         $currentType      = $postNLOrder->getType();
-        
+
         if (in_array($currentType, $availableOptions)) {
             return $currentType;
         }
-        
+
         if ($currentType == ProductInfo::SHIPMENT_TYPE_PG) {
             return ucfirst(ProductInfo::TYPE_PICKUP);
         }
-        
+
         return ProductInfo::SHIPMENT_TYPE_DAYTIME;
     }
-    
+
     /**
-     * This endpoint is only available for dutch addresses.
+     * This endpoint is only available for dutch and belgian addresses.
+     *
+     * @var PostNLOrder $postNLOrder
      *
      * @return string
      * @see getPostcode
      */
-    private function getCountryId()
+    private function getCountryId($postNLOrder)
     {
-        return 'NL';
+        $shippingAddress = $postNLOrder->getShippingAddress();
+
+        return in_array($shippingAddress->getCountryId(), ['NL', 'BE']) ? $shippingAddress->getCountryId() : 'NL';
     }
-    
+
     /**
      * The sent date webservice can only work with NL addresses. That's why we default use the PostNL Pakketten office
      * postcode for addresses outside the Netherlands.
@@ -210,18 +214,18 @@ class SentDate extends AbstractEndpoint
      */
     private function getPostcode($address)
     {
-        if ($address->getCountryId() != 'NL') {
+        if ($address->getCountryId() != 'NL' && $address->getCountryId() != 'BE') {
             return '2132WT';
         }
-        
+
         $postcode = $address->getPostcode();
         $postcode = str_replace(' ', '', $postcode);
         $postcode = strtoupper($postcode);
         $postcode = trim($postcode);
-        
+
         return $postcode;
     }
-    
+
     /**
      * @param Address     $address
      * @param PostNLOrder $postNLOrder
@@ -234,12 +238,12 @@ class SentDate extends AbstractEndpoint
         if ($deliveryDate == null) {
             return $this->dateFallback->get();
         }
-        
+
         if (in_array($address->getCountryId(), ['NL', 'BE'])
             || ($address->getCountryId() === null && !empty($deliveryDate))) {
             return $this->dateFallback->getDate($deliveryDate);
         }
-        
+
         return $this->dateFallback->get();
     }
 }
