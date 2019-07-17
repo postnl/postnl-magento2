@@ -191,7 +191,6 @@ class SentDate extends AbstractEndpoint
      * This endpoint is only available for dutch and belgian addresses.
      *
      * @var PostNLOrder $postNLOrder
-     *
      * @return string
      * @see getPostcode
      */
@@ -199,7 +198,8 @@ class SentDate extends AbstractEndpoint
     {
         $shippingAddress = $postNLOrder->getShippingAddress();
 
-        return in_array($shippingAddress->getCountryId(), ['NL', 'BE']) ? $shippingAddress->getCountryId() : 'NL';
+        return $shippingAddress && in_array($shippingAddress->getCountryId(), ['NL', 'BE'])
+            ? $shippingAddress->getCountryId() : 'NL';
     }
 
     /**
