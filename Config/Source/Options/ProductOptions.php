@@ -51,6 +51,13 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     private $canaryConverter;
 
     /**
+     * @var array
+     */
+    private $combiProductCodes = [
+        '4944' => '4952'
+    ];
+
+    /**
      * @param CanaryIslandToIC $canaryConverter
      */
     public function __construct(CanaryIslandToIC $canaryConverter)
@@ -66,6 +73,10 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getLabel($code, $type)
     {
+        if (array_key_exists($code, $this->combiProductCodes)) {
+            $code = $this->combiProductCodes[$code];
+        }
+
         if (!array_key_exists($code, $this->availableOptions) || !array_key_exists($type, $this->typeToComment)) {
             return ['label' => '', 'type' => '', 'comment' => ''];
         }
@@ -224,7 +235,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     {
         return $this->getProductOptions(['group' => 'extra_at_home_options']);
     }
-	
+
 	/**
 	 * @return array
 	 */
@@ -233,7 +244,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     	$productOptions = $this->getProductOptions(['isDefault' => 1, 'group' => 'global_options']);
     	return array_shift($productOptions);
     }
-	
+
 	/**
 	 * @return array
 	 */

@@ -166,6 +166,39 @@ class ProductOptionsTest extends TestCase
         $this->assertEquals('standard_options', $options['group']);
     }
 
+    /**
+     * @return array
+     */
+    public function getLabelProvider()
+    {
+        return [
+            ['3085', 'Daytime', ['label' => 'Domestic', 'type' => '', 'comment' => 'Standard shipment']],
+            ['3089', 'Daytime', ['label' => 'Domestic', 'type' => '', 'comment' => 'Signature on delivery + Delivery to stated address only']],
+            ['3089', 'Evening', ['label' => 'Domestic', 'type' => 'Evening', 'comment' => 'Signature on delivery + Delivery to stated address only']],
+            ['3534', 'PG',      ['label' => 'Post Office', 'type' => '', 'comment' => 'Post Office + Extra Cover']],
+            ['4952', 'Daytime', ['label' => 'EPS', 'type' => '', 'comment' => 'EU Pack Special Consumer']],
+            ['4945', 'Daytime', ['label' => 'Global Pack', 'type' => '', 'comment' => 'GlobalPack']],
+            ['2928', 'Daytime', ['label' => 'Letter Box', 'type' => '', 'comment' => 'Letter Box Parcel Extra']],
+            ['4944', 'Daytime', ['label' => 'EPS', 'type' => '', 'comment' => 'EU Pack Special Consumer']],
+            ['1234', 'Daytime', ['label' => '', 'type' => '', 'comment' => '']],
+        ];
+    }
+
+    /**
+     * @param $code
+     * @param $type
+     * @param $expected
+     *
+     * @throws \Exception
+     * @dataProvider getLabelProvider
+     */
+    public function testLabel($code, $type, $expected)
+    {
+        $instance = $this->getInstance();
+
+        $this->assertEquals($expected, $instance->getLabel($code, $type));
+    }
+
     public function testReturnsNullWhenCodeDoesNotExists()
     {
         $instance = $this->getInstance();
