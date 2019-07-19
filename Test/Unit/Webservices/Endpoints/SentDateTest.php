@@ -56,8 +56,8 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
                 ['country' => 'NL', 'postcode' => '1014BA', 'delivery_date' => '19-11-2016'],
             ],
             'Random address BE' => [
-                ['country' => 'BE', 'postcode' => '1000', 'delivery_date' => null],
-                ['country' => 'NL', 'postcode' => '2132WT', 'delivery_date' => '19-11-2016'],
+                ['country' => 'BE', 'postcode' => '1000', 'delivery_date' => '19-11-2016'],
+                ['country' => 'BE', 'postcode' => '1000', 'delivery_date' => '19-11-2016'],
             ],
             'Random address DE' => [
                 ['country' => 'DE', 'postcode' => '10179', 'delivery_date' => null],
@@ -90,6 +90,8 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
 
         $orderMock = $this->getMock(OrderInterface::class);
         $this->mockFunction($orderMock, 'getDeliveryDate', $input['delivery_date']);
+        $this->mockFunction($orderMock, 'getShippingAddress', $address);
+
         $fallbackMock = $this->deliveryDateFallbackMock();
         $optionsMock  = $this->optionsMock();
 

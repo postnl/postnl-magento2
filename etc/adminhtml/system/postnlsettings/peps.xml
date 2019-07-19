@@ -40,7 +40,7 @@
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
         <field id="active" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Use Priority products</label>
-            <comment>These products can only be used for an order which contains five or more parcels (colli). Each of these parcels should have a maximum weight of 2kg.</comment>
+            <comment>Packet Tracked is a small parcel with Track & Trace. The minimum amount is 5 items. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.</comment>
             <tooltip><![CDATA[This allows you the use of the priority parcel products. After you enable this setting the products can be selected in the default EPS and Globalpack selection.]]></tooltip>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/peps/active</config_path>
