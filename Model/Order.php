@@ -318,20 +318,19 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
      */
     public function getShippingAddress()
     {
-        if ($this->getOrderId()) {
-            try {
-                $order = $this->orderRepository->get($this->getOrderId());
-
-                $addresses = $order->getAddresses();
-                unset($addresses[$order->getBillingAddressId()]);
-                unset($addresses[$this->getPgOrderAddressId()]);
-
-                return reset($addresses);
-            } catch (\Error $exception) {
-            }
+        if (!$this->getOrderId()) {
+            return reset($this->getShippingAddressFromQuote());
         }
 
-        $addresses = $this->getShippingAddressFromQuote();
+        try {
+            $order = $this->orderRepository->get($this->getOrderId());
+
+            $addresses = $order->getAddresses();
+            unset($addresses[$order->getBillingAddressId()]);
+            unset($addresses[$this->getPgOrderAddressId()]);
+        } catch (\Error $exception) {
+            $addresses = $this->getShippingAddressFromQuote();
+        }
 
         return reset($addresses);
     }
