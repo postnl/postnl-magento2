@@ -319,7 +319,8 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     public function getShippingAddress()
     {
         if (!$this->getOrderId()) {
-            return reset($this->getShippingAddressFromQuote());
+            $addresses = $this->getShippingAddressFromQuote();
+            return reset($addresses);
         }
 
         try {
