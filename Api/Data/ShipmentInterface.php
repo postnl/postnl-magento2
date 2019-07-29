@@ -108,7 +108,19 @@ interface ShipmentInterface
      * @return string|null
      */
     public function getShipmentType();
-
+    
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function setShipmentCountry($value);
+    
+    /**
+     * @return mixed
+     */
+    public function getShipmentCountry();
+    
     /**
      * @param $value
      *
@@ -320,6 +332,11 @@ interface ShipmentInterface
      * @return \Magento\Sales\Api\Data\ShipmentInterface
      */
     public function getShipment();
+    
+    /**
+     * @return mixed
+     */
+    public function getShippingAddress();
 
     /**
      * @return bool

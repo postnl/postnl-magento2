@@ -95,9 +95,14 @@ define([
          * The street is not always available on the first run.
          */
         var shippingAddress = quote.shippingAddress();
-        if (customer.isLoggedIn() && shippingAddress && shippingAddress.street) {
+        var quoteStreet = [];
+        if (shippingAddress) {
+            quoteStreet = (typeof shippingAddress.street === 'undefined') ? [] : shippingAddress.street;
+        }
+
+        if (customer.isLoggedIn() && shippingAddress && quoteStreet.length > 0) {
             address = {
-                street: shippingAddress.street,
+                street: quoteStreet,
                 postcode: shippingAddress.postcode,
                 lastname: shippingAddress.lastname,
                 firstname: shippingAddress.firstname,

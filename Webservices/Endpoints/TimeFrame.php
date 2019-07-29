@@ -109,12 +109,14 @@ class TimeFrame extends AbstractEndpoint
             $shipmentData
         );
     }
-
+    
     /**
      * @param bool $parseTimeFrames
      *
-     * @return mixed
+     * @return array|mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     public function call($parseTimeFrames = true)
     {

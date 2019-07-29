@@ -51,6 +51,13 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     private $canaryConverter;
 
     /**
+     * @var array
+     */
+    private $combiProductCodes = [
+        '4944' => '4952'
+    ];
+
+    /**
      * @param CanaryIslandToIC $canaryConverter
      */
     public function __construct(CanaryIslandToIC $canaryConverter)
@@ -66,6 +73,10 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getLabel($code, $type)
     {
+        if (array_key_exists($code, $this->combiProductCodes)) {
+            $code = $this->combiProductCodes[$code];
+        }
+
         if (!array_key_exists($code, $this->availableOptions) || !array_key_exists($type, $this->typeToComment)) {
             return ['label' => '', 'type' => '', 'comment' => ''];
         }
@@ -104,7 +115,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getIsSundayOptions()
     {
-        return $this->getProductoptions(['isSunday' => true]);
+        return $this->getProductOptions(['isSunday' => true]);
     }
 
     /**
@@ -116,7 +127,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         $flags = [];
         $flags['groups'][] = ['group' => 'pakjegemak_options'];
         $flags['groups'][] = ['group' => 'id_check_pakjegemak_options'];
-        return $this->getProductoptions($flags);
+        return $this->getProductOptions($flags);
     }
 
     /**
@@ -125,7 +136,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getPakjeGemakEarlyDeliveryOptions()
     {
-        return $this->getProductoptions(['pge' => true]);
+        return $this->getProductOptions(['pge' => true]);
     }
 
     /**
@@ -139,7 +150,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         $flags['groups'][] = ['group' => 'id_check_options'];
         $flags['groups'][] = ['group' => 'cargo_options'];
 
-        return $this->getProductoptions($flags);
+        return $this->getProductOptions($flags);
     }
 
     /**
@@ -147,7 +158,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getExtraCoverProductOptions()
     {
-        return $this->getProductoptions(['isExtraCover' => true]);
+        return $this->getProductOptions(['isExtraCover' => true]);
     }
 
     /**
@@ -160,7 +171,53 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         if ($address && $address->getCountryId() === 'ES' && $this->canaryConverter->isCanaryIsland($address)) {
             return $this->getGlobalPackOptions();
         }
-        return $this->getProductoptions(['isEvening' => false, 'countryLimitation' => false, 'group' => 'eu_options']);
+        return $this->getProductOptions(['isEvening' => false, 'countryLimitation' => false, 'group' => 'eu_options']);
+    }
+
+    /**
+     * @return array
+     */
+    public function getEuOptions()
+    {
+        $euOptions = $this->getProductOptions(['group' => 'eu_options']);
+
+        return $euOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEpsOptions()
+    {
+        $epsOptions = $this->getProductOptions(
+            ['isEvening' => false, 'countryLimitation' => false, 'group' => 'eu_options']
+        );
+        return $epsOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPriorityOptions()
+    {
+        $priorityOptions = $this->getProductOptions(['group' => 'priority_options']);
+
+        return $priorityOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEpsBusinessOptions()
+    {
+        $epsBusinessOptions = $this->getProductOptions(
+            [
+                'isEvening' => false,
+                'group' => 'eps_package_options'
+            ]
+        );
+
+        return $epsBusinessOptions;
     }
 
     /**
@@ -168,7 +225,7 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getGlobalPackOptions()
     {
-        return $this->getProductoptions(['group' => 'global_options']);
+        return $this->getProductOptions(['group' => 'global_options']);
     }
 
     /**
@@ -176,7 +233,37 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getExtraAtHomeOptions()
     {
-        return $this->getProductoptions(['group' => 'extra_at_home_options']);
+        return $this->getProductOptions(['group' => 'extra_at_home_options']);
+    }
+
+	/**
+	 * @return array
+	 */
+    public function getDefaultGPOption()
+    {
+    	$productOptions = $this->getProductOptions(['isDefault' => 1, 'group' => 'global_options']);
+    	return array_shift($productOptions);
+    }
+
+	/**
+	 * @return array
+	 */
+    public function getDefaultEUOption()
+    {
+    	$productOptions = $this->getProductOptions(['isDefault' => 1, 'group' => 'eu_options']);
+    	return array_shift($productOptions);
+    }
+
+    /**
+     * @return array
+     */
+    public function getCargoOptions()
+    {
+        $cargoProducts = $this->getProductOptions(
+            ['countryLimitation' => 'BE', 'group' => 'cargo_options']
+        );
+
+        return $cargoProducts;
     }
 
     /**

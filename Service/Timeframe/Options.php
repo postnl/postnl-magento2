@@ -84,7 +84,9 @@ class Options
             $deliveryTimeframesOptions[] = self::EVENING_DELIVERY_OPTION;
         }
 
-        if ($this->shippingOptions->isSundayDeliveryActive() && $this->hasSaturdayAsShippingDay()) {
+        // Sunday Delivery is only available for the Netherlands
+        if ($this->shippingOptions->isSundayDeliveryActive()
+            && $this->hasSaturdayAsShippingDay() && $countryId == 'NL') {
             $deliveryTimeframesOptions[] = self::SUNDAY_DELIVERY_OPTION;
         }
 

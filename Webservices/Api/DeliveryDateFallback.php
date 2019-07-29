@@ -71,7 +71,7 @@ class DeliveryDateFallback
 
         $date = $this->getDate($nextDay);
         $day  = $this->helper->getDayOrWeekNumber($nextDay);
-        if ($day == 0 || $day == 7) {
+        if ($day == 7) {
             $nextDay = $date .'+1 day';
         }
 

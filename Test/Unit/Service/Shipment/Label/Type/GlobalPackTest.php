@@ -29,49 +29,27 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Timeframe\Filters\Days;
 
-use TIG\PostNL\Config\Provider\ShippingOptions;
-use TIG\PostNL\Helper\Data;
-use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
+namespace PostNL\Test\Unit\Service\Shipment\Label\Type;
 
-class Sunday implements DaysFilterInterface
+use TIG\PostNL\Service\Shipment\Label\Type\GlobalPack;
+use TIG\PostNL\Test\TestCase;
+
+class GlobalPackTest extends TestCase
 {
+    /** @var GlobalPack $instanceClass */
+    public $instanceClass = GlobalPack::class;
+    
     /**
-     * @var Data
+     * @throws \Exception
      */
-    private $helper;
-    /**
-     * @var ShippingOptions
-     */
-    private $shippingOptions;
-
-    public function __construct(
-        Data $helper,
-        ShippingOptions $shippingOptions
-    ) {
-        $this->helper = $helper;
-        $this->shippingOptions = $shippingOptions;
-    }
-
-    /**
-     * @param object|array $days
-     *
-     * @return array
-     */
-    public function filter($days)
+    public function testIsExcludedCountry()
     {
-        if ($this->shippingOptions->isSundayDeliveryActive()) {
-            return $days;
-        }
-
-        $filtered = array_filter($days, function ($day) {
-            $date = $day->Date;
-            $dayOfWeek = $this->helper->getDayOrWeekNumber($date, 'w');
-
-            return $dayOfWeek !== 7;
-        });
-
-        return array_values($filtered);
+        /** @var GlobalPack $instance */
+        $instance = $this->getInstance();
+        $result   = $instance->isExcludedCountry("US");
+        $expected = true;
+        
+        $this->assertEquals($expected, $result);
     }
 }

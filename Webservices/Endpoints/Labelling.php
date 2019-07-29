@@ -29,7 +29,6 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-
 namespace TIG\PostNL\Webservices\Endpoints;
 
 use TIG\PostNL\Model\Shipment;
@@ -47,7 +46,7 @@ class Labelling extends AbstractEndpoint
      * @var Soap
      */
     private $soap;
-    
+
     /**
      * @var Customer
      */
@@ -97,7 +96,9 @@ class Labelling extends AbstractEndpoint
     }
     
     /**
-     * {@inheritdoc}
+     * @return mixed
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     public function call()
     {
@@ -126,7 +127,7 @@ class Labelling extends AbstractEndpoint
     }
     
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getLocation()
     {

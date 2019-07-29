@@ -20,19 +20,19 @@ matrix:
 # PHP 7.2 is only supported in Magento 2.3.x
   include:
     - php: 7.0
-      env: MAGENTO_VERSION=2.1.16
-    - php: 7.0
       env: MAGENTO_VERSION=2.1.17
     - php: 7.0
-      env: MAGENTO_VERSION=2.2.7
-    - php: 7.1
+      env: MAGENTO_VERSION=2.1.18
+    - php: 7.0
       env: MAGENTO_VERSION=2.2.8
     - php: 7.1
-      env: MAGENTO_VERSION=2.3.0
+      env: MAGENTO_VERSION=2.2.9
     - php: 7.1
-      env: MAGENTO_VERSION=2.3.1 # DI_COMPILE=true
+      env: MAGENTO_VERSION=2.3.1
     - php: 7.2
-      env: MAGENTO_VERSION=2.3.1 CODE_COVERAGE=true
+      env: MAGENTO_VERSION=2.3.2 # DI_COMPILE=true
+    - php: 7.2
+      env: MAGENTO_VERSION=2.3.2 CODE_COVERAGE=true
 
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
