@@ -629,7 +629,7 @@ abstract class OptionsAbstract
         ],
         '6942' => [
             'value'                => '6942',
-            'label'                => 'Priority Packet Tracked Boxable',
+            'label'                => 'Priority Packet Tracked Boxable Sorted',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
