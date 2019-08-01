@@ -447,3 +447,7 @@ Percent,Percent
 "Packet Tracked is a small parcel with Track & Trace. The minimum amount is 5 items. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.","Packet Tracked is a small parcel with Track & Trace. The minimum amount is 5 items. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached."
 "The confirmation has to be at PostNL Pakketten before 8.00 pm. In this case the pallet will be collected the same day. Otherwise the pallet will be collected the next day.","The confirmation has to be at PostNL Pakketten before 8.00 pm. In this case the pallet will be collected the same day. Otherwise the pallet will be collected the next day."
 "Please note: Some of the priority parcel products require specific contractual agreements with PostNL. Please contact your PostNL account manager for more information about these products.","Please note: Some of the priority parcel products require specific contractual agreements with PostNL. Please contact your PostNL account manager for more information about these products."
+"Priority Packets Tracked","Priority Packets Tracked"
+"Priority Packets Tracked Bulk","Priority Packets Tracked Bulk"
+"Priority Packets Tracked Sorted","Priority Packets Tracked Sorted"
+"Priority Packets Tracked Boxable Sorted","Priority Packets Tracked Boxable Sorted"
