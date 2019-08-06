@@ -54,9 +54,14 @@ class Validator
     private $errors = [];
 
     /**
+     * @var array
+     */
+    private $notices = [];
+
+    /**
      * @var bool
      */
-    private $priorityError = false;
+    private $priorityNotice = false;
 
     /**
      * Validator constructor.
@@ -122,6 +127,14 @@ class Validator
     }
 
     /**
+     * @return array
+     */
+    public function getNotices()
+    {
+        return $this->notices;
+    }
+
+    /**
      * @param ShipmentInterface $shipment
      *
      * @return bool
@@ -170,10 +183,10 @@ class Validator
         }
 
         /** We want to show this notification for every Priority Shipment */
-        if ($isPriority && $this->priorityError == false) {
+        if ($isPriority && $this->priorityNotice == false) {
             // @codingStandardsIgnoreLine
-            $this->errors[] = __('Packet Tracked is a small parcel with Track & Trace. The minimum amount is 5 items. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
-            $this->priorityError = true;
+            $this->notices[] = __('Packet Tracked is a small parcel with Track & Trace. The minimum amount is 5 items. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
+            $this->priorityNotice = true;
         }
 
         return true;

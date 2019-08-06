@@ -89,7 +89,7 @@ class GetLabels
      * @param int|string $shipmentId
      * @param bool $confirm
      *
-     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface[]
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface|array[]
      */
     public function get($shipmentId, $confirm = true)
     {
@@ -101,10 +101,17 @@ class GetLabels
 
         /** Validate products and generate error/warning messages */
         $this->labelValidator->validateProduct($shipment);
-        
+
         $labels = $this->getLabels($shipment, $confirm);
         $labels = $this->labelValidator->validate($labels);
-        $labels['errors'] = $this->labelValidator->getErrors();
+
+        if (count($this->labelValidator->getErrors()) > 0) {
+            $labels['errors'] = $this->labelValidator->getErrors();
+        }
+
+        if (count($this->labelValidator->getNotices()) > 0) {
+            $labels['notices'] = $this->labelValidator->getNotices();
+        }
 
         return $labels;
     }
