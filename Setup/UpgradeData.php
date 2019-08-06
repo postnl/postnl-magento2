@@ -36,6 +36,7 @@ use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
+// @codingStandardsIgnoreFile
 class UpgradeData implements UpgradeDataInterface
 {
     /**
