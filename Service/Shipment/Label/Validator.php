@@ -51,12 +51,7 @@ class Validator
     /**
      * @var array
      */
-    private $errors = [];
-
-    /**
-     * @var array
-     */
-    private $notices = [];
+    private $notifications = [];
 
     /**
      * @var bool
@@ -123,7 +118,7 @@ class Validator
      */
     public function getErrors()
     {
-        return $this->errors;
+        return $this->notifications['errors'];
     }
 
     /**
@@ -131,7 +126,7 @@ class Validator
      */
     public function getNotices()
     {
-        return $this->notices;
+        return $this->notifications['notices'];
     }
 
     /**
@@ -158,7 +153,7 @@ class Validator
         if (!$this->shippingOptions->canUseGlobalPack()) {
             $magentoShipment = $shipment->getShipment();
             // @codingStandardsIgnoreLine
-            $this->errors[] = __('Could not print labels for shipment %1. Worldwide (Globalpack) Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
+            $this->notifications['errors'][] = __('Could not print labels for shipment %1. Worldwide (Globalpack) Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
             return false;
         }
 
@@ -178,14 +173,14 @@ class Validator
         if ($isPriority && !$this->shippingOptions->canUsePriority()) {
             $magentoShipment = $shipment->getShipment();
             // @codingStandardsIgnoreLine
-            $this->errors[] = __('Could not print labels for shipment %1. Priority Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
+            $this->notifications['errors'][] = __('Could not print labels for shipment %1. Priority Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
             return false;
         }
 
         /** We want to show this notification for every Priority Shipment */
         if ($isPriority && $this->priorityNotice == false) {
             // @codingStandardsIgnoreLine
-            $this->notices[] = __('Packet Tracked is a small parcel with Track & Trace. The minimum amount is 5 items. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
+            $this->notifications['notices'][] = __('Packet Tracked is a small parcel with Track & Trace. The minimum amount is 5 items. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
             $this->priorityNotice = true;
         }
 
