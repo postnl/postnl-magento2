@@ -51,7 +51,7 @@ class Validator
     /**
      * @var array
      */
-    private $notifications = [];
+    private $notifications = ['errors', 'notices'];
 
     /**
      * @var bool
