@@ -34,7 +34,6 @@ namespace TIG\PostNL\Test\Unit\Service\Shipment\Packingslip;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Service\Pdf\Fpdi;
 use TIG\PostNL\Service\Pdf\FpdiFactory;
-use TIG\PostNL\Service\Shipment\Label\File;
 use TIG\PostNL\Service\Shipment\Label\Generate as LabelGenerate;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
@@ -127,7 +126,7 @@ class MergeWithLabelsTest extends TestCase
             ->getMock();
         $fpdiMock->method('Output')->willReturn('merged first label with packingslip');
 
-        $fpdiFactoryMock = $this->getFakeMock(FpdiFactory::class)->setMethods(['create'])->getMock();
+        $fpdiFactoryMock = $this->getFakeMock(FpdiFactory::class)->setMethods(['create', 'saveFile', 'cleanupFiles'])->getMock();
         $fpdiFactoryMock->method('create')->willReturn($fpdiMock);
 
         $instance = $this->getInstance([
@@ -199,17 +198,15 @@ class MergeWithLabelsTest extends TestCase
         $fpdiMock->expects($this->exactly(3))->method('pixelsToPoints')->withConsecutive([-1037], [413], [538]);
         $fpdiMock->expects($this->once())->method('Output')->with('s')->willReturn('merged label');
 
-        $fpdiFactoryMock = $this->getFakeMock(FpdiFactory::class)->setMethods(['create'])->getMock();
+        $fpdiFactoryMock = $this->getFakeMock(FpdiFactory::class)->setMethods(['create', 'saveFile', 'cleanupFiles'])->getMock();
         $fpdiFactoryMock->expects($this->once())->method('create')->willReturn($fpdiMock);
-
-        $fileMock = $this->getFakeMock(File::class)->setMethods(['cleanup', 'save'])->getMock();
-        $fileMock->expects($this->once())->method('cleanup');
-        $fileMock->expects($this->exactly(2))
-            ->method('save')
+        $fpdiFactoryMock->expects($this->once())->method('cleanupFiles');
+        $fpdiFactoryMock->expects($this->exactly(2))
+            ->method('saveFile')
             ->withConsecutive(['packingslip'], ['label'])
             ->willReturnOnConsecutiveCalls('packingslipfile', 'labelfile');
 
-        $instance = $this->getInstance(['fpdiFactory' => $fpdiFactoryMock, 'file' => $fileMock]);
+        $instance = $this->getInstance(['fpdiFactory' => $fpdiFactoryMock]);
         $result = $this->invokeArgs('mergeFirstLabel', ['label', 'packingslip'], $instance);
         $this->assertEquals('merged label', $result);
     }
