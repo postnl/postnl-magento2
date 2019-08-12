@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,21 +28,24 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="1.8.1">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Directory"/>
-            <module name="Magento_Backend"/>
-            <module name="Magento_Catalog"/>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Quote"/>
-            <module name="Magento_Checkout"/>
-            <module name="Magento_Store"/>
-            <module name="Magento_Ui"/>
-            <module name="Magento_Config"/>
-        </sequence>
-    </module>
-</config>
+ */
+namespace TIG\PostNL\Setup\V181\Data;
+
+use Magento\Framework\Setup\ModuleContextInterface;
+use Magento\Framework\Setup\ModuleDataSetupInterface;
+use TIG\PostNL\Setup\AbstractDataInstaller;
+
+// @codingStandardsIgnoreFile
+class UpdateConfigData extends AbstractDataInstaller
+{
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param ModuleContextInterface   $context
+     */
+    // @codingStandardsIgnoreLine
+    public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
+    {
+        $table = $setup->getTable('core_config_data');
+        $setup->getConnection()->delete($table, 'path = ' . '\'tig_postnl/evening_delivery_be/eveningdelivery_be_active\'');
+    }
+}
