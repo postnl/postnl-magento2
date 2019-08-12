@@ -52,7 +52,7 @@ class Validator
      * @var array
      */
     private $errors = [];
-    
+
     /**
      * @var bool
      */
@@ -89,7 +89,7 @@ class Validator
 
         return array_values($filtered);
     }
-    
+
     /**
      * @param ShipmentLabelInterface|null $model
      *
@@ -100,19 +100,19 @@ class Validator
         if ($model === null) {
             return false;
         }
-        
+
         $label = $model->getLabel();
-        
+
         if (!is_string($label) || empty($label)) {
             return false;
         }
-        
+
         $start = substr($label, 0, strlen('invalid'));
         $start = strtolower($start);
-        
+
         return $start != 'invalid';
     }
-    
+
     /**
      * @return array
      */
@@ -120,7 +120,7 @@ class Validator
     {
         return $this->errors;
     }
-    
+
     /**
      * @param ShipmentInterface $shipment
      *
@@ -134,7 +134,7 @@ class Validator
 
         return $this->validatePriority($shipment);
     }
-    
+
     /**
      * @param $shipment
      *
@@ -151,7 +151,7 @@ class Validator
 
         return $this->validatePriority($shipment);
     }
-    
+
     /**
      * @param $shipment
      *
@@ -172,7 +172,7 @@ class Validator
         /** We want to show this notification for every Priority Shipment */
         if ($isPriority && $this->priorityError == false) {
             // @codingStandardsIgnoreLine
-            $this->errors[] = __('Tracked Parcels can only be used if 5 packages or more are delivered in a domestic mail bag with an attached bag label specific for priority parcels.');
+            $this->errors[] = __('Packet Tracked is a small parcel with Track & Trace. The minimum amount is 5 items. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
             $this->priorityError = true;
         }
 
