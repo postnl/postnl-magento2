@@ -32,11 +32,13 @@
 namespace TIG\PostNL\Model;
 
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 
+use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\OrderRepository;
 use TIG\PostNL\Api\Data\OrderInterface;
 use Magento\Framework\DataObject\IdentityInterface;
@@ -81,6 +83,11 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     protected $orderRepository;
 
     /**
+     * @var QuoteRepository $quoteRepository
+     */
+    private $quoteRepository;
+
+    /**
      * Order constructor.
      * @param OrderRepository       $orderRepository
      * @param Context               $context
@@ -92,6 +99,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
      */
     public function __construct(
         OrderRepository $orderRepository,
+        QuoteRepository $quoteRepository,
         Context $context,
         Registry $registry,
         DateTime $dateTime,
@@ -100,7 +108,8 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
         array $data = []
     )
     {
-        $this->orderRepository   = $orderRepository;
+        $this->orderRepository = $orderRepository;
+        $this->quoteRepository = $quoteRepository;
         parent::__construct($context, $registry, $dateTime, $resource, $resourceCollection, $data);
     }
 
@@ -309,13 +318,42 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
      */
     public function getShippingAddress()
     {
-        $order = $this->orderRepository->get($this->getOrderId());
+        $shippingAddress = null;
 
-        $addresses = $order->getAddresses();
-        unset($addresses[$order->getBillingAddressId()]);
-        unset($addresses[$this->getPgOrderAddressId()]);
+        if (!$this->getOrderId()) {
+            $addresses = $this->getShippingAddressFromQuote();
+
+            return reset($addresses);
+        }
+
+        try {
+            $order = $this->orderRepository->get($this->getOrderId());
+
+            $addresses = $order->getAddresses();
+            unset($addresses[$order->getBillingAddressId()]);
+            unset($addresses[$this->getPgOrderAddressId()]);
+        } catch (\Error $exception) {
+            $addresses = $this->getShippingAddressFromQuote();
+        }
 
         return reset($addresses);
+    }
+
+    /**
+     * @throws NoSuchEntityException
+     */
+    public function getShippingAddressFromQuote()
+    {
+        $quote = $this->quoteRepository->get($this->getQuoteId());
+
+        $addresses = $quote->getAllShippingAddresses();
+        array_walk($addresses, function ($address, $key) use (&$addresses) {
+            if ($address->getId() == $this->getPgOrderAddressId()) {
+                unset($addresses[$key]);
+            }
+        });
+
+        return $addresses;
     }
 
     /**
@@ -326,7 +364,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     public function getBillingAddress()
     {
         $order = $this->orderRepository->get($this->getOrderId());
-        
+
         return $order->getBillingAddress();
     }
 
