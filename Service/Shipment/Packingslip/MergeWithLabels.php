@@ -225,6 +225,9 @@ class MergeWithLabels
 
         $pdf->Rotate(0);
 
+        //Always reset back to the default position;
+        $this->resetPosition();
+
         return $pdf;
     }
 
@@ -234,5 +237,13 @@ class MergeWithLabels
         $this->xPosition = 400;
         $this->yPosition = 560;
         $this->width     = 390;
+    }
+
+    private function resetPosition()
+    {
+        $this->rotation  = 90;
+        $this->xPosition = -1037;
+        $this->yPosition = 413;
+        $this->width     = 538;
     }
 }
