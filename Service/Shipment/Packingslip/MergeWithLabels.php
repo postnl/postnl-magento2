@@ -40,6 +40,7 @@ use TIG\PostNL\Service\Shipment\Label\Generate as LabelGenerate;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
 
+// @codingStandardsIgnoreFile
 class MergeWithLabels
 {
     // @codingStandardsIgnoreLine
