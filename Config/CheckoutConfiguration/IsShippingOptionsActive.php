@@ -29,11 +29,13 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Config\CheckoutConfiguration;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Service\Quote\CheckIfQuoteItemsAreInStock;
 use TIG\PostNL\Service\Quote\CheckIfQuoteItemsCanBackorder;
 use \TIG\PostNL\Service\Quote\CheckIfQuoteHasOption;
@@ -41,31 +43,31 @@ use TIG\PostNL\Service\Order\ProductInfo;
 
 class IsShippingOptionsActive implements CheckoutConfigurationInterface
 {
-    /**
-     * @var ShippingOptions
-     */
+    const POSTNL_LETTERBOX_PARCEL_CODE = '2928';
+
+    /** @var ShippingOptions */
     private $shippingOptions;
 
-    /**
-     * @var CheckIfQuoteItemsAreInStock
-     */
+    /** @var ProductOptions */
+    private $productOptions;
+
+    /** @var CheckIfQuoteItemsAreInStock */
     private $quoteItemsAreInStock;
 
-    /**
-     * @var AccountConfiguration
-     */
+    /** @var AccountConfiguration */
     private $accountConfiguration;
 
-    /**
-     * @var CheckIfQuoteHasOption
-     */
+    /** @var CheckIfQuoteHasOption */
     private $quoteHasOption;
 
-    /** @var  CheckIfQuoteItemsCanBackorder */
+    /** @var CheckIfQuoteItemsCanBackorder */
     private $quoteItemsCanBackorder;
 
     /**
+     * IsShippingOptionsActive constructor.
+     *
      * @param ShippingOptions               $shippingOptions
+     * @param ProductOptions                $productOptions
      * @param AccountConfiguration          $accountConfiguration
      * @param CheckIfQuoteItemsAreInStock   $quoteItemsAreInStock
      * @param CheckIfQuoteHasOption         $quoteHasOption
@@ -73,15 +75,17 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
      */
     public function __construct(
         ShippingOptions $shippingOptions,
+        ProductOptions $productOptions,
         AccountConfiguration $accountConfiguration,
         CheckIfQuoteItemsAreInStock $quoteItemsAreInStock,
         CheckIfQuoteHasOption $quoteHasOption,
         CheckIfQuoteItemsCanBackorder $quoteItemsCanBackorder
     ) {
-        $this->shippingOptions = $shippingOptions;
-        $this->quoteItemsAreInStock = $quoteItemsAreInStock;
-        $this->accountConfiguration = $accountConfiguration;
-        $this->quoteHasOption = $quoteHasOption;
+        $this->shippingOptions        = $shippingOptions;
+        $this->productOptions         = $productOptions;
+        $this->quoteItemsAreInStock   = $quoteItemsAreInStock;
+        $this->accountConfiguration   = $accountConfiguration;
+        $this->quoteHasOption         = $quoteHasOption;
         $this->quoteItemsCanBackorder = $quoteItemsCanBackorder;
     }
 
@@ -90,15 +94,12 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
      */
     public function getValue()
     {
-        if (!$this->shippingOptions->isShippingoptionsActive() || $this->accountConfiguration->isModusOff()) {
-            return false;
-        }
-
-        if (!$this->hasValidApiSettings()) {
-            return false;
-        }
-
-        if ($this->quoteHasOption->get(ProductInfo::OPTION_EXTRAATHOME)) {
+        if (!$this->shippingOptions->isShippingoptionsActive()
+            || $this->accountConfiguration->isModusOff()
+            || !$this->hasValidApiSettings()
+            || $this->quoteHasOption->get(ProductInfo::OPTION_EXTRAATHOME)
+            || $this->productOptions->getDefaultProductOption() == static::POSTNL_LETTERBOX_PARCEL_CODE
+        ) {
             return false;
         }
 
@@ -136,18 +137,8 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
      */
     private function hasValidApiSettings()
     {
-        if (!$this->accountConfiguration->getCustomerCode()) {
-            return false;
-        }
-
-        if (!$this->accountConfiguration->getCustomerNumber()) {
-            return false;
-        }
-
-        if (!$this->accountConfiguration->getApiKey()) {
-            return false;
-        }
-
-        return true;
+        return $this->accountConfiguration->getCustomerCode()
+            || $this->accountConfiguration->getCustomerNumber()
+            || $this->accountConfiguration->getApiKey();
     }
 }
