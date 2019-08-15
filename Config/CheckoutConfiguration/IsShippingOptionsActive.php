@@ -41,7 +41,7 @@ use TIG\PostNL\Service\Quote\CheckIfQuoteItemsCanBackorder;
 use \TIG\PostNL\Service\Quote\CheckIfQuoteHasOption;
 use TIG\PostNL\Service\Order\ProductInfo;
 
-// @codingStandartsIgnoreFile
+// @codingStandardsIgnoreFile
 // TODO: See if class can be simplified (less properties)
 class IsShippingOptionsActive implements CheckoutConfigurationInterface
 {
@@ -92,7 +92,7 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
     }
 
     /**
-     * @return bool
+     * @return bool|string
      */
     public function getValue()
     {
