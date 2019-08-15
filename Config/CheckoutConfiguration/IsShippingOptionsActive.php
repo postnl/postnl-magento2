@@ -140,7 +140,7 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
     private function hasValidApiSettings()
     {
         return $this->accountConfiguration->getCustomerCode()
-            || $this->accountConfiguration->getCustomerNumber()
-            || $this->accountConfiguration->getApiKey();
+            && $this->accountConfiguration->getCustomerNumber()
+            && $this->accountConfiguration->getApiKey();
     }
 }
