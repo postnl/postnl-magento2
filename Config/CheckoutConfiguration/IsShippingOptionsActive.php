@@ -41,6 +41,8 @@ use TIG\PostNL\Service\Quote\CheckIfQuoteItemsCanBackorder;
 use \TIG\PostNL\Service\Quote\CheckIfQuoteHasOption;
 use TIG\PostNL\Service\Order\ProductInfo;
 
+// @codingStandartsIgnoreFile
+// TODO: See if class can be simplified (less properties)
 class IsShippingOptionsActive implements CheckoutConfigurationInterface
 {
     const POSTNL_LETTERBOX_PARCEL_CODE = '2928';
