@@ -32,6 +32,7 @@
 
 namespace TIG\PostNL\Service\Shipment\Packingslip\Compatibility;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\Data\ShipmentInterface;
