@@ -516,7 +516,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
      */
     public function setShippingDuration($value)
     {
-       return $this->setData(static::FIELD_SHIPPING_DURATION, $value);
+        return $this->setData(static::FIELD_SHIPPING_DURATION, $value);
     }
 
     /**
