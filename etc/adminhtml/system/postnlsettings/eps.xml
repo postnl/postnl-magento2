@@ -38,10 +38,9 @@
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
 
-        <field id="default_be_option" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+        <field id="default_be_option" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default BE delivery</label>
             <comment><![CDATA[Select the default product option for BE shipments.]]></comment>
-            <tooltip><![CDATA[Evening BE delivery can be configured under the Evening Delivery tab.]]></tooltip>
             <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getBeProducts</source_model>
             <config_path>tig_postnl/delivery_settings/default_be_option</config_path>
         </field>
