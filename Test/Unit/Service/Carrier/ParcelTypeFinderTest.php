@@ -34,7 +34,7 @@ namespace TIG\PostNL\Test\Unit\Service\Carrier;
 
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface;
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Test\TestCase;
 
 class ParcelTypeFinderTest extends TestCase
@@ -43,13 +43,13 @@ class ParcelTypeFinderTest extends TestCase
 
     public function testFindsExtraAtHome()
     {
-        $itemsToOption = $this->mockItemsToOption(ProductCodeAndType::OPTION_EXTRAATHOME);
+        $itemsToOption = $this->mockItemsToOption(ProductInfo::OPTION_EXTRAATHOME);
 
         $instance = $this->getInstance([
             'itemsToOption' => $itemsToOption,
         ]);
 
-        $this->assertEquals(ProductCodeAndType::OPTION_EXTRAATHOME, $instance->get());
+        $this->assertEquals(ProductInfo::OPTION_EXTRAATHOME, $instance->get());
     }
 
     public function testPakjegemakIsReturned()

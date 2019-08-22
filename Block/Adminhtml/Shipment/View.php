@@ -43,29 +43,13 @@ use Magento\Shipping\Block\Adminhtml\View as MagentoView;
 // @codingStandardsIgnoreFile
 class View extends MagentoView
 {
-    /**
-     * @var string
-     */
-    private $printRoute = 'postnl/shipment/confirmAndPrintShippingLabel';
-
-    /**
-     * @var string
-     */
-    private $printLabel = 'PostNL - Confirm And Print Shipment Label';
-
-    /**
-     * @var PostNLShipmentRepository
-     */
+    /** @var \TIG\PostNL\Model\ShipmentRepository $postNLShipmentRepository */
     private $postNLShipmentRepository;
 
-    /**
-     * @var SearchCriteriaBuilder
-     */
+    /** @var \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder */
     private $searchCriteriaBuilder;
 
-    /**
-     * @var ValidAddress
-     */
+    /** @var \TIG\PostNL\Config\Validator\ValidAddress $validAddress */
     private $validAddress;
 
     /**
@@ -90,8 +74,7 @@ class View extends MagentoView
 
         parent::__construct($context, $registry, $data);
     }
-
-    // @codingStandardsIgnoreLine
+    
     protected function _construct()
     {
         parent::_construct();
@@ -120,7 +103,6 @@ class View extends MagentoView
     private function processButtons()
     {
         $this->buttonList->remove('print');
-        //@codingStandardsIgnoreLine
         $this->buttonList->update('save', 'label', __('Send Shipment Email'));
         $this->setPostNLPrintLabelButton();
         $this->setPostNLPrintLabelButtonData();
@@ -136,8 +118,7 @@ class View extends MagentoView
         $this->buttonList->add(
             'postnl_print',
             [
-                // @codingStandardsIgnoreLine
-                'label' => __($this->printLabel),
+                'label' => __('PostNL - Confirm And Print Shipment Label'),
                 'class' => 'save primary',
                 'onclick' => 'download(\'' .$this->getLabelUrl() .'\')'
             ]
@@ -145,15 +126,14 @@ class View extends MagentoView
     }
 
     /**
-     * Add the PostNL change confirmation button.
+     * Add the PostNL cancel confirmation button.
      */
-    private function setPostNLChangeConfirmButton()
+    private function setPostNLCancelConfirmButton()
     {
-        /** @codingStandardsIgnoreStart */
         $this->buttonList->add(
-            'postnl_change_confirm',
+            'postnl_cancel_confirm',
             [
-                'label'   => __('PostNL - Change Confirmation'),
+                'label'   => __('PostNL - Cancel Confirmation'),
                 'class'   => 'delete primary',
                 'onclick' =>
                     'deleteConfirm(\'' . __(
@@ -161,19 +141,20 @@ class View extends MagentoView
                         . ' You will need to confirm this shipment with PostNL again before you can send it.'
                         .' This action will remove all barcodes'
                         . ' and labels associated with this shipment. You can not undo this action.'
-                    ) . '\', \'' . $this->getAlterUrl() . '\')'
+                    ) . '\', \'' . $this->getCancelConfirmationUrl() . '\')'
             ]
         );
-        /** @codingStandardsIgnoreEnd */
     }
 
     private function setPostNLPrintLabelWithoutConfirmButton()
     {
+        $postNLShipment = $this->getPostNLShipment();
+        $mainBarcode    = $postNLShipment->getMainBarcode();
+        
         $this->buttonList->add(
             'postnl_print_without_confirm',
             [
-                // @codingStandardsIgnoreLine
-                'label' => __('PostNL - Print Label'),
+                'label' => $mainBarcode ? __('PostNL - Print Label') : __('PostNL - Generate Label'),
                 'class' => 'save primary',
                 'onclick' => 'download(\'' .$this->getLabelWithoutConfirmUrl() .'\')'
             ]
@@ -185,7 +166,6 @@ class View extends MagentoView
         $this->buttonList->add(
             'postnl_print_packingslip',
             [
-                // @codingStandardsIgnoreLine
                 'label' => __('PostNL - Print Packingslip'),
                 'class' => 'save primary',
                 'onclick' => 'download(\'' .$this->getPackingslipUrl() .'\')'
@@ -198,7 +178,6 @@ class View extends MagentoView
         $this->buttonList->add(
             'postnl_confirm_shipment',
             [
-                // @codingStandardsIgnoreLine
                 'label' => __('PostNL - Confirm'),
                 'class' => 'save primary',
                 'onclick' => 'setLocation(\'' . $this->getConfirmUrl() . '\')',
@@ -216,7 +195,7 @@ class View extends MagentoView
         $confirmedAt = $postNLShipment->getConfirmedAt();
         if (!empty($confirmedAt)) {
             $this->buttonList->remove('postnl_print');
-            $this->setPostNLChangeConfirmButton();
+            $this->setPostNLCancelConfirmButton();
         }
 
         if (empty($confirmedAt) && $postNLShipment->getMainBarcode()) {
@@ -229,7 +208,9 @@ class View extends MagentoView
      */
     private function getLabelUrl()
     {
-        return $this->getUrl($this->printRoute, ['shipment_id' => $this->getShipment()->getId()]);
+        return $this->getUrl(
+            'postnl/shipment/confirmAndPrintShippingLabel',
+            ['shipment_id' => $this->getShipment()->getId()]);
     }
 
     /**
@@ -268,19 +249,20 @@ class View extends MagentoView
     /**
      * @return string
      */
-    private function getAlterUrl()
+    private function getCancelConfirmationUrl()
     {
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLShipment();
 
         return $this->getUrl(
-            'postnl/shipment/ChangeConfirmation',
+            'postnl/shipment/CancelConfirmation',
             [
                 'postnl_shipment_id' => $postNLShipment->getId(),
                 'shipment_id'        => $this->getShipment()->getId(),
             ]
         );
     }
+    
     /**
      * @return \TIG\PostNL\Api\Data\ShipmentInterface|null
      */

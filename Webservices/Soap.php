@@ -96,14 +96,15 @@ class Soap
         $this->log = $log;
         $this->accountConfiguration = $accountConfiguration;
     }
-
+    
     /**
-     * @param AbstractEndpoint $endpoint
-     * @param                  $method
-     * @param                  $requestParams
+     * @param \TIG\PostNL\Webservices\AbstractEndpoint $endpoint
+     * @param                                          $method
+     * @param                                          $requestParams
      *
-     * @return \stdClass
-     * @throws WebapiException
+     * @return mixed
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     public function call(AbstractEndpoint $endpoint, $method, $requestParams)
     {
@@ -119,9 +120,10 @@ class Soap
             $this->log->request($soapClient);
         }
     }
-
+    
     /**
-     * @return ZendSoapClient
+     * @return \Zend\Soap\Client
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getClient()
     {
@@ -130,10 +132,10 @@ class Soap
 
         return $this->soapClient;
     }
-
+    
     /**
      * @return array
-     * @throws LocalizedException
+     * @throws \Exception
      */
     private function getOptionsArray()
     {
@@ -153,9 +155,9 @@ class Soap
             'stream_context' => $stream_context,
         ];
     }
-
+    
     /**
-     * @throws WebapiException
+     * @throws \Magento\Framework\Webapi\Exception
      */
     private function checkSoapExtensionIsLoaded()
     {

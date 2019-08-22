@@ -57,6 +57,10 @@ define([
             return;
         }
 
+        if (shippingMethod.carrier_code !== 'tig_postnl') {
+            currentSelectedShipmentType(shippingMethod.carrier_code);
+        }
+
         if (shippingMethod.carrier_code === 'tig_postnl') {
             return;
         }

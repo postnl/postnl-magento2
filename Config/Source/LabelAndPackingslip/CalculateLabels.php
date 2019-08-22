@@ -29,21 +29,27 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Parcel\Quote;
+namespace TIG\PostNL\Config\Source\LabelAndPackingslip;
 
-use \TIG\PostNL\Service\Parcel\CountAbstract;
-use \Magento\Quote\Model\Quote;
+use Magento\Framework\Option\ArrayInterface;
 
-class Count extends CountAbstract
+class CalculateLabels implements ArrayInterface
 {
+    const CALCULATE_LABELS_WEIGHT = 'weight';
+    const CALCULATE_LABELS_PARCEL_COUNT = 'parcel_count';
+
     /**
-     * @param Quote $quote
-     *
-     * @return int|\Magento\Framework\Api\AttributeInterface|null
+     * @return array
      */
-    public function get(Quote $quote)
+    public function toOptionArray()
     {
-        $items = $quote->getAllItems();
-        return $this->calculate($this->getWeight($items), $items);
+        // @codingStandardsIgnoreStart
+        $options = [
+            ['value' => self::CALCULATE_LABELS_WEIGHT, 'label' => __("Based on weight")],
+            ['value' => self::CALCULATE_LABELS_PARCEL_COUNT, 'label' => __("Based on predefined parcel count")],
+        ];
+        // @codingStandardsIgnoreEnd
+
+        return $options;
     }
 }

@@ -60,7 +60,7 @@ class Confirming extends AbstractEndpoint
     /**
      * @var string
      */
-    private $version = 'v1_10';
+    private $version = 'v2';
 
     /**
      * @var string
@@ -71,18 +71,14 @@ class Confirming extends AbstractEndpoint
      * @var array
      */
     private $requestParams;
-
+    
     /**
-     * @var ShipmentData
-     */
-    private $shipmentData;
-
-
-    /**
-     * @param Soap           $soap
-     * @param Customer       $customer
-     * @param Message        $message
-     * @param ShipmentData   $shipmentData
+     * Confirming constructor.
+     *
+     * @param \TIG\PostNL\Webservices\Soap                   $soap
+     * @param \TIG\PostNL\Webservices\Parser\Label\Customer  $customer
+     * @param \TIG\PostNL\Webservices\Api\Message            $message
+     * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
      */
     public function __construct(
         Soap $soap,
@@ -93,11 +89,16 @@ class Confirming extends AbstractEndpoint
         $this->soap = $soap;
         $this->customer = $customer;
         $this->message = $message;
-        $this->shipmentData = $shipmentData;
+        
+        parent::__construct(
+            $shipmentData
+        );
     }
-
+    
     /**
-     * {@inheritdoc}
+     * @return mixed
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     public function call()
     {
@@ -116,28 +117,12 @@ class Confirming extends AbstractEndpoint
             'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
     }
-
+    
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getLocation()
     {
         return $this->version . '/' . $this->endpoint;
-    }
-
-    /**
-     * @param Shipment|ShipmentInterface $shipment
-     * @param $currentShipmentNumber
-     *
-     * @return array
-     */
-    private function getShipments($shipment, $currentShipmentNumber)
-    {
-        $shipments = [];
-        for ($number = $currentShipmentNumber; $number <= $shipment->getParcelCount(); $number++) {
-            $shipments[] = $this->shipmentData->get($shipment, $number);
-        }
-
-        return ['Shipment' => $shipments];
     }
 }

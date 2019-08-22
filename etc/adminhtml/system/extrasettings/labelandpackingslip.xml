@@ -33,11 +33,11 @@
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
 
-    <group id="labelandpackingslipoptions" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="labelandpackingslipoptions" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Label and packingslip options</label>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
 
-        <field id="reference_type" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+        <field id="reference_type" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Shipment reference type</label>
             <comment><![CDATA[Select what to use as a shipment's reference. This will be printed on the shipping label.]]></comment>
             <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\ReferenceType</source_model>
@@ -55,20 +55,39 @@
 
         <field id="show_label" translate="label tooltip comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
             <label>Show shipping label</label>
-            <comment><![CDATA[Printing a custom (such as Fooman) packing slip always results an PDF with the label on a separate page.]]></comment>
+            <comment><![CDATA[Printing a custom (such as Fooman) packing slip always results in a PDF with the label on a separate page.]]></comment>
             <tooltip><![CDATA[If you select 'on the same page' in some cases the shipping label may not fit. In this case, the shipping label will be printed on a separate page instead.]]></tooltip>
             <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\ShowShippingLabel</source_model>
             <config_path>tig_postnl/labelandpackingslipoptions/show_label</config_path>
         </field>
 
-        <field id="enable_barcode" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+        <field id="calculate_labels" translate="label tooltip comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Calculate amount of parcels</label>
+            <comment><![CDATA[Select what to use to calculate the parcel count for each order.]]></comment>
+            <tooltip><![CDATA[For Extra@Home products, the parcel count attribute is mandatory and always used to calculate the amount of parcels. For regular products the 'weight' attribute will always be used as a fallback, when the 'parcel count' attribute is not defined.]]></tooltip>
+            <source_model>TIG\PostNL\Config\Source\LabelAndPackingslip\CalculateLabels</source_model>
+            <config_path>tig_postnl/labelandpackingslipoptions/calculate_labels</config_path>
+        </field>
+
+        <field id="calculate_labels_max_weight" translate="label tooltip comment" type="text" sortOrder="45" showInDefault="1" showInStore="0" showInWebsite="1">
+            <depends>
+                <field id="calculate_labels">weight</field>
+            </depends>
+            <label>Maximum weight per parcel</label>
+            <comment><![CDATA[Defines the maximum weight per parcel. Uses the Weight Unit as defined in: General > General > Local Options > Weight Unit]]></comment>
+            <tooltip><![CDATA[If the total weight of the order exceeds the value defined here, it will be divided into multiple parcels. A separate label will be generated for each parcel.]]></tooltip>
+            <backend_model>Magento\Framework\App\Config\Value</backend_model>
+            <config_path>tig_postnl/labelandpackingslipoptions/calculate_labels_max_weight</config_path>
+        </field>
+
+        <field id="enable_barcode" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
             <label>Enable barcode on Packingslip</label>
             <comment><![CDATA[This will print a barcode on the packingslip.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/labelandpackingslipoptions/enable_barcode</config_path>
         </field>
 
-        <group id="barcode_settings" translate="label" type="text" sortOrder="45" showInDefault="1" showInStore="0" showInWebsite="1">
+        <group id="barcode_settings" translate="label" type="text" sortOrder="55" showInDefault="1" showInStore="0" showInWebsite="1">
             <label>Barcode settings</label>
             <fieldset_css>tig_postnl-sub-sub-sub-section barcode</fieldset_css>
             <field id="value" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInStore="0" showInWebsite="1">

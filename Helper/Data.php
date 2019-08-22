@@ -150,19 +150,37 @@ class Data extends AbstractHelper
         }
 
         if ($format === 'w') {
-            return $number % 7;
+            return $this->formatDayNumber($number);
         }
 
         return $number;
     }
 
     /**
+     * Make sure that day 7 (Sunday) is actually returned as 7 rather than 0
+     *
+     * @param $number
+     *
+     * @return int
+     */
+    private function formatDayNumber($number)
+    {
+        $formattedNumber = $number % 7;
+
+        if ($formattedNumber == 0) {
+            $formattedNumber = 7;
+        }
+
+        return $formattedNumber;
+    }
+
+    /**
      * @return bool|string
      */
-    public function getTommorowsDate()
+    public function getTomorrowsDate()
     {
         $dateTime = $this->dateTime->date($this->getCurrentDate());
-        return date('Y-m-d ' . $dateTime->format('H:i:s'), strtotime('tommorow'));
+        return date('Y-m-d ' . $dateTime->format('H:i:s'), strtotime('tomorrow'));
     }
 
     /**
@@ -177,7 +195,7 @@ class Data extends AbstractHelper
          */
         $maximumNumberOfDeliveryDays = $this->shippingOptions->getMaxAmountOfDeliverydays() - 1;
 
-        $endDate = $this->dateTime->date($startDate);
+        $endDate = $this->dateTime->date($startDate, 'nl_NL');
         // @codingStandardsIgnoreLine
         $endDate->add(new \DateInterval("P{$maximumNumberOfDeliveryDays}D"));
 

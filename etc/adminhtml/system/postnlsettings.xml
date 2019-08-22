@@ -38,7 +38,7 @@
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-section tig_postnl-postnl-section</fieldset_css>
 
-        <group id="shipping_settings" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+        <group id="shipping_settings" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Shipping</label>
             <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
@@ -71,7 +71,7 @@
                 <config_path>tig_postnl/postnl_settings/sunday_cutoff_time</config_path>
             </field>
 
-            <field id="shipment_days" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <field id="shipment_days" translate="label comment" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Shipment days</label>
                 <comment><![CDATA[Select on which days of the week orders are shipped. You can read more about shipping and delivery days <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+verzenddagen+instellen" target="_blank" title="PostNL shipping days">here</a>.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Settings\DaysOfWeek</source_model>
@@ -82,11 +82,11 @@
 
         <!--Shipping options combined with product options -->
 
-        <group id="delivery_settings" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+        <group id="delivery_settings" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Delivery</label>
             <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
-            <comment><![CDATA[If you are unsure which options to select, ask your PostNL account manager. Read more about <a href="https://confluence.tig.nl/display/SDPOSTNL/Kies+uw+PostNL+Productopties" target="_blank" title="product options">PostNL product options</a>.]]></comment>
+            <comment><![CDATA[If you are unsure which options to select, ask your PostNL accountmanager. Read more about <a href="https://confluence.tig.nl/x/WIC2" target="_blank" title="product options">PostNL product options</a>.]]></comment>
 
 
             <field id="shippingoptions_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -196,14 +196,14 @@
             </field>
 
             <include path="TIG_PostNL::system/postnlsettings/eveningdelivery.xml"/>
-            <!-- Because PostNL has to update their getSentDate endpoint, we can not enable sundaydelivery.-->
-            <!--<include path="TIG_PostNL::system/postnlsettings/sundaydelivery.xml"/>-->
+            <include path="TIG_PostNL::system/postnlsettings/sundaydelivery.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/deliverydays.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/postoffices.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/stock.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/idcheck.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/cargo.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/eps.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/peps.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/extraathome.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/trackandtrace.xml"/>
 

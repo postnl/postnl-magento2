@@ -29,23 +29,26 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Webservices\Endpoints;
 
 use Magento\Customer\Model\Address\AbstractAddress as Address;
 use TIG\PostNL\Api\Data\OrderInterface as PostNLOrder;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Message;
-use TIG\PostNL\Webservices\Soap;
 use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
 use TIG\PostNL\Webservices\Api\CutoffTimes;
+use TIG\PostNL\Webservices\Parser\Label\Shipments as ShipmentData;
+use TIG\PostNL\Webservices\Soap;
 
 class SentDate extends AbstractEndpoint
 {
     /**
      * @var string
      */
-    private $version = 'v2_1';
+    private $version = 'v2_2';
 
     /**
      * @var string
@@ -58,7 +61,7 @@ class SentDate extends AbstractEndpoint
     private $type = 'GetSentDate';
 
     /**
-     * Array
+     * @var array
      */
     private $requestParams;
 
@@ -68,7 +71,7 @@ class SentDate extends AbstractEndpoint
     private $soap;
 
     /**
-     * @var array
+     * @var Message
      */
     private $message;
 
@@ -88,29 +91,38 @@ class SentDate extends AbstractEndpoint
     private $dateFallback;
 
     /**
-     * @param Soap                 $soap
-     * @param CutoffTimes          $cutoffTimes
-     * @param Options              $timeframeOptions
-     * @param Message              $message
-     * @param DeliveryDateFallback $dateFallback
+     * SentDate constructor.
+     *
+     * @param \TIG\PostNL\Webservices\Soap                     $soap
+     * @param \TIG\PostNL\Webservices\Api\CutoffTimes          $cutoffTimes
+     * @param \TIG\PostNL\Service\Timeframe\Options            $timeframeOptions
+     * @param \TIG\PostNL\Webservices\Api\Message              $message
+     * @param \TIG\PostNL\Webservices\Api\DeliveryDateFallback $dateFallback
+     * @param \TIG\PostNL\Webservices\Parser\Label\Shipments   $shipmentData
      */
     public function __construct(
         Soap $soap,
         CutoffTimes $cutoffTimes,
         Options $timeframeOptions,
         Message $message,
-        DeliveryDateFallback $dateFallback
+        DeliveryDateFallback $dateFallback,
+        ShipmentData $shipmentData
     ) {
-        $this->soap = $soap;
-        $this->message = $message->get('');
-        $this->cutoffTimes = $cutoffTimes;
+        $this->soap             = $soap;
+        $this->message          = $message->get('');
+        $this->cutoffTimes      = $cutoffTimes;
         $this->timeframeOptions = $timeframeOptions;
-        $this->dateFallback = $dateFallback;
+        $this->dateFallback     = $dateFallback;
+
+        parent::__construct(
+            $shipmentData
+        );
     }
 
     /**
-     * @throws \Magento\Framework\Webapi\Exception
      * @return mixed
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     public function call()
     {
@@ -124,14 +136,13 @@ class SentDate extends AbstractEndpoint
      */
     public function getLocation()
     {
-        return $this->version .'/'. $this->endpoint;
+        return $this->version . '/' . $this->endpoint;
     }
 
     /**
-     * @param Address $address
-     * @param $storeId
+     * @param             $address
+     * @param             $storeId
      * @param PostNLOrder $postNLOrder
-     *
      */
     public function setParameters($address, $storeId, PostNLOrder $postNLOrder)
     {
@@ -139,7 +150,7 @@ class SentDate extends AbstractEndpoint
 
         $this->requestParams = [
             $this->type => [
-                'CountryCode'        => $this->getCountryId(),
+                'CountryCode'        => $this->getCountryId($postNLOrder),
                 'PostalCode'         => $this->getPostcode($address),
                 'HouseNr'            => '',
                 'HouseNrExt'         => '',
@@ -148,28 +159,52 @@ class SentDate extends AbstractEndpoint
                 'DeliveryDate'       => $this->getDeliveryDate($address, $postNLOrder),
                 'ShippingDuration'   => '1', // Request by PostNL not to use $postNLOrder->getShippingDuration()
                 'AllowSundaySorting' => $this->timeframeOptions->isSundaySortingAllowed(),
-                // @codingStandardsIgnoreLine
-                //'CutOffTimes'      => $this->cutoffTimes->get(),
-                'Options'            => $this->timeframeOptions->get($this->getCountryId())
-            ],
-            'Message' => $this->message
+                'Options'            => [$this->getOption($postNLOrder)]
+            ], 'Message'   => $this->message
         ];
     }
 
     /**
-     * This endpoint is only available for dutch addresses.
+     * GetSentDate 2.2 doesn't support multiple options for requests. That's why we send
+     * along the option actually selected.
      *
-     * @see getPostcode
+     * @param PostNLOrder $postNLOrder
      * @return string
      */
-    private function getCountryId()
+    private function getOption(PostNLOrder $postNLOrder)
     {
-        return 'NL';
+        $availableOptions = $this->timeframeOptions->get($this->getCountryId($postNLOrder));
+        $currentType      = $postNLOrder->getType();
+
+        if (in_array($currentType, $availableOptions)) {
+            return $currentType;
+        }
+
+        if ($currentType == ProductInfo::SHIPMENT_TYPE_PG) {
+            return ucfirst(ProductInfo::TYPE_PICKUP);
+        }
+
+        return ProductInfo::SHIPMENT_TYPE_DAYTIME;
     }
 
     /**
-     * The sent date webservice can only work with NL addresses. That's why we default use the PostNL Pakketten office
-     * postcode for addresses outside the Netherlands.
+     * This endpoint is only available for dutch and belgian addresses.
+     *
+     * @var PostNLOrder $postNLOrder
+     * @return string
+     * @see getPostcode
+     */
+    private function getCountryId($postNLOrder)
+    {
+        $shippingAddress = $postNLOrder->getShippingAddress();
+
+        return $shippingAddress && in_array($shippingAddress->getCountryId(), ['NL', 'BE'])
+            ? $shippingAddress->getCountryId() : 'NL';
+    }
+
+    /**
+     * The sent date webservice can only work with NL and BE addresses. That's why we default use the PostNL Pakketten
+     * office postcode for addresses outside the Netherlands or Belgium.
      *
      * @param Address $address
      *
@@ -177,7 +212,7 @@ class SentDate extends AbstractEndpoint
      */
     private function getPostcode($address)
     {
-        if ($address->getCountryId() != 'NL') {
+        if ($address->getCountryId() != 'NL' && $address->getCountryId() != 'BE') {
             return '2132WT';
         }
 

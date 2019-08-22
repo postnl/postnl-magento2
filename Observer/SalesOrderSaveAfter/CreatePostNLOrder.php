@@ -35,7 +35,7 @@ use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Model\OrderRepository;
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
@@ -60,9 +60,9 @@ class CreatePostNLOrder implements ObserverInterface
     private $helper;
 
     /**
-     * @var ProductCodeAndType
+     * @var ProductInfo
      */
-    private $productCode;
+    private $productInfo;
 
     /**
      * @var ItemsToOption
@@ -70,24 +70,24 @@ class CreatePostNLOrder implements ObserverInterface
     private $itemsToOption;
 
     /**
-     * @param OrderRepository    $orderRepository
-     * @param ParcelCount        $count
-     * @param ItemsToOption      $itemsToOption
-     * @param ProductCodeAndType $productCode
-     * @param Data               $helper
+     * @param OrderRepository $orderRepository
+     * @param ParcelCount     $count
+     * @param ItemsToOption   $itemsToOption
+     * @param ProductInfo     $productInfo
+     * @param Data            $helper
      */
     public function __construct(
         OrderRepository $orderRepository,
         ParcelCount $count,
         ItemsToOption $itemsToOption,
-        ProductCodeAndType $productCode,
+        ProductInfo $productInfo,
         Data $helper
     ) {
         $this->orderRepository = $orderRepository;
-        $this->parcelCount = $count;
-        $this->itemsToOption = $itemsToOption;
-        $this->helper = $helper;
-        $this->productCode = $productCode;
+        $this->parcelCount     = $count;
+        $this->itemsToOption   = $itemsToOption;
+        $this->helper          = $helper;
+        $this->productInfo     = $productInfo;
     }
 
     /**
@@ -178,12 +178,12 @@ class CreatePostNLOrder implements ObserverInterface
     {
         /**
          * If the product code is not set by the user then calculate it and save it also. It is possible that it is not
-         * set because the deliveryoptions are disabled or this is an EPS shipment.
+         * set because the delivery options are disabled or this is an EPS shipment.
          */
         if (!$postnlOrder->getProductCode()) {
             $option          = $this->itemsToOption->get($magentoOrder->getItems());
             $shippingAddress = $magentoOrder->getShippingAddress();
-            $productInfo     = $this->productCode->get('', $option, $shippingAddress);
+            $productInfo     = $this->productInfo->get('', $option, $shippingAddress);
             $postnlOrder->setProductCode($productInfo['code']);
             $postnlOrder->setType($productInfo['type']);
         }

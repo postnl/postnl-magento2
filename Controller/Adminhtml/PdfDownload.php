@@ -40,7 +40,7 @@ use TIG\PostNL\Config\Source\Settings\LabelsizeSettings;
 use TIG\PostNL\Service\Shipment\Label\Generate as LabelGenerate;
 use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
 use TIG\PostNL\Service\Shipment\ShipmentService as Shipment;
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 
 // @codingStandardsIgnoreFile
 class PdfDownload
@@ -154,8 +154,13 @@ class PdfDownload
     private function filterLabel($labels)
     {
         return array_filter($labels, function ($label) {
+            
+            if (is_array($label)) {
+                return false;
+            }
+            
             /** @var ShipmentLabelInterface $label */
-            if (strtoupper($label->getType()) == ProductCodeAndType::SHIPMENT_TYPE_GP) {
+            if (strtoupper($label->getType()) == ProductInfo::SHIPMENT_TYPE_GP) {
                 $this->filteredLabels[] = $label->getParentId();
                 return false;
             }

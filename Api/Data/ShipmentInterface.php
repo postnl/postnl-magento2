@@ -108,7 +108,19 @@ interface ShipmentInterface
      * @return string|null
      */
     public function getShipmentType();
-
+    
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function setShipmentCountry($value);
+    
+    /**
+     * @return mixed
+     */
+    public function getShipmentCountry();
+    
     /**
      * @param $value
      *
@@ -221,6 +233,36 @@ interface ShipmentInterface
      * @return bool
      */
     public function getConfirmed();
+    
+    /**
+     * @return string|null
+     */
+    public function setDownpartnerId($value);
+    
+    /**
+     * @return string|null
+     */
+    public function getDownpartnerId();
+    
+    /**
+     * @return string|null
+     */
+    public function setDownpartnerLocation($value);
+    
+    /**
+     * @return string|null
+     */
+    public function getDownpartnerLocation();
+    
+    /**
+     * @return string|null
+     */
+    public function setDownpartnerBarcode($value);
+    
+    /**
+     * @return string|null
+     */
+    public function getDownpartnerBarcode();
 
     /**
      * @param string $value
@@ -290,6 +332,11 @@ interface ShipmentInterface
      * @return \Magento\Sales\Api\Data\ShipmentInterface
      */
     public function getShipment();
+    
+    /**
+     * @return mixed
+     */
+    public function getShippingAddress();
 
     /**
      * @return bool

@@ -32,12 +32,13 @@
 namespace TIG\PostNL\Webservices\Endpoints;
 
 use Magento\Framework\Exception\LocalizedException;
+use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
-use TIG\PostNL\Webservices\Parser\TimeFrames;
-use TIG\PostNL\Webservices\Soap;
 use TIG\PostNL\Webservices\Api\Message;
-use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Webservices\Parser\TimeFrames;
+use TIG\PostNL\Webservices\Parser\Label\Shipments as ShipmentData;
+use TIG\PostNL\Webservices\Soap;
 
 class TimeFrame extends AbstractEndpoint
 {
@@ -79,33 +80,43 @@ class TimeFrame extends AbstractEndpoint
      * @var Options
      */
     private $timeframeOptions;
-
+    
     /**
-     * @param Soap       $soap
-     * @param Message    $message
-     * @param TimeFrames $timerFramesParser
-     * @param Data       $postNLhelper
-     * @param Options    $timeframeOptions
+     * TimeFrame constructor.
+     *
+     * @param \TIG\PostNL\Webservices\Soap                   $soap
+     * @param \TIG\PostNL\Webservices\Api\Message            $message
+     * @param \TIG\PostNL\Webservices\Parser\TimeFrames      $timerFramesParser
+     * @param \TIG\PostNL\Helper\Data                        $postNLhelper
+     * @param \TIG\PostNL\Service\Timeframe\Options          $timeframeOptions
+     * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
      */
     public function __construct(
         Soap $soap,
         Message $message,
         TimeFrames $timerFramesParser,
         Data $postNLhelper,
-        Options $timeframeOptions
+        Options $timeframeOptions,
+        ShipmentData $shipmentData
     ) {
         $this->soap = $soap;
         $this->message = $message->get('');
         $this->timerFramesParser = $timerFramesParser;
         $this->postNLhelper = $postNLhelper;
         $this->timeframeOptions = $timeframeOptions;
+        
+        parent::__construct(
+            $shipmentData
+        );
     }
-
+    
     /**
      * @param bool $parseTimeFrames
      *
-     * @return mixed
+     * @return array|mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     public function call($parseTimeFrames = true)
     {
