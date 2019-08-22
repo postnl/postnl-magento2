@@ -46,6 +46,8 @@ class AddressEnhancer
 
     /**
      * @param $address
+     *
+     * @throws PostnlException
      */
     public function set($address)
     {
@@ -72,8 +74,7 @@ class AddressEnhancer
         if (!isset($address['street'][0])) {
             return ['error' => [
                         'code'    => 'POSTNL-0124',
-                        'message' =>
-                            'Unable to extract the house number, because the street data could not be found'
+                        'message' => 'Unable to extract the house number, because the street data could not be found'
                 ]
             ];
         }
@@ -130,12 +131,11 @@ class AddressEnhancer
     }
 
     /**
-     * POC FALLBACK !!!!
-     *
      * @param $address
      * @param $result
      *
      * @return mixed
+     * @throws PostnlException
      */
     // @codingStandardsIgnoreLine
     protected function extractIndividual($address, $result)
