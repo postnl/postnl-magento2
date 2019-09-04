@@ -94,7 +94,7 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     {
         $labels = $this->getLabels();
         if (isset($labels['errors'])) {
-            $this->handleRequestErrors($labels['errors']);
+            $this->handleRequestMessages($labels['errors']);
         }
 
         if (empty($labels)) {
