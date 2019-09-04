@@ -133,7 +133,7 @@ class Validator
             return $this->validateGlobalPack($shipment);
         }
 
-        return $this->validatePriority($shipment);
+        return $this->validatePeps($shipment);
     }
 
     /**
@@ -150,7 +150,7 @@ class Validator
             return false;
         }
 
-        return $this->validatePriority($shipment);
+        return $this->validatePeps($shipment);
     }
 
     /**
@@ -158,7 +158,7 @@ class Validator
      *
      * @return bool
      */
-    private function validatePriority(ShipmentInterface $shipment)
+    private function validatePeps(ShipmentInterface $shipment)
     {
         $code = $shipment->getProductCode();
         $isPriority = $this->productOptions->checkProductByFlags($code, 'group', 'priority_options');
