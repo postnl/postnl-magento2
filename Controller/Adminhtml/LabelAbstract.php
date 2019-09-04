@@ -121,14 +121,6 @@ abstract class LabelAbstract extends Action
     {
         $labels = $this->getLabels->get($shipmentId);
 
-        if (isset($labels['errors'])) {
-            $this->getLabels->handleRequestMessages($labels['errors']);
-        }
-
-        if (isset($labels['notices'])) {
-            $this->getLabels->handleRequestMessages($labels['notices'], 'notice');
-        }
-
         if (empty($labels)) {
             return;
         }
