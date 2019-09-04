@@ -180,7 +180,7 @@ class Validator
         /** We want to show this notification for every Priority Shipment */
         if ($isPriority && $this->priorityNotice == false) {
             // @codingStandardsIgnoreLine
-            $this->notifications['notices'][] = __('Packet Tracked is a small parcel with Track & Trace. The minimum amount is 5 items. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
+            $this->notifications['notices'][] = __('Packet Tracked is a small parcel with Track & Trace. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
             $this->priorityNotice = true;
         }
 
