@@ -38,24 +38,16 @@ use TIG\PostNL\Config\Provider\ShippingOptions;
 
 class Validator
 {
-    /**
-     * @var ProductOptions
-     */
+    /** @var ProductOptions */
     private $productOptions;
 
-    /**
-     * @var ShippingOptions
-     */
+    /** @var ShippingOptions */
     private $shippingOptions;
 
-    /**
-     * @var array
-     */
-    private $notifications = ['errors' => [], 'notices' => []];
+    /** @var array */
+    private $messages = ['errors' => [], 'notices' => []];
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $priorityNotice = false;
 
     /**
@@ -77,6 +69,7 @@ class Validator
      * removed from the stack.
      *
      * @param $input
+     *
      * @return array
      */
     public function validate($input)
@@ -114,19 +107,19 @@ class Validator
     }
 
     /**
-     * @return array
+     * @return mixed
      */
     public function getErrors()
     {
-        return $this->notifications['errors'];
+        return $this->messages['errors'];
     }
 
     /**
-     * @return array
+     * @return mixed
      */
     public function getNotices()
     {
-        return $this->notifications['notices'];
+        return $this->messages['notices'];
     }
 
     /**
@@ -144,7 +137,7 @@ class Validator
     }
 
     /**
-     * @param $shipment
+     * @param ShipmentInterface $shipment
      *
      * @return bool
      */
@@ -153,7 +146,7 @@ class Validator
         if (!$this->shippingOptions->canUseGlobalPack()) {
             $magentoShipment = $shipment->getShipment();
             // @codingStandardsIgnoreLine
-            $this->notifications['errors'][] = __('Could not print labels for shipment %1. Worldwide (Globalpack) Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
+            $this->messages['errors'][] = __('Could not print labels for shipment %1. Worldwide (Globalpack) Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
             return false;
         }
 
@@ -161,7 +154,7 @@ class Validator
     }
 
     /**
-     * @param $shipment
+     * @param ShipmentInterface $shipment
      *
      * @return bool
      */
@@ -173,15 +166,15 @@ class Validator
         if ($isPriority && !$this->shippingOptions->canUsePriority()) {
             $magentoShipment = $shipment->getShipment();
             // @codingStandardsIgnoreLine
-            $this->notifications['errors'][] = __('Could not print labels for shipment %1. Priority Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
+            $this->messages['errors'][] = __('Could not print labels for shipment %1. Priority Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
             return false;
         }
 
         /** We want to show this notification for every Priority Shipment */
         if ($isPriority && $this->priorityNotice == false) {
             // @codingStandardsIgnoreLine
-            $this->notifications['notices'][] = __('Packet Tracked is a small parcel with Track & Trace. The minimum amount is 5 items. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
-            $this->priorityNotice = true;
+            $this->messages['notices'][] = __('Packet Tracked is a small parcel with Track & Trace. The minimum amount is 5 items. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
+            $this->priorityNotice        = true;
         }
 
         return true;

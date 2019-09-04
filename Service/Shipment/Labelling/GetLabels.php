@@ -29,8 +29,10 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Service\Shipment\Labelling;
 
+use Magento\Framework\Message\Manager as MessageManager;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
@@ -39,32 +41,28 @@ use TIG\PostNL\Service\Shipment\ConfirmLabel;
 
 class GetLabels
 {
-    /**
-     * @var ShipmentRepositoryInterface
-     */
+    /** @var MessageManager $messageManager */
+    private $messageManager;
+
+    /** @var ShipmentRepositoryInterface */
     private $shipmentRepository;
 
-    /**
-     * @var Validator
-     */
+    /** @var Validator */
     private $labelValidator;
 
-    /**
-     * @var ShipmentLabelRepositoryInterface
-     */
+    /** @var ShipmentLabelRepositoryInterface */
     private $shipmentLabelRepository;
 
-    /**
-     * @var GenerateLabel
-     */
+    /** @var GenerateLabel */
     private $generateLabel;
 
-    /**
-     * @var ConfirmLabel
-     */
+    /** @var ConfirmLabel */
     private $confirmLabel;
 
     /**
+     * GetLabels constructor.
+     *
+     * @param MessageManager                   $messageManager
      * @param ShipmentLabelRepositoryInterface $shipmentLabelRepository
      * @param ShipmentRepositoryInterface      $shipmentRepository
      * @param GenerateLabel                    $generateLabel
@@ -72,12 +70,14 @@ class GetLabels
      * @param ConfirmLabel                     $confirmLabel
      */
     public function __construct(
+        MessageManager $messageManager,
         ShipmentLabelRepositoryInterface $shipmentLabelRepository,
         ShipmentRepositoryInterface $shipmentRepository,
         GenerateLabel $generateLabel,
         Validator $labelValidator,
         ConfirmLabel $confirmLabel
     ) {
+        $this->messageManager          = $messageManager;
         $this->shipmentRepository      = $shipmentRepository;
         $this->labelValidator          = $labelValidator;
         $this->shipmentLabelRepository = $shipmentLabelRepository;
@@ -86,29 +86,33 @@ class GetLabels
     }
 
     /**
-     * @param int|string $shipmentId
+     * @param      $shipmentId
      * @param bool $confirm
      *
-     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface|array[]
+     * @return array|\Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function get($shipmentId, $confirm = true)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
+
         if (!$shipment) {
             return [];
         }
 
-        /** Validate products and generate error/warning messages */
         $this->labelValidator->validateProduct($shipment);
         $labels = $this->getLabels($shipment, $confirm);
         $labels = $this->labelValidator->validate($labels);
 
+        $errors  = $this->labelValidator->getErrors();
+        $notices = $this->labelValidator->getNotices();
+
         if (!empty($this->labelValidator->getErrors())) {
-            $labels['errors'] = $this->labelValidator->getErrors();
+            $this->handleRequestMessages($errors);
         }
 
         if (!empty($this->labelValidator->getNotices())) {
-            $labels['notices'] = $this->labelValidator->getNotices();
+            $this->handleRequestMessages($notices, 'notice');
         }
 
         return $labels;
@@ -116,15 +120,17 @@ class GetLabels
 
     /**
      * @param ShipmentInterface $shipment
-     * @param bool $confirm
+     * @param                   $confirm
      *
-     * @return \Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface[]
+     * @return \Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     private function getLabels(ShipmentInterface $shipment, $confirm)
     {
         $labels = $this->shipmentLabelRepository->getByShipment($shipment);
         if ($labels && $confirm) {
             $this->confirmLabel->confirm($shipment);
+
             return $labels;
         }
 
@@ -133,5 +139,17 @@ class GetLabels
         }
 
         return $this->generateLabel->get($shipment, 1, $confirm);
+    }
+
+    /**
+     * @param        $errors
+     * @param string $type
+     */
+    public function handleRequestMessages($errors, $type = 'warning')
+    {
+        foreach ($errors as $error) {
+            $type == 'warning' ? $this->messageManager->addWarningMessage($error)
+                : $this->messageManager->addNoticeMessage($error);
+        }
     }
 }

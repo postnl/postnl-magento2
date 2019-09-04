@@ -35,7 +35,6 @@ use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\Order\ShipmentRepository;
-
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
@@ -44,12 +43,12 @@ use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 
 class PrintShippingLabel extends LabelAbstract
 {
-    /**
-     * @var ShipmentRepository
-     */
+    /** @var ShipmentRepository */
     private $shipmentRepository;
 
     /**
+     * PrintShippingLabel constructor.
+     *
      * @param Context            $context
      * @param GetLabels          $getLabels
      * @param GetPdf             $getPdf
@@ -80,14 +79,15 @@ class PrintShippingLabel extends LabelAbstract
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|\Magento\Framework\Message\ManagerInterface
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Zend_Pdf_Exception
      */
     public function execute()
     {
         $labels = $this->getLabels();
-        if (isset($labels['errors'])) {
-            $this->handleRequestMessages($labels['errors']);
-        }
 
         if (empty($labels)) {
             $this->messageManager->addErrorMessage(
@@ -102,9 +102,9 @@ class PrintShippingLabel extends LabelAbstract
     }
 
     /**
-     * Retrieve shipment model instance
-     *
-     * @return Shipment
+     * @return \Magento\Sales\Api\Data\ShipmentInterface
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getShipment()
     {
@@ -113,7 +113,10 @@ class PrintShippingLabel extends LabelAbstract
     }
 
     /**
-     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface[]
+     * @return array|\Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getLabels()
     {
