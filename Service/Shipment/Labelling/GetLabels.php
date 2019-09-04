@@ -39,6 +39,15 @@ use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Service\Shipment\Label\Validator;
 use TIG\PostNL\Service\Shipment\ConfirmLabel;
 
+/**
+ * Class GetLabels
+ *
+ * Every property we use here is needed and shouldn't be moved for risk of over-
+ * specifying. That's why we ignore this file.
+ *
+ * @package TIG\PostNL\Service\Shipment\Labelling
+ * @codingStandardsIgnoreFile
+ */
 class GetLabels
 {
     /** @var MessageManager $messageManager */
