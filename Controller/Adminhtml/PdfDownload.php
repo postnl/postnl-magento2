@@ -129,7 +129,7 @@ class PdfDownload
         if (!$labels) {
             $this->setEmptyLabelsResponse();
             // @codingStandardsIgnoreLine
-            /** @todo : find a beter solution to close the new browser tab. */
+            /** @todo : find a better solution to close the new browser tab. */
             echo "<script>window.close();</script>";
             return;
         }
@@ -154,11 +154,11 @@ class PdfDownload
     private function filterLabel($labels)
     {
         return array_filter($labels, function ($label) {
-            
+
             if (is_array($label)) {
                 return false;
             }
-            
+
             /** @var ShipmentLabelInterface $label */
             if (strtoupper($label->getType()) == ProductInfo::SHIPMENT_TYPE_GP) {
                 $this->filteredLabels[] = $label->getParentId();
