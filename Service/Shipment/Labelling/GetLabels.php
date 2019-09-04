@@ -107,13 +107,8 @@ class GetLabels
         $errors  = $this->labelValidator->getErrors();
         $notices = $this->labelValidator->getNotices();
 
-        if (!empty($this->labelValidator->getErrors())) {
-            $this->handleRequestMessages($errors);
-        }
-
-        if (!empty($this->labelValidator->getNotices())) {
-            $this->handleRequestMessages($notices, 'notice');
-        }
+        $this->handleRequestMessages($errors);
+        $this->handleRequestMessages($notices, 'notice');
 
         return $labels;
     }
@@ -145,7 +140,7 @@ class GetLabels
      * @param        $errors
      * @param string $type
      */
-    public function handleRequestMessages($errors, $type = 'warning')
+    public function handleRequestMessages($errors = [], $type = 'warning')
     {
         foreach ($errors as $error) {
             $type == 'warning' ? $this->messageManager->addWarningMessage($error)
