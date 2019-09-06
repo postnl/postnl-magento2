@@ -69,7 +69,6 @@ class Validator
      * removed from the stack.
      *
      * @param $input
-     *
      * @return array
      */
     public function validate($input)
