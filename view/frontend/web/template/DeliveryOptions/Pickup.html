@@ -20,20 +20,6 @@
                 <span class="tig-postnl-pickup-city" data-bind="text: Address.City"></span>
             </div>
 
-            <!-- EARLY PICKUP -->
-
-            <!-- ko if: hasPGE() -->
-            <label>
-                <input class="tig-postnl-pickup-radio" type="radio" data-bind="value: LocationCode, checked: $parent.selectedOption, checkedValue: {data: $data, type: 'PGE'}" name="pickuplocation"/>
-                <span class="location-container">
-                    <span class="tig-postnl-pickup-early-deliver" data-bind="i18n: 'From 9:00'"></span>
-                    <!-- ko if: hasFee() -->
-                     <span class="tig-postnl-pickup-early-deliver-fee">(+ <span data-bind="text: getFormattedFee()"></span>) </span>
-                    <!-- /ko -->
-                </span>
-            </label>
-            <!-- /ko -->
-
             <!-- STANDARD PICKUP -->
             <label>
                 <input class="tig-postnl-pickup-radio" type="radio" data-bind="value: LocationCode, checked: $parent.selectedOption, checkedValue: {data: $data, type: 'PG'}" name="pickuplocation"/>

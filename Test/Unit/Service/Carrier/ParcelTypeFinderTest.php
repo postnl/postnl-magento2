@@ -65,19 +65,6 @@ class ParcelTypeFinderTest extends TestCase
         $this->assertEquals('pakjegemak', $instance->get());
     }
 
-    public function testEarlyPakjegemakIsReturned()
-    {
-        $itemsToOption = $this->mockItemsToOption('');
-        $orderRepositoryMock = $this->mockOrderRepository('PGE');
-
-        $instance = $this->getInstance([
-            'itemsToOption' => $itemsToOption,
-            'orderRepository' => $orderRepositoryMock,
-        ]);
-
-        $this->assertEquals('pakjegemak', $instance->get());
-    }
-
     public function testRegularIsReturnedByDefault()
     {
         $itemsToOption = $this->mockItemsToOption('');

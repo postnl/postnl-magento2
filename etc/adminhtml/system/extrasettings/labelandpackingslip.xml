@@ -69,7 +69,7 @@
             <config_path>tig_postnl/labelandpackingslipoptions/calculate_labels</config_path>
         </field>
 
-        <field id="calculate_labels_max_weight" translate="label tooltip comment" type="text" sortOrder="45" showInDefault="1" showInStore="0" showInWebsite="1">
+        <field id="calculate_labels_max_weight" translate="label tooltip comment" type="text" sortOrder="45" showInDefault="1" showInStore="0" showInWebsite="1" canRestore="1">
             <depends>
                 <field id="calculate_labels">weight</field>
             </depends>

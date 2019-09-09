@@ -53,13 +53,11 @@ class ProductInfo
     const TYPE_PICKUP               = 'pickup';
     const TYPE_DELIVERY             = 'delivery';
     const OPTION_PG                 = 'pg';
-    const OPTION_PGE                = 'pge';
     const OPTION_SUNDAY             = 'sunday';
     const OPTION_DAYTIME            = 'daytime';
     const OPTION_EVENING            = 'evening';
     const OPTION_EXTRAATHOME        = 'extra@home';
     const SHIPMENT_TYPE_PG          = 'PG';
-    const SHIPMENT_TYPE_PGE         = 'PGE';
     const SHIPMENT_TYPE_EPS         = 'EPS';
     const SHIPMENT_TYPE_GP          = 'GP';
     const SHIPMENT_TYPE_SUNDAY      = 'Sunday';
@@ -122,7 +120,7 @@ class ProductInfo
         }
 
         if ($type == static::TYPE_PICKUP) {
-            $this->setPakjegemakProductOption($option);
+            $this->setPakjegemakProductOption();
 
             return $this->getInfo();
         }
@@ -242,18 +240,8 @@ class ProductInfo
         return $this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'priority_options');
     }
 
-    /**
-     * @param string $option
-     */
-    private function setPakjegemakProductOption($option)
+    private function setPakjegemakProductOption()
     {
-        if ($option == static::OPTION_PGE) {
-            $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakEarlyProductOption();
-            $this->type = static::SHIPMENT_TYPE_PGE;
-
-            return;
-        }
-
         $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
         $this->type = static::SHIPMENT_TYPE_PG;
     }
