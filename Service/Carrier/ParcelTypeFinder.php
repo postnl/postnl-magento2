@@ -91,7 +91,6 @@ class ParcelTypeFinder
     {
         switch ($type) {
             case 'PG':
-            case 'PGE':
                 return 'pakjegemak';
         }
 

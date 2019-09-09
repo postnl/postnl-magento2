@@ -68,10 +68,6 @@ class FeeCalculator
             return (float)$this->shippingOptions->getSundayDeliveryFee();
         }
 
-        if ($this->shippingOptions->isPakjegemakExpressActive() && $params['option'] == 'PGE') {
-            return (float)$this->shippingOptions->getPakjegemakExpressFee();
-        }
-
         return (float)0.0;
     }
 

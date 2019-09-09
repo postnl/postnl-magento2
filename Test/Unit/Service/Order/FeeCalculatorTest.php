@@ -90,30 +90,6 @@ class FeeCalculatorTest extends TestCase
                 ],
                 'expected' => 0.0
             ],
-            'Pakjegemak Express delivery with fee' => [
-                'params' => ['option' => 'PGE'],
-                'config options' => [
-                    'isPakjegemakExpressActive' => true,
-                    'getPakjegemakExpressFee' => 3,
-                ],
-                'expected' => 3.0
-            ],
-            'Pakjegemak Express delivery with fee but inactive' => [
-                'params' => ['option' => 'PGE'],
-                'config options' => [
-                    'isPakjegemakExpressActive' => false,
-                    'getPakjegemakExpressFee' => 3,
-                ],
-                'expected' => 0.0
-            ],
-            'Pakjegemak Express delivery without fee' => [
-                'params' => ['option' => 'PGE'],
-                'config options' => [
-                    'isPakjegemakExpressActive' => true,
-                    'getPakjegemakExpressFee' => '',
-                ],
-                'expected' => 0.0
-            ],
             'params are missing' => [
                 'params' => [],
                 'config options' => [
@@ -121,8 +97,6 @@ class FeeCalculatorTest extends TestCase
                     'getSundayDeliveryFee' => 3,
                     'isEveningDeliveryActive' => true,
                     'getEveningDeliveryFee' => 3,
-                    'isPakjegemakExpressActive' => true,
-                    'getPakjegemakExpressFee' => 3,
                 ],
                 'expected' => 0.0
             ],

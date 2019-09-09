@@ -674,7 +674,6 @@ abstract class OptionsAbstract
         'Extra@Home'  => '',
         'Sunday'      => 'Sunday',
         'PG'          => '',
-        'PGE'         => 'Early morning pickup',
         'EPS'         => '',
         'GP'          => '',
     ];
