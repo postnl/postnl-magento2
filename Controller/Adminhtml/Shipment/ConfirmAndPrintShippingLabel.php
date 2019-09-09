@@ -45,17 +45,15 @@ use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 
 class ConfirmAndPrintShippingLabel extends LabelAbstract
 {
-    /**
-     * @var ShipmentRepository
-     */
+    /** @var ShipmentRepository */
     private $shipmentRepository;
 
-    /**
-     * @var CanaryIslandToIC
-     */
+    /** @var CanaryIslandToIC */
     private $canaryConverter;
 
     /**
+     * ConfirmAndPrintShippingLabel constructor.
+     *
      * @param Context            $context
      * @param GetLabels          $getLabels
      * @param GetPdf             $getPdf
@@ -88,14 +86,13 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|\Magento\Framework\Message\ManagerInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Zend_Pdf_Exception
      */
     public function execute()
     {
         $labels = $this->getLabels();
-        if (isset($labels['errors'])) {
-            $this->handleRequestErrors($labels['errors']);
-        }
 
         if (empty($labels)) {
             $this->messageManager->addErrorMessage(
@@ -110,9 +107,9 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     }
 
     /**
-     * Retrieve shipment model instance
-     *
-     * @return Shipment
+     * @return \Magento\Sales\Api\Data\ShipmentInterface
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getShipment()
     {
@@ -121,7 +118,8 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     }
 
     /**
-     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface[]
+     * @return array|\Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     private function getLabels()
     {

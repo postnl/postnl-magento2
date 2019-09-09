@@ -38,24 +38,16 @@ use TIG\PostNL\Config\Provider\ShippingOptions;
 
 class Validator
 {
-    /**
-     * @var ProductOptions
-     */
+    /** @var ProductOptions */
     private $productOptions;
 
-    /**
-     * @var ShippingOptions
-     */
+    /** @var ShippingOptions */
     private $shippingOptions;
 
-    /**
-     * @var array
-     */
-    private $notifications = ['errors' => [], 'notices' => []];
+    /** @var array */
+    private $messages = ['errors' => [], 'notices' => []];
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $priorityNotice = false;
 
     /**
@@ -114,19 +106,19 @@ class Validator
     }
 
     /**
-     * @return array
+     * @return mixed
      */
     public function getErrors()
     {
-        return $this->notifications['errors'];
+        return $this->messages['errors'];
     }
 
     /**
-     * @return array
+     * @return mixed
      */
     public function getNotices()
     {
-        return $this->notifications['notices'];
+        return $this->messages['notices'];
     }
 
     /**
@@ -140,11 +132,11 @@ class Validator
             return $this->validateGlobalPack($shipment);
         }
 
-        return $this->validatePriority($shipment);
+        return $this->validatePeps($shipment);
     }
 
     /**
-     * @param $shipment
+     * @param ShipmentInterface $shipment
      *
      * @return bool
      */
@@ -153,19 +145,19 @@ class Validator
         if (!$this->shippingOptions->canUseGlobalPack()) {
             $magentoShipment = $shipment->getShipment();
             // @codingStandardsIgnoreLine
-            $this->notifications['errors'][] = __('Could not print labels for shipment %1. Worldwide (Globalpack) Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
+            $this->messages['errors'][] = __('Could not print labels for shipment %1. Worldwide (Globalpack) Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
             return false;
         }
 
-        return $this->validatePriority($shipment);
+        return $this->validatePeps($shipment);
     }
 
     /**
-     * @param $shipment
+     * @param ShipmentInterface $shipment
      *
      * @return bool
      */
-    private function validatePriority(ShipmentInterface $shipment)
+    private function validatePeps(ShipmentInterface $shipment)
     {
         $code = $shipment->getProductCode();
         $isPriority = $this->productOptions->checkProductByFlags($code, 'group', 'priority_options');
@@ -173,15 +165,15 @@ class Validator
         if ($isPriority && !$this->shippingOptions->canUsePriority()) {
             $magentoShipment = $shipment->getShipment();
             // @codingStandardsIgnoreLine
-            $this->notifications['errors'][] = __('Could not print labels for shipment %1. Priority Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
+            $this->messages['errors'][] = __('Could not print labels for shipment %1. Priority Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
             return false;
         }
 
         /** We want to show this notification for every Priority Shipment */
         if ($isPriority && $this->priorityNotice == false) {
             // @codingStandardsIgnoreLine
-            $this->notifications['notices'][] = __('Packet Tracked is a small parcel with Track & Trace. The minimum amount is 5 items. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
-            $this->priorityNotice = true;
+            $this->messages['notices'][] = __('Packet Tracked is a small parcel with Track & Trace. The minimum amount is 5 items. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
+            $this->priorityNotice        = true;
         }
 
         return true;
