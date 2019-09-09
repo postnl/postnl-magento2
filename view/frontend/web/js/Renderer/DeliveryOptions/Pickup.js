@@ -112,13 +112,8 @@ define([
                     selectedFrom = '15:00:00',
                     option = 'PG';
 
-                if (value.type == 'PGE') {
-                    selectedFrom = '9:00:00';
-                    option = 'PGE';
-                }
-
                 var fee = 0;
-                if (value.type == 'PGE' && dataObject.hasFee()) {
+                if (dataObject.hasFee()) {
                     fee = dataObject.getFee();
                 }
                 State.fee(fee);

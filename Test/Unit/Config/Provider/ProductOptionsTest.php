@@ -214,25 +214,6 @@ class ProductOptionsTest extends AbstractConfigurationTest
         $this->assertEquals($value, $instance->getDefaultPakjeGemakProductOption());
     }
 
-    public function pakjegemakEarlyOptionsProvider()
-    {
-        return [
-            'Post Office + extra cover + Notification' => ['3544'],
-            'Post Office + Signature on Delivery + Notification' => ['3543']
-        ];
-    }
-
-    /**
-     * @dataProvider pakjegemakEarlyOptionsProvider
-     * @param $value
-     */
-    public function testGetDefaultPakjeGemakEarlyProductOption($value)
-    {
-        $instance = $this->getInstance();
-        $this->setXpath(ProductOptions::XPATH_DEFAULT_PAKJEGEMAK_EARLY_PRODUCT_OPTION, $value);
-        $this->assertEquals($value, $instance->getDefaultPakjeGemakEarlyProductOption());
-    }
-
     public function sundayOptionsProvider()
     {
         return [

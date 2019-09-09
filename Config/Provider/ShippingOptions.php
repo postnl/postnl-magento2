@@ -42,8 +42,6 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE       = 'tig_postnl/delivery_days/deliverydays_active';
     const XPATH_SHIPPING_OPTION_MAX_DELIVERYDAYS          = 'tig_postnl/delivery_days/max_deliverydays';
     const XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE         = 'tig_postnl/post_offices/pakjegemak_active';
-    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_ACTIVE = 'tig_postnl/post_offices/pakjegemak_express_active';
-    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_FEE    = 'tig_postnl/post_offices/pakjegemak_express_fee';
     const XPATH_SHIPPING_OPTION_EVENING_ACTIVE            = 'tig_postnl/evening_delivery_nl/eveningdelivery_active';
     const XPATH_SHIPPING_OPTION_EVENING_BE_ACTIVE         = 'tig_postnl/evening_delivery_be/eveningdelivery_be_active';
     const XPATH_SHIPPING_OPTION_EVENING_FEE               = 'tig_postnl/evening_delivery_nl/eveningdelivery_fee';
@@ -112,30 +110,6 @@ class ShippingOptions extends AbstractConfigProvider
     public function isPakjegemakActive()
     {
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE);
-    }
-
-    /**
-     * @return mixed|bool
-     */
-    public function isPakjegemakExpressActive()
-    {
-        if (!$this->isPakjegemakActive()) {
-            return false;
-        }
-
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_ACTIVE);
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getPakjegemakExpressFee()
-    {
-        if (!$this->isPakjegemakExpressActive()) {
-            return '0';
-        }
-
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_FEE);
     }
 
     /**
