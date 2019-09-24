@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-We will dive into any security related issue as long as your Magento version is still supported by Magento. If you are running a Magento version that is not supported by Magento, you can contact us for a quote at sales@tig.nl.
+We will dive into any security related issue as long as your Magento version is still supported by Magento. If you are running a Magento version that is not supported by Magento and you wish to upgrade to the latest version, you can contact us for a quote at sales@tig.nl
 
 ## Reporting a Vulnerability
 
