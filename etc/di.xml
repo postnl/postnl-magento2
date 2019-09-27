@@ -39,6 +39,7 @@
     <preference for="TIG\PostNL\Api\Data\ShipmentInterface" type="TIG\PostNL\Model\Shipment" />
     <preference for="TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface" type="TIG\PostNL\Model\ShipmentBarcodeRepository" />
     <preference for="TIG\PostNL\Api\ShipmentLabelRepositoryInterface" type="TIG\PostNL\Model\ShipmentLabelRepository" />
+    <preference for="TIG\PostNL\Api\ShipmentManagementInterface" type="TIG\PostNL\Service\Api\ShipmentManagement" />
     <preference for="TIG\PostNL\Service\Wrapper\QuoteInterface" type="TIG\PostNL\Service\Wrapper\Quote" />
     <preference for="TIG\PostNL\Service\Wrapper\StoreInterface" type="TIG\PostNL\Service\Wrapper\Store" />
     <preference for="TIG\PostNL\Service\Wrapper\CheckoutSessionInterface" type="TIG\PostNL\Service\Wrapper\CheckoutSession" />

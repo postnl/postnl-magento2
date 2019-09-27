@@ -76,6 +76,26 @@
         </resources>
     </route>
 
+    <!-- Webapi description for the TIG PostNL Shipment management -->
+    <route url="/V1/postnl/shipments/:shipmentId/generateLabel" method="POST">
+        <service class="TIG\PostNL\Api\ShipmentManagementInterface" method="generateLabel"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments/:shipmentId/confirm" method="POST">
+        <service class="TIG\PostNL\Api\ShipmentManagementInterface" method="confirm"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
+    <route url="/V1/postnl/shipments/:shipmentId/cancelConfirm" method="POST">
+        <service class="TIG\PostNL\Api\ShipmentManagementInterface" method="cancelConfirm"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
+
     <!-- Webapi description for the TIG PostNL Shipment model -->
     <route url="/V1/postnl/shipments/:id" method="GET">
         <service class="TIG\PostNL\Api\ShipmentRepositoryInterface" method="getById"/>
