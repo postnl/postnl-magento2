@@ -47,7 +47,7 @@ class TestBase extends AbstractController
 
         parent::setUp();
 
-        $addressEnhancer = $this->getMock(\TIG\PostNL\Helper\AddressEnhancer::class);
+        $addressEnhancer = $this->getFakeMock(\TIG\PostNL\Helper\AddressEnhancer::class);
         $deliveryDate = $this->getMockBuilder(DeliveryDate::class)->disableOriginalConstructor()->getMock();
         $timeFrame = $this->getMockBuilder(TimeFrame::class)->disableOriginalConstructor()->getMock();
         $location = $this->getMockBuilder(Locations::class)->disableOriginalConstructor()->getMock();
