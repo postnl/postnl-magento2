@@ -81,9 +81,11 @@ class Payment
         }
 
         $billingAddress->setStreet(
-            $billingAddress->getStreet()[0] . ' ' .
-            $attributes->getTigHousenumber() . ' ' .
-            $attributes->getTigHousenumberAddition()
+            [
+                $billingAddress->getStreet()[0],
+                $attributes->getTigHousenumber(),
+                $attributes->getTigHousenumberAddition()
+            ]
         );
 
         return [$cartId, $paymentMethod, $billingAddress];
