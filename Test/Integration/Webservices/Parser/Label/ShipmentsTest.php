@@ -143,7 +143,7 @@ class ShipmentsTest extends TestCase
             'housenumberExtension' => 'A'
         ];
 
-        $enhancerMock = $this->getMock(AddressEnhancer::class);
+        $enhancerMock = $this->getFakeMock(AddressEnhancer::class);
         $enhancerMockExpects = $enhancerMock->expects($this->any());
         $enhancerMockExpects->method('set');
         $enhancerMockExpects->willReturn($return);
