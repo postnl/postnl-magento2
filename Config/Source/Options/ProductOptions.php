@@ -31,13 +31,12 @@
  */
 namespace TIG\PostNL\Config\Source\Options;
 
+use Magento\Framework\Option\ArrayInterface;
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
+use Magento\Sales\Model\Order\Address as SalesAddress;
 use TIG\PostNL\Config\Source\OptionsAbstract;
 use TIG\PostNL\Service\Converter\CanaryIslandToIC;
-use Magento\Framework\Option\ArrayInterface;
 use TIG\PostNL\Service\Shipment\GuaranteedOptions;
-
-use Magento\Sales\Model\Order\Address as SalesAddress;
-use Magento\Quote\Model\Quote\Address as QuoteAddress;
 
 /**
  * As this class holds all the methods to retrieve correct product codes, it is too long for Code Sniffer to check.
@@ -128,15 +127,6 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         $flags['groups'][] = ['group' => 'pakjegemak_options'];
         $flags['groups'][] = ['group' => 'id_check_pakjegemak_options'];
         return $this->getProductOptions($flags);
-    }
-
-    /**
-     * Returns options if pge equals true
-     * @return array
-     */
-    public function getPakjeGemakEarlyDeliveryOptions()
-    {
-        return $this->getProductOptions(['pge' => true]);
     }
 
     /**
@@ -236,22 +226,22 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         return $this->getProductOptions(['group' => 'extra_at_home_options']);
     }
 
-	/**
-	 * @return array
-	 */
+    /**
+     * @return array
+     */
     public function getDefaultGPOption()
     {
-    	$productOptions = $this->getProductOptions(['isDefault' => 1, 'group' => 'global_options']);
-    	return array_shift($productOptions);
+        $productOptions = $this->getProductOptions(['isDefault' => 1, 'group' => 'global_options']);
+        return array_shift($productOptions);
     }
 
-	/**
-	 * @return array
-	 */
+    /**
+     * @return array
+     */
     public function getDefaultEUOption()
     {
-    	$productOptions = $this->getProductOptions(['isDefault' => 1, 'group' => 'eu_options']);
-    	return array_shift($productOptions);
+        $productOptions = $this->getProductOptions(['isDefault' => 1, 'group' => 'eu_options']);
+        return array_shift($productOptions);
     }
 
     /**

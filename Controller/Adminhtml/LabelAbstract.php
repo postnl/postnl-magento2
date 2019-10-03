@@ -113,14 +113,13 @@ abstract class LabelAbstract extends Action
 
     /**
      * @param $shipmentId
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     //@codingStandardsIgnoreLine
     protected function setLabel($shipmentId)
     {
         $labels = $this->getLabels->get($shipmentId);
-        if (isset($labels['errors'])) {
-            $this->handleRequestErrors($labels['errors']);
-        }
 
         if (empty($labels)) {
             return;
@@ -130,16 +129,16 @@ abstract class LabelAbstract extends Action
     }
 
     /**
-     * @param $shipmentId
-     * @param $withLabels
-     * @param $confirm
+     * @param      $shipmentId
+     * @param bool $withLabels
+     * @param bool $confirm
      */
     //@codingStandardsIgnoreLine
     protected function setPackingslip($shipmentId, $withLabels = true, $confirm = true)
     {
         $packingslip = $this->getPackingSlip->get($shipmentId, $withLabels, $confirm);
         if (is_array($packingslip) && isset($packingslip['errors'])) {
-            $this->handleRequestErrors($packingslip['errors']);
+            $this->getLabels->handleRequestMessages($packingslip['errors']);
             return;
         }
 
@@ -151,24 +150,13 @@ abstract class LabelAbstract extends Action
     }
 
     /**
-     * @param Shipment $shipment
+     * @param $shipment
      */
     //@codingStandardsIgnoreLine
     protected function setTracks($shipment)
     {
         if (!$shipment->getTracks()) {
             $this->track->set($shipment);
-        }
-    }
-
-    /**
-     * @param $errors
-     */
-    //@codingStandardsIgnoreLine
-    protected function handleRequestErrors($errors)
-    {
-        foreach ($errors as $error) {
-            $this->messageManager->addWarningMessage($error);
         }
     }
 }

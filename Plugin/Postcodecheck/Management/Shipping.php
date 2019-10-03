@@ -70,9 +70,11 @@ class Shipping
         }
 
         $address->setStreet(
-            $address->getStreet()[0] . ' ' .
-            $attributes->getTigHousenumber() . ' ' .
-            $attributes->getTigHousenumberAddition()
+            [
+                $address->getStreet()[0],
+                $attributes->getTigHousenumber(),
+                $attributes->getTigHousenumberAddition()
+            ]
         );
 
         return [$cartId, $address];

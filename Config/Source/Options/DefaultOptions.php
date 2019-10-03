@@ -72,6 +72,7 @@ class DefaultOptions implements ArrayInterface
     {
         $flags = [];
         $flags['groups'][] = ['group' => 'standard_options'];
+        $flags['groups'][] = ['group' => 'buspakje_options'];
         if ($this->shippingOptions->isIDCheckActive()) {
             $flags['groups'][] = ['group' => 'id_check_options'];
         }
@@ -95,7 +96,7 @@ class DefaultOptions implements ArrayInterface
         $beProducts[] = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
         $beProducts[] = $this->shippingOptions->canUseCargoProducts() ? $this->productOptions->getCargoOptions() : [];
         $beProducts[] = $this->productOptions->getEuOptions();
-        
+
         return call_user_func_array("array_merge", $beProducts);
     }
 
@@ -107,10 +108,10 @@ class DefaultOptions implements ArrayInterface
         $epsProducts[] = $this->shippingOptions->canUsePriority() ? $this->productOptions->getPriorityOptions() : [];
         $epsProducts[] = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
         $epsProducts[] = $this->productOptions->getEpsOptions();
-        
+
         return call_user_func_array("array_merge", $epsProducts);
     }
-    
+
     /**
      * @return array
      */

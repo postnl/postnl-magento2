@@ -140,7 +140,7 @@ class ShipmentRepository implements ShipmentRepositoryInterface
     /**
      * @param SearchCriteriaInterface $criteria
      *
-     * @return mixed
+     * @return \Magento\Framework\Api\SearchResultsInterface
      */
     public function getList(SearchCriteriaInterface $criteria)
     {

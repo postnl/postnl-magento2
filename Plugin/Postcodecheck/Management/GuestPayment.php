@@ -92,9 +92,11 @@ class GuestPayment
         }
 
         $billingAddress->setStreet(
-            $billingAddress->getStreet()[0] . ' ' .
-            $attributes->getTigHousenumber() . ' ' .
-            $attributes->getTigHousenumberAddition()
+            [
+                $billingAddress->getStreet()[0],
+                $attributes->getTigHousenumber(),
+                $attributes->getTigHousenumberAddition()
+            ]
         );
 
         return [$cartId, $email, $paymentMethod, $billingAddress];
