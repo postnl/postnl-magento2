@@ -55,8 +55,7 @@ class AddressEnhancer
      */
     public function __construct(
         Config $config
-    )
-    {
+    ) {
         $this->config = $config;
     }
 
