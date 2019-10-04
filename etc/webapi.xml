@@ -77,6 +77,12 @@
     </route>
 
     <!-- Webapi description for the TIG PostNL Shipment management -->
+    <route url="/V1/postnl/shipments/:shipmentId/createShipment" method="POST">
+        <service class="TIG\PostNL\Api\ShipmentManagementInterface" method="createShipment"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
     <route url="/V1/postnl/shipments/:shipmentId/generateLabel" method="POST">
         <service class="TIG\PostNL\Api\ShipmentManagementInterface" method="generateLabel"/>
         <resources>

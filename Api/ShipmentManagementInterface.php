@@ -39,7 +39,7 @@ interface ShipmentManagementInterface
      * @param int $shipmentId
      *
      * @api
-     * @return \Magento\Framework\Phrase|string
+     * @return string
      */
     public function confirm($shipmentId);
 
@@ -49,7 +49,7 @@ interface ShipmentManagementInterface
      * @param int $shipmentId
      *
      * @api
-     * @return \Magento\Framework\Phrase|string
+     * @return string
      */
     public function cancelConfirm($shipmentId);
 
@@ -59,7 +59,19 @@ interface ShipmentManagementInterface
      * @param int $shipmentId
      *
      * @api
-     * @return \Magento\Framework\Phrase|string
+     * @return string
      */
     public function generateLabel($shipmentId);
+
+    /**
+     * Create a PostNL shipment
+     *
+     * @param int      $shipmentId
+     * @param int|null $productCode
+     * @param int|null $colliAmount
+     *
+     * @api
+     * @return string
+     */
+    public function createShipment($shipmentId, $productCode = null, $colliAmount = null);
 }
