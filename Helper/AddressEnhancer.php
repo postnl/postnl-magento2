@@ -29,9 +29,11 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Helper;
 
 use TIG\PostNL\Exception as PostnlException;
+use TIG\PostNL\Config\Provider\Webshop as Config;
 
 class AddressEnhancer
 {
@@ -40,9 +42,23 @@ class AddressEnhancer
     // @codingStandardsIgnoreLine
     const STREET_SPLIT_NUMBER_FROM_NAME = '/^(?P<number>\d+)\s*(?P<street>[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\-\.]*)$/i';
 
+    /** @var Config $config */
+    private $config;
+
     /** @var array */
     // @codingStandardsIgnoreLine
     protected $address = [];
+
+    /**
+     * AddressEnhancer constructor.
+     *
+     * @param Config $config
+     */
+    public function __construct(
+        Config $config
+    ) {
+        $this->config = $config;
+    }
 
     /**
      * @param $address
@@ -51,7 +67,11 @@ class AddressEnhancer
      */
     public function set($address)
     {
-        $this->address = $this->appendHouseNumber($address);
+        $this->address = $address;
+
+        if (!$this->config->getIsAddressCheckEnabled()) {
+            $this->address = $this->appendHouseNumber($address);
+        }
     }
 
     /**
@@ -72,9 +92,10 @@ class AddressEnhancer
     protected function appendHouseNumber($address)
     {
         if (!isset($address['street'][0])) {
-            return ['error' => [
-                        'code'    => 'POSTNL-0124',
-                        'message' => 'Unable to extract the house number, because the street data could not be found'
+            return [
+                'error' => [
+                    'code'    => 'POSTNL-0124',
+                    'message' => 'Unable to extract the house number, because the street data could not be found'
                 ]
             ];
         }
@@ -103,6 +124,7 @@ class AddressEnhancer
 
         if (isset($result['error'])) {
             $result = $this->extractIndividual($address, $result);
+
             return $result;
         }
 
@@ -150,7 +172,7 @@ class AddressEnhancer
         }
 
         if (count($address['street']) == 2) {
-            $tmpAddress = $this->extractHousenumber(['street' => [$address['street'][0]]]);
+            $tmpAddress           = $this->extractHousenumber(['street' => [$address['street'][0]]]);
             $result['street']     = $address['street'][0];
             $result['number']     = $tmpAddress['housenumber'];
             $result['addition']   = $address['street'][1];
