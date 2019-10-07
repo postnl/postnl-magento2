@@ -51,6 +51,7 @@ class AddressEnhancer
 
     /**
      * AddressEnhancer constructor.
+     *
      * @param Config $config
      */
     public function __construct(
@@ -66,7 +67,11 @@ class AddressEnhancer
      */
     public function set($address)
     {
-        $this->address = $this->appendHouseNumber($address);
+        $this->address = $address;
+
+        if (!$this->config->getIsAddressCheckEnabled()) {
+            $this->address = $this->appendHouseNumber($address);
+        }
     }
 
     /**
@@ -89,15 +94,10 @@ class AddressEnhancer
         if (!isset($address['street'][0])) {
             return [
                 'error' => [
-                    'code' => 'POSTNL-0124',
+                    'code'    => 'POSTNL-0124',
                     'message' => 'Unable to extract the house number, because the street data could not be found'
                 ]
             ];
-        }
-
-        if ($this->config->getIsAddressCheckEnabled()) {
-            $address['housenumber']          = $address['street'][1];
-            $address['housenumberExtension'] = isset($address['street'][2]) ? $address['street'][2] : null;
         }
 
         if (!isset($address['housenumber']) || !$address['housenumber']) {
@@ -124,6 +124,7 @@ class AddressEnhancer
 
         if (isset($result['error'])) {
             $result = $this->extractIndividual($address, $result);
+
             return $result;
         }
 
@@ -142,7 +143,7 @@ class AddressEnhancer
         if (!$matched) {
             return [
                 'error' => [
-                    'code' => 'POSTNL-0124',
+                    'code'    => 'POSTNL-0124',
                     'message' => 'Unable to extract the house number, could not find a number inside the street value'
                 ]
             ];
