@@ -33,39 +33,32 @@ namespace TIG\PostNL\Service\Api\ShipmentManagement;
 
 use Magento\Framework\Webapi\Exception;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
-use TIG\PostNL\Helper\Data as DataHelper;
 use TIG\PostNL\Helper\Tracking\Track;
-use TIG\PostNL\Webservices\Endpoints\Confirming;
+use TIG\PostNL\Service\Shipment\ConfirmLabel;
 
 class Confirm
 {
     /** @var ShipmentRepositoryInterface */
     private $postnlShipmentRepository;
 
-    /** @var Confirming */
-    private $confirming;
-
-    /** @var DataHelper */
-    private $dataHelper;
+    /** @var ConfirmLabel */
+    private $confirmLabel;
 
     /** @var Track */
     private $track;
 
     /**
      * @param ShipmentRepositoryInterface $postnlShipmentRepository
-     * @param Confirming                  $confirming
-     * @param DataHelper                  $dataHelper
+     * @param ConfirmLabel                $confirmLabel
      * @param Track                       $track
      */
     public function __construct(
         ShipmentRepositoryInterface $postnlShipmentRepository,
-        Confirming $confirming,
-        DataHelper $dataHelper,
+        ConfirmLabel $confirmLabel,
         Track $track
     ) {
         $this->postnlShipmentRepository = $postnlShipmentRepository;
-        $this->confirming = $confirming;
-        $this->dataHelper = $dataHelper;
+        $this->confirmLabel = $confirmLabel;
         $this->track = $track;
     }
 
@@ -75,17 +68,13 @@ class Confirm
      * @return void
      * @throws Exception
      * @throws \TIG\PostNL\Webservices\Api\Exception
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function confirm($shipmentId)
     {
         $postnlShipment = $this->postnlShipmentRepository->getByShipmentId($shipmentId);
 
-        $this->confirming->setParameters($postnlShipment);
-        $this->confirming->call();
-
-        $postnlShipment->setConfirmedAt($this->dataHelper->getDate());
-        $postnlShipment->setConfirmed(true);
-        $this->postnlShipmentRepository->save($postnlShipment);
+        $this->confirmLabel->confirm($postnlShipment);
 
         $magentoShipment = $postnlShipment->getShipment();
 

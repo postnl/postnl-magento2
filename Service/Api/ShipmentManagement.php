@@ -34,7 +34,6 @@ namespace TIG\PostNL\Service\Api;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Webapi\Exception;
 use TIG\PostNL\Api\ShipmentManagementInterface;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Service\Api\ShipmentManagement\Confirm;
@@ -90,13 +89,7 @@ class ShipmentManagement implements ShipmentManagementInterface
         try {
             $this->confirm->confirm($shipmentId);
             $message = __('Shipment #' . $shipmentId . ' Has been successfully confirmed');
-        } catch (Exception $exception) {
-            // @codingStandardsIgnoreLine
-            $message = __('Could not confirm shipment #' . $shipmentId);
-
-            $this->logger->notice($message);
-            $this->logger->notice($exception->getMessage());
-        } catch (\TIG\PostNL\Webservices\Api\Exception $exception) {
+        } catch (LocalizedException $exception) {
             // @codingStandardsIgnoreLine
             $message = __('Could not confirm shipment #' . $shipmentId);
 
