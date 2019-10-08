@@ -67,6 +67,10 @@ class Payment
         PaymentInterface $paymentMethod,
         AddressInterface $billingAddress = null
     ) {
+        if (!$billingAddress) {
+            return [$cartId, $paymentMethod, $billingAddress];
+        }
+
         $attributes = $billingAddress->getExtensionAttributes();
         if (empty($attributes) || !$this->webshopConfig->getIsAddressCheckEnabled()) {
             return [$cartId, $paymentMethod, $billingAddress];
