@@ -34,6 +34,7 @@ namespace TIG\PostNL\Test\Unit\Service\Handler;
 use Magento\Framework\Phrase;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
 use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Api\Data\ShipmentInterface;
 
 class BarcodeHandlerTest extends TestCase
 {
@@ -63,7 +64,7 @@ class BarcodeHandlerTest extends TestCase
         $barcodeMock = $this->getBarcodeMock($callReturnValue);
 
         $instance = $this->getInstance(['barcodeEndpoint' => $barcodeMock]);
-        $result = $this->invoke('generate', $instance);
+        $result = $this->invokeArgs('generate', [$this->getShippmentMock()], $instance);
 
         if ($result instanceof Phrase) {
             $result = $result->render();
@@ -79,13 +80,25 @@ class BarcodeHandlerTest extends TestCase
 
         try {
             $instance = $this->getInstance(['barcodeEndpoint' => $barcodeMock]);
-            $result = $this->invoke('generate', $instance);
+            $result = $this->invokeArgs('generate', [$this->getShippmentMock()], $instance);
             if ($result instanceof Phrase) {
                 $result->render();
             }
         } catch (\Magento\Framework\Exception\LocalizedException $exception) {
             $this->assertEquals($message, $exception->getMessage());
         }
+    }
+
+    protected function getShippmentMock()
+    {
+        $magentoShipmentMock = $this->getFakeMock('\Magento\Sales\Api\Data\ShipmentInterface')->getMock();
+        $magentoShipmentMock->method('getStoreId')->willReturn(0);
+
+        $shipmentMock = $this->getFakeMock(ShipmentInterface::class)->getMock();
+        $shipmentMock->method('getProductCode')->willReturn('3085');
+        $shipmentMock->method('getShipment')->willReturn($magentoShipmentMock);
+
+        return $shipmentMock;
     }
 
     /**

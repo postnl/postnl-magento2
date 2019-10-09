@@ -31,16 +31,21 @@
  */
 namespace TIG\PostNL\Service\Shipment;
 
+use Magento\Sales\Model\Convert\Order as ConvertOrder;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\Convert\Order as ConvertOrder;
-use TIG\PostNL\Model\ShipmentRepository;
 use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Model\ShipmentRepository;
 
 //@codingStandardsIgnoreFile
 class CreateShipment
 {
+    /**
+     * @var InventorySource
+     */
+    private $inventorySource;
+
     /**
      * @var ConvertOrder
      */
@@ -72,18 +77,21 @@ class CreateShipment
     private $errors = [];
 
     /**
-     * @param ConvertOrder                         $convertOrder
+     * @param ConvertOrder       $convertOrder
      * @param ShipmentRepository $shipmentRepository
-     * @param Data  $postnlHelper
+     * @param Data               $postnlHelper
+     * @param InventorySource    $inventorySource
      */
     public function __construct(
         ConvertOrder $convertOrder,
         ShipmentRepository $shipmentRepository,
-        Data $postnlHelper
+        Data $postnlHelper,
+        InventorySource $inventorySource
     ) {
-        $this->convertOrder = $convertOrder;
+        $this->convertOrder       = $convertOrder;
         $this->shipmentRepository = $shipmentRepository;
-        $this->postNLHelper = $postnlHelper;
+        $this->postNLHelper       = $postnlHelper;
+        $this->inventorySource    = $inventorySource;
     }
 
     /**
@@ -219,6 +227,8 @@ class CreateShipment
     {
         $this->shipment->register();
         $order = $this->shipment->getOrder();
+        $this->inventorySource->setSource($order, $this->getShippingItems());
+
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus('processing');
 
@@ -226,7 +236,7 @@ class CreateShipment
             $this->shipment->save();
             $order->save();
         } catch (\Exception $exception) {
-            $message = $this->handleExceptionForPosibleSoapErrors($exception);
+            $message = $this->handleExceptionForPossibleSoapErrors($exception);
             $localizedErrorMessage = __($message)->render();
             $this->errors[] = $localizedErrorMessage;
             $this->shipment = false;
@@ -235,20 +245,31 @@ class CreateShipment
         return $this;
     }
 
+    private function getShippingItems()
+    {
+        $shippingItems = [];
+
+        foreach ($this->shipment->getItems() as $shipmentItem) {
+            $shippingItems[$shipmentItem->getProductId()] = (string)$shipmentItem->getQty();
+        }
+
+        return $shippingItems;
+    }
+
     /**
      * @param \Exception $exception
      *
      * @return \Magento\Framework\Phrase|string
      */
-    private function handleExceptionForPosibleSoapErrors(\Exception $exception)
+    private function handleExceptionForPossibleSoapErrors(\Exception $exception)
     {
-        if (!$exception->getErrors() || !is_array($exception->getErrors())) {
+        if (!method_exists($exception, 'getErrors') || !$exception->getErrors() || !is_array($exception->getErrors())) {
             return $exception->getMessage();
         }
 
         $message =  __('[POSTNL-0010] - An error occurred while processing this action.');
         foreach ($exception->getErrors() as $error) {
-            $message .= ' '. (string) $error;
+            $message .= ' ' . (string) $error;
         }
 
         return $message;

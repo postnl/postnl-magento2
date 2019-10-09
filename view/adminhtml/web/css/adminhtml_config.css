@@ -351,7 +351,6 @@
     float:left;
     width: 50px;
     height: 37px;
-
     content: ' ';
     background-image: url(../images/postnl_logo_50.png) !important;
     background-position: 0 2px;
@@ -390,6 +389,9 @@
     background-size: auto 29px;
 }
 
+.postnl-config-page .page-main-actions .page-actions:not(._fixed) .page-actions-inner:before {
+    margin-left: 80px;
+}
 
 .postnl-config-page .page-main-actions .page-actions .page-actions-inner:after {
     background-image: url(../images/logo_tig.png) !important;

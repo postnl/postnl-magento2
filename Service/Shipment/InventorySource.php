@@ -18,7 +18,7 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
+ * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
@@ -29,49 +29,46 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Timeframe\Filters\Days;
+namespace TIG\PostNL\Service\Shipment;
 
-use TIG\PostNL\Config\Provider\ShippingOptions;
-use TIG\PostNL\Helper\Data;
-use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
+use Magento\Sales\Model\Order\ShipmentFactory;
 
-class Sunday implements DaysFilterInterface
+class InventorySource
 {
     /**
-     * @var Data
+     * @var ShipmentFactory
      */
-    private $helper;
-    /**
-     * @var ShippingOptions
-     */
-    private $shippingOptions;
+    private $shipmentFactory;
 
+    /**
+     * InventorySource constructor.
+     *
+     * @param ShipmentFactory $shipmentFactory
+     */
     public function __construct(
-        Data $helper,
-        ShippingOptions $shippingOptions
+        ShipmentFactory $shipmentFactory
     ) {
-        $this->helper = $helper;
-        $this->shippingOptions = $shippingOptions;
+        $this->shipmentFactory = $shipmentFactory;
     }
 
     /**
-     * @param object|array $days
+     * Magento uses an afterCreate plugin on the shipmentFactory to set the SourceCode. In the default flow Magento
+     * runs this code when you open the Create Shipment page. This behaviour doesn't occur in this flow, so we force
+     * that flow to happen here.
      *
-     * @return array
+     * @param $order
+     * @param $shipmentItems
+     *
+     * @return Shipment
      */
-    public function filter($days)
+    public function setSource($order, $shipmentItems)
     {
-        if ($this->shippingOptions->isSundayDeliveryActive()) {
-            return $days;
-        }
+        /** @var Shipment $shipment */
+        $shipment = $this->shipmentFactory->create(
+            $order,
+            $shipmentItems
+        );
 
-        $filtered = array_filter($days, function ($day) {
-            $date = $day->Date;
-            $dayOfWeek = $this->helper->getDayOrWeekNumber($date, 'w');
-
-            return $dayOfWeek !== 7;
-        });
-
-        return array_values($filtered);
+        return $shipment;
     }
 }

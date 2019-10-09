@@ -29,6 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Test\Unit\Webservices\Endpoints;
 
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
@@ -62,7 +63,7 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
                 ['country' => 'DE', 'postcode' => '10179', 'delivery_date' => null],
                 ['country' => 'NL', 'postcode' => '2132WT', 'delivery_date' => '19-11-2016'],
             ],
-            'Reverse date' => [
+            'Reverse date'      => [
                 ['country' => 'NL', 'postcode' => '1014 BA', 'delivery_date' => '2016-11-19'],
                 ['country' => 'NL', 'postcode' => '1014BA', 'delivery_date' => '19-11-2016'],
             ],
@@ -89,10 +90,12 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
 
         $orderMock = $this->getMock(OrderInterface::class);
         $this->mockFunction($orderMock, 'getDeliveryDate', $input['delivery_date']);
-        $falbackMock  = $this->deliveryDateFallbackMock();
+        $fallbackMock = $this->deliveryDateFallbackMock();
+        $optionsMock  = $this->optionsMock();
 
         $instance = $this->getInstance([
-            'dateFallback' => $falbackMock
+            'dateFallback'     => $fallbackMock,
+            'timeframeOptions' => $optionsMock
         ]);
         $instance->setParameters($address, 1, $orderMock);
 
@@ -106,17 +109,29 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
+    private function optionsMock()
+    {
+        $optionsMock     = $this->getFakeMock(\TIG\PostNL\Service\Timeframe\Options::class)->getMock();
+        $optionsExpected = $optionsMock->expects($this->any());
+        $optionsExpected->method('get');
+        $optionsExpected->willReturn(['Daytime']);
+
+        return $optionsMock;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
     private function deliveryDateFallbackMock()
     {
         $fallbackMock = $this->getFakeMock(DeliveryDateFallback::class)->getMock();
-        $getFalback = $fallbackMock->expects($this->any());
-        $getFalback->method('get');
-        $getFalback->willReturn('19-11-2016');
+        $getFallback  = $fallbackMock->expects($this->any());
+        $getFallback->method('get');
+        $getFallback->willReturn('19-11-2016');
 
-        $getFalback2 = $fallbackMock->expects($this->any());
-        $getFalback2->method('getDate');
-        $getFalback2->willReturn('19-11-2016');
-
+        $getFallback2 = $fallbackMock->expects($this->any());
+        $getFallback2->method('getDate');
+        $getFallback2->willReturn('19-11-2016');
 
         return $fallbackMock;
     }

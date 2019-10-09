@@ -36,7 +36,7 @@ use TIG\PostNL\Config\CheckoutConfiguration\IsShippingOptionsActive;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Quote\CheckIfQuoteHasOption;
-use TIG\PostNL\Service\Order\ProductCodeAndType;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Test\TestCase;
 
 class IsShippingOptionsActiveTest extends TestCase
@@ -680,7 +680,7 @@ class IsShippingOptionsActiveTest extends TestCase
         $quoteHasOption = $this->getFakeMock(CheckIfQuoteHasOption::class)->getMock();
 
         $extraAtHomeGetValueExpects = $quoteHasOption->method('get');
-        $extraAtHomeGetValueExpects->with(ProductCodeAndType::OPTION_EXTRAATHOME);
+        $extraAtHomeGetValueExpects->with(ProductInfo::OPTION_EXTRAATHOME);
         $extraAtHomeGetValueExpects->willReturn($isExtraAtHome);
 
         /** @var IsShippingOptionsActive $instance */

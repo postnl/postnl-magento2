@@ -29,49 +29,30 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Timeframe\Filters\Days;
+namespace TIG\PostNL\Config\Provider;
 
-use TIG\PostNL\Config\Provider\ShippingOptions;
-use TIG\PostNL\Helper\Data;
-use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
-
-class Sunday implements DaysFilterInterface
+class PepsConfiguration extends AbstractConfigProvider
 {
-    /**
-     * @var Data
-     */
-    private $helper;
-    /**
-     * @var ShippingOptions
-     */
-    private $shippingOptions;
+    const XPATH_BARCODE_TYPE  = 'tig_postnl/peps/barcode_type';
+    const XPATH_BARCODE_RANGE = 'tig_postnl/peps/barcode_range';
 
-    public function __construct(
-        Data $helper,
-        ShippingOptions $shippingOptions
-    ) {
-        $this->helper = $helper;
-        $this->shippingOptions = $shippingOptions;
+    /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
+    public function getBarcodeType($storeId = null)
+    {
+        return $this->getConfigFromXpath(static::XPATH_BARCODE_TYPE, $storeId);
     }
 
     /**
-     * @param object|array $days
+     * @param null $storeId
      *
-     * @return array
+     * @return mixed
      */
-    public function filter($days)
+    public function getBarcodeRange($storeId = null)
     {
-        if ($this->shippingOptions->isSundayDeliveryActive()) {
-            return $days;
-        }
-
-        $filtered = array_filter($days, function ($day) {
-            $date = $day->Date;
-            $dayOfWeek = $this->helper->getDayOrWeekNumber($date, 'w');
-
-            return $dayOfWeek !== 7;
-        });
-
-        return array_values($filtered);
+        return $this->getConfigFromXpath(static::XPATH_BARCODE_RANGE, $storeId);
     }
 }
