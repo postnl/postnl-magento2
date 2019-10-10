@@ -33,6 +33,7 @@ namespace TIG\PostNL\Observer\SalesOrderSaveAfter;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Quote\Model\Quote\Address\ToOrderAddress;
 use Magento\Sales\Model\Order\AddressFactory;
@@ -63,42 +64,48 @@ class AddressToOrder implements ObserverInterface
     private $orderRepository;
 
     /**
-     * @param ToOrderAddress  $toOrderAddress
-     * @param PickupAddress   $pickupAddress
-     * @param AddressFactory  $addressFactory
-     * @param OrderRepository $orderRepository
+     * @var CartRepositoryInterface
+     */
+    private $quoteRepository;
+
+    /**
+     * @param ToOrderAddress          $toOrderAddress
+     * @param PickupAddress           $pickupAddress
+     * @param AddressFactory          $addressFactory
+     * @param OrderRepository         $orderRepository
+     * @param CartRepositoryInterface $quoteRepository
      */
     public function __construct(
         ToOrderAddress $toOrderAddress,
         PickupAddress $pickupAddress,
         AddressFactory $addressFactory,
-        OrderRepository $orderRepository
+        OrderRepository $orderRepository,
+        CartRepositoryInterface $quoteRepository
     ) {
         $this->quoteAddressToOrderAddress = $toOrderAddress;
         $this->pickupAddressHelper = $pickupAddress;
         $this->addressFactory = $addressFactory;
         $this->orderRepository = $orderRepository;
+        $this->quoteRepository = $quoteRepository;
     }
 
     /**
      * @param Observer $observer
      *
      * @return $this
+     * @throws Exception
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute(Observer $observer)
     {
         /** @var Order $order */
         $order         = $observer->getData('order');
-        $quotePgAddres = $this->pickupAddressHelper->getPakjeGemakAddressInQuote($order->getQuoteId());
         $pgAddress     = false;
         $postnlOrder   = $this->getPostNLOrder($order);
 
-        if ($quotePgAddres->getId() && $this->shouldAdd($order, $postnlOrder)) {
-            /** @var Order\Address $orderPgAddress */
-            $orderPgAddress = $this->quoteAddressToOrderAddress->convert($quotePgAddres);
-            $pgAddress      = $this->createOrderAddress($orderPgAddress, $order);
-            $order->addAddress($pgAddress);
-        }
+        $this->addPgAddress($order, $postnlOrder);
+
 
         if (false !== $pgAddress && $postnlOrder->getId()) {
             $postnlOrder->setData('pg_order_address_id', $pgAddress->getId());
@@ -106,6 +113,28 @@ class AddressToOrder implements ObserverInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @param $order
+     * @param $postnlOrder
+     *
+     * @throws Exception
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function addPgAddress($order, $postnlOrder)
+    {
+        $quotePgAddress = $this->pickupAddressHelper->getPakjeGemakAddressInQuote($order->getQuoteId());
+
+        if ($quotePgAddress->getId() && $this->shouldAdd($order, $postnlOrder)) {
+            $quote = $this->quoteRepository->get($order->getQuoteId());
+            $quotePgAddress->setQuote($quote);
+
+            /** @var Order\Address $orderPgAddress */
+            $orderPgAddress = $this->quoteAddressToOrderAddress->convert($quotePgAddress);
+            $pgAddress      = $this->createOrderAddress($orderPgAddress, $order);
+            $order->addAddress($pgAddress);
+        }
     }
 
     /**
