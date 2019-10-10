@@ -106,12 +106,6 @@ class AddressToOrder implements ObserverInterface
 
         $this->addPgAddress($order, $postnlOrder);
 
-
-        if (false !== $pgAddress && $postnlOrder->getId()) {
-            $postnlOrder->setData('pg_order_address_id', $pgAddress->getId());
-            $this->orderRepository->save($postnlOrder);
-        }
-
         return $this;
     }
 
@@ -134,6 +128,11 @@ class AddressToOrder implements ObserverInterface
             $orderPgAddress = $this->quoteAddressToOrderAddress->convert($quotePgAddress);
             $pgAddress      = $this->createOrderAddress($orderPgAddress, $order);
             $order->addAddress($pgAddress);
+        }
+
+        if (false !== $pgAddress && $postnlOrder->getId()) {
+            $postnlOrder->setData('pg_order_address_id', $pgAddress->getId());
+            $this->orderRepository->save($postnlOrder);
         }
     }
 
