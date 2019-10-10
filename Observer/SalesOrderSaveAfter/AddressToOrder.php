@@ -101,7 +101,6 @@ class AddressToOrder implements ObserverInterface
     {
         /** @var Order $order */
         $order         = $observer->getData('order');
-        $pgAddress     = false;
         $postnlOrder   = $this->getPostNLOrder($order);
 
         $this->addPgAddress($order, $postnlOrder);
@@ -118,6 +117,7 @@ class AddressToOrder implements ObserverInterface
      */
     private function addPgAddress($order, $postnlOrder)
     {
+        $pgAddress      = false;
         $quotePgAddress = $this->pickupAddressHelper->getPakjeGemakAddressInQuote($order->getQuoteId());
 
         if ($quotePgAddress->getId() && $this->shouldAdd($order, $postnlOrder)) {
