@@ -121,16 +121,17 @@ class Shipments
     private function getAddressData($shippingAddress, $addressType = '01')
     {
         $streetData   = $this->getStreetData($shippingAddress);
+        $houseNr = isset($streetData['housenumber']) ? $streetData['housenumber'] : $shippingAddress->getStreetLine(2);
+        $houseNrExt = $shippingAddress->getStreetLine(3);
+        $houseNrExt = (isset($streetData['housenumberExtension']) ? $streetData['housenumberExtension'] : $houseNrExt);
         $addressArray = [
             'AddressType' => $addressType,
             'FirstName'   => $this->getFirstName($shippingAddress),
             'Name'        => $shippingAddress->getLastname(),
             'CompanyName' => $shippingAddress->getCompany(),
             'Street'      => $streetData['street'][0],
-            'HouseNr'     => isset($streetData['housenumber']) ? $streetData['housenumber']
-                : $shippingAddress->getStreetLine(2),
-            'HouseNrExt'  => isset($streetData['housenumberExtension']) ? $streetData['housenumberExtension']
-                : $shippingAddress->getStreetLine(3),
+            'HouseNr'     => $houseNr,
+            'HouseNrExt'  => $houseNrExt,
             'Zipcode'     => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode())),
             'City'        => $shippingAddress->getCity(),
             'Region'      => $shippingAddress->getRegion(),
