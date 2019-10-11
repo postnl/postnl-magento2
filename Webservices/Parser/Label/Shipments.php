@@ -130,10 +130,8 @@ class Shipments
             'Name'        => $shippingAddress->getLastname(),
             'CompanyName' => $shippingAddress->getCompany(),
             'Street'      => $streetData['street'][0],
-            // @codingStandardsIgnoreLine
-            'HouseNr'     => isset($streetData['housenumber']) ? $streetData['housenumber'] : $shippingAddress->getStreetLine(2),
-            // @codingStandardsIgnoreLine
-            'HouseNrExt'  => isset($streetData['housenumberExtension']) ? $streetData['housenumberExtension'] : $shippingAddress->getStreetLine(3),
+            'HouseNr'     => $houseNr,
+            'HouseNrExt'  => $houseNrExt,
             'Zipcode'     => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode())),
             'City'        => $shippingAddress->getCity(),
             'Region'      => $shippingAddress->getRegion(),
