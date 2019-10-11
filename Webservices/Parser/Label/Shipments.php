@@ -31,11 +31,12 @@
  */
 namespace TIG\PostNL\Webservices\Parser\Label;
 
-use TIG\PostNL\Service\Shipment\Data as ShipmentData;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\Order\Address;
-use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Helper\AddressEnhancer;
-use \Magento\Framework\Message\ManagerInterface;
+use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Service\Shipment\Data as ShipmentData;
 
 class Shipments
 {
@@ -54,19 +55,24 @@ class Shipments
      */
     private $messageManager;
 
+    /** @var ReturnOptions */
+    private $returnOptions;
+
     /**
-     * @param ShipmentData $shipmentData
-     * @param AddressEnhancer $addressEnhancer
-     * @param ManagerInterface $messageManager
+     * @param ShipmentData         $shipmentData
+     * @param AddressEnhancer      $addressEnhancer
+     * @param ManagerInterface     $messageManager
      */
     public function __construct(
         ShipmentData $shipmentData,
         AddressEnhancer $addressEnhancer,
-        ManagerInterface $messageManager
+        ManagerInterface $messageManager,
+        ReturnOptions $returnOptions
     ) {
         $this->shipmentData = $shipmentData;
         $this->addressEnhancer = $addressEnhancer;
         $this->messageManager = $messageManager;
+        $this->returnOptions = $returnOptions;
     }
 
     /**
@@ -74,6 +80,7 @@ class Shipments
      * @param          $shipmentNumber
      *
      * @return array
+     * @throws \TIG\PostNL\Exception
      */
     public function get(Shipment $postnlShipment, $shipmentNumber)
     {
@@ -85,6 +92,13 @@ class Shipments
 
         if ($postnlOrder->getIsPakjegemak()) {
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
+        }
+
+        $order = $shipment->getOrder();
+        $shippingAddress = $order->getShippingAddress();
+
+        if ($this->canReturnNl() || $this->canReturnBe()) {
+            $address[] = $this->getCorrectReturnAddress($shippingAddress->getCountryId());
         }
 
         $shipmentData = $this->shipmentData->get($postnlShipment, $address, $contact, $shipmentNumber);
@@ -113,9 +127,10 @@ class Shipments
 
     /**
      * @param Address $shippingAddress
-     * @param string   $addressType
+     * @param string  $addressType
      *
      * @return array
+     * @throws \TIG\PostNL\Exception
      */
     private function getAddressData($shippingAddress, $addressType = '01')
     {
@@ -141,6 +156,7 @@ class Shipments
      * @param Address $shippingAddress
      *
      * @return array
+     * @throws \TIG\PostNL\Exception
      */
     private function getStreetData($shippingAddress)
     {
@@ -165,8 +181,57 @@ class Shipments
     {
         $name = $shippingAddress->getFirstname();
         if ($shippingAddress->getMiddlename()) {
-            $name .= ' ' .$shippingAddress->getMiddlename();
+            $name .= ' ' . $shippingAddress->getMiddlename();
         }
         return $name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canReturnNl()
+    {
+        return $this->returnOptions->isReturnNlActive();
+    }
+
+    /**
+     * @return bool
+     */
+    public function canReturnBe()
+    {
+        return $this->returnOptions->isReturnBeActive();
+    }
+
+    /**
+     * @param $countryCode
+     *
+     * @return array
+     */
+    private function getCorrectReturnAddress($countryCode)
+    {
+        if ($countryCode == 'NL' || $countryCode == 'BE') {
+            return $this->getReturnAddress($countryCode);
+        }
+    }
+
+    private function getReturnAddress($countryCode)
+    {
+        $city = 'getCity' . $countryCode;
+        $company = 'getCompany' . $countryCode;
+        $houseNo = 'getHouseNumber' . $countryCode;
+        $street  = 'getFreepostNumber' . $countryCode;
+        $zipcode = 'getZipcode' . $countryCode;
+
+        $data = [
+            'AddressType'      => '08',
+            'City'             => $this->returnOptions->$city(),
+            'CompanyName'      => $this->returnOptions->$company(),
+            'Countrycode'      => $countryCode,
+            'HouseNr'          => $this->returnOptions->$houseNo(),
+            'Street'           => $this->returnOptions->$street(),
+            'Zipcode'          => $this->returnOptions->$zipcode(),
+        ];
+
+        return $data;
     }
 }

@@ -35,7 +35,7 @@
 
     <!-- Returns BE -->
 
-    <group id="returns_be" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="returns_be" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Returns BE</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
@@ -46,10 +46,10 @@
         <field id="returns_be_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Activate returns</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>tig_postnl/returns_nl/returns_be_active</config_path>
+            <config_path>tig_postnl/returns_be/returns_be_active</config_path>
         </field>
 
-        <field id="company" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="company" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Company</label>
             <config_path>tig_postnl/returns_be/company</config_path>
             <depends>
@@ -57,7 +57,7 @@
             </depends>
         </field>
 
-        <field id="freepost_number" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="freepost_number" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Freepost number</label>
             <comment><![CDATA[You can apply for a freepost number on <a href='http://www.postnl.nl/zakelijke-oplossingen/ontvangen/antwoordnummer/?searchResult=position1' target='_blank' title='Request a freepost number.'>this</a> page.]]></comment>
             <config_path>tig_postnl/returns_be/freepost_number</config_path>
@@ -66,9 +66,9 @@
             </depends>
         </field>
 
-        <field id="postcode" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Postcode</label>
-            <config_path>tig_postnl/returns_be/postcode</config_path>
+        <field id="zipcode" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Zipcode</label>
+            <config_path>tig_postnl/returns_be/zipcode</config_path>
             <depends>
                 <field id="returns_be_active">1</field>
             </depends>
