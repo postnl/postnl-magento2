@@ -42,6 +42,7 @@ class ReturnOptions extends AbstractConfigProvider
     const XPATH_RETURN_NL_HOUSENUMBER = 'tig_postnl/returns_nl/housenumber';
     const XPATH_RETURN_NL_FREEPOST_NUMBER = 'tig_postnl/returns_nl/freepost_number';
     const XPATH_RETURN_NL_ZIPCODE = 'tig_postnl/returns_nl/zipcode';
+    const XPATH_RETURN_NL_CUSTOMER_CODE = 'tig_postnl/returns_nl/customer_code';
 
     const XPATH_RETURN_IS_ACTIVE_BE = 'tig_postnl/returns_be/returns_be_active';
     const XPATH_RETURN_BE_CITY = 'tig_postnl/returns_be/city';
@@ -49,6 +50,7 @@ class ReturnOptions extends AbstractConfigProvider
     const XPATH_RETURN_BE_HOUSENUMBER = 'tig_postnl/returns_be/housenumber';
     const XPATH_RETURN_BE_FREEPOST_NUMBER = 'tig_postnl/returns_be/freepost_number';
     const XPATH_RETURN_BE_ZIPCODE = 'tig_postnl/returns_be/zipcode';
+    const XPATH_RETURN_BE_CUSTOMER_CODE = 'tig_postbe/returns_be/customer_code';
 
     /**
      * @return bool
@@ -144,5 +146,21 @@ class ReturnOptions extends AbstractConfigProvider
     public function getZipcodeBE()
     {
         return $this->getConfigFromXpath(self::XPATH_RETURN_BE_ZIPCODE);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomerCodeNL()
+    {
+        return $this->getConfigFromXpath(self::XPATH_RETURN_NL_CUSTOMER_CODE);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomerCodeBE()
+    {
+        return $this->getConfigFromXpath(self::XPATH_RETURN_BE_CUSTOMER_CODE);
     }
 }

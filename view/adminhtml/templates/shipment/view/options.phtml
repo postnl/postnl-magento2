@@ -102,6 +102,15 @@
                         </span>
                     </span>
                 </li>
+                <?php $returnBarcode = $postNLShipment->getReturnBarcode(); ?>
+                <?php if (isset($returnBarcode)): ?>
+                <li>
+                    <span class="type"><?php /* @escapeNotVerified */ echo __('Return Barcode:'); ?></span>
+                    <span class="value return_barcode">
+                        <?php echo $postNLShipment->getReturnBarcode(); ?>
+                    </span>
+                </li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>

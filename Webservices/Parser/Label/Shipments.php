@@ -29,6 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Webservices\Parser\Label;
 
 use Magento\Framework\Message\ManagerInterface;
@@ -59,9 +60,9 @@ class Shipments
     private $returnOptions;
 
     /**
-     * @param ShipmentData         $shipmentData
-     * @param AddressEnhancer      $addressEnhancer
-     * @param ManagerInterface     $messageManager
+     * @param ShipmentData     $shipmentData
+     * @param AddressEnhancer  $addressEnhancer
+     * @param ManagerInterface $messageManager
      */
     public function __construct(
         ShipmentData $shipmentData,
@@ -69,10 +70,10 @@ class Shipments
         ManagerInterface $messageManager,
         ReturnOptions $returnOptions
     ) {
-        $this->shipmentData = $shipmentData;
+        $this->shipmentData    = $shipmentData;
         $this->addressEnhancer = $addressEnhancer;
-        $this->messageManager = $messageManager;
-        $this->returnOptions = $returnOptions;
+        $this->messageManager  = $messageManager;
+        $this->returnOptions   = $returnOptions;
     }
 
     /**
@@ -84,10 +85,10 @@ class Shipments
      */
     public function get(Shipment $postnlShipment, $shipmentNumber)
     {
-        $shipment = $postnlShipment->getShipment();
+        $shipment    = $postnlShipment->getShipment();
         $postnlOrder = $postnlShipment->getPostNLOrder();
 
-        $contact = $this->getContactData($shipment);
+        $contact   = $this->getContactData($shipment);
         $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
 
         if ($postnlOrder->getIsPakjegemak()) {
@@ -114,7 +115,7 @@ class Shipments
     private function getContactData($shipment)
     {
         $shippingAddress = $shipment->getShippingAddress();
-        $order = $shipment->getOrder();
+        $order           = $shipment->getOrder();
 
         $contact = [
             'ContactType' => '01', // Receiver
@@ -135,18 +136,21 @@ class Shipments
     private function getAddressData($shippingAddress, $addressType = '01')
     {
         $streetData   = $this->getStreetData($shippingAddress);
+        $houseNr = isset($streetData['housenumber']) ? $streetData['housenumber'] : $shippingAddress->getStreetLine(2);
+        $houseNrExt = $shippingAddress->getStreetLine(3);
+        $houseNrExt = (isset($streetData['housenumberExtension']) ? $streetData['housenumberExtension'] : $houseNrExt);
         $addressArray = [
-            'AddressType'      => $addressType,
-            'FirstName'        => $this->getFirstName($shippingAddress),
-            'Name'             => $shippingAddress->getLastname(),
-            'CompanyName'      => $shippingAddress->getCompany(),
-            'Street'           => $streetData['street'][0],
-            'HouseNr'          => isset($streetData['housenumber']) ? $streetData['housenumber'] : $shippingAddress->getStreetLine(2),
-            'HouseNrExt'       => isset($streetData['housenumberExtension']) ? $streetData['housenumberExtension'] : $shippingAddress->getStreetLine(3),
-            'Zipcode'          => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode())),
-            'City'             => $shippingAddress->getCity(),
-            'Region'           => $shippingAddress->getRegion(),
-            'Countrycode'      => $shippingAddress->getCountryId(),
+            'AddressType' => $addressType,
+            'FirstName'   => $this->getFirstName($shippingAddress),
+            'Name'        => $shippingAddress->getLastname(),
+            'CompanyName' => $shippingAddress->getCompany(),
+            'Street'      => $streetData['street'][0],
+            'HouseNr'     => $houseNr,
+            'HouseNrExt'  => $houseNrExt,
+            'Zipcode'     => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode())),
+            'City'        => $shippingAddress->getCity(),
+            'Region'      => $shippingAddress->getRegion(),
+            'Countrycode' => $shippingAddress->getCountryId(),
         ];
 
         return $addressArray;
@@ -183,6 +187,7 @@ class Shipments
         if ($shippingAddress->getMiddlename()) {
             $name .= ' ' . $shippingAddress->getMiddlename();
         }
+
         return $name;
     }
 

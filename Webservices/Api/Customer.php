@@ -33,6 +33,7 @@ namespace TIG\PostNL\Webservices\Api;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 
 class Customer
 {
@@ -53,25 +54,31 @@ class Customer
      */
     private $storeId = null;
 
+    /** @var ReturnOptions  */
+    private $returnOptions;
+
     /**
      * @param AccountConfiguration $accountConfiguration
      * @param AddressConfiguration $addressConfiguration
+     * @param ReturnOptions        $returnOptions
      */
     public function __construct(
         AccountConfiguration $accountConfiguration,
-        AddressConfiguration $addressConfiguration
+        AddressConfiguration $addressConfiguration,
+        ReturnOptions $returnOptions
     ) {
         $this->accountConfiguration = $accountConfiguration;
         $this->addressConfiguration = $addressConfiguration;
+        $this->returnOptions = $returnOptions;
     }
 
     /**
      * @return array
      */
-    public function get()
+    public function get($isReturnBarcode = false)
     {
         $customer = [
-            'CustomerCode'   => $this->accountConfiguration->getCustomerCode($this->storeId),
+            'CustomerCode'   => $isReturnBarcode ? $this->getReturnCustomerCode() : $this->accountConfiguration->getCustomerCode($this->storeId),
             'CustomerNumber' => $this->accountConfiguration->getCustomerNumber($this->storeId),
         ];
 
@@ -114,5 +121,10 @@ class Customer
     public function setStoreId($storeId)
     {
         $this->storeId = $storeId;
+    }
+
+    public function getReturnCustomerCode()
+    {
+        return $this->returnOptions->getCustomerCodeNL();
     }
 }

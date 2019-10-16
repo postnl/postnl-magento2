@@ -110,6 +110,7 @@ class Range
      * @param string $type
      *
      * @return array|string
+     * @throws PostnlException
      */
     public function getByCountryId($countryId, $storeId = null, $type = '')
     {

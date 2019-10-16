@@ -95,6 +95,8 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
 
     const FIELD_DOWNPARTNER_BARCODE  = 'downpartner_barcode';
 
+    const FIELD_RETURN_BARCODE = 'return_barcode';
+
     /**
      * @var string
      */
@@ -887,5 +889,10 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
          */
         // @codingStandardsIgnoreLine
         return new \DateTime($deliveryDate);
+    }
+
+    public function setReturnBarcode($value)
+    {
+        return $this->setData(static::FIELD_RETURN_BARCODE, $value);
     }
 }

@@ -32,14 +32,15 @@
 
 namespace TIG\PostNL\Service\Handler;
 
+use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
+use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
+use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory;
 use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Model\ShipmentBarcodeFactory;
 use TIG\PostNL\Webservices\Endpoints\Barcode as BarcodeEndpoint;
-use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory;
-use \Magento\Framework\Exception\LocalizedException;
-use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
+use TIG\PostNL\Webservices\Parser\Label\Shipments;
 
 // @codingStandardsIgnoreFile
 class BarcodeHandler
@@ -79,30 +80,37 @@ class BarcodeHandler
      */
     private $storeId;
 
+    private $shipments;
+
     /**
      * @param BarcodeEndpoint             $barcodeEndpoint
      * @param ShipmentRepositoryInterface $shipmentRepository
      * @param ShipmentBarcodeFactory      $shipmentBarcodeFactory
      * @param CollectionFactory           $shipmentBarcodeCollectionFactory
      * @param ProductOptionsConfiguration $productOptionsConfiguration
+     * @param Shipments                   $shipments
      */
     public function __construct(
         BarcodeEndpoint $barcodeEndpoint,
         ShipmentRepositoryInterface $shipmentRepository,
         ShipmentBarcodeFactory $shipmentBarcodeFactory,
         CollectionFactory $shipmentBarcodeCollectionFactory,
-        ProductOptionsConfiguration $productOptionsConfiguration
+        ProductOptionsConfiguration $productOptionsConfiguration,
+        Shipments $shipments
     ) {
         $this->barcodeEndpoint = $barcodeEndpoint;
         $this->shipmentBarcodeCollectionFactory = $shipmentBarcodeCollectionFactory;
         $this->shipmentBarcodeFactory = $shipmentBarcodeFactory;
         $this->shipmentRepository = $shipmentRepository;
         $this->productOptionsConfiguration = $productOptionsConfiguration;
+        $this->shipments = $shipments;
     }
 
     /**
      * @param $magentoShipmentId
      * @param $countryId
+     *
+     * @throws LocalizedException
      */
     public function prepareShipment($magentoShipmentId, $countryId)
     {
@@ -119,6 +127,11 @@ class BarcodeHandler
         $mainBarcode = $this->generate($shipment);
         $shipment->setMainBarcode($mainBarcode);
         $this->shipmentRepository->save($shipment);
+
+        if ($this->shipments->canReturnNl() || $this->shipments->canReturnBe()) {
+            $shipment->setReturnBarcode($this->generate($shipment, true));
+            $this->shipmentRepository->save($shipment);
+        }
 
         if ($shipment->getParcelCount() > 1) {
             $this->addBarcodes($shipment, $mainBarcode);
@@ -162,14 +175,14 @@ class BarcodeHandler
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function generate(ShipmentInterface $shipment)
+    private function generate(ShipmentInterface $shipment, $isReturnBarcode = false)
     {
         $magentoShipment = $shipment->getShipment();
 
         $this->barcodeEndpoint->setCountryId($this->countryId);
         $this->barcodeEndpoint->setStoreId($magentoShipment->getStoreId());
         $this->setTypeByProductCode($shipment->getProductCode());
-        $response = $this->barcodeEndpoint->call();
+        $response = $this->barcodeEndpoint->call($isReturnBarcode);
 
         if (!is_object($response) || !isset($response->Barcode)) {
             // Should throw an exception otherwise the postnl flow will break.
@@ -188,7 +201,7 @@ class BarcodeHandler
     {
         if ($this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'priority_options')) {
             $this->barcodeEndpoint->setType('PEPS');
-            
+
             return;
         }
 
@@ -208,6 +221,11 @@ class BarcodeHandler
         $barcodeModel = $this->shipmentBarcodeFactory->create();
         $barcodeModel->setParentId($shipmentId);
         $barcodeModel->setType(ShipmentBarcode::BARCODE_TYPE_SHIPMENT);
+
+        if ('return') {
+            $barcodeModel->setType(ShipmentBarcode::BARCODE_TYPE_RETURN);
+        }
+
         $barcodeModel->setNumber($count);
         $barcodeModel->setValue($barcode);
 
