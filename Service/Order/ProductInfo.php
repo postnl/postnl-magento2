@@ -278,8 +278,8 @@ class ProductInfo {
 		$this->type = static::SHIPMENT_TYPE_DAYTIME;
 
         if ($country != 'NL') {
-        return;
-    }
+            return;
+        }
 
 		/** @var Quote $magentoQuote */
 		$magentoQuote         = $this->quote->getQuote();
