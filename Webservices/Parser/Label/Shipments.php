@@ -63,6 +63,7 @@ class Shipments
      * @param ShipmentData     $shipmentData
      * @param AddressEnhancer  $addressEnhancer
      * @param ManagerInterface $messageManager
+     * @param ReturnOptions    $returnOptions
      */
     public function __construct(
         ShipmentData $shipmentData,
@@ -87,7 +88,6 @@ class Shipments
     {
         $shipment    = $postnlShipment->getShipment();
         $postnlOrder = $postnlShipment->getPostNLOrder();
-
         $contact   = $this->getContactData($shipment);
         $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
 

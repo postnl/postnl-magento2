@@ -83,13 +83,14 @@ class AddReturnTracks
     public function addReturnTrack($shipment)
     {
         $returnItems = $this->getReturnItems($shipment);
+        $shipment = $shipment->getShipment();
 
         foreach ($returnItems as $item) {
             $track = $this->trackFactory->create();
             $track->setNumber($item->getValue());
             $track->setCarrierCode('tig_postnl');
             $track->setTitle('PostNL Return');
-            $shipment->getShipment()->addTrack($track);
+            $shipment->addTrack($track);
         }
 
         /**
