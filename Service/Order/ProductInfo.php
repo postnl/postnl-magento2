@@ -268,14 +268,19 @@ class ProductInfo {
 	/**
 	 * @param $country
 	 */
-	private function setDefaultProductOption($country) {
+	private function setDefaultProductOption($country)
+    {
 		$this->code = $this->productOptionsConfiguration->getDefaultProductOption();
 		if ($country == 'BE') {
 			$this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
 		}
-		
+
 		$this->type = static::SHIPMENT_TYPE_DAYTIME;
-		
+
+        if ($country != 'NL') {
+        return;
+    }
+
 		/** @var Quote $magentoQuote */
 		$magentoQuote         = $this->quote->getQuote();
 		$quoteTotal           = $magentoQuote->getBaseGrandTotal();
