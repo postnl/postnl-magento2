@@ -50,6 +50,7 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, Iden
     const FIELD_LABEL = 'label';
     const FIELD_TYPE = 'type';
     const FIELD_PRODUCT_CODE = 'product_code';
+    const FIELD_RETURN_LABEL = 'return_label';
 
     /**
      * @var string
@@ -188,5 +189,23 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, Iden
     public function getShipment()
     {
         return $this->shipmentRepository->getById($this->getParentId());
+    }
+
+    /**
+     * @return string
+     */
+    public function getReturnLabel()
+    {
+        return $this->getData(static::FIELD_RETURN_LABEL);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setReturnLabel($value)
+    {
+        return $this->setData(static::FIELD_RETURN_LABEL, $value);
     }
 }

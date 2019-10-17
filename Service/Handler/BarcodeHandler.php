@@ -41,6 +41,7 @@ use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Model\ShipmentBarcodeFactory;
 use TIG\PostNL\Webservices\Endpoints\Barcode as BarcodeEndpoint;
 use TIG\PostNL\Webservices\Parser\Label\Shipments;
+use TIG\PostNL\Service\Shipment\Barcode\AddReturnTracks;
 
 // @codingStandardsIgnoreFile
 class BarcodeHandler
@@ -80,7 +81,11 @@ class BarcodeHandler
      */
     private $storeId;
 
+    /** @var Shipments  */
     private $shipments;
+
+    /** @var AddReturnTracks */
+    private $addreturnTracks;
 
     /**
      * @param BarcodeEndpoint             $barcodeEndpoint
@@ -96,7 +101,8 @@ class BarcodeHandler
         ShipmentBarcodeFactory $shipmentBarcodeFactory,
         CollectionFactory $shipmentBarcodeCollectionFactory,
         ProductOptionsConfiguration $productOptionsConfiguration,
-        Shipments $shipments
+        Shipments $shipments,
+        AddReturnTracks $addReturnTracks
     ) {
         $this->barcodeEndpoint = $barcodeEndpoint;
         $this->shipmentBarcodeCollectionFactory = $shipmentBarcodeCollectionFactory;
@@ -104,6 +110,7 @@ class BarcodeHandler
         $this->shipmentRepository = $shipmentRepository;
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->shipments = $shipments;
+        $this->addreturnTracks = $addReturnTracks;
     }
 
     /**
@@ -133,9 +140,11 @@ class BarcodeHandler
             $this->shipmentRepository->save($shipment);
         }
 
-        if ($shipment->getParcelCount() > 1) {
+        if ($shipment->getParcelCount() > 1 || $shipment->getReturnBarcode()) {
             $this->addBarcodes($shipment, $mainBarcode);
         }
+
+        $this->addreturnTracks->addReturnTrack($shipment);
     }
 
     /**
@@ -162,6 +171,14 @@ class BarcodeHandler
             $barcodeModelCollection->addItem(
                 $this->createBarcode($shipment->getId(), $count, $this->generate($shipment))
             );
+
+            if ($this->shipments->canReturnNl() || $this->shipments->canReturnBe()) {
+                $isReturnBarcode = true;
+
+                $barcodeModelCollection->addItem(
+                    $this->createBarcode($shipment->getId(), $count, $this->generate($shipment, $isReturnBarcode), $isReturnBarcode)
+                );
+            }
         }
 
         $barcodeModelCollection->save();
@@ -215,14 +232,14 @@ class BarcodeHandler
      *
      * @return ShipmentBarcode
      */
-    private function createBarcode($shipmentId, $count, $barcode)
+    private function createBarcode($shipmentId, $count, $barcode, $isReturnBarcode = false)
     {
         /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
         $barcodeModel = $this->shipmentBarcodeFactory->create();
         $barcodeModel->setParentId($shipmentId);
         $barcodeModel->setType(ShipmentBarcode::BARCODE_TYPE_SHIPMENT);
 
-        if ('return') {
+        if ($isReturnBarcode) {
             $barcodeModel->setType(ShipmentBarcode::BARCODE_TYPE_RETURN);
         }
 

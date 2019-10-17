@@ -78,7 +78,8 @@ class Customer
     public function get($isReturnBarcode = false)
     {
         $customer = [
-            'CustomerCode'   => $isReturnBarcode ? $this->getReturnCustomerCode() : $this->accountConfiguration->getCustomerCode($this->storeId),
+            'CustomerCode'   => $isReturnBarcode ? $this->getReturnCustomerCode() :
+                $this->accountConfiguration->getCustomerCode($this->storeId),
             'CustomerNumber' => $this->accountConfiguration->getCustomerNumber($this->storeId),
         ];
 
