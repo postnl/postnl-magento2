@@ -891,8 +891,21 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         return new \DateTime($deliveryDate);
     }
 
+    /**
+     * @param string
+     *
+     * @return $this
+     */
     public function setReturnBarcode($value)
     {
         return $this->setData(static::FIELD_RETURN_BARCODE, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getReturnBarcode()
+    {
+        return $this->getData(static::FIELD_RETURN_BARCODE);
     }
 }

@@ -342,4 +342,15 @@ interface ShipmentInterface
      * @return bool
      */
     public function canChangeParcelCount();
+
+    /**
+     * @param string $value
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function setReturnBarcode($value);
+
+    /**
+     * @return string|null
+     */
+    public function getReturnBarcode();
 }
