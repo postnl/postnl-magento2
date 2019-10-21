@@ -114,6 +114,13 @@ abstract class AbstractTracking extends AbstractHelper
         $searchCriteria->setPageSize(1);
         /** @var \Magento\Framework\Api\SearchResults $list */
         $list = $this->postNLShipmentRepository->getList($searchCriteria->create());
+
+        if (!$list->getItems()) {
+            $searchCriteria = $this->searchCriteriaBuilder->addFilter('return_barcode', $trackingNumber);
+            $searchCriteria->setPageSize(1);
+            $list = $this->postNLShipmentRepository->getList($searchCriteria->create());
+        }
+
         return $list->getItems()[0];
     }
 
