@@ -73,12 +73,15 @@ class Customer
     }
 
     /**
+     * @param      $shipment
+     * @param bool $isReturnBarcode
+     *
      * @return array
      */
-    public function get($isReturnBarcode = false)
+    public function get($shipment = false, $isReturnBarcode = false)
     {
         $customer = [
-            'CustomerCode'   => $isReturnBarcode ? $this->getReturnCustomerCode() :
+            'CustomerCode'   => $isReturnBarcode ? $this->getReturnCustomerCode($shipment) :
                 $this->accountConfiguration->getCustomerCode($this->storeId),
             'CustomerNumber' => $this->accountConfiguration->getCustomerNumber($this->storeId),
         ];
@@ -124,8 +127,21 @@ class Customer
         $this->storeId = $storeId;
     }
 
-    public function getReturnCustomerCode()
+    /**
+     * @param $shipment
+     *
+     * @return mixed
+     */
+    public function getReturnCustomerCode($shipment)
     {
-        return $this->returnOptions->getCustomerCodeNL();
+        $shippingAddress = $shipment->getShippingAddress();
+
+        if ($shippingAddress->getCountryId() == 'NL') {
+            return $this->returnOptions->getCustomerCodeNL();
+        }
+
+        if ($shippingAddress->getCountryId() == 'BE') {
+            return $this->returnOptions->getCustomerCodeBE();
+        }
     }
 }

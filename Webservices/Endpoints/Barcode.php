@@ -120,7 +120,7 @@ class Barcode extends AbstractEndpoint
      * @throws \Magento\Framework\Webapi\Exception
      * @throws \TIG\PostNL\Webservices\Api\Exception
      */
-    public function call($isReturnBarcode = false)
+    public function call($shipment = null, $isReturnBarcode = false)
     {
         $this->validateRequiredValues();
 
@@ -128,7 +128,7 @@ class Barcode extends AbstractEndpoint
 
         $parameters = [
             'Message'  => $this->message->get(''),
-            'Customer' => $this->customer->get($isReturnBarcode),
+            'Customer' => $this->customer->get($isReturnBarcode, $shipment),
             'Barcode'  => [
                 'Type'  => $barcode['type'],
                 'Range' => $barcode['range'],
