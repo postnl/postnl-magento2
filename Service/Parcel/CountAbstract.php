@@ -42,18 +42,18 @@ use TIG\PostNL\Service\Product\CollectionByAttributeValue;
 abstract class CountAbstract extends CollectAbstract
 {
     const CALCULATE_LABELS_WEIGHT       = 'weight';
-    
+
     const CALCULATE_LABELS_PARCEL_COUNT = 'parcel_count';
-    
+
     /** @var \TIG\PostNL\Config\Provider\LabelAndPackingslipOptions */
     private $labelOptions;
-    
+
     /** @var $products */
     private $products;
-    
+
     /** @var $quantities */
     private $quantities;
-    
+
     /**
      * CountAbstract constructor.
      *
@@ -75,7 +75,7 @@ abstract class CountAbstract extends CollectAbstract
             $shippingOptions
         );
     }
-    
+
     /**
      * @param $weight
      * @param $items
@@ -88,20 +88,20 @@ abstract class CountAbstract extends CollectAbstract
         if (empty($this->products)) {
             return $this->getBasedOnWeight($weight);
         }
-        
+
         foreach ($items as $orderItem) {
             /** @var $orderItem OrderItemInterface */
             $this->quantities[$orderItem->getProductId()] = $orderItem->getQtyOrdered();
         }
-        
+
         $labelOption = $this->labelOptions->getCalculateLabels();
         if ($labelOption == self::CALCULATE_LABELS_PARCEL_COUNT) {
             return $this->calculateByParcelCount($weight, $items);
         }
-        
+
         return $this->calculateByWeight($weight, $items);
     }
-    
+
     /**
      * When 'parcel_count' is selected to calculate parcel count. Products without a
      * specified 'parcel_count' will still be calculated by weight.
@@ -118,22 +118,22 @@ abstract class CountAbstract extends CollectAbstract
         if (!$productsWithParcelCount) {
             return $this->getBasedOnWeight($weight);
         }
-        
+
         $subtractWeight = 0;
         foreach ($productsWithParcelCount as $item) {
             $parcelCount    += $this->getBasedOnParcelCount($item);
             $subtractWeight += $item->getWeight();
         }
-        
+
         $productsWithoutParcelCount = $this->getProductsWithoutParcelCount($items);
         if (!$productsWithoutParcelCount) {
             return $parcelCount;
         }
         $parcelCount += $this->getBasedOnWeight($weight - $subtractWeight);
-        
+
         return $parcelCount;
     }
-    
+
     /**
      * When 'weight' is selected to calculate parcel count. The total parcel count for
      * Extra@Home products is calculated separately.
@@ -149,22 +149,22 @@ abstract class CountAbstract extends CollectAbstract
         if (!$extraAtHomeProducts) {
             return $this->getBasedOnWeight($weight);
         }
-        
+
         $parcelCount    = 0;
         $subtractWeight = 0;
         foreach ($extraAtHomeProducts as $item) {
             $parcelCount    += $this->getBasedOnParcelCount($item);
             $subtractWeight += $item->getWeight();
         }
-        
+
         $weight = $weight - $subtractWeight;
         if ($weight > 0) {
             $parcelCount += $this->getBasedOnWeight($weight);
         }
-        
+
         return $parcelCount;
     }
-    
+
     /**
      * When 'weight' is selected to calculate parcel count.
      *
@@ -177,12 +177,17 @@ abstract class CountAbstract extends CollectAbstract
         $labelOption = $this->labelOptions->getCalculateLabels();
         // @codingStandardsIgnoreLine
         $maxWeight            = ($labelOption == self::CALCULATE_LABELS_WEIGHT) ? $this->labelOptions->getCalculateLabelsMaxWeight() : 20000;
+
+        if (!$maxWeight) {
+            $maxWeight = 20000;
+        }
+
         $remainingParcelCount = ceil($weight / $maxWeight);
         $weightCount          = $remainingParcelCount < 1 ? 1 : $remainingParcelCount;
-        
+
         return $weightCount;
     }
-    
+
     /**
      * Get parcel count of current item.
      *
@@ -195,14 +200,14 @@ abstract class CountAbstract extends CollectAbstract
         if (!isset($this->products[$item->getId()])) {
             return 0;
         }
-        
+
         /** @var ProductInterface $product */
         $product            = $this->products[$item->getId()];
         $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
         if ($productParcelCount) {
             return ($productParcelCount->getValue() * $this->quantities[$item->getId()]);
         }
-        
+
         return 0;
     }
 }

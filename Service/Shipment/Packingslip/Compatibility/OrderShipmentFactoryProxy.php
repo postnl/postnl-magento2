@@ -29,42 +29,50 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Config\CheckoutConfiguration;
+namespace TIG\PostNL\Service\Shipment\Packingslip\Compatibility;
 
-use TIG\PostNL\Config\CheckoutConfiguration\IsPakjegemakExpressActive;
-use TIG\PostNL\Config\Provider\ShippingOptions;
-use TIG\PostNL\Test\TestCase;
+use Magento\Framework\ObjectManagerInterface;
 
-class IsPakjegemakExpressActiveTest extends TestCase
+// @codingStandardsIgnoreFile
+class OrderShipmentFactoryProxy
 {
-    public $instanceClass = IsPakjegemakExpressActive::class;
 
-    public function getValueProvider()
+    /**
+     * @var ObjectManagerInterface
+     */
+    private $objectManager;
+
+    /**
+     * @var \Fooman\PdfCustomiser\Block\OrderShipmentFactory
+     */
+    private $subject;
+
+    /**
+     * @param ObjectManagerInterface $objectManager
+     */
+    public function __construct(ObjectManagerInterface $objectManager)
     {
-        return [
-            'is active' => [true],
-            'is not active' => [true],
-        ];
+        $this->objectManager = $objectManager;
     }
 
     /**
-     * @dataProvider getValueProvider
-     *
-     * @param $expected
+     * @return \Fooman\PdfCustomiser\Block\OrderShipmentFactory
      */
-    public function testGetValue($expected)
+    private function getSubject()
     {
-        $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
+        if (!$this->subject) {
+            $this->subject = $this->objectManager->get(\Fooman\PdfCustomiser\Block\OrderShipmentFactory::class);
+        }
+        return $this->subject;
+    }
 
-        $expects = $shippingOptions->expects($this->once());
-        $expects->method('isPakjegemakExpressActive');
-        $expects->willReturn($expected);
-
-        /** @var IsPakjegemakExpressActive $instance */
-        $instance = $this->getInstance([
-            'shippingOptions' => $shippingOptions,
-        ]);
-
-        $this->assertEquals($expected, $instance->getValue());
+    /**
+     * @param array $data
+     *
+     * @return \Fooman\PdfCustomiser\Block\OrderShipment
+     */
+    public function create(array $data = [])
+    {
+        return $this->getSubject()->create($data);
     }
 }

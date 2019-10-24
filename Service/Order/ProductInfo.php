@@ -137,7 +137,8 @@ class ProductInfo
         }
 
         if ($type == static::TYPE_PICKUP) {
-            $this->setPakjegemakProductOption($option);
+
+        $this->setPakjegemakProductOption($option);
 
             return $this->getInfo();
         }
@@ -179,6 +180,13 @@ class ProductInfo
         $this->type = static::SHIPMENT_TYPE_GP;
         $this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
 
+        if ($this->makeExceptionForEUPriority($country)) {
+            $this->type = static::SHIPMENT_TYPE_EPS;
+            $this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
+
+            return;
+        }
+
         if (in_array($country, PriorityCountries::GLOBALPACK)
             && $this->isPriorityProduct($this->code)
         ) {
@@ -186,6 +194,28 @@ class ProductInfo
         }
 
         $this->code = $this->productOptionsFinder->getDefaultGPOption()['value'];
+    }
+
+    /**
+     * Malta, Cyprus, Serbia and Croatia are Global Pack countries and EU PEPS countries. That's why
+     * we need a method specifically to switch back to PEPS if it is enabled for EPS.
+     *
+     * @param null $country
+     *
+     * @return bool
+     */
+    private function makeExceptionForEUPriority($country = null)
+    {
+        $epsCode = $this->productOptionsConfiguration->getDefaultEpsProductOption();
+        $EUPriorityCountries = array_diff(PriorityCountries::EPS, EpsCountries::ALL);
+
+        if (in_array($country, $EUPriorityCountries)
+            && $this->isPriorityProduct($epsCode)
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

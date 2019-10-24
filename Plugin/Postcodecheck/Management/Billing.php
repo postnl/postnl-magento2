@@ -60,7 +60,12 @@ class Billing
      * @return array
      */
     // @codingStandardsIgnoreLine
-    public function beforeAssign($subject, $cartId, AddressInterface $address, $shipping = false) {
+    public function beforeAssign($subject, $cartId, AddressInterface $address, $shipping = false)
+    {
+        if (!$address) {
+            return [$cartId, $address, $shipping];
+        }
+
         $attributes = $address->getExtensionAttributes();
         if (empty($attributes) || !$this->webshopConfig->getIsAddressCheckEnabled()) {
             return [$cartId, $address, $shipping];
@@ -75,9 +80,11 @@ class Billing
         }
 
         $address->setStreet(
-            $address->getStreet()[0] . ' ' .
-            $attributes->getTigHousenumber() . ' ' .
-            $attributes->getTigHousenumberAddition()
+            [
+                $address->getStreet()[0],
+                $attributes->getTigHousenumber(),
+                $attributes->getTigHousenumberAddition()
+            ]
         );
 
         return [$cartId, $address, $shipping];
