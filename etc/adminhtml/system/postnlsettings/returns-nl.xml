@@ -40,6 +40,9 @@
         <comment><![CDATA[By activating returns a return label is created when generating a label for the out shipment. To activate returns you need an answer number and a seperate customer code. For this, contact your account manager.]]></comment>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+        <depends>
+            <field id="returns_active">1</field>
+        </depends>
 
         <field id="returns_nl_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Activate returns</label>
@@ -101,8 +104,6 @@
             </depends>
             <validate>required-entry</validate>
         </field>
-
-
     </group>
 
 </include>

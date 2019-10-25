@@ -104,7 +104,6 @@
             </depends>
             <validate>required-entry</validate>
         </field>
-
     </group>
 
 </include>
