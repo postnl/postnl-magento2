@@ -140,8 +140,8 @@ class BarcodeHandler
         }
 
         if ($this->shipments->canReturnNl() || $this->shipments->canReturnBe() && $countryId == 'NL' || $countryId == 'BE') {
-            $this->addreturnTracks->addReturnTrack($shipment);
             $this->addReturnBarcodes($shipment);
+            $this->addreturnTracks->addReturnTrack($shipment);
         }
     }
 
