@@ -87,8 +87,6 @@ class Barcode extends AbstractEndpoint
     private $type = '';
     
     /**
-     * Barcode constructor.
-     *
      * @param \TIG\PostNL\Webservices\Soap                   $soap
      * @param \TIG\PostNL\Service\Shipment\Barcode\Range     $barcodeRange
      * @param \TIG\PostNL\Webservices\Api\Customer           $customer
@@ -113,6 +111,7 @@ class Barcode extends AbstractEndpoint
     }
 
     /**
+     * @param bool $shipment
      * @param bool $isReturnBarcode
      *
      * @return mixed|\stdClass
@@ -120,7 +119,7 @@ class Barcode extends AbstractEndpoint
      * @throws \Magento\Framework\Webapi\Exception
      * @throws \TIG\PostNL\Webservices\Api\Exception
      */
-    public function call($shipment = null, $isReturnBarcode = false)
+    public function call($shipment = false, $isReturnBarcode = false)
     {
         $this->validateRequiredValues();
 
@@ -128,7 +127,7 @@ class Barcode extends AbstractEndpoint
 
         $parameters = [
             'Message'  => $this->message->get(''),
-            'Customer' => $this->customer->get($isReturnBarcode, $shipment),
+            'Customer' => $this->customer->get($shipment, $isReturnBarcode),
             'Barcode'  => [
                 'Type'  => $barcode['type'],
                 'Range' => $barcode['range'],

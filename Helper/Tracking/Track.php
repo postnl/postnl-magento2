@@ -43,6 +43,7 @@ use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Sales\Model\Order\ShipmentRepository;
+use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
 
 class Track extends AbstractTracking
 {
@@ -67,15 +68,16 @@ class Track extends AbstractTracking
     private $shipmentRepository;
 
     /**
-     * @param Context                  $context
-     * @param ShipmentRepository       $shipmentRepository
-     * @param TrackFactory             $trackFactory
-     * @param PostNLShipmentRepository $postNLShipmentRepository
-     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
-     * @param StatusFactory            $statusFactory
-     * @param Mail                     $mail
-     * @param Webshop                  $webshop
-     * @param Log                      $logging
+     * @param Context                            $context
+     * @param ShipmentRepository                 $shipmentRepository
+     * @param TrackFactory                       $trackFactory
+     * @param PostNLShipmentRepository           $postNLShipmentRepository
+     * @param SearchCriteriaBuilder              $searchCriteriaBuilder
+     * @param StatusFactory                      $statusFactory
+     * @param Mail                               $mail
+     * @param Webshop                            $webshop
+     * @param Log                                $logging
+     * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
      */
     public function __construct(
         Context $context,
@@ -86,7 +88,8 @@ class Track extends AbstractTracking
         StatusFactory $statusFactory,
         Mail $mail,
         Webshop $webshop,
-        Log $logging
+        Log $logging,
+        ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
     ) {
         $this->trackFactory             = $trackFactory;
         $this->trackStatusFactory       = $statusFactory;
@@ -98,7 +101,8 @@ class Track extends AbstractTracking
             $postNLShipmentRepository,
             $searchCriteriaBuilder,
             $webshop,
-            $logging
+            $logging,
+            $shipmentBarcodeRepositoryInterface
         );
     }
 
@@ -121,6 +125,7 @@ class Track extends AbstractTracking
      * @param $tracking
      *
      * @return \Magento\Shipping\Model\Tracking\Result
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function get($tracking)
     {

@@ -135,16 +135,14 @@ class BarcodeHandler
         $shipment->setMainBarcode($mainBarcode);
         $this->shipmentRepository->save($shipment);
 
-        if ($this->shipments->canReturnNl() || $this->shipments->canReturnBe()) {
-            $shipment->setReturnBarcode($this->generate($shipment, true));
-            $this->shipmentRepository->save($shipment);
-        }
-
-        if ($shipment->getParcelCount() > 1 || $shipment->getReturnBarcode()) {
+        if ($shipment->getParcelCount() > 1) {
             $this->addBarcodes($shipment, $mainBarcode);
         }
 
-        $this->addreturnTracks->addReturnTrack($shipment);
+        if ($this->shipments->canReturnNl() || $this->shipments->canReturnBe() && $countryId == 'NL' || $countryId == 'BE') {
+            $this->addreturnTracks->addReturnTrack($shipment);
+            $this->addReturnBarcodes($shipment);
+        }
     }
 
     /**
@@ -171,14 +169,36 @@ class BarcodeHandler
             $barcodeModelCollection->addItem(
                 $this->createBarcode($shipment->getId(), $count, $this->generate($shipment))
             );
+        }
 
-            if ($this->shipments->canReturnNl() || $this->shipments->canReturnBe()) {
-                $isReturnBarcode = true;
+        $barcodeModelCollection->save();
+    }
 
-                $barcodeModelCollection->addItem(
-                    $this->createBarcode($shipment->getId(), $count, $this->generate($shipment, $isReturnBarcode), $isReturnBarcode)
-                );
-            }
+    /**
+     * @param ShipmentInterface $shipment
+     *
+     * @throws LocalizedException
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
+     */
+    public function addReturnBarcodes(ShipmentInterface $shipment)
+    {
+        $isReturnBarcode = true;
+
+        /** @var \TIG\PostNL\Model\ResourceModel\ShipmentBarcode\Collection $barcodeModelCollection */
+        $barcodeModelCollection = $this->shipmentBarcodeCollectionFactory->create();
+        $barcodeModelCollection->load();
+
+        $parcelCount = $shipment->getParcelCount();
+
+        for ($count = 1; $count <= $parcelCount; $count++) {
+            $returnBarcode = $this->generate($shipment, $isReturnBarcode);
+            $barcodeModelCollection->addItem(
+                $this->createBarcode($shipment->getId(), $count, $returnBarcode, $isReturnBarcode)
+            );
+            $shipment->setReturnBarcode($returnBarcode);
+            $this->shipmentRepository->save($shipment);
         }
 
         $barcodeModelCollection->save();
@@ -188,9 +208,13 @@ class BarcodeHandler
      * CIF call to generate a new barcode
      *
      * @param ShipmentInterface $shipment
+     * @param bool              $isReturnBarcode
      *
      * @return string
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     private function generate(ShipmentInterface $shipment, $isReturnBarcode = false)
     {
@@ -199,7 +223,7 @@ class BarcodeHandler
         $this->barcodeEndpoint->setCountryId($this->countryId);
         $this->barcodeEndpoint->setStoreId($magentoShipment->getStoreId());
         $this->setTypeByProductCode($shipment->getProductCode());
-        $response = $this->barcodeEndpoint->call($isReturnBarcode);
+        $response = $this->barcodeEndpoint->call($shipment, $isReturnBarcode);
 
         if (!is_object($response) || !isset($response->Barcode)) {
             // Should throw an exception otherwise the postnl flow will break.
@@ -226,9 +250,10 @@ class BarcodeHandler
     }
 
     /**
-     * @param $shipmentId
-     * @param $count
-     * @param $barcode
+     * @param      $shipmentId
+     * @param      $count
+     * @param      $barcode
+     * @param bool $isReturnBarcode
      *
      * @return ShipmentBarcode
      */

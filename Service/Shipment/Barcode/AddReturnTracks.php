@@ -32,18 +32,17 @@
 namespace TIG\PostNL\Service\Shipment\Barcode;
 
 use Magento\Sales\Model\Order\Shipment\TrackFactory;
-use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory;
+use Magento\Sales\Model\Order\ShipmentRepository;
 use TIG\PostNL\Model\ShipmentBarcodeRepository;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Sales\Model\Order\ShipmentRepository;
 
 class AddReturnTracks
 {
     /** @var TrackFactory */
     private $trackFactory;
 
-    /** @var CollectionFactory */
-    private $collectionFactory;
+    /** @var ShipmentRepository */
+    private $shipmentRepository;
 
     /** @var ShipmentBarcodeRepository */
     private $shipmentBarcodeRepository;
@@ -51,54 +50,44 @@ class AddReturnTracks
     /** @var SearchCriteriaBuilder */
     private $searchCriteriaBuilder;
 
-    /** @var ShipmentRepository */
-    private $shipmentRepository;
-
     /**
-     * @param TrackFactory              $trackFactory
-     * @param CollectionFactory         $collectionFactory
-     * @param ShipmentBarcodeRepository $shipmentBarcodeRepository
-     * @param SearchCriteriaBuilder     $searchCriteriaBuilder
-     * @param ShipmentRepository        $shipmentRepository
+     * @param TrackFactory                       $trackFactory
+     * @param ShipmentRepository                 $shipmentRepository
+     * @param ShipmentBarcodeRepository          $shipmentBarcodeRepository
+     * @param SearchCriteriaBuilder              $searchCriteriaBuilder
      */
     public function __construct(
         TrackFactory $trackFactory,
-        CollectionFactory $collectionFactory,
+        ShipmentRepository $shipmentRepository,
         ShipmentBarcodeRepository $shipmentBarcodeRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        ShipmentRepository $shipmentRepository
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->trackFactory = $trackFactory;
-        $this->collectionFactory = $collectionFactory;
+        $this->shipmentRepository = $shipmentRepository;
         $this->shipmentBarcodeRepository = $shipmentBarcodeRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->shipmentRepository = $shipmentRepository;
     }
 
     /**
-     * @param $shipment
+     * @param $postNLShipment
      *
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function addReturnTrack($shipment)
+    public function addReturnTrack($postNLShipment)
     {
-        $returnItems = $this->getReturnItems($shipment);
-        $shipment = $shipment->getShipment();
+        $returnItems = $this->getList($postNLShipment);
+        $shipment = $postNLShipment->getShipment();
 
         foreach ($returnItems as $item) {
             $track = $this->trackFactory->create();
             $track->setNumber($item->getValue());
             $track->setCarrierCode('tig_postnl');
             $track->setTitle('PostNL Return');
+            /** @noinspection PhpUndefinedMethodInspection */
             $shipment->addTrack($track);
         }
 
-        /**
-         * @codingStandardsIgnoreLine
-         * @todo : Recalculate packages and set correct data.
-         */
-        $shipment->setPackages([]);
-        $this->shipmentRepository->save($shipment->getShipment());
+        $this->shipmentRepository->save($shipment);
     }
 
     /**
@@ -106,29 +95,14 @@ class AddReturnTracks
      *
      * @return \Magento\Framework\Api\ExtensibleDataInterface[]
      */
-    public function getReturnItems($shipment)
-    {
-        $list = $this->getList($shipment);
-        $items = $list->getItems();
-        $mainBarcode = $this->shipmentBarcodeRepository->create();
-        $mainBarcode->setValue($shipment->getReturnBarcode());
-
-        array_unshift($items, $mainBarcode);
-
-        return $items;
-    }
-
-    /**
-     * @param $shipment
-     *
-     * @return \Magento\Framework\Api\SearchResultsInterface
-     */
     public function getList($shipment)
     {
         $this->searchCriteriaBuilder->addFilter('parent_id', $shipment->getId());
         $this->searchCriteriaBuilder->addFilter('type', 'return');
         $searchCriteria = $this->searchCriteriaBuilder->create();
-        $list = $this->shipmentBarcodeRepository->getList($searchCriteria);
+
+        $result = $this->shipmentBarcodeRepository->getList($searchCriteria);
+        $list = $result->getItems();
 
         return $list;
     }

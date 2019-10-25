@@ -130,7 +130,7 @@ class Customer
     /**
      * @param $shipment
      *
-     * @return mixed
+     * @return $this|mixed
      */
     public function getReturnCustomerCode($shipment)
     {
@@ -143,5 +143,7 @@ class Customer
         if ($shippingAddress->getCountryId() == 'BE') {
             return $this->returnOptions->getCustomerCodeBE();
         }
+
+        return $this;
     }
 }

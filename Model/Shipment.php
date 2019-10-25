@@ -405,6 +405,17 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         return $barcode->getValue();
     }
 
+    public function getBarcodes($currentShipmentNumber = 1)
+    {
+        $barcode = $this->barcodeRepository->getReturnForShipment($this, $currentShipmentNumber);
+
+        if (!$barcode) {
+            return null;
+        }
+
+        return $barcode->getValue();
+    }
+
     /**
      * @return null|string
      */

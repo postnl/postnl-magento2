@@ -40,6 +40,7 @@ use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\AbstractExtensibleObject;
+use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
 
 abstract class AbstractTracking extends AbstractHelper
 {
@@ -67,24 +68,30 @@ abstract class AbstractTracking extends AbstractHelper
     //@codingStandardsIgnoreLine
     protected $logging;
 
+    /** @var ShipmentBarcodeRepositoryInterface */
+    private $shipmentBarcodeRepositoryInterface;
+
     /**
-     * @param Context                  $context
-     * @param PostNLShipmentRepository $postNLShipmentRepository
-     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
-     * @param Webshop                  $webshop
-     * @param Log                      $logging
+     * @param Context                            $context
+     * @param PostNLShipmentRepository           $postNLShipmentRepository
+     * @param SearchCriteriaBuilder              $searchCriteriaBuilder
+     * @param Webshop                            $webshop
+     * @param Log                                $logging
+     * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
      */
     public function __construct(
         Context $context,
         PostNLShipmentRepository $postNLShipmentRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         Webshop $webshop,
-        Log $logging
+        Log $logging,
+        ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
     ) {
-        $this->postNLShipmentRepository = $postNLShipmentRepository;
-        $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
-        $this->webshopConfig            = $webshop;
-        $this->logging                  = $logging;
+        $this->postNLShipmentRepository           = $postNLShipmentRepository;
+        $this->searchCriteriaBuilder              = $searchCriteriaBuilder;
+        $this->webshopConfig                      = $webshop;
+        $this->logging                            = $logging;
+        $this->shipmentBarcodeRepositoryInterface = $shipmentBarcodeRepositoryInterface;
         parent::__construct($context);
     }
 
@@ -105,7 +112,8 @@ abstract class AbstractTracking extends AbstractHelper
     /**
      * @param $trackingNumber
      *
-     * @return AbstractExtensibleObject
+     * @return AbstractExtensibleObject|\Magento\Framework\Api\SearchResults|\TIG\PostNL\Api\Data\ShipmentInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     //@codingStandardsIgnoreLine
     protected function getPostNLshipmentByTracking($trackingNumber)
@@ -116,19 +124,24 @@ abstract class AbstractTracking extends AbstractHelper
         $list = $this->postNLShipmentRepository->getList($searchCriteria->create());
 
         if (!$list->getItems()) {
-            $searchCriteria = $this->searchCriteriaBuilder->addFilter('return_barcode', $trackingNumber);
+            $searchCriteria = $this->searchCriteriaBuilder->addFilter('value', $trackingNumber);
             $searchCriteria->setPageSize(1);
-            $list = $this->postNLShipmentRepository->getList($searchCriteria->create());
+            $shipmentBarcode = $this->shipmentBarcodeRepositoryInterface->getList($searchCriteria->create());
+            $shipmentId = $shipmentBarcode->getItems()[0]->getParentId();
+            $list = $this->postNLShipmentRepository->getById($shipmentId);
+
+            return $list;
         }
 
         return $list->getItems()[0];
     }
 
     /**
-     * @param $trackingNumber
+     * @param        $trackingNumber
      * @param string $type
      *
      * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     //@codingStandardsIgnoreLine
     protected function getTrackAndTraceUrl($trackingNumber, $type = 'C')

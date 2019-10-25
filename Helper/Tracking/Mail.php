@@ -44,6 +44,7 @@ use TIG\PostNL\Helper\AbstractTracking;
 use TIG\PostNL\Helper\Data as PostNLHelper;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
 
 class Mail extends AbstractTracking
 {
@@ -68,14 +69,15 @@ class Mail extends AbstractTracking
     private $assetRepository;
 
     /**
-     * @param Context                  $context
-     * @param PostNLShipmentRepository $postNLShipmentRepository
-     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
-     * @param TransportBuilder         $transportBuilder
-     * @param PostNLHelper             $data
-     * @param Webshop                  $webshop
-     * @param Log                      $logging
-     * @param AssetRepository          $assetRepository
+     * @param Context                            $context
+     * @param PostNLShipmentRepository           $postNLShipmentRepository
+     * @param SearchCriteriaBuilder              $searchCriteriaBuilder
+     * @param TransportBuilder                   $transportBuilder
+     * @param PostNLHelper                       $data
+     * @param Webshop                            $webshop
+     * @param Log                                $logging
+     * @param AssetRepository                    $assetRepository
+     * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
      */
     public function __construct(
         Context $context,
@@ -85,7 +87,8 @@ class Mail extends AbstractTracking
         PostNLHelper $data,
         Webshop $webshop,
         Log $logging,
-        AssetRepository $assetRepository
+        AssetRepository $assetRepository,
+        ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
     ) {
         $this->transportBuilder     = $transportBuilder;
         $this->postNLHelperData     = $data;
@@ -96,7 +99,8 @@ class Mail extends AbstractTracking
             $postNLShipmentRepository,
             $searchCriteriaBuilder,
             $webshop,
-            $logging
+            $logging,
+            $shipmentBarcodeRepositoryInterface
         );
     }
 

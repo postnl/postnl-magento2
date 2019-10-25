@@ -41,19 +41,13 @@ use TIG\PostNL\Service\Shipment\Data as ShipmentData;
 
 class Shipments
 {
-    /**
-     * @var ShipmentData
-     */
+    /** @var ShipmentData */
     private $shipmentData;
 
-    /**
-     * @var AddressEnhancer
-     */
+    /** @var AddressEnhancer */
     private $addressEnhancer;
 
-    /**
-     * @var ManagerInterface
-     */
+    /** @var ManagerInterface */
     private $messageManager;
 
     /** @var ReturnOptions */
@@ -191,17 +185,13 @@ class Shipments
         return $name;
     }
 
-    /**
-     * @return bool
-     */
+    /** @return bool */
     public function canReturnNl()
     {
         return $this->returnOptions->isReturnNlActive();
     }
 
-    /**
-     * @return bool
-     */
+    /** @return bool */
     public function canReturnBe()
     {
         return $this->returnOptions->isReturnBeActive();
@@ -210,15 +200,22 @@ class Shipments
     /**
      * @param $countryCode
      *
-     * @return array
+     * @return array|bool
      */
     private function getCorrectReturnAddress($countryCode)
     {
         if ($countryCode == 'NL' || $countryCode == 'BE') {
             return $this->getReturnAddress($countryCode);
         }
+
+        return false;
     }
 
+    /**
+     * @param $countryCode
+     *
+     * @return array
+     */
     private function getReturnAddress($countryCode)
     {
         $city = 'getCity' . $countryCode;
@@ -232,8 +229,8 @@ class Shipments
             'City'             => $this->returnOptions->$city(),
             'CompanyName'      => $this->returnOptions->$company(),
             'Countrycode'      => $countryCode,
-            'HouseNr'          => $this->returnOptions->$houseNo(),
-            'Street'           => $this->returnOptions->$street(),
+            'HouseNr'          => $this->returnOptions->$street(),
+            'Street'           => 'Antwoordnummer:',
             'Zipcode'          => $this->returnOptions->$zipcode(),
         ];
 

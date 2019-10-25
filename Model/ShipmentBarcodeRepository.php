@@ -174,6 +174,30 @@ class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
         $shipmentId = $shipment->getId();
         $this->searchCriteriaBuilder->addFilter('parent_id', $shipmentId);
         $this->searchCriteriaBuilder->addFilter('number', $number);
+        $this->searchCriteriaBuilder->addFilter('type', 'shipment');
+        $searchCriteria = $this->searchCriteriaBuilder->create();
+
+        $items = $this->getList($searchCriteria);
+
+        if ($items->getTotalCount()) {
+            return $items->getItems()[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param ShipmentInterface $shipment
+     * @param int               $number
+     *
+     * @return \Magento\Framework\Api\ExtensibleDataInterface|null
+     */
+    public function getReturnForShipment(ShipmentInterface $shipment, $number)
+    {
+        $shipmentId = $shipment->getId();
+        $this->searchCriteriaBuilder->addFilter('parent_id', $shipmentId);
+        $this->searchCriteriaBuilder->addFilter('number', $number);
+        $this->searchCriteriaBuilder->addFilter('type', 'return');
         $searchCriteria = $this->searchCriteriaBuilder->create();
 
         $items = $this->getList($searchCriteria);
