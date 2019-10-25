@@ -183,7 +183,6 @@ class DataTest extends TestCase
         $shipmentData = [
             'Addresses'                => ['Address' => $addresses],
             'Barcode'                  => null,
-            'ReturnBarcode'            => null,
             'CollectionTimeStampEnd'   => '',
             'CollectionTimeStampStart' => '',
             'Contacts'                 => ['Contact' => $contact],
@@ -201,7 +200,6 @@ class DataTest extends TestCase
         $this->mockFunction($this->shipmentMock, 'getDownpartnerId', $shipmentData['DownPartnerID']);
         $this->mockFunction($this->shipmentMock, 'getDownpartnerLocation', $shipmentData['DownPartnerLocation']);
         $this->mockFunction($this->shipmentMock, 'getProductCode', $shipmentData['ProductCodeDelivery']);
-        $this->mockFunction($this->shipmentMock, 'getReturnBarcode', $shipmentData['ReturnBarcode']);
 
         $this->mockFunction($this->packingslipOptionsMock, 'getReference', $shipmentData['Reference']);
 
