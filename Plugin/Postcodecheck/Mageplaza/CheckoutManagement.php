@@ -59,6 +59,14 @@ class CheckoutManagement
 
         $addressInformation->setShippingAddress($shippingAddress);
 
+        $billingAddress = $addressInformation->getBillingAddress();
+
+        $billingAddress->setStreet(
+            $this->parseStreet($billingAddress->getStreet(), $customerAttributes)
+        );
+
+        $addressInformation->setBillingAddress($billingAddress);
+
         return [$cartId, $addressInformation, $customerAttributes, $additionInformation];
     }
 
