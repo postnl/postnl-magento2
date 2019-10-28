@@ -65,18 +65,26 @@ class Factory
     private $foomanPdfCustomiser;
 
     /**
+     * @var Compatibility\XtentoPdfCustomiser
+     */
+    private $xtentoPdfCustomiser;
+
+    /**
      * @param Manager $manager
      * @param PdfShipment $pdfShipment
      * @param Compatibility\FoomanPdfCustomiser $foomanPdfCustomiser
+     * @param Compatibility\XtentoPdfCustomiser $xtentoPdfCustomiser
      */
     public function __construct(
         Manager $manager,
         PdfShipment $pdfShipment,
-        Compatibility\FoomanPdfCustomiser $foomanPdfCustomiser
+        Compatibility\FoomanPdfCustomiser $foomanPdfCustomiser,
+        Compatibility\XtentoPdfCustomiser $xtentoPdfCustomiser
     ) {
         $this->moduleManager   = $manager;
         $this->magentoPdf      = $pdfShipment;
         $this->foomanPdfCustomiser = $foomanPdfCustomiser;
+        $this->xtentoPdfCustomiser = $xtentoPdfCustomiser;
     }
 
     /**
@@ -87,6 +95,11 @@ class Factory
      */
     public function create($magentoShipment, $forceMagento = false)
     {
+
+        if (!$forceMagento && $this->moduleManager->isEnabled('Xtento_PdfCustomizer') && $this->xtentoPdfCustomiser->isShipmentPdfEnabled()) {
+            return $this->xtentoPdfCustomiser->getPdf($this, $magentoShipment);
+        }
+
         if (!$forceMagento && $this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             return $this->foomanPdfCustomiser->getPdf($this, $magentoShipment);
         }
