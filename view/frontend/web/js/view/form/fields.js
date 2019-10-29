@@ -72,8 +72,8 @@ define([
                     streetElement.enable();
                     cityElement.enable();
                 } else {
-                    streetElement.disable();
-                    cityElement.disable();
+                    streetElement.enable();
+                    cityElement.enable();
                 }
             });
         },

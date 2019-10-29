@@ -77,7 +77,6 @@ class GuestPayment
         if (!$billingAddress) {
             return [$cartId, $email, $paymentMethod, $billingAddress];
         }
-
         $attributes = $billingAddress->getExtensionAttributes();
         if (empty($attributes) || !$this->webshopConfig->getIsAddressCheckEnabled()) {
             return [$cartId, $email, $paymentMethod, $billingAddress];
