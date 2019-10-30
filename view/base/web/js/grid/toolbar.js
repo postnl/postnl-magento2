@@ -140,7 +140,7 @@ define([
          */
         submit : function () {
             var data = this.getSelectedItems();
-            if (!data.selected) {
+            if (!data.selected & data.excluded != false) {
                 alert($.mage.__('Please select item(s)'));
                 return;
             }
