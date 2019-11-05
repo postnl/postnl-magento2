@@ -183,7 +183,6 @@ class DataTest extends TestCase
         $shipmentData = [
             'Addresses'                => ['Address' => $addresses],
             'Barcode'                  => null,
-            'ReturnBarcode'            => null,
             'CollectionTimeStampEnd'   => '',
             'CollectionTimeStampStart' => '',
             'Contacts'                 => ['Contact' => $contact],
@@ -192,6 +191,7 @@ class DataTest extends TestCase
             'DownPartnerID'            => '12345',
             'DownPartnerLocation'      => '112345',
             'ProductCodeDelivery'      => '3085',
+            'ReturnBarcode'            => null,
             'Reference'                => '0000000012',
         ];
 
