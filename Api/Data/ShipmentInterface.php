@@ -362,5 +362,5 @@ interface ShipmentInterface
     /**
      * @return string|null
      */
-    public function getReturnBarcode();
+    public function getReturnBarcodes();
 }
