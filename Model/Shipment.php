@@ -405,7 +405,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         return $barcode->getValue();
     }
 
-    public function getBarcodes($currentShipmentNumber = 1)
+    public function getReturnBarcodes($currentShipmentNumber = 1)
     {
         $barcode = $this->barcodeRepository->getReturnForShipment($this, $currentShipmentNumber);
 
@@ -750,6 +750,34 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         }
 
         return $productCodeOptions['group'] == 'extra_at_home_options';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBuspakjeShipment()
+    {
+        $productCodeOptions = $this->getProductCodeOptions();
+
+        if ($productCodeOptions == null) {
+            return false;
+        }
+
+        return $productCodeOptions['group'] == 'buspakje_options';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDomesticShipment()
+    {
+        $productCodeOptions = $this->getProductCodeOptions();
+
+        if ($productCodeOptions == null) {
+            return false;
+        }
+
+        return $productCodeOptions['group'] == 'standard_options';
     }
 
     /**

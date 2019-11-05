@@ -316,6 +316,16 @@ interface ShipmentInterface
     /**
      * @return bool
      */
+    public function isBuspakjeShipment();
+
+    /**
+     * @return bool
+     */
+    public function isDomesticShipment();
+
+    /**
+     * @return bool
+     */
     public function isIDCheck();
 
     /**

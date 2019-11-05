@@ -42,6 +42,7 @@ use TIG\PostNL\Model\ShipmentBarcodeFactory;
 use TIG\PostNL\Webservices\Endpoints\Barcode as BarcodeEndpoint;
 use TIG\PostNL\Webservices\Parser\Label\Shipments;
 use TIG\PostNL\Service\Shipment\Barcode\AddReturnTracks;
+use TIG\PostNL\Model\Shipment;
 
 // @codingStandardsIgnoreFile
 class BarcodeHandler
@@ -87,6 +88,9 @@ class BarcodeHandler
     /** @var AddReturnTracks */
     private $addreturnTracks;
 
+    /** @var Shipment  */
+    private $shipment;
+
     /**
      * @param BarcodeEndpoint             $barcodeEndpoint
      * @param ShipmentRepositoryInterface $shipmentRepository
@@ -94,6 +98,8 @@ class BarcodeHandler
      * @param CollectionFactory           $shipmentBarcodeCollectionFactory
      * @param ProductOptionsConfiguration $productOptionsConfiguration
      * @param Shipments                   $shipments
+     * @param AddReturnTracks             $addReturnTracks
+     * @param Shipment                    $shipment
      */
     public function __construct(
         BarcodeEndpoint $barcodeEndpoint,
@@ -102,7 +108,8 @@ class BarcodeHandler
         CollectionFactory $shipmentBarcodeCollectionFactory,
         ProductOptionsConfiguration $productOptionsConfiguration,
         Shipments $shipments,
-        AddReturnTracks $addReturnTracks
+        AddReturnTracks $addReturnTracks,
+        Shipment $shipment
     ) {
         $this->barcodeEndpoint = $barcodeEndpoint;
         $this->shipmentBarcodeCollectionFactory = $shipmentBarcodeCollectionFactory;
@@ -111,6 +118,7 @@ class BarcodeHandler
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->shipments = $shipments;
         $this->addreturnTracks = $addReturnTracks;
+        $this->shipment = $shipment;
     }
 
     /**
@@ -139,7 +147,7 @@ class BarcodeHandler
             $this->addBarcodes($shipment, $mainBarcode);
         }
 
-        if ($this->shipments->canReturnNl() || $this->shipments->canReturnBe() && $countryId == 'NL' || $countryId == 'BE') {
+        if ($this->canAddReturnBarcodes($countryId, $shipment)) {
             $this->addReturnBarcodes($shipment);
             $this->addreturnTracks->addReturnTrack($shipment);
         }
@@ -272,5 +280,21 @@ class BarcodeHandler
         $barcodeModel->setValue($barcode);
 
         return $barcodeModel;
+    }
+
+    public function canAddReturnBarcodes($countryId, ShipmentInterface $shipment)
+    {
+        if ((!in_array($countryId, ['NL', 'BE']) ||
+             (!$shipment->isDomesticShipment()) ||
+             ($countryId == 'NL' && !$this->shipments->canReturnNl()) ||
+             ($countryId == 'BE' && !$this->shipments->canReturnBe()))) {
+            return false;
+        }
+
+        if ($shipment->isExtraAtHome() || $shipment->isBuspakjeShipment()) {
+            return false;
+        }
+
+        return true;
     }
 }
