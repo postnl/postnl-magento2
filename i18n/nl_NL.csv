@@ -476,3 +476,4 @@ Percent,Percentage
 "The current PEPS barcode type as supplied by PostNL. Must contain 2 letters.","De huidige PEPS barcodetype zoals aangeleverd door PostNL. Moet bestaan uit 2 letters."
 "Customer code","Klantcode"
 "By activating returns a return label is created when generating a label for the out shipment. To activate returns you need an answer number and a seperate customer code. For this, contact your account manager.","Door retouren te activeren wordt er een retourlabel aangemaakt bij het genereren van een label voor de heenzending. Voor het activeren van retouren heeft u een antwoordnummer nodig en een aparte klantcode. Neem hiervoor contact op met uw accountmanager."
+"PostNL Return","PostNL Retouren"

@@ -82,7 +82,7 @@ class AddReturnTracks
             $track = $this->trackFactory->create();
             $track->setNumber($item->getValue());
             $track->setCarrierCode('tig_postnl');
-            $track->setTitle('PostNL Return');
+            $track->setTitle(__('PostNL Return'));
             /** @noinspection PhpUndefinedMethodInspection */
             $shipment->addTrack($track);
         }
