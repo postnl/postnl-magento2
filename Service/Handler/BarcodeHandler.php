@@ -282,6 +282,12 @@ class BarcodeHandler
         return $barcodeModel;
     }
 
+    /**
+     * @param                   $countryId
+     * @param ShipmentInterface $shipment
+     *
+     * @return bool
+     */
     public function canAddReturnBarcodes($countryId, ShipmentInterface $shipment)
     {
         if ((!in_array($countryId, ['NL', 'BE']) ||
