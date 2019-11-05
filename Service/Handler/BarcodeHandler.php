@@ -290,10 +290,13 @@ class BarcodeHandler
      */
     public function canAddReturnBarcodes($countryId, ShipmentInterface $shipment)
     {
-        if ((!in_array($countryId, ['NL', 'BE']) ||
+        if (
+            (!in_array($countryId, ['NL', 'BE']) ||
              (!$shipment->isDomesticShipment()) ||
              ($countryId == 'NL' && !$this->shipments->canReturnNl()) ||
-             ($countryId == 'BE' && !$this->shipments->canReturnBe()))) {
+             ($countryId == 'BE' && !$this->shipments->canReturnBe())
+            )
+        ) {
             return false;
         }
 
