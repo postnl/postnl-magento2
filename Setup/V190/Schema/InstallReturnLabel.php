@@ -47,11 +47,11 @@ class InstallReturnLabel extends AbstractColumnsInstaller
     {
         return [
             // @codingStandardsIgnoreLine
-            'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            'length'   => 64,
-            'nullable' => true,
-            'default'  => null,
-            'comment'  => 'Return Label'
+            'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
+            'nullable' => false,
+            'default'  => 0,
+            'comment'  => 'Return Label',
+            'after' => 'product_code',
         ];
     }
 }
