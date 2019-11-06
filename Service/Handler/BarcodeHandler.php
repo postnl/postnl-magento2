@@ -41,7 +41,6 @@ use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Model\ShipmentBarcodeFactory;
 use TIG\PostNL\Webservices\Endpoints\Barcode as BarcodeEndpoint;
 use TIG\PostNL\Webservices\Parser\Label\Shipments;
-use TIG\PostNL\Service\Shipment\Barcode\AddReturnTracks;
 use TIG\PostNL\Model\Shipment;
 
 // @codingStandardsIgnoreFile
@@ -85,9 +84,6 @@ class BarcodeHandler
     /** @var Shipments  */
     private $shipments;
 
-    /** @var AddReturnTracks */
-    private $addreturnTracks;
-
     /** @var Shipment  */
     private $shipment;
 
@@ -98,7 +94,6 @@ class BarcodeHandler
      * @param CollectionFactory           $shipmentBarcodeCollectionFactory
      * @param ProductOptionsConfiguration $productOptionsConfiguration
      * @param Shipments                   $shipments
-     * @param AddReturnTracks             $addReturnTracks
      * @param Shipment                    $shipment
      */
     public function __construct(
@@ -108,7 +103,6 @@ class BarcodeHandler
         CollectionFactory $shipmentBarcodeCollectionFactory,
         ProductOptionsConfiguration $productOptionsConfiguration,
         Shipments $shipments,
-        AddReturnTracks $addReturnTracks,
         Shipment $shipment
     ) {
         $this->barcodeEndpoint = $barcodeEndpoint;
@@ -117,7 +111,6 @@ class BarcodeHandler
         $this->shipmentRepository = $shipmentRepository;
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->shipments = $shipments;
-        $this->addreturnTracks = $addReturnTracks;
         $this->shipment = $shipment;
     }
 
@@ -149,7 +142,6 @@ class BarcodeHandler
 
         if ($this->canAddReturnBarcodes($countryId, $shipment)) {
             $this->addReturnBarcodes($shipment);
-            $this->addreturnTracks->addReturnTrack($shipment);
         }
     }
 

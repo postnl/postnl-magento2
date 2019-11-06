@@ -54,14 +54,14 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     /**
      * ConfirmAndPrintShippingLabel constructor.
      *
-     * @param Context            $context
-     * @param GetLabels          $getLabels
-     * @param GetPdf             $getPdf
-     * @param ShipmentRepository $shipmentRepository
-     * @param Track              $track
-     * @param BarcodeHandler     $barcodeHandler
-     * @param GetPackingslip     $pdfShipment
-     * @param CanaryIslandToIC   $canaryConverter
+     * @param Context                  $context
+     * @param GetLabels                $getLabels
+     * @param GetPdf                   $getPdf
+     * @param ShipmentRepository       $shipmentRepository
+     * @param Track                    $track
+     * @param BarcodeHandler           $barcodeHandler
+     * @param GetPackingslip           $pdfShipment
+     * @param CanaryIslandToIC         $canaryConverter
      */
     public function __construct(
         Context $context,
@@ -131,7 +131,9 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
 
         $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
 
-        $this->track->set($shipment);
+        if (!$shipment->getTracks()) {
+            $this->track->set($shipment);
+        }
 
         $labels = $this->getLabels->get($shipment->getId());
 

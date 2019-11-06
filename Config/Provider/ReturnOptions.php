@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Config\Provider;
 
 /**
- * @codingStandardsIgnoreStart
+ * @codingStandardsIgnoreFile
  */
 class ReturnOptions extends AbstractConfigProvider
 {

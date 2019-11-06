@@ -66,7 +66,9 @@ class View extends OptionsAbstract
      */
     private $shipmentBarcodeCollectionFactory;
 
-    /** @var TrackFactory */
+    /**
+     * @var TrackFactory
+     */
     private $trackFactory;
 
     /**
