@@ -237,7 +237,7 @@ abstract class GenerateAbstract
         
         return $labelModels;
     }
-    
+
     /**
      * @param ShipmentInterface|Shipment $shipment
      * @param int                        $number
@@ -259,7 +259,7 @@ abstract class GenerateAbstract
         $labelModel->setProductCode($productCode);
 
         if ($labelType == 'Return Label') {
-            $labelModel->setReturnLabel(1);
+            $labelModel->isReturnLabel(true);
         }
         
         return $labelModel;

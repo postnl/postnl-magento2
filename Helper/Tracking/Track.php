@@ -46,6 +46,7 @@ use Magento\Sales\Model\Order\ShipmentRepository;
 use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
 
+// @codingStandardsIgnoreFile
 class Track extends AbstractTracking
 {
     /**
@@ -130,8 +131,9 @@ class Track extends AbstractTracking
         $this->addTrackingNumbersToShipment($shipment, $trackingNumbers);
 
         $postNLShipment = $this->getPostNLShipment($shipment->getId());
+        $shippingAddress = $shipment->getShippingAddress();
 
-        if ($this->barcodeHandler->canAddReturnBarcodes($shipment->getShippingAddress()->getCountryId(), $postNLShipment)) {
+        if ($this->barcodeHandler->canAddReturnBarcodes($shippingAddress->getCountryId(), $postNLShipment)) {
             $this->addReturnTrackingNumbersToShipment($postNLShipment);
         }
 
@@ -208,7 +210,6 @@ class Track extends AbstractTracking
     {
         $shipment = $postNLShipment->getShipment();
         $this->logging->addDebug('Adding return trackingnumbers to shipment_id : '. $shipment->getId());
-
         $returnItems = $this->getList($postNLShipment);
 
         foreach ($returnItems as $item) {

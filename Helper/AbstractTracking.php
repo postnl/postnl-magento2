@@ -68,7 +68,10 @@ abstract class AbstractTracking extends AbstractHelper
     //@codingStandardsIgnoreLine
     protected $logging;
 
-    /** @var ShipmentBarcodeRepositoryInterface */
+    /**
+     * @var ShipmentBarcodeRepositoryInterface
+     */
+    //@codingStandardsIgnoreLine
     protected $shipmentBarcodeRepositoryInterface;
 
     /**

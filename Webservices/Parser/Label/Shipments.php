@@ -93,7 +93,7 @@ class Shipments
         $shippingAddress = $order->getShippingAddress();
 
         if ($this->canReturnNl() || $this->canReturnBe()) {
-            $address[] = $this->getCorrectReturnAddress($shippingAddress->getCountryId());
+            $address[] = $this->getReturnAddressData($shippingAddress->getCountryId());
         }
 
         $shipmentData = $this->shipmentData->get($postnlShipment, $address, $contact, $shipmentNumber);
@@ -202,7 +202,7 @@ class Shipments
      *
      * @return array|bool
      */
-    private function getCorrectReturnAddress($countryCode)
+    private function getReturnAddressData($countryCode)
     {
         if ($countryCode == 'NL' || $countryCode == 'BE') {
             return $this->getReturnAddress($countryCode);

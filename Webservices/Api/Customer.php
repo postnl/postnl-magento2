@@ -130,7 +130,8 @@ class Customer
     /**
      * @param $shipment
      *
-     * @return $this|mixed
+     * @return integer
+     * @throws \TIG\PostNL\Exception
      */
     public function getReturnCustomerCode($shipment)
     {
@@ -144,6 +145,6 @@ class Customer
             return $this->returnOptions->getCustomerCodeBE();
         }
 
-        return $this;
+        throw new \TIG\PostNL\Exception('No customer code set for Returns');
     }
 }

@@ -108,7 +108,7 @@ interface ShipmentLabelInterface
      * @param boolean $value
      * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
      */
-    public function setReturnLabel($value);
+    public function isReturnLabel($value);
 
     /**
      * @return string

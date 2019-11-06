@@ -204,7 +204,7 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, Iden
      *
      * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
      */
-    public function setReturnLabel($value)
+    public function isReturnLabel($value)
     {
         return $this->setData(static::FIELD_RETURN_LABEL, $value);
     }
