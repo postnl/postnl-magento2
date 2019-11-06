@@ -98,7 +98,7 @@ abstract class AbstractTracking extends AbstractHelper
     /**
      * @param $shipmentId
      *
-     * @return PostNLShipment[]
+     * @return AbstractExtensibleObject[]
      */
     //@codingStandardsIgnoreLine
     protected function getPostNLshipments($shipmentId)
