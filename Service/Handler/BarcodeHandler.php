@@ -40,7 +40,7 @@ use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory;
 use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Model\ShipmentBarcodeFactory;
 use TIG\PostNL\Webservices\Endpoints\Barcode as BarcodeEndpoint;
-use TIG\PostNL\Webservices\Parser\Label\Shipments;
+use TIG\PostNL\Webservices\Parser\Label\Shipments as LabelParser;
 use TIG\PostNL\Model\Shipment;
 
 // @codingStandardsIgnoreFile
@@ -81,8 +81,8 @@ class BarcodeHandler
      */
     private $storeId;
 
-    /** @var Shipments  */
-    private $shipments;
+    /** @var LabelParser  */
+    private $labelParser;
 
     /** @var Shipment  */
     private $shipment;
@@ -93,7 +93,7 @@ class BarcodeHandler
      * @param ShipmentBarcodeFactory      $shipmentBarcodeFactory
      * @param CollectionFactory           $shipmentBarcodeCollectionFactory
      * @param ProductOptionsConfiguration $productOptionsConfiguration
-     * @param Shipments                   $shipments
+     * @param LabelParser                 $labelParser
      * @param Shipment                    $shipment
      */
     public function __construct(
@@ -102,7 +102,7 @@ class BarcodeHandler
         ShipmentBarcodeFactory $shipmentBarcodeFactory,
         CollectionFactory $shipmentBarcodeCollectionFactory,
         ProductOptionsConfiguration $productOptionsConfiguration,
-        Shipments $shipments,
+        LabelParser $labelParser,
         Shipment $shipment
     ) {
         $this->barcodeEndpoint = $barcodeEndpoint;
@@ -110,7 +110,7 @@ class BarcodeHandler
         $this->shipmentBarcodeFactory = $shipmentBarcodeFactory;
         $this->shipmentRepository = $shipmentRepository;
         $this->productOptionsConfiguration = $productOptionsConfiguration;
-        $this->shipments = $shipments;
+        $this->labelParser = $labelParser;
         $this->shipment = $shipment;
     }
 
@@ -285,8 +285,8 @@ class BarcodeHandler
         if (
             (!in_array($countryId, ['NL', 'BE']) ||
              (!$shipment->isDomesticShipment()) ||
-             ($countryId == 'NL' && !$this->shipments->canReturnNl()) ||
-             ($countryId == 'BE' && !$this->shipments->canReturnBe())
+             ($countryId == 'NL' && !$this->labelParser->canReturnNl()) ||
+             ($countryId == 'BE' && !$this->labelParser->canReturnBe())
             )
         ) {
             return false;
