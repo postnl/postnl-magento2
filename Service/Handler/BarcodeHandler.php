@@ -286,13 +286,10 @@ class BarcodeHandler
             (!in_array($countryId, ['NL', 'BE']) ||
              (!$shipment->isDomesticShipment()) ||
              ($countryId == 'NL' && !$this->labelParser->canReturnNl()) ||
-             ($countryId == 'BE' && !$this->labelParser->canReturnBe())
-            )
+             ($countryId == 'BE' && !$this->labelParser->canReturnBe()) ||
+             ($shipment->isExtraAtHome()) ||
+             ($shipment->isBuspakjeShipment()))
         ) {
-            return false;
-        }
-
-        if ($shipment->isExtraAtHome() || $shipment->isBuspakjeShipment()) {
             return false;
         }
 
