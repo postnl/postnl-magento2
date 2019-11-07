@@ -107,7 +107,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
         $orientation = $templateSize['width'] > $templateSize['height'] ? 'L' :'P';
 
         if ($this->shouldAddNewPage($orientation)) {
-            $this->labelCounter = $this->IsNewLabelType() ? 1 : 0;
+            $this->labelCounter = $this->isNewLabelType() ? 1 : 0;
             $this->pdf->AddPage('P', 'A4');
         }
 
