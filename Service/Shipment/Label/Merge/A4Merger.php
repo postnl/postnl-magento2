@@ -171,9 +171,11 @@ class A4Merger extends AbstractMerger implements MergeInterface
         if ($this->lastLabelType == null || $this->currentLabelType == null) {
             return false;
         }
+
         if ($this->currentLabelType === $this->lastLabelType) {
             return false;
         }
+
         return true;
     }
 
