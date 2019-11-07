@@ -106,6 +106,11 @@ class A4Merger extends AbstractMerger implements MergeInterface
     {
         $orientation = $templateSize['width'] > $templateSize['height'] ? 'L' :'P';
 
+        if ($this->shouldAddNewPage($orientation)) {
+            $this->labelCounter = $this->IsNewLabelType() ? 1 : 0;
+            $this->pdf->AddPage('P', 'A4');
+        }
+
         if ($this->pdf->PageNo() == 0 || $this->labelCounter == 0) {
             $this->pdf->AddPage('P', 'A4');
         }
@@ -156,6 +161,20 @@ class A4Merger extends AbstractMerger implements MergeInterface
         }
 
         return [Fpdi::PAGE_SIZE_A6_WIDTH, Fpdi::PAGE_SIZE_A6_HEIGHT];
+    }
+
+    /**
+     * @return bool
+     */
+    private function isNewLabelType()
+    {
+        if ($this->lastLabelType == null || $this->currentLabelType == null) {
+            return false;
+        }
+        if ($this->currentLabelType === $this->lastLabelType) {
+            return false;
+        }
+        return true;
     }
 
     /**
