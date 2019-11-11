@@ -36,8 +36,10 @@
     <preference for="TIG\PostNL\Api\OrderRepositoryInterface" type="TIG\PostNL\Model\OrderRepository" />
     <preference for="TIG\PostNL\Api\Data\OrderInterface" type="TIG\PostNL\Model\Order" />
     <preference for="TIG\PostNL\Api\ShipmentRepositoryInterface" type="TIG\PostNL\Model\ShipmentRepository" />
+    <preference for="TIG\PostNL\Api\Data\ShipmentInterface" type="TIG\PostNL\Model\Shipment" />
     <preference for="TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface" type="TIG\PostNL\Model\ShipmentBarcodeRepository" />
     <preference for="TIG\PostNL\Api\ShipmentLabelRepositoryInterface" type="TIG\PostNL\Model\ShipmentLabelRepository" />
+    <preference for="TIG\PostNL\Api\ShipmentManagementInterface" type="TIG\PostNL\Service\Api\ShipmentManagement" />
     <preference for="TIG\PostNL\Service\Wrapper\QuoteInterface" type="TIG\PostNL\Service\Wrapper\Quote" />
     <preference for="TIG\PostNL\Service\Wrapper\StoreInterface" type="TIG\PostNL\Service\Wrapper\Store" />
     <preference for="TIG\PostNL\Service\Wrapper\CheckoutSessionInterface" type="TIG\PostNL\Service\Wrapper\CheckoutSession" />
@@ -176,6 +178,9 @@
                 </item>
                 <item name="v1.7.2" xsi:type="array">
                     <item name="UpdateCustomProductAttributes" xsi:type="object">TIG\PostNL\Setup\V172\Data\UpdateCustomProductAttributes</item>
+                </item>
+                <item name="v1.8.1" xsi:type="array">
+                    <item name="UpdateConfigData" xsi:type="object">TIG\PostNL\Setup\V181\Data\UpdateConfigData</item>
                 </item>
             </argument>
         </arguments>

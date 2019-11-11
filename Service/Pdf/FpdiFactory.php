@@ -33,6 +33,7 @@ namespace TIG\PostNL\Service\Pdf;
 
 use Magento\Framework\ObjectManager\ObjectManager;
 use Magento\Framework\Module\Manager;
+use TIG\PostNL\Service\Shipment\Label\File;
 
 /**
  * As Magento does auto generate the Fpdi class when using FpdiFactory we are doing this ourself.
@@ -50,15 +51,23 @@ class FpdiFactory
     private $moduleManager;
 
     /**
+     * @var File
+     */
+    private $file;
+
+    /**
      * @param ObjectManager $objectManager
-     * @param Manager $moduleManager
+     * @param Manager       $moduleManager
+     * @param File          $file
      */
     public function __construct(
         ObjectManager $objectManager,
-        Manager $moduleManager
+        Manager $moduleManager,
+        File $file
     ) {
         $this->objectManager = $objectManager;
         $this->moduleManager = $moduleManager;
+        $this->file = $file;
     }
 
     /**
@@ -93,5 +102,23 @@ class FpdiFactory
             'diskcache' => false,
             'pdfa' => false,
         ]);
+    }
+
+    /**
+     * @param $pdf
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function saveFile($pdf)
+    {
+        $file = $this->file->save($pdf);
+
+        return $file;
+    }
+
+    public function cleanupFiles()
+    {
+        $this->file->cleanup();
     }
 }

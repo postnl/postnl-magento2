@@ -34,27 +34,26 @@
 
     <!-- Eps products -->
     <group id="eps" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>EPS and Belgium</label>
+        <label>EU and Belgium</label>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
 
-        <field id="default_be_option" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+        <field id="default_be_option" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default BE delivery</label>
             <comment><![CDATA[Select the default product option for BE shipments.]]></comment>
-            <tooltip><![CDATA[Evening BE delivery can be configured under the Evening Delivery tab.]]></tooltip>
             <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getBeProducts</source_model>
             <config_path>tig_postnl/delivery_settings/default_be_option</config_path>
         </field>
 
         <field id="default_eps_option" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-            <label>Default EPS delivery</label>
-            <comment><![CDATA[Select the default product option for EPS shipments.]]></comment>
+            <label>Default EU delivery</label>
+            <comment><![CDATA[Select the default product option for EU shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getEpsProducts</source_model>
             <config_path>tig_postnl/delivery_settings/default_eps_option</config_path>
         </field>
 
         <field id="business_active" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Use EPS business</label>
+            <label>Use EU business</label>
             <comment><![CDATA[This gives you the choice of multiple EPS products for company to business purpose.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/eps/business_active</config_path>

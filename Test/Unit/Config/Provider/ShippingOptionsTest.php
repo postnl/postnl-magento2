@@ -129,45 +129,6 @@ class ShippingOptionsTest extends AbstractConfigurationTest
         $this->assertEquals($value, $instance->isPakjegemakActive());
     }
 
-    public function pakjegemakExpressProvider()
-    {
-        return [
-            'with pakjegemak not active'             => [false, false],
-            'with pakjegemak active but not express' => [true, false],
-            'with pakjegemak active and express'     => [true, true]
-        ];
-    }
-
-    /**
-     * @dataProvider pakjegemakExpressProvider
-     * @param $pakjegemakActive
-     * @param $expected
-     */
-    public function testIsPakjegemakExpressActive($pakjegemakActive, $expected)
-    {
-        $instance = $this->getInstance();
-
-        $xpaths = [
-            [
-                ShippingOptions::XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE,
-                ScopeInterface::SCOPE_STORE,
-                null
-            ],
-            [
-                ShippingOptions::XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_ACTIVE,
-                ScopeInterface::SCOPE_STORE,
-                null
-            ]
-        ];
-
-        $returns = [
-            $pakjegemakActive, $expected
-        ];
-
-        $this->setXpathConsecutive($xpaths, $returns);
-        $this->assertEquals($expected, $instance->isPakjegemakExpressActive());
-    }
-
     public function feeProvider()
     {
         $values = [
@@ -181,41 +142,6 @@ class ShippingOptionsTest extends AbstractConfigurationTest
             'when parent not active' => [false, '0'],
             'when parent is active'   => [true, $values[rand(0, 3)]]
         ];
-    }
-
-    /**
-     * @dataProvider feeProvider
-     * @param $pakjegemakExpressActive
-     * @param $expected
-     */
-    public function testGetPakjegemakExpressFee($pakjegemakExpressActive, $expected)
-    {
-        $instance = $this->getInstance();
-
-        $xpaths = [
-            [
-                ShippingOptions::XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE,
-                ScopeInterface::SCOPE_STORE,
-                null
-            ],
-            [
-                ShippingOptions::XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE,
-                ScopeInterface::SCOPE_STORE,
-                null
-            ],
-            [
-                ShippingOptions::XPATH_SHIPPING_OPTION_PAKJEGEMAK_EXPRESS_ACTIVE,
-                ScopeInterface::SCOPE_STORE,
-                null
-            ]
-        ];
-
-        $returns = [
-            true, $pakjegemakExpressActive, $expected
-        ];
-
-        $this->setXpathConsecutive($xpaths, $returns);
-        $this->assertEquals($expected, $instance->getPakjegemakExpressFee());
     }
 
     /**

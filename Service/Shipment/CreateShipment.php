@@ -227,7 +227,14 @@ class CreateShipment
     {
         $this->shipment->register();
         $order = $this->shipment->getOrder();
-        $this->inventorySource->setSource($order, $this->getShippingItems());
+
+        $shipmentAttributes = $this->shipment->getExtensionAttributes();
+
+        // This method only exists if you have the various Magento Inventory extensions installed.
+        if (method_exists($shipmentAttributes, 'setSourceCode')) {
+            $shipmentAttributes->setSourceCode($this->inventorySource->getSource($order, $this->getShippingItems()));
+            $this->shipment->setExtensionAttributes($shipmentAttributes);
+        }
 
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus('processing');

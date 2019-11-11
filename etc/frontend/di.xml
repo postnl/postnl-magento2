@@ -45,8 +45,6 @@
             <argument name="shippingConfiguration" xsi:type="array">
                 <item name="shippingoptions_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsShippingOptionsActive</item>
                 <item name="pakjegemak_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsPakjegemakActive</item>
-                <item name="pakjegemak_express_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsPakjegemakExpressActive</item>
-                <item name="pakjegemak_express_fee" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\PakjegemakExpressFee</item>
                 <item name="urls" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\Urls</item>
                 <item name="is_sundaydelivery_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsSundayDeliveryActive</item>
                 <item name="sundaydelivery_fee" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\SundayDeliveryFee</item>

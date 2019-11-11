@@ -47,7 +47,7 @@
         </carriers>
         <tig_postnl>
             <stability/>
-            <supported_magento_version>2.1.0 - 2.1.16, 2.2.0 - 2.2.7, 2.3.0 - 2.3.1</supported_magento_version>
+            <supported_magento_version>2.1.0 - 2.1.18, 2.2.0 - 2.2.9, 2.3.0 - 2.3.2</supported_magento_version>
             <generalconfiguration_extension_status>
                 <modus>0</modus>
             </generalconfiguration_extension_status>
@@ -111,10 +111,7 @@
 
             <post_offices>
                 <pakjegemak_active>1</pakjegemak_active>
-                <pakjegemak_express_active>0</pakjegemak_express_active>
-                <pakjegemak_express_fee>2</pakjegemak_express_fee>
                 <default_pakjegemak_option>3533</default_pakjegemak_option>
-                <default_pakjegemak_early_option>3543</default_pakjegemak_early_option>
             </post_offices>
 
             <extra_at_home>

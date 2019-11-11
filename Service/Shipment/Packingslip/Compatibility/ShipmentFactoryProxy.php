@@ -29,30 +29,50 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\CheckoutConfiguration;
+namespace TIG\PostNL\Service\Shipment\Packingslip\Compatibility;
 
-use TIG\PostNL\Config\Provider\ShippingOptions;
+use Magento\Framework\ObjectManagerInterface;
 
-class PakjegemakExpressFee implements CheckoutConfigurationInterface
+// @codingStandardsIgnoreFile
+class ShipmentFactoryProxy
 {
-    /**
-     * @var ShippingOptions
-     */
-    private $shippingOptions;
 
     /**
-     * @param ShippingOptions $shippingOptions
+     * @var ObjectManagerInterface
      */
-    public function __construct(ShippingOptions $shippingOptions)
+    private $objectManager;
+
+    /**
+     * @var \Fooman\PdfCustomiser\Block\OrderShipmentFactory
+     */
+    private $subject;
+
+    /**
+     * @param ObjectManagerInterface $objectManager
+     */
+    public function __construct(ObjectManagerInterface $objectManager)
     {
-        $this->shippingOptions = $shippingOptions;
+        $this->objectManager = $objectManager;
     }
 
     /**
-     * @return bool
+     * @return \Fooman\PdfCustomiser\Block\ShipmentFactory
      */
-    public function getValue()
+    private function getSubject()
     {
-        return $this->shippingOptions->getPakjegemakExpressFee();
+        if (!$this->subject) {
+            $this->subject = $this->objectManager->get(\Fooman\PdfCustomiser\Block\ShipmentFactoryProxy::class);
+        }
+        return $this->subject;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return \Fooman\PdfCustomiser\Block\Shipment
+     */
+    public function create(array $data = [])
+    {
+        return $this->getSubject()->create($data);
     }
 }

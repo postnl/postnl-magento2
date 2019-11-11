@@ -38,25 +38,17 @@ use TIG\PostNL\Config\Provider\ShippingOptions;
 
 class Validator
 {
-    /**
-     * @var ProductOptions
-     */
+    /** @var ProductOptions */
     private $productOptions;
 
-    /**
-     * @var ShippingOptions
-     */
+    /** @var ShippingOptions */
     private $shippingOptions;
 
-    /**
-     * @var array
-     */
-    private $errors = [];
-    
-    /**
-     * @var bool
-     */
-    private $priorityError = false;
+    /** @var array */
+    private $messages = ['errors' => [], 'notices' => []];
+
+    /** @var bool */
+    private $priorityNotice = false;
 
     /**
      * Validator constructor.
@@ -89,7 +81,7 @@ class Validator
 
         return array_values($filtered);
     }
-    
+
     /**
      * @param ShipmentLabelInterface|null $model
      *
@@ -100,27 +92,35 @@ class Validator
         if ($model === null) {
             return false;
         }
-        
+
         $label = $model->getLabel();
-        
+
         if (!is_string($label) || empty($label)) {
             return false;
         }
-        
+
         $start = substr($label, 0, strlen('invalid'));
         $start = strtolower($start);
-        
+
         return $start != 'invalid';
     }
-    
+
     /**
-     * @return array
+     * @return mixed
      */
     public function getErrors()
     {
-        return $this->errors;
+        return $this->messages['errors'];
     }
-    
+
+    /**
+     * @return mixed
+     */
+    public function getNotices()
+    {
+        return $this->messages['notices'];
+    }
+
     /**
      * @param ShipmentInterface $shipment
      *
@@ -132,11 +132,11 @@ class Validator
             return $this->validateGlobalPack($shipment);
         }
 
-        return $this->validatePriority($shipment);
+        return $this->validatePeps($shipment);
     }
-    
+
     /**
-     * @param $shipment
+     * @param ShipmentInterface $shipment
      *
      * @return bool
      */
@@ -145,19 +145,19 @@ class Validator
         if (!$this->shippingOptions->canUseGlobalPack()) {
             $magentoShipment = $shipment->getShipment();
             // @codingStandardsIgnoreLine
-            $this->errors[] = __('Could not print labels for shipment %1. Worldwide (Globalpack) Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
+            $this->messages['errors'][] = __('Could not print labels for shipment %1. Worldwide (Globalpack) Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
             return false;
         }
 
-        return $this->validatePriority($shipment);
+        return $this->validatePeps($shipment);
     }
-    
+
     /**
-     * @param $shipment
+     * @param ShipmentInterface $shipment
      *
      * @return bool
      */
-    private function validatePriority(ShipmentInterface $shipment)
+    private function validatePeps(ShipmentInterface $shipment)
     {
         $code = $shipment->getProductCode();
         $isPriority = $this->productOptions->checkProductByFlags($code, 'group', 'priority_options');
@@ -165,15 +165,15 @@ class Validator
         if ($isPriority && !$this->shippingOptions->canUsePriority()) {
             $magentoShipment = $shipment->getShipment();
             // @codingStandardsIgnoreLine
-            $this->errors[] = __('Could not print labels for shipment %1. Priority Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
+            $this->messages['errors'][] = __('Could not print labels for shipment %1. Priority Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
             return false;
         }
 
         /** We want to show this notification for every Priority Shipment */
-        if ($isPriority && $this->priorityError == false) {
+        if ($isPriority && $this->priorityNotice == false) {
             // @codingStandardsIgnoreLine
-            $this->errors[] = __('Tracked Parcels can only be used if 5 packages or more are delivered in a domestic mail bag with an attached bag label specific for priority parcels.');
-            $this->priorityError = true;
+            $this->messages['notices'][] = __('Packet Tracked is a small parcel with Track & Trace. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
+            $this->priorityNotice        = true;
         }
 
         return true;
