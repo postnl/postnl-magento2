@@ -43,8 +43,7 @@ class Count extends CountAbstract
      */
     public function get(ShipmentInterface $shipment)
     {
-        $items = $shipment->getItems();
         /** @noinspection PhpUndefinedMethodInspection */
-        return $this->calculate($shipment->getTotalWeight(), $items->getItems());
+        return $this->calculate($shipment->getTotalWeight(), $shipment->getItems());
     }
 }
