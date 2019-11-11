@@ -106,18 +106,18 @@ class Place extends Grid
 
     public function afterRefreshBySchedule()
     {
-        foreach($this->notSyncedIds as $orderId) {
+        foreach ($this->notSyncedIds as $orderId) {
             $postNLOrder = $this->orderRepository->getByOrderId($orderId);
             $shipAt = $postNLOrder->getShipAt();
             $productCode = $postNLOrder->getProductCode();
             $confirmed = $postNLOrder->getConfirmed();
             $connection = $this->resourceConnection->getConnection();
 
-            $binds = array(
+            $binds = [
                 'tig_postnl_ship_at'        => $shipAt,
                 'tig_postnl_product_code'   => $productCode,
                 'tig_postnl_confirmed'      => $confirmed,
-            );
+            ];
 
             $where = [$connection->quoteIdentifier('entity_id') . '=?' => $orderId];
             $connection->update('sales_order_grid', $binds, $where);
