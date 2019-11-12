@@ -37,7 +37,7 @@ use Magento\Sales\Model\ResourceModel\Grid;
 use Magento\Sales\Model\ResourceModel\Provider\NotSyncedDataProviderInterface;
 use TIG\PostNL\Model\OrderRepository;
 
-class Place extends Grid
+class AsyncPlugin extends Grid
 {
     /**
      * @var array

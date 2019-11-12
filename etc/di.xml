@@ -288,10 +288,10 @@
     </type>
 
     <type name="Magento\Sales\Model\ResourceModel\Grid">
-        <plugin name="TIG_PostNL_OrderPlace" type="\TIG\PostNL\Plugin\Order\Place" sortOrder="1" />
+        <plugin name="TIG_PostNL_OrderPlace" type="TIG\PostNL\Plugin\Order\AsyncPlugin" sortOrder="1" />
     </type>
 
-    <type name="TIG\PostNL\Plugin\Order\Place">
+    <type name="TIG\PostNL\Plugin\Order\AsyncPlugin">
         <arguments>
             <argument name="mainTableName" xsi:type="string">sales_order</argument>
             <argument name="gridTableName" xsi:type="string">sales_order_grid</argument>
