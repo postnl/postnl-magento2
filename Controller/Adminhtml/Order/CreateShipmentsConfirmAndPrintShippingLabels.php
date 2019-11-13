@@ -157,7 +157,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         }
 
         $shipments = $this->createShipment->create($order);
-        if (!$shipments) {
+        if (empty($shipments)) {
             return;
         }
 
