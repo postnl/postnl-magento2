@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="tig_postnl_tablerate">
+        <column xsi:type="varchar" name="condition_name" nullable="false" length="20" comment="Rate Condition name"/>
+        <column xsi:type="varchar" name="condition_name" nullable="false" length="30" comment="Rate Condition name"/>
+    </table>
+</schema>
