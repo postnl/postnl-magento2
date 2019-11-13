@@ -142,7 +142,7 @@ class CreateShipment
     /**
      * Look if an order already has a PostNL shipment. If so, return that shipment.
      * @codingStandardsIgnoreLine
-     * @todo: What if an order has multiple PostNL shipments?
+     * @todo: What if an order has multiple PostNL shipments? Done
      *
      * @return array
      */

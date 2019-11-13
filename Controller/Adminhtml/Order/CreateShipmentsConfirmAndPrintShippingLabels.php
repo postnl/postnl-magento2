@@ -158,7 +158,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
 
         $shipments = $this->createShipment->create($order);
         if (!is_array($shipments)) {
-            $shipments = [$shipments];
+            return [$shipments];
         }
 
         foreach ($shipments as $shipment) {
