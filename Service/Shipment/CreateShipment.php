@@ -152,14 +152,6 @@ class CreateShipment
         $shipments = $collection->getItems();
         $foundShipment = [];
 
-//        foreach ($shipments as $item) {
-//            $postnlShipment = $this->shipmentRepository->getByShipmentId($item->getId());
-//
-//            if ($postnlShipment) {
-//                array_push($foundShipment, $item);
-//            }
-//        }
-
         array_walk(
             $shipments,
             function ($item) use (&$foundShipment) {
