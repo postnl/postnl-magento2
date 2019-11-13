@@ -49,7 +49,7 @@ class InstallTablerateTable extends AbstractTableInstaller
         $this->addText('dest_country_id', 'Destination coutry ISO/2 or ISO/3 code', 4, false, '0');
         $this->addInt('dest_region_id', 'Destination Region ID', false, true, 0);
         $this->addText('dest_zip', 'Destination Post Code (Zip)', 10, false, '*');
-        $this->addText('condition_name', 'Rate Condition name', 20, false);
+        $this->addText('condition_name', 'Rate Condition name', 30, false);
         $this->addDecimal('condition_value', 'Rate condition value', '12,4', false, '0.0000');
         $this->addDecimal('price', 'Price', '12,4', false, '0.0000');
         $this->addDecimal('cost', 'Cost', '12,4', false, '0.0000');
