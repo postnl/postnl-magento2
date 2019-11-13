@@ -144,25 +144,21 @@ class CreateShipment
      * @codingStandardsIgnoreLine
      * @todo: What if an order has multiple PostNL shipments?
      *
-     * @return null|Shipment
+     * @return array
      */
     private function findPostNLShipment()
     {
         $collection = $this->currentOrder->getShipmentsCollection();
         $shipments = $collection->getItems();
-        $foundShipment = null;
+        $foundShipment = [];
 
-        array_walk(
-            $shipments,
-            function ($item) use (&$foundShipment) {
-                /** @var Shipment $item */
-                $postnlShipment = $this->shipmentRepository->getByShipmentId($item->getId());
+        foreach ($shipments as $item) {
+            $postnlShipment = $this->shipmentRepository->getByShipmentId($item->getId());
 
-                if ($postnlShipment) {
-                    $foundShipment = $item;
-                }
+            if ($postnlShipment) {
+                array_push($foundShipment, $item);
             }
-        );
+        }
 
         return $foundShipment;
     }
