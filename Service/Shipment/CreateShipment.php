@@ -105,15 +105,20 @@ class CreateShipment
     /**
      * @param Order $order
      *
-     * @return Shipment|null
+     * @return Shipment|null|array
      */
     public function create(Order $order)
     {
+        $this->shipment = [];
         $this->currentOrder = $order;
 
         $foundShipment = $this->findPostNLShipment();
         if ($foundShipment) {
             return $foundShipment;
+        }
+
+        if (!is_array($this->shipment)) {
+            $this->shipment = [$this->shipment];
         }
 
         if (!$this->isValidOrder()) {
