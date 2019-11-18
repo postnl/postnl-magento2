@@ -162,9 +162,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         }
 
         foreach ($shipments as $shipment) {
-
             $this->loadlabel($shipment);
-
         }
     }
 
