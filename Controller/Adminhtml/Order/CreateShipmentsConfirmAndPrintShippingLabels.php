@@ -137,7 +137,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         $collection = $this->filter->getCollection($collection);
 
         foreach ($collection as $order) {
-            $this->loadLabel($order);
+            $this->loadLabels($order);
         }
     }
 
@@ -146,7 +146,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
      *
      * @throws LocalizedException
      */
-    private function loadLabel($order)
+    private function loadLabels($order)
     {
         if (!in_array($order->getState(), $this->stateToHandel)) {
             $this->messageManager->addWarningMessage(
@@ -158,16 +158,26 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
 
         $shipments = $this->createShipment->create($order);
         if (empty($shipments)) {
-            return [$shipments];
+            $shipments = [$shipments];
         }
 
         foreach ($shipments as $shipment) {
-            $address = $this->canaryConverter->convert($shipment->getShippingAddress());
 
-            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
-            $this->setTracks($shipment);
-            $this->setLabel($shipment->getId());
         }
+    }
+
+    /**
+     * @param Shipment $shipment
+     *
+     * @throws LocalizedException
+     */
+    private function loadlabel($shipment)
+    {
+        $address = $this->canaryConverter->convert($shipment->getShippingAddress());
+
+        $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+        $this->setTracks($shipment);
+        $this->setLabel($shipment->getId());
     }
 
     /**
