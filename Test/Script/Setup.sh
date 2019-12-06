@@ -56,7 +56,7 @@ mkdir -p ${CACHE_DIR}
 if [ ! -f "$CACHE_FILE" ]; then
     wget "http://magento.mirror.hypernode.com/releases/magento-${MAGENTO_VERSION}.tar.gz" -O $CACHE_FILE
 fi
-
+echo $CACHE_FILE;
 tar xzf $CACHE_FILE -C /tmp/magento2
 
 find Test/Fixtures -type f -print0 | xargs -0 -n 1 sed -i -e "s/MAGENTO_DB_HOST/${MAGENTO_DB_HOST}/g"
@@ -80,8 +80,8 @@ fi
 
 ( cd "${BUILD_DIR}/" && composer config minimum-stability dev )
 ( cd "${BUILD_DIR}/" && composer config repositories.postnl "${REPOSITORY_CONFIG}" )
-sed -i "s/^memory_limit =.*$/memory_limit = 4096M/" $(php -i | grep 'Loaded Configuration File' |  sed 's/^.*=> //')
-sed -i "s/^memory_limit =.*$/memory_limit = 4096M/" $(php -i | grep 'Additional .ini files parsed' |  sed 's/^.*=> //' | tr -d ,)
+#sed -i "s/^memory_limit =.*$/memory_limit = 4096M/" $(php -i | grep 'Loaded Configuration File' |  sed 's/^.*=> //')
+#sed -i "s/^memory_limit =.*$/memory_limit = 4096M/" $(php -i | grep 'Additional .ini files parsed' |  sed 's/^.*=> //' | tr -d ,)
 ( cd "${BUILD_DIR}/" && composer require tig/postnl --ignore-platform-reqs )
 
 mysql -u${MAGENTO_DB_USER} ${MYSQLPASS} -h${MAGENTO_DB_HOST} -P${MAGENTO_DB_PORT} -e "DROP DATABASE IF EXISTS \`${MAGENTO_DB_NAME}\`; CREATE DATABASE \`${MAGENTO_DB_NAME}\`;"
