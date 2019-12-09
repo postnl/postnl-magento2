@@ -69,7 +69,11 @@ class AddressEnhancer
     {
         $this->address = $address;
 
-        if (!$this->config->getIsAddressCheckEnabled()) {
+        if (!$this->config->getIsAddressCheckEnabled() ||
+            // If an address is parsed as a 1-liner, we still have to extract the housenumber
+            !is_array($address['street']) ||
+            !isset($address['street'][1])
+        ) {
             $this->address = $this->appendHouseNumber($address);
         }
     }
