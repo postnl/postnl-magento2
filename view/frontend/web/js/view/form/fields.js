@@ -66,20 +66,21 @@ define([
         },
 
         setMageplazaPrefilter : function () {
-            $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                let optionsArray;
                 if (options.url.indexOf('checkout-information') >= 0) {
-                    var optionsArray = JSON.parse(options.data);
+                    optionsArray = JSON.parse(options.data);
                     if (Object.keys(optionsArray.customerAttributes).length < 1) {
                         optionsArray.customerAttributes = {
                             tig_housenumber: $(".tig-postnl-field-group div[name='shippingAddress.custom_attributes.tig_housenumber'] input").val(),
                             tig_housenumber_addition: $(".tig-postnl-field-group div[name='shippingAddress.custom_attributes.tig_housenumber_addition'] input").val()
-                        }
+                        };
                     }
                     options.data = JSON.stringify(optionsArray);
                 }
 
                 if (options.url.indexOf('payment-information') >= 0) {
-                    var optionsArray = JSON.parse(options.data);
+                    optionsArray = JSON.parse(options.data);
                     if (optionsArray.billingAddress.extension_attributes === undefined) {
                         optionsArray.billingAddress.extension_attributes = {
                             tig_housenumber: $(".tig-postnl-field-group div[name='billingAddress.custom_attributes.tig_housenumber'] input").val(),

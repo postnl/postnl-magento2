@@ -57,6 +57,7 @@ class LayoutProcessor
      *
      * @return array
      */
+    //@codingStandardsIgnoreLine
     public function afterProcess($subject, $jsLayout)
     {
         $jsLayout = $this->processMageplazaBillingFields($jsLayout);
