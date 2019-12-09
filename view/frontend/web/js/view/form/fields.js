@@ -67,7 +67,7 @@ define([
 
         setMageplazaPrefilter : function () {
             $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-                let optionsArray;
+                var optionsArray;
                 if (options.url.indexOf('checkout-information') >= 0) {
                     optionsArray = JSON.parse(options.data);
                     if (Object.keys(optionsArray.customerAttributes).length < 1) {
@@ -85,7 +85,7 @@ define([
                         optionsArray.billingAddress.extension_attributes = {
                             tig_housenumber: $(".tig-postnl-field-group div[name='billingAddress.custom_attributes.tig_housenumber'] input").val(),
                             tig_housenumber_addition: $(".tig-postnl-field-group div[name='billingAddress.custom_attributes.tig_housenumber_addition'] input").val()
-                        }
+                        };
                     }
                     options.data = JSON.stringify(optionsArray);
                 }
