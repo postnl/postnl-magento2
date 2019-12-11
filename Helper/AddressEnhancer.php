@@ -67,7 +67,7 @@ class AddressEnhancer
      */
     public function set($address)
     {
-	if (isset($address['street'][1]) && empty($address['housenumber'])) {
+	if (empty($address['housenumber']) && isset($address['street'][1])) {
 	    $address['housenumber'] = $address['street'][1];
 	}
 
