@@ -84,16 +84,16 @@ class Shipments
         $postnlOrder = $postnlShipment->getPostNLOrder();
         $contact   = $this->getContactData($shipment);
         $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
+        $order = $shipment->getOrder();
+        $shippingAddress = $order->getShippingAddress();
+        $countryId = $shippingAddress->getCountryId();
 
         if ($postnlOrder->getIsPakjegemak()) {
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
 
-        $order = $shipment->getOrder();
-        $shippingAddress = $order->getShippingAddress();
-
-        if ($this->canReturnNl() || $this->canReturnBe()) {
-            $address[] = $this->getReturnAddressData($shippingAddress->getCountryId());
+        if (($this->canReturnNl($countryId)) || $this->canReturnBe($countryId)) {
+            $address[] = $this->getReturnAddressData($countryId);
         }
 
         $shipmentData = $this->shipmentData->get($postnlShipment, $address, $contact, $shipmentNumber);
@@ -110,7 +110,6 @@ class Shipments
     {
         $shippingAddress = $shipment->getShippingAddress();
         $order           = $shipment->getOrder();
-
         $contact = [
             'ContactType' => '01', // Receiver
             'Email'       => $order->getCustomerEmail(),
@@ -162,9 +161,8 @@ class Shipments
         $streetData = $this->addressEnhancer->get();
 
         if (isset($streetData['error'])) {
-            $this->messageManager->addWarningMessage(
-                $streetData['error']['code'] . ' - ' . $streetData['error']['message']
-            );
+            $message = $streetData['error']['code'] . ' - ' . $streetData['error']['message'];
+            $this->messageManager->addWarningMessage($message);
         }
 
         return $streetData;
@@ -178,23 +176,29 @@ class Shipments
     private function getFirstName($shippingAddress)
     {
         $name = $shippingAddress->getFirstname();
-        if ($shippingAddress->getMiddlename()) {
-            $name .= ' ' . $shippingAddress->getMiddlename();
-        }
+        $name .= ($shippingAddress->getMiddlename() ? ' ' . $shippingAddress->getMiddlename() : '');
 
         return $name;
     }
 
-    /** @return bool */
-    public function canReturnNl()
+    /**
+     * @param $countryId
+     *
+     * @return bool
+     */
+    public function canReturnNl($countryId)
     {
-        return $this->returnOptions->isReturnNlActive();
+        return ($this->returnOptions->isReturnNlActive() && $countryId == 'NL');
     }
 
-    /** @return bool */
-    public function canReturnBe()
+    /**
+     * @param $countryId
+     *
+     * @return bool
+     */
+    public function canReturnBe($countryId)
     {
-        return $this->returnOptions->isReturnBeActive();
+        return ($this->returnOptions->isReturnBeActive() && $countryId == 'BE');
     }
 
     /**
