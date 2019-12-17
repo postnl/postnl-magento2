@@ -84,16 +84,16 @@ class Shipments
         $postnlOrder = $postnlShipment->getPostNLOrder();
         $contact   = $this->getContactData($shipment);
         $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
-        $order = $shipment->getOrder();
-        $shippingAddress = $order->getShippingAddress();
-        $countryId = $shippingAddress->getCountryId();
 
         if ($postnlOrder->getIsPakjegemak()) {
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
 
-        if (($this->canReturnNl($countryId)) || $this->canReturnBe($countryId)) {
-            $address[] = $this->getReturnAddressData($countryId);
+        $order = $shipment->getOrder();
+        $shippingAddress = $order->getShippingAddress();
+
+        if ($this->canReturnNl() || $this->canReturnBe()) {
+            $address[] = $this->getReturnAddressData($shippingAddress->getCountryId());
         }
 
         $shipmentData = $this->shipmentData->get($postnlShipment, $address, $contact, $shipmentNumber);
@@ -186,15 +186,15 @@ class Shipments
     }
 
     /** @return bool */
-    public function canReturnNl($countryId)
+    public function canReturnNl()
     {
-        return ($this->returnOptions->isReturnNlActive() && $countryId == 'NL');
+        return $this->returnOptions->isReturnNlActive();
     }
 
     /** @return bool */
-    public function canReturnBe($countryId)
+    public function canReturnBe()
     {
-        return ($this->returnOptions->isReturnBeActive() && $countryId == 'BE');
+        return $this->returnOptions->isReturnBeActive();
     }
 
     /**
