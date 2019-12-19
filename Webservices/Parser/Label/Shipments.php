@@ -84,9 +84,7 @@ class Shipments
         $postnlOrder = $postnlShipment->getPostNLOrder();
         $contact   = $this->getContactData($shipment);
         $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
-        $order = $shipment->getOrder();
-        $shippingAddress = $order->getShippingAddress();
-        $countryId = $shippingAddress->getCountryId();
+        $countryId = $address[0]['Countrycode'];
 
         if ($postnlOrder->getIsPakjegemak()) {
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
@@ -162,7 +160,7 @@ class Shipments
 
         if (isset($streetData['error'])) {
             $message = $streetData['error']['code'] . ' - ' . $streetData['error']['message'];
-            $this->messageManager->addWarningMessage($message);
+            $this->messageManager->addErrorMessage($message);
         }
 
         return $streetData;
