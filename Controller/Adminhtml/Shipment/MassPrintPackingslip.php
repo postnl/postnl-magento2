@@ -33,6 +33,7 @@ namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 use Magento\Ui\Component\MassAction\Filter;
@@ -95,7 +96,11 @@ class MassPrintPackingslip extends LabelAbstract
     {
         $collection = $this->collectionFactory->create();
         $collection = $this->filter->getCollection($collection);
-        $this->loadLabels($collection);
+
+        /** @var Shipment $shipment */
+        foreach ($collection as $shipment) {
+            $this->loadLabels($shipment);
+        }
 
         if (empty($this->labels)) {
             $this->messageManager->addErrorMessage(
@@ -110,16 +115,22 @@ class MassPrintPackingslip extends LabelAbstract
     }
 
     /**
-     * @param $collection
+     * @param Shipment $shipment
      */
-    private function loadLabels($collection)
+    private function loadLabels($shipment)
     {
-        /** @var Shipment $shipment */
-        foreach ($collection as $shipment) {
-            $address = $shipment->getShippingAddress();
+        $address = $shipment->getShippingAddress();
+
+        try {
             $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
-            $this->setTracks($shipment);
-            $this->setPackingslip($shipment->getId(), true, false);
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addErrorMessage(
+                __('[POSTNL-0070] - Unable to generate barcode for shipment #%1', $shipment->getIncrementId())
+            );
+            return;
         }
+
+        $this->setTracks($shipment);
+        $this->setPackingslip($shipment->getId(), true, false);
     }
 }
