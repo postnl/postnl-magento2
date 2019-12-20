@@ -100,6 +100,18 @@ class AddressEnhancerTest extends TestCase
             'Streetname parsed with three values in street fields' => [
                 ['TestStraat', '67', ' -1 hoog'],
                 ['housenumber' => '67', 'housenumberExtension' => '-1 hoog']
+            ],
+            'Streetname with acute apostrophe' => [
+                ["matena'spad 58", ''],
+                ['housenumber' => '58', 'housenumberExtension' => '']
+            ],
+            'Streetname with grave apostrophe' => [
+                ['matena`spad 58', ''],
+                ['housenumber' => '58', 'housenumberExtension' => '']
+            ],
+            'Streetname with quote apostrophe' => [
+                ['matena‘spad 58', ''],
+                ['housenumber' => '58', 'housenumberExtension' => '']
             ]
         ];
     }

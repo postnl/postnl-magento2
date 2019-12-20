@@ -38,9 +38,9 @@ use TIG\PostNL\Config\Provider\Webshop as Config;
 class AddressEnhancer
 {
     // @codingStandardsIgnoreLine
-    const STREET_SPLIT_NAME_FROM_NUMBER = '/^(?P<street>\d*[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\-\.]+)[,\s]+(?P<number>\d+)\s*(?P<addition>[\wäöüß\d\-\/]*)$/i';
+    const STREET_SPLIT_NAME_FROM_NUMBER = '/^(?P<street>\d*[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\‘\`\-\.]+)[,\s]+(?P<number>\d+)\s*(?P<addition>[\wäöüß\d\-\/]*)$/i';
     // @codingStandardsIgnoreLine
-    const STREET_SPLIT_NUMBER_FROM_NAME = '/^(?P<number>\d+)\s*(?P<street>[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\-\.]*)$/i';
+    const STREET_SPLIT_NUMBER_FROM_NAME = '/^(?P<number>\d+)\s*(?P<street>[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\‘\`\-\.]*)$/i';
 
     /** @var Config $config */
     private $config;
