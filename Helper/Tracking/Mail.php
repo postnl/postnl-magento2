@@ -136,9 +136,11 @@ class Mail extends AbstractTracking
             $this->getTemplateVars($order, $url)
         );
 
-        $transport->setFrom('general');
+        
         if (method_exists($transport, 'setFromByScope')) {
             $transport->setFromByScope('general', $shipment->getStoreId());
+        } else {
+            $transport->setFrom('general');   
         }
 
         $address = $shipment->getShippingAddress();
