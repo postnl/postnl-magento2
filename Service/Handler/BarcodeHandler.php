@@ -32,6 +32,8 @@
 
 namespace TIG\PostNL\Service\Handler;
 
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
@@ -39,6 +41,7 @@ use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory;
 use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Model\ShipmentBarcodeFactory;
+use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 use TIG\PostNL\Webservices\Endpoints\Barcode as BarcodeEndpoint;
 use TIG\PostNL\Webservices\Parser\Label\Shipments as LabelParser;
 use TIG\PostNL\Model\Shipment;
@@ -88,6 +91,11 @@ class BarcodeHandler
     private $shipment;
 
     /**
+     * @var ResetPostNLShipment
+     */
+    private $resetPostNLShipment;
+
+    /**
      * @param BarcodeEndpoint             $barcodeEndpoint
      * @param ShipmentRepositoryInterface $shipmentRepository
      * @param ShipmentBarcodeFactory      $shipmentBarcodeFactory
@@ -95,6 +103,7 @@ class BarcodeHandler
      * @param ProductOptionsConfiguration $productOptionsConfiguration
      * @param LabelParser                 $labelParser
      * @param Shipment                    $shipment
+     * @param ResetPostNLShipment         $resetPostNLShipment
      */
     public function __construct(
         BarcodeEndpoint $barcodeEndpoint,
@@ -103,7 +112,8 @@ class BarcodeHandler
         CollectionFactory $shipmentBarcodeCollectionFactory,
         ProductOptionsConfiguration $productOptionsConfiguration,
         LabelParser $labelParser,
-        Shipment $shipment
+        Shipment $shipment,
+        ResetPostNLShipment $resetPostNLShipment
     ) {
         $this->barcodeEndpoint = $barcodeEndpoint;
         $this->shipmentBarcodeCollectionFactory = $shipmentBarcodeCollectionFactory;
@@ -112,6 +122,7 @@ class BarcodeHandler
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->labelParser = $labelParser;
         $this->shipment = $shipment;
+        $this->resetPostNLShipment = $resetPostNLShipment;
     }
 
     /**
@@ -123,12 +134,12 @@ class BarcodeHandler
     public function prepareShipment($magentoShipmentId, $countryId)
     {
         $this->countryId = $countryId;
-        $shipment = $this->shipmentRepository->getByShipmentId($magentoShipmentId);
 
-        if (!$shipment || $shipment->getMainBarcode() !== null || $shipment->getConfirmedAt() !== null) {
+        if (!$this->validateShipment($magentoShipmentId, $countryId)) {
             return;
         }
 
+        $shipment = $this->shipmentRepository->getByShipmentId($magentoShipmentId);
         $magentoShipment = $shipment->getShipment();
         $this->storeId = $magentoShipment->getStoreId();
 
@@ -290,6 +301,31 @@ class BarcodeHandler
              ($shipment->isExtraAtHome()) ||
              ($shipment->isBuspakjeShipment()))
         ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $magentoShipmentId
+     * @param $countryId
+     *
+     * @return bool
+     * @throws CouldNotDeleteException
+     * @throws CouldNotSaveException
+     */
+    private function validateShipment($magentoShipmentId, $countryId)
+    {
+        $shipment = $this->shipmentRepository->getByShipmentId($magentoShipmentId);
+        $isPrepared = (!$shipment || $shipment->getMainBarcode() !== null || $shipment->getConfirmedAt() !== null);
+
+        if ($isPrepared && $this->canAddReturnBarcodes($countryId, $shipment) && !$shipment->getReturnBarcodes()) {
+            $this->resetPostNLShipment->resetShipment($magentoShipmentId);
+            return true;
+        }
+
+        if ($isPrepared) {
             return false;
         }
 

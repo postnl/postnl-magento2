@@ -31,9 +31,9 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
+use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use Magento\Backend\App\Action\Context;
-use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\Order\ShipmentRepository;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
@@ -122,7 +122,15 @@ class PrintShippingLabel extends LabelAbstract
     {
         $shipment = $this->getShipment();
         $shippingAddress = $shipment->getShippingAddress();
-        $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
+
+        try {
+            $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addErrorMessage(
+                __('[POSTNL-0070] - Unable to generate barcode for shipment #%1', $shipment->getIncrementId())
+            );
+            return [];
+        }
 
         $labels = $this->getLabels->get($shipment->getId(), false);
 
