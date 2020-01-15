@@ -50,7 +50,7 @@ class ReturnOptions extends AbstractConfigProvider
     const XPATH_RETURN_BE_HOUSENUMBER = 'tig_postnl/returns_be/housenumber';
     const XPATH_RETURN_BE_FREEPOST_NUMBER = 'tig_postnl/returns_be/freepost_number';
     const XPATH_RETURN_BE_ZIPCODE = 'tig_postnl/returns_be/zipcode';
-    const XPATH_RETURN_BE_CUSTOMER_CODE = 'tig_postbe/returns_be/customer_code';
+    const XPATH_RETURN_BE_CUSTOMER_CODE = 'tig_postnl/returns_be/customer_code';
 
     /**
      * @return bool
