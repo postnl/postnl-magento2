@@ -40,7 +40,7 @@ class EPS extends Domestic
      * These are combiLabel products, these codes are returned by PostNL in the label response (ProductCodeDelivery)
      */
     private $rotated = [4940, 4950, 4983, 4985, 4986, 3622, 3642, 3659];
-    
+
     /**
      * The product codes, returned by the label response, to alter label generation for priority products.
      *
@@ -49,10 +49,15 @@ class EPS extends Domestic
     private $priority = [6350, 6550, 6940, 6942];
 
     /**
+     * These are return labels that should be rotated, separate from their normal shipping labels
+     */
+    private $returnProducts = [4946];
+
+    /**
      * @var bool
      */
     private $templateInserted = false;
-    
+
     /**
      * @param ShipmentLabelInterface $label
      *
@@ -70,12 +75,8 @@ class EPS extends Domestic
         $this->createPdf();
         $this->pdf->AddPage('P', Fpdi::PAGE_SIZE_A6);
         $this->pdf->setSourceFile($filename);
-        
-        $productCode = $label->getProductCode();
 
-        if ($this->isRotated()
-            || ($this->isRotatedProduct($productCode) && !$this->isPriorityProduct($productCode))
-        ) {
+        if ($this->shouldRotate($label)) {
             $this->insertRotated();
         }
 
@@ -85,7 +86,37 @@ class EPS extends Domestic
 
         return $this->pdf;
     }
-    
+
+    /**
+     * @param ShipmentLabelInterface $label
+     *
+     * @return bool
+     *
+     * @throws \setasign\Fpdi\PdfParser\CrossReference\CrossReferenceException
+     * @throws \setasign\Fpdi\PdfParser\Filter\FilterException
+     * @throws \setasign\Fpdi\PdfParser\PdfParserException
+     * @throws \setasign\Fpdi\PdfParser\Type\PdfTypeException
+     * @throws \setasign\Fpdi\PdfReader\PdfReaderException
+     */
+    private function shouldRotate($label)
+    {
+        $productCode = $label->getProductCode();
+
+        if ($this->isRotated()) {
+            return true;
+        }
+
+        if ($this->isRotatedProduct($productCode) && !$this->isPriorityProduct($productCode)) {
+            return true;
+        }
+
+        if ($this->rotateReturnProduct($label)) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * @param $code
      *
@@ -95,7 +126,17 @@ class EPS extends Domestic
     {
         return in_array($code, $this->rotated);
     }
-    
+
+    /**
+     * @param ShipmentLabelInterface $label
+     *
+     * @return bool
+     */
+    private function rotateReturnProduct($label)
+    {
+        return (in_array($label->getProductCode(), $this->returnProducts) && $label->getReturnLabel());
+    }
+
     /**
      * This is a label with a vertical orientation, so rotate it before inserting.
      *
@@ -115,7 +156,7 @@ class EPS extends Domestic
         $this->pdf->useTemplate($pageId, - 130, 0);
         $this->pdf->Rotate(0);
     }
-    
+
     /**
      * This is a default label, it does not need any modification.
      *
@@ -131,7 +172,7 @@ class EPS extends Domestic
         $pageId = $this->pdf->importPage(1);
         $this->pdf->useTemplate($pageId, 0, 0, Fpdi::PAGE_SIZE_A6_WIDTH, Fpdi::PAGE_SIZE_A6_HEIGHT);
     }
-    
+
     /**
      * @param $code
      *
@@ -141,7 +182,7 @@ class EPS extends Domestic
     {
         return in_array($code, $this->priority);
     }
-    
+
     /**
      * @return bool
      * @throws \setasign\Fpdi\PdfParser\CrossReference\CrossReferenceException
@@ -161,7 +202,7 @@ class EPS extends Domestic
 
         return false;
     }
-    
+
     /**
      * @param $value
      */
@@ -169,7 +210,7 @@ class EPS extends Domestic
     {
         $this->templateInserted = $value;
     }
-    
+
     /**
      * @return bool
      */
