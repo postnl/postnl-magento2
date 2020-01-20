@@ -51,25 +51,25 @@ class XtentoPdfCustomizer
     private $dataHelper;
 
     /**
-     * @var XtentoPdfCustomizer
+     * @var GeneratePdfFactoryProxy
      */
-    private $pdfCustomizer;
+    private $pdfGenerator;
 
     /**
      * XtentoPdfCustomiser constructor.
      *
      * @param OrderRepositoryInterface $orderRepository
      * @param DataHelperFactoryProxy   $dataHelper
-     * @param XtentoPdfCustomizer      $pdfCustomizer
+     * @param GeneratePdfFactoryProxy  $pdfGenerator
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         DataHelperFactoryProxy $dataHelper,
-        XtentoPdfCustomizer $pdfCustomizer
+        GeneratePdfFactoryProxy $pdfGenerator
     ) {
         $this->orderRepository = $orderRepository;
         $this->dataHelper = $dataHelper;
-        $this->pdfCustomizer = $pdfCustomizer;
+        $this->pdfGenerator = $pdfGenerator;
     }
 
     /**
@@ -86,7 +86,7 @@ class XtentoPdfCustomizer
         $xtentoDataHelper = $this->dataHelper->create();
         $templateId = $xtentoDataHelper->getDefaultTemplate($order, TemplateType::TYPE_SHIPMENT)->getId();
 
-        $generatePdfHelper = $this->pdfCustomizer->create();
+        $generatePdfHelper = $this->pdfGenerator->create();
         $document = $generatePdfHelper->generatePdfForObject('shipment', $magentoShipment->getId(), $templateId);
 
         return $document['output'];

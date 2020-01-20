@@ -33,10 +33,9 @@
 namespace TIG\PostNL\Service\Shipment\Packingslip\Compatibility;
 
 use Magento\Framework\ObjectManagerInterface;
-use Xtento\PdfCustomizer\Helper\Data;
 
 // @codingStandardsIgnoreFile
-class GeneratePdf
+class GeneratePdfFactoryProxy
 {
     /**
      * @var ObjectManagerInterface
@@ -64,7 +63,7 @@ class GeneratePdf
     private function getSubject()
     {
         if (!$this->subject) {
-            $this->subject = $this->objectManager->get('\Xtento\PdfCustomizer\Helper\Data');
+            $this->subject = $this->objectManager->get('\Xtento\PdfCustomizer\Helper\GeneratePdf');
         }
 
         return $this->subject;

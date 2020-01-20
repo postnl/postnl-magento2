@@ -33,7 +33,6 @@
 namespace TIG\PostNL\Service\Shipment\Packingslip\Compatibility;
 
 use Magento\Framework\ObjectManagerInterface;
-use Xtento\PdfCustomizer\Helper\Data;
 
 // @codingStandardsIgnoreFile
 class DataHelperFactoryProxy
