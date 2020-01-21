@@ -78,13 +78,14 @@ class XtentoPdfCustomizer
      *
      * @return mixed
      */
-    public function getPdf(Factory $factory, ShipmentInterface $magentoShipment)
+    public function getPdf(ShipmentInterface $magentoShipment)
     {
         $orderId = $magentoShipment->getOrderId();
         $order = $this->orderRepository->get($orderId);
 
         $xtentoDataHelper = $this->dataHelper->create();
-        $templateId = $xtentoDataHelper->getDefaultTemplate($order, TemplateType::TYPE_SHIPMENT)->getId();
+        $template = $xtentoDataHelper->getDefaultTemplate($order, TemplateType::TYPE_SHIPMENT);
+        $templateId = $template->getId();
 
         $generatePdfHelper = $this->pdfGenerator->create();
         $document = $generatePdfHelper->generatePdfForObject('shipment', $magentoShipment->getId(), $templateId);

@@ -154,6 +154,7 @@ class Data
          *
          * $line = [0 => null];
          */
+        // @codingStandardsIgnoreLine
         if (empty($line) || (count($line) == 1 && $line[0] === null)) {
             return;
         }
@@ -177,6 +178,7 @@ class Data
      */
     private function validateHeaders($header)
     {
+        // @codingStandardsIgnoreLine
         if ($header === false || count($header) < 8) {
             // @codingStandardsIgnoreLine
             throw new IncorrectFormat(__('Invalid PostNL Matrix Rates File Format'), 'POSTNL-0194');

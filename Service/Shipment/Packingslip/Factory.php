@@ -102,12 +102,11 @@ class Factory
             return $this->foomanPdfCustomiser->getPdf($this, $magentoShipment);
         }
 
-        if (
-            !$forceMagento &&
+        if (!$forceMagento &&
             $this->moduleManager->isEnabled('Xtento_PdfCustomizer') &&
             $this->xtentoPdfCustomizer->isShipmentPdfEnabled()
         ) {
-            return $this->xtentoPdfCustomizer->getPdf($this, $magentoShipment);
+            return $this->xtentoPdfCustomizer->getPdf($magentoShipment);
         }
 
         $renderer = $this->magentoPdf->getPdf([$magentoShipment]);

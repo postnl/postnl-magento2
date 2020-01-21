@@ -162,6 +162,7 @@ class AddressEnhancer
     // @codingStandardsIgnoreLine
     protected function extractIndividual($address, $result)
     {
+        // @codingStandardsIgnoreLine
         if (count($address['street']) == 3) {
             $result['street']     = $address['street'][0];
             $result['number']     = $address['street'][1];
@@ -170,7 +171,7 @@ class AddressEnhancer
             $address['street'][2] = '';
             unset($result['error']);
         }
-
+        // @codingStandardsIgnoreLine
         if (count($address['street']) == 2) {
             $tmpAddress           = $this->extractHousenumber(['street' => [$address['street'][0]]]);
             $result['street']     = $address['street'][0];
