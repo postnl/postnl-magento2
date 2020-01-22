@@ -63,9 +63,9 @@ class AsyncPlugin extends Grid
      * @param OrderRepository                     $orderRepository
      * @param ResourceConnection                  $resourceConnection
      * @param Context                             $context
-     * @param                                     $mainTableName
-     * @param                                     $gridTableName
-     * @param                                     $orderIdField
+     * @param string                              $mainTableName
+     * @param string                              $gridTableName
+     * @param string                              $orderIdField
      * @param array                               $joins
      * @param array                               $columns
      * @param null                                $connectionName
