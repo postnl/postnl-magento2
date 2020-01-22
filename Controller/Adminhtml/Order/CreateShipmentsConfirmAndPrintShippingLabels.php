@@ -197,6 +197,4 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
 
         return $this;
     }
-
-
 }
