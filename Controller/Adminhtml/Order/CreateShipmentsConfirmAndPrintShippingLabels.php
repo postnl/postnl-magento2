@@ -31,12 +31,12 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Order;
 
-use Magento\Framework\App\ResponseInterface;
-use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\Order;
-use Magento\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use Magento\Ui\Component\MassAction\Filter;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
@@ -108,7 +108,8 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
      * Dispatch request
      *
      * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
-     * @throws \Magento\Framework\Exception\NotFoundException
+     * @throws LocalizedException
+     * @throws \Zend_Pdf_Exception
      */
     public function execute()
     {
@@ -128,6 +129,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
 
     /**
      * Create or load the shipments and labels
+     * @throws LocalizedException
      */
     private function createShipmentsAndLoadLabels()
     {
@@ -135,14 +137,16 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         $collection = $this->filter->getCollection($collection);
 
         foreach ($collection as $order) {
-            $this->loadLabel($order);
+            $this->loadLabels($order);
         }
     }
 
     /**
      * @param Order $order
+     *
+     * @throws LocalizedException
      */
-    private function loadLabel($order)
+    private function loadLabels($order)
     {
         if (!in_array($order->getState(), $this->stateToHandel)) {
             $this->messageManager->addWarningMessage(
@@ -152,11 +156,23 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
             return;
         }
 
-        $shipment = $this->createShipment->create($order);
-        if (!$shipment) {
-            return;
+        $shipments = $this->createShipment->create($order);
+        if (empty($shipments)) {
+            $shipments = [$shipments];
         }
 
+        foreach ($shipments as $shipment) {
+            $this->loadlabel($shipment);
+        }
+    }
+
+    /**
+     * @param Shipment $shipment
+     *
+     * @throws LocalizedException
+     */
+    private function loadlabel($shipment)
+    {
         $address = $this->canaryConverter->convert($shipment->getShippingAddress());
 
         $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
