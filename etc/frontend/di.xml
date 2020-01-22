@@ -54,6 +54,7 @@
                 <item name="eveningdelivery_be_fee" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\EveningDeliveryBeFee</item>
                 <item name="is_deliverydays_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive</item>
                 <item name="is_postcodecheck_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsPostcodecheckActive</item>
+                <item name="checkout_extension" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\CheckoutExtension</item>
             </argument>
         </arguments>
     </type>

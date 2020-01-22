@@ -105,15 +105,20 @@ class CreateShipment
     /**
      * @param Order $order
      *
-     * @return Shipment|null
+     * @return Shipment|null|array
      */
     public function create(Order $order)
     {
+        $this->shipment = [];
         $this->currentOrder = $order;
 
         $foundShipment = $this->findPostNLShipment();
         if ($foundShipment) {
             return $foundShipment;
+        }
+
+        if (!is_array($this->shipment)) {
+            $this->shipment = [$this->shipment];
         }
 
         if (!$this->isValidOrder()) {
@@ -142,15 +147,15 @@ class CreateShipment
     /**
      * Look if an order already has a PostNL shipment. If so, return that shipment.
      * @codingStandardsIgnoreLine
-     * @todo: What if an order has multiple PostNL shipments?
+     * @todo: What if an order has multiple PostNL shipments? Done
      *
-     * @return null|Shipment
+     * @return array
      */
     private function findPostNLShipment()
     {
         $collection = $this->currentOrder->getShipmentsCollection();
         $shipments = $collection->getItems();
-        $foundShipment = null;
+        $foundShipment = [];
 
         array_walk(
             $shipments,
@@ -159,7 +164,7 @@ class CreateShipment
                 $postnlShipment = $this->shipmentRepository->getByShipmentId($item->getId());
 
                 if ($postnlShipment) {
-                    $foundShipment = $item;
+                    array_push($foundShipment, $item);
                 }
             }
         );

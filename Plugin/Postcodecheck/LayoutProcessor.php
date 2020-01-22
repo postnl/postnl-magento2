@@ -44,22 +44,22 @@ class LayoutProcessor
      * @var Factory
      */
     private $fieldFactory;
-    
+
     /**
      * @var AccountConfiguration
      */
     private $accountConfig;
-    
+
     /**
      * @var Webshop
      */
     private $webshopConfig;
-    
+
     /**
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
-    
+
     /**
      * LayoutProcessor constructor.
      *
@@ -184,7 +184,7 @@ class LayoutProcessor
      *
      * @return mixed
      */
-    private function processAddress($fieldset, $scope, $deps)
+    public function processAddress($fieldset, $scope, $deps)
     {
         $fieldset['postcode-field-group'] = [
             'component' => 'TIG_PostNL/js/view/form/fields',
@@ -221,7 +221,7 @@ class LayoutProcessor
      * @param      $section
      * @param bool $disableRequired
      */
-    private function setAdditionalClass(&$fields, $section, $disableRequired = false)
+    public function setAdditionalClass(&$fields, $section, $disableRequired = false)
     {
         $additionalClass = null;
         if (isset($fields[$section]['config']['additionalClasses'])) {
