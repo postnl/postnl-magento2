@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Observer\SalesOrderSaveAfter;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Sales\Model\Order;
@@ -51,15 +52,23 @@ class UpdateOrderGrid implements ObserverInterface
     private $orderRepositoryInterface;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $globalConfig;
+
+    /**
      * @param OrderRepositoryInterface $orderRepositoryInterface
      * @param GridInterface            $orderGrid
+     * @param ScopeConfigInterface     $globalConfig
      */
     public function __construct(
         OrderRepositoryInterface $orderRepositoryInterface,
-        GridInterface $orderGrid
+        GridInterface $orderGrid,
+        ScopeConfigInterface $globalConfig
     ) {
         $this->orderRepositoryInterface = $orderRepositoryInterface;
         $this->orderGrid = $orderGrid;
+        $this->globalConfig = $globalConfig;
     }
 
     /**
@@ -78,7 +87,7 @@ class UpdateOrderGrid implements ObserverInterface
             return $this;
         }
 
-        if ($postNLOrder->getShipAt()) {
+        if ($postNLOrder->getShipAt() && !$this->globalConfig->getValue('dev/grid/async_indexing')) {
             $this->orderGrid->refresh($order->getId());
         }
 
