@@ -29,20 +29,33 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Parcel\Shipment;
+namespace TIG\PostNL\Config\CheckoutConfiguration;
 
-use \TIG\PostNL\Service\Parcel\CountAbstract;
-use Magento\Sales\Api\Data\ShipmentInterface;
+use TIG\PostNL\Config\Provider\Webshop;
 
-class Count extends CountAbstract
+class CheckoutExtension implements CheckoutConfigurationInterface
 {
     /**
-     * @param ShipmentInterface $shipment
-     *
-     * @return int|\Magento\Framework\Api\AttributeInterface|null
+     * @var Webshop
      */
-    public function get(ShipmentInterface $shipment)
+    private $webshopConfig;
+
+    /**
+     * IsPostcodecheckActive constructor.
+     *
+     * @param Webshop $webshop
+     */
+    public function __construct(
+        Webshop $webshop
+    ) {
+        $this->webshopConfig = $webshop;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getValue()
     {
-        return $this->calculate($shipment->getTotalWeight(), $shipment->getItems());
+        return $this->webshopConfig->getCheckoutCompatibleForAddressCheck();
     }
 }
