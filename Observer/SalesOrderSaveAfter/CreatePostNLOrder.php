@@ -112,7 +112,6 @@ class CreatePostNLOrder implements ObserverInterface
         $this->setProductCode($postnlOrder, $magentoOrder);
         $postnlOrder->setData('order_id', $magentoOrder->getId());
         $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
-
         $parcelCount = $this->parcelCount->get($magentoOrder);
         $postnlOrder->setData('parcel_count', $parcelCount > 0 ? $parcelCount : 1);
 
