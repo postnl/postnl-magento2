@@ -117,10 +117,6 @@ class CreateShipment
             return $foundShipment;
         }
 
-        if (!is_array($this->shipment)) {
-            $this->shipment = [$this->shipment];
-        }
-
         if (!$this->isValidOrder()) {
             return null;
         }
@@ -147,7 +143,6 @@ class CreateShipment
     /**
      * Look if an order already has a PostNL shipment. If so, return that shipment.
      * @codingStandardsIgnoreLine
-     * @todo: What if an order has multiple PostNL shipments? Done
      *
      * @return array
      */

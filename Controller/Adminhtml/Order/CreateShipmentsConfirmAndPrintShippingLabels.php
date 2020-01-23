@@ -154,7 +154,8 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         }
 
         $shipments = $this->createShipment->create($order);
-        if (empty($shipments)) {
+        // $shipments will contain a single shipment if it created a new one.
+        if (!is_array($shipments)) {
             $shipments = [$shipments];
         }
 
