@@ -108,7 +108,11 @@ class Domestic extends AbstractType implements TypeInterface
      */
     private function rotateReturnProduct($label)
     {
-        return (in_array($label->getProductCode(), array_column($this->defaultOptions->getBeProducts(), 'value')) && $label->getReturnLabel());
+        $beProducts = array_column($this->defaultOptions->getBeProducts(), 'value');
+        // 4952 is the normal, but automatically falls back to 4944 - which doesn't exist in getBeProducts.
+        $beProducts[] = 4944;
+
+        return (in_array($label->getProductCode(), $beProducts) && $label->getReturnLabel());
     }
 
     /**
