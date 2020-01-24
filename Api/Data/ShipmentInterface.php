@@ -316,6 +316,16 @@ interface ShipmentInterface
     /**
      * @return bool
      */
+    public function isBuspakjeShipment();
+
+    /**
+     * @return bool
+     */
+    public function isDomesticShipment();
+
+    /**
+     * @return bool
+     */
     public function isIDCheck();
 
     /**
@@ -342,4 +352,15 @@ interface ShipmentInterface
      * @return bool
      */
     public function canChangeParcelCount();
+
+    /**
+     * @param string $value
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function setReturnBarcode($value);
+
+    /**
+     * @return string|null
+     */
+    public function getReturnBarcodes();
 }

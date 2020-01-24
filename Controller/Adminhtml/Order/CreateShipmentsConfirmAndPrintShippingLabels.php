@@ -34,7 +34,6 @@ namespace TIG\PostNL\Controller\Adminhtml\Order;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Ui\Component\MassAction\Filter;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
@@ -142,9 +141,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
     }
 
     /**
-     * @param Order $order
-     *
-     * @throws LocalizedException
+     * @param $order
      */
     private function loadLabels($order)
     {
@@ -157,27 +154,32 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         }
 
         $shipments = $this->createShipment->create($order);
-        if (empty($shipments)) {
+        // $shipments will contain a single shipment if it created a new one.
+        if (!is_array($shipments)) {
             $shipments = [$shipments];
         }
 
         foreach ($shipments as $shipment) {
-            $this->loadlabel($shipment);
+            $this->loadLabel($shipment);
         }
     }
 
     /**
-     * @param Shipment $shipment
-     *
-     * @throws LocalizedException
+     * @param $shipment
      */
-    private function loadlabel($shipment)
+    private function loadLabel($shipment)
     {
         $address = $this->canaryConverter->convert($shipment->getShippingAddress());
 
-        $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
-        $this->setTracks($shipment);
-        $this->setLabel($shipment->getId());
+        try {
+            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+            $this->setTracks($shipment);
+            $this->setLabel($shipment->getId());
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addErrorMessage(
+                __('[POSTNL-0070] - Unable to generate barcode for shipment #%1', $shipment->getIncrementId())
+            );
+        }
     }
 
     /**

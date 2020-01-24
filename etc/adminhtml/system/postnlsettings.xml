@@ -208,5 +208,16 @@
             <include path="TIG_PostNL::system/postnlsettings/trackandtrace.xml"/>
 
         </group>
+
+    <group id="returns" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Returns</label>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-sub-section</fieldset_css>
+
+        <include path="TIG_PostNL::system/postnlsettings/returns-nl.xml"/>
+        <include path="TIG_PostNL::system/postnlsettings/returns-be.xml"/>
+
+    </group>
+
     </group>
 </include>

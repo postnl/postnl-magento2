@@ -67,10 +67,6 @@ class AddressEnhancer
      */
     public function set($address)
     {
-	if (empty($address['housenumber']) && isset($address['street'][1])) {
-	    $address['housenumber'] = $address['street'][1];
-	}
-
         $this->address = $address;
 
         if (!$this->config->getIsAddressCheckEnabled() ||
@@ -79,6 +75,10 @@ class AddressEnhancer
             !isset($address['street'][1])
         ) {
             $this->address = $this->appendHouseNumber($address);
+        }
+
+        if (empty($this->address['housenumber']) && isset($this->address['street'][1])) {
+            $this->address['housenumber'] = $this->address['street'][1];
         }
     }
 
