@@ -45,11 +45,13 @@ class ModifyConditionNameColumn implements InstallSchemaInterface
         'condition_name'
     ];
 
+    // @codingStandardsIgnoreLine
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
 
-        $setup->getConnection()->changeColumn(
+        $connection = $setup->getConnection();
+        $connection->changeColumn(
             $setup->getTable(self::TABLE_NAME),
             'condition_name',
             'condition_name',
