@@ -37,14 +37,34 @@ use setasign\Fpdi\PdfParser\PdfParserException;
 use setasign\Fpdi\PdfParser\Type\PdfTypeException;
 use setasign\Fpdi\PdfReader\PdfReaderException;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
+use TIG\PostNL\Config\Source\Options\DefaultOptions;
 use TIG\PostNL\Service\Pdf\Fpdi;
+use TIG\PostNL\Service\Pdf\FpdiFactory;
+use TIG\PostNL\Service\Shipment\Label\File;
 
 class Domestic extends AbstractType implements TypeInterface
 {
     /**
-     * These are return labels that should be rotated, separate from their normal shipping labels
+     * @var DefaultOptions
      */
-    private $returnProducts = [4946];
+    private $defaultOptions;
+
+    /**
+     * Domestic constructor.
+     *
+     * @param FpdiFactory    $Fpdi
+     * @param File           $file
+     * @param DefaultOptions $defaultOptions
+     */
+    public function __construct(
+        FpdiFactory $Fpdi,
+        File $file,
+        DefaultOptions $defaultOptions
+    ) {
+        parent::__construct($Fpdi, $file);
+
+        $this->defaultOptions = $defaultOptions;
+    }
 
     /** @var bool */
     private $templateInserted = false;
@@ -80,13 +100,19 @@ class Domestic extends AbstractType implements TypeInterface
     }
 
     /**
+     * Belgian return labels should be rotated
+     *
      * @param ShipmentLabelInterface $label
      *
      * @return bool
      */
     private function rotateReturnProduct($label)
     {
-        return (in_array($label->getProductCode(), $this->returnProducts) && $label->getReturnLabel());
+        $beProducts = array_column($this->defaultOptions->getBeProducts(), 'value');
+        // 4952 is the normal, but automatically falls back to 4944 - which doesn't exist in getBeProducts.
+        $beProducts[] = 4944;
+
+        return (in_array($label->getProductCode(), $beProducts) && $label->getReturnLabel());
     }
 
     /**
