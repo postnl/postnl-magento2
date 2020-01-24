@@ -33,6 +33,7 @@
 namespace PostNL\Test\Unit\Service\Shipment\Label\Type;
 
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
+use TIG\PostNL\Config\Source\Options\DefaultOptions;
 use TIG\PostNL\Test\TestCase;
 use TIG\PostNL\Service\Shipment\Label\Type\Domestic;
 
@@ -49,8 +50,8 @@ class DomesticTest extends TestCase
         return [
             'ProductCode should rotate, is return label' => [4946, true, true],
             'ProductCode should rotate, is not return label' => [4946, false, false],
-            'ProductCode should not rotate, is return label' => [4950, true, false],
-            'ProductCode should not rotate, is not return label' => [5060, false, false]
+            'ProductCode should not rotate, is return label' => [3085, true, false],
+            'ProductCode should not rotate, is not return label' => [3085, false, false]
         ];
     }
 
@@ -71,7 +72,12 @@ class DomesticTest extends TestCase
         $labelMock->expects($this->once())->method('getProductCode')->willReturn($productCode);
         $labelMock->method('getReturnLabel')->willReturn($isReturnLabel);
 
-        $instance = $this->getInstance();
+        $productOptionsMock = $this->getFakeMock(DefaultOptions::class)->getMock();
+        $productOptionsExpects = $productOptionsMock->expects($this->once());
+        $productOptionsExpects->method('getBeProducts');
+        $productOptionsExpects->willReturn([['value' => 4946]]);
+
+        $instance = $this->getInstance(['defaultOptions' => $productOptionsMock]);
         $result = $this->invokeArgs('rotateReturnProduct', [$labelMock], $instance);
         $this->assertEquals($expected, $result);
     }
