@@ -18,7 +18,7 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
+ * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
@@ -29,25 +29,27 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Service\Shipment\Packingslip\Compatibility;
 
 use Magento\Framework\ObjectManagerInterface;
 
 // @codingStandardsIgnoreFile
-class ShipmentFactoryProxy
+class GeneratePdfFactoryProxy
 {
-
     /**
      * @var ObjectManagerInterface
      */
     private $objectManager;
 
     /**
-     * @var \Fooman\PdfCustomiser\Block\OrderShipmentFactory
+     * @var Data
      */
     private $subject;
 
     /**
+     * DataHelperFactoryProxy constructor.
+     *
      * @param ObjectManagerInterface $objectManager
      */
     public function __construct(ObjectManagerInterface $objectManager)
@@ -56,20 +58,21 @@ class ShipmentFactoryProxy
     }
 
     /**
-     * @return \Fooman\PdfCustomiser\Block\ShipmentFactory
+     * @return mixed|Data
      */
     private function getSubject()
     {
         if (!$this->subject) {
-            $this->subject = $this->objectManager->get(\Fooman\PdfCustomiser\Block\ShipmentFactory\Proxy::class);
+            $this->subject = $this->objectManager->get('\Xtento\PdfCustomizer\Helper\GeneratePdf');
         }
+
         return $this->subject;
     }
 
     /**
      * @param array $data
      *
-     * @return \Fooman\PdfCustomiser\Block\Shipment
+     * @return mixed
      */
     public function create(array $data = [])
     {

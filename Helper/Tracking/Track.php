@@ -240,7 +240,7 @@ class Track extends AbstractTracking
     private function resetTrackingKey($shipment)
     {
         $data = $shipment->getData();
-        if (isset($data['tracks']) && count($data['tracks']) === 0) {
+        if (isset($data['tracks']) && empty($data['tracks'])) {
             unset($data['tracks']);
         }
 
