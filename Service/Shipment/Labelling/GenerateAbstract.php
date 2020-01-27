@@ -222,7 +222,7 @@ abstract class GenerateAbstract
         $labelItemHandle = $this->handler->handle($shipment, $labelItem->Labels->Label);
 
         foreach ($labelItemHandle['labels'] as $Label) {
-            $labelModel    = $this->save($shipment, $currentShipmentNumber, $this->getLabelContent($Label), $labelItemHandle['Type'], $labelItem->ProductCodeDelivery, $this->getLabelType($Label, $labelItem->ProductCodeDelivery));
+            $labelModel    = $this->save($shipment, $currentShipmentNumber, $this->getLabelContent($Label), $labelItemHandle['type'], $labelItem->ProductCodeDelivery, $this->getLabelType($Label, $labelItem->ProductCodeDelivery));
             $labelModels[] = $labelModel;
             $this->shipmentLabelRepository->save($labelModel);
         }
