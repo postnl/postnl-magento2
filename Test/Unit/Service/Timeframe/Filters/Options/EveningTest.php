@@ -32,6 +32,7 @@
 
 namespace TIG\PostNL\Unit\Service\Timeframe\Filters\Options;
 
+use Exception;
 use TIG\PostNL\Test\TestCase;
 use TIG\PostNL\Service\Timeframe\Filters\Options\Evening;
 use TIG\PostNL\Config\Provider\ShippingOptions;
@@ -46,6 +47,8 @@ class EveningTest extends TestCase
      * @param $isEnabled
      * @param $options
      * @param $expected
+     *
+     * @throws Exception
      */
     public function testFilter($isEnabled, $options, $expected)
     {

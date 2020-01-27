@@ -222,7 +222,7 @@ abstract class GenerateAbstract
         $labelItemHandle = $this->handler->handle($shipment, $labelItem->Labels->Label);
         
         foreach ($labelItemHandle['labels'] as $Label) {
-            $labelModel    = $this->save($shipment, $currentShipmentNumber, $Label, $labelItemHandle['type'], $labelItem->ProductCodeDelivery);
+            $labelModel    = $this->save($shipment, $currentShipmentNumber, $Label['Content'], $labelItemHandle['type'], $labelItem->ProductCodeDelivery, $Label['Type']);
             $labelModels[] = $labelModel;
             $this->shipmentLabelRepository->save($labelModel);
         }
@@ -237,17 +237,18 @@ abstract class GenerateAbstract
         
         return $labelModels;
     }
-    
+
     /**
      * @param ShipmentInterface|Shipment $shipment
      * @param int                        $number
      * @param string                     $label
      * @param null|string                $type
      * @param int                        $productCode
+     * @param                            $labelType
      *
      * @return ShipmentLabelInterface
      */
-    public function save(ShipmentInterface $shipment, $number, $label, $type, $productCode)
+    public function save(ShipmentInterface $shipment, $number, $label, $type, $productCode, $labelType)
     {
         /** @var ShipmentLabelInterface $labelModel */
         $labelModel = $this->shipmentLabelFactory->create();
@@ -256,6 +257,10 @@ abstract class GenerateAbstract
         $labelModel->setLabel(base64_encode($label));
         $labelModel->setType($type ?: ShipmentLabelInterface::BARCODE_TYPE_LABEL);
         $labelModel->setProductCode($productCode);
+
+        if ($labelType == 'Return Label') {
+            $labelModel->isReturnLabel(true);
+        }
         
         return $labelModel;
     }

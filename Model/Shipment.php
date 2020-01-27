@@ -95,6 +95,8 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
 
     const FIELD_DOWNPARTNER_BARCODE  = 'downpartner_barcode';
 
+    const FIELD_RETURN_BARCODE = 'return_barcode';
+
     /**
      * @var string
      */
@@ -394,7 +396,23 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
             return $this->getMainBarcode();
         }
 
-        $barcode = $this->barcodeRepository->getForShipment($this, $currentShipmentNumber);
+        $barcode = $this->barcodeRepository->getForShipment($this, $currentShipmentNumber, $type = 'shipment');
+
+        if (!$barcode) {
+            return null;
+        }
+
+        return $barcode->getValue();
+    }
+
+    /**
+     * @param int $currentShipmentNumber
+     *
+     * @return string|null
+     */
+    public function getReturnBarcodes($currentShipmentNumber = 1)
+    {
+        $barcode = $this->barcodeRepository->getForShipment($this, $currentShipmentNumber, $type = 'return');
 
         if (!$barcode) {
             return null;
@@ -742,6 +760,34 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     /**
      * @return bool
      */
+    public function isBuspakjeShipment()
+    {
+        $productCodeOptions = $this->getProductCodeOptions();
+
+        if ($productCodeOptions == null) {
+            return false;
+        }
+
+        return $productCodeOptions['group'] == 'buspakje_options';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDomesticShipment()
+    {
+        $productCodeOptions = $this->getProductCodeOptions();
+
+        if ($productCodeOptions == null) {
+            return false;
+        }
+
+        return $productCodeOptions['group'] == 'standard_options';
+    }
+
+    /**
+     * @return bool
+     */
     public function isIDCheck()
     {
         $productCodeOptions = $this->getProductCodeOptions();
@@ -887,5 +933,23 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
          */
         // @codingStandardsIgnoreLine
         return new \DateTime($deliveryDate);
+    }
+
+    /**
+     * @param string
+     *
+     * @return $this
+     */
+    public function setReturnBarcode($value)
+    {
+        return $this->setData(static::FIELD_RETURN_BARCODE, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getReturnBarcode()
+    {
+        return $this->getData(static::FIELD_RETURN_BARCODE);
     }
 }

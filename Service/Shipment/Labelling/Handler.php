@@ -114,7 +114,7 @@ class Handler
     {
         $labelContents = [];
         foreach ($labels as $label) {
-            $labelContents[] = $label->Content;
+            $labelContents[] = ['Content' => $label->Content, 'Type' => $label->Labeltype];
         }
 
         return $labelContents;
