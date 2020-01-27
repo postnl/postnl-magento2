@@ -50,25 +50,25 @@ abstract class GenerateAbstract
      * $labelling
      */
     private $labelling;
-    
+
     /** @var \TIG\PostNL\Service\Shipment\Labelling\Handler $handler */
     private $handler;
-    
+
     /** @var \TIG\PostNL\Logging\Log $logger */
     private $logger;
-    
+
     /** @var \TIG\PostNL\Model\ShipmentLabelFactory $shipmentLabelFactory */
     private $shipmentLabelFactory;
-    
+
     /** @var \TIG\PostNL\Api\ShipmentLabelRepositoryInterface $shipmentLabelRepository */
     private $shipmentLabelRepository;
-    
+
     /** @var \TIG\PostNL\Api\ShipmentRepositoryInterface $shipmentRepository */
     private $shipmentRepository;
-    
+
     /** @var string $date */
     private $date;
-    
+
     /**
      * GenerateAbstract constructor.
      *
@@ -94,7 +94,7 @@ abstract class GenerateAbstract
         $this->shipmentRepository      = $shipmentRepository;
         $this->date                    = $helper->getDate();
     }
-    
+
     /**
      * @param ShipmentInterface $shipment
      * @param                   $currentShipmentNumber
@@ -108,27 +108,27 @@ abstract class GenerateAbstract
             $responseShipments = $this->callEndpoint($shipment, $currentShipmentNumber);
         } catch (\Exception $exception) {
             $this->logger->debug($exception->getMessage());
-            
+
             return null;
         }
-        
+
         if ($responseShipments) {
             $this->saveDownpartnerData($shipment, $responseShipments);
             $this->saveCountryId($shipment);
         }
-        
+
         if ($confirm) {
             $shipment->setConfirmedAt($this->date);
             $shipment->setConfirmed(true);
         }
-        
+
         $labelModels = $this->handleLabels($shipment, $responseShipments, $currentShipmentNumber);
-    
+
         $this->shipmentRepository->save($shipment);
-        
+
         return $labelModels;
     }
-    
+
     /**
      * @param \TIG\PostNL\Api\Data\ShipmentInterface $shipment
      * @param                                        $response
@@ -138,12 +138,12 @@ abstract class GenerateAbstract
         $downPartnerBarcode  = $response[0]->DownPartnerBarcode;
         $downPartnerId       = $response[0]->DownPartnerID;
         $downPartnerLocation = $response[0]->DownPartnerLocation;
-        
+
         $shipment->setDownpartnerBarcode($downPartnerBarcode);
         $shipment->setDownpartnerId($downPartnerId);
         $shipment->setDownpartnerLocation($downPartnerLocation);
     }
-    
+
     /**
      * @param ShipmentInterface $shipment
      */
@@ -151,10 +151,10 @@ abstract class GenerateAbstract
     {
         $shippingAddress = $shipment->getShippingAddress();
         $countryId       = $shippingAddress->getCountryId();
-        
+
         $shipment->setShipmentCountry($countryId);
     }
-    
+
     /**
      * @param \TIG\PostNL\Api\Data\ShipmentInterface $postNlShipment
      * @param                                        $currentShipmentNumber
@@ -168,18 +168,18 @@ abstract class GenerateAbstract
         $this->labelling->setParameters($postNlShipment, $currentShipmentNumber);
         $response          = $this->labelling->call();
         $responseShipments = null;
-        
+
         if (isset($response->ResponseShipments)) {
             $responseShipments = $response->ResponseShipments;
         }
-        
+
         if (!is_object($response) || !isset($responseShipments->ResponseShipment)) {
             throw new PostNLException(sprintf('Invalid generateLabel response: %1', var_export($response, true)));
         }
-        
+
         return $responseShipments->ResponseShipment;
     }
-    
+
     /**
      * @param $labelService
      */
@@ -187,7 +187,7 @@ abstract class GenerateAbstract
     {
         $this->labelling = $labelService;
     }
-    
+
     /**
      * @param $shipment
      * @param $responseShipments
@@ -205,10 +205,10 @@ abstract class GenerateAbstract
             );
             $currentShipmentNumber++;
         }
-        
+
         return $labelModels;
     }
-    
+
     /**
      * @param $labelItem
      * @param $shipment
@@ -220,13 +220,13 @@ abstract class GenerateAbstract
     {
         $labelModels     = [];
         $labelItemHandle = $this->handler->handle($shipment, $labelItem->Labels->Label);
-        
+
         foreach ($labelItemHandle['labels'] as $Label) {
-            $labelModel    = $this->save($shipment, $currentShipmentNumber, $Label['Content'], $labelItemHandle['type'], $labelItem->ProductCodeDelivery, $Label['Type']);
+            $labelModel    = $this->save($shipment, $currentShipmentNumber, $this->getLabelContent($Label), $labelItemHandle['type'], $labelItem->ProductCodeDelivery, $this->getLabelType($Label, $labelItem->ProductCodeDelivery));
             $labelModels[] = $labelModel;
             $this->shipmentLabelRepository->save($labelModel);
         }
-        
+
         /**
          * If SAM returned different product code during generation, override
          * it in PostNL Shipment table.
@@ -234,8 +234,37 @@ abstract class GenerateAbstract
         if ($labelItem->ProductCodeDelivery !== $shipment->getProductCode()) {
             $shipment->setProductCode($labelItem->ProductCodeDelivery);
         }
-        
+
         return $labelModels;
+    }
+
+    /**
+     * @param $Label
+     *
+     * @return string
+     */
+    private function getLabelContent($Label)
+    {
+        if (is_array($Label)) {
+            return $Label['Content'];
+        }
+
+        return $Label;
+    }
+
+    /**
+     * @param $Label
+     * @param $productCodeDelivery
+     *
+     * @return string
+     */
+    private function getLabelType($Label, $productCodeDelivery)
+    {
+        if (is_array($Label)) {
+            return $Label['type'];
+        }
+
+        return $productCodeDelivery;
     }
 
     /**
@@ -261,7 +290,7 @@ abstract class GenerateAbstract
         if ($labelType == 'Return Label') {
             $labelModel->isReturnLabel(true);
         }
-        
+
         return $labelModel;
     }
 }

@@ -159,6 +159,10 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
             return;
         }
 
+        if (is_array($shipment)) {
+            $shipment = array_pop($shipment);
+        }
+
         $address = $shipment->getShippingAddress();
 
         try {
