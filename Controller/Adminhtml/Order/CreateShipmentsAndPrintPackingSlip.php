@@ -164,7 +164,6 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
         }
 
         $address = $shipment->getShippingAddress();
-
         try {
             $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
         } catch (LocalizedException $exception) {
@@ -173,7 +172,6 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
             );
             return;
         }
-
         $this->setTracks($shipment);
         $this->setPackingslip($shipment->getId(), true, false);
     }
