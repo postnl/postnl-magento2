@@ -183,7 +183,7 @@ class AddressEnhancer
         if (count($address['street']) == 2) {
             $tmpAddress           = $this->extractHousenumber(['street' => [$address['street'][0]]]);
             $result['street']     = $address['street'][0];
-            $result['number']     = $tmpAddress['housenumber'];
+            $result['number']     = isset($tmpAddress['housenumber']) ? $tmpAddress['housenumber'] : null;
             $result['addition']   = $address['street'][1];
             $address['street'][1] = '';
             unset($result['error']);
