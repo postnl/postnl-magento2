@@ -179,6 +179,7 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
      *
      * @param $shipmentId
      *
+     * @api
      * @return \Magento\Framework\Api\ExtensibleDataInterface[]|null|\TIG\PostNL\Api\Data\ShipmentLabelInterface[]
      */
     public function getByShipmentId($shipmentId)
