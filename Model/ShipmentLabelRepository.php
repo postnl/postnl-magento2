@@ -177,7 +177,7 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
     /**
      * Return a label that belongs to a shipment.
      *
-     * @param $shipmentId
+     * @param int $shipmentId
      *
      * @api
      * @return \Magento\Framework\Api\ExtensibleDataInterface[]|null|\TIG\PostNL\Api\Data\ShipmentLabelInterface[]
