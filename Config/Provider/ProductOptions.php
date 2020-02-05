@@ -56,6 +56,7 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_ALTERNATIVE_DEFAULT_PACKAGE_DELIVERY_TYPE  = 'tig_postnl/delivery_settings/alternative_package_type';
     const XPATH_DEFAULT_EPS_PRODUCT_OPTION                 = 'tig_postnl/delivery_settings/default_eps_option';
     const XPATH_DEFAULT_GP_PRODUCT_OPTION                  = 'tig_postnl/globalpack/default_gp_option';
+    const XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS    = 'tig_postnl/delivery_settings/default_delivery_stated_address';
 
     /**
      * Since 1.5.1 all product options are automaticly supported.
@@ -251,6 +252,14 @@ class ProductOptions extends AbstractConfigProvider
     public function checkProductByFlags($code, $key, $value)
     {
         return $this->productOptions->doesProductMatchFlags($code, $key, $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultDeliveryStatedAddress()
+    {
+        return (string) $this->getConfigFromXpath(static::XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS);
     }
 }
 /**
