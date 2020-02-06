@@ -179,7 +179,7 @@
             <resource ref="Magento_Sales::sales"/>
         </resources>
     </route>
-    <route url="/V1/postnl/shipments/label/:shipmentId" method="GET">
+    <route url="/V1/postnl/shipments/label/getbyshipment/:shipmentId" method="GET">
         <service class="TIG\PostNL\Api\ShipmentLabelRepositoryInterface" method="getByShipmentId"/>
         <resources>
             <resource ref="Magento_Sales::sales"/>
