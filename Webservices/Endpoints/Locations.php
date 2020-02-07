@@ -119,7 +119,7 @@ class Locations extends AbstractEndpoint
     {
         $this->requestParams = [
             'Location'    => [
-                'DeliveryOptions'    => $this->postNLhelper->getAllowedDeliveryOptions(),
+                'DeliveryOptions'    => $this->postNLhelper->getAllowedDeliveryOptions($address['country']),
                 'DeliveryDate'       => $this->getDeliveryDate($startDate),
                 'Postalcode'         => str_replace(' ', '', $address['postcode']),
                 'Options'            => ['Daytime', 'Morning'],
