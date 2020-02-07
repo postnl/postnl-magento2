@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
+use TIG\PostNL\Service\Quote\QuoteHasDeliveryDaysDisabled;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
@@ -66,16 +67,22 @@ class Timeframes extends AbstractDeliveryOptions
     private $isDeliveryDaysActive;
 
     /**
-     * @param Context             $context
-     * @param OrderRepository     $orderRepository
-     * @param Session             $checkoutSession
-     * @param QuoteToRateRequest  $quoteToRateRequest
-     * @param AddressEnhancer     $addressEnhancer
-     * @param DeliveryDate        $deliveryDate
-     * @param TimeFrame           $timeFrame
-     * @param Calculator          $calculator
-     * @param IsDeliverDaysActive $isDeliverDaysActive
-     * @param ShippingDuration    $shippingDuration
+     * @var QuoteHasDeliveryDaysDisabled
+     */
+    private $quoteHasDeliveryDaysDisabled;
+
+    /**
+     * @param Context                      $context
+     * @param OrderRepository              $orderRepository
+     * @param Session                      $checkoutSession
+     * @param QuoteToRateRequest           $quoteToRateRequest
+     * @param AddressEnhancer              $addressEnhancer
+     * @param DeliveryDate                 $deliveryDate
+     * @param TimeFrame                    $timeFrame
+     * @param Calculator                   $calculator
+     * @param IsDeliverDaysActive          $isDeliverDaysActive
+     * @param ShippingDuration             $shippingDuration
+     * @param QuoteHasDeliveryDaysDisabled $quoteHasDeliveryDaysDisabled
      */
     public function __construct(
         Context $context,
@@ -87,12 +94,14 @@ class Timeframes extends AbstractDeliveryOptions
         TimeFrame $timeFrame,
         Calculator $calculator,
         IsDeliverDaysActive $isDeliverDaysActive,
-        ShippingDuration $shippingDuration
+        ShippingDuration $shippingDuration,
+        QuoteHasDeliveryDaysDisabled $quoteHasDeliveryDaysDisabled
     ) {
-        $this->addressEnhancer      = $addressEnhancer;
-        $this->timeFrameEndpoint    = $timeFrame;
-        $this->calculator           = $calculator;
-        $this->isDeliveryDaysActive = $isDeliverDaysActive;
+        $this->addressEnhancer              = $addressEnhancer;
+        $this->timeFrameEndpoint            = $timeFrame;
+        $this->calculator                   = $calculator;
+        $this->isDeliveryDaysActive         = $isDeliverDaysActive;
+        $this->quoteHasDeliveryDaysDisabled = $quoteHasDeliveryDaysDisabled;
 
         parent::__construct(
             $context,
@@ -107,11 +116,16 @@ class Timeframes extends AbstractDeliveryOptions
     /**
      * @return \Magento\Framework\Controller\ResultInterface
      */
+    // @codingStandardsIgnoreStart
     public function execute()
     {
         $params = $this->getRequest()->getParams();
         if (!isset($params['address']) || !is_array($params['address'])) {
             return $this->jsonResponse($this->getFallBackResponse(1));
+        }
+
+        if ($this->quoteHasDeliveryDaysDisabled->canDisableDeliveryDays($this->checkoutSession)) {
+            return $this->jsonResponse($this->getFallBackResponse(2));
         }
 
         $this->addressEnhancer->set($params['address']);
@@ -126,6 +140,7 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getFallBackResponse(3, $price['price']));
         }
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * @param $address
