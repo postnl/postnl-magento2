@@ -112,6 +112,7 @@
             <post_offices>
                 <pakjegemak_active>1</pakjegemak_active>
                 <default_pakjegemak_option>3533</default_pakjegemak_option>
+                <default_pakjegemak_be_option>4936</default_pakjegemak_be_option>
             </post_offices>
 
             <extra_at_home>

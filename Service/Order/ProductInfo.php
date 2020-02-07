@@ -120,7 +120,7 @@ class ProductInfo
         }
 
         if ($type == static::TYPE_PICKUP) {
-            $this->setPakjegemakProductOption();
+            $this->setPakjegemakProductOption($country);
 
             return $this->getInfo();
         }
@@ -240,9 +240,9 @@ class ProductInfo
         return $this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'priority_options');
     }
 
-    private function setPakjegemakProductOption()
+    private function setPakjegemakProductOption($country = null)
     {
-        $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
+        $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption($country);
         $this->type = static::SHIPMENT_TYPE_PG;
     }
 

@@ -47,6 +47,7 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_EVENING_PRODUCT_OPTION             = 'tig_postnl/evening_delivery_nl/default_evening_option';
     const XPATH_DEFAULT_EXTRAATHOME_PRODUCT_OPTION         = 'tig_postnl/extra_at_home/default_extraathome_option';
     const XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION          = 'tig_postnl/post_offices/default_pakjegemak_option';
+    const XPATH_DEFAULT_PAKJEGEMAK_BE_PRODUCT_OPTION       = 'tig_postnl/evening_delivery_be/default_pakjegemak_be_option';
     const XPATH_DEFAULT_EVENING_BE_PRODUCT_OPTION          = 'tig_postnl/evening_delivery_be/default_evening_be_option';
     const XPATH_DEFAULT_BE_PRODUCT_OPTION                  = 'tig_postnl/delivery_settings/default_be_option';
     const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION              = 'tig_postnl/sunday_delivery/default_sunday_option';
@@ -137,6 +138,14 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
+     * @return string|int
+     */
+    public function getDefaultPakjeGemakBeProductOption()
+    {
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_PAKJEGEMAK_BE_PRODUCT_OPTION);
+    }
+
+    /**
      * @return mixed
      */
     public function getDefaultBeProductOption()
@@ -161,10 +170,14 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
+     * @param string $country
      * @return mixed
      */
-    public function getDefaultPakjeGemakProductOption()
+    public function getDefaultPakjeGemakProductOption($country = null)
     {
+        if ($country === 'BE') {
+            return $this->getDefaultPakjeGemakBeProductOption();
+        }
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION);
     }
 
