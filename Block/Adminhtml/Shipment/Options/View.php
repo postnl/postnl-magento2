@@ -41,6 +41,8 @@ use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
 use TIG\PostNL\Block\Adminhtml\Renderer\ShipmentType;
+use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory as ShipmentBarcodeCollectionFactory;
+use Magento\Sales\Model\Order\Shipment\TrackFactory;
 
 class View extends OptionsAbstract
 {
@@ -60,14 +62,26 @@ class View extends OptionsAbstract
     private $shipment;
 
     /**
-     * @param Context                  $context
-     * @param ShipmentSupported           $productOptions
-     * @param ProductOptionSource      $productOptionsSource
-     * @param OrderRepository          $orderRepository
-     * @param Registry                 $registry
-     * @param PostNLShipmentRepository $shipmentRepository
-     * @param ShipmentType             $shipmentType
-     * @param array                    $data
+     * @var ShipmentBarcodeCollectionFactory
+     */
+    private $shipmentBarcodeCollectionFactory;
+
+    /**
+     * @var TrackFactory
+     */
+    private $trackFactory;
+
+    /**
+     * @param Context                               $context
+     * @param ShipmentSupported                     $productOptions
+     * @param ProductOptionSource                   $productOptionsSource
+     * @param OrderRepository                       $orderRepository
+     * @param Registry                              $registry
+     * @param PostNLShipmentRepository              $shipmentRepository
+     * @param ShipmentType                          $shipmentType
+     * @param ShipmentBarcodeCollectionFactory      $shipmentBarcodeCollectionFactory
+     * @param TrackFactory                          $trackFactory
+     * @param array                                 $data
      */
     public function __construct(
         Context $context,
@@ -77,6 +91,8 @@ class View extends OptionsAbstract
         Registry $registry,
         PostNLShipmentRepository $shipmentRepository,
         ShipmentType $shipmentType,
+        ShipmentBarcodeCollectionFactory $shipmentBarcodeCollectionFactory,
+        TrackFactory $trackFactory,
         array $data = []
     ) {
         parent::__construct(
@@ -88,8 +104,10 @@ class View extends OptionsAbstract
             $data
         );
 
-        $this->postNLShipmentRepository = $shipmentRepository;
-        $this->productCodeRenderer      = $shipmentType;
+        $this->postNLShipmentRepository         = $shipmentRepository;
+        $this->productCodeRenderer              = $shipmentType;
+        $this->shipmentBarcodeCollectionFactory = $shipmentBarcodeCollectionFactory;
+        $this->trackFactory                     = $trackFactory;
     }
 
     /**

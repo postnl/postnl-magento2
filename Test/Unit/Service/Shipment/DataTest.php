@@ -191,7 +191,8 @@ class DataTest extends TestCase
             'DownPartnerID'            => '12345',
             'DownPartnerLocation'      => '112345',
             'ProductCodeDelivery'      => '3085',
-            'Reference'                => '0000000012'
+            'ReturnBarcode'            => null,
+            'Reference'                => '0000000012',
         ];
 
         $this->mockFunction($this->shipmentMock, 'getMainBarcode', $shipmentData['Barcode']);
@@ -200,6 +201,7 @@ class DataTest extends TestCase
         $this->mockFunction($this->shipmentMock, 'getDownpartnerId', $shipmentData['DownPartnerID']);
         $this->mockFunction($this->shipmentMock, 'getDownpartnerLocation', $shipmentData['DownPartnerLocation']);
         $this->mockFunction($this->shipmentMock, 'getProductCode', $shipmentData['ProductCodeDelivery']);
+        $this->mockFunction($this->shipmentMock, 'getReturnBarcodes', $shipmentData['ReturnBarcode']);
 
         $this->mockFunction($this->packingslipOptionsMock, 'getReference', $shipmentData['Reference']);
 

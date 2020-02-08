@@ -31,9 +31,10 @@
  */
 namespace TIG\PostNL\Service\Shipment\Packingslip;
 
+use Magento\Framework\Exception\NotFoundException;
 use Magento\Sales\Model\Order\Pdf\Shipment as PdfShipment;
 use Magento\Framework\Module\Manager;
-use Magento\Sales\Api\Data\ShipmentInterface;
+use Zend_Pdf_Exception;
 
 /**
  * Class Factory
@@ -65,30 +66,47 @@ class Factory
     private $foomanPdfCustomiser;
 
     /**
-     * @param Manager $manager
-     * @param PdfShipment $pdfShipment
+     * @var Compatibility\XtentoPdfCustomizer
+     */
+    private $xtentoPdfCustomizer;
+
+    /**
+     * @param Manager                           $manager
+     * @param PdfShipment                       $pdfShipment
      * @param Compatibility\FoomanPdfCustomiser $foomanPdfCustomiser
+     * @param Compatibility\XtentoPdfCustomizer $xtentoPdfCustomizer
      */
     public function __construct(
         Manager $manager,
         PdfShipment $pdfShipment,
-        Compatibility\FoomanPdfCustomiser $foomanPdfCustomiser
+        Compatibility\FoomanPdfCustomiser $foomanPdfCustomiser,
+        Compatibility\XtentoPdfCustomizer $xtentoPdfCustomizer
     ) {
         $this->moduleManager   = $manager;
         $this->magentoPdf      = $pdfShipment;
         $this->foomanPdfCustomiser = $foomanPdfCustomiser;
+        $this->xtentoPdfCustomizer = $xtentoPdfCustomizer;
     }
 
     /**
-     * @param ShipmentInterface $magentoShipment
+     * @param      $magentoShipment
      * @param bool $forceMagento
      *
      * @return string
+     * @throws NotFoundException
+     * @throws Zend_Pdf_Exception
      */
     public function create($magentoShipment, $forceMagento = false)
     {
         if (!$forceMagento && $this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             return $this->foomanPdfCustomiser->getPdf($this, $magentoShipment);
+        }
+
+        if (!$forceMagento &&
+            $this->moduleManager->isEnabled('Xtento_PdfCustomizer') &&
+            $this->xtentoPdfCustomizer->isShipmentPdfEnabled()
+        ) {
+            return $this->xtentoPdfCustomizer->getPdf($magentoShipment);
         }
 
         $renderer = $this->magentoPdf->getPdf([$magentoShipment]);
