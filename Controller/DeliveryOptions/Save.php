@@ -132,11 +132,10 @@ class Save extends AbstractDeliveryOptions
             $postnlOrder->setData($key, $value);
         }
 
+        $postnlOrder->setIsStatedAddressOnly(false);
         if (isset($params['stated_address_only']) && $params['stated_address_only']) {
             $postnlOrder->setIsStatedAddressOnly(true);
             $postnlOrder->setProductCode($this->productOptions->getDefaultStatedAddressOnlyProductOption());
-        } else {
-            $postnlOrder->setIsStatedAddressOnly(false);
         }
 
         $this->orderRepository->save($postnlOrder);
