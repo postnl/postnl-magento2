@@ -252,8 +252,6 @@ class ProductOptions extends AbstractConfigProvider
     {
         return $this->productOptions->doesProductMatchFlags($code, $key, $value);
     }
-<<<<<<< Updated upstream
-=======
 
     /**
      * @return mixed
@@ -262,7 +260,6 @@ class ProductOptions extends AbstractConfigProvider
     {
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS);
     }
->>>>>>> Stashed changes
 }
 /**
  * codingStandardsIgnoreEnd
