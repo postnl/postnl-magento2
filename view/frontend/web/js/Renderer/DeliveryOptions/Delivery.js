@@ -213,7 +213,7 @@ define([
             return priceUtils.formatPrice(fee, quote.getPriceFormat());
         },
 
-        handleStatedAddressOnlyFee: function() {
+        handleStatedAddressOnlyFee: function () {
             this.saveSelectedOption(this.selectedOption());
             var statedAddressOnly = +$('#postnl_stated_address_only_checkbox').is(':checked');
             if (statedAddressOnly) {
