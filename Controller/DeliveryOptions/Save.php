@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
+use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\DeliveryOptions\OrderParams;
@@ -55,6 +56,11 @@ class Save extends AbstractDeliveryOptions
     private $pickupAddress;
 
     /**
+     * @var ProductOptions
+     */
+    private $productOptions;
+
+    /**
      * @param Context            $context
      * @param OrderRepository    $orderRepository
      * @param QuoteToRateRequest $quoteToRateRequest
@@ -62,6 +68,7 @@ class Save extends AbstractDeliveryOptions
      * @param Session            $checkoutSession
      * @param PickupAddress      $pickupAddress
      * @param ShippingDuration   $shippingDuration
+     * @param ProductOptions     $productOptions
      */
     public function __construct(
         Context $context,
@@ -70,7 +77,8 @@ class Save extends AbstractDeliveryOptions
         OrderParams $orderParams,
         Session $checkoutSession,
         PickupAddress $pickupAddress,
-        ShippingDuration $shippingDuration
+        ShippingDuration $shippingDuration,
+        ProductOptions $productOptions
     ) {
         parent::__construct(
             $context,
@@ -82,6 +90,7 @@ class Save extends AbstractDeliveryOptions
 
         $this->orderParams     = $orderParams;
         $this->pickupAddress   = $pickupAddress;
+        $this->productOptions = $productOptions;
     }
 
     /**
@@ -121,6 +130,13 @@ class Save extends AbstractDeliveryOptions
 
         foreach ($params as $key => $value) {
             $postnlOrder->setData($key, $value);
+        }
+
+        if (isset($params['stated_address_only']) && $params['stated_address_only']) {
+            $postnlOrder->setIsStatedAddressOnly(true);
+            $postnlOrder->setProductCode($this->productOptions->getDefaultStatedAddressOnlyProductOption());
+        } else {
+            $postnlOrder->setIsStatedAddressOnly(false);
         }
 
         $this->orderRepository->save($postnlOrder);

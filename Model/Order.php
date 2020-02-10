@@ -60,6 +60,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     const FIELD_EXPECTED_DELIVERY_TIME_START = 'expected_delivery_time_start';
     const FIELD_EXPECTED_DELIVERY_TIME_END = 'expected_delivery_time_end';
     const FIELD_IS_PAKJEGEMAK = 'is_pakjegemak';
+    const FIELD_IS_STATED_ADDRESS_ONLY = 'is_stated_address_only';
     const FIELD_PG_ORDER_ADDRESS_ID = 'pg_order_address_id';
     const FIELD_PG_LOCATION_CODE = 'pg_location_code';
     const FIELD_PG_RETAIL_NETWORK_ID = 'pg_retail_network_id';
@@ -291,6 +292,24 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     public function getIsPakjegemak()
     {
         return $this->getData(static::FIELD_IS_PAKJEGEMAK);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setIsStatedAddressOnly($value)
+    {
+        return $this->setData(static::FIELD_IS_STATED_ADDRESS_ONLY, $value);
+    }
+
+    /**
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function getIsStatedAddressOnly()
+    {
+        return $this->getData(static::FIELD_IS_STATED_ADDRESS_ONLY);
     }
 
     /**

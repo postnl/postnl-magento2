@@ -10,6 +10,9 @@
                 <!-- ko if: shipmentType() == 'delivery' && deliveryFee() -->
                 + <span data-bind="text: formatPrice(deliveryFee())"></span>
                 <!-- /ko -->
+                <!-- ko if: shipmentType() == 'delivery' && statedDeliveryFee() -->
+                + <span data-bind="text: formatPrice(statedDeliveryFee())"></span>
+                <!-- /ko -->
             </div>
 
         </button>
