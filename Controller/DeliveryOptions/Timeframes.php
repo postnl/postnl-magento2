@@ -124,7 +124,7 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getFallBackResponse(1));
         }
 
-        if ($this->quoteHasDeliveryDaysDisabled->canDisableDeliveryDays($this->checkoutSession)) {
+        if ($this->quoteHasDeliveryDaysDisabled->shouldDisableDeliveryDays($this->checkoutSession)) {
             return $this->jsonResponse($this->getFallBackResponse(2));
         }
 

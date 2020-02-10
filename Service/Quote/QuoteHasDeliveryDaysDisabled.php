@@ -34,25 +34,38 @@ namespace TIG\PostNL\Service\Quote;
 class QuoteHasDeliveryDaysDisabled
 {
     /**
+     * @var bool $disabledDeliveryDays
+     */
+    private $disabledDeliveryDays = false;
+
+    /**
      * @param $checkoutSession
      *
      * @return bool
      */
-    public function canDisableDeliveryDays($checkoutSession)
+    public function shouldDisableDeliveryDays($checkoutSession)
     {
         $quote = $checkoutSession->getQuote();
         $items = $quote->getItems();
-        $hasDeliveryDays = [];
+
+        if($items === null) {
+            return;
+        }
 
         foreach ($items as $item) {
-            $product = $item->getProduct();
-            $hasDeliveryDays[] = $product->getPostnlDisableDeliveryDays();
+            $this->disableDeliveryDays($item->getProduct());
         }
 
-        if (in_array('1', $hasDeliveryDays)) {
-            return true;
-        }
+        return $this->disabledDeliveryDays;
+    }
 
-        return false;
+    /**
+     * @param $product
+     */
+    private function disableDeliveryDays($product)
+    {
+        if ($product->getPostnlDisableDeliveryDays()) {
+            $this->disabledDeliveryDays = true;
+        }
     }
 }

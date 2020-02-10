@@ -47,6 +47,11 @@ class InstallDisableDeliveryDaysAttribute extends AbstractDataInstaller
      */
     private $eavSetupFactory;
 
+    /**
+     * InstallDisableDeliveryDaysAttribute constructor.
+     *
+     * @param EavSetupFactory $eavSetupFactory
+     */
     public function __construct(EavSetupFactory $eavSetupFactory)
     {
         $this->eavSetupFactory = $eavSetupFactory;
