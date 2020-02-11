@@ -29,47 +29,48 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Quote;
+namespace TIG\PostNL\Config\CheckoutConfiguration;
 
-class QuoteHasDeliveryDaysDisabled
+use Magento\Checkout\Model\Session;
+
+class IsDeliveryDaysDisabled implements CheckoutConfigurationInterface
 {
     /**
-     * @var bool $disabledDeliveryDays
+     * @var Session
      */
-    private $disabledDeliveryDays = false;
+    private $checkoutSession;
 
     /**
-     * @param $checkoutSession
+     * IsDeliveryDaysDisabled constructor.
      *
-     * @return bool
+     * @param Session $checkoutSession
      */
-    public function shouldDisableDeliveryDays($checkoutSession)
-    {
-        $quote = $checkoutSession->getQuote();
-        $items = $quote->getAllItems();
+    public function __construct(
+        Session $checkoutSession
+    ){
+        $this->checkoutSession = $checkoutSession;
+    }
 
-        if ($items === null) {
+    /**
+     * @return array|void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getValue()
+    {
+        $data = [];
+        $quote = $this->checkoutSession->getQuote();
+        $items = $quote->getItems();
+
+        if($items === null) {
             return;
         }
 
         foreach ($items as $item) {
-            $this->disableDeliveryDays($item->getProduct());
+            $product = $item->getProduct();
+            $data[$item->getName()] = $product->getPostnlDisableDeliveryDays();
         }
 
-        return $this->disabledDeliveryDays;
-    }
-
-    /**
-     * @param $product
-     */
-    private function disableDeliveryDays($product)
-    {
-        if ($product->getTypeId() === 'configurable' || $product->getTypeId() === 'downloadable') {
-            return;
-        }
-
-        if ($product->getPostnlDisableDeliveryDays()) {
-            $this->disabledDeliveryDays = true;
-        }
+        return $data;
     }
 }

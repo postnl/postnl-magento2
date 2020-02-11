@@ -93,7 +93,8 @@ class InstallDisableDeliveryDaysAttribute extends AbstractDataInstaller
                 'visible_on_front'        => false,
                 'used_in_product_listing' => true,
                 'unique'                  => false,
-                'apply_to'                => '',
+                'apply_to'                => 'simple,grouped,bundle',
+                'note'                    => 'This setting will override the global PostNL Delivery Days setting. Delivery Days will be disabled for this product when set to yes.'
             ]
         );
     }
