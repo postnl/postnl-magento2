@@ -33,7 +33,9 @@ namespace TIG\PostNL\Config\CheckoutConfiguration;
 
 use Magento\Checkout\Model\Session;
 
-/** This class adds an array to the window checkout config to check if the current products have the postnl delivery days disabled */
+/** This class adds an array to the window checkout config to check if the
+ * current products have the postnl delivery days disabled
+ */
 class IsDeliveryDaysDisabled implements CheckoutConfigurationInterface
 {
     /**
@@ -48,7 +50,7 @@ class IsDeliveryDaysDisabled implements CheckoutConfigurationInterface
      */
     public function __construct(
         Session $checkoutSession
-    ){
+    ) {
         $this->checkoutSession = $checkoutSession;
     }
 
@@ -63,7 +65,7 @@ class IsDeliveryDaysDisabled implements CheckoutConfigurationInterface
         $quote = $this->checkoutSession->getQuote();
         $items = $quote->getItems();
 
-        if($items === null) {
+        if ($items === null) {
             return;
         }
 
