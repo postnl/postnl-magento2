@@ -63,6 +63,24 @@ class FirstDeliveryDate
         $this->quote = $quote;
     }
 
+    public function get($postcode, $country)
+    {
+        $address = $this->quote->getShippingAddress();
+
+        if ($address === null) {
+            return null;
+        }
+
+        $address->setPostcode($postcode);
+        $address->setCountryId($country);
+
+        if (!$this->validateCountry($address)) {
+            return null;
+        }
+
+        return $this->getDeliveryDate($address);
+    }
+
     /**
      * @param OrderInterface $order
      *
