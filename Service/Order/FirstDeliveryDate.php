@@ -63,6 +63,12 @@ class FirstDeliveryDate
         $this->quote = $quote;
     }
 
+    /**
+     * @param $postcode
+     * @param $country
+     *
+     * @return string|null
+     */
     public function get($postcode, $country)
     {
         $address = $this->quote->getShippingAddress();
