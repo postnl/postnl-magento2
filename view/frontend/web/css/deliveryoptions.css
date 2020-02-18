@@ -58,6 +58,7 @@
 }
 /* Delivery Options */
 .postnl-deliveryoptions .delivery_options {
+  overflow: hidden;
   /* End Delivery */
   /* End PickUp */
 }
@@ -100,13 +101,6 @@
 .postnl-deliveryoptions .delivery_options button.btn.btn-default.button-active:hover {
   color: #001A73;
 }
-
-@media all and (min-width: 1024px), print {
-  .table-checkout-shipping-method {
-    min-width: 455px !important;
-  }
-}
-
 @media screen and (min-width: 480px) {
   .postnl-deliveryoptions .delivery_options button.btn.btn-default .data {
     float: right;
@@ -170,6 +164,16 @@
 .postnl-deliveryoptions .delivery_options .delivery ol li label.selected-row,
 .postnl-deliveryoptions .delivery_options .pickup ol li label.selected-row {
   background: #FFE0B2 !important;
+}
+.postnl-deliveryoptions .delivery_options .delivery {
+  border: 0;
+  background: transparent;
+}
+.postnl-deliveryoptions .delivery_options .delivery .days {
+  border: 1px solid #ccc;
+  border-top: 0;
+  overflow: hidden;
+  background: #eee;
 }
 .postnl-deliveryoptions .delivery_options .delivery .days .wrapper {
   float: left;
@@ -276,6 +280,59 @@
     margin: auto;
     width: auto;
   }
+}
+.postnl-deliveryoptions .delivery_options .delivery .extra-service-container {
+  border: 1px solid #ccc;
+  margin-top: 30px;
+  background: #eee;
+}
+.postnl-deliveryoptions .delivery_options .delivery .extra-service-container .extra-service-header {
+  padding: 10px 15px;
+  background: #ccc;
+}
+.postnl-deliveryoptions .delivery_options .delivery .extra-service-container .extra-service-header .extra-service-label {
+  font-weight: 600;
+}
+.postnl-deliveryoptions .delivery_options .delivery .extra-service-container .only-stated-address {
+  padding: 0;
+  position: relative;
+}
+.postnl-deliveryoptions .delivery_options .delivery .extra-service-container .only-stated-address input {
+  position: absolute;
+  left: 15px;
+  transform: translateY(-50%);
+  top: 49%;
+  pointer-events: none;
+  z-index: 2;
+}
+.postnl-deliveryoptions .delivery_options .delivery .extra-service-container .only-stated-address input:not([disabled]):focus {
+  box-shadow: none;
+}
+.postnl-deliveryoptions .delivery_options .delivery .extra-service-container .only-stated-address label {
+  position: relative;
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+  padding: 0 0 0 40px;
+  line-height: 65px;
+  cursor: pointer;
+}
+.postnl-deliveryoptions .delivery_options .delivery .extra-service-container .only-stated-address label:hover {
+  background: #FFE0B2;
+}
+.postnl-deliveryoptions .delivery_options .delivery .extra-service-container .only-stated-address .price {
+  font-size: 11px;
+  position: absolute;
+  right: 79px;
+  transform: translateY(-50%);
+  top: 50%;
+  pointer-events: none;
+}
+.postnl-deliveryoptions .delivery_options .delivery .extra-service-container .only-stated-address .price:before {
+  content: '(+ ';
+}
+.postnl-deliveryoptions .delivery_options .delivery .extra-service-container .only-stated-address .price:after {
+  content: ')';
 }
 @media screen and (max-width: 480px) {
   .postnl-deliveryoptions .delivery_options .delivery .days .wrapper strong {
@@ -481,26 +538,6 @@
     border-radius: 0;
   }
 }
-
-/* Extra service */
-.extra-service-header {
-    float: left;
-    width: 100%;
-    background: #ccc;
-    margin-top: 12px;
-    height: 2.6em;
-    line-height: 2.4em;
-}
-
-.extra-service-label {
-    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 600;
-    margin-left: 12px;
-}
-
-
-
-
 /* Loading Image */
 .postnl-deliveryoptions .delivery_options {
   position: relative;
