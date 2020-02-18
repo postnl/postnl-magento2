@@ -55,6 +55,7 @@ define([
             deliveryPrice: State.deliveryPrice,
             pickupPrice: State.pickupPrice,
             statedDeliveryPrice: State.statedDeliveryPrice,
+            pickupDate: State.pickupDate,
             deliveryFee: State.deliveryFee,
             pickupFee: State.pickupFee,
             statedDeliveryFee: State.statedDeliveryFee

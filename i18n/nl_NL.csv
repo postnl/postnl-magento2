@@ -139,6 +139,7 @@ Webshop,Webshop
 "Letter Box Parcel Extra","Brievenbuspakje Extra"
 Pickup,Ophalen
 Delivery,Bezorgen
+from,vanaf
 Daytime,Overdag
 Evening,Avond
 Monday,Maandag

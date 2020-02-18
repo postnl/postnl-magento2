@@ -69,10 +69,10 @@ interface ShipmentLabelRepositoryInterface
     public function getByShipment(\TIG\PostNL\Api\Data\ShipmentInterface $shipment);
 
     /**
-     * Return a label that belongs to a shipment.
+     * Return a label that belongs to a PostNL shipment.
      * @api
-     * @param $shipmentId
-     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     * @param int $shipmentId
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface[]
      */
     public function getByShipmentId($shipmentId);
 
