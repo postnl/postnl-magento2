@@ -94,6 +94,7 @@
 .postnl-deliveryoptions {
 
   .delivery_options {
+    overflow: hidden;
 
     .btn-group {
       background: @custom-button-active;
@@ -107,7 +108,6 @@
 
     button {
       &.btn {
-
         &.btn-default {
           float: left;
           width: 50%;
@@ -217,8 +217,14 @@
     // Delivery List
 
     .delivery {
+      border:0;
+      background: transparent;
 
       .days {
+        border:1px solid @custom-border-color;
+        border-top:0;
+        overflow: hidden;
+        background: @custom-list-background;
 
         .wrapper {
           float:left;
@@ -296,7 +302,71 @@
               }
             }
           }
+        }
+      }
 
+      .extra-service-container {
+        border:1px solid @custom-border-color;
+        margin-top:30px;
+        background:@custom-list-background;
+
+        .extra-service-header {
+          padding:10px 15px;
+          background:@custom-border-color;
+
+          .extra-service-label {
+            font-weight:600;
+          }
+        }
+
+        .only-stated-address {
+          padding:0;
+          position: relative;
+
+          input {
+            position: absolute;
+            left:15px;
+            transform: translateY(-50%);
+            top: 49%;
+            pointer-events: none;
+            z-index: 2;
+
+            &:not([disabled]) {
+              &:focus {
+                box-shadow:none;
+              }
+            }
+          }
+
+          label {
+            position: relative;
+            width:100%;
+            display: block;
+            box-sizing:border-box;
+            padding:0 0 0 40px;
+            line-height: 65px;
+            cursor:pointer;
+
+            &:hover {
+              background:#FFE0B2;
+            }
+          }
+
+          .price {
+            font-size:11px;
+            position: absolute;
+            right: 79px;
+            transform: translateY(-50%);
+            top: 50%;
+            pointer-events: none;
+
+            &:before {
+              content:'(+ ';
+            }
+            &:after {
+              content:')';
+            }
+          }
         }
       }
 
