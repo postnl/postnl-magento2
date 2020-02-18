@@ -481,6 +481,26 @@
     border-radius: 0;
   }
 }
+
+/* Extra service */
+.extra-service-header {
+    float: left;
+    width: 100%;
+    background: #ccc;
+    margin-top: 12px;
+    height: 2.6em;
+    line-height: 2.4em;
+}
+
+.extra-service-label {
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    margin-left: 12px;
+}
+
+
+
+
 /* Loading Image */
 .postnl-deliveryoptions .delivery_options {
   position: relative;
