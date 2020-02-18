@@ -85,6 +85,7 @@
                 <default_option>3085</default_option>
                 <default_be_option>4946</default_be_option>
                 <default_eps_option>4952</default_eps_option>
+                <default_delivery_stated_address>3385</default_delivery_stated_address>
                 <use_alternative_default>0</use_alternative_default>
                 <stated_address_only_fee>2</stated_address_only_fee>
             </delivery_settings>

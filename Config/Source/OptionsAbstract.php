@@ -92,7 +92,7 @@ abstract class OptionsAbstract
             'statedAddressOnly'    => true,
             'isBelgiumOnly'        => false,
             'countryLimitation'    => 'NL',
-            'group'                => 'standard_options',
+            'group'                => 'only_stated_address_options',
         ],
         '3389' => [
             'value'                => '3389',
@@ -115,7 +115,7 @@ abstract class OptionsAbstract
             'statedAddressOnly'    => true,
             'isBelgiumOnly'        => false,
             'countryLimitation'    => 'NL',
-            'group'                => 'standard_options',
+            'group'                => 'only_stated_address_options',
         ],
         '3090' => [
             'value'                => '3090',
@@ -137,7 +137,7 @@ abstract class OptionsAbstract
             'isSameDay'            => true,
             'statedAddressOnly'    => true,
             'countryLimitation'    => 'NL',
-            'group'                => 'standard_options',
+            'group'                => 'only_stated_address_options',
         ],
         // Pakjegemak Options
         '3534' => [
@@ -650,7 +650,8 @@ abstract class OptionsAbstract
 	    'id_check_pakjegemak_options' => 'ID Check Post Office options',
 	    'cargo_options'               => 'Cargo options',
 	    'eps_package_options'         => 'Package options',
-	    'priority_options'            => 'Priority EPS'
+	    'priority_options'            => 'Priority EPS',
+        'only_stated_address_options' => 'Only Stated Address options'
     ];
 
 	protected $groupToLabel = [
@@ -664,7 +665,8 @@ abstract class OptionsAbstract
 		'id_check_pakjegemak_options' => 'ID Check Post Office',
 		'cargo_options'               => 'Cargo',
 		'eps_package_options'         => 'Package',
-		'priority_options'            => 'Priority (EPS / Globalpack)'
+		'priority_options'            => 'Priority (EPS / Globalpack)',
+        'only_stated_address_options' => 'Delivery to stated address only'
     ];
 
     protected $typeToComment = [
