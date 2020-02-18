@@ -105,16 +105,14 @@ class Locations extends AbstractDeliveryOptions
         if (!isset($params['address']) || !is_array($params['address'])) {
             return $this->jsonResponse(__('No Address data found.'));
         }
-
         $this->addressEnhancer->set($params['address']);
-        $price = $this->priceCalculator->price($this->getRateRequest(), 'pakjegemak', null, true);
+        $price    = $this->priceCalculator->price($this->getRateRequest(), 'pakjegemak', null, true);
         $postcode = $params['address']['postcode'] ?? '';
         $country  = $params['address']['country'] ?? '';
-
         try {
             return $this->jsonResponse([
-                'price' => $price['price'],
-                'locations' => $this->getValidResponeType(),
+                'price'       => $price['price'],
+                'locations'   => $this->getValidResponeType(),
                 'pickup_date' => $this->firstDeliveryDate->get($postcode, $country)
             ]);
         } catch (\Exception $exception) {
