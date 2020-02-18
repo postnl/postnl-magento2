@@ -36,6 +36,7 @@ use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Service\Carrier\Price\Calculator;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
+use TIG\PostNL\Service\Order\FirstDeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\Locations as LocationsEndpoint;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use Magento\Framework\App\Action\Context;
@@ -45,20 +46,17 @@ use TIG\PostNL\Service\Quote\ShippingDuration;
 
 class Locations extends AbstractDeliveryOptions
 {
-    /**
-     * @var AddressEnhancer
-     */
+    /** @var AddressEnhancer */
     private $addressEnhancer;
 
-    /**
-     * @var  LocationsEndpoint
-     */
+    /** @var  LocationsEndpoint */
     private $locationsEndpoint;
 
-    /**
-     * @var Calculator
-     */
+    /** @var Calculator */
     private $priceCalculator;
+
+    /** @var FirstDeliveryDate $firstDeliveryDate */
+    private $firstDeliveryDate;
 
     /**
      * @param Context            $context
@@ -80,11 +78,13 @@ class Locations extends AbstractDeliveryOptions
         LocationsEndpoint $locations,
         DeliveryDate $deliveryDate,
         Calculator $priceCalculator,
-        ShippingDuration $shippingDuration
+        ShippingDuration $shippingDuration,
+        FirstDeliveryDate $firstDeliveryDate
     ) {
         $this->addressEnhancer   = $addressEnhancer;
         $this->locationsEndpoint = $locations;
         $this->priceCalculator   = $priceCalculator;
+        $this->firstDeliveryDate = $firstDeliveryDate;
 
         parent::__construct(
             $context,
@@ -105,14 +105,15 @@ class Locations extends AbstractDeliveryOptions
         if (!isset($params['address']) || !is_array($params['address'])) {
             return $this->jsonResponse(__('No Address data found.'));
         }
-
         $this->addressEnhancer->set($params['address']);
-        $price = $this->priceCalculator->price($this->getRateRequest(), 'pakjegemak', null, true);
-
+        $price    = $this->priceCalculator->price($this->getRateRequest(), 'pakjegemak', null, true);
+        $postcode = $params['address']['postcode'] ?? '';
+        $country  = $params['address']['country'] ?? '';
         try {
             return $this->jsonResponse([
-                'price' => $price['price'],
-                'locations' => $this->getValidResponeType(),
+                'price'       => $price['price'],
+                'locations'   => $this->getValidResponeType(),
+                'pickup_date' => $this->firstDeliveryDate->get($postcode, $country)
             ]);
         } catch (\Exception $exception) {
             return $this->jsonResponse([
