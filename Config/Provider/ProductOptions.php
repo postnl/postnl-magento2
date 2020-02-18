@@ -257,9 +257,9 @@ class ProductOptions extends AbstractConfigProvider
     /**
      * @return mixed
      */
-    public function getDefaultDeliveryStatedAddress()
+    public function getDefaultStatedAddressOnlyProductOption()
     {
-        return (string) $this->getConfigFromXpath(static::XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS);
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS);
     }
 }
 /**

@@ -47,7 +47,7 @@
             <label>Activate delivery to stated address only</label>
             <comment><![CDATA[Whether or not customers may choose to have their order delivered to the stated address only.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>tig_postnl/delivery_settings/only_stated_address_active</config_path>
+            <config_path>tig_postnl/delivery_settings/stated_address_only_active</config_path>
             <depends>
                 <field id="shippingoptions_active">1</field>
             </depends>
@@ -57,19 +57,19 @@
             <label>Default delivery to stated address only</label>
             <comment><![CDATA[Select the default product option for domestic shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getDeliveryStatedAddressOnlyOptions</source_model>
-            <config_path>tig_postnl/delivery_settings/only_stated_address_default</config_path>
+            <config_path>tig_postnl/delivery_settings/default_delivery_stated_address</config_path>
             <depends>
-                <field id="delivery_stated_address_active">1</field>
+                <field id="delivery_only_stated_address_active">1</field>
             </depends>
         </field>
 
         <field id="only_stated_address_fee" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Delivery to stated address only fee</label>
             <comment><![CDATA[Set the payment fee for stated address delivery.]]></comment>
-            <config_path>tig_postnl/delivery_settings/only_stated_address_fee</config_path>
+            <config_path>tig_postnl/delivery_settings/stated_address_only_fee</config_path>
             <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
             <depends>
-                <field id="only_stated_address_active">1</field>
+                <field id="delivery_only_stated_address_active">1</field>
             </depends>
         </field>
 

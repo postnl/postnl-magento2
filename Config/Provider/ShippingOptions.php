@@ -57,6 +57,8 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_EPS_BUSINESS_ACTIVE       = 'tig_postnl/eps/business_active';
     const XPATH_SHIPPING_OPTIONS_PEPS_ACTIVE              = 'tig_postnl/peps/active';
     const XPATH_SHIPPING_OPTIONS_GLOBALPACK_ACTIVE        = 'tig_postnl/globalpack/enabled';
+    const XPATH_SHIPPING_OPTION_STATED_ADDRESS_ACTIVE     = 'tig_postnl/delivery_settings/stated_address_only_active';
+    const XPATH_SHIPPING_OPTION_STATED_ADDRESS_FEE        = 'tig_postnl/delivery_settings/stated_address_only_fee';
 
     private $defaultMaxDeliverydays = '5';
 
@@ -232,6 +234,26 @@ class ShippingOptions extends AbstractConfigProvider
     public function canUseGlobalPack()
     {
         return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTIONS_GLOBALPACK_ACTIVE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatedAddressOnlyActive()
+    {
+        return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_STATED_ADDRESS_ACTIVE);
+    }
+
+    /**
+     * @return float
+     */
+    public function getStatedAddressOnlyFee()
+    {
+        if (!$this->isStatedAddressOnlyActive()) {
+            return (float)0.0;
+        }
+
+        return (float) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_STATED_ADDRESS_FEE);
     }
 }
 /**
