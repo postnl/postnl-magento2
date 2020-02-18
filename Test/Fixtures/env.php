@@ -39,5 +39,5 @@ return array (
     ),
   ),
   'x-frame-options' => 'SAMEORIGIN',
-  'MAGE_MODE' => 'default',
+  'MAGE_MODE' => 'developer',
 );
