@@ -39,5 +39,14 @@ return array (
     ),
   ),
   'x-frame-options' => 'SAMEORIGIN',
-  'MAGE_MODE' => 'default',
+  'MAGE_MODE' => 'developer',
+  'cache_types' => [
+      'config' => 1,
+      'layout' => 1,
+      'block_html' => 1,
+      'collections' => 1,
+      'eav' => 1,
+      'full_page' => 1,
+      'translate' => 1,
+  ],
 );

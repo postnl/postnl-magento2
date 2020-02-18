@@ -54,6 +54,7 @@ define([
             shipmentType: State.currentOpenPane,
             deliveryPrice: State.deliveryPrice,
             pickupPrice: State.pickupPrice,
+            pickupDate: State.pickupDate,
             deliveryFee: State.deliveryFee,
             pickupFee: State.pickupFee
         },

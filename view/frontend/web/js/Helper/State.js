@@ -83,6 +83,7 @@ define([
     return {
         deliveryPrice: ko.observable(0),
         pickupPrice: ko.observable(0),
+        pickupDate: ko.observable(0),
         deliveryOptionsAreAvailable: ko.observable(true),
         deliveryOptionsAreLoading: deliveryOptionsAreLoading,
         pickupOptionsAreAvailable: ko.observable(true),

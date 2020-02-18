@@ -192,6 +192,7 @@ define([
 
                 State.pickupOptionsAreAvailable(true);
                 State.pickupPrice(data.price);
+                State.pickupDate(data.pickup_date);
 
                 data = data.locations.slice(0, 5);
                 data = ko.utils.arrayMap(data, function (data) {
