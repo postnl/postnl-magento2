@@ -323,7 +323,7 @@
 .postnl-deliveryoptions .delivery_options .delivery .extra-service-container .only-stated-address .price {
   font-size: 11px;
   position: absolute;
-  right: 79px;
+  right: 15px;
   transform: translateY(-50%);
   top: 50%;
   pointer-events: none;
