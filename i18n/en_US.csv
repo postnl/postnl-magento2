@@ -460,3 +460,5 @@ Percent,Percent
 "By activating returns a return label is created when generating a label for the out shipment. To activate returns you need an answer number and a seperate customer code. For this, contact your account manager.","By activating returns a return label is created when generating a label for the out shipment. To activate returns you need an answer number and a seperate customer code. For this, contact your account manager."
 "PostNL Return","PostNL Return"
 "[POSTNL-0070] - Unable to generate barcode for shipment #%1","[POSTNL-0070] - Unable to generate barcode for shipment #%1"
+"Do not deliver to neighbours","Do not deliver to neighbours"
+"Extra service","Extra service"
