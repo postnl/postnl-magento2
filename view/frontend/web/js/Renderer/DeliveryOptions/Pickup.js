@@ -148,7 +148,8 @@ define([
                         LocationCode : dataObject.LocationCode,
                         from: selectedFrom,
                         address: dataObject.Address,
-                        customerData : AddressFinder()
+                        customerData : AddressFinder(),
+                        stated_address_only: 0
                     }
                 }).done(function (response) {
                     $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
