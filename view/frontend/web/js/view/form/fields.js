@@ -143,6 +143,19 @@ define([
                 country = countryElement.value();
             });
 
+            if (country !== 'NL' && country !== 'BE') {
+                // In some countries housenumber is not required
+                Registry.get([this.parentName + '.postcode-field-group.field-group.housenumber'], function (housenumberElement) {
+                    housenumberElement.required(false);
+                    housenumberElement.validation['required-entry'] = false;
+                });
+            } else {
+                Registry.get([this.parentName + '.postcode-field-group.field-group.housenumber'], function (housenumberElement) {
+                    housenumberElement.required(true);
+                    housenumberElement.validation['required-entry'] = true;
+                });
+            }
+
             if (country !== 'NL') {
                 self.enableAddressFields(true);
                 self.hideAddressFields(false);
