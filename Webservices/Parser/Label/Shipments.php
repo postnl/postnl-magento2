@@ -158,6 +158,10 @@ class Shipments
         $this->addressEnhancer->set(['street' => $shippingAddress->getStreet()]);
         $streetData = $this->addressEnhancer->get();
 
+        if (isset($streetData['error']) && $shippingAddress->getCountryId() !== 'NL' && $shippingAddress->getCountryId() !== 'BE') {
+            return ['street' => $shippingAddress->getStreet()];
+        }
+
         if (isset($streetData['error'])) {
             $message = $streetData['error']['code'] . ' - ' . $streetData['error']['message'];
             $this->messageManager->addErrorMessage($message);
