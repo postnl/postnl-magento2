@@ -108,19 +108,19 @@ interface ShipmentInterface
      * @return string|null
      */
     public function getShipmentType();
-    
+
     /**
      * @param $value
      *
-     * @return mixed
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
      */
     public function setShipmentCountry($value);
-    
+
     /**
-     * @return mixed
+     * @return string
      */
     public function getShipmentCountry();
-    
+
     /**
      * @param $value
      *
@@ -233,32 +233,32 @@ interface ShipmentInterface
      * @return bool
      */
     public function getConfirmed();
-    
+
     /**
      * @return string|null
      */
     public function setDownpartnerId($value);
-    
+
     /**
      * @return string|null
      */
     public function getDownpartnerId();
-    
+
     /**
      * @return string|null
      */
     public function setDownpartnerLocation($value);
-    
+
     /**
      * @return string|null
      */
     public function getDownpartnerLocation();
-    
+
     /**
      * @return string|null
      */
     public function setDownpartnerBarcode($value);
-    
+
     /**
      * @return string|null
      */
@@ -314,7 +314,17 @@ interface ShipmentInterface
     public function isExtraAtHome();
 
     /**
-     * @return mixed
+     * @return bool
+     */
+    public function isBuspakjeShipment();
+
+    /**
+     * @return bool
+     */
+    public function isDomesticShipment();
+
+    /**
+     * @return bool
      */
     public function isIDCheck();
 
@@ -332,9 +342,9 @@ interface ShipmentInterface
      * @return \Magento\Sales\Api\Data\ShipmentInterface
      */
     public function getShipment();
-    
+
     /**
-     * @return mixed
+     * @return \Magento\Sales\Api\Data\OrderAddressInterface
      */
     public function getShippingAddress();
 
@@ -342,4 +352,15 @@ interface ShipmentInterface
      * @return bool
      */
     public function canChangeParcelCount();
+
+    /**
+     * @param string $value
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function setReturnBarcode($value);
+
+    /**
+     * @return string|null
+     */
+    public function getReturnBarcodes();
 }

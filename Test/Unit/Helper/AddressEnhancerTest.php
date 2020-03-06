@@ -85,6 +85,34 @@ class AddressEnhancerTest extends TestCase
                 ['7 Januaristraat 18', ''],
                 ['housenumber' => '18', 'housenumberExtension' => '']
             ],
+            'Streetname with three spaces' => [
+                ['De La Reylaan 43', ''],
+                ['housenumber' => '43', 'housenumberExtension' => '']
+            ],
+            'Streetname with three spaces and number on second street field' => [
+                ['De La Reylaan', '43'],
+                ['housenumber' => '43', 'housenumberExtension' => '']
+            ],
+            'Streetname with addition in second street field' => [
+                ['TestStraat 67', ' -1 hoog'],
+                ['housenumber' => '67', 'housenumberExtension' => '-1 hoog']
+            ],
+            'Streetname parsed with three values in street fields' => [
+                ['TestStraat', '67', ' -1 hoog'],
+                ['housenumber' => '67', 'housenumberExtension' => '-1 hoog']
+            ],
+            'Streetname with acute apostrophe' => [
+                ["matena'spad 58", ''],
+                ['housenumber' => '58', 'housenumberExtension' => '']
+            ],
+            'Streetname with grave apostrophe' => [
+                ['matena`spad 58', ''],
+                ['housenumber' => '58', 'housenumberExtension' => '']
+            ],
+            'Streetname with quote apostrophe' => [
+                ['matena‘spad 58', ''],
+                ['housenumber' => '58', 'housenumberExtension' => '']
+            ]
         ];
     }
 

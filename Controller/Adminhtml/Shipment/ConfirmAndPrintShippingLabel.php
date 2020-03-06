@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
+use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\Shipment;
@@ -45,25 +46,23 @@ use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 
 class ConfirmAndPrintShippingLabel extends LabelAbstract
 {
-    /**
-     * @var ShipmentRepository
-     */
+    /** @var ShipmentRepository */
     private $shipmentRepository;
 
-    /**
-     * @var CanaryIslandToIC
-     */
+    /** @var CanaryIslandToIC */
     private $canaryConverter;
 
     /**
-     * @param Context            $context
-     * @param GetLabels          $getLabels
-     * @param GetPdf             $getPdf
-     * @param ShipmentRepository $shipmentRepository
-     * @param Track              $track
-     * @param BarcodeHandler     $barcodeHandler
-     * @param GetPackingslip     $pdfShipment
-     * @param CanaryIslandToIC   $canaryConverter
+     * ConfirmAndPrintShippingLabel constructor.
+     *
+     * @param Context                  $context
+     * @param GetLabels                $getLabels
+     * @param GetPdf                   $getPdf
+     * @param ShipmentRepository       $shipmentRepository
+     * @param Track                    $track
+     * @param BarcodeHandler           $barcodeHandler
+     * @param GetPackingslip           $pdfShipment
+     * @param CanaryIslandToIC         $canaryConverter
      */
     public function __construct(
         Context $context,
@@ -88,14 +87,13 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|\Magento\Framework\Message\ManagerInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Zend_Pdf_Exception
      */
     public function execute()
     {
         $labels = $this->getLabels();
-        if (isset($labels['errors'])) {
-            $this->handleRequestErrors($labels['errors']);
-        }
 
         if (empty($labels)) {
             $this->messageManager->addErrorMessage(
@@ -110,9 +108,9 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     }
 
     /**
-     * Retrieve shipment model instance
-     *
-     * @return Shipment
+     * @return \Magento\Sales\Api\Data\ShipmentInterface
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getShipment()
     {
@@ -121,17 +119,22 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     }
 
     /**
-     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface[]
+     * @return array|\Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     private function getLabels()
     {
         $shipment = $this->getShipment();
-        $shippingAddress = $shipment->getShippingAddress();
-        if ($shippingAddress->getCountryId() === 'ES') {
-            $shippingAddress = $this->canaryConverter->convert($shippingAddress);
-        }
+        $countryId = $this->getCountryId($shipment);
 
-        $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
+        try {
+            $this->barcodeHandler->prepareShipment($shipment->getId(), $countryId);
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addErrorMessage(
+                __('[POSTNL-0070] - Unable to generate barcode for shipment #%1', $shipment->getIncrementId())
+            );
+            return [];
+        }
 
         if (!$shipment->getTracks()) {
             $this->track->set($shipment);
@@ -140,5 +143,20 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
         $labels = $this->getLabels->get($shipment->getId());
 
         return $labels;
+    }
+
+    /**
+     * @param Shipment $shipment
+     *
+     * @return mixed|string
+     */
+    private function getCountryId($shipment)
+    {
+        $shippingAddress = $shipment->getShippingAddress();
+        if ($shippingAddress->getCountryId() === 'ES') {
+            $shippingAddress = $this->canaryConverter->convert($shippingAddress);
+        }
+
+        return $shippingAddress->getCountryId();
     }
 }

@@ -29,42 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Config\CheckoutConfiguration;
 
-use TIG\PostNL\Config\CheckoutConfiguration\IsPakjegemakExpressActive;
-use TIG\PostNL\Config\Provider\ShippingOptions;
-use TIG\PostNL\Test\TestCase;
+namespace TIG\PostNL\Setup\V190\Schema;
 
-class IsPakjegemakExpressActiveTest extends TestCase
+use TIG\PostNL\Setup\AbstractColumnsInstaller;
+
+class InstallReturnBarcode extends AbstractColumnsInstaller
 {
-    public $instanceClass = IsPakjegemakExpressActive::class;
+    const TABLE_NAME = 'tig_postnl_shipment';
 
-    public function getValueProvider()
+    // @codingStandardsIgnoreLine
+    protected $columns = [
+        'return_barcode'
+    ];
+
+    public function installReturnBarcodeColumn()
     {
         return [
-            'is active' => [true],
-            'is not active' => [true],
+            // @codingStandardsIgnoreLine
+            'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            'length'   => 32,
+            'nullable' => true,
+            'default'  => null,
+            'comment'  => 'Return Barcode'
         ];
-    }
-
-    /**
-     * @dataProvider getValueProvider
-     *
-     * @param $expected
-     */
-    public function testGetValue($expected)
-    {
-        $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
-
-        $expects = $shippingOptions->expects($this->once());
-        $expects->method('isPakjegemakExpressActive');
-        $expects->willReturn($expected);
-
-        /** @var IsPakjegemakExpressActive $instance */
-        $instance = $this->getInstance([
-            'shippingOptions' => $shippingOptions,
-        ]);
-
-        $this->assertEquals($expected, $instance->getValue());
     }
 }

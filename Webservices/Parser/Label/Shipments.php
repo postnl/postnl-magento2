@@ -29,44 +29,46 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Webservices\Parser\Label;
 
-use TIG\PostNL\Service\Shipment\Data as ShipmentData;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\Order\Address;
-use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Helper\AddressEnhancer;
-use \Magento\Framework\Message\ManagerInterface;
+use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Service\Shipment\Data as ShipmentData;
 
 class Shipments
 {
-    /**
-     * @var ShipmentData
-     */
+    /** @var ShipmentData */
     private $shipmentData;
 
-    /**
-     * @var AddressEnhancer
-     */
+    /** @var AddressEnhancer */
     private $addressEnhancer;
 
-    /**
-     * @var ManagerInterface
-     */
+    /** @var ManagerInterface */
     private $messageManager;
 
+    /** @var ReturnOptions */
+    private $returnOptions;
+
     /**
-     * @param ShipmentData $shipmentData
-     * @param AddressEnhancer $addressEnhancer
+     * @param ShipmentData     $shipmentData
+     * @param AddressEnhancer  $addressEnhancer
      * @param ManagerInterface $messageManager
+     * @param ReturnOptions    $returnOptions
      */
     public function __construct(
         ShipmentData $shipmentData,
         AddressEnhancer $addressEnhancer,
-        ManagerInterface $messageManager
+        ManagerInterface $messageManager,
+        ReturnOptions $returnOptions
     ) {
-        $this->shipmentData = $shipmentData;
+        $this->shipmentData    = $shipmentData;
         $this->addressEnhancer = $addressEnhancer;
-        $this->messageManager = $messageManager;
+        $this->messageManager  = $messageManager;
+        $this->returnOptions   = $returnOptions;
     }
 
     /**
@@ -74,17 +76,22 @@ class Shipments
      * @param          $shipmentNumber
      *
      * @return array
+     * @throws \TIG\PostNL\Exception
      */
     public function get(Shipment $postnlShipment, $shipmentNumber)
     {
-        $shipment = $postnlShipment->getShipment();
+        $shipment    = $postnlShipment->getShipment();
         $postnlOrder = $postnlShipment->getPostNLOrder();
-
-        $contact = $this->getContactData($shipment);
+        $contact   = $this->getContactData($shipment);
         $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
+        $countryId = $address[0]['Countrycode'];
 
         if ($postnlOrder->getIsPakjegemak()) {
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
+        }
+
+        if (($this->canReturnNl($countryId)) || $this->canReturnBe($countryId)) {
+            $address[] = $this->getReturnAddressData($countryId);
         }
 
         $shipmentData = $this->shipmentData->get($postnlShipment, $address, $contact, $shipmentNumber);
@@ -100,8 +107,7 @@ class Shipments
     private function getContactData($shipment)
     {
         $shippingAddress = $shipment->getShippingAddress();
-        $order = $shipment->getOrder();
-
+        $order           = $shipment->getOrder();
         $contact = [
             'ContactType' => '01', // Receiver
             'Email'       => $order->getCustomerEmail(),
@@ -113,25 +119,29 @@ class Shipments
 
     /**
      * @param Address $shippingAddress
-     * @param string   $addressType
+     * @param string  $addressType
      *
      * @return array
+     * @throws \TIG\PostNL\Exception
      */
     private function getAddressData($shippingAddress, $addressType = '01')
     {
         $streetData   = $this->getStreetData($shippingAddress);
+        $houseNr = isset($streetData['housenumber']) ? $streetData['housenumber'] : $shippingAddress->getStreetLine(2);
+        $houseNrExt = $shippingAddress->getStreetLine(3);
+        $houseNrExt = (isset($streetData['housenumberExtension']) ? $streetData['housenumberExtension'] : $houseNrExt);
         $addressArray = [
-            'AddressType'      => $addressType,
-            'FirstName'        => $this->getFirstName($shippingAddress),
-            'Name'             => $shippingAddress->getLastname(),
-            'CompanyName'      => $shippingAddress->getCompany(),
-            'Street'           => $streetData['street'][0],
-            'HouseNr'          => $streetData['housenumber'],
-            'HouseNrExt'       => isset($streetData['housenumberExtension']) ? $streetData['housenumberExtension'] : '',
-            'Zipcode'          => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode())),
-            'City'             => $shippingAddress->getCity(),
-            'Region'           => $shippingAddress->getRegion(),
-            'Countrycode'      => $shippingAddress->getCountryId(),
+            'AddressType' => $addressType,
+            'FirstName'   => $this->getFirstName($shippingAddress),
+            'Name'        => $shippingAddress->getLastname(),
+            'CompanyName' => $shippingAddress->getCompany(),
+            'Street'      => $streetData['street'][0],
+            'HouseNr'     => $houseNr,
+            'HouseNrExt'  => $houseNrExt,
+            'Zipcode'     => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode())),
+            'City'        => $shippingAddress->getCity(),
+            'Region'      => $shippingAddress->getRegion(),
+            'Countrycode' => $shippingAddress->getCountryId(),
         ];
 
         return $addressArray;
@@ -141,6 +151,7 @@ class Shipments
      * @param Address $shippingAddress
      *
      * @return array
+     * @throws \TIG\PostNL\Exception
      */
     private function getStreetData($shippingAddress)
     {
@@ -148,9 +159,8 @@ class Shipments
         $streetData = $this->addressEnhancer->get();
 
         if (isset($streetData['error'])) {
-            $this->messageManager->addWarningMessage(
-                $streetData['error']['code'] . ' - ' . $streetData['error']['message']
-            );
+            $message = $streetData['error']['code'] . ' - ' . $streetData['error']['message'];
+            $this->messageManager->addErrorMessage($message);
         }
 
         return $streetData;
@@ -164,9 +174,68 @@ class Shipments
     private function getFirstName($shippingAddress)
     {
         $name = $shippingAddress->getFirstname();
-        if ($shippingAddress->getMiddlename()) {
-            $name .= ' ' .$shippingAddress->getMiddlename();
-        }
+        $name .= ($shippingAddress->getMiddlename() ? ' ' . $shippingAddress->getMiddlename() : '');
+
         return $name;
+    }
+
+    /**
+     * @param $countryId
+     *
+     * @return bool
+     */
+    public function canReturnNl($countryId)
+    {
+        return ($this->returnOptions->isReturnNlActive() && $countryId == 'NL');
+    }
+
+    /**
+     * @param $countryId
+     *
+     * @return bool
+     */
+    public function canReturnBe($countryId)
+    {
+        return ($this->returnOptions->isReturnBeActive() && $countryId == 'BE');
+    }
+
+    /**
+     * @param $countryCode
+     *
+     * @return array|bool
+     */
+    private function getReturnAddressData($countryCode)
+    {
+        if ($countryCode == 'NL' || $countryCode == 'BE') {
+            return $this->getReturnAddress($countryCode);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $countryCode
+     *
+     * @return array
+     */
+    private function getReturnAddress($countryCode)
+    {
+        $city = 'getCity' . $countryCode;
+        $company = 'getCompany' . $countryCode;
+        $houseNo = 'getHouseNumber' . $countryCode;
+        $freePostNumber  = 'getFreepostNumber' . $countryCode;
+        $zipcode = 'getZipcode' . $countryCode;
+
+        $data = [
+            'AddressType'      => '08',
+            'City'             => $this->returnOptions->$city(),
+            'CompanyName'      => $this->returnOptions->$company(),
+            'Countrycode'      => $countryCode,
+            'HouseNr'          => $this->returnOptions->$freePostNumber(),
+            'Street'           => 'Antwoordnummer:',
+            'Zipcode'          => strtoupper(str_replace(' ', '', $this->returnOptions->$zipcode())),
+        ];
+
+        return $data;
     }
 }

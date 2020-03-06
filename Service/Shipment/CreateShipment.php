@@ -105,10 +105,11 @@ class CreateShipment
     /**
      * @param Order $order
      *
-     * @return Shipment|null
+     * @return Shipment|null|array
      */
     public function create(Order $order)
     {
+        $this->shipment = [];
         $this->currentOrder = $order;
 
         $foundShipment = $this->findPostNLShipment();
@@ -142,15 +143,14 @@ class CreateShipment
     /**
      * Look if an order already has a PostNL shipment. If so, return that shipment.
      * @codingStandardsIgnoreLine
-     * @todo: What if an order has multiple PostNL shipments?
      *
-     * @return null|Shipment
+     * @return array
      */
     private function findPostNLShipment()
     {
         $collection = $this->currentOrder->getShipmentsCollection();
         $shipments = $collection->getItems();
-        $foundShipment = null;
+        $foundShipment = [];
 
         array_walk(
             $shipments,
@@ -159,7 +159,7 @@ class CreateShipment
                 $postnlShipment = $this->shipmentRepository->getByShipmentId($item->getId());
 
                 if ($postnlShipment) {
-                    $foundShipment = $item;
+                    array_push($foundShipment, $item);
                 }
             }
         );
@@ -227,7 +227,14 @@ class CreateShipment
     {
         $this->shipment->register();
         $order = $this->shipment->getOrder();
-        $this->inventorySource->setSource($order, $this->getShippingItems());
+
+        $shipmentAttributes = $this->shipment->getExtensionAttributes();
+
+        // This method only exists if you have the various Magento Inventory extensions installed.
+        if (method_exists($shipmentAttributes, 'setSourceCode')) {
+            $shipmentAttributes->setSourceCode($this->inventorySource->getSource($order, $this->getShippingItems()));
+            $this->shipment->setExtensionAttributes($shipmentAttributes);
+        }
 
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus('processing');

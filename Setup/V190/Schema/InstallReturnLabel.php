@@ -29,30 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Test\Unit\Config\CheckoutConfiguration;
 
-use TIG\PostNL\Config\CheckoutConfiguration\PakjegemakExpressFee;
-use TIG\PostNL\Config\Provider\ShippingOptions;
-use TIG\PostNL\Test\TestCase;
+namespace TIG\PostNL\Setup\V190\Schema;
 
-class PakjegemakExpressFeeTest extends TestCase
+use TIG\PostNL\Setup\AbstractColumnsInstaller;
+
+class InstallReturnLabel extends AbstractColumnsInstaller
 {
-    public $instanceClass = PakjegemakExpressFee::class;
+    const TABLE_NAME = 'tig_postnl_shipment_label';
 
-    public function testGetValue()
+    // @codingStandardsIgnoreLine
+    protected $columns = [
+        'return_label'
+    ];
+
+    public function installReturnLabelColumn()
     {
-        $expected = 2;
-        $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
-
-        $expects = $shippingOptions->expects($this->once());
-        $expects->method('getPakjegemakExpressFee');
-        $expects->willReturn($expected);
-
-        /** @var PakjegemakExpressFee $instance */
-        $instance = $this->getInstance([
-            'shippingOptions' => $shippingOptions,
-        ]);
-
-        $this->assertEquals($expected, $instance->getValue());
+        return [
+            // @codingStandardsIgnoreLine
+            'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
+            'nullable' => false,
+            'default'  => 0,
+            'comment'  => 'Return Label',
+            'after' => 'product_code',
+        ];
     }
 }

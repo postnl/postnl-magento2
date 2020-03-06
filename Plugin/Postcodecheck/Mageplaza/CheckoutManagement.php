@@ -66,18 +66,19 @@ class CheckoutManagement
      * @param $street
      * @param $customerAttributes
      *
-     * @return string
+     * @return array
      */
     private function parseStreet($street, $customerAttributes)
     {
-        if (is_array($street)) {
-            $street = $street[0];
+        if (!is_array($street)) {
+            $street = [$street];
         }
+
+        $street[1] = $customerAttributes['tig_housenumber'];
         if (isset($customerAttributes['tig_housenumber_addition'])) {
-            return $street . ' ' .
-                $customerAttributes['tig_housenumber'] . ' ' .
-                $customerAttributes['tig_housenumber_addition'];
+            $street[2] = $customerAttributes['tig_housenumber_addition'];
         }
-        return $street . ' ' . $customerAttributes['tig_housenumber'];
+
+        return $street;
     }
 }

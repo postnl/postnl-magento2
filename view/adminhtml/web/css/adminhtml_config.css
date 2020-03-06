@@ -97,12 +97,6 @@
     position: relative;
 }
 
-
-
-
-
-
-
 .tig_postnl-section input,
 .tig_postnl-section select {
     border-radius: 4px !important;
@@ -113,9 +107,6 @@
     linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)),
     linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)) !important;
 }
-
-
-
 
 .tig_postnl-general-section,
 .tig_postnl-postnl-section {
@@ -457,9 +448,7 @@ h4#carriers_tig_postnl_import_export_header {
     padding: 20px;
 }
 
-
-
-
+/* Config layout overwrites ========================================================================================= */
 
 .section-config.tig_postnl-section,
 .section-config.tig_postnl-section:last-child {
@@ -486,6 +475,10 @@ h4#carriers_tig_postnl_import_export_header {
     margin-top: 20px;
     margin-bottom: 20px;
     margin-left: 0;
+}
+
+.section-config.tig_postnl-sub-sub-section.active fieldset {
+    padding-bottom: 2.6rem !important;
 }
 
 .tig_postnl-sub-section.active {

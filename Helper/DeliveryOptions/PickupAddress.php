@@ -152,11 +152,8 @@ class PickupAddress
     private function getStreet($address)
     {
         $houseNr = $address['HouseNr'];
+        $houseNrExt = isset($address['HouseNrExt']) ? $address['HouseNrExt'] : null;
 
-        if (array_key_exists('HouseNrExt', $address)) {
-            $houseNr .= ' ' . $address['HouseNrExt'];
-        }
-
-        return [$address['Street'], $houseNr];
+        return [$address['Street'], $houseNr, $houseNrExt];
     }
 }

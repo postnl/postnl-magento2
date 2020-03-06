@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\Order\ShipmentRepository;
@@ -103,7 +104,16 @@ class PrintPackingslip extends LabelAbstract
     {
         $shipment = $this->getShipment();
         $address  = $shipment->getShippingAddress();
-        $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+
+        try {
+            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addErrorMessage(
+                __('[POSTNL-0070] - Unable to generate barcode for shipment #%1', $shipment->getIncrementId())
+            );
+            return;
+        }
+
         $this->setTracks($shipment);
         $this->setPackingslip($shipment->getId(), true, false);
     }

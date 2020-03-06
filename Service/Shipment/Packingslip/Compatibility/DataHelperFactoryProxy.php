@@ -18,7 +18,7 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
+ * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
@@ -29,35 +29,53 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\CheckoutConfiguration;
 
-use TIG\PostNL\Config\Provider\ShippingOptions;
+namespace TIG\PostNL\Service\Shipment\Packingslip\Compatibility;
 
-/**
- * Class IsPakjegemakExpressActive
- *
- * @package TIG\PostNL\Config\CheckoutConfiguration
- */
-class IsPakjegemakExpressActive implements CheckoutConfigurationInterface
+use Magento\Framework\ObjectManagerInterface;
+
+// @codingStandardsIgnoreFile
+class DataHelperFactoryProxy
 {
     /**
-     * @var ShippingOptions
+     * @var ObjectManagerInterface
      */
-    private $shippingOptions;
+    private $objectManager;
 
     /**
-     * @param ShippingOptions $shippingOptions
+     * @var Data
      */
-    public function __construct(ShippingOptions $shippingOptions)
+    private $subject;
+
+    /**
+     * DataHelperFactoryProxy constructor.
+     *
+     * @param ObjectManagerInterface $objectManager
+     */
+    public function __construct(ObjectManagerInterface $objectManager)
     {
-        $this->shippingOptions = $shippingOptions;
+        $this->objectManager = $objectManager;
     }
 
     /**
-     * @return bool
+     * @return mixed|Data
      */
-    public function getValue()
+    private function getSubject()
     {
-        return $this->shippingOptions->isPakjegemakExpressActive();
+        if (!$this->subject) {
+            $this->subject = $this->objectManager->get('\Xtento\PdfCustomizer\Helper\Data');
+        }
+
+        return $this->subject;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public function create(array $data = [])
+    {
+        return $this->getSubject()->create($data);
     }
 }

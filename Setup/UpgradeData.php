@@ -36,6 +36,7 @@ use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
+// @codingStandardsIgnoreFile
 class UpgradeData implements UpgradeDataInterface
 {
     /**
@@ -70,6 +71,10 @@ class UpgradeData implements UpgradeDataInterface
 
         if (version_compare($context->getVersion(), '1.7.2', '<')) {
             $this->upgradeData($this->upgradeDataObjects['v1.7.2'], $setup, $context);
+        }
+
+        if (version_compare($context->getVersion(), '1.8.1', '<')) {
+            $this->upgradeData($this->upgradeDataObjects['v1.8.1'], $setup, $context);
         }
 
         $setup->endSetup();

@@ -96,16 +96,6 @@ define([
         };
 
         /**
-         * @returns {boolean}
-         */
-        this.hasPGE = function () {
-            var pgeActive = window.checkoutConfig.shipping.postnl.pakjegemak_express_active === "1";
-            var pgeInDeliveryOptions = (this.DeliveryOptions.string.indexOf('PGE') >= '0');
-
-            return pgeActive && pgeInDeliveryOptions;
-        };
-
-        /**
          * Check if there is valid fee.
          *
          * @returns {boolean}
@@ -126,11 +116,7 @@ define([
          * @returns {*}
          */
         this.getFee = function () {
-            if (!this.hasPGE()) {
-                return null;
-            }
-
-            return window.checkoutConfig.shipping.postnl.pakjegemak_express_fee;
+            return null;
         };
 
         /**

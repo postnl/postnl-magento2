@@ -599,7 +599,7 @@ abstract class OptionsAbstract
         // Priority Products
         '6350' => [
             'value'                => '6350',
-            'label'                => 'Priority packets tracked',
+            'label'                => 'Priority Packet Tracked',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -609,7 +609,7 @@ abstract class OptionsAbstract
         ],
         '6550' => [
             'value'                => '6550',
-            'label'                => 'Priority packets tracked bulk',
+            'label'                => 'Priority Packet Tracked Bulk',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -619,7 +619,7 @@ abstract class OptionsAbstract
         ],
         '6940' => [
             'value'                => '6940',
-            'label'                => 'Priority packets tracked sorted',
+            'label'                => 'Priority Packet Tracked Sorted',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -629,7 +629,7 @@ abstract class OptionsAbstract
         ],
         '6942' => [
             'value'                => '6942',
-            'label'                => 'Priority packets tracked boxable',
+            'label'                => 'Priority Packet Tracked Boxable Sorted',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -652,7 +652,7 @@ abstract class OptionsAbstract
 	    'eps_package_options'         => 'Package options',
 	    'priority_options'            => 'Priority EPS'
     ];
-	
+
 	protected $groupToLabel = [
 		'standard_options'            => 'Domestic',
 		'pakjegemak_options'          => 'Post Office',
@@ -674,7 +674,6 @@ abstract class OptionsAbstract
         'Extra@Home'  => '',
         'Sunday'      => 'Sunday',
         'PG'          => '',
-        'PGE'         => 'Early morning pickup',
         'EPS'         => '',
         'GP'          => '',
     ];

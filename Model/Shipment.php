@@ -56,91 +56,93 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 class Shipment extends AbstractModel implements ShipmentInterface, IdentityInterface
 {
     const CACHE_TAG                  = 'tig_postnl_shipment';
-    
+
     const FIELD_SHIPMENT_ID          = 'shipment_id';
-    
+
     const FIELD_ORDER_ID             = 'order_id';
-    
+
     const FIELD_MAIN_BARCODE         = 'main_barcode';
-    
+
     const FIELD_PRODUCT_CODE         = 'product_code';
-    
+
     const FIELD_SHIPMENT_TYPE        = 'shipment_type';
-    
+
     const FIELD_SHIPMENT_COUNTRY     = 'shipment_country';
-    
+
     const FIELD_AC_CHARACTERISTIC    = 'ac_characteristic';
-    
+
     const FIELD_AC_OPTION            = 'ac_option';
-    
+
     const FIELD_DELIVERY_DATE        = 'delivery_date';
-    
+
     const FIELD_IS_PAKJEGEMAK        = 'is_pakjegemak';
-    
+
     const FIELD_PG_LOCATION_CODE     = 'pg_location_code';
-    
+
     const FIELD_PG_RETAIL_NETWORK_ID = 'pg_retail_network_id';
-    
+
     const FIELD_PARCEL_COUNT         = 'parcel_count';
-    
+
     const FIELD_SHIP_AT              = 'ship_at';
-    
+
     const FIELD_CONFIRMED_AT         = 'confirmed_at';
-    
+
     const FIELD_CONFIRMED            = 'confirmed';
-    
+
     const FIELD_DOWNPARTNER_ID       = 'downpartner_id';
-    
+
     const FIELD_DOWNPARTNER_LOCATION = 'downpartner_location';
-    
+
     const FIELD_DOWNPARTNER_BARCODE  = 'downpartner_barcode';
-    
+
+    const FIELD_RETURN_BARCODE = 'return_barcode';
+
     /**
      * @var string
      */
     // @codingStandardsIgnoreLine
     protected $_eventPrefix = 'tig_postnl_shipment';
-    
+
     /**
      * @var OrderShipmentRepository $orderShipmentRepository
      */
     private $orderShipmentRepository;
-    
+
     /**
      * @var TimezoneInterface
      */
     private $timezoneInterface;
-    
+
     /**
      * @var OrderFactory
      */
     private $orderFactory;
-    
+
     /**
      * @var AddressFactory
      */
     private $addressFactory;
-    
+
     /**
      * @var ProductOptions
      */
     private $productOptions;
-    
+
     /**
      * @var ShipmentBarcodeRepositoryInterface
      */
     private $barcodeRepository;
-    
+
     /**
      * @var \Magento\Sales\Model\Order\Address
      */
     private $shippingAddress;
-    
+
     /**
      * @var ProductRepositoryInterface
      */
     private $productRepository;
-    
+
     /**
      * @param Context                            $context
      * @param Registry                           $registry
@@ -172,7 +174,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         array $data = []
     ) {
         parent::__construct($context, $registry, $dateTime, $resource, $resourceCollection, $data);
-        
+
         $this->orderShipmentRepository = $orderShipmentRepository;
         $this->timezoneInterface       = $timezoneInterface;
         $this->orderFactory            = $orderFactory;
@@ -181,7 +183,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         $this->barcodeRepository       = $barcodeRepository;
         $this->productRepository       = $productRepository;
     }
-    
+
     /**
      * Constructor
      */
@@ -191,7 +193,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         // @codingStandardsIgnoreLine
         $this->_init('TIG\PostNL\Model\ResourceModel\Shipment');
     }
-    
+
     /**
      * @return array
      */
@@ -199,7 +201,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return [self::CACHE_TAG . '_' . $this->getId()];
     }
-    
+
     /**
      * @return \Magento\Sales\Model\Order\Shipment
      */
@@ -207,7 +209,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->orderShipmentRepository->get($this->getShipmentId());
     }
-    
+
     /**
      * @return Address
      */
@@ -216,29 +218,29 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         if ($this->shippingAddress !== null) {
             return $this->shippingAddress;
         }
-        
+
         $postNLOrder     = $this->getPostNLOrder();
         $shipment        = $this->getShipment();
         $shippingAddress = $shipment->getShippingAddress();
-        
+
         if (!$postNLOrder->getIsPakjegemak()) {
             return $this->shippingAddress = $shippingAddress;
         }
-        
+
         $pgOrderAddressId = $postNLOrder->getPgOrderAddressId();
         $order            = $shipment->getOrder();
         $orderBillingId   = $order->getBillingAddressId();
-        
+
         $pgAddressStreet = implode("\n", $this->getPakjegemakAddress()->getStreet());
-        
+
         $shippingAddress = $this->filterShippingAddress([
             $pgOrderAddressId,
             $orderBillingId
         ], $pgAddressStreet);
-        
+
         return $this->shippingAddress = $shippingAddress;
     }
-    
+
     /**
      * Mainly used when pakjegemak is available
      *
@@ -247,10 +249,10 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function getOriginalShippingAddress()
     {
         $shippingAddress = $this->getShippingAddress();
-        
+
         return $shippingAddress;
     }
-    
+
     /**
      * @param array $ignoreAddressIds
      * @param       $ignoreStreet
@@ -262,17 +264,17 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         $addressModel = $this->addressFactory->create();
         /** @var \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection $addressCollection */
         $addressCollection = $addressModel->getCollection();
-        
+
         $addressCollection->addFieldToFilter('entity_id', ['nin' => $ignoreAddressIds]);
         $addressCollection->addFieldToFilter('parent_id', ['eq' => $this->getOrderId()]);
         $addressCollection->addFieldToFilter('street', ['neq' => $ignoreStreet]);
-        
+
         // @codingStandardsIgnoreLine
         $shippingAddress = $addressCollection->setPageSize(1)->getFirstItem();
-        
+
         return $shippingAddress;
     }
-    
+
     /**
      * @return Address
      */
@@ -280,13 +282,13 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         $postNLOrder      = $this->getPostNLOrder();
         $pgOrderAddressId = $postNLOrder->getPgOrderAddressId();
-        
+
         $PgOrderAddress = $this->addressFactory->create();
         $PgOrderAddress->load($pgOrderAddressId);
-        
+
         return $PgOrderAddress;
     }
-    
+
     /**
      * @return Order
      */
@@ -294,10 +296,10 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         $postNLOrder = $this->orderFactory->create();
         $postNLOrder->load($this->getOrderId(), 'order_id');
-        
+
         return $postNLOrder;
     }
-    
+
     /**
      * @return float|int
      */
@@ -305,19 +307,19 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         $items  = $this->getShipment()->getItems();
         $weight = 0;
-        
+
         /** @var Item $item */
         foreach ($items as $item) {
             $weight += ($item->getWeight() * $item->getQty());
         }
-        
+
         if ($weight < 1) {
             $weight = 1;
         }
-        
+
         return $weight;
     }
-    
+
     /**
      * @param string $format
      *
@@ -329,13 +331,13 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         if (!$deliveryDate) {
             $deliveryDate = $this->getDeliveryDateByOrder();
         }
-        
+
         $deliveryDate          = $this->timezoneInterface->date($deliveryDate);
         $deliveryDateFormatted = $deliveryDate->format($format);
-        
+
         return $deliveryDateFormatted;
     }
-    
+
     /**
      * @param int
      *d
@@ -346,7 +348,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_SHIPMENT_ID, $value);
     }
-    
+
     /**
      * @return null|int
      */
@@ -354,7 +356,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_SHIPMENT_ID);
     }
-    
+
     /**
      * @param int
      *
@@ -364,7 +366,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_ORDER_ID, $value);
     }
-    
+
     /**
      * @return null|int
      */
@@ -372,7 +374,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_ORDER_ID);
     }
-    
+
     /**
      * @param string
      *
@@ -382,7 +384,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_MAIN_BARCODE, $value);
     }
-    
+
     /**
      * @param int $currentShipmentNumber
      *
@@ -393,16 +395,32 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         if ($currentShipmentNumber == 1) {
             return $this->getMainBarcode();
         }
-        
-        $barcode = $this->barcodeRepository->getForShipment($this, $currentShipmentNumber);
-        
+
+        $barcode = $this->barcodeRepository->getForShipment($this, $currentShipmentNumber, $type = 'shipment');
+
         if (!$barcode) {
             return null;
         }
-        
+
         return $barcode->getValue();
     }
-    
+
+    /**
+     * @param int $currentShipmentNumber
+     *
+     * @return string|null
+     */
+    public function getReturnBarcodes($currentShipmentNumber = 1)
+    {
+        $barcode = $this->barcodeRepository->getForShipment($this, $currentShipmentNumber, $type = 'return');
+
+        if (!$barcode) {
+            return null;
+        }
+
+        return $barcode->getValue();
+    }
+
     /**
      * @return null|string
      */
@@ -410,7 +428,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_MAIN_BARCODE);
     }
-    
+
     /**
      * @param string
      *
@@ -420,7 +438,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_PRODUCT_CODE, $value);
     }
-    
+
     /**
      * @return null|string
      */
@@ -428,7 +446,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_PRODUCT_CODE);
     }
-    
+
     /**
      * @param string
      *
@@ -438,7 +456,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_SHIPMENT_TYPE, $value);
     }
-    
+
     /**
      * @return null|string
      */
@@ -446,7 +464,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_SHIPMENT_TYPE);
     }
-    
+
     /**
      * @return string
      */
@@ -454,7 +472,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_SHIPMENT_COUNTRY);
     }
-    
+
     /**
      * @param $value
      *
@@ -464,7 +482,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_SHIPMENT_COUNTRY, $value);
     }
-    
+
     /**
      * @param $value
      *
@@ -474,7 +492,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_AC_CHARACTERISTIC, $value);
     }
-    
+
     /**
      * @return string|null
      */
@@ -482,7 +500,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_AC_CHARACTERISTIC);
     }
-    
+
     /**
      * @param $value
      *
@@ -492,7 +510,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_AC_OPTION, $value);
     }
-    
+
     /**
      * @return string|null
      */
@@ -500,7 +518,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_AC_OPTION);
     }
-    
+
     /**
      * @param string
      *
@@ -510,7 +528,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_DELIVERY_DATE, $value);
     }
-    
+
     /**
      * @return null|string
      */
@@ -518,7 +536,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_DELIVERY_DATE);
     }
-    
+
     /**
      * @param string
      *
@@ -528,7 +546,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_IS_PAKJEGEMAK, $value);
     }
-    
+
     /**
      * @return null|string
      */
@@ -536,7 +554,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_IS_PAKJEGEMAK);
     }
-    
+
     /**
      * @param string
      *
@@ -546,7 +564,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_PG_LOCATION_CODE, $value);
     }
-    
+
     /**
      * @return null|string
      */
@@ -554,7 +572,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_PG_LOCATION_CODE);
     }
-    
+
     /**
      * @param string
      *
@@ -564,7 +582,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_PG_RETAIL_NETWORK_ID, $value);
     }
-    
+
     /**
      * @return null|string
      */
@@ -572,7 +590,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_PG_RETAIL_NETWORK_ID);
     }
-    
+
     /**
      * @param $value
      *
@@ -582,7 +600,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_PARCEL_COUNT, $value);
     }
-    
+
     /**
      * @return null|string
      */
@@ -590,7 +608,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_PARCEL_COUNT);
     }
-    
+
     /**
      * @param string
      *
@@ -600,7 +618,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_SHIP_AT, $value);
     }
-    
+
     /**
      * @return null|string
      */
@@ -608,7 +626,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_SHIP_AT);
     }
-    
+
     /**
      * @param string
      *
@@ -619,10 +637,10 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         if ($value !== null) {
             $this->_eventManager->dispatch('tig_postnl_set_confirmed_at_before', ['shipment' => $this]);
         }
-        
+
         return $this->setData(static::FIELD_CONFIRMED_AT, $value);
     }
-    
+
     /**
      * @return null|string
      */
@@ -630,7 +648,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getData(static::FIELD_CONFIRMED_AT);
     }
-    
+
     /**
      * @param $value
      *
@@ -640,15 +658,15 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_CONFIRMED, $value);
     }
-    
+
     /**
-     * @return mixed
+     * @return bool
      */
     public function getConfirmed()
     {
         return $this->getData(static::FIELD_CONFIRMED);
     }
-    
+
     /**
      * @return \TIG\PostNL\Model\Shipment
      */
@@ -656,15 +674,15 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_DOWNPARTNER_ID, $value);
     }
-    
+
     /**
-     * @return mixed|string|null
+     * @return string|null
      */
     public function getDownpartnerId()
     {
         return $this->getData(static::FIELD_DOWNPARTNER_ID);
     }
-    
+
     /**
      * @return \TIG\PostNL\Model\Shipment
      */
@@ -672,15 +690,15 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_DOWNPARTNER_LOCATION, $value);
     }
-    
+
     /**
-     * @return mixed|string|null
+     * @return string|null
      */
     public function getDownpartnerLocation()
     {
         return $this->getData(static::FIELD_DOWNPARTNER_LOCATION);
     }
-    
+
     /**
      * @return \TIG\PostNL\Model\Shipment
      */
@@ -688,15 +706,15 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->setData(static::FIELD_DOWNPARTNER_BARCODE, $value);
     }
-    
+
     /**
-     * @return mixed|string|null
+     * @return string|null
      */
     public function getDownpartnerBarcode()
     {
         return $this->getData(static::FIELD_DOWNPARTNER_BARCODE);
     }
-    
+
     /**
      * Check if this shipment must be sent using Extra Cover.
      *
@@ -705,18 +723,18 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     public function isExtraCover()
     {
         $productCodeOptions = $this->getProductCodeOptions();
-        
+
         if ($productCodeOptions === null) {
             return false;
         }
-        
+
         if (!array_key_exists('isExtraCover', $productCodeOptions)) {
             return false;
         }
-        
+
         return $productCodeOptions['isExtraCover'];
     }
-    
+
     /**
      * @return bool
      */
@@ -724,35 +742,63 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         return $this->getShipmentType() == 'GP';
     }
-    
+
     /**
      * @return bool
      */
     public function isExtraAtHome()
     {
         $productCodeOptions = $this->getProductCodeOptions();
-        
+
         if ($productCodeOptions === null) {
             return false;
         }
-        
+
         return $productCodeOptions['group'] == 'extra_at_home_options';
     }
-    
+
+    /**
+     * @return bool
+     */
+    public function isBuspakjeShipment()
+    {
+        $productCodeOptions = $this->getProductCodeOptions();
+
+        if ($productCodeOptions == null) {
+            return false;
+        }
+
+        return $productCodeOptions['group'] == 'buspakje_options';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDomesticShipment()
+    {
+        $productCodeOptions = $this->getProductCodeOptions();
+
+        if ($productCodeOptions == null) {
+            return false;
+        }
+
+        return $productCodeOptions['group'] == 'standard_options';
+    }
+
     /**
      * @return bool
      */
     public function isIDCheck()
     {
         $productCodeOptions = $this->getProductCodeOptions();
-        
+
         if ($productCodeOptions === null) {
             return false;
         }
-        
+
         return $productCodeOptions['group'] == 'id_check_options';
     }
-    
+
     /**
      * @return float
      */
@@ -761,14 +807,14 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         $shipment   = $this->getShipment();
         $order      = $shipment->getOrder();
         $orderItems = $order->getItems();
-        
+
         $productPrices = $this->getPricePerProductId($orderItems);
-        
+
         $shipmentItems = $shipment->getAllItems();
-        
+
         return $this->getTotalPrice($shipmentItems, $productPrices);
     }
-    
+
     /**
      * @param \Magento\Sales\Api\Data\OrderItemInterface[]|\Magento\Sales\Model\Order\Item[] $orderItems
      *
@@ -783,10 +829,10 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
                 /** @var \Magento\Sales\Model\Order\Item $orderItem */
                 if ($orderItem->getProductType() == 'bundle') {
                     $productPrices[$orderItem->getSku()] = $this->getBundledPrice($orderItem);
-                    
+
                     return;
                 }
-                
+
                 if ($orderItem->getProductType() != 'simple') {
                     return;
                 }
@@ -795,10 +841,10 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
                 $productPrices[$orderItem->getSku()] = $productPrice;
             }
         );
-        
+
         return $productPrices;
     }
-    
+
     /**
      * @param $shipmentItems
      * @param $productPrices
@@ -819,10 +865,10 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
                 $totalPrice   += $productPrice * $shipmentItem->getQty();
             }
         );
-        
+
         return $totalPrice;
     }
-    
+
     /**
      * @param \Magento\Sales\Model\Order\Item $bundleItem
      *
@@ -838,20 +884,20 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
             $qty         = $childItem->getQtyOrdered() - ($childItem->getQtyShipped() - $childItem->getQtyCanceled());
             $bundlePrice += $product->getPrice() * $qty;
         }
-        
+
         return $bundlePrice;
     }
-    
+
     /**
-     * @return mixed
+     * @return array|null
      */
     private function getProductCodeOptions()
     {
         $productCode = $this->getProductCode();
-        
+
         return $this->productOptions->getOptionsByCode($productCode);
     }
-    
+
     /**
      * @return bool
      */
@@ -860,14 +906,14 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         if ($this->getConfirmedAt()) {
             return false;
         }
-        
+
         if ($this->getShippingAddress()->getCountryId() != 'NL') {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /**
      * @return \DateTime|null
      */
@@ -878,7 +924,7 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
         if (!$deliveryDate) {
             return null;
         }
-        
+
         /**
          * Delivery_date => '2017-11-09 01:00:00'
          * When not created with \DateTime the timezoneInterface will return it like '2015-01-01 01:00:00'
@@ -887,5 +933,23 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
          */
         // @codingStandardsIgnoreLine
         return new \DateTime($deliveryDate);
+    }
+
+    /**
+     * @param string
+     *
+     * @return $this
+     */
+    public function setReturnBarcode($value)
+    {
+        return $this->setData(static::FIELD_RETURN_BARCODE, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getReturnBarcode()
+    {
+        return $this->getData(static::FIELD_RETURN_BARCODE);
     }
 }
