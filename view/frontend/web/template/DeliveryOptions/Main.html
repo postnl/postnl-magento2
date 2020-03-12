@@ -10,6 +10,9 @@
                 <!-- ko if: shipmentType() == 'delivery' && deliveryFee() -->
                 + <span data-bind="text: formatPrice(deliveryFee())"></span>
                 <!-- /ko -->
+                <!-- ko if: shipmentType() == 'delivery' && statedDeliveryFee() -->
+                + <span data-bind="text: formatPrice(statedDeliveryFee())"></span>
+                <!-- /ko -->
             </div>
 
         </button>
@@ -21,6 +24,8 @@
         <button type="button" class="btn btn-default" data-bind="click: setPickup, css: { 'button-active': shipmentType() == 'pickup' }">
             <span class="label" data-bind="i18n:'Pickup'"></span>
 
+            <span class="pickup-date">(<span class="pickup-date-from" data-bind="i18n: 'from'"></span> <span class="pickup-date-date" data-bind="text: pickupDate()"></span>)</span>
+
             <div class="data" data-bind="visible: !isLoading()">
                 <span data-bind="text: formatPrice(pickupPrice())"></span>
 
@@ -28,8 +33,6 @@
                 + <span data-bind="text: formatPrice(pickupFee())"></span>
                 <!-- /ko -->
             </div>
-
-
         </button>
         <!-- /ko -->
     </div>

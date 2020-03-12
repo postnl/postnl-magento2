@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ *
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+
+    <!-- Delivery to stated address only -->
+
+    <group id="delivery_stated_address" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Delivery to stated address only</label>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+        <depends>
+            <field id="shippingoptions_active">1</field>
+        </depends>
+
+        <field id="delivery_only_stated_address_active" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Activate delivery to stated address only</label>
+            <comment><![CDATA[Whether or not customers may choose to have their order delivered to the stated address only.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/delivery_settings/stated_address_only_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+        </field>
+
+        <field id="default_only_stated_address" translate="label comment" type="select" sortOrder="35" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default delivery to stated address only</label>
+            <comment><![CDATA[Select the default product option for domestic shipments.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getDeliveryStatedAddressOnlyOptions</source_model>
+            <config_path>tig_postnl/delivery_settings/default_delivery_stated_address</config_path>
+            <depends>
+                <field id="delivery_only_stated_address_active">1</field>
+            </depends>
+        </field>
+
+        <field id="only_stated_address_fee" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Delivery to stated address only fee</label>
+            <comment><![CDATA[Set the payment fee for stated address delivery.]]></comment>
+            <config_path>tig_postnl/delivery_settings/stated_address_only_fee</config_path>
+            <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
+            <depends>
+                <field id="delivery_only_stated_address_active">1</field>
+            </depends>
+        </field>
+
+    </group>
+
+</include>

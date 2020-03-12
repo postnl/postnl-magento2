@@ -148,7 +148,8 @@ define([
                         LocationCode : dataObject.LocationCode,
                         from: selectedFrom,
                         address: dataObject.Address,
-                        customerData : AddressFinder()
+                        customerData : AddressFinder(),
+                        stated_address_only: 0
                     }
                 }).done(function (response) {
                     $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
@@ -192,6 +193,7 @@ define([
 
                 State.pickupOptionsAreAvailable(true);
                 State.pickupPrice(data.price);
+                State.pickupDate(data.pickup_date);
 
                 data = data.locations.slice(0, 5);
                 data = ko.utils.arrayMap(data, function (data) {

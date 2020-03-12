@@ -83,6 +83,8 @@ define([
     return {
         deliveryPrice: ko.observable(0),
         pickupPrice: ko.observable(0),
+        statedDeliveryPrice: ko.observable(0),
+        pickupDate: ko.observable(0),
         deliveryOptionsAreAvailable: ko.observable(true),
         deliveryOptionsAreLoading: deliveryOptionsAreLoading,
         pickupOptionsAreAvailable: ko.observable(true),
@@ -95,6 +97,7 @@ define([
         fee: fee,
         deliveryFee: ko.observable(0),
         pickupFee: ko.observable(0),
+        statedDeliveryFee: ko.observable(0),
 
         /**
          * Make sure that the PostNL shipping method gets selected when the customer picks a delivery or pickup option.

@@ -31,14 +31,19 @@
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
+use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Response\Http;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Phrase;
+use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
-use TIG\PostNL\Model\OrderRepository;
+use TIG\PostNL\Exception;
 use TIG\PostNL\Helper\DeliveryOptions\OrderParams;
 use TIG\PostNL\Helper\DeliveryOptions\PickupAddress;
-use Magento\Framework\App\Response\Http;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Checkout\Model\Session;
+use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Service\Quote\ShippingDuration;
 
@@ -55,6 +60,11 @@ class Save extends AbstractDeliveryOptions
     private $pickupAddress;
 
     /**
+     * @var ProductOptions
+     */
+    private $productOptions;
+
+    /**
      * @param Context            $context
      * @param OrderRepository    $orderRepository
      * @param QuoteToRateRequest $quoteToRateRequest
@@ -62,6 +72,7 @@ class Save extends AbstractDeliveryOptions
      * @param Session            $checkoutSession
      * @param PickupAddress      $pickupAddress
      * @param ShippingDuration   $shippingDuration
+     * @param ProductOptions     $productOptions
      */
     public function __construct(
         Context $context,
@@ -70,7 +81,8 @@ class Save extends AbstractDeliveryOptions
         OrderParams $orderParams,
         Session $checkoutSession,
         PickupAddress $pickupAddress,
-        ShippingDuration $shippingDuration
+        ShippingDuration $shippingDuration,
+        ProductOptions $productOptions
     ) {
         parent::__construct(
             $context,
@@ -82,11 +94,12 @@ class Save extends AbstractDeliveryOptions
 
         $this->orderParams     = $orderParams;
         $this->pickupAddress   = $pickupAddress;
+        $this->productOptions = $productOptions;
     }
 
     /**
-     * @return \Magento\Framework\Controller\ResultInterface
-     * @throws \TIG\PostNL\Exception
+     * @return ResultInterface
+     * @throws Exception
      */
     public function execute()
     {
@@ -110,8 +123,9 @@ class Save extends AbstractDeliveryOptions
     /**
      * @param $params
      *
-     * @return \Magento\Framework\Phrase
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @return Phrase
+     * @throws CouldNotSaveException
+     * @throws Exception
      */
     private function saveDeliveryOption($params)
     {
@@ -119,11 +133,7 @@ class Save extends AbstractDeliveryOptions
         $params        = $this->orderParams->get($this->addSessionDataToParams($params));
         $postnlOrder   = $this->getPostNLOrderByQuoteId($params['quote_id']);
 
-        foreach ($params as $key => $value) {
-            $postnlOrder->setData($key, $value);
-        }
-
-        $this->orderRepository->save($postnlOrder);
+        $this->setPostNLOrderData($params, $postnlOrder);
 
         if ($type != 'pickup') {
             $this->pickupAddress->remove();
@@ -134,6 +144,27 @@ class Save extends AbstractDeliveryOptions
         }
 
         return __('ok');
+    }
+
+    /**
+     * @param $params
+     * @param $postnlOrder
+     *
+     * @throws CouldNotSaveException
+     */
+    private function setPostNLOrderData($params, $postnlOrder)
+    {
+        foreach ($params as $key => $value) {
+            $postnlOrder->setData($key, $value);
+        }
+
+        $postnlOrder->setIsStatedAddressOnly(false);
+        if (isset($params['stated_address_only']) && $params['stated_address_only']) {
+            $postnlOrder->setIsStatedAddressOnly(true);
+            $postnlOrder->setProductCode($this->productOptions->getDefaultStatedAddressOnlyProductOption());
+        }
+
+        $this->orderRepository->save($postnlOrder);
     }
 
     /**

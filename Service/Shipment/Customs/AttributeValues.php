@@ -77,9 +77,10 @@ class AttributeValues
      */
     public function get($attributeCode, $item)
     {
-        /** @var \Magento\Catalog\Model\Product $product */
-        $product = $this->productRepository->get($item->getSku());
-        $attributeValue = $product->getDataUsingMethod($attributeCode);
+        $orderItem = $item->getOrderItem();
+        $discountPerItem = $orderItem->getDiscountAmount() / $orderItem->getQtyOrdered();
+        $totalDiscount = $discountPerItem * $item->getQty();
+        $attributeValue = $item->getPrice() - $totalDiscount;
 
         if (empty($attributeValue) && !in_array($attributeCode, $this->hasFallback)) {
             // @codingStandardsIgnoreLine

@@ -107,6 +107,9 @@
     <type name="TIG\PostNL\Setup\UpgradeSchema">
         <arguments>
             <argument name="upgradeSchemaObjects" xsi:type="array">
+                <item name="v1.9.1" xsi:type="array">
+                    <item name="InstallStatedAddressOnly" xsi:type="object">TIG\PostNL\Setup\V191\Schema\InstallStatedAddressOnly</item>
+                </item>
                 <item name="v1.9.0" xsi:type="array">
                     <item name="InstallReturnBarcode" xsi:type="object">TIG\PostNL\Setup\V190\Schema\InstallReturnBarcode</item>
                     <item name="InstallReturnLabel" xsi:type="object">TIG\PostNL\Setup\V190\Schema\InstallReturnLabel</item>
@@ -188,6 +191,9 @@
                 </item>
                 <item name="v1.8.1" xsi:type="array">
                     <item name="UpdateConfigData" xsi:type="object">TIG\PostNL\Setup\V181\Data\UpdateConfigData</item>
+                </item>
+                <item name="v1.9.1" xsi:type="array">
+                    <item name="InstallDisableDeliveryDaysAttribute" xsi:type="object">TIG\PostNL\Setup\V191\Data\InstallDisableDeliveryDaysAttribute</item>
                 </item>
             </argument>
         </arguments>
