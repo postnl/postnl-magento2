@@ -46,6 +46,7 @@ use TIG\PostNL\Helper\DeliveryOptions\PickupAddress;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Service\Quote\ShippingDuration;
+use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 
 class Save extends AbstractDeliveryOptions
 {
@@ -73,6 +74,7 @@ class Save extends AbstractDeliveryOptions
      * @param PickupAddress      $pickupAddress
      * @param ShippingDuration   $shippingDuration
      * @param ProductOptions     $productOptions
+     * @param DeliveryDate       $deliveryEndpoint
      */
     public function __construct(
         Context $context,
@@ -82,14 +84,16 @@ class Save extends AbstractDeliveryOptions
         Session $checkoutSession,
         PickupAddress $pickupAddress,
         ShippingDuration $shippingDuration,
-        ProductOptions $productOptions
+        ProductOptions $productOptions,
+        DeliveryDate $deliveryEndpoint
     ) {
         parent::__construct(
             $context,
             $orderRepository,
             $checkoutSession,
             $quoteToRateRequest,
-            $shippingDuration
+            $shippingDuration,
+            $deliveryEndpoint
         );
 
         $this->orderParams     = $orderParams;
@@ -170,10 +174,10 @@ class Save extends AbstractDeliveryOptions
     /**
      * @param $params
      *
-     * @codingStandardsIgnoreLine
-     * @todo : When type is pickup the delivery Date needs to be recalculated,
-     *
      * @return mixed
+     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Webapi\Exception
      */
     private function addSessionDataToParams($params)
     {
@@ -183,6 +187,13 @@ class Save extends AbstractDeliveryOptions
         }
 
         $params['quote_id'] = $this->checkoutSession->getQuoteId();
+
+        // Recalculate the delivery date if it's unknown for pickup
+        if (!$params['date'] && $params['type'] == 'pickup') {
+            $params['address']['country'] = $params['address']['Countrycode'];
+            $params['address']['postcode'] = $params['address']['Zipcode'];
+            $params['date'] = $this->getDeliveryDay($params['address']);
+        }
 
         return $params;
     }
