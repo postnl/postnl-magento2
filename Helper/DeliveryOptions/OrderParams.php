@@ -49,7 +49,7 @@ class OrderParams
         'delivery_date'                => [
             'pickup'   => true,
             'delivery' => true,
-            'fallback' => true
+            'fallback' => false
         ],
         'expected_delivery_time_start' => [
             'pickup'   => false,
