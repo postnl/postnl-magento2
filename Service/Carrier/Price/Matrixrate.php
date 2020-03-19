@@ -95,9 +95,11 @@ class Matrixrate
      */
     public function getRate(RateRequest $request, $parcelType, $store = null, $includeVat = false)
     {
+        $matrixrateCollection = $this->matrixrateCollection->addOrder('price', $this->matrixrateCollection::SORT_ORDER_DESC);
+
         $this->shippingVatEnabled = $this->taxHelper->shippingPriceIncludesTax($store);
         $parcelType               = $parcelType ?: 'regular';
-        $collection               = $this->matrixrateCollection->toArray();
+        $collection               = $matrixrateCollection->toArray();
         $this->parcelType         = $parcelType;
         $this->request            = $request;
         $data                     = $this->filterData($collection['items']);
