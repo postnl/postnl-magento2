@@ -174,7 +174,7 @@ define([
 
             var self = this;
             if (self.getLocationsRequest !== undefined) {
-                self.getLocationsRequest.abort('avoidMulticall')
+                self.getLocationsRequest.abort('avoidMulticall');
             }
 
             self.getLocationsRequest = $.ajax({

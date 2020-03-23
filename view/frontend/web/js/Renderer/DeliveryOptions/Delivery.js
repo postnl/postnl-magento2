@@ -156,7 +156,7 @@ define([
             State.deliveryOptionsAreLoading(true);
             var self = this;
             if (self.getDeliveryDayRequest !== undefined) {
-                self.getDeliveryDayRequest.abort('avoidMulticall')
+                self.getDeliveryDayRequest.abort('avoidMulticall');
             }
 
             self.getDeliveryDayRequest = $.ajax({
