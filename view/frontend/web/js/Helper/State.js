@@ -97,18 +97,6 @@ define([
         fee: fee,
         deliveryFee: ko.observable(0),
         pickupFee: ko.observable(0),
-        statedDeliveryFee: ko.observable(0),
-
-        /**
-         * Make sure that the PostNL shipping method gets selected when the customer picks a delivery or pickup option.
-         *
-         * @returns {boolean}
-         */
-        selectShippingMethod: function () {
-            selectShippingMethodAction(this.method());
-            checkoutData.setSelectedShippingRate(this.method().carrier_code + '_' + this.method().method_code);
-
-            return true;
-        }
+        statedDeliveryFee: ko.observable(0)
     };
 });
