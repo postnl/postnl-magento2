@@ -172,7 +172,12 @@ define([
         getPickupAddresses : function (address) {
             State.pickupOptionsAreLoading(true);
 
-            jQuery.ajax({
+            var self = this;
+            if (self.getLocationsRequest !== undefined) {
+                self.getLocationsRequest.abort('avoidMulticall')
+            }
+
+            self.getLocationsRequest = $.ajax({
                 method: 'POST',
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_locations,
                 data : {address: address}
@@ -202,8 +207,10 @@ define([
 
                 this.setPickupAddresses(data);
             }.bind(this)).fail(function (data) {
-                State.pickupOptionsAreAvailable(false);
-                Logger.error(data);
+                if (data.statusText !== 'avoidMulticall') {
+                    State.pickupOptionsAreAvailable(false);
+                    Logger.error(data);
+                }
             }).always(function () {
                 State.pickupOptionsAreLoading(false);
             });
