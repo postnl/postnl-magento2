@@ -116,7 +116,6 @@ define([
             }
 
             State.currentSelectedShipmentType('delivery');
-            State.selectShippingMethod();
 
             var fee = null;
             if (!value.fallback) {

@@ -105,7 +105,6 @@ define([
                     return;
                 }
 
-                State.selectShippingMethod();
                 State.currentSelectedShipmentType('pickup');
 
                 var dataObject = value.data,
