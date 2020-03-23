@@ -63,6 +63,12 @@ define([
 
 
         initObservable: function () {
+            this.selectedMethod = ko.computed(function () {
+                var method = quote.shippingMethod();
+                var selectedMethod = method != null ? method.carrier_code + '_' + method.method_code : null;
+                return selectedMethod;
+            }, this);
+            
             this._super().observe([
                 'shipmentType'
             ]);
