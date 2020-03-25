@@ -6,3 +6,4 @@ Build/
 build
 .idea/
 composer.lock
+*.map

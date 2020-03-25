@@ -63,6 +63,12 @@ define([
 
 
         initObservable: function () {
+            this.selectedMethod = ko.computed(function () {
+                var method = quote.shippingMethod();
+                var selectedMethod = method != null ? method.carrier_code + '_' + method.method_code : null;
+                return selectedMethod;
+            }, this);
+
             this._super().observe([
                 'shipmentType'
             ]);
@@ -72,19 +78,25 @@ define([
             return this;
         },
 
-        canUseDeliveryOptions: ko.computed(function () {
+        canUsePostNLDeliveryOptions: ko.computed(function () {
+            var deliveryOptionsActive = window.checkoutConfig.shipping.postnl.shippingoptions_active;
+            var deliveryDaysActive = window.checkoutConfig.shipping.postnl.is_deliverydays_active;
+            var pakjegemakActive = window.checkoutConfig.shipping.postnl.pakjegemak_active === 1;
 
+            return deliveryOptionsActive && (deliveryDaysActive || pakjegemakActive);
+        }),
+
+        canUseDeliveryOptions: ko.computed(function () {
             var address = AddressFinder();
 
             if (address === null || address === false) {
                 return false;
             }
 
-            return (address.country === 'NL' || address.country === 'BE');
+            return  (address.country === 'NL' || address.country === 'BE');
         }),
 
         canUsePickupLocations: ko.computed(function () {
-
             var isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
             var pickupOptionsAreAvailable = State.pickupOptionsAreAvailable();
 
