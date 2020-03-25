@@ -224,7 +224,8 @@ class Shipments
     {
         $city = 'getCity' . $countryCode;
         $company = 'getCompany' . $countryCode;
-        $freePostNumber  = 'getFreepostNumber' . $countryCode;
+        $street = 'getStreetName' . $countryCode;
+        $freePostNumber  = ($countryCode == 'BE' ? 'getHouseNumber' : 'getFreepostNumber') . $countryCode;
         $zipcode = 'getZipcode' . $countryCode;
 
         $data = [
@@ -233,7 +234,7 @@ class Shipments
             'CompanyName'      => $this->returnOptions->$company(),
             'Countrycode'      => $countryCode,
             'HouseNr'          => $this->returnOptions->$freePostNumber(),
-            'Street'           => 'Antwoordnummer:',
+            'Street'           => ($countryCode == 'BE' ? $this->returnOptions->$street() : 'Antwoordnummer:'),
             'Zipcode'          => strtoupper(str_replace(' ', '', $this->returnOptions->$zipcode())),
         ];
 
