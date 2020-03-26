@@ -47,8 +47,9 @@ define([
             var deliveryOptionsActive = window.checkoutConfig.shipping.postnl.shippingoptions_active == 1;
             var deliveryDaysActive = window.checkoutConfig.shipping.postnl.is_deliverydays_active;
             var pakjegemakActive = window.checkoutConfig.shipping.postnl.pakjegemak_active == '1';
+            var pakjegemakBeActive = window.checkoutConfig.shipping.postnl.pakjegemak_be_active == '1';
 
-            return deliveryOptionsActive && (deliveryDaysActive || pakjegemakActive);
+            return deliveryOptionsActive && (deliveryDaysActive || pakjegemakActive || pakjegemakBeActive);
         },
 
         isPostNLDeliveryMethod: function (method) {
