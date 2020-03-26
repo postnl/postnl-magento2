@@ -95,9 +95,10 @@ class Matrixrate
      */
     public function getRate(RateRequest $request, $parcelType, $store = null, $includeVat = false)
     {
+        $matrixrateCollection     = $this->matrixrateCollection->addOrder('price', 'DESC');
         $this->shippingVatEnabled = $this->taxHelper->shippingPriceIncludesTax($store);
         $parcelType               = $parcelType ?: 'regular';
-        $collection               = $this->matrixrateCollection->toArray();
+        $collection               = $matrixrateCollection->toArray();
         $this->parcelType         = $parcelType;
         $this->request            = $request;
         $data                     = $this->filterData($collection['items']);
@@ -109,10 +110,7 @@ class Matrixrate
         $result = array_shift($data);
         $result = $includeVat ? $this->handleVat($result) : $result;
 
-        return [
-            'price' => $result['price'],
-            'cost'  => 0,
-        ];
+        return ['price' => $result['price'], 'cost'  => 0];
     }
 
     /**

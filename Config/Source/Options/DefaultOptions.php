@@ -73,6 +73,7 @@ class DefaultOptions implements ArrayInterface
         $flags = [];
         $flags['groups'][] = ['group' => 'standard_options'];
         $flags['groups'][] = ['group' => 'buspakje_options'];
+        $flags['groups'][] = ['group' => 'only_stated_address_options'];
         if ($this->shippingOptions->isIDCheckActive()) {
             $flags['groups'][] = ['group' => 'id_check_options'];
         }
@@ -162,6 +163,18 @@ class DefaultOptions implements ArrayInterface
         $options = array_filter($options, function ($option) use ($idKeys) {
             return !in_array($option['value'], $idKeys);
         });
+
+        return $options;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDeliveryStatedAddressOnlyOptions()
+    {
+        $options = $this->productOptions->getProductOptions(
+            ['group' => 'only_stated_address_options']
+        );
 
         return $options;
     }

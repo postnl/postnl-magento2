@@ -79,7 +79,7 @@ define([
                     options.data = JSON.stringify(optionsArray);
                 }
 
-                if (options.url.indexOf('payment-information') >= 0) {
+                if (options.url.indexOf('payment-information') >= 0 && options.data) {
                     optionsArray = JSON.parse(options.data);
                     if (optionsArray.billingAddress.extension_attributes === undefined) {
                         optionsArray.billingAddress.extension_attributes = {
@@ -142,6 +142,19 @@ define([
             Registry.get([this.parentName + '.country_id'], function (countryElement) {
                 country = countryElement.value();
             });
+
+            if (country !== 'NL' && country !== 'BE') {
+                // In some countries housenumber is not required
+                Registry.get([this.parentName + '.postcode-field-group.field-group.housenumber'], function (housenumberElement) {
+                    housenumberElement.required(false);
+                    housenumberElement.validation['required-entry'] = false;
+                });
+            } else {
+                Registry.get([this.parentName + '.postcode-field-group.field-group.housenumber'], function (housenumberElement) {
+                    housenumberElement.required(true);
+                    housenumberElement.validation['required-entry'] = true;
+                });
+            }
 
             if (country !== 'NL') {
                 self.enableAddressFields(true);

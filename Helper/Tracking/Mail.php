@@ -130,7 +130,7 @@ class Mail extends AbstractTracking
         $template  = $this->webshopConfig->getTrackAndTraceEmailTemplate($shipment->getStoreId());
         $transport = $this->transportBuilder->setTemplateIdentifier($template);
         $transport->setTemplateOptions([
-            'area'  => \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE,
+            'area'  => \Magento\Framework\App\Area::AREA_FRONTEND,
             'store' => $shipment->getStoreId()
         ]);
 
