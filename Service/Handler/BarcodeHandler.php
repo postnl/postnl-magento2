@@ -168,17 +168,19 @@ class BarcodeHandler
     {
         /** @var \TIG\PostNL\Model\ResourceModel\ShipmentBarcode\Collection $barcodeModelCollection */
         $barcodeModelCollection = $this->shipmentBarcodeCollectionFactory->create();
-        $barcodeModelCollection->load();
+        $collectionCount = $barcodeModelCollection->getSize();
+        $collectionCount++;
 
         /**
          * The first item is the main barcode
          */
-        $barcodeModelCollection->addItem($this->createBarcode($shipment->getId(), 1, $mainBarcode));
+        $barcodeModelCollection->addItem($this->createBarcode($shipment->getId(), 1, $mainBarcode, $collectionCount));
 
         $parcelCount = $shipment->getParcelCount();
         for ($count = 2; $count <= $parcelCount; $count++) {
+            $collectionCount++;
             $barcodeModelCollection->addItem(
-                $this->createBarcode($shipment->getId(), $count, $this->generate($shipment))
+                $this->createBarcode($shipment->getId(), $count, $this->generate($shipment), $collectionCount)
             );
         }
 
@@ -199,14 +201,15 @@ class BarcodeHandler
 
         /** @var \TIG\PostNL\Model\ResourceModel\ShipmentBarcode\Collection $barcodeModelCollection */
         $barcodeModelCollection = $this->shipmentBarcodeCollectionFactory->create();
-        $barcodeModelCollection->load();
+        $collectionCount = $barcodeModelCollection->getSize();
 
         $parcelCount = $shipment->getParcelCount();
 
         for ($count = 1; $count <= $parcelCount; $count++) {
+            $collectionCount++;
             $returnBarcode = $this->generate($shipment, $isReturnBarcode);
             $barcodeModelCollection->addItem(
-                $this->createBarcode($shipment->getId(), $count, $returnBarcode, $isReturnBarcode)
+                $this->createBarcode($shipment->getId(), $count, $returnBarcode,  $collectionCount, $isReturnBarcode)
             );
             $shipment->setReturnBarcode($returnBarcode);
             $this->shipmentRepository->save($shipment);
@@ -264,11 +267,12 @@ class BarcodeHandler
      * @param      $shipmentId
      * @param      $count
      * @param      $barcode
+     * @param      $iterator
      * @param bool $isReturnBarcode
      *
      * @return ShipmentBarcode
      */
-    private function createBarcode($shipmentId, $count, $barcode, $isReturnBarcode = false)
+    private function createBarcode($shipmentId, $count, $barcode, $iterator, $isReturnBarcode = false)
     {
         /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
         $barcodeModel = $this->shipmentBarcodeFactory->create();
@@ -281,6 +285,7 @@ class BarcodeHandler
 
         $barcodeModel->setNumber($count);
         $barcodeModel->setValue($barcode);
+        $barcodeModel->setEntityId($iterator);
 
         return $barcodeModel;
     }
