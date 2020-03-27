@@ -132,7 +132,7 @@ class SetDefaultData implements ObserverInterface
             $this->log->critical($exception->getTraceAsString());
         }
     }
-	
+
 	/**
 	 * @param \TIG\PostNL\Api\Data\OrderInterface $order
 	 *
@@ -157,9 +157,7 @@ class SetDefaultData implements ObserverInterface
             $order->setShippingDuration($duration);
         }
 
-        if (!$order->getDeliveryDate()) {
-            $this->firstDeliveryDate->set($order);
-        }
+        $this->firstDeliveryDate->set($order);
 
         // As long as the Magento Order is not saved the ship at is not determined.
         if (!$order->getShipAt() || !$order->getOrderId()) {
