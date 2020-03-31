@@ -116,7 +116,6 @@ define([
             }
 
             State.currentSelectedShipmentType('delivery');
-            State.selectShippingMethod();
 
             var fee = null;
             if (!value.fallback) {
@@ -154,7 +153,12 @@ define([
          */
         getDeliverydays: function (address) {
             State.deliveryOptionsAreLoading(true);
-            $.ajax({
+            var self = this;
+            if (self.getDeliveryDayRequest !== undefined) {
+                self.getDeliveryDayRequest.abort('avoidMulticall');
+            }
+
+            self.getDeliveryDayRequest = $.ajax({
                 method: 'POST',
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_timeframes,
                 data : {address: address}
@@ -186,8 +190,10 @@ define([
 
                 this.deliverydays(data);
             }.bind(this)).fail(function (data) {
-                State.deliveryOptionsAreAvailable(false);
-                Logger.error(data);
+                if (data.statusText !== 'avoidMulticall') {
+                    State.deliveryOptionsAreAvailable(false);
+                    Logger.error(data);
+                }
             }).always(function () {
                 State.deliveryOptionsAreLoading(false);
             });

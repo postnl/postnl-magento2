@@ -154,6 +154,7 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
         $collection = $this->collectionFactory->create();
 
         $collection->addFieldToFilter('website_id', $websiteId);
+        $collection->setOrder('price', $collection::SORT_ORDER_DESC);
 
         return $collection;
     }
