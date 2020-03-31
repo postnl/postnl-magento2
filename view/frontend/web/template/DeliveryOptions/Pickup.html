@@ -26,7 +26,9 @@
                     <input class="tig-postnl-pickup-radio" type="radio" data-bind="value: LocationCode, checked: $parent.selectedOption, checkedValue: {data: $data, type: 'PG'}" name="pickuplocation"/>
                     <span class="location-container">
                         <span class="tig-postnl-pickup-deliver" data-bind="i18n: 'From 15:00'"></span>
+                        <!-- ko if: $parentContext.$parent.pickupDate() -->
                         <span class="pickup-date"><span class="pickup-date-date" data-bind="text: $parentContext.$parent.pickupDate()"></span></span>
+                        <!-- /ko -->
                     </span>
                 </label>
             </div>
