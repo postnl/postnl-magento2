@@ -54,6 +54,7 @@ class FirstDeliveryDate
      *
      * @param DeliveryDate   $endpoint
      * @param QuoteInterface $quote
+     * @param ShippingOptions $shippingConfig
      */
     public function __construct(
         DeliveryDate $endpoint,
