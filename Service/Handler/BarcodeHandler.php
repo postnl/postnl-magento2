@@ -36,15 +36,15 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
-use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory;
+use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Model\ShipmentBarcodeFactory;
 use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 use TIG\PostNL\Webservices\Endpoints\Barcode as BarcodeEndpoint;
 use TIG\PostNL\Webservices\Parser\Label\Shipments as LabelParser;
-use TIG\PostNL\Model\Shipment;
 
 // @codingStandardsIgnoreFile
 class BarcodeHandler
@@ -53,11 +53,6 @@ class BarcodeHandler
      * @var BarcodeEndpoint
      */
     private $barcodeEndpoint;
-
-    /**
-     * @var CollectionFactory
-     */
-    private $shipmentBarcodeCollectionFactory;
 
     /**
      * @var ShipmentBarcodeFactory
@@ -96,33 +91,38 @@ class BarcodeHandler
     private $resetPostNLShipment;
 
     /**
-     * @param BarcodeEndpoint             $barcodeEndpoint
-     * @param ShipmentRepositoryInterface $shipmentRepository
-     * @param ShipmentBarcodeFactory      $shipmentBarcodeFactory
-     * @param CollectionFactory           $shipmentBarcodeCollectionFactory
-     * @param ProductOptionsConfiguration $productOptionsConfiguration
-     * @param LabelParser                 $labelParser
-     * @param Shipment                    $shipment
-     * @param ResetPostNLShipment         $resetPostNLShipment
+     * @var ShipmentBarcodeRepositoryInterface
+     */
+    private $shipmentBarcodeRepository;
+
+    /**
+     * @param BarcodeEndpoint                    $barcodeEndpoint
+     * @param ShipmentRepositoryInterface        $shipmentRepository
+     * @param ShipmentBarcodeFactory             $shipmentBarcodeFactory
+     * @param ProductOptionsConfiguration        $productOptionsConfiguration
+     * @param LabelParser                        $labelParser
+     * @param Shipment                           $shipment
+     * @param ResetPostNLShipment                $resetPostNLShipment
+     * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepository
      */
     public function __construct(
         BarcodeEndpoint $barcodeEndpoint,
         ShipmentRepositoryInterface $shipmentRepository,
         ShipmentBarcodeFactory $shipmentBarcodeFactory,
-        CollectionFactory $shipmentBarcodeCollectionFactory,
         ProductOptionsConfiguration $productOptionsConfiguration,
         LabelParser $labelParser,
         Shipment $shipment,
-        ResetPostNLShipment $resetPostNLShipment
+        ResetPostNLShipment $resetPostNLShipment,
+        ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepository
     ) {
         $this->barcodeEndpoint = $barcodeEndpoint;
-        $this->shipmentBarcodeCollectionFactory = $shipmentBarcodeCollectionFactory;
         $this->shipmentBarcodeFactory = $shipmentBarcodeFactory;
         $this->shipmentRepository = $shipmentRepository;
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->labelParser = $labelParser;
         $this->shipment = $shipment;
         $this->resetPostNLShipment = $resetPostNLShipment;
+        $this->shipmentBarcodeRepository = $shipmentBarcodeRepository;
     }
 
     /**
@@ -157,34 +157,25 @@ class BarcodeHandler
     }
 
     /**
-     * Generate and save a new barcode for the just saved shipment
-     *
      * @param ShipmentInterface $shipment
      * @param                   $mainBarcode
      *
-     * @throws \Exception
+     * @throws LocalizedException
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     public function addBarcodes(ShipmentInterface $shipment, $mainBarcode)
     {
-        /** @var \TIG\PostNL\Model\ResourceModel\ShipmentBarcode\Collection $barcodeModelCollection */
-        $barcodeModelCollection = $this->shipmentBarcodeCollectionFactory->create();
-        $barcodeModelCollection->setOrder('entity_id', 'DESC');
-        $barcodeModelCollection->setPageSize(1);
-        $barcodeModelCollection->getItems();
-
         /**
          * The first item is the main barcode
          */
-        $barcodeModelCollection->addItem($this->createBarcode($shipment->getId(), 1, $mainBarcode));
+        $this->createBarcode($shipment->getId(), 1, $mainBarcode);
 
         $parcelCount = $shipment->getParcelCount();
         for ($count = 2; $count <= $parcelCount; $count++) {
-            $barcodeModelCollection->addItem(
-                $this->createBarcode($shipment->getId(), $count, $this->generate($shipment))
-            );
+            $this->createBarcode($shipment->getId(), $count, $this->generate($shipment));
         }
-
-        $barcodeModelCollection->save();
     }
 
     /**
@@ -198,25 +189,14 @@ class BarcodeHandler
     public function addReturnBarcodes(ShipmentInterface $shipment)
     {
         $isReturnBarcode = true;
-
-        /** @var \TIG\PostNL\Model\ResourceModel\ShipmentBarcode\Collection $barcodeModelCollection */
-        $barcodeModelCollection = $this->shipmentBarcodeCollectionFactory->create();
-        $barcodeModelCollection->setOrder('entity_id', 'DESC');
-        $barcodeModelCollection->setPageSize(1);
-        $barcodeModelCollection->getItems();
-
         $parcelCount = $shipment->getParcelCount();
 
         for ($count = 1; $count <= $parcelCount; $count++) {
             $returnBarcode = $this->generate($shipment, $isReturnBarcode);
-            $barcodeModelCollection->addItem(
-                $this->createBarcode($shipment->getId(), $count, $returnBarcode, $isReturnBarcode)
-            );
+            $this->createBarcode($shipment->getId(), $count, $returnBarcode, $isReturnBarcode);
             $shipment->setReturnBarcode($returnBarcode);
             $this->shipmentRepository->save($shipment);
         }
-
-        $barcodeModelCollection->save();
     }
 
     /**
@@ -269,8 +249,6 @@ class BarcodeHandler
      * @param      $count
      * @param      $barcode
      * @param bool $isReturnBarcode
-     *
-     * @return ShipmentBarcode
      */
     private function createBarcode($shipmentId, $count, $barcode, $isReturnBarcode = false)
     {
@@ -286,7 +264,7 @@ class BarcodeHandler
         $barcodeModel->setNumber($count);
         $barcodeModel->setValue($barcode);
 
-        return $barcodeModel;
+        $this->shipmentBarcodeRepository->save($barcodeModel);
     }
 
     /**
