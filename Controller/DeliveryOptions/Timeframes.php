@@ -124,15 +124,13 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getFallBackResponse(1));
         }
 
-        if ($this->quoteHasDeliveryDaysDisabled->shouldDisableDeliveryDays($this->checkoutSession)) {
-            return $this->jsonResponse($this->getFallBackResponse(2));
-        }
-
-        $this->addressEnhancer->set($params['address']);
         $price = $this->calculator->price($this->getRateRequest(), null, null, true);
+
         if (!$this->isDeliveryDaysActive->getValue()) {
             return $this->jsonResponse($this->getFallBackResponse(2, $price['price']));
         }
+
+        $this->addressEnhancer->set($params['address']);
 
         try {
             return $this->jsonResponse($this->getValidResponeType($price['price']));
