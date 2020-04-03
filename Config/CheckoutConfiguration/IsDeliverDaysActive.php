@@ -56,6 +56,7 @@ class IsDeliverDaysActive implements CheckoutConfigurationInterface
     /**
      * @return bool
      */
+    // @codingStandardsIgnoreStart
     public function getValue()
     {
         $quote = $this->checkoutSession->getQuote();
@@ -73,7 +74,6 @@ class IsDeliverDaysActive implements CheckoutConfigurationInterface
         foreach ($items as $item) {
             $product = $item->getProduct();
 
-            // @codingStandardsIgnoreLine
             if ($product->getPostnlDisableDeliveryDays()) {
                 return false;
             }
@@ -81,4 +81,5 @@ class IsDeliverDaysActive implements CheckoutConfigurationInterface
 
         return (bool) $this->shippingOptions->isDeliverydaysActive();
     }
+    // @codingStandardsIgnoreEnd
 }
