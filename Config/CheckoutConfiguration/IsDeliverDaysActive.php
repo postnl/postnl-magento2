@@ -59,6 +59,11 @@ class IsDeliverDaysActive implements CheckoutConfigurationInterface
     public function getValue()
     {
         $quote = $this->checkoutSession->getQuote();
+
+        if (!$quote) {
+            return (bool) $this->shippingOptions->isDeliverydaysActive();
+        }
+
         $items = $quote->getItems();
 
         if ($items === null) {
@@ -74,6 +79,6 @@ class IsDeliverDaysActive implements CheckoutConfigurationInterface
             }
         }
 
-        return (bool)$this->shippingOptions->isDeliverydaysActive();
+        return (bool) $this->shippingOptions->isDeliverydaysActive();
     }
 }
