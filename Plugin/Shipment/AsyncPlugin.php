@@ -109,19 +109,14 @@ class AsyncPlugin extends Grid
         foreach ($this->notSyncedIds as $shipmentId) {
             $postNLShipment = $this->shipmentRepository->getByShipmentId($shipmentId);
 
-            $shipAt = $postNLShipment->getShipAt();
-            $productCode = $postNLShipment->getProductCode();
-            $confirmed = $postNLShipment->getConfirmed();
-            $confirmedAt = $postNLShipment->getConfirmedAt();
-            $barcode = $postNLShipment->getMainBarcode();
             $connection = $this->resourceConnection->getConnection();
 
             $binds = [
-                'tig_postnl_ship_at'        => $shipAt,
-                'tig_postnl_product_code'   => $productCode,
-                'tig_postnl_confirmed'      => $confirmed,
-                'tig_postnl_confirmed_at'   => $confirmedAt,
-                'tig_postnl_barcode'        => $barcode,
+                'tig_postnl_ship_at'        => $postNLShipment->getShipAt(),
+                'tig_postnl_product_code'   => $postNLShipment->getProductCode(),
+                'tig_postnl_confirmed'      => $postNLShipment->getConfirmed(),
+                'tig_postnl_confirmed_at'   => $postNLShipment->getConfirmedAt(),
+                'tig_postnl_barcode'        => $postNLShipment->getMainBarcode(),
             ];
 
             $where = [$connection->quoteIdentifier('entity_id') . '=?' => $shipmentId];
