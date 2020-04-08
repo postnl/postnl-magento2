@@ -36,31 +36,36 @@
 /*
 * =================================================================================================================== */
 
-
 /*** PostNL Color Pallet ***/
 
 @postnl-orange: #ED8C00;
 @postnl-blue-dark: #27324C;
-@postnl-blue: #001A73;
-@postnl-grey: #868681;
+@postnl-blue-light: #eaf7ff;
+@postnl-grey: #D4D9E3;
+@postnl-grey-light: #F3F4F7;
 @postnl-white: #fff;
-
 
 /*** Custom Color Pallet ***/
 
-/* Container */
-@custom-border-color: #D4D9E3;
-
 /* Buttons */
-@custom-button-active: @postnl-orange;
-@custom-button-hover: #F3F4F7;
+@postnl-button-active: @postnl-orange;
+@postnl-button-inactive: @postnl-white;
+@postnl-button-inactive-hover: @postnl-grey-light;
 
-@custom-border-radius: 5px;
+/* Border radius button group */
+@postnl-border-radius: 5px;
+@postnl-border-radius-inner: 4px;
 
-/* List */
-@custom-list-background: #fff;
-@custom-list-background-even: #fff;
-@custom-list-hover: #eaf7ff;
+/* Top row elements */
+@postnl-border-color: @postnl-grey;
+@postnl-top-row-background: @postnl-grey-light;
+
+/* Middle row */
+@postnl-list-background: @postnl-white;
+@postnl-list-hover: @postnl-blue-light;
+
+/* Opening hours */
+@postnl-hours-background: @postnl-grey-light;
 
 /* =================================================================================================================== *
 *
@@ -71,12 +76,10 @@
 /* PostNL Branding Frontend */
 
 #label_method_regular_tig_postnl {
-
   &:before {
     float: left;
     width: 50px;
     height: 37px;
-
     content: ' ';
     background-image: url(../images/postnl_logo.png) !important;
     background-position: 0 2px;
@@ -93,14 +96,18 @@
   width: 100%;
   max-width: 500px;
 
+  * {
+      box-sizing: border-box;
+  }
+
   .btn-group {
-    background: @custom-button-active;
+    background: @postnl-button-active;
     float: left;
     width: 100%;
-    border: 1px solid @custom-border-color;
+    border: 1px solid @postnl-border-color;
     box-sizing: border-box;
     border-bottom: 0;
-    border-radius: @custom-border-radius @custom-border-radius 0 0;
+    border-radius: @postnl-border-radius @postnl-border-radius 0 0;
   }
 
   button {
@@ -110,7 +117,7 @@
         width: 50%;
         box-sizing: border-box;
         border: 0;
-        background: white;
+        background: @postnl-button-inactive;
         text-align: left;
         padding: 15px;
         min-height: 55px;
@@ -124,20 +131,20 @@
         }
 
         &:nth-child(1) {
-          border-radius: 4px 0 0 0;
+          border-radius: @postnl-border-radius-inner 0 0 0;
           border-right: 0;
         }
 
         &:nth-child(2) {
-          border-radius: 0 4px 0 0;
+          border-radius: 0 @postnl-border-radius-inner 0 0;
         }
 
         &:hover {
-          background: @custom-button-hover;
+          background: @postnl-button-inactive-hover;
         }
 
         &.button-active {
-          background: @custom-button-active;
+          background: @postnl-button-active;
           color: @postnl-white;
         }
 
@@ -158,7 +165,6 @@
 
     &:active, &:hover, &:focus, &:visited {
       box-shadow: none;
-
     }
   }
 
@@ -168,8 +174,8 @@
   .pickup {
     float: left;
     width: 100%;
-    background: @custom-list-background;
-    border: 1px solid @custom-border-color;
+    background: @postnl-list-background;
+    border: 1px solid @postnl-border-color;
     box-sizing: border-box;
     border-top: 0;
 
@@ -184,18 +190,19 @@
         margin-bottom: 0;
         position: relative;
 
+        &.selected-row {
+            background: @postnl-list-hover;
+        }
+
         label {
           cursor: pointer;
           box-sizing: border-box;
 
           &:hover {
-            background: @custom-list-hover;
-          }
-
-          &.selected-row {
-            background: @custom-list-hover !important;
+            background: @postnl-list-hover;
           }
         }
+
       }
     }
 
@@ -207,22 +214,18 @@
     border: 0;
     background: transparent;
 
-    * {
-       box-sizing: border-box;
-    }
-
     .days {
-      border: 1px solid @custom-border-color;
+      border: 1px solid @postnl-border-color;
       border-top: 0;
       overflow: hidden;
-      background: @custom-list-background;
+      background: @postnl-list-background;
 
       .wrapper {
         float: left;
         width: 100%;
 
         &:nth-child(even) {
-          background: @custom-list-background-even;
+          background: @postnl-list-background;
         }
 
         // Top Row
@@ -231,9 +234,9 @@
           float: left;
           width: 100%;
           box-sizing: border-box;
-          background: #F3F4F7;
-          border-bottom: 1px solid @custom-border-color;
-          border-top: 1px solid @custom-border-color;
+          background: @postnl-top-row-background;
+          border-bottom: 1px solid @postnl-border-color;
+          border-top: 1px solid @postnl-border-color;
           padding: 5px 15px;
 
           .deliverydays-day {
@@ -334,9 +337,9 @@
     }
 
     .extra-service-container {
-      border: 1px solid @custom-border-color;
+      border: 1px solid @postnl-border-color;
       margin-top: 25px;
-      background: @custom-list-background;
+      background: @postnl-list-background;
 
       .extra-service-header {
         padding: 6px 15px;
@@ -379,7 +382,7 @@
           cursor: pointer;
 
           &:hover {
-            background: @custom-list-hover;
+            background: @postnl-list-hover;
           }
         }
 
@@ -426,26 +429,21 @@
     }
 
   }
-
   /* End Delivery */
 
 
   // Pickup List
 
   .pickup {
-      * {
-          box-sizing: border-box;
-      }
-
       .tig-postnl-pickup-row {
           strong {
               font-size: 12px;
               float: left;
               width: 100%;
               box-sizing: border-box;
-              background: #F3F4F7;
-              border-bottom: 1px solid @custom-border-color;
-              border-top: 1px solid @custom-border-color;
+              background: @postnl-top-row-background;
+              border-bottom: 1px solid @postnl-border-color;
+              border-top: 1px solid @postnl-border-color;
               padding: 5px 15px;
               text-transform: uppercase;
 
@@ -521,15 +519,14 @@
                   }
               }
 
-
               .tig-postnl-pickup-hours-list {
                   float:left;
                   width: calc(~'100% - 30px');
                   margin-left: 30px;
-                  background: #F3F4F7;
+                  background: @postnl-hours-background;
                   padding: 15px;
                   border-radius: 5px;
-                  border: 1px solid #D4D9E3;
+                  border: 1px solid @postnl-border-color;
                   box-sizing: border-box;
                   margin-top: 10px;
 

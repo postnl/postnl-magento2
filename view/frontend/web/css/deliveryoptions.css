@@ -36,9 +36,11 @@
 * =================================================================================================================== */
 /*** PostNL Color Pallet ***/
 /*** Custom Color Pallet ***/
-/* Container */
 /* Buttons */
-/* List */
+/* Border radius button group */
+/* Top row elements */
+/* Middle row */
+/* Opening hours */
 /* =================================================================================================================== *
 *
 * TIG PostNL Magento 2 Extension
@@ -64,6 +66,9 @@
   max-width: 500px;
   /* End Delivery */
 }
+.postnl-delivery-options * {
+  box-sizing: border-box;
+}
 .postnl-delivery-options .btn-group {
   background: #ED8C00;
   float: left;
@@ -78,7 +83,7 @@
   width: 50%;
   box-sizing: border-box;
   border: 0;
-  background: white;
+  background: #fff;
   text-align: left;
   padding: 15px;
   min-height: 55px;
@@ -148,6 +153,12 @@
   margin-bottom: 0;
   position: relative;
 }
+.postnl-delivery-options .delivery ul li.selected-row,
+.postnl-delivery-options .pickup ul li.selected-row,
+.postnl-delivery-options .delivery ol li.selected-row,
+.postnl-delivery-options .pickup ol li.selected-row {
+  background: #eaf7ff;
+}
 .postnl-delivery-options .delivery ul li label,
 .postnl-delivery-options .pickup ul li label,
 .postnl-delivery-options .delivery ol li label,
@@ -161,18 +172,9 @@
 .postnl-delivery-options .pickup ol li label:hover {
   background: #eaf7ff;
 }
-.postnl-delivery-options .delivery ul li label.selected-row,
-.postnl-delivery-options .pickup ul li label.selected-row,
-.postnl-delivery-options .delivery ol li label.selected-row,
-.postnl-delivery-options .pickup ol li label.selected-row {
-  background: #eaf7ff !important;
-}
 .postnl-delivery-options .delivery {
   border: 0;
   background: transparent;
-}
-.postnl-delivery-options .delivery * {
-  box-sizing: border-box;
 }
 .postnl-delivery-options .delivery .days {
   border: 1px solid #D4D9E3;
@@ -355,9 +357,6 @@
     float: right;
     width: 100%;
   }
-}
-.postnl-delivery-options .pickup * {
-  box-sizing: border-box;
 }
 .postnl-delivery-options .pickup .tig-postnl-pickup-row strong {
   font-size: 12px;
