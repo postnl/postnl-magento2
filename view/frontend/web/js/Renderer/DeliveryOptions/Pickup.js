@@ -219,7 +219,7 @@ define([
             });
         },
 
-        /**
+    /**
          * Check if the current row is selected.
          *
          * @param $data
