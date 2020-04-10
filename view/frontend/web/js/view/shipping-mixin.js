@@ -49,6 +49,11 @@ define([
                     return originalResult;
                 }
 
+                // Delivery Options are not shown for countries other than Belgium and The Netherlands. So no need to validate.
+                if (quote.shippingAddress().countryId !== 'NL' || quote.shippingAddress().countryId !== 'BE') {
+                    return originalResult;
+                }
+
                 // Returns undefined if no option is checked.
                 var checkedOption = $('.tig-postnl-delivery-radio:checked, .tig-postnl-pickup-radio:checked').val();
 
