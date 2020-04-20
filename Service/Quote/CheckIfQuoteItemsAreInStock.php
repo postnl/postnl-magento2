@@ -36,8 +36,10 @@ use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
+use Psr\Log\LoggerInterface;
 
 class CheckIfQuoteItemsAreInStock
 {
@@ -65,23 +67,30 @@ class CheckIfQuoteItemsAreInStock
      * @var GetSourceItemsDataBySku
      */
     private $getSourceItemsDataBySku;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @param CheckoutSession             $checkoutSession
      * @param StockRegistryInterface      $stockRegistryInterface
      * @param StockConfigurationInterface $stockConfiguration
      * @param GetSourceItemsDataBySku     $getSourceItemsDataBySku
+     * @param LoggerInterface             $logger
      */
     public function __construct(
         CheckoutSession $checkoutSession,
         StockRegistryInterface $stockRegistryInterface,
         StockConfigurationInterface $stockConfiguration,
-        GetSourceItemsDataBySku $getSourceItemsDataBySku
+        GetSourceItemsDataBySku $getSourceItemsDataBySku,
+        LoggerInterface $logger
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->stockRegistry = $stockRegistryInterface;
         $this->stockConfiguration = $stockConfiguration;
         $this->getSourceItemsDataBySku = $getSourceItemsDataBySku;
+        $this->logger = $logger;
     }
 
     /**
@@ -129,28 +138,18 @@ class CheckIfQuoteItemsAreInStock
      * @param QuoteItem $item
      *
      * @return bool
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function isItemInStock(QuoteItem $item)
     {
         $stockItem = $this->getStockItem($item);
         $requiredQuantity = $this->getRequiredQuantity($item);
         $minimumQuantity = $this->getMinimumQuantity($stockItem);
-        $sources = $this->getSourceItemsDataBySku->execute($item->getSku());
-        $sourceQty = 0;
-
-        foreach ($sources as $source) {
-            $sourceQty+= $source['quantity'];
-        }
 
         if ($stockItem->getId() && $stockItem->getManageStock() == false) {
             return true;
         }
 
-        /**
-         * Check if the product has MSI quantity available.
-         */
-        if (($sourceQty - $minimumQuantity) > $requiredQuantity) {
+        if ($this->hasMultiStockInventoryStock($item, $requiredQuantity, $minimumQuantity)) {
             return true;
         }
 
@@ -206,5 +205,35 @@ class CheckIfQuoteItemsAreInStock
         $stockItem = $this->stockRegistry->getStockItem($product->getId(), $product->getStoreId());
 
         return $stockItem;
+    }
+
+    /**
+     * @param $item
+     *
+     * @param $requiredQuantity
+     * @param $minimumQuantity
+     *
+     * @return int|void
+     */
+    private function hasMultiStockInventoryStock($item, $requiredQuantity, $minimumQuantity)
+    {
+        $sourceQty = 0;
+
+        try {
+            $sources = $this->getSourceItemsDataBySku->execute($item->getSku());
+        } catch (NoSuchEntityException $noSuchEntityException) {
+            $this->logger->critical($noSuchEntityException);
+            return false;
+        }
+
+        foreach ($sources as $source) {
+            $sourceQty+= $source['quantity'];
+        }
+
+        if (($sourceQty - $minimumQuantity) > $requiredQuantity) {
+            return true;
+        }
+
+        return false;
     }
 }
