@@ -36,6 +36,7 @@ use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
+use Magento\Inventory\Model\SourceItem\Command\GetSourceItemsBySku;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 
 class CheckIfQuoteItemsAreInStock
@@ -61,22 +62,32 @@ class CheckIfQuoteItemsAreInStock
     private $stockConfiguration;
 
     /**
+     * @var GetSourceItemsBySku
+     */
+    private $getSourceItemsBySku;
+
+    /**
      * @param CheckoutSession             $checkoutSession
      * @param StockRegistryInterface      $stockRegistryInterface
      * @param StockConfigurationInterface $stockConfiguration
+     * @param GetSourceItemsBySku         $getSourceItemsBySku
      */
     public function __construct(
         CheckoutSession $checkoutSession,
         StockRegistryInterface $stockRegistryInterface,
-        StockConfigurationInterface $stockConfiguration
+        StockConfigurationInterface $stockConfiguration,
+        GetSourceItemsBySku $getSourceItemsBySku
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->stockRegistry = $stockRegistryInterface;
         $this->stockConfiguration = $stockConfiguration;
+        $this->getSourceItemsBySku = $getSourceItemsBySku;
     }
 
     /**
      * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getValue()
     {
@@ -122,17 +133,29 @@ class CheckIfQuoteItemsAreInStock
     private function isItemInStock(QuoteItem $item)
     {
         $stockItem = $this->getStockItem($item);
-
+        $requiredQuantity = $this->getRequiredQuantity($item);
         $minimumQuantity = $this->getMinimumQuantity($stockItem);
+        $sources = $this->getSourceItemsBySku->execute($item->getSku());
+        $sourceQty = 0;
+
+        foreach ($sources as $source) {
+            $sourceQty+= $source->getQuantity();
+        }
 
         if ($stockItem->getId() && $stockItem->getManageStock() == false) {
             return true;
         }
 
         /**
+         * Check if the product has MSI quantity available.
+         */
+        if (($sourceQty - $minimumQuantity) > $requiredQuantity) {
+            return true;
+        }
+
+        /**
          * Check if the product has the required quantity available.
          */
-        $requiredQuantity = $this->getRequiredQuantity($item);
         if (($stockItem->getQty() - $minimumQuantity) < $requiredQuantity) {
             return false;
         }
