@@ -36,7 +36,7 @@ use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
-use Magento\Inventory\Model\SourceItem\Command\GetSourceItemsBySku;
+use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 
 class CheckIfQuoteItemsAreInStock
@@ -62,26 +62,26 @@ class CheckIfQuoteItemsAreInStock
     private $stockConfiguration;
 
     /**
-     * @var GetSourceItemsBySku
+     * @var GetSourceItemsDataBySku
      */
-    private $getSourceItemsBySku;
+    private $getSourceItemsDataBySku;
 
     /**
      * @param CheckoutSession             $checkoutSession
      * @param StockRegistryInterface      $stockRegistryInterface
      * @param StockConfigurationInterface $stockConfiguration
-     * @param GetSourceItemsBySku         $getSourceItemsBySku
+     * @param GetSourceItemsDataBySku     $getSourceItemsDataBySku
      */
     public function __construct(
         CheckoutSession $checkoutSession,
         StockRegistryInterface $stockRegistryInterface,
         StockConfigurationInterface $stockConfiguration,
-        GetSourceItemsBySku $getSourceItemsBySku
+        GetSourceItemsDataBySku $getSourceItemsDataBySku
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->stockRegistry = $stockRegistryInterface;
         $this->stockConfiguration = $stockConfiguration;
-        $this->getSourceItemsBySku = $getSourceItemsBySku;
+        $this->getSourceItemsDataBySku = $getSourceItemsDataBySku;
     }
 
     /**
@@ -129,17 +129,18 @@ class CheckIfQuoteItemsAreInStock
      * @param QuoteItem $item
      *
      * @return bool
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function isItemInStock(QuoteItem $item)
     {
         $stockItem = $this->getStockItem($item);
         $requiredQuantity = $this->getRequiredQuantity($item);
         $minimumQuantity = $this->getMinimumQuantity($stockItem);
-        $sources = $this->getSourceItemsBySku->execute($item->getSku());
+        $sources = $this->getSourceItemsDataBySku->execute($item->getSku());
         $sourceQty = 0;
 
         foreach ($sources as $source) {
-            $sourceQty+= $source->getQuantity();
+            $sourceQty+= $source['quantity'];
         }
 
         if ($stockItem->getId() && $stockItem->getManageStock() == false) {
