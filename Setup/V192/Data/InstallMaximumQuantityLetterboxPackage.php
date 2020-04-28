@@ -72,7 +72,7 @@ class InstallMaximumQuantityLetterboxPackage extends AbstractDataInstaller
 
         $eavSetup->addAttribute(
             Product::ENTITY,
-            'postnl_maximum_quantity_letterbox_package',
+            'postnl_max_qty_letterbox',
             [
                 'group'                   => 'PostNL',
                 'type'                    => 'int',
