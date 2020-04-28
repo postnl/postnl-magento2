@@ -61,6 +61,10 @@ class ParcelType implements ContractInterface
             return 'pakjegemak';
         }
 
+        if ($this->isLetterboxPackage($line)) {
+            return 'letterbox_package';
+        }
+
         return false;
     }
 
@@ -102,6 +106,13 @@ class ParcelType implements ContractInterface
     private function isPakjegemak($line)
     {
         $options = ['pakjegemak', 'pakje_gemak', 'pakje gemak', 'PakjeGemak', 'postkantoor', 'post office'];
+
+        return in_array($line, $options);
+    }
+
+    private function isLetterboxPackage($line)
+    {
+        $options = ['letterbox_package', 'brievenbuspakje'];
 
         return in_array($line, $options);
     }
