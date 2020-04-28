@@ -295,4 +295,12 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
 
         return $productOption[$key] == $value;
     }
+
+    /**
+     * @return array
+     */
+    public function getLetterBoxOptions()
+    {
+        return $this->getProductOptions(['group' => 'buspakje_options']);
+    }
 }
