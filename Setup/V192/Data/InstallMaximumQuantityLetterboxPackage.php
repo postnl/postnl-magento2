@@ -78,7 +78,7 @@ class InstallMaximumQuantityLetterboxPackage extends AbstractDataInstaller
                 'type'                    => 'int',
                 'backend'                 => '',
                 'frontend'                => '',
-                'label'                   => 'Maximum Quantity Letterbox Package',
+                'label'                   => 'Maximum quantity Letterbox Package',
                 'input'                   => 'text',
                 'class'                   => '',
                 'source'                  => '',
