@@ -111,6 +111,11 @@ class Calculator
             return $this->priceResponse('0.00', '0.00');
         }
 
+       //check if we are dealing with a letterbox package
+        if () {
+            return $this->priceResponse('','');
+        }
+
         $ratePrice = $this->getRatePrice($this->getConfigData('rate_type'), $request, $parcelType, $includeVat);
 
         if ($ratePrice) {
