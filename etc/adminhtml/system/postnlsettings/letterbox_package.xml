@@ -53,7 +53,7 @@
 
         <field id="letterbox_package_calculation_mode" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Calculation mode</label>
-            <comment><![CDATA[You can let the PostNL extension automatically determine whether a shipment fits through the letterbox or you can indicate this manually when you create shipments. If the calculation mode is set to "automatic", the extension will use the product attributes "Weight" and "Maximum quantity for Mailbox Package" to determine whether a shipment will fit through the letterbox. You can always override this by indicating whether a shipment is a letterbox package when you manually create a shipment.]]></comment>
+            <comment><![CDATA[The PostNL extension can automatically determine whether a shipment fits through a letterbox or this can be indicated manually when creating shipments. When the calculation mode is set to 'automatic', PostNL will use the product attributes Weight and Maximum Quantity for Letterbox Package" to determine whether a shipment will fit through the letterbox. This choice can be overridden when a manually creating a shipment.]]></comment>
             <source_model>TIG\PostNL\Config\Source\LetterboxPackage\CalculationMode</source_model>
             <config_path>tig_postnl/letterbox_package/letterbox_package_calculation_mode</config_path>
             <depends>
