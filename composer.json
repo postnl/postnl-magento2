@@ -4,7 +4,7 @@
     "require": {
         "php": "~7.0|~7.1|~7.2|~7.3",
         "ext-soap": "*",
-        "magento/framework": ">=100.1.0,<=100.1.18|>=101.0.0,<=101.0.11|>=102.0.0,<=102.0.4",
+        "magento/framework": ">=100.1.0,<=100.1.18|>=101.0.0,<=101.0.11|~102.0",
         "setasign/fpdi-fpdf": "2.1.*|2.2.*",
         "zendframework/zend-barcode" : "~2.5"
     },
