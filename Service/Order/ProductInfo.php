@@ -50,37 +50,41 @@ class ProductInfo
     /** @var string */
     private $type = null;
 
-    const TYPE_PICKUP               = 'pickup';
+    const TYPE_PICKUP                     = 'pickup';
 
-    const TYPE_DELIVERY             = 'delivery';
+    const TYPE_DELIVERY                   = 'delivery';
 
-    const OPTION_PG                 = 'pg';
+    const OPTION_PG                       = 'pg';
 
-    const OPTION_PGE                = 'pge';
+    const OPTION_PGE                      = 'pge';
 
-    const OPTION_SUNDAY             = 'sunday';
+    const OPTION_SUNDAY                   = 'sunday';
 
-    const OPTION_DAYTIME            = 'daytime';
+    const OPTION_DAYTIME                  = 'daytime';
 
-    const OPTION_EVENING            = 'evening';
+    const OPTION_EVENING                  = 'evening';
 
-    const OPTION_EXTRAATHOME        = 'extra@home';
+    const OPTION_EXTRAATHOME              = 'extra@home';
 
-    const SHIPMENT_TYPE_PG          = 'PG';
+    const OPTION_LETTERBOX_PACKAGE        = 'letterbox_package';
 
-    const SHIPMENT_TYPE_PGE         = 'PGE';
+    const SHIPMENT_TYPE_PG                = 'PG';
 
-    const SHIPMENT_TYPE_EPS         = 'EPS';
+    const SHIPMENT_TYPE_PGE               = 'PGE';
 
-    const SHIPMENT_TYPE_GP          = 'GP';
+    const SHIPMENT_TYPE_EPS               = 'EPS';
 
-    const SHIPMENT_TYPE_SUNDAY      = 'Sunday';
+    const SHIPMENT_TYPE_GP                = 'GP';
 
-    const SHIPMENT_TYPE_EVENING     = 'Evening';
+    const SHIPMENT_TYPE_SUNDAY            = 'Sunday';
 
-    const SHIPMENT_TYPE_DAYTIME     = 'Daytime';
+    const SHIPMENT_TYPE_EVENING           = 'Evening';
 
-    const SHIPMENT_TYPE_EXTRAATHOME = 'Extra@Home';
+    const SHIPMENT_TYPE_DAYTIME           = 'Daytime';
+
+    const SHIPMENT_TYPE_EXTRAATHOME       = 'Extra@Home';
+
+    const SHIPMENT_TYPE_LETTERBOX_PACKAGE = 'Letterbox Package';
 
     /** @var ProductOptionsConfiguration */
     private $productOptionsConfiguration;
@@ -298,6 +302,9 @@ class ProductInfo
                 $this->type = static::SHIPMENT_TYPE_EXTRAATHOME;
 
                 return;
+            case static::OPTION_LETTERBOX_PACKAGE;
+                $this->code = $this->productOptionsConfiguration->getDefaultLetterboxPackageProductOption();
+                $this->type = static::SHIPMENT_TYPE_LETTERBOX_PACKAGE;
         }
 
         $this->setDefaultProductOption($country);
