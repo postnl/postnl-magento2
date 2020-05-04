@@ -36,11 +36,25 @@ class LetterboxPackage
     public function isLetterboxPackage($products)
     {
         foreach ($products as $product) {
-            if ($product->getProduct()->getPostnlProductType() === 'letterbox_package') {
-                $product->getQty();
-            }
+            $result = $this->calculateLetterboxPackage($product);
+        }
 
+        return $result;
+    }
+
+    public function calculateLetterboxPackage($product)
+    {
+        if ($product->getProduct()->getPostnlProductType() !== 'letterbox_package') {
             return false;
         }
+
+        $orderedQty = $product->getQty();
+        $maximumQty = floatval($product->getProduct()->getPostnlMaxQtyLetterbox());
+
+        if (1 / $maximumQty * $orderedQty < 1) {
+            return true;
+        }
+
+        return false;
     }
 }
