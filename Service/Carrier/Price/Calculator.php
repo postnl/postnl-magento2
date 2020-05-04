@@ -35,6 +35,7 @@ namespace TIG\PostNL\Service\Carrier\Price;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
 use TIG\PostNL\Config\Source\Carrier\RateType;
+use TIG\PostNL\Service\Shipping\LetterboxPackage;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
@@ -72,6 +73,11 @@ class Calculator
     private $parcelTypeFinder;
 
     /**
+     * @var LetterboxPackage
+     */
+    private $letterboxPackage;
+
+    /**
      * Calculator constructor.
      *
      * @param ScopeConfigInterface $scopeConfig
@@ -79,19 +85,22 @@ class Calculator
      * @param Matrixrate           $matrixratePrice
      * @param Tablerate            $tablerateShippingPrice
      * @param ParcelTypeFinder     $parcelTypeFinder
+     * @param LetterboxPackage    $letterboxPackage
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         GetFreeBoxes $getFreeBoxes,
         Matrixrate $matrixratePrice,
         Tablerate $tablerateShippingPrice,
-        ParcelTypeFinder $parcelTypeFinder
+        ParcelTypeFinder $parcelTypeFinder,
+        LetterboxPackage $letterboxPackage
     ) {
         $this->scopeConfig            = $scopeConfig;
         $this->getFreeBoxes           = $getFreeBoxes;
         $this->matrixratePrice        = $matrixratePrice;
         $this->tablerateShippingPrice = $tablerateShippingPrice;
         $this->parcelTypeFinder       = $parcelTypeFinder;
+        $this->letterboxPackage = $letterboxPackage;
     }
 
     /**
@@ -112,8 +121,8 @@ class Calculator
         }
 
        //check if we are dealing with a letterbox package
-        if () {
-            return $this->priceResponse('','');
+        if ($this->letterboxPackage->isLetterboxPackage($request->getAllItems())) {
+            return $this->priceResponse('2.50','2.50');
         }
 
         $ratePrice = $this->getRatePrice($this->getConfigData('rate_type'), $request, $parcelType, $includeVat);
