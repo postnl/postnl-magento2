@@ -127,6 +127,7 @@ class Data
             'DownPartnerLocation'      => $shipment->getDownpartnerLocation(),
             'DownPartnerBarcode'       => $shipment->getDownpartnerBarcode(),
             'ProductCodeDelivery'      => $shipment->getProductCode(),
+            'ReturnBarcode'            => $shipment->getReturnBarcodes($currentShipmentNumber),
             'Reference'                => $this->labelAndPackingslipOptions->getReference($shipment->getShipment())
         ];
     }

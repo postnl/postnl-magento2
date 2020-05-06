@@ -1,20 +1,20 @@
-<div class="delivery_options" data-bind="visible: canUseDeliveryOptions() || canUsePickupLocations()">
+<!-- ko if: canUsePostNLDeliveryOptions() -->
+<div class="postnl-delivery-options" data-bind="visible: selectedMethod() == 'tig_postnl_regular'">
     <div class="btn-group" role="group">
+
         <!-- ko if: canUseDeliveryOptions() -->
         <button type="button" class="btn btn-default" data-bind="click: setDelivery, css: { 'button-active': shipmentType() == 'delivery' }">
             <span class="label" data-bind="i18n:'Delivery'"></span>
-
             <div class="data" data-bind="visible: !isLoading()">
                 <span data-bind="text: formatPrice(deliveryPrice())"></span>
-
                 <!-- ko if: shipmentType() == 'delivery' && deliveryFee() -->
                 + <span data-bind="text: formatPrice(deliveryFee())"></span>
                 <!-- /ko -->
+                <!-- ko if: shipmentType() == 'delivery' && statedDeliveryFee() -->
+                + <span data-bind="text: formatPrice(statedDeliveryFee())"></span>
+                <!-- /ko -->
             </div>
-
         </button>
-
-
         <!-- /ko -->
 
         <!-- ko if: canUsePickupLocations() -->
@@ -23,13 +23,10 @@
 
             <div class="data" data-bind="visible: !isLoading()">
                 <span data-bind="text: formatPrice(pickupPrice())"></span>
-
                 <!-- ko if: shipmentType() == 'pickup' && pickupFee() -->
                 + <span data-bind="text: formatPrice(pickupFee())"></span>
                 <!-- /ko -->
             </div>
-
-
         </button>
         <!-- /ko -->
     </div>
@@ -52,3 +49,4 @@
     </div>
     <!-- /ko -->
 </div>
+<!-- /ko -->

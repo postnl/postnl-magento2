@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
+use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\Shipment;
@@ -54,14 +55,14 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     /**
      * ConfirmAndPrintShippingLabel constructor.
      *
-     * @param Context            $context
-     * @param GetLabels          $getLabels
-     * @param GetPdf             $getPdf
-     * @param ShipmentRepository $shipmentRepository
-     * @param Track              $track
-     * @param BarcodeHandler     $barcodeHandler
-     * @param GetPackingslip     $pdfShipment
-     * @param CanaryIslandToIC   $canaryConverter
+     * @param Context                  $context
+     * @param GetLabels                $getLabels
+     * @param GetPdf                   $getPdf
+     * @param ShipmentRepository       $shipmentRepository
+     * @param Track                    $track
+     * @param BarcodeHandler           $barcodeHandler
+     * @param GetPackingslip           $pdfShipment
+     * @param CanaryIslandToIC         $canaryConverter
      */
     public function __construct(
         Context $context,
@@ -124,12 +125,16 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
     private function getLabels()
     {
         $shipment = $this->getShipment();
-        $shippingAddress = $shipment->getShippingAddress();
-        if ($shippingAddress->getCountryId() === 'ES') {
-            $shippingAddress = $this->canaryConverter->convert($shippingAddress);
-        }
+        $countryId = $this->getCountryId($shipment);
 
-        $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
+        try {
+            $this->barcodeHandler->prepareShipment($shipment->getId(), $countryId);
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addErrorMessage(
+                __('[POSTNL-0070] - Unable to generate barcode for shipment #%1', $shipment->getIncrementId())
+            );
+            return [];
+        }
 
         if (!$shipment->getTracks()) {
             $this->track->set($shipment);
@@ -138,5 +143,20 @@ class ConfirmAndPrintShippingLabel extends LabelAbstract
         $labels = $this->getLabels->get($shipment->getId());
 
         return $labels;
+    }
+
+    /**
+     * @param Shipment $shipment
+     *
+     * @return mixed|string
+     */
+    private function getCountryId($shipment)
+    {
+        $shippingAddress = $shipment->getShippingAddress();
+        if ($shippingAddress->getCountryId() === 'ES') {
+            $shippingAddress = $this->canaryConverter->convert($shippingAddress);
+        }
+
+        return $shippingAddress->getCountryId();
     }
 }

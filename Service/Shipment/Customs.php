@@ -70,6 +70,13 @@ class Customs
         'Returned Goods',
     ];
 
+    /**
+     * Customs constructor.
+     *
+     * @param Globalpack      $globalpack
+     * @param SortItems       $sortItems
+     * @param AttributeValues $attributeValues
+     */
     public function __construct(
         Globalpack $globalpack,
         SortItems $sortItems,

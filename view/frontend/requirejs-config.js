@@ -37,8 +37,8 @@ var config = {
             'Amasty_Checkout/js/action/set-shipping-information' : {
                 'TIG_PostNL/js/action/set-shipping-information-mixin': true
             },
-            'Magneto_Checkout/js/action/set-billing-address': {
-                'TIG_PostNL/js/action/set-billing-address': true
+            'Magento_Checkout/js/action/set-billing-address': {
+                'TIG_PostNL/js/action/set-billing-address-mixin': true
             },
             'Magento_Checkout/js/action/place-order': {
                 'TIG_PostNL/js/action/set-billing-address-mixin': true
@@ -53,8 +53,6 @@ var config = {
     },
     map: {
         '*': {
-            "Magento_Checkout/template/shipping-address/shipping-method-item.html" :
-                "TIG_PostNL/template/shipping-address/shipping-method-item.html",
             //Postcodecheck housenumber & addition in shipping and billing fields
             "Magento_Checkout/template/shipping-address/address-renderer/default.html" :
                 "TIG_PostNL/template/shipping-address/address-renderer/default.html",
@@ -64,12 +62,6 @@ var config = {
                 "TIG_PostNL/template/billing-address/details.html",
             'Amasty_CustomerAttributes/js/action/set-shipping-information-mixin' :
                 'TIG_PostNL/js/action/set-shipping-information-mixin',
-            //Magento Backwards Compatibility
-            "Magento_Checkout/template/shipping.html" :
-                "TIG_PostNL/template/shipping.html",
-            //Rubic Clean Checkout Compatibility
-            "Rubic_CleanCheckout/template/shipping-address/shipping-method-item.html":
-                "TIG_PostNL/template/shipping-address/shipping-method-item.html",
             //Amasty Checkout Compatibility
             "Amasty_Checkout/template/onepage/shipping/methods.html" :
                 "TIG_PostNL/template/Compatibility/amasty_checkout/methods.html",

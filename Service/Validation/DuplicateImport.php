@@ -51,6 +51,7 @@ class DuplicateImport implements ContractInterface
      */
     public function validate($line)
     {
+        // @codingStandardsIgnoreLine
         if ($count = count($line) < 7) {
             // @codingStandardsIgnoreLine
             $message = __('The array to validate is expected to have 7 elements, you only have %1', $count);

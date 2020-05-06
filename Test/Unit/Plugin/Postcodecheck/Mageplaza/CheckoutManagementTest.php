@@ -47,7 +47,7 @@ class CheckoutManagementTest extends TestCase
 
         $instance = $this->getInstance();
 
-        $addressInformation = $this->getAddressMock('Kabelweg 37');
+        $addressInformation = $this->getAddressMock(['Kabelweg', 37]);
 
         $expected = [1, $addressInformation, $customAttributes, []];
         $result = $instance->beforeSaveCheckoutInformation(null, 1, $addressInformation, $customAttributes);

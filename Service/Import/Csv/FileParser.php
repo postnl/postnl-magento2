@@ -196,6 +196,7 @@ class FileParser
      */
     private function validateHeaderFormat($headers)
     {
+        // @codingStandardsIgnoreLine
         if ($headers === false || count($headers) < 5) {
             // @codingStandardsIgnoreLine
             throw new PostnlException(__('Invalid PostNL Table Rates File Format'), 'POSTNL-0246');

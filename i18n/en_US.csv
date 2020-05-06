@@ -124,6 +124,7 @@ Webshop,Webshop
 "Shipping Date","Shipping Date"
 Pickup,Pickup
 Delivery,Delivery
+from,from
 Daytime,Daytime
 Evening,Evening
 Monday,Monday
@@ -443,9 +444,31 @@ Percent,Percent
 "Priority Packets Tracked Bulk","Priority Packets Tracked Bulk"
 "Priority Packets Tracked Sorted","Priority Packets Tracked Sorted"
 "Priority Packets Tracked Boxable Sorted","Priority Packets Tracked Boxable Sorted"
+"Freepost number","Freepost number"
+"Returns","Returns"
+"Returns NL","Returns NL"
+"Returns BE","Returns BE"
+"Activate returns","Activate returns"
+"You can apply for a freepost number on <a href="http://www.postnl.nl/zakelijke-oplossingen/ontvangen/antwoordnummer/?searchResult=position1" target="_blank" title="Request a freepost number.">this</a> page.","You can apply for a freepost number on <a href="http://www.postnl.nl/zakelijke-oplossingen/ontvangen/antwoordnummer/?searchResult=position1" target="_blank" title="Request a freepost number.">this</a> page."
 "Cargo products allow you to send pallet shipments to several European countries. These products can only be used after consulting your PostNL Pakketten account manager.","Cargo products allow you to send pallet shipments to several European countries. These products can only be used after consulting your PostNL Pakketten account manager."
 "This allows you the use of the priority parcel products. After you enable this setting the products can be selected in the default EPS and Globalpack selection.","This allows you the use of the priority parcel products. After you enable this setting the products can be selected in the default EPS and Globalpack selection."
 "Shipping","Shipping"
 "Default Sunday delivery","Default Sunday delivery"
 "Select the default product option for Sunday shipments.","Select the default product option for Sunday shipments."
 "The current PEPS barcode type as supplied by PostNL. Must contain 2 letters.","The current PEPS barcode type as supplied by PostNL. Must contain 2 letters."
+"Customer code","Customer code"
+"By activating returns a return label is created when generating a label for the out shipment. To activate returns you need an answer number and a seperate customer code. For this, contact your account manager.","By activating returns a return label is created when generating a label for the out shipment. To activate returns you need an answer number and a seperate customer code. For this, contact your account manager."
+"PostNL Return","PostNL Return"
+"[POSTNL-0070] - Unable to generate barcode for shipment #%1","[POSTNL-0070] - Unable to generate barcode for shipment #%1"
+"Do not deliver to neighbours","Do not deliver to neighbours"
+"Extra service","Extra service"
+"Activate delivery to stated address only","Activate delivery to stated address only"
+"Default delivery to stated address only","Default delivery to stated address only"
+"Delivery to stated address only fee","Delivery to stated address only fee"
+"Whether or not customers may choose to have their order delivered to the stated address only.","Whether or not customers may choose to have their order delivered to the stated address only."
+"Select the default product option for shipments with delivery to stated address only.","Select the default product option for shipments with delivery to stated address only."
+"Set the payment fee for stated address delivery.","Set the payment fee for stated address delivery."
+"When sending Extra@Home types, this field is mandatory. Enter as cubic centimeters like 30000.","When sending Extra@Home types, this field is mandatory. Enter as cubic centimeters like 30000."
+"Disable Delivery Days","Disable Delivery Days"
+"This setting will override the global PostNL Delivery Days setting. Delivery Days will be disabled for this product when set to yes.","This setting will override the global PostNL Delivery Days setting. Delivery Days will be disabled for this product when set to yes."
+"Delivery to stated address only","Delivery to stated address only"

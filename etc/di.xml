@@ -107,6 +107,16 @@
     <type name="TIG\PostNL\Setup\UpgradeSchema">
         <arguments>
             <argument name="upgradeSchemaObjects" xsi:type="array">
+                <item name="v1.9.1" xsi:type="array">
+                    <item name="InstallStatedAddressOnly" xsi:type="object">TIG\PostNL\Setup\V191\Schema\InstallStatedAddressOnly</item>
+                </item>
+                <item name="v1.9.0" xsi:type="array">
+                    <item name="InstallReturnBarcode" xsi:type="object">TIG\PostNL\Setup\V190\Schema\InstallReturnBarcode</item>
+                    <item name="InstallReturnLabel" xsi:type="object">TIG\PostNL\Setup\V190\Schema\InstallReturnLabel</item>
+                </item>
+                <item name="v1.8.2" xsi:type="array">
+                    <item name="ModifyConditionNameColumn" xsi:type="object">TIG\PostNL\Setup\V182\Schema\ModifyConditionNameColumn</item>
+                </item>
                 <item name="v1.8.0" xsi:type="array">
                     <item name="InstallPriorityAttribute" xsi:type="object">TIG\PostNL\Setup\V180\Schema\InstallPriorityAttribute</item>
                 </item>
@@ -181,6 +191,9 @@
                 </item>
                 <item name="v1.8.1" xsi:type="array">
                     <item name="UpdateConfigData" xsi:type="object">TIG\PostNL\Setup\V181\Data\UpdateConfigData</item>
+                </item>
+                <item name="v1.9.1" xsi:type="array">
+                    <item name="InstallDisableDeliveryDaysAttribute" xsi:type="object">TIG\PostNL\Setup\V191\Data\InstallDisableDeliveryDaysAttribute</item>
                 </item>
             </argument>
         </arguments>
@@ -285,6 +298,23 @@
 
     <type name="\Mageplaza\Osc\Api\CheckoutManagementInterface">
         <plugin name="postcodeMageplazaCheckoutInformation" type="TIG\PostNL\Plugin\Postcodecheck\Mageplaza\CheckoutManagement" />
+    </type>
+
+    <type name="\Mageplaza\Osc\Block\Checkout\LayoutProcessor">
+        <plugin name="postcodeMageplazaLayoutProcessor" type="\TIG\PostNL\Plugin\Postcodecheck\Mageplaza\LayoutProcessor" sortOrder="1"/>
+    </type>
+
+    <type name="Magento\Sales\Model\ResourceModel\Grid">
+        <plugin name="TIG_PostNL_OrderPlace" type="TIG\PostNL\Plugin\Order\AsyncPlugin" sortOrder="1" />
+    </type>
+
+    <type name="TIG\PostNL\Plugin\Order\AsyncPlugin">
+        <arguments>
+            <argument name="mainTableName" xsi:type="string">sales_order</argument>
+            <argument name="gridTableName" xsi:type="string">sales_order_grid</argument>
+            <argument name="orderIdField" xsi:type="string">sales_order_grid.entity_id</argument>
+            <argument name="notSyncedDataProvider" xsi:type="object">Magento\Sales\Model\ResourceModel\Provider\NotSyncedOrderDataProvider</argument>
+        </arguments>
     </type>
 
 </config>

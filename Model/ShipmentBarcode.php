@@ -40,7 +40,7 @@ class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface, 
     const CACHE_TAG = 'tig_postnl_shipment_barcode';
 
     const BARCODE_TYPE_SHIPMENT = 'shipment';
-    const BARCODE_TYPE_RETURN   = 'return';
+    const BARCODE_TYPE_RETURN = 'return';
 
     const FIELD_PARENT_ID = 'parent_id';
     const FIELD_TYPE = 'type';

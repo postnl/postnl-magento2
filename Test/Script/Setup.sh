@@ -36,7 +36,7 @@ BUILD_DIR="/tmp/magento2"
 
 if [ -z $TRAVIS_BUILD_DIR ]; then TRAVIS_BUILD_DIR=`pwd`; fi
 if [ -z $TRAVIS_COMMIT ]; then TRAVIS_COMMIT=`git rev-parse HEAD`; fi
-if [ -z $MAGENTO_VERSION ]; then MAGENTO_VERSION="2.1.3"; fi
+if [ -z $MAGENTO_VERSION ]; then MAGENTO_VERSION="2.3.4"; fi
 if [ -z $MAGENTO_DB_HOST ]; then MAGENTO_DB_HOST="localhost"; fi
 if [ -z $MAGENTO_DB_PORT ]; then MAGENTO_DB_PORT="3306"; fi
 if [ -z $MAGENTO_DB_USER ]; then MAGENTO_DB_USER="root"; fi
@@ -72,7 +72,7 @@ cp -v Test/Fixtures/phpunit.xml "${BUILD_DIR}/dev/tests/integration/phpunit.xml"
 
 zip --exclude=node_modules/* --exclude=vendor/* --exclude=.git/* -r build.zip .
 
-REPOSITORY_CONFIG="{\"type\": \"package\",\"package\": { \"name\": \"tig/postnl\", \"version\": \"master\", \"dist\": {\"type\": \"zip\",\"url\": \"${TRAVIS_BUILD_DIR}/build.zip\",\"reference\": \"master\" }, \"autoload\": {\"files\": [\"registration.php\"],\"psr-4\": {\"TIG\\\\PostNL\\\\\": \"\"}},\"require\": {\"setasign/fpdi-fpdf\": \"2.1\"}}}"
+REPOSITORY_CONFIG="{\"type\": \"package\",\"package\": { \"name\": \"tig/postnl\", \"version\": \"master\", \"dist\": {\"type\": \"zip\",\"url\": \"${TRAVIS_BUILD_DIR}/build.zip\",\"reference\": \"master\" }, \"autoload\": {\"files\": [\"registration.php\"],\"psr-4\": {\"TIG\\\\PostNL\\\\\": \"\"}},\"require\": {\"setasign/fpdi-fpdf\": \"2.1.*|2.2.*\"}}}"
 
 if [ -d "$HOME/.cache/composer/files/tig/" ]; then
     rm -rf $HOME/.cache/composer/files/tig/;

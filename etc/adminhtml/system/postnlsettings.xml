@@ -118,7 +118,7 @@
                 <config_path>tig_postnl/delivery_settings/default_option</config_path>
             </field>
 
-            <field id="default_cargo_type" translate="label comment" type="select" sortOrder="25" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <field id="default_cargo_type" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Guaranteed delivery default type</label>
                 <comment><![CDATA[Select the default guaranteed delivery type for the current <strong>cargo</strong> product you use for default delivery.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Options\GuaranteedOptionsCargo</source_model>
@@ -130,7 +130,7 @@
                 </depends>
             </field>
 
-            <field id="default_package_type" translate="label comment" type="select" sortOrder="25" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <field id="default_package_type" translate="label comment" type="select" sortOrder="35" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Guaranteed delivery default type</label>
                 <comment><![CDATA[Select the default guaranteed delivery type for the current product you use for default delivery.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Options\GuaranteedOptionsPackages</source_model>
@@ -142,14 +142,14 @@
                 </depends>
             </field>
 
-            <field id="use_alternative_default" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <field id="use_alternative_default" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Activate alternative delivery</label>
                 <comment><![CDATA[Enable this to use an alternative default option when a shipment's total value reaches a certain amount.]]></comment>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <config_path>tig_postnl/delivery_settings/use_alternative_default</config_path>
             </field>
 
-            <field id="alternative_default_min_amount" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+            <field id="alternative_default_min_amount" translate="label comment" type="text" sortOrder="45" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Minimum amount</label>
                 <comment><![CDATA[The alternative default option will be used from this value.]]></comment>
                 <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
@@ -182,7 +182,7 @@
                 </depends>
             </field>
 
-            <field id="alternative_package_type" translate="label comment" type="select" sortOrder="55" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <field id="alternative_package_type" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Alternative guaranteed delivery default type</label>
                 <comment><![CDATA[Select the default guaranteed delivery type for the current product you use for default delivery.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Options\GuaranteedOptionsPackages</source_model>
@@ -206,7 +206,19 @@
             <include path="TIG_PostNL::system/postnlsettings/peps.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/extraathome.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/trackandtrace.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/deliverystatedaddress.xml"/>
 
         </group>
+
+    <group id="returns" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Returns</label>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-sub-section</fieldset_css>
+
+        <include path="TIG_PostNL::system/postnlsettings/returns-nl.xml"/>
+        <include path="TIG_PostNL::system/postnlsettings/returns-be.xml"/>
+
+    </group>
+
     </group>
 </include>
