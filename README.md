@@ -1,5 +1,7 @@
 # Postnl Magento 2
 
+![TIG PostNL tested 2.2.x versions](https://img.shields.io/badge/Tested%20with-2.2.11-%23009f3e)
+![TIG PostNL tested 2.3.x versions](https://img.shields.io/badge/Tested%20with-2.3.5-%23009f3e)
 [![Build Status](https://travis-ci.org/tig-nl/postnl-magento2.svg?branch=master)](https://travis-ci.org/tig-nl/postnl-magento2) ![Coverage Status](https://coveralls.io/repos/github/tig-nl/tig-extension-tig-postnl-magento2/badge.svg?t=uuXzu3)
 
 ## Installation
