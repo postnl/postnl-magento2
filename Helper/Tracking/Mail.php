@@ -178,7 +178,8 @@ class Mail extends AbstractTracking
             'name'            => $shippingAddress->getFirstname() . ' ' .
                 $shippingAddress->getMiddlename() . ' ' .
                 $shippingAddress->getLastname(),
-            'street'          => $this->getStreetFlattend($shippingAddress->getStreet())
+            'street'          => $this->getStreetFlattend($shippingAddress->getStreet()),
+            'delivery_date'   => $shipment->getDeliveryDateFormatted('d-m-Y')
         ];
     }
 
