@@ -74,38 +74,30 @@ class LetterboxPackage
         }
 
         foreach ($products as $product) {
-            $this->result = $this->fitsLetterboxPackage($product);
+            $this->fitsLetterboxPackage($product);
 
-            if ($this->result === false) {
-                break;
+            if ($this->totalVolume <= 1 && $this->totalWeight <= 2) {
+                return true;
             }
         }
 
-        return $this->result;
+        return false;
     }
 
     /**
      * @param $product
-     *
-     * @return bool
      */
     public function fitsLetterboxPackage($product)
     {
         $maximumQtyLetterbox = floatval($product->getProduct()->getPostnlMaxQtyLetterbox());
 
         if ($maximumQtyLetterbox === 0.0) {
-            return false;
+            return;
         }
 
         $orderedQty = $product->getQty();
         $this->totalVolume += 1 / $maximumQtyLetterbox * $orderedQty;
         $this->getTotalWeightInKg($product, $orderedQty);
-
-        if ($this->totalVolume <= 1 && $this->totalWeight <= 2) {
-            return true;
-        }
-
-        return false;
     }
 
     /**

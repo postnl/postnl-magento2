@@ -128,15 +128,10 @@ class Timeframes extends AbstractDeliveryOptions
     // @codingStandardsIgnoreStart
     public function execute()
     {
-        $quote = $this->checkoutSession->getQuote();
-        $cartItems = $quote->getAllItems();
         $params = $this->getRequest()->getParams();
+
         if (!isset($params['address']) || !is_array($params['address'])) {
             return $this->jsonResponse($this->getFallBackResponse(1));
-        }
-
-        if ($this->letterboxPackage->isLetterboxPackage($cartItems)) {
-            return $this->jsonResponse($this->getFallBackResponse(5));
         }
 
         if ($this->quoteHasDeliveryDaysDisabled->shouldDisableDeliveryDays($this->checkoutSession)) {
@@ -145,6 +140,13 @@ class Timeframes extends AbstractDeliveryOptions
 
         $this->addressEnhancer->set($params['address']);
         $price = $this->calculator->price($this->getRateRequest(), null, null, true);
+
+        $quote = $this->checkoutSession->getQuote();
+        $cartItems = $quote->getAllItems();
+        if ($this->letterboxPackage->isLetterboxPackage($cartItems)) {
+            return $this->jsonResponse($this->getLetterboxPackageResponse($price));
+        }
+
         if (!$this->isDeliveryDaysActive->getValue()) {
             return $this->jsonResponse($this->getFallBackResponse(2, $price['price']));
         }
@@ -194,10 +196,15 @@ class Timeframes extends AbstractDeliveryOptions
 
     /**
      * CIF call to get the timeframes.
+     *
      * @param $address
      * @param $startDate
      *
      * @return array|\Magento\Framework\Phrase
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     private function getTimeFrames($address, $startDate)
     {
@@ -221,6 +228,15 @@ class Timeframes extends AbstractDeliveryOptions
             'error'      => __($errorMessage),
             'price'      => $price,
             'timeframes' => [[['fallback' => __('At the first opportunity')]]]
+        ];
+    }
+
+    private function getLetterboxPackageResponse($price)
+    {
+        return [
+            'error'      => __('letterbox package'),
+            'price'      => $price,
+            'timeframes' => [[['fallback' => __('Your order fits through the letterbox and will be delivered by the mail deliverer from Tuesday to Saturday.')]]]
         ];
     }
 }
