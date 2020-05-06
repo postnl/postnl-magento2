@@ -64,6 +64,15 @@ class LetterboxPackage
      */
     public function isLetterboxPackage($products)
     {
+        $calculationMode = $this->scopeConfig->getValue(
+            'tig_postnl/letterbox_package/letterbox_package_calculation_mode',
+            ScopeInterface::SCOPE_STORE
+        );
+
+        if ($calculationMode === 'manually') {
+            return false;
+        }
+
         foreach ($products as $product) {
             $this->result = $this->fitsLetterboxPackage($product);
 
