@@ -115,13 +115,14 @@ class Calculator
     {
         $this->store = $store;
         $price       = $this->getConfigData('price');
+        $items       = $request->getAllItems();
 
         if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
             return $this->priceResponse('0.00', '0.00');
         }
 
-        if ($this->letterboxPackage->isLetterboxPackage($request->getAllItems())) {
-            return $this->priceResponse('2.50','2.50');
+        if (isset($items) && $this->letterboxPackage->isLetterboxPackage($items)) {
+            return $this->priceResponse('2.50', '2.50');
         }
 
         $ratePrice = $this->getRatePrice($this->getConfigData('rate_type'), $request, $parcelType, $includeVat);
