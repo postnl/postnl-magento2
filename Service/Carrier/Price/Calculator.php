@@ -120,7 +120,6 @@ class Calculator
             return $this->priceResponse('0.00', '0.00');
         }
 
-       //check if we are dealing with a letterbox package
         if ($this->letterboxPackage->isLetterboxPackage($request->getAllItems())) {
             return $this->priceResponse('2.50','2.50');
         }

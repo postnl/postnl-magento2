@@ -81,6 +81,7 @@ abstract class AbstractDeliveryOptions extends Action
         2 => 'Deliverydays options are disabled.',
         3 => 'Invalid timeframes response, more information can be found in the PostNL log files.',
         4 => 'Invalid locations response, more information can be found in the PostNL log files.',
+        5 => 'Your order fits through the letterbox and will be delivered by the mail deliverer from Tuesday to Saturday.',
     ];
 
     /**

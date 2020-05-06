@@ -31,12 +31,13 @@
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
-use TIG\PostNL\Service\Quote\QuoteHasDeliveryDaysDisabled;
+use  TIG\PostNL\Service\Quote\QuoteHasDeliveryDaysDisabled;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Service\Carrier\Price\Calculator;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
+use TIG\PostNL\Service\Shipping\LetterboxPackage;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
 use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
@@ -72,6 +73,11 @@ class Timeframes extends AbstractDeliveryOptions
     private $quoteHasDeliveryDaysDisabled;
 
     /**
+     * @var LetterboxPackage
+     */
+    private $letterboxPackage;
+
+    /**
      * @param Context                      $context
      * @param OrderRepository              $orderRepository
      * @param Session                      $checkoutSession
@@ -83,6 +89,7 @@ class Timeframes extends AbstractDeliveryOptions
      * @param IsDeliverDaysActive          $isDeliverDaysActive
      * @param ShippingDuration             $shippingDuration
      * @param QuoteHasDeliveryDaysDisabled $quoteHasDeliveryDaysDisabled
+     * @param LetterboxPackage             $letterboxPackage
      */
     public function __construct(
         Context $context,
@@ -95,7 +102,8 @@ class Timeframes extends AbstractDeliveryOptions
         Calculator $calculator,
         IsDeliverDaysActive $isDeliverDaysActive,
         ShippingDuration $shippingDuration,
-        QuoteHasDeliveryDaysDisabled $quoteHasDeliveryDaysDisabled
+        QuoteHasDeliveryDaysDisabled $quoteHasDeliveryDaysDisabled,
+        LetterboxPackage $letterboxPackage
     ) {
         $this->addressEnhancer              = $addressEnhancer;
         $this->timeFrameEndpoint            = $timeFrame;
@@ -111,6 +119,7 @@ class Timeframes extends AbstractDeliveryOptions
             $shippingDuration,
             $deliveryDate
         );
+        $this->letterboxPackage = $letterboxPackage;
     }
 
     /**
@@ -119,9 +128,15 @@ class Timeframes extends AbstractDeliveryOptions
     // @codingStandardsIgnoreStart
     public function execute()
     {
+        $quote = $this->checkoutSession->getQuote();
+        $cartItems = $quote->getAllItems();
         $params = $this->getRequest()->getParams();
         if (!isset($params['address']) || !is_array($params['address'])) {
             return $this->jsonResponse($this->getFallBackResponse(1));
+        }
+
+        if ($this->letterboxPackage->isLetterboxPackage($cartItems)) {
+            return $this->jsonResponse($this->getFallBackResponse(5));
         }
 
         if ($this->quoteHasDeliveryDaysDisabled->shouldDisableDeliveryDays($this->checkoutSession)) {
