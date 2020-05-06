@@ -79,7 +79,7 @@ define([
                     options.data = JSON.stringify(optionsArray);
                 }
 
-                if (options.url.indexOf('payment-information') >= 0) {
+                if (options.url.indexOf('payment-information') >= 0 && options.data) {
                     optionsArray = JSON.parse(options.data);
                     if (optionsArray.billingAddress.extension_attributes === undefined) {
                         optionsArray.billingAddress.extension_attributes = {
