@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
-use  TIG\PostNL\Service\Quote\QuoteHasDeliveryDaysDisabled;
+use TIG\PostNL\Service\Quote\QuoteHasDeliveryDaysDisabled;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
@@ -236,7 +236,9 @@ class Timeframes extends AbstractDeliveryOptions
         return [
             'error'      => __('letterbox package'),
             'price'      => $price,
-            'timeframes' => [[['fallback' => __('Your order fits through the letterbox and will be delivered by the mail deliverer from Tuesday to Saturday.')]]]
+            'timeframes' => [[['fallback' => __('Your order fits through the 
+            letterbox and will be delivered by the mail deliverer from Tuesday 
+            to Saturday.')]]]
         ];
     }
 }
