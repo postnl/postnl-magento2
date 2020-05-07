@@ -36,7 +36,6 @@ use Magento\Store\Model\ScopeInterface;
 
 class LetterboxPackage
 {
-    public $result = false;
     public $totalVolume = 0;
     public $totalWeight = 0;
 
@@ -76,6 +75,7 @@ class LetterboxPackage
         foreach ($products as $product) {
             $this->fitsLetterboxPackage($product);
 
+            // check if all products fit in a letterbox package and the weight is equal or lower than 2 kilograms.
             if ($this->totalVolume <= 1 && $this->totalWeight <= 2) {
                 return true;
             }
