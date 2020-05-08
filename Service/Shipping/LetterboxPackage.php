@@ -38,6 +38,7 @@ class LetterboxPackage
 {
     public $totalVolume = 0;
     public $totalWeight = 0;
+    public $result      = true;
 
     /**
      * @var ScopeConfigInterface
@@ -75,7 +76,7 @@ class LetterboxPackage
             $this->fitsLetterboxPackage($product);
 
             // check if all products fit in a letterbox package and the weight is equal or lower than 2 kilograms.
-            if ($this->totalVolume <= 1 && $this->totalWeight <= 2) {
+            if ($this->totalVolume <= 1 && $this->totalWeight <= 2 && $this->result == true) {
                 return true;
             }
         }
@@ -91,6 +92,7 @@ class LetterboxPackage
         $maximumQtyLetterbox = floatval($product->getProduct()->getPostnlMaxQtyLetterbox());
 
         if ($maximumQtyLetterbox === 0.0) {
+            $this->result = false;
             return;
         }
 
