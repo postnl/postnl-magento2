@@ -115,14 +115,13 @@ class Range
     }
 
     /**
-     * @param        $countryId
+     * @param        $productCode
      * @param null   $storeId
-     * @param string $type
      *
      * @return array|string
      * @throws PostnlException
      */
-    public function getByProductCode($productCode, $storeId = null, $type = '')
+    public function getByProductCode($productCode, $storeId = null)
     {
         $this->storeId = $storeId;
 

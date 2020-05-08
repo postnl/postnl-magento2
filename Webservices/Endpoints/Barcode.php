@@ -123,7 +123,7 @@ class Barcode extends AbstractEndpoint
     {
         $this->validateRequiredValues();
 
-        $barcode = $this->barcodeRange->getByProductCode($this->productCode, $this->storeId, $this->type);
+        $barcode = $this->barcodeRange->getByProductCode($this->productCode, $this->storeId);
 
         $parameters = [
             'Message'  => $this->message->get(''),
@@ -154,14 +154,6 @@ class Barcode extends AbstractEndpoint
     public function setProductCode($productCode)
     {
         $this->productCode = $productCode;
-    }
-
-    /**
-     * @param $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
     }
 
     /**
