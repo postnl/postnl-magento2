@@ -34,6 +34,7 @@ namespace TIG\PostNL\Test\Unit\Service\Shipment\Barcode;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
 use TIG\PostNL\Config\Provider\Globalpack;
+use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Service\Shipment\Barcode\Range;
 use TIG\PostNL\Test\TestCase;
 
@@ -86,27 +87,27 @@ class RangeTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function getByCountryProvider()
+    public function getByProductProvider()
     {
         return [
-            'Netherlands' => ['NL', ['type' => '3S', 'range' => '123456', 'serie' => '000000000-999999999']],
-            'EPS Country 1' => ['BE', ['type' => '3S', 'range' => '123456', 'serie' => '0000000-9999999']],
-            'EPS Country 2' => ['DE', ['type' => '3S', 'range' => '123456', 'serie' => '0000000-9999999']],
-            'Globalpack' => ['US', ['type' => 'CD', 'range' => '1660', 'serie' => '0000-9999']],
+            'Netherlands' => ['3085', ['type' => '3S', 'range' => '123456', 'serie' => '000000000-999999999']],
+            'EPS Country 1' => ['4938', ['type' => '3S', 'range' => '123456', 'serie' => '0000000-9999999']],
+            'EPS Country 2' => ['4952', ['type' => '3S', 'range' => '123456', 'serie' => '0000000-9999999']],
+            'Globalpack' => ['4945', ['type' => 'CD', 'range' => '1660', 'serie' => '0000-9999']],
         ];
     }
 
     /**
-     * @dataProvider getByCountryProvider
+     * @dataProvider getByProductProvider
      *
-     * @param $country
+     * @param $productCode
      * @param $expected
      */
-    public function testGetByCountry($country, $expected)
+    public function testGetByProductCode($productCode, $expected)
     {
         /** @var Range $instance */
         $instance = $this->getInstance();
-        $result = $instance->getByCountryId($country);
+        $result = $instance->getByProductCode($productCode);
 
         $this->assertEquals($expected, $result);
     }
@@ -123,9 +124,13 @@ class RangeTest extends TestCase
         $this->mockFunction($defaultConfigurationMock, 'getBarcodeType', 'CD');
         $this->mockFunction($defaultConfigurationMock, 'getBarcodeRange', '1660');
 
+        $optionsConfigurationMock = $this->getFakeMock(ProductOptions::class);
+        $optionsConfigurationMock->setMethods(null);
+
         $instance = parent::getInstance($args + [
             'accountConfiguration' => $accountConfigurationMock,
-            'globalpack' => $defaultConfigurationMock
+            'globalpack' => $defaultConfigurationMock,
+            'options' => $optionsConfigurationMock->getMock()
         ]);
 
         return $instance;

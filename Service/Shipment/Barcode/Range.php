@@ -34,7 +34,9 @@ namespace TIG\PostNL\Service\Shipment\Barcode;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\Globalpack;
 use TIG\PostNL\Config\Provider\PepsConfiguration;
+use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Exception as PostnlException;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 
 class Range
@@ -78,20 +80,28 @@ class Range
     ];
 
     /**
+     * @var ProductOptions
+     */
+    private $options;
+
+    /**
      * @param AccountConfiguration  $accountConfiguration
      * @param Globalpack            $globalpack
      * @param PepsConfiguration     $pepsConfiguration
+     * @param ProductOptions        $options
      */
     public function __construct(
         AccountConfiguration $accountConfiguration,
         Globalpack $globalpack,
-        PepsConfiguration $pepsConfiguration
+        PepsConfiguration $pepsConfiguration,
+        ProductOptions $options
     ) {
         $this->accountConfiguration    = $accountConfiguration;
         $this->globalpackConfiguration = $globalpack;
         $this->pepsConfiguration       = $pepsConfiguration;
+        $this->options = $options;
     }
-    
+
     /**
      * @param $barcodeType
      *
@@ -112,25 +122,25 @@ class Range
      * @return array|string
      * @throws PostnlException
      */
-    public function getByCountryId($countryId, $storeId = null, $type = '')
+    public function getByProductCode($productCode, $storeId = null, $type = '')
     {
         $this->storeId = $storeId;
 
-        if ($type) {
-            return $this->get($type);
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'global_options')) {
+            return $this->get('GLOBAL');
         }
 
-        if ($countryId == 'NL') {
-            return $this->get('NL');
-        }
-
-        if (in_array($countryId, EpsCountries::ALL)) {
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'eu_options')) {
             return $this->get('EU');
         }
 
-        return $this->get('GLOBAL');
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'priority_options')) {
+            return $this->get('PEPS');
+        }
+
+        return $this->get('NL');
     }
-    
+
     /**
      * @param $type
      *
