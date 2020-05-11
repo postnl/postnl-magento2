@@ -34,6 +34,7 @@ namespace TIG\PostNL\Service\Shipment;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Service\Volume\Items\Calculate;
+use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
 
 // @codingStandardsIgnoreFile
 class Data
@@ -64,24 +65,32 @@ class Data
     private $labelAndPackingslipOptions;
 
     /**
-     * @param ProductOptions $productOptions
-     * @param ContentDescription $contentDescription
-     * @param Calculate $calculate
+     * @var DeliveryDateFallback
+     */
+    private $deliveryDateFallback;
+
+    /**
+     * @param ProductOptions             $productOptions
+     * @param ContentDescription         $contentDescription
+     * @param Calculate                  $calculate
      * @param LabelAndPackingslipOptions $labelAndPackingslipOptions
-     * @param Customs $customs
+     * @param Customs                    $customs
+     * @param DeliveryDateFallback       $deliveryDateFallback
      */
     public function __construct(
         ProductOptions $productOptions,
         ContentDescription $contentDescription,
         Calculate $calculate,
         LabelAndPackingslipOptions $labelAndPackingslipOptions,
-        Customs $customs
+        Customs $customs,
+        DeliveryDateFallback $deliveryDateFallback
     ) {
         $this->productOptions = $productOptions;
         $this->contentDescription = $contentDescription;
         $this->shipmentVolume = $calculate;
         $this->labelAndPackingslipOptions = $labelAndPackingslipOptions;
         $this->customsInfo = $customs;
+        $this->deliveryDateFallback = $deliveryDateFallback;
     }
 
     /**
@@ -110,6 +119,11 @@ class Data
      */
     private function getDefaultShipmentData(ShipmentInterface $shipment, $address, $contact, $currentShipmentNumber)
     {
+        $deliveryDate = $shipment->getDeliveryDate();
+        if (!$shipment->getDeliveryDate()) {
+            $deliveryDate = $this->deliveryDateFallback->get();
+        }
+
         return [
             'Addresses'                => ['Address' => $address],
             'Barcode'                  => $shipment->getBarcode($currentShipmentNumber),
@@ -122,7 +136,7 @@ class Data
                         $shipment->getParcelCount()
                     )
                 ],
-            'DeliveryDate'             => $shipment->getDeliveryDateFormatted(),
+            'DeliveryDate'             => $deliveryDate,
             'DownPartnerID'            => $shipment->getDownpartnerId(),
             'DownPartnerLocation'      => $shipment->getDownpartnerLocation(),
             'DownPartnerBarcode'       => $shipment->getDownpartnerBarcode(),
