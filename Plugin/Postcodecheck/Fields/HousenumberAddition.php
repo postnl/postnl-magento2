@@ -43,7 +43,7 @@ class HousenumberAddition implements FieldInterface
             'config'     => [
                 'customScope' => $scope . '.custom_attributes',
                 'template'    => 'ui/form/field',
-                'elementTmpl' => 'TIG_PostNL/form/element/input'
+                'elementTmpl' => 'TIG_PostNL/form/element/input-addition'
             ],
             'provider'   => 'checkoutProvider',
             'dataScope'  => $scope . '.custom_attributes.tig_housenumber_addition',

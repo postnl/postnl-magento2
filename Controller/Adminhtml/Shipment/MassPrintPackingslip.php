@@ -94,13 +94,7 @@ class MassPrintPackingslip extends LabelAbstract
      */
     public function execute()
     {
-        $collection = $this->collectionFactory->create();
-        $collection = $this->filter->getCollection($collection);
-
-        /** @var Shipment $shipment */
-        foreach ($collection as $shipment) {
-            $this->loadLabels($shipment);
-        }
+        $this->loadLabels();
 
         if (empty($this->labels)) {
             $this->messageManager->addErrorMessage(
@@ -114,10 +108,27 @@ class MassPrintPackingslip extends LabelAbstract
         return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
     }
 
+    private function loadLabels()
+    {
+        $collection = $this->collectionFactory->create();
+
+        try {
+            $collection = $this->filter->getCollection($collection);
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addWarningMessage($exception->getMessage());
+            return;
+        }
+
+        /** @var Shipment $shipment */
+        foreach ($collection as $shipment) {
+            $this->loadLabel($shipment);
+        }
+    }
+
     /**
      * @param Shipment $shipment
      */
-    private function loadLabels($shipment)
+    private function loadLabel($shipment)
     {
         $address = $shipment->getShippingAddress();
 

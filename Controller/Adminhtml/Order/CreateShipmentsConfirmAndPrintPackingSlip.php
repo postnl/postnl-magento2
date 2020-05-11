@@ -100,14 +100,22 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
      * Dispatch request
      *
      * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
-     * @throws \Magento\Framework\Exception\NotFoundException
+     * @throws \Zend_Pdf_Exception
      */
     public function execute()
     {
-        $packingSlips = $this->createShipmentsAndLoadPackingSlips();
+        $this->createShipmentsAndLoadPackingSlips();
         $this->handleErrors();
 
-        return $packingSlips;
+        if (empty($this->labels)) {
+            $this->messageManager->addErrorMessage(
+                __('[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information')
+            );
+
+            return $this->_redirect($this->_redirect->getRefererUrl());
+        }
+
+        return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
     }
 
     /**
@@ -116,13 +124,17 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
     private function createShipmentsAndLoadPackingSlips()
     {
         $collection = $this->collectionFactory->create();
-        $collection = $this->filter->getCollection($collection);
+
+        try {
+            $collection = $this->filter->getCollection($collection);
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addWarningMessage($exception->getMessage());
+            return;
+        }
 
         foreach ($collection as $order) {
             $this->handleOrderToShipment($order);
         }
-
-        return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
     }
 
     /**
