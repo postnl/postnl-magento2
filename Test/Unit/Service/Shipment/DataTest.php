@@ -197,7 +197,7 @@ class DataTest extends TestCase
 
         $this->mockFunction($this->shipmentMock, 'getMainBarcode', $shipmentData['Barcode']);
         $this->mockFunction($this->shipmentMock, 'getTotalWeight', $shipmentData['Dimension']['Weight']);
-        $this->mockFunction($this->shipmentMock, 'getDeliveryDateFormatted', $shipmentData['DeliveryDate']);
+        $this->mockFunction($this->shipmentMock, 'getDeliveryDate', $shipmentData['DeliveryDate']);
         $this->mockFunction($this->shipmentMock, 'getDownpartnerId', $shipmentData['DownPartnerID']);
         $this->mockFunction($this->shipmentMock, 'getDownpartnerLocation', $shipmentData['DownPartnerLocation']);
         $this->mockFunction($this->shipmentMock, 'getProductCode', $shipmentData['ProductCodeDelivery']);

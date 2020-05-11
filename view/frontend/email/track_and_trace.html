@@ -3,7 +3,8 @@
 "var order.getIncrementId()":"Increment ID",
 "var dateAndTime":"Date and Time of Transaction",
 "var url":"track and trace url to PostNL",
-"var logo_url":"PostNL Track & Trace"
+"var logo_url":"PostNL Track & Trace",
+"var delivery_date":"PostNL Delivery Date"
 } @-->
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -35,10 +36,12 @@
                                         <b style="font-weight: normal; font-size: 14px; ">{{trans "Order"}} {{var order.getIncrementId()}}</b><br/>
                                         {{var DateAndTime}}
                                     </li>
+                                    {{if postnlShipment.getPostNLOrder().getDeliveryDate()}}
                                     <li style=" color: #868681; vertical-align: top;">
                                         <b style="font-weight: normal; font-size: 14px; ">{{trans "Expected Delivery"}}</b><br/>
-                                        {{var postnlShipment.getDeliveryDateFormatted('d-m-Y')}}
+                                        {{var delivery_date}}
                                     </li>
+                                    {{/if}}
                                 </ul>
 
                                 <div class="block-divider" style="clear: both;height: 5px; margin-bottom: 20px; border-top: 1px solid #E3E3E3;"></div>
