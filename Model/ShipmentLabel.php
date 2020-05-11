@@ -36,15 +36,12 @@ use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
-use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel as MagentoModel;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 
 // @codingStandardsIgnoreFile
-class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, IdentityInterface
+class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface
 {
-    const CACHE_TAG = 'tig_postnl_shipment_label';
-
     const FIELD_PARENT_ID = 'parent_id';
     const FIELD_NUMBER = 'number';
     const FIELD_LABEL = 'label';
@@ -83,14 +80,6 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface, Iden
     {
         // @codingStandardsIgnoreLine
         $this->_init('TIG\PostNL\Model\ResourceModel\ShipmentLabel');
-    }
-
-    /**
-     * @return array
-     */
-    public function getIdentities()
-    {
-        return [self::CACHE_TAG . '_' . $this->getId()];
     }
 
     /**

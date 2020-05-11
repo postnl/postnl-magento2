@@ -41,16 +41,13 @@ use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\OrderRepository;
 use TIG\PostNL\Api\Data\OrderInterface;
-use Magento\Framework\DataObject\IdentityInterface;
 
 // @codingStandardsIgnoreFile
 /**
  * Too much public methods, and too much code. We can't get this file to pass the (Object Calisthenics) code inspection.
  */
-class Order extends AbstractModel implements OrderInterface, IdentityInterface
+class Order extends AbstractModel implements OrderInterface
 {
-    const CACHE_TAG = 'tig_postnl_order';
-
     const FIELD_ORDER_ID = 'order_id';
     const FIELD_QUOTE_ID = 'quote_id';
     const FIELD_TYPE = 'type';
@@ -122,14 +119,6 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     {
         // @codingStandardsIgnoreLine
         $this->_init('TIG\PostNL\Model\ResourceModel\Order');
-    }
-
-    /**
-     * @return array
-     */
-    public function getIdentities()
-    {
-        return [self::CACHE_TAG . '_' . $this->getId()];
     }
 
     /**
