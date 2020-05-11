@@ -303,8 +303,10 @@ class ProductInfo
 
                 return;
             case static::OPTION_LETTERBOX_PACKAGE;
-                $this->code = $this->productOptionsConfiguration->getDefaultLetterboxPackageProductOption();
+                $this->code = '2928';
                 $this->type = static::SHIPMENT_TYPE_LETTERBOX_PACKAGE;
+
+                return;
         }
 
         $this->setDefaultProductOption($country);

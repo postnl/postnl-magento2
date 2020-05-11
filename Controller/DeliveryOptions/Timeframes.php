@@ -234,9 +234,8 @@ class Timeframes extends AbstractDeliveryOptions
     private function getLetterboxPackageResponse($price)
     {
         return [
-            'error'      => __('letterbox package'),
             'price'      => $price,
-            'timeframes' => [[['fallback' => __('Your order fits through the 
+            'timeframes' => [[['letterbox_package' => __('Your order fits through the 
             letterbox and will be delivered by the mail deliverer from Tuesday 
             to Saturday.')]]]
         ];
