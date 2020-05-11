@@ -231,9 +231,8 @@ class BarcodeHandler
     {
         $magentoShipment = $shipment->getShipment();
 
-        $this->barcodeEndpoint->setCountryId($this->countryId);
+        $this->barcodeEndpoint->setProductCode($shipment->getProductCode());
         $this->barcodeEndpoint->setStoreId($magentoShipment->getStoreId());
-        $this->setTypeByProductCode($shipment->getProductCode());
         $response = $this->barcodeEndpoint->call($shipment, $isReturnBarcode);
 
         if (!is_object($response) || !isset($response->Barcode)) {
@@ -244,20 +243,6 @@ class BarcodeHandler
         }
 
         return (string) $response->Barcode;
-    }
-
-    /**
-     * @param $code
-     */
-    private function setTypeByProductCode($code)
-    {
-        if ($this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'priority_options')) {
-            $this->barcodeEndpoint->setType('PEPS');
-
-            return;
-        }
-
-        $this->barcodeEndpoint->setType('');
     }
 
     /**
