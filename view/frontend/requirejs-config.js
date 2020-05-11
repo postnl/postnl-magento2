@@ -31,6 +31,9 @@
 var config = {
     config: {
         mixins: {
+            'Magento_Checkout/js/view/shipping': {
+                'TIG_PostNL/js/view/shipping-mixin': true
+            },
             'Magento_Checkout/js/action/set-shipping-information': {
                 'TIG_PostNL/js/action/set-shipping-information-mixin': true
             },
