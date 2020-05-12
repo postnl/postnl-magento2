@@ -123,7 +123,7 @@ class Calculator
             return $this->priceResponse('0.00', '0.00');
         }
 
-        if (isset($items) && $this->letterboxPackage->isLetterboxPackage($items)) {
+        if (isset($items) && $this->letterboxPackage->isLetterboxPackage($items) && $this->parcelTypeFinder->get() === 'letterbox_package') {
             return $this->priceResponse('2.50', '2.50');
         }
 
