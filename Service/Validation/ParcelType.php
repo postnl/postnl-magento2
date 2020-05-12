@@ -41,6 +41,7 @@ class ParcelType implements ContractInterface
      *
      * @return bool|mixed
      */
+    // @codingStandardsIgnoreStart
     public function validate($line)
     {
         $line = strtolower($line);
@@ -67,6 +68,7 @@ class ParcelType implements ContractInterface
 
         return false;
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * @param $line

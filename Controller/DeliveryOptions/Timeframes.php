@@ -110,6 +110,7 @@ class Timeframes extends AbstractDeliveryOptions
         $this->calculator                   = $calculator;
         $this->isDeliveryDaysActive         = $isDeliverDaysActive;
         $this->quoteHasDeliveryDaysDisabled = $quoteHasDeliveryDaysDisabled;
+        $this->letterboxPackage             = $letterboxPackage;
 
         parent::__construct(
             $context,
@@ -119,7 +120,6 @@ class Timeframes extends AbstractDeliveryOptions
             $shippingDuration,
             $deliveryDate
         );
-        $this->letterboxPackage = $letterboxPackage;
     }
 
     /**
@@ -235,6 +235,7 @@ class Timeframes extends AbstractDeliveryOptions
     {
         return [
             'price'      => $price,
+            // @codingStandardsIgnoreLine
             'timeframes' => [[['letterbox_package' => __('Your order fits through the 
             letterbox and will be delivered by the mail deliverer from Tuesday 
             to Saturday.')]]]
