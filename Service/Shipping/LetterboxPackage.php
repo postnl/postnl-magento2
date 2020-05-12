@@ -74,11 +74,11 @@ class LetterboxPackage
 
         foreach ($products as $product) {
             $this->fitsLetterboxPackage($product);
+        }
 
-            // check if all products fit in a letterbox package and the weight is equal or lower than 2 kilograms.
-            if ($this->totalVolume <= 1 && $this->totalWeight <= 2 && $this->result == true) {
-                return true;
-            }
+        // check if all products fit in a letterbox package and the weight is equal or lower than 2 kilograms.
+        if ($this->totalVolume <= 1 && $this->totalWeight <= 2 && $this->result == true) {
+            return true;
         }
 
         return false;
