@@ -34,8 +34,6 @@ namespace TIG\PostNL\Service\Quote;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
-use Magento\Checkout\Model\Session;
-use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
@@ -43,11 +41,6 @@ use Psr\Log\LoggerInterface;
 
 class CheckIfQuoteItemsAreInStock
 {
-    /**
-     * @var Session
-     */
-    private $checkoutSession;
-
     /**
      * @var StockRegistryInterface
      */
@@ -73,20 +66,17 @@ class CheckIfQuoteItemsAreInStock
     private $logger;
 
     /**
-     * @param CheckoutSession             $checkoutSession
      * @param StockRegistryInterface      $stockRegistryInterface
      * @param StockConfigurationInterface $stockConfiguration
      * @param GetSourceItemsDataBySku     $getSourceItemsDataBySku
      * @param LoggerInterface             $logger
      */
     public function __construct(
-        CheckoutSession $checkoutSession,
         StockRegistryInterface $stockRegistryInterface,
         StockConfigurationInterface $stockConfiguration,
         GetSourceItemsDataBySku $getSourceItemsDataBySku,
         LoggerInterface $logger
     ) {
-        $this->checkoutSession = $checkoutSession;
         $this->stockRegistry = $stockRegistryInterface;
         $this->stockConfiguration = $stockConfiguration;
         $this->getSourceItemsDataBySku = $getSourceItemsDataBySku;
@@ -94,13 +84,12 @@ class CheckIfQuoteItemsAreInStock
     }
 
     /**
+     * @param $quote
+     *
      * @return bool
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getValue()
+    public function getValue($quote)
     {
-        $quote = $this->checkoutSession->getQuote();
         $items = $quote->getAllItems();
 
         return $this->itemsAreInStock($items);
@@ -153,9 +142,7 @@ class CheckIfQuoteItemsAreInStock
             return true;
         }
 
-        /**
-         * Check if the product has the required quantity available.
-         */
+        // Check if the product has the required quantity available.
         if (($stockItem->getQty() - $minimumQuantity) < $requiredQuantity) {
             return false;
         }

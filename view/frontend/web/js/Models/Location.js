@@ -71,7 +71,7 @@ define([
         /**
          * Toggle the pickup hours visibility.
          */
-        this.toggle = function(data, element) {
+        this.toggle = function (data, element) {
             this.expanded(!this.expanded());
             $(element.currentTarget).toggleClass('active');
         };
