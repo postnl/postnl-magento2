@@ -40,6 +40,7 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 
+// @codingStandardsIgnoreFile
 class Calculator
 {
     /**
@@ -123,7 +124,8 @@ class Calculator
             return $this->priceResponse('0.00', '0.00');
         }
 
-        if (isset($items) && $this->letterboxPackage->isLetterboxPackage($items) && $this->parcelTypeFinder->get() === 'letterbox_package') {
+        if (isset($items) && $this->letterboxPackage->isLetterboxPackage($items)
+            && $this->parcelTypeFinder->get() === 'letterbox_package') {
             return $this->priceResponse('2.50', '2.50');
         }
 

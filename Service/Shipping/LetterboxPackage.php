@@ -34,6 +34,7 @@ namespace TIG\PostNL\Service\Shipping;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 
+// @codingStandardsIgnoreFile
 class LetterboxPackage
 {
     public $totalVolume = 0;

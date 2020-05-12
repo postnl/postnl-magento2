@@ -45,6 +45,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Checkout\Model\Session;
 use TIG\PostNL\Service\Quote\ShippingDuration;
 
+// @codingStandardsIgnoreFile
 class Timeframes extends AbstractDeliveryOptions
 {
     /**
