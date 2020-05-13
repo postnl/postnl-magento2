@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
+use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Controller\Adminhtml\ToolbarAbstract;
 use Magento\Backend\App\Action\Context;
 use Magento\Ui\Component\MassAction\Filter;
@@ -56,7 +57,8 @@ class MassChangeMulticolli extends ToolbarAbstract
         OrderRepositoryInterface $orderRepository,
         ShipmentCollectionFactory $collectionFactory,
         GuaranteedOptions $guaranteedOptions,
-        ResetPostNLShipment $resetPostNLShipment
+        ResetPostNLShipment $resetPostNLShipment,
+        ProductOptions $options
     ) {
         parent::__construct(
             $context,
@@ -64,7 +66,8 @@ class MassChangeMulticolli extends ToolbarAbstract
             $shipmentRepository,
             $orderRepository,
             $guaranteedOptions,
-            $resetPostNLShipment
+            $resetPostNLShipment,
+            $options
         );
 
         $this->collectionFactory = $collectionFactory;

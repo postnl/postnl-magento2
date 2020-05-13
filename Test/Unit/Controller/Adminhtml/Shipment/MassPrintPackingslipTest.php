@@ -102,7 +102,7 @@ class MassPrintPackingslipTest extends TestCase
         return $shipmentMock;
     }
 
-    public function testLoadLabels()
+    public function testLoadLabel()
     {
         $shipmentMock = $this->getShipmentMock(1, 'NL');
 
@@ -110,6 +110,6 @@ class MassPrintPackingslipTest extends TestCase
         $barcodeHandlerMock->expects($this->exactly(1))->method('prepareShipment')->with(1, 'NL');
 
         $instance = $this->getInstance(['barcodeHandler' => $barcodeHandlerMock]);
-        $this->invokeArgs('loadLabels', [$shipmentMock], $instance);
+        $this->invokeArgs('loadLabel', [$shipmentMock], $instance);
     }
 }

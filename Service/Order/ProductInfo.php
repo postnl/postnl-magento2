@@ -197,7 +197,7 @@ class ProductInfo
     }
 
     /**
-     * Malta, Cyprus, Serbia and Croatia are Global Pack countries and EU PEPS countries. That's why
+     * It's possible that a country is not considered EPS, but does fall in the EU PEPS country list. That's why
      * we need a method specifically to switch back to PEPS if it is enabled for EPS.
      *
      * @param null $country

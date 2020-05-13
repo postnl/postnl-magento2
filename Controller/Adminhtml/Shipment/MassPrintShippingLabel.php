@@ -94,16 +94,12 @@ class MassPrintShippingLabel extends LabelAbstract
      * Dispatch request
      *
      * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
-     * @throws \Magento\Framework\Exception\NotFoundException
+     * @throws \Zend_Pdf_Exception
      */
     public function execute()
     {
-        $collection = $this->collectionFactory->create();
-        $collection = $this->filter->getCollection($collection);
+        $this->loadLabels();
 
-        foreach ($collection as $shipment) {
-            $this->loadLabels($shipment);
-        }
         if (empty($this->labels)) {
             $this->messageManager->addErrorMessage(
                 // @codingStandardsIgnoreLine
@@ -117,9 +113,28 @@ class MassPrintShippingLabel extends LabelAbstract
     }
 
     /**
+     * Load the labels for the shipments
+     */
+    private function loadLabels()
+    {
+        $collection = $this->collectionFactory->create();
+
+        try {
+            $collection = $this->filter->getCollection($collection);
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addWarningMessage($exception->getMessage());
+            return;
+        }
+
+        foreach ($collection as $shipment) {
+            $this->loadLabel($shipment);
+        }
+    }
+
+    /**
      * @param Shipment $shipment
      */
-    private function loadLabels($shipment)
+    private function loadLabel($shipment)
     {
         $address = $shipment->getShippingAddress();
 

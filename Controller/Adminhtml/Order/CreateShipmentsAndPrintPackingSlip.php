@@ -114,12 +114,37 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
      * Dispatch request
      *
      * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
-     * @throws \Magento\Framework\Exception\NotFoundException
+     * @throws \Zend_Pdf_Exception
      */
     public function execute()
     {
+        $this->createShipmentsAndLoadPackingSlips();
+        $this->handleErrors();
+
+        if (empty($this->labels)) {
+            $this->messageManager->addErrorMessage(
+                __('[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information')
+            );
+
+            return $this->_redirect($this->_redirect->getRefererUrl());
+        }
+
+        return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
+    }
+
+    /**
+     * Load the shipments and labels
+     */
+    private function createShipmentsAndLoadPackingSlips()
+    {
         $collection = $this->collectionFactory->create();
-        $collection = $this->filter->getCollection($collection);
+
+        try {
+            $collection = $this->filter->getCollection($collection);
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addWarningMessage($exception->getMessage());
+            return;
+        }
 
         /** @var Order $order */
         foreach ($collection as $order) {
@@ -127,10 +152,6 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
             $shipment = $this->createShipment->create($order);
             $this->loadLabels($shipment);
         }
-
-        $this->handleErrors();
-
-        return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
     }
 
     /**

@@ -31,7 +31,6 @@
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
-use TIG\PostNL\Service\Quote\QuoteHasDeliveryDaysDisabled;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
@@ -67,11 +66,6 @@ class Timeframes extends AbstractDeliveryOptions
     private $isDeliveryDaysActive;
 
     /**
-     * @var QuoteHasDeliveryDaysDisabled
-     */
-    private $quoteHasDeliveryDaysDisabled;
-
-    /**
      * @param Context                      $context
      * @param OrderRepository              $orderRepository
      * @param Session                      $checkoutSession
@@ -82,7 +76,6 @@ class Timeframes extends AbstractDeliveryOptions
      * @param Calculator                   $calculator
      * @param IsDeliverDaysActive          $isDeliverDaysActive
      * @param ShippingDuration             $shippingDuration
-     * @param QuoteHasDeliveryDaysDisabled $quoteHasDeliveryDaysDisabled
      */
     public function __construct(
         Context $context,
@@ -94,14 +87,12 @@ class Timeframes extends AbstractDeliveryOptions
         TimeFrame $timeFrame,
         Calculator $calculator,
         IsDeliverDaysActive $isDeliverDaysActive,
-        ShippingDuration $shippingDuration,
-        QuoteHasDeliveryDaysDisabled $quoteHasDeliveryDaysDisabled
+        ShippingDuration $shippingDuration
     ) {
         $this->addressEnhancer              = $addressEnhancer;
         $this->timeFrameEndpoint            = $timeFrame;
         $this->calculator                   = $calculator;
         $this->isDeliveryDaysActive         = $isDeliverDaysActive;
-        $this->quoteHasDeliveryDaysDisabled = $quoteHasDeliveryDaysDisabled;
 
         parent::__construct(
             $context,
@@ -124,15 +115,13 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getFallBackResponse(1));
         }
 
-        if ($this->quoteHasDeliveryDaysDisabled->shouldDisableDeliveryDays($this->checkoutSession)) {
-            return $this->jsonResponse($this->getFallBackResponse(2));
-        }
-
-        $this->addressEnhancer->set($params['address']);
         $price = $this->calculator->price($this->getRateRequest(), null, null, true);
+
         if (!$this->isDeliveryDaysActive->getValue()) {
             return $this->jsonResponse($this->getFallBackResponse(2, $price['price']));
         }
+
+        $this->addressEnhancer->set($params['address']);
 
         try {
             return $this->jsonResponse($this->getValidResponeType($price['price']));

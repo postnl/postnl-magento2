@@ -65,9 +65,6 @@ define([
             return;
         }
 
-        $("input[name*='deliveryday']").prop('checked', false);
-        $("input[name*='pickuplocation']").prop('checked', false);
-
         pickupAddress(null);
     });
 

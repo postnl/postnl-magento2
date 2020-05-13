@@ -132,7 +132,7 @@ class SetDefaultData implements ObserverInterface
             $this->log->critical($exception->getTraceAsString());
         }
     }
-	
+
 	/**
 	 * @param \TIG\PostNL\Api\Data\OrderInterface $order
 	 *

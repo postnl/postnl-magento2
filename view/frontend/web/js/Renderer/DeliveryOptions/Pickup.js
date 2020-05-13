@@ -101,7 +101,7 @@ define([
              * Save the selected pickup option
              */
             this.selectedOption.subscribe(function (value) {
-                if (value === null) {
+                if (value === null || value === undefined) {
                     return;
                 }
 
@@ -197,7 +197,11 @@ define([
 
                 State.pickupOptionsAreAvailable(true);
                 State.pickupPrice(data.price);
-                State.pickupDate(data.pickup_date);
+
+                var isDeliveryDaysActive = window.checkoutConfig.shipping.postnl.is_deliverydays_active;
+                if (isDeliveryDaysActive) {
+                    State.pickupDate(data.pickup_date);
+                }
 
                 data = data.locations.slice(0, 5);
                 data = ko.utils.arrayMap(data, function (data) {
@@ -222,7 +226,11 @@ define([
          * @returns {boolean}
          */
         isRowSelected: function ($data) {
-            return JSON.stringify(this.selectedOption()) == JSON.stringify($data);
+
+            if (this.selectedOption() === null || this.selectedOption() === undefined || this.selectedOption().data === undefined) {
+                return false;
+            }
+            return JSON.stringify(this.selectedOption().data) == JSON.stringify($data);
         }
     });
 });

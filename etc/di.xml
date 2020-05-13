@@ -306,6 +306,7 @@
 
     <type name="Magento\Sales\Model\ResourceModel\Grid">
         <plugin name="TIG_PostNL_OrderPlace" type="TIG\PostNL\Plugin\Order\AsyncPlugin" sortOrder="1" />
+        <plugin name="TIG_PostNL_ShipmentPlace" type="TIG\PostNL\Plugin\Shipment\AsyncPlugin" sortOrder="1" />
     </type>
 
     <type name="TIG\PostNL\Plugin\Order\AsyncPlugin">
@@ -313,6 +314,15 @@
             <argument name="mainTableName" xsi:type="string">sales_order</argument>
             <argument name="gridTableName" xsi:type="string">sales_order_grid</argument>
             <argument name="orderIdField" xsi:type="string">sales_order_grid.entity_id</argument>
+            <argument name="notSyncedDataProvider" xsi:type="object">Magento\Sales\Model\ResourceModel\Provider\NotSyncedOrderDataProvider</argument>
+        </arguments>
+    </type>
+
+    <type name="TIG\PostNL\Plugin\Shipment\AsyncPlugin">
+        <arguments>
+            <argument name="mainTableName" xsi:type="string">sales_shipment</argument>
+            <argument name="gridTableName" xsi:type="string">sales_shipment_grid</argument>
+            <argument name="orderIdField" xsi:type="string">sales_shipment_grid.entity_id</argument>
             <argument name="notSyncedDataProvider" xsi:type="object">Magento\Sales\Model\ResourceModel\Provider\NotSyncedOrderDataProvider</argument>
         </arguments>
     </type>

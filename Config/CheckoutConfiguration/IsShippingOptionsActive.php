@@ -32,6 +32,8 @@
 
 namespace TIG\PostNL\Config\CheckoutConfiguration;
 
+use Magento\Checkout\Model\Session;
+use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
@@ -65,6 +67,9 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
     /** @var CheckIfQuoteItemsCanBackorder */
     private $quoteItemsCanBackorder;
 
+    /** @var Session */
+    private $checkoutSession;
+
     /**
      * IsShippingOptionsActive constructor.
      *
@@ -74,6 +79,7 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
      * @param CheckIfQuoteItemsAreInStock   $quoteItemsAreInStock
      * @param CheckIfQuoteHasOption         $quoteHasOption
      * @param CheckIfQuoteItemsCanBackorder $quoteItemsCanBackorder
+     * @param CheckoutSession               $checkoutSession
      */
     public function __construct(
         ShippingOptions $shippingOptions,
@@ -81,7 +87,8 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
         AccountConfiguration $accountConfiguration,
         CheckIfQuoteItemsAreInStock $quoteItemsAreInStock,
         CheckIfQuoteHasOption $quoteHasOption,
-        CheckIfQuoteItemsCanBackorder $quoteItemsCanBackorder
+        CheckIfQuoteItemsCanBackorder $quoteItemsCanBackorder,
+        CheckoutSession $checkoutSession
     ) {
         $this->shippingOptions        = $shippingOptions;
         $this->productOptions         = $productOptions;
@@ -89,6 +96,7 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
         $this->accountConfiguration   = $accountConfiguration;
         $this->quoteHasOption         = $quoteHasOption;
         $this->quoteItemsCanBackorder = $quoteItemsCanBackorder;
+        $this->checkoutSession = $checkoutSession;
     }
 
     /**
@@ -114,13 +122,14 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
     private function validateStockOptions()
     {
         $manageStock = $this->shippingOptions->getManageStock();
+        $quote = $this->checkoutSession->getQuote();
 
-        if ($manageStock === false || $this->quoteItemsAreInStock->getValue()) {
+        if ($manageStock === false || $this->quoteItemsAreInStock->getValue($quote)) {
             return true;
         }
 
         if ($this->shippingOptions->getShippingStockoptions() == 'in_stock' &&
-            !$this->quoteItemsAreInStock->getValue()
+            !$this->quoteItemsAreInStock->getValue($quote)
         ) {
             return false;
         }
