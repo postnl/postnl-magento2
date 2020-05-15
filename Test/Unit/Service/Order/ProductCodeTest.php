@@ -77,7 +77,7 @@ class ProductCodeTest extends TestCase
         $this->addProductOptionsMockFunction('getDefaultEveningProductOption', static::PRODUCT_OPTION_EVENING);
         $this->addProductOptionsMockFunction('getDefaultExtraAtHomeProductOption', static::PRODUCT_OPTION_EXTRAATHOME);
         $this->addProductOptionsMockFunction('getDefaultPakjeGemakProductOption', static::PRODUCT_OPTION_PAKJEGEMAK);
-        $this->addProductOptionsMockFunction('getDefaultPakjegemakBeProductOption', static::PRODUCT_OPTION_PAKJEGEMAK_BE);
+        $this->addProductOptionsMockFunction('getDefaultPakjeGemakBeProductOption', static::PRODUCT_OPTION_PAKJEGEMAK_BE);
         $this->addProductOptionsMockFunction('getDefaultSundayProductOption', static::PRODUCT_OPTION_SUNDAY);
         $this->addProductOptionsMockFunction(
             'getAlternativeDefaultProductOption',

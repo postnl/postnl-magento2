@@ -271,8 +271,15 @@ class ProductInfo
             return;
         }
 
-        $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption($country);
         $this->type = static::SHIPMENT_TYPE_PG;
+
+        if ($country === 'BE') {
+            $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakBeProductOption();
+
+            return;
+        }
+
+        $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
     }
 
     /**

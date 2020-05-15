@@ -174,11 +174,8 @@ class ProductOptions extends AbstractConfigProvider
      * @param string $country
      * @return mixed
      */
-    public function getDefaultPakjeGemakProductOption($country = null)
+    public function getDefaultPakjeGemakProductOption()
     {
-        if ($country === 'BE') {
-            return $this->getDefaultPakjeGemakBeProductOption();
-        }
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION);
     }
 
