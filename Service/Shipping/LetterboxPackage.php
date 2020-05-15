@@ -33,6 +33,7 @@ namespace TIG\PostNL\Service\Shipping;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
+use TIG\PostNL\Config\Provider\LetterBoxPackageConfiguration;
 
 // @codingStandardsIgnoreFile
 class LetterboxPackage
@@ -47,14 +48,22 @@ class LetterboxPackage
     private $scopeConfig;
 
     /**
+     * @var LetterBoxPackageConfiguration
+     */
+    private $letterBoxPackageConfiguration;
+
+    /**
      * LetterboxPackage constructor.
      *
-     * @param ScopeConfigInterface $scopeConfig
+     * @param ScopeConfigInterface          $scopeConfig
+     * @param LetterBoxPackageConfiguration $letterBoxPackageConfiguration
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        LetterBoxPackageConfiguration $letterBoxPackageConfiguration
     ) {
         $this->scopeConfig = $scopeConfig;
+        $this->letterBoxPackageConfiguration = $letterBoxPackageConfiguration;
     }
 
     /**
@@ -64,10 +73,7 @@ class LetterboxPackage
      */
     public function isLetterboxPackage($products)
     {
-        $calculationMode = $this->scopeConfig->getValue(
-            'tig_postnl/letterbox_package/letterbox_package_calculation_mode',
-            ScopeInterface::SCOPE_STORE
-        );
+        $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
 
         if ($calculationMode === 'manually') {
             return false;

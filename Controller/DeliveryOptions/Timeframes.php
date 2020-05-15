@@ -126,7 +126,6 @@ class Timeframes extends AbstractDeliveryOptions
     /**
      * @return \Magento\Framework\Controller\ResultInterface
      */
-    // @codingStandardsIgnoreStart
     public function execute()
     {
         $params = $this->getRequest()->getParams();
@@ -158,7 +157,6 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getFallBackResponse(3, $price['price']));
         }
     }
-    // @codingStandardsIgnoreEnd
 
     /**
      * @param $address
@@ -181,7 +179,6 @@ class Timeframes extends AbstractDeliveryOptions
         $address = $this->addressEnhancer->get();
 
         if (isset($address['error'])) {
-            //@codingStandardsIgnoreLine
             return [
                 'error'      => __('%1 : %2', $address['error']['code'], $address['error']['message']),
                 'price'      => $price,
@@ -236,7 +233,6 @@ class Timeframes extends AbstractDeliveryOptions
     {
         return [
             'price'      => $price,
-            // @codingStandardsIgnoreLine
             'timeframes' => [[['letterbox_package' => __('Your order fits through the 
             letterbox and will be delivered by the mail deliverer from Tuesday 
             to Saturday.')]]]

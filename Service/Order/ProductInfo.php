@@ -35,6 +35,8 @@ namespace TIG\PostNL\Service\Order;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Sales\Model\Order\Address as SalesAddress;
+use TIG\PostNL\Config\Provider\CheckoutConfiguration;
+use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Shipment\EpsCountries;
@@ -94,20 +96,27 @@ class ProductInfo
 
     /** @var QuoteInterface */
     private $quote;
+    /**
+     * @var ProductOptionsFinder
+     */
+    private $productOptions;
 
     /**
      * @param ProductOptionsConfiguration $productOptionsConfiguration
      * @param ProductOptionsFinder        $productOptionsFinder
      * @param QuoteInterface              $quote
+     * @param ProductOptionsFinder        $productOptions
      */
     public function __construct(
         ProductOptionsConfiguration $productOptionsConfiguration,
         ProductOptionsFinder $productOptionsFinder,
-        QuoteInterface $quote
+        QuoteInterface $quote,
+        \TIG\PostNL\Config\Source\Options\ProductOptions $productOptions
     ) {
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->productOptionsFinder        = $productOptionsFinder;
         $this->quote                       = $quote;
+        $this->productOptions = $productOptions;
     }
 
     /**
@@ -303,7 +312,7 @@ class ProductInfo
 
                 return;
             case static::OPTION_LETTERBOX_PACKAGE;
-                $this->code = '2928';
+                $this->code = $this->productOptions->getLetterBoxOptions()[0]['value'];
                 $this->type = static::SHIPMENT_TYPE_LETTERBOX_PACKAGE;
 
                 return;

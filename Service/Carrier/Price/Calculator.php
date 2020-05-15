@@ -88,7 +88,6 @@ class Calculator
      * @param ParcelTypeFinder     $parcelTypeFinder
      * @param LetterboxPackage    $letterboxPackage
      */
-    // @codingStandardsIgnoreStart
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         GetFreeBoxes $getFreeBoxes,
@@ -104,7 +103,6 @@ class Calculator
         $this->parcelTypeFinder       = $parcelTypeFinder;
         $this->letterboxPackage       = $letterboxPackage;
     }
-    // @codingStandardsIgnoreEnd
 
     /**
      * @param RateRequest $request
