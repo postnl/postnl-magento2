@@ -94,7 +94,7 @@ class InstallMaximumQuantityLetterboxPackage extends AbstractDataInstaller
                 'used_in_product_listing' => true,
                 'unique'                  => false,
                 'apply_to'                => 'simple',
-                'note'                    => 'Maximum quantity for Letterbox Package.'
+                'note'                    => 'The maximum number of this product that can fit in a letterbox package.'
             ]
         );
     }

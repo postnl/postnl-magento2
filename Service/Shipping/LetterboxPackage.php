@@ -38,9 +38,10 @@ use TIG\PostNL\Config\Provider\LetterBoxPackageConfiguration;
 // @codingStandardsIgnoreFile
 class LetterboxPackage
 {
-    public $totalVolume = 0;
-    public $totalWeight = 0;
-    public $result      = true;
+    public $totalVolume   = 0;
+    public $totalWeight   = 0;
+    public $result        = true;
+    public $maximumWeight = 2;
 
     /**
      * @var ScopeConfigInterface
@@ -84,7 +85,7 @@ class LetterboxPackage
         }
 
         // check if all products fit in a letterbox package and the weight is equal or lower than 2 kilograms.
-        if ($this->totalVolume <= 1 && $this->totalWeight <= 2 && $this->result == true) {
+        if ($this->totalVolume <= 1 && $this->totalWeight <= $this->maximumWeight && $this->result == true) {
             return true;
         }
 
@@ -105,24 +106,23 @@ class LetterboxPackage
 
         $orderedQty = $product->getQty();
         $this->totalVolume += 1 / $maximumQtyLetterbox * $orderedQty;
-        $this->getTotalWeightInKg($product, $orderedQty);
+        $this->getTotalWeight($product, $orderedQty);
     }
 
     /**
      * @param $product
      * @param $orderedQty
      */
-    public function getTotalWeightInKg($product, $orderedQty)
+    public function getTotalWeight($product, $orderedQty)
     {
         $weightUnit = $this->scopeConfig->getValue(
             'general/locale/weight_unit',
             ScopeInterface::SCOPE_STORE
         );
 
+        // maximum weight for a letterbox package is 4.4 in lbs
         if ($weightUnit === 'lbs') {
-            $this->totalWeight += $product->getWeight() * $orderedQty / 2.2046;
-
-            return;
+            $this->maximumWeight = 4.4;
         }
 
         $this->totalWeight += $product->getWeight() * $orderedQty;

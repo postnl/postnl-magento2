@@ -185,6 +185,6 @@ class Validator
 
     private function showLetterboxPackageNotice()
     {
-        $this->messages['notices'][] = __('Please note, a letterbox package may be a maximum of 38 x 26.5 x 3.2 cm and 2 kg in weight.');
+        $this->messages['notices'][] = __('Please note, a letterbox package may not exceed 38 x 26.5 x 3.2 cm in size and 2 kg (4.4 lbs) in weight.');
     }
 }
