@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Shipping;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Config\Provider\LetterBoxPackageConfiguration;
 
@@ -54,17 +55,25 @@ class LetterboxPackage
     private $letterBoxPackageConfiguration;
 
     /**
+     * @var CartRepositoryInterface
+     */
+    private $cartRepository;
+
+    /**
      * LetterboxPackage constructor.
      *
      * @param ScopeConfigInterface          $scopeConfig
      * @param LetterBoxPackageConfiguration $letterBoxPackageConfiguration
+     * @param CartRepositoryInterface       $cartRepository
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        LetterBoxPackageConfiguration $letterBoxPackageConfiguration
+        LetterBoxPackageConfiguration $letterBoxPackageConfiguration,
+        CartRepositoryInterface $cartRepository
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->letterBoxPackageConfiguration = $letterBoxPackageConfiguration;
+        $this->cartRepository = $cartRepository;
     }
 
     /**
@@ -72,11 +81,11 @@ class LetterboxPackage
      *
      * @return bool
      */
-    public function isLetterboxPackage($products)
+    public function isLetterboxPackage($products, $isDomestic = false)
     {
         $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
 
-        if ($calculationMode === 'manually') {
+        if ($calculationMode === 'manually' && $isDomestic = false) {
             return false;
         }
 
@@ -126,5 +135,19 @@ class LetterboxPackage
         }
 
         $this->totalWeight += $product->getWeight() * $orderedQty;
+    }
+
+    public function isPossibleLetterboxPackage($order)
+    {
+        $quote = $this->cartRepository->get($order->getQuoteId());
+        $products = $quote->getAllItems();
+
+        if ($order->getProductCode() == '3085' &&
+            $this->isLetterboxPackage($products, true) &&
+            $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode() === 'manually') {
+            return true;
+        }
+
+        return false;
     }
 }
