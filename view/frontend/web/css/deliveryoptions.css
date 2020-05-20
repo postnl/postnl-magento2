@@ -158,16 +158,16 @@
   cursor: pointer;
   box-sizing: border-box;
 }
-.postnl-delivery-options .delivery ul li label:hover,
-.postnl-delivery-options .pickup ul li label:hover,
-.postnl-delivery-options .delivery ol li label:hover,
-.postnl-delivery-options .pickup ol li label:hover {
+.postnl-delivery-options .delivery ul li:hover,
+.postnl-delivery-options .pickup ul li:hover,
+.postnl-delivery-options .delivery ol li:hover,
+.postnl-delivery-options .pickup ol li:hover {
   background: #FFE0B2;
 }
-.postnl-delivery-options .delivery ul li label.selected-row,
-.postnl-delivery-options .pickup ul li label.selected-row,
-.postnl-delivery-options .delivery ol li label.selected-row,
-.postnl-delivery-options .pickup ol li label.selected-row {
+.postnl-delivery-options .delivery ul li selected-row,
+.postnl-delivery-options .pickup ul li selected-row,
+.postnl-delivery-options .delivery ol li selected-row,
+.postnl-delivery-options .pickup ol li selected-row {
   background: #FFE0B2 !important;
 }
 .postnl-delivery-options .delivery {

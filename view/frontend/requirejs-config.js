@@ -63,10 +63,8 @@ var config = {
             'Amasty_CustomerAttributes/js/action/set-shipping-information-mixin' :
                 'TIG_PostNL/js/action/set-shipping-information-mixin',
             //Amasty Checkout Compatibility
-            "Amasty_Checkout/template/onepage/shipping/methods.html" :
-                "TIG_PostNL/template/Compatibility/amasty_checkout/methods.html",
-            "Amasty_Checkout/js/view/shipping" :
-                "TIG_PostNL/js/Compatibility/amasty_checkout/shipping"
+            "Amasty_Checkout/js/view/shipping-mixin" :
+                "TIG_PostNL/js/Compatibility/amasty_checkout/shipping-mixin"
         }
     }
 };
