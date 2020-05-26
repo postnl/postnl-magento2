@@ -50,6 +50,7 @@ class ProductCodeTest extends TestCase
     const PRODUCT_OPTION_EXTRAATHOME = 'extraathome_product_option';
     const PRODUCT_OPTION_PAKJEGEMAK = 'pakjegemak_product_option';
     const PRODUCT_OPTION_SUNDAY = 'sunday_product_option';
+    const PRODUCT_OPTION_LETTERBOX_PACKAGE = '2928';
 
     /**
      * @var ProductOptions|\PHPUnit_Framework_MockObject_MockObject
@@ -116,6 +117,7 @@ class ProductCodeTest extends TestCase
             'sunday' => ['delivery', 'sunday', 'NL', static::PRODUCT_OPTION_SUNDAY, 'Sunday'],
             'default pg' => ['pickup', 'default', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
             'pakjegemak' => ['pickup', '', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
+            'letterbox package' => ['delivery', 'letterbox_package', 'NL', static::PRODUCT_OPTION_LETTERBOX_PACKAGE, 'Letter Box']
         ];
     }
 
