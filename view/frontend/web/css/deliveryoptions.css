@@ -64,6 +64,7 @@
   overflow: hidden;
   width: 100%;
   max-width: 500px;
+  margin-bottom: 10px;
   /* End Delivery */
 }
 .postnl-delivery-options * {
@@ -469,3 +470,4 @@
 #opc-shipping_method #checkout-shipping-method-load .table-checkout-shipping-method .col-price {
   min-width: 100px;
 }
+/*# sourceMappingURL=deliveryoptions.css.map */
