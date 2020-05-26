@@ -50,7 +50,7 @@ define([
                 }
 
                 // Delivery Options are not shown for countries other than Belgium and The Netherlands. So no need to validate.
-                if (quote.shippingAddress().countryId !== 'NL' || quote.shippingAddress().countryId !== 'BE') {
+                if (quote.shippingAddress().countryId !== 'NL' && quote.shippingAddress().countryId !== 'BE') {
                     return originalResult;
                 }
 
