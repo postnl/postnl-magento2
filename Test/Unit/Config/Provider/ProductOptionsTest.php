@@ -214,6 +214,24 @@ class ProductOptionsTest extends AbstractConfigurationTest
         $this->assertEquals($value, $instance->getDefaultPakjeGemakProductOption());
     }
 
+    public function letterboxPackageOptionsProvider()
+    {
+        return [
+            'Letter Box Parcel Extra' => ['2928']
+        ];
+    }
+
+    /**
+     * @dataProvider letterboxPackageOptionsProvider
+     * @param $value
+     */
+    public function testGetDefaultLetterBoxPackageProductOption($value)
+    {
+        $instance = $this->getInstance();
+        $this->setXpath(ProductOptions::XPATH_DEFAULT_LETTERBOX_PACKAGE_OPTION, $value);
+        $this->assertEquals($value, $instance->getDefaultLetterboxPackageProductOption());
+    }
+
     public function sundayOptionsProvider()
     {
         return [
