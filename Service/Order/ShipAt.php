@@ -74,10 +74,13 @@ class ShipAt
         $this->sentDate->setParameters($address, $storeId, $order);
 
         try {
-            $order->setShipAt($this->sentDate->call());
+            $sentDate = $this->sentDate->call();
         } catch (\Exception $exception) {
-            $order->setShipAt(null);
+            // sentDate calls could break during holidays, but this variable is only used to inform merchants. It shouldn’t break the shipping flow.
+            $sentDate = null;
         }
+
+        $order->setShipAt($sentDate);
 
         return $order;
     }
