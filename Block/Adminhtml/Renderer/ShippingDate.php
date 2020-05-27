@@ -76,7 +76,7 @@ class ShippingDate
     {
         $shipAt = $this->getShipAt($item);
         if ($shipAt === null) {
-            return null;
+            return 'At the first opportunity';
         }
 
         return $this->formatShippingDate($shipAt);

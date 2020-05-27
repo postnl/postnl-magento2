@@ -497,3 +497,4 @@ Percent,Percentage
 "Disable Delivery Days","Zet bezorgdagen uit"
 "This setting will override the global PostNL Delivery Days setting. Delivery Days will be disabled for this product when set to yes.","Deze optie zal de globale PostNL bezorgdagen overschrijven. Bezorgdagen zullen voor dit product uitgeschakeld worden wanneer deze optie aan staat."
 "Delivery to stated address only","Niet bij buren leveren"
+"At the first opportunity","Eerst volgende mogelijkheid"
