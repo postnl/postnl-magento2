@@ -76,7 +76,10 @@ class ShipAt
         try {
             $sentDate = $this->sentDate->call();
         } catch (\Exception $exception) {
-            // sentDate calls could break during holidays, but this variable is only used to inform merchants. It shouldn’t break the shipping flow.
+            /**
+             * GetSentDate calls could break during holidays, but this variable is only used to inform merchants.
+             * It shouldn't break the shipping flow.
+             */
             $sentDate = null;
         }
 
