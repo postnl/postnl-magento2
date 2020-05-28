@@ -38,11 +38,7 @@ use TIG\PostNL\Config\Provider\PostNLConfiguration;
 
 class SupportTab extends Template implements RendererInterface
 {
-<<<<<<< HEAD
     const POSTNL_VERSION = '1.9.3';
-=======
-    const POSTNL_VERSION = '1.9.2.2';
->>>>>>> 537f366acd96f528ccc85ec6934715ab99dc2851
 
     // @codingStandardsIgnoreLine
     protected $_template = 'TIG_PostNL::config/support/supportTab.phtml';
