@@ -86,7 +86,7 @@ class InstallDisableDeliveryDaysAttribute extends AbstractDataInstaller
                 'visible'                 => true,
                 'required'                => false,
                 'user_defined'            => false,
-                'default'                 => '0',
+                'default'                 => '1',
                 'searchable'              => false,
                 'filterable'              => false,
                 'comparable'              => false,
