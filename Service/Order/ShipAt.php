@@ -58,6 +58,9 @@ class ShipAt
     }
 
     /**
+     * GetSentDate calls could break during holidays, but this variable is only used to inform merchants.
+     * It shouldn't break the shipping flow. This is the reason why $sentDate is set to null on failure. #POSTNLM2-1012
+     *
      * @param OrderInterface $order
      *
      * @return OrderInterface|null
@@ -76,10 +79,6 @@ class ShipAt
         try {
             $sentDate = $this->sentDate->call();
         } catch (\Exception $exception) {
-            /**
-             * GetSentDate calls could break during holidays, but this variable is only used to inform merchants.
-             * It shouldn't break the shipping flow.
-             */
             $sentDate = null;
         }
 

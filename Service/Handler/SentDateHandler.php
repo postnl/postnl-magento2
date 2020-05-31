@@ -90,7 +90,7 @@ class SentDateHandler
         } catch (\Exception $exception) {
             /**
              * GetSentDate calls could break during holidays, but this variable is only used to inform merchants.
-             * It shouldn't break the shipping flow.
+             * It shouldn't break the shipping flow. #POSTNLM2-1012
              */
             return null;
         }
