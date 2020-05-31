@@ -33,6 +33,7 @@
 namespace TIG\PostNL\Service\Order;
 
 use TIG\PostNL\Api\Data\OrderInterface;
+use TIG\PostNL\Service\Import\Exception;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Webservices\Endpoints\SentDate;
 
@@ -56,6 +57,11 @@ class ShipAt
         $this->sentDate = $endpoint;
     }
 
+    /**
+     * @param OrderInterface $order
+     *
+     * @return OrderInterface|null
+     */
     public function set(OrderInterface $order)
     {
         $address = $this->quote->getShippingAddress();
@@ -66,7 +72,12 @@ class ShipAt
 
         $storeId = $this->quote->getStoreId();
         $this->sentDate->setParameters($address, $storeId, $order);
-        $order->setShipAt($this->sentDate->call());
+
+        try {
+            $order->setShipAt($this->sentDate->call());
+        } catch (\Exception $exception) {
+            $order->setShipAt(null);
+        }
 
         return $order;
     }

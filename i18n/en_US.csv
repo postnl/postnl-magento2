@@ -472,3 +472,4 @@ Percent,Percent
 "Disable Delivery Days","Disable Delivery Days"
 "This setting will override the global PostNL Delivery Days setting. Delivery Days will be disabled for this product when set to yes.","This setting will override the global PostNL Delivery Days setting. Delivery Days will be disabled for this product when set to yes."
 "Delivery to stated address only","Delivery to stated address only"
+"At the first opportunity","At the first opportunity"
