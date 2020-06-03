@@ -170,9 +170,15 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
 
     /**
      * @param $shipment
+     *
+     * If a shipment is null or false, it means Magento errored on creating the shipment.
+     * Magento will already throw their own Exceptions, so we won't have to.
      */
     private function loadLabel($shipment)
     {
+        if (!$shipment) {
+            return;
+        }
         $address = $this->canaryConverter->convert($shipment->getShippingAddress());
 
         try {
