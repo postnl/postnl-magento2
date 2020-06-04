@@ -43,9 +43,22 @@ define([
     return function (Component) {
         return Component.extend({
             validateShippingInformation: function () {
-                var originalResult = this._super();
+                var originalResult = this._super(),
+                    can_continue   = false;
 
                 if (quote.shippingMethod().carrier_code !== 'tig_postnl') {
+                    return originalResult;
+                }
+
+                quote.getItems().forEach(function (item) {
+                    var product = item.product;
+
+                    if (product.postnl_product_type === 'extra_at_home') {
+                        can_continue = true;
+                    }
+                });
+
+                if (can_continue === true) {
                     return originalResult;
                 }
 
