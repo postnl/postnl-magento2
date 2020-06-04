@@ -219,6 +219,9 @@ class ProductOptionsTest extends AbstractConfigurationTest
         $this->assertEquals($value, $instance->getDefaultPakjeGemakProductOption());
     }
 
+    /**
+     * @return array
+     */
     public function letterboxPackageOptionsProvider()
     {
         return [
