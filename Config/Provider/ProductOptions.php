@@ -267,7 +267,8 @@ class ProductOptions extends AbstractConfigProvider
      */
     public function getDefaultLetterboxPackageProductOption()
     {
-        return $this->productOptions->getLetterBoxOptions()[0]['value'];
+        $result = array_column($this->productOptions->getProductOptions(['group' => 'buspakje_options']), 'value');
+        return current($result);
     }
 }
 /**

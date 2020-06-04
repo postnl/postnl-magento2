@@ -37,11 +37,6 @@ class ProductOptionsTest extends AbstractConfigurationTest
 {
     protected $instanceClass = ProductOptions::class;
 
-    /**
-     * @var ProductOptions|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $productOptionsMock;
-
     public function defaultProductOptionsProvider()
     {
         return [
@@ -219,35 +214,13 @@ class ProductOptionsTest extends AbstractConfigurationTest
         $this->assertEquals($value, $instance->getDefaultPakjeGemakProductOption());
     }
 
-    /**
-     * @return array
-     */
-    public function letterboxPackageOptionsProvider()
+    public function testGetDefaultLetterBoxPackageProductOption()
     {
-        return [
-            'Letter Box Parcel Extra' => ['2928']
-        ];
-    }
-
-    /**
-     * @param $function
-     * @param $returnValue
-     */
-    private function addProductOptionsMockFunction($function, $returnValue)
-    {
-        $expects = $this->productOptionsMock->method($function);
-        $expects->willReturn($returnValue);
-    }
-
-    /**
-     * @dataProvider letterboxPackageOptionsProvider
-     * @param $value
-     */
-    public function testGetDefaultLetterBoxPackageProductOption($value)
-    {
-        $this->productOptionsMock = $this->getFakeMock(ProductOptions::class)->getMock();
-        $this->addProductOptionsMockFunction('getDefaultLetterboxPackageProductOption', $value);
-        $this->assertEquals($value, $this->productOptionsMock->getDefaultLetterboxPackageProductOption());
+        $value = '2928';
+        $optionsConfigurationMock = $this->getFakeMock(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
+        $optionsConfigurationMock->setMethods(null);
+        $instance = $this->getInstance(['productOptions' => $optionsConfigurationMock->getMock()]);
+        $this->assertEquals($value, $instance->getDefaultLetterboxPackageProductOption());
     }
 
     public function sundayOptionsProvider()
