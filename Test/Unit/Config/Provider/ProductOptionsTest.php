@@ -37,6 +37,11 @@ class ProductOptionsTest extends AbstractConfigurationTest
 {
     protected $instanceClass = ProductOptions::class;
 
+    /**
+     * @var ProductOptions|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $productOptionsMock;
+
     public function defaultProductOptionsProvider()
     {
         return [
@@ -221,15 +226,21 @@ class ProductOptionsTest extends AbstractConfigurationTest
         ];
     }
 
+    private function addProductOptionsMockFunction($function, $returnValue)
+    {
+        $expects = $this->productOptionsMock->method($function);
+        $expects->willReturn($returnValue);
+    }
+
     /**
      * @dataProvider letterboxPackageOptionsProvider
      * @param $value
      */
     public function testGetDefaultLetterBoxPackageProductOption($value)
     {
-        $instance = $this->getInstance();
-        $this->setXpath(ProductOptions::XPATH_DEFAULT_LETTERBOX_PACKAGE_OPTION, $value);
-        $this->assertEquals($value, $instance->getDefaultLetterboxPackageProductOption());
+        $this->productOptionsMock = $this->getFakeMock(ProductOptions::class)->getMock();
+        $this->addProductOptionsMockFunction('getDefaultLetterboxPackageProductOption', $value);
+        $this->assertEquals($value, $this->productOptionsMock->getDefaultLetterboxPackageProductOption());
     }
 
     public function sundayOptionsProvider()
