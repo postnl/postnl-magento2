@@ -226,6 +226,10 @@ class ProductOptionsTest extends AbstractConfigurationTest
         ];
     }
 
+    /**
+     * @param $function
+     * @param $returnValue
+     */
     private function addProductOptionsMockFunction($function, $returnValue)
     {
         $expects = $this->productOptionsMock->method($function);
