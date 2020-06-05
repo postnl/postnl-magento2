@@ -57,6 +57,11 @@ define([
                     return originalResult;
                 }
 
+                // deliverydays and pickupAddresses are not emptied when another country is selected.
+                if (quote.shippingAddress().countryId !== 'NL' && quote.shippingAddress().countryId !== 'BE') {
+                    return originalResult;
+                }
+
                 // Returns undefined if no option is checked.
                 var checkedOption = $('.tig-postnl-delivery-radio:checked, .tig-postnl-pickup-radio:checked').val();
 
