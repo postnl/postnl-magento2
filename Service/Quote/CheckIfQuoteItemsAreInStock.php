@@ -35,9 +35,10 @@ use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku;
+use Magento\Framework\Module\Manager;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Psr\Log\LoggerInterface;
+use TIG\PostNL\Service\Order\Compatibility\SourceItemsDataBySkuProxy;
 
 class CheckIfQuoteItemsAreInStock
 {
@@ -57,30 +58,39 @@ class CheckIfQuoteItemsAreInStock
     private $stockConfiguration;
 
     /**
-     * @var GetSourceItemsDataBySku
-     */
-    private $getSourceItemsDataBySku;
-    /**
      * @var LoggerInterface
      */
     private $logger;
 
     /**
+     * @var Manager
+     */
+    private $moduleManager;
+
+    /**
+     * @var SourceItemsDataBySkuProxy
+     */
+    private $sourceItemsDataBySkuProxy;
+
+    /**
      * @param StockRegistryInterface      $stockRegistryInterface
      * @param StockConfigurationInterface $stockConfiguration
-     * @param GetSourceItemsDataBySku     $getSourceItemsDataBySku
      * @param LoggerInterface             $logger
+     * @param Manager                     $moduleManager
+     * @param SourceItemsDataBySkuProxy   $sourceItemsDataBySkuProxy
      */
     public function __construct(
         StockRegistryInterface $stockRegistryInterface,
         StockConfigurationInterface $stockConfiguration,
-        GetSourceItemsDataBySku $getSourceItemsDataBySku,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        Manager $moduleManager,
+        SourceItemsDataBySkuProxy $sourceItemsDataBySkuProxy
     ) {
         $this->stockRegistry = $stockRegistryInterface;
         $this->stockConfiguration = $stockConfiguration;
-        $this->getSourceItemsDataBySku = $getSourceItemsDataBySku;
         $this->logger = $logger;
+        $this->moduleManager = $moduleManager;
+        $this->sourceItemsDataBySkuProxy = $sourceItemsDataBySkuProxy;
     }
 
     /**
@@ -206,21 +216,26 @@ class CheckIfQuoteItemsAreInStock
     {
         $sourceQty = 0;
 
-        try {
-            $sources = $this->getSourceItemsDataBySku->execute($item->getSku());
-        } catch (NoSuchEntityException $noSuchEntityException) {
-            $this->logger->critical($noSuchEntityException);
+        if ($this->moduleManager->isEnabled('Magento_InventoryCatalogAdminUi')) {
+            try {
+                /** @var SourceItemsDataBySkuProxy $sourceItemsDataBySku */
+                $sourceItemsDataBySku = $this->sourceItemsDataBySkuProxy->create();
+                $sources = $sourceItemsDataBySku->execute($item->getSku());
+            } catch (NoSuchEntityException $noSuchEntityException) {
+                $this->logger->critical($noSuchEntityException);
+
+                return false;
+            }
+
+            foreach ($sources as $source) {
+                $sourceQty += $source['quantity'];
+            }
+
+            if (($sourceQty - $minimumQuantity) > $requiredQuantity) {
+                return true;
+            }
+
             return false;
         }
-
-        foreach ($sources as $source) {
-            $sourceQty+= $source['quantity'];
-        }
-
-        if (($sourceQty - $minimumQuantity) > $requiredQuantity) {
-            return true;
-        }
-
-        return false;
     }
 }
