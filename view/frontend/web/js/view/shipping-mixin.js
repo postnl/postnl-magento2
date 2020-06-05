@@ -32,10 +32,14 @@
 define([
     'jquery',
     'Magento_Checkout/js/model/quote',
+    'TIG_PostNL/js/Renderer/DeliveryOptions/Delivery',
+    'TIG_PostNL/js/Renderer/DeliveryOptions/Pickup',
     'mage/translate'
 ], function (
     $,
     quote,
+    delivery,
+    pickup,
     $t
 ) {
     'use strict';
@@ -49,7 +53,11 @@ define([
                     return originalResult;
                 }
 
-                // Delivery Options are not shown for countries other than Belgium and The Netherlands. So no need to validate.
+                if (delivery().deliverydays().length === 0 && pickup().pickupAddresses().length === 0) {
+                    return originalResult;
+                }
+
+                // deliverydays and pickupAddresses are not emptied when another country is selected.
                 if (quote.shippingAddress().countryId !== 'NL' && quote.shippingAddress().countryId !== 'BE') {
                     return originalResult;
                 }

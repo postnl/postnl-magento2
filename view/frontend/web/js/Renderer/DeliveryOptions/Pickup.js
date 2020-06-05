@@ -56,7 +56,7 @@ define([
             country : null,
             street : null,
             hasAddress :false,
-            pickupAddresses: []
+            pickupAddresses: ko.observableArray([])
         },
 
         initObservable : function () {
