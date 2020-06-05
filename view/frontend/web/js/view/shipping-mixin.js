@@ -32,10 +32,14 @@
 define([
     'jquery',
     'Magento_Checkout/js/model/quote',
+    'TIG_PostNL/js/Renderer/DeliveryOptions/Delivery',
+    'TIG_PostNL/js/Renderer/DeliveryOptions/Pickup',
     'mage/translate'
 ], function (
     $,
     quote,
+    delivery,
+    pickup,
     $t
 ) {
     'use strict';
@@ -43,27 +47,13 @@ define([
     return function (Component) {
         return Component.extend({
             validateShippingInformation: function () {
-                var originalResult = this._super(),
-                    can_continue   = false;
+                var originalResult = this._super();
 
                 if (quote.shippingMethod().carrier_code !== 'tig_postnl') {
                     return originalResult;
                 }
 
-                quote.getItems().forEach(function (item) {
-                    var product = item.product;
-
-                    if (product.postnl_product_type === 'extra_at_home') {
-                        can_continue = true;
-                    }
-                });
-
-                if (can_continue === true) {
-                    return originalResult;
-                }
-
-                // Delivery Options are not shown for countries other than Belgium and The Netherlands. So no need to validate.
-                if (quote.shippingAddress().countryId !== 'NL' && quote.shippingAddress().countryId !== 'BE') {
+                if (delivery().deliverydays().length === 0 && pickup().pickupAddresses().length === 0) {
                     return originalResult;
                 }
 
