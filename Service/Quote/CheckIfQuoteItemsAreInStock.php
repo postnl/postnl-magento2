@@ -40,6 +40,7 @@ use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Psr\Log\LoggerInterface;
 use TIG\PostNL\Service\Order\Compatibility\SourceItemsDataBySkuProxy;
 
+// @codingStandardsIgnoreFile
 class CheckIfQuoteItemsAreInStock
 {
     /**
@@ -214,8 +215,6 @@ class CheckIfQuoteItemsAreInStock
      */
     private function hasMultiStockInventoryStock($item, $requiredQuantity, $minimumQuantity)
     {
-        $sourceQty = 0;
-
         if ($this->moduleManager->isEnabled('Magento_InventoryCatalogAdminUi')) {
             try {
                 /** @var SourceItemsDataBySkuProxy $sourceItemsDataBySku */
@@ -227,15 +226,22 @@ class CheckIfQuoteItemsAreInStock
                 return false;
             }
 
-            foreach ($sources as $source) {
-                $sourceQty += $source['quantity'];
-            }
-
-            if (($sourceQty - $minimumQuantity) > $requiredQuantity) {
-                return true;
-            }
-
-            return false;
+            return $this->getStockFromSources($sources, $requiredQuantity, $minimumQuantity);
         }
+    }
+
+    private function getStockFromSources($sources, $requiredQuantity, $minimumQuantity)
+    {
+        $sourceQty = 0;
+
+        foreach ($sources as $source) {
+            $sourceQty += $source['quantity'];
+        }
+
+        if (($sourceQty - $minimumQuantity) > $requiredQuantity) {
+            return true;
+        }
+
+        return false;
     }
 }
