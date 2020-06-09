@@ -88,6 +88,8 @@ class ResetPostNLShipment
      *
      * @throws \Magento\Framework\Exception\CouldNotDeleteException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
+     *
+     * @return PostNLShipment
      */
     public function resetShipment($shipmentId)
     {
@@ -102,5 +104,7 @@ class ResetPostNLShipment
         $this->barcodeDeleteHandler->deleteAllByShipmentId($postNLShipment->getId());
         $this->labelDeleteHandler->deleteAllByParentId($postNLShipment->getId());
         $this->trackDeleteHandler->deleteAllByShipmentId($shipmentId);
+
+        return $postNLShipment;
     }
 }

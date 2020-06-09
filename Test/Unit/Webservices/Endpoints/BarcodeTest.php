@@ -40,9 +40,9 @@ class BarcodeTest extends TestCase
 
     /**
      * @expectedException \TIG\PostNL\Exception
-     * @expectedExceptionMessage Please provide the country id first by calling setCountryId
+     * @expectedExceptionMessage Please provide the productcode first by calling setProductCode
      */
-    public function testShouldThrowAnExceptionWhenNoCountryIdIsset()
+    public function testShouldThrowAnExceptionWhenNoProductCodeIsset()
     {
         /** @var Barcode $instance */
         $this->getInstance()->call();

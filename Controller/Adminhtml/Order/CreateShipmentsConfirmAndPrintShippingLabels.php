@@ -107,7 +107,6 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
      * Dispatch request
      *
      * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
-     * @throws LocalizedException
      * @throws \Zend_Pdf_Exception
      */
     public function execute()
@@ -128,12 +127,17 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
 
     /**
      * Create or load the shipments and labels
-     * @throws LocalizedException
      */
     private function createShipmentsAndLoadLabels()
     {
         $collection = $this->collectionFactory->create();
-        $collection = $this->filter->getCollection($collection);
+
+        try {
+            $collection = $this->filter->getCollection($collection);
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addWarningMessage($exception->getMessage());
+            return;
+        }
 
         foreach ($collection as $order) {
             $this->loadLabels($order);
@@ -166,9 +170,15 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
 
     /**
      * @param $shipment
+     *
+     * If a shipment is null or false, it means Magento errored on creating the shipment.
+     * Magento will already throw their own Exceptions, so we won't have to.
      */
     private function loadLabel($shipment)
     {
+        if (!$shipment) {
+            return;
+        }
         $address = $this->canaryConverter->convert($shipment->getShippingAddress());
 
         try {

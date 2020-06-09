@@ -29,51 +29,51 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Model;
+namespace TIG\PostNL\Service\Order\Compatibility;
 
-use TIG\PostNL\Model\ShipmentLabel;
-use TIG\PostNL\Test\TestCase;
+use Magento\Framework\ObjectManagerInterface;
+use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySkuFactory\Proxy as GetSourceItemsDataBySku;
 
-class ShipmentLabelTest extends TestCase
+// @codingStandardsIgnoreFile
+class SourceItemsDataBySkuProxy
 {
+
     /**
-     * @param array $args
-     *
-     * @return object
+     * @var ObjectManagerInterface
      */
-    public function getInstance(array $args = [])
+    private $objectManager;
+
+    /**
+     * @var GetSourceItemsDataBySku
+     */
+    private $subject;
+
+    /**
+     * @param ObjectManagerInterface $objectManager
+     */
+    public function __construct(ObjectManagerInterface $objectManager)
     {
-        return $this->objectManager->getObject(ShipmentLabel::class, $args);
+        $this->objectManager = $objectManager;
     }
 
     /**
-     * @return array
+     * @return GetSourceItemsDataBySku
      */
-    public function getIdentitiesProvider()
+    private function getSubject()
     {
-        return [
-            [1],
-            [2],
-            [3],
-            [4],
-            [5],
-        ];
+        if (!$this->subject) {
+            $this->subject = $this->objectManager->get(GetSourceItemsDataBySku::class);
+        }
+        return $this->subject;
     }
 
     /**
-     * @param $id
+     * @param array $data
      *
-     * @dataProvider getIdentitiesProvider
+     * @return GetSourceItemsDataBySku
      */
-    public function testGetIdentities($id)
+    public function create(array $data = [])
     {
-        $instance = $this->getInstance();
-        $instance->setId($id);
-
-        $result = $instance->getIdentities();
-        $expected = ShipmentLabel::CACHE_TAG . '_' . $id;
-
-        $this->assertInternalType('array', $result);
-        $this->assertEquals([$expected], $result);
+        return $this->getSubject()->create($data);
     }
 }

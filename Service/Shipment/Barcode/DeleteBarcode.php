@@ -38,7 +38,6 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Exception as PostNLException;
 use Magento\Sales\Model\Order\ShipmentRepository;
-use Magento\Sales\Model\Order\Shipment;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 
 class DeleteBarcode extends ShipmentServiceAbstract

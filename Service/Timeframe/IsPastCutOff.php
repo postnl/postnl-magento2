@@ -91,13 +91,8 @@ class IsPastCutOff
      */
     private function cutOffTime()
     {
-        static $cutOffTime = null;
-
-        if ($cutOffTime) {
-            return $cutOffTime;
-        }
-
         $day = $this->postNLHelper->getDayOrWeekNumber($this->now()->format('H:i:s'));
+
         return $cutOffTime = $this->webshop->getCutOffTimeForDay($day);
     }
 }

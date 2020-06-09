@@ -32,13 +32,10 @@
 namespace TIG\PostNL\Model;
 
 use TIG\PostNL\Api\Data\ShipmentBarcodeInterface;
-use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel as MagentoModel;
 
-class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface, IdentityInterface
+class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface
 {
-    const CACHE_TAG = 'tig_postnl_shipment_barcode';
-
     const BARCODE_TYPE_SHIPMENT = 'shipment';
     const BARCODE_TYPE_RETURN = 'return';
 
@@ -61,14 +58,6 @@ class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface, 
     {
         // @codingStandardsIgnoreLine
         $this->_init('TIG\PostNL\Model\ResourceModel\ShipmentBarcode');
-    }
-
-    /**
-     * @return array
-     */
-    public function getIdentities()
-    {
-        return [self::CACHE_TAG . '_' . $this->getId()];
     }
 
     /**

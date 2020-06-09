@@ -33,6 +33,7 @@
 namespace TIG\PostNL\Service\Order;
 
 use TIG\PostNL\Api\Data\OrderInterface;
+use TIG\PostNL\Service\Import\Exception;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Webservices\Endpoints\SentDate;
 
@@ -56,6 +57,14 @@ class ShipAt
         $this->sentDate = $endpoint;
     }
 
+    /**
+     * GetSentDate calls could break during holidays, but this variable is only used to inform merchants.
+     * It shouldn't break the shipping flow. This is the reason why $sentDate is set to null on failure. #POSTNLM2-1012
+     *
+     * @param OrderInterface $order
+     *
+     * @return OrderInterface|null
+     */
     public function set(OrderInterface $order)
     {
         $address = $this->quote->getShippingAddress();
@@ -66,7 +75,14 @@ class ShipAt
 
         $storeId = $this->quote->getStoreId();
         $this->sentDate->setParameters($address, $storeId, $order);
-        $order->setShipAt($this->sentDate->call());
+
+        try {
+            $sentDate = $this->sentDate->call();
+        } catch (\Exception $exception) {
+            $sentDate = null;
+        }
+
+        $order->setShipAt($sentDate);
 
         return $order;
     }

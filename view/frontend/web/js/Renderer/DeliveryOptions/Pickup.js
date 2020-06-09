@@ -56,7 +56,7 @@ define([
             country : null,
             street : null,
             hasAddress :false,
-            pickupAddresses: []
+            pickupAddresses: ko.observableArray([])
         },
 
         initObservable : function () {
@@ -101,7 +101,7 @@ define([
              * Save the selected pickup option
              */
             this.selectedOption.subscribe(function (value) {
-                if (value === null) {
+                if (value === null || value === undefined) {
                     return;
                 }
 
@@ -226,7 +226,11 @@ define([
          * @returns {boolean}
          */
         isRowSelected: function ($data) {
-            return JSON.stringify(this.selectedOption()) == JSON.stringify($data);
+
+            if (this.selectedOption() === null || this.selectedOption() === undefined || this.selectedOption().data === undefined) {
+                return false;
+            }
+            return JSON.stringify(this.selectedOption().data) == JSON.stringify($data);
         }
     });
 });
