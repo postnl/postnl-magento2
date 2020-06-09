@@ -23,7 +23,7 @@ matrix:
     - php: 7.3
       env: MAGENTO_VERSION=2.3.4 # DI_COMPILE=true
     - php: 7.3
-      env: MAGENTO_VERSION=2.3.5 CODE_COVERAGE=true
+      env: MAGENTO_VERSION=2.3.5-p1 CODE_COVERAGE=true
 
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
