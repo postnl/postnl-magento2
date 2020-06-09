@@ -54,6 +54,6 @@ class IsLetterboxPackageActive implements CheckoutConfigurationInterface
      */
     public function getValue()
     {
-        return (int) $this->shippingOptions->isLetterboxPackageActive();
+        return (bool) $this->shippingOptions->isLetterboxPackageActive();
     }
 }

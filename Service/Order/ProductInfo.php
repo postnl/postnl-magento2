@@ -35,8 +35,6 @@ namespace TIG\PostNL\Service\Order;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Sales\Model\Order\Address as SalesAddress;
-use TIG\PostNL\Config\Provider\CheckoutConfiguration;
-use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Shipment\EpsCountries;
@@ -105,18 +103,15 @@ class ProductInfo
      * @param ProductOptionsConfiguration $productOptionsConfiguration
      * @param ProductOptionsFinder        $productOptionsFinder
      * @param QuoteInterface              $quote
-     * @param ProductOptionsFinder        $productOptions
      */
     public function __construct(
         ProductOptionsConfiguration $productOptionsConfiguration,
         ProductOptionsFinder $productOptionsFinder,
-        QuoteInterface $quote,
-        \TIG\PostNL\Config\Source\Options\ProductOptions $productOptions
+        QuoteInterface $quote
     ) {
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->productOptionsFinder        = $productOptionsFinder;
         $this->quote                       = $quote;
-        $this->productOptions = $productOptions;
     }
 
     /**
@@ -150,8 +145,7 @@ class ProductInfo
         }
 
         if ($type == static::TYPE_PICKUP) {
-
-        $this->setPakjegemakProductOption($option);
+            $this->setPakjegemakProductOption($option);
 
             return $this->getInfo();
         }
@@ -300,25 +294,27 @@ class ProductInfo
                 $this->code = $this->productOptionsConfiguration->getDefaultEveningProductOption($country);
                 $this->type = static::SHIPMENT_TYPE_EVENING;
 
-                return;
+                break;
             case static::OPTION_SUNDAY:
                 $this->code = $this->productOptionsConfiguration->getDefaultSundayProductOption();
                 $this->type = static::SHIPMENT_TYPE_SUNDAY;
 
-                return;
+                break;
             case static::OPTION_EXTRAATHOME:
                 $this->code = $this->productOptionsConfiguration->getDefaultExtraAtHomeProductOption();
                 $this->type = static::SHIPMENT_TYPE_EXTRAATHOME;
 
-                return;
-            case static::OPTION_LETTERBOX_PACKAGE;
+                break;
+            case static::OPTION_LETTERBOX_PACKAGE:
                 $this->code = $this->productOptionsConfiguration->getDefaultLetterboxPackageProductOption();
                 $this->type = static::SHIPMENT_TYPE_LETTERBOX_PACKAGE;
 
-                return;
+                break;
         }
 
         $this->setDefaultProductOption($country);
+
+        return;
     }
 
     /**

@@ -119,8 +119,6 @@ class ParcelType implements ContractInterface
      */
     private function isLetterboxPackage($line)
     {
-        $options = ['letterbox_package'];
-
-        return in_array($line, $options);
+        return in_array($line, ['letterbox_package']);
     }
 }
