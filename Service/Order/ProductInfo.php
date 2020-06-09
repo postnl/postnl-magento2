@@ -312,7 +312,7 @@ class ProductInfo
 
                 return;
             case static::OPTION_LETTERBOX_PACKAGE;
-                $this->code = $this->productOptions->getLetterBoxOptions()[0]['value'];
+                $this->code = $this->productOptionsConfiguration->getDefaultLetterboxPackageProductOption();
                 $this->type = static::SHIPMENT_TYPE_LETTERBOX_PACKAGE;
 
                 return;
