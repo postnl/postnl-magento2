@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -19,7 +18,7 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
+ * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
@@ -29,21 +28,16 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="1.9.4">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Directory"/>
-            <module name="Magento_Backend"/>
-            <module name="Magento_Catalog"/>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Quote"/>
-            <module name="Magento_Checkout"/>
-            <module name="Magento_Store"/>
-            <module name="Magento_Ui"/>
-            <module name="Magento_Config"/>
-        </sequence>
-    </module>
-</config>
+ */
+namespace TIG\PostNL\Config\Provider;
+
+class LetterBoxPackageConfiguration extends AbstractConfigProvider
+{
+    const XPATH_CALCULATION_MODE = 'tig_postnl/letterbox_package/letterbox_package_calculation_mode';
+
+
+    public function getLetterBoxPackageCalculationMode($storeId = null)
+    {
+        return $this->getConfigFromXpath(static::XPATH_CALCULATION_MODE, $storeId);
+    }
+}
