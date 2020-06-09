@@ -68,11 +68,6 @@ class Timeframes extends AbstractDeliveryOptions
     private $isDeliveryDaysActive;
 
     /**
-     * @var QuoteHasDeliveryDaysDisabled
-     */
-    private $quoteHasDeliveryDaysDisabled;
-
-    /**
      * @var LetterboxPackage
      */
     private $letterboxPackage;
@@ -88,7 +83,6 @@ class Timeframes extends AbstractDeliveryOptions
      * @param Calculator                   $calculator
      * @param IsDeliverDaysActive          $isDeliverDaysActive
      * @param ShippingDuration             $shippingDuration
-     * @param QuoteHasDeliveryDaysDisabled $quoteHasDeliveryDaysDisabled
      * @param LetterboxPackage             $letterboxPackage
      */
     public function __construct(
@@ -102,14 +96,12 @@ class Timeframes extends AbstractDeliveryOptions
         Calculator $calculator,
         IsDeliverDaysActive $isDeliverDaysActive,
         ShippingDuration $shippingDuration,
-        QuoteHasDeliveryDaysDisabled $quoteHasDeliveryDaysDisabled,
         LetterboxPackage $letterboxPackage
     ) {
         $this->addressEnhancer              = $addressEnhancer;
         $this->timeFrameEndpoint            = $timeFrame;
         $this->calculator                   = $calculator;
         $this->isDeliveryDaysActive         = $isDeliverDaysActive;
-        $this->quoteHasDeliveryDaysDisabled = $quoteHasDeliveryDaysDisabled;
         $this->letterboxPackage             = $letterboxPackage;
 
         parent::__construct(
