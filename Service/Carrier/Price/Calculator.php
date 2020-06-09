@@ -35,10 +35,12 @@ namespace TIG\PostNL\Service\Carrier\Price;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
 use TIG\PostNL\Config\Source\Carrier\RateType;
+use TIG\PostNL\Service\Shipping\LetterboxPackage;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 
+// @codingStandardsIgnoreFile
 class Calculator
 {
     /**
@@ -72,6 +74,11 @@ class Calculator
     private $parcelTypeFinder;
 
     /**
+     * @var LetterboxPackage
+     */
+    private $letterboxPackage;
+
+    /**
      * Calculator constructor.
      *
      * @param ScopeConfigInterface $scopeConfig
@@ -79,19 +86,22 @@ class Calculator
      * @param Matrixrate           $matrixratePrice
      * @param Tablerate            $tablerateShippingPrice
      * @param ParcelTypeFinder     $parcelTypeFinder
+     * @param LetterboxPackage    $letterboxPackage
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         GetFreeBoxes $getFreeBoxes,
         Matrixrate $matrixratePrice,
         Tablerate $tablerateShippingPrice,
-        ParcelTypeFinder $parcelTypeFinder
+        ParcelTypeFinder $parcelTypeFinder,
+        LetterboxPackage $letterboxPackage
     ) {
         $this->scopeConfig            = $scopeConfig;
         $this->getFreeBoxes           = $getFreeBoxes;
         $this->matrixratePrice        = $matrixratePrice;
         $this->tablerateShippingPrice = $tablerateShippingPrice;
         $this->parcelTypeFinder       = $parcelTypeFinder;
+        $this->letterboxPackage       = $letterboxPackage;
     }
 
     /**
@@ -106,6 +116,7 @@ class Calculator
     {
         $this->store = $store;
         $price       = $this->getConfigData('price');
+        $items       = $request->getAllItems();
 
         if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
             return $this->priceResponse('0.00', '0.00');

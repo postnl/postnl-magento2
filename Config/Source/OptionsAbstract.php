@@ -670,14 +670,15 @@ abstract class OptionsAbstract
     ];
 
     protected $typeToComment = [
-        'Daytime'     => '',
-        'Evening'     => 'Evening',
-        'ExtraAtHome' => '',
-        'Extra@Home'  => '',
-        'Sunday'      => 'Sunday',
-        'PG'          => '',
-        'EPS'         => '',
-        'GP'          => '',
+        'Daytime'           => '',
+        'Evening'           => 'Evening',
+        'ExtraAtHome'       => '',
+        'Extra@Home'        => '',
+        'Sunday'            => 'Sunday',
+        'PG'                => '',
+        'EPS'               => '',
+        'GP'                => '',
+        'Letterbox Package' => '',
     ];
 
     /**

@@ -195,8 +195,8 @@
                 <item name="v1.9.1" xsi:type="array">
                     <item name="InstallDisableDeliveryDaysAttribute" xsi:type="object">TIG\PostNL\Setup\V191\Data\InstallDisableDeliveryDaysAttribute</item>
                 </item>
-                <item name="v1.9.2" xsi:type="array">
-                    <item name="InstallMaximumQuantityLetterboxPackage" xsi:type="object">TIG\PostNL\Setup\V192\Data\InstallMaximumQuantityLetterboxPackage</item>
+                <item name="v1.9.4" xsi:type="array">
+                    <item name="InstallMaximumQuantityLetterboxPackage" xsi:type="object">TIG\PostNL\Setup\V194\Data\InstallMaximumQuantityLetterboxPackage</item>
                 </item>
             </argument>
         </arguments>

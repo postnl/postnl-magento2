@@ -261,6 +261,15 @@ class ProductOptions extends AbstractConfigProvider
     {
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS);
     }
+
+    /**
+     * @return string
+     */
+    public function getDefaultLetterboxPackageProductOption()
+    {
+        $result = array_column($this->productOptions->getProductOptions(['group' => 'buspakje_options']), 'value');
+        return current($result);
+    }
 }
 /**
  * codingStandardsIgnoreEnd

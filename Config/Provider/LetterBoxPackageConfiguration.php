@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,15 +28,16 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Catalog:etc/catalog_attributes.xsd">
-    <group name="quote_item">
-        <attribute name="postnl_disable_delivery_days"/>
-        <attribute name="postnl_product_type"/>
-        <attribute name="postnl_parcel_count"/>
-        <attribute name="postnl_parcel_volume"/>
-        <attribute name="postnl_shipping_duration"/>
-        <attribute name="postnl_max_qty_letterbox"/>
-    </group>
-</config>
+ */
+namespace TIG\PostNL\Config\Provider;
+
+class LetterBoxPackageConfiguration extends AbstractConfigProvider
+{
+    const XPATH_CALCULATION_MODE = 'tig_postnl/letterbox_package/letterbox_package_calculation_mode';
+
+
+    public function getLetterBoxPackageCalculationMode($storeId = null)
+    {
+        return $this->getConfigFromXpath(static::XPATH_CALCULATION_MODE, $storeId);
+    }
+}

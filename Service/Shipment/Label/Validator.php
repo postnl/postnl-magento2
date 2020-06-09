@@ -132,6 +132,10 @@ class Validator
             return $this->validateGlobalPack($shipment);
         }
 
+        if ($shipment->isBuspakjeShipment()) {
+            $this->showLetterboxPackageNotice();
+        }
+
         return $this->validatePeps($shipment);
     }
 
@@ -177,5 +181,10 @@ class Validator
         }
 
         return true;
+    }
+
+    private function showLetterboxPackageNotice()
+    {
+        $this->messages['notices'][] = __('Please note, a letterbox package may not exceed 38 x 26.5 x 3.2 cm in size and 2 kg (4.4 lbs) in weight.');
     }
 }

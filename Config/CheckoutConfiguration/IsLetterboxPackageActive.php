@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -19,7 +18,7 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
@@ -29,15 +28,32 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Catalog:etc/catalog_attributes.xsd">
-    <group name="quote_item">
-        <attribute name="postnl_disable_delivery_days"/>
-        <attribute name="postnl_product_type"/>
-        <attribute name="postnl_parcel_count"/>
-        <attribute name="postnl_parcel_volume"/>
-        <attribute name="postnl_shipping_duration"/>
-        <attribute name="postnl_max_qty_letterbox"/>
-    </group>
-</config>
+ */
+namespace TIG\PostNL\Config\CheckoutConfiguration;
+
+use TIG\PostNL\Config\Provider\ShippingOptions;
+
+class IsLetterboxPackageActive implements CheckoutConfigurationInterface
+{
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
+
+    /**
+     * @param ShippingOptions      $shippingOptions
+     */
+    public function __construct(
+        ShippingOptions $shippingOptions
+    ) {
+        $this->shippingOptions = $shippingOptions;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return (int) $this->shippingOptions->isLetterboxPackageActive();
+    }
+}
