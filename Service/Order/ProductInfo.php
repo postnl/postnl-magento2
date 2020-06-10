@@ -310,11 +310,8 @@ class ProductInfo
                 $this->type = static::SHIPMENT_TYPE_LETTERBOX_PACKAGE;
 
                 break;
+            default: $this->setDefaultProductOption($country);
         }
-
-        $this->setDefaultProductOption($country);
-
-        return;
     }
 
     /**
