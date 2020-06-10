@@ -56,7 +56,6 @@ class ShipmentType extends AbstractGrid
      */
     private $letterboxPackage;
 
-
     /**
      * @param ContextInterface              $context
      * @param UiComponentFactory            $uiComponentFactory
@@ -101,7 +100,8 @@ class ShipmentType extends AbstractGrid
         }
 
         if ($this->letterboxPackage->isPossibleLetterboxPackage($order)) {
-            $output = 'Domestic<br><em style="font-size:9px;"  title="Standard shipment">Standard shipment (possible letterboxpackage)</em>';
+            $output = 'Domestic<br><em style="font-size:9px;"  
+                       title="Standard shipment">Standard shipment (possible letterboxpackage)</em>';
         }
 
         return $output;
