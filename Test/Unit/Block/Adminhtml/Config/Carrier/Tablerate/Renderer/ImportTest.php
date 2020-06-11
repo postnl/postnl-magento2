@@ -43,7 +43,7 @@ class ImportTest extends TestCase
         $conditionName = 'some_condition_name';
 
         $instance = $this->getInstance();
-        $instance->setTimeConditionName($conditionName);
+        $instance->updateTimeConditionName($conditionName);
 
         $result = $instance->getTimeConditionName();
         $this->assertEquals($conditionName, $result);
