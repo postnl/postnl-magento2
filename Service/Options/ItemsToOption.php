@@ -98,7 +98,7 @@ class ItemsToOption
     {
         foreach ($this->productTypes->getAllTypes() as $type) {
             $products = $this->productDictionary->get($items, [$type]);
-            $this->setCurrentType($products, $type);
+            $this->updateCurrentType($products, $type);
         }
 
         return $this->typeToOption[$this->currentType];
@@ -108,7 +108,7 @@ class ItemsToOption
      * @param $products
      * @param $type
      */
-    private function setCurrentType($products, $type)
+    private function updateCurrentType($products, $type)
     {
         if (empty($products)) {
             $type = $this->currentType;

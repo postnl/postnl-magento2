@@ -151,23 +151,23 @@ class Range
         $this->response['range'] = $this->accountConfiguration->getCustomerCode($this->storeId);
         switch ($type) {
             case 'NL':
-                $this->setNlSerie();
+                $this->updateNlSerie();
                 return;
             case 'EU':
-                $this->setEuSerie();
+                $this->updateEuSerie();
                 return;
             case 'GLOBAL':
-                $this->setGlobalPackOptions();
+                $this->updateGlobalPackOptions();
                 return;
             case 'PEPS':
-                $this->setPepsOptions();
+                $this->updatePepsOptions();
                 return;
         }
 
         $this->noBarcodeDataError($type);
     }
 
-    private function setNlSerie()
+    private function updateNlSerie()
     {
         $this->response['serie'] = static::NL_BARCODE_SERIE_LONG;
         if (strlen($this->response['range']) > 3) {
@@ -175,7 +175,7 @@ class Range
         }
     }
 
-    private function setEuSerie()
+    private function updateEuSerie()
     {
         $this->response['serie'] = static::EU_BARCODE_SERIE_LONG;
         if (strlen($this->response['range']) > 3) {
@@ -183,14 +183,14 @@ class Range
         }
     }
 
-    private function setGlobalPackOptions()
+    private function updateGlobalPackOptions()
     {
         $this->response['type']  = $this->globalpackConfiguration->getBarcodeType();
         $this->response['range'] = $this->globalpackConfiguration->getBarcodeRange();
         $this->response['serie'] = static::GLOBAL_BARCODE_SERIE;
     }
 
-    private function setPepsOptions()
+    private function updatePepsOptions()
     {
         $this->response['type']  = $this->pepsConfiguration->getBarcodeType();
         $this->response['range'] = $this->pepsConfiguration->getBarcodeRange();

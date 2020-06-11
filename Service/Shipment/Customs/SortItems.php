@@ -135,7 +135,7 @@ class SortItems
     {
         $filtered = [];
         foreach ($items as $item) {
-            $filtered = $this->setItemsArray($item, $filtered);
+            $filtered = $this->mergeItemsArray($item, $filtered);
         }
 
         $items = array_filter($filtered, function ($item) {
@@ -152,7 +152,7 @@ class SortItems
      *
      * @return array $filtered
      */
-    private function setItemsArray($item, $filtered)
+    private function mergeItemsArray($item, $filtered)
     {
         /** @var \Magento\Sales\Model\Order\Item $orderItem */
         $orderItem = $item->getOrderItem();

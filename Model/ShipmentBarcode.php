@@ -73,7 +73,7 @@ class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface
      *
      * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
      */
-    public function setParentId($value)
+    public function changeParentId($value)
     {
         return $this->setData(static::FIELD_PARENT_ID, $value);
     }
@@ -91,7 +91,7 @@ class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface
      *
      * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
      */
-    public function setType($value)
+    public function changeType($value)
     {
         return $this->setData(static::FIELD_TYPE, $value);
     }
@@ -109,7 +109,7 @@ class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface
      *
      * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
      */
-    public function setNumber($value)
+    public function changeNumber($value)
     {
         return $this->setData(static::FIELD_NUMBER, $value);
     }
@@ -127,7 +127,7 @@ class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface
      *
      * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
      */
-    public function setValue($value)
+    public function changeValue($value)
     {
         return $this->setData(static::FIELD_VALUE, $value);
     }

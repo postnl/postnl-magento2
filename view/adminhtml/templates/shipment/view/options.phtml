@@ -32,7 +32,7 @@
 
 /** @var $block TIG\PostNL\Block\Adminhtml\Shipment\Options\View */
 ?>
-<?php if ($block->getIsPostNLOrder()) : ?>
+<?php if ($block->getIsPostNLOrder()): ?>
 <!--@todo move style to less and add style to header trough xml-->
     <style>
         #postnl_shipping_options_selected {
@@ -72,33 +72,42 @@
         <div class="tig_postnl_delivery_info">
             <ul>
                 <li>
-                    <span class="type"><?php /* @escapeNotVerified */ echo __('Product option:'); ?></span>
+                    <span class="type"><?= $block->escapeHtml(__('Product option:')); ?></span>
                     <span class="value option">
-                        <?php echo $block->getProductOptionValue(); ?>
+                        <?= $block->escapeHtml($block->getProductOptionValue()); ?>
                     </span>
                 </li>
                 <li>
-                    <span class="type"><?php /* @escapeNotVerified */ echo __('Ship at:'); ?></span>
+                    <span class="type"><?= $block->escapeHtml(__('Ship at:')); ?></span>
                     <span class="value ship_at">
-                        <?php echo $postNLShipment->getShipAt(); ?>
+                        <?= $block->escapeHtml($postNLShipment->getShipAt()); ?>
                     </span>
                 </li>
                 <li>
-                    <span class="type"><?php /* @escapeNotVerified */ echo __('Parcel count:'); ?></span>
+                    <span class="type"><?= $block->escapeHtml(__('Parcel count:')); ?></span>
                     <span data-bind="visible: !editingParcelCount()">
                         <span class="value parcels">
                             <!-- ko text: parcelCount --><!-- /ko -->
                         </span>
                         <?php if ($block->canChangeParcelCount()): ?>
-                        <button class="btn btn-default" data-bind="click: setEditingParcelCount(true)"><?php echo __('Edit'); ?></button>
+                        <button
+                            class="btn btn-default"
+                            data-bind="click: setEditingParcelCount(true)"
+                        ><?= $block->escapeHtml(__('Edit')); ?></button>
                         <?php endif; ?>
                     </span>
                     <span data-bind="visible: editingParcelCount">
                         <span class="value parcels">
                             <input type="text" data-bind="value: newParcelCount" class="input-text admin__control-text">
 
-                            <button class="btn btn-default primary" data-bind="click: saveParcelCount"><?php echo __('Save'); ?></button>
-                            <button class="btn btn-default" data-bind="click: setEditingParcelCount(false)"><?php echo __('Cancel'); ?></button>
+                            <button
+                                class="btn btn-default primary"
+                                data-bind="click: saveParcelCount"
+                            ><?= $block->escapeHtml(__('Save')); ?></button>
+                            <button
+                                class="btn btn-default"
+                                data-bind="click: setEditingParcelCount(false)"
+                            ><?= $block->escapeHtml(__('Cancel')); ?></button>
                         </span>
                     </span>
                 </li>
@@ -124,9 +133,9 @@
                 "components": {
                     "PostNLSelectedOptions": {
                         "component": "TIG_PostNL/js/shipment/view/options",
-                        "parcelCount": "<?php echo $postNLShipment->getParcelCount(); ?>",
-                        "shipmentId": "<?php echo $postNLShipment->getId(); ?>",
-                        "saveUrl": "<?php echo $block->getUrl('postnl/shipment/SaveMulticolli'); ?>"
+                        "parcelCount": "<?= $block->escapeHtml($postNLShipment->getParcelCount()); ?>",
+                        "shipmentId": "<?= $block->escapeHtml($postNLShipment->getId()); ?>",
+                        "saveUrl": "<?= $block->escapeHtml($block->getUrl('postnl/shipment/SaveMulticolli')); ?>"
                     }
                 }
             }

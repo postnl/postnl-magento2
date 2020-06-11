@@ -143,14 +143,14 @@ class ExceptionHandler
         $this->exception = new Api\Exception($this->soapFault->getMessage(), null, $this->soapFault);
 
         if ($lastRequestXml = $client->getLastRequest()) {
-            $this->exception->setRequestXml($this->helper->formatXml($lastRequestXml));
+            $this->exception->changeRequestXml($this->helper->formatXml($lastRequestXml));
         }
 
         if ($lastResponseXml = $client->getLastResponse()) {
             // @codingStandardsIgnoreLine
             $this->responseXml = new \DOMDocument;
             $this->responseXml->loadXML($lastResponseXml);
-            $this->exception->setResponseXml($this->helper->formatXml($lastResponseXml));
+            $this->exception->changeResponseXml($this->helper->formatXml($lastResponseXml));
         }
     }
 

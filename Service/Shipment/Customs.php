@@ -96,15 +96,15 @@ class Customs
     {
         $this->shipment = $postnlShipment->getShipment();
 
-        $this->setCustomsLicense();
-        $this->setCustomsCertificate();
-        $this->setShipmentType();
-        $this->setContentInformation();
+        $this->insertCustomsLicense();
+        $this->insertCustomsCertificate();
+        $this->insertShipmentType();
+        $this->insertContentInformation();
 
         return $this->customs;
     }
 
-    private function setCustomsCertificate()
+    private function insertCustomsCertificate()
     {
         $certificate = $this->globalpackConfig->getCertificateNumber($this->shipment->getStoreId());
         if ($certificate) {
@@ -113,7 +113,7 @@ class Customs
         }
     }
 
-    private function setCustomsLicense()
+    private function insertCustomsLicense()
     {
         $license = $this->globalpackConfig->getLicenseNumber($this->shipment->getStoreId());
         if ($license) {
@@ -122,7 +122,7 @@ class Customs
         }
     }
 
-    private function setShipmentType()
+    private function insertShipmentType()
     {
         $type = $this->globalpackConfig->getDefaultShipmentType($this->shipment->getStoreId());
         if ($type) {
@@ -138,7 +138,7 @@ class Customs
         }
     }
 
-    private function setContentInformation()
+    private function insertContentInformation()
     {
         $content = [];
         /** @var \Magento\Sales\Model\Order\Shipment\Item $item */

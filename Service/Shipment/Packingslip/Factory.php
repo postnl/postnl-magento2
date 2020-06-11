@@ -40,8 +40,6 @@ use Zend_Pdf_Exception;
  * Class Factory
  *
  * This is needed so we can check if Fooman PdfCustomiser is installed or not.
- *
- * @package TIG\PostNL\Service\Shipment\Packingslip
  */
 class Factory
 {
@@ -111,7 +109,7 @@ class Factory
 
         $renderer = $this->magentoPdf->getPdf([$magentoShipment]);
         // @codingStandardsIgnoreLine
-        $this->setY($this->magentoPdf->y);
+        $this->changeY($this->magentoPdf->y);
         return $renderer->render();
     }
 
@@ -126,7 +124,7 @@ class Factory
     /**
      * @param $coordinate
      */
-    public function setY($coordinate)
+    public function changeY($coordinate)
     {
         $this->yCoordinate = $coordinate;
     }

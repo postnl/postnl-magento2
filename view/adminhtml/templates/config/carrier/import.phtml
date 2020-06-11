@@ -33,8 +33,8 @@
 
 <input id="time_condition"
        type="hidden"
-       name="<?php echo $block->getTimeConditionName() ?>"
-       value="<?php echo time() ?>"/>
+       name="<?php $block->escapeHtml($block->getTimeConditionName()); ?>"
+       value="<?= $block->escapeHtml(time()); ?>"/>
 
 <script>
     require(['prototype'], function(){

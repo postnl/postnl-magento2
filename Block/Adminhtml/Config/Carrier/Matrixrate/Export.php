@@ -72,7 +72,7 @@ class Export extends AbstractElement
         $layout = $form->getLayout();
 
         /** @var \Magento\Backend\Block\Widget\Button $buttonBlock  */
-        $buttonBlock = $layout->createBlock('Magento\Backend\Block\Widget\Button');
+        $buttonBlock = $layout->createBlock(\Magento\Backend\Block\Widget\Button::class);
         $buttonBlockRequest = $buttonBlock->getRequest();
 
         $params = ['website' => $buttonBlockRequest->getParam('website')];

@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Service\Wrapper;
 
-use Magento\Checkout\Model\Session\Proxy as MagentoCheckoutSession;
+use Magento\Checkout\Model\Session as MagentoCheckoutSession;
 
 class CheckoutSession implements CheckoutSessionInterface
 {
@@ -73,6 +73,7 @@ class CheckoutSession implements CheckoutSessionInterface
      *
      * @return mixed
      */
+    // @codingStandardsIgnoreLine
     public function setData($key, $value)
     {
         /** @noinspection PhpUndefinedMethodInspection */

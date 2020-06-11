@@ -268,7 +268,7 @@ interface ShipmentInterface
      * @param string $value
      * @return \TIG\PostNL\Api\Data\ShipmentInterface
      */
-    public function setCreatedAt($value);
+    public function changeCreatedAt($value);
 
     /**
      * @return string|null
@@ -279,7 +279,7 @@ interface ShipmentInterface
      * @param string $value
      * @return \TIG\PostNL\Api\Data\ShipmentInterface
      */
-    public function setUpdatedAt($value);
+    public function changeUpdatedAt($value);
 
     /**
      * @return string|null

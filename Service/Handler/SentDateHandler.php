@@ -83,7 +83,7 @@ class SentDateHandler
             return null;
         }
 
-        $this->sentDate->setParameters($shipment->getShippingAddress(), $shipment->getStoreId(), $postnlOrder);
+        $this->sentDate->updateParameters($shipment->getShippingAddress(), $shipment->getStoreId(), $postnlOrder);
 
         try {
             return $this->sentDate->call();

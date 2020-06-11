@@ -74,7 +74,7 @@ class ShipAt
         }
 
         $storeId = $this->quote->getStoreId();
-        $this->sentDate->setParameters($address, $storeId, $order);
+        $this->sentDate->updateParameters($address, $storeId, $order);
 
         try {
             $sentDate = $this->sentDate->call();

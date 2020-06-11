@@ -325,7 +325,7 @@ Percent,Percentage
 "No labels were created. If you're trying to generate Global Pack shipments, set your Label Size to A4. Please check your Label Size settings.","Er zijn geen labels gegenereerd. Indien u Global Pack zendingen probeert aan te maken, zet dan de printer label instellingen op A4 formaat. Controleer de label formaat configuratie."
 "Not all labels were created. Please check your Label Size settings. Labels are not generated for the following Shipment(s): %1","Niet alle labels zijn gegenereerd. Controlleer uw label formaat instellingen. Labels voor de volgende zending(en) zijn niet gegenereerd: %1"
 "Some label types, like Global Pack or Combi EPS, can only be printed in A4 format.","Sommige labeltypes, zoals Global Pack of Combi EPS, kunnen alleen in A4-formaat worden afgedrukt."
-"The PostNL extension is compatible with the software mentoined below. The use of other software and extensions is at your own risk and is not supported by PostNL.","De PostNL-plugin is compatibel met de onderstaande software. Gebruik van andere software en extensies is op eigen risico en wordt niet ondersteund door PostNL."
+"The PostNL extension is compatible with the software mentioned below. The use of other software and extensions is at your own risk and is not supported by PostNL.","De PostNL-plugin is compatibel met de onderstaande software. Gebruik van andere software en extensies is op eigen risico en wordt niet ondersteund door PostNL."
 "Barcode settings","Barcode-instellingen"
 "Value for barcode","Waarde voor barcode"
 "Position of the barcode","Positie van de barcode"

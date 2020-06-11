@@ -51,5 +51,6 @@ interface CheckoutSessionInterface
      *
      * @return mixed
      */
+    // @codingStandardsIgnoreLine
     public function setData($key, $value);
 }
