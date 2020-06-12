@@ -42,6 +42,7 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE       = 'tig_postnl/delivery_days/deliverydays_active';
     const XPATH_SHIPPING_OPTION_MAX_DELIVERYDAYS          = 'tig_postnl/delivery_days/max_deliverydays';
     const XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE         = 'tig_postnl/post_offices/pakjegemak_active';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_BE_ACTIVE      = 'tig_postnl/post_offices/pakjegemak_be_active';
     const XPATH_SHIPPING_OPTION_EVENING_ACTIVE            = 'tig_postnl/evening_delivery_nl/eveningdelivery_active';
     const XPATH_SHIPPING_OPTION_EVENING_BE_ACTIVE         = 'tig_postnl/evening_delivery_be/eveningdelivery_be_active';
     const XPATH_SHIPPING_OPTION_EVENING_FEE               = 'tig_postnl/evening_delivery_nl/eveningdelivery_fee';
@@ -108,10 +109,14 @@ class ShippingOptions extends AbstractConfigProvider
     }
 
     /**
+     * @param string $country
      * @return mixed
      */
-    public function isPakjegemakActive()
+    public function isPakjegemakActive($country = 'NL')
     {
+        if ('BE' === $country){
+            return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_BE_ACTIVE);
+        }
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE);
     }
 
