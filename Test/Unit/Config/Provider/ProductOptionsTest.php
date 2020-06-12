@@ -224,11 +224,12 @@ class ProductOptionsTest extends AbstractConfigurationTest
 
     public function testGetDefaultLetterBoxPackageProductOption()
     {
-        $value = '2928';
+        $value                    = '2928';
         $optionsConfigurationMock = $this->getFakeMock(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
         $optionsConfigurationMock->setMethods(null);
         $instance = $this->getInstance(['productOptions' => $optionsConfigurationMock->getMock()]);
         $this->assertEquals($value, $instance->getDefaultLetterboxPackageProductOption());
+    }
 
     /**
      * @dataProvider pakjegemakOptionsProvider
