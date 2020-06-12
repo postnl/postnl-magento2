@@ -138,7 +138,7 @@ class ProductInfo
 
         if ($type == static::TYPE_PICKUP) {
 
-        $this->setPakjegemakProductOption($option);
+            $this->setPakjegemakProductOption($option, $country);
 
             return $this->getInfo();
         }
@@ -260,8 +260,9 @@ class ProductInfo
 
     /**
      * @param string $option
+     * @param null $country
      */
-    private function setPakjegemakProductOption($option)
+    private function setPakjegemakProductOption($option, $country = 'NL')
     {
         if ($option == static::OPTION_PGE) {
             $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakEarlyProductOption();
@@ -270,8 +271,15 @@ class ProductInfo
             return;
         }
 
-        $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
         $this->type = static::SHIPMENT_TYPE_PG;
+
+        if ($country === 'BE') {
+            $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakBeProductOption();
+
+            return;
+        }
+
+        $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
     }
 
     /**

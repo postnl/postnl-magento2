@@ -63,6 +63,26 @@
             </depends>
         </field>
 
+        <field id="pakjegemak_be_active" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Activate post office locations Belgium</label>
+            <comment><![CDATA[Whether or not customers may choose to have their order delivered to a nearby post office in Belgium.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/post_offices/pakjegemak_be_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+        </field>
+
+        <field id="default_pakjegemak_be_option" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Post office delivery Belgium</label>
+            <comment><![CDATA[Select the default product option for postoffice delivery shipments in Belgium.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakBeOptions</source_model>
+            <config_path>tig_postnl/post_offices/default_pakjegemak_be_option</config_path>
+            <depends>
+                <field id="pakjegemak_be_active">1</field>
+            </depends>
+        </field>
+
     </group>
 
 </include>
