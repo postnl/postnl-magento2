@@ -1,0 +1,111 @@
+<?php
+/**
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to support@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact support@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
+?>
+<script type="text/javascript">
+    require(['jquery', 'TIG_PostNL/js/Helper/Logger'], function($, Logger){
+        var request = null;
+
+        var postcodeSearch = function() {
+            if (self.request !== undefined) {
+                self.request.abort('avoidMulticall');
+            }
+
+            var housenumber = housenumberInput.val();
+            var zipcode = $('.field.zip .control #zip').val();
+
+            self.request = $.ajax({
+                method:'GET',
+                url: '<?php echo $block->getPostcodeUrl();?>',
+                data: {
+                    housenumber : housenumber,
+                    postcode   : zipcode
+                }
+            }).done(function (data) {
+                var errorMessage = $.mage.__('Unexpected error occurred. Please fill in the address details manually.');
+
+                if (data.status === false) {
+                    errorMessage = $.mage.__('Sorry, we could not find your address with the zipcode and housenumber combination. If you are sure that the zipcode and housenumber are correct, please fill in the address details manually.');
+                }
+
+                if (data.streetName && data.city) {
+                    $('.field.street').find('.control input').first().val(data.streetName);
+                    $('.field.city').find('.control input').val(data.city);
+
+                    errorMessage = null;
+                }
+
+                handleError(errorMessage);
+            }).fail(function (data) {
+                Logger.error(data);
+
+                if (data.statusText !== 'avoidMulticall') {
+                    var errorMessage = $.mage.__('Unexpected error occurred. Please fill in the address details manually.');
+                    handleError(errorMessage);
+                }
+            }).always(function (data) {
+                Logger.info(data);
+            });
+        }.bind(request);
+
+        var handleError = function(errorMessage) {
+            var error = $('.tig-postnl-validation-message');
+            error.hide();
+
+            if (errorMessage) {
+                error.html(errorMessage).show();
+            }
+        };
+
+
+        $('.field.country').insertBefore('.field.street');
+
+        $('.field.zip').insertBefore('.field.street');
+        var housenumberElement = $('.field.zip').clone();
+        housenumberElement.removeClass('zip').addClass('postnl-housenumber');
+        housenumberElement.find('label').attr('for', 'postnl-housenumber');
+        housenumberElement.find('label span').text('<?php echo __('House number'); ?>');
+
+        var housenumberInput = housenumberElement.find('.control input');
+        housenumberInput.attr('title', '<?php echo __('House number'); ?>');
+        housenumberInput.attr('name', '<?php echo __('House number'); ?>');
+        housenumberInput.attr('id', 'postnl-housenumber');
+        housenumberInput.removeClass('validate-zip-international').addClass('validate-number');
+
+        housenumberInput.keyup(postcodeSearch);
+        $('.field.zip .control').keyup(postcodeSearch);
+
+        housenumberElement.insertAfter('.field.zip');
+
+        var validationMessage = '<div class="tig-postnl-validation-message"></div>';
+        $(validationMessage).insertAfter('.field.postnl-housenumber');
+    });
+</script>
