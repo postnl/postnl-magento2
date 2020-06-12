@@ -111,7 +111,7 @@ class ShippingOptions extends AbstractConfigProvider
      * @param string $country
      * @return mixed
      */
-    public function isPakjegemakActive($country = null)
+    public function isPakjegemakActive($country = 'NL')
     {
         if ('BE' === $country){
             return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_BE_ACTIVE);

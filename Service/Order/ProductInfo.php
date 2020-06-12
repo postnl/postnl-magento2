@@ -262,7 +262,7 @@ class ProductInfo
      * @param string $option
      * @param null $country
      */
-    private function setPakjegemakProductOption($option, $country = null)
+    private function setPakjegemakProductOption($option, $country = 'NL')
     {
         if ($option == static::OPTION_PGE) {
             $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakEarlyProductOption();
