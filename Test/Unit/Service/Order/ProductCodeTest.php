@@ -51,6 +51,7 @@ class ProductCodeTest extends TestCase
     const PRODUCT_OPTION_PAKJEGEMAK = 'pakjegemak_product_option';
     const PRODUCT_OPTION_PAKJEGEMAK_BE = 'pakjegemak_be_product_option';
     const PRODUCT_OPTION_SUNDAY = 'sunday_product_option';
+    const PRODUCT_OPTION_LETTERBOX_PACKAGE = '2928';
 
     /**
      * @var ProductOptions|\PHPUnit_Framework_MockObject_MockObject
@@ -77,6 +78,7 @@ class ProductCodeTest extends TestCase
         $this->addProductOptionsMockFunction('getDefaultEveningProductOption', static::PRODUCT_OPTION_EVENING);
         $this->addProductOptionsMockFunction('getDefaultExtraAtHomeProductOption', static::PRODUCT_OPTION_EXTRAATHOME);
         $this->addProductOptionsMockFunction('getDefaultPakjeGemakProductOption', static::PRODUCT_OPTION_PAKJEGEMAK);
+        $this->addProductOptionsMockFunction('getDefaultLetterBoxPackageProductOption', static::PRODUCT_OPTION_LETTERBOX_PACKAGE);
         $this->addProductOptionsMockFunction('getDefaultPakjeGemakBeProductOption', static::PRODUCT_OPTION_PAKJEGEMAK_BE);
         $this->addProductOptionsMockFunction('getDefaultSundayProductOption', static::PRODUCT_OPTION_SUNDAY);
         $this->addProductOptionsMockFunction(
@@ -118,6 +120,7 @@ class ProductCodeTest extends TestCase
             'sunday' => ['delivery', 'sunday', 'NL', static::PRODUCT_OPTION_SUNDAY, 'Sunday'],
             'default pg' => ['pickup', 'default', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
             'pakjegemak' => ['pickup', '', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
+            'letterbox package' => ['delivery', 'letterbox_package', 'NL', static::PRODUCT_OPTION_LETTERBOX_PACKAGE, 'Letterbox Package']
             'pakjegemak_be' => ['pickup', '', 'BE', static::PRODUCT_OPTION_PAKJEGEMAK_BE, 'PG']
         ];
     }
@@ -130,6 +133,7 @@ class ProductCodeTest extends TestCase
      * @param $expectedType
      *
      * @dataProvider getShippingOptionProvider
+     * @throws \Exception
      */
     public function testGetShippingOption($type, $option, $country, $expectedCode, $expectedType)
     {
