@@ -103,6 +103,11 @@ class LetterboxPackage
 
     /**
      * @param $product
+     *
+     * Based on the product attribute postnl_max_qty_letterbox, a percentage
+     * is calculated for each product. If, for example, the attribute is set
+     * to 4, each product will weight 25%. If the products in the cart
+     * have a total weight of over 100%, the order will not fit as a letterbox.
      */
     public function fitsLetterboxPackage($product)
     {
