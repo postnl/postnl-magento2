@@ -204,14 +204,14 @@ define(
 
                     if (result && this.isFormInline) {
                         invalidElement = _.find(shippingRegistry.addressComponents, function (module) {
-                            return ko.isObservable(module.required)
-                                && ko.isObservable(module.value)
-                                && ko.isObservable(module.visible)
-                                && ko.isObservable(module.disabled)
-                                && module.required.peek()
-                                && module.visible.peek()
-                                && !module.disabled.peek()
-                                && _.isEmpty(module.value.peek());
+                            return ko.isObservable(module.required) &&
+                                ko.isObservable(module.value) &&
+                                ko.isObservable(module.visible) &&
+                                ko.isObservable(module.disabled) &&
+                                module.required.peek() &&
+                                module.visible.peek() &&
+                                !module.disabled.peek() &&
+                                _.isEmpty(module.value.peek());
                         });
 
                         result = _.isUndefined(invalidElement);
@@ -296,8 +296,8 @@ define(
                     if (this.isFormInline) {
                         versionBeforeChange = shippingService.isLoading.getVersion();
 
-                        if ((this.validateShippingInformation() || !this.source.get('params.invalid'))
-                            && shippingService.isLoading.hasChanged(versionBeforeChange)
+                        if ((this.validateShippingInformation() || !this.source.get('params.invalid')) &&
+                            shippingService.isLoading.hasChanged(versionBeforeChange)
                         ) {
                             return;
                         }
