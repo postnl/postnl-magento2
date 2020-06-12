@@ -100,7 +100,7 @@ class ShipmentType extends AbstractGrid
         }
 
         if ($this->letterboxPackage->isPossibleLetterboxPackage($order)) {
-            $output = 'Domestic<br><em style="font-size:9px;"  
+            $output = 'Domestic<br><em class="possible-letterbox"  
                        title="Standard shipment">Standard shipment (possible letterboxpackage)</em>';
         }
 
