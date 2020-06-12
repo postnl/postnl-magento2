@@ -120,7 +120,7 @@ class ProductCodeTest extends TestCase
             'sunday' => ['delivery', 'sunday', 'NL', static::PRODUCT_OPTION_SUNDAY, 'Sunday'],
             'default pg' => ['pickup', 'default', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
             'pakjegemak' => ['pickup', '', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
-            'letterbox package' => ['delivery', 'letterbox_package', 'NL', static::PRODUCT_OPTION_LETTERBOX_PACKAGE, 'Letterbox Package']
+            'letterbox package' => ['delivery', 'letterbox_package', 'NL', static::PRODUCT_OPTION_LETTERBOX_PACKAGE, 'Letterbox Package'],
             'pakjegemak_be' => ['pickup', '', 'BE', static::PRODUCT_OPTION_PAKJEGEMAK_BE, 'PG']
         ];
     }
