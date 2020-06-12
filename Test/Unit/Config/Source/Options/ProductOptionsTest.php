@@ -41,6 +41,7 @@ class ProductOptionsTest extends TestCase
     protected $groups = [
         'standard_options'              => 'Domestic options',
         'pakjegemak_options'            => 'Post Office options',
+        'pakjegemak_be_options'         => 'Post Office Belgium options',
         'eu_options'                    => 'EU options',
         'global_options'                => 'Global options',
         'buspakje_options'              => 'Letter Box Parcel options',
@@ -111,6 +112,7 @@ class ProductOptionsTest extends TestCase
         return [
             [$this->groups, ['Domestic options',
                              'Post Office options',
+                             'Post Office Belgium options',
                              'EU options',
                              'Global options',
                              'Letter Box Parcel options',

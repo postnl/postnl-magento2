@@ -118,7 +118,7 @@ define([
             State.currentSelectedShipmentType('delivery');
 
             var fee = null;
-            if (!value.fallback) {
+            if (!value.fallback || !value.letterbox_package) {
                 if (value.hasFee()) {
                     fee = value.getFee();
                 }
@@ -180,6 +180,16 @@ define([
                     State.currentOpenPane('delivery');
                     return;
                 }
+                
+                if (typeof data.timeframes[0][0] !== 'undefined' && "letterbox_package" in data.timeframes[0][0]) {
+                    data  = ko.utils.arrayMap(data.timeframes, function (letterbox_package) {
+                        return letterbox_package;
+                    });
+                    this.deliverydays(data);
+                    State.currentOpenPane('delivery');
+                    return;
+                }
+             
 
                 data = ko.utils.arrayMap(data.timeframes, function (day) {
                     return ko.utils.arrayMap(day, function (timeFrame) {
