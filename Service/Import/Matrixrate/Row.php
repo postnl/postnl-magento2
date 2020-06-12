@@ -41,6 +41,7 @@ class Row
         'regular',
         'pakjegemak',
         'extra@home',
+        'letterbox_package',
     ];
 
     /**

@@ -81,7 +81,7 @@ define([
                     return;
                 }
 
-                if (address.country !== 'NL') {
+                if (address.country !== 'NL' && address.country !== 'BE') {
                     return;
                 }
 
