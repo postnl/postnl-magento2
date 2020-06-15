@@ -178,13 +178,13 @@ abstract class AbstractTracking extends AbstractHelper
         $storeLocale = $this->scopeConfig->getValue('general/locale/code', $store->getCode(), $store->getStoreId());
         $language = substr($storeLocale, 3, 2);
         $params = [
-            'B=' . $trackingNumber,
-            'D=' . $address->getCountryId(),
-            'P=' . str_replace(' ', '', $address->getPostcode()),
-            'T=' . $type,
-            'L=' . $language
+            'B' => $trackingNumber,
+            'D' => $address->getCountryId(),
+            'P' => str_replace(' ', '', $address->getPostcode()),
+            'T' => $type,
+            'L' => $language
         ];
 
-        return $this->webshopConfig->getTrackAndTraceServiceUrl() . implode('&', $params);
+        return $this->webshopConfig->getTrackAndTraceServiceUrl() . http_build_query($params);
     }
 }
