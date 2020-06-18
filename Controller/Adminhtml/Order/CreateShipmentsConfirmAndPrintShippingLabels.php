@@ -184,7 +184,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         try {
             $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
             $this->setTracks($shipment);
-            $this->setLabel($shipment);
+            $this->setLabel($shipment->getId());
         } catch (LocalizedException $exception) {
             $this->messageManager->addErrorMessage(
                 __('[POSTNL-0070] - Unable to generate barcode for shipment #%1', $shipment->getIncrementId())

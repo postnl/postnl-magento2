@@ -117,13 +117,12 @@ abstract class LabelAbstract extends Action
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     //@codingStandardsIgnoreLine
-    protected function setLabel($shipment)
+    protected function setLabel($shipmentId)
     {
-        $shipmentId = $shipment->getId();
         $labels     = $this->getLabels->get($shipmentId);
 
         if (empty($labels)) {
-            return $this->messageManager->addErrorMessage(__('[POSTNL-0070] - Unable to generate barcode for shipment #%1.', $shipment->getIncrementId()));
+            return $this->messageManager->addErrorMessage(__('[POSTNL-0070] - Unable to generate barcode for shipment #%1.', $shipmentId()));
         }
 
         $this->labels = array_merge($this->labels, $labels);
