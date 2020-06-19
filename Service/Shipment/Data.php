@@ -121,7 +121,7 @@ class Data
     {
         $deliveryDate = $shipment->getDeliveryDate();
         if (!$deliveryDate) {
-            $deliveryDate = date('d-m-Y', strtotime($shipment->getPostNLOrder()->getDeliveryDate()));
+            $deliveryDate = $this->getDeliveryDateFromPostNLOrder($shipment);
         }
 
         if (!$deliveryDate) {
@@ -148,6 +148,21 @@ class Data
             'ReturnBarcode'            => $shipment->getReturnBarcodes($currentShipmentNumber),
             'Reference'                => $this->labelAndPackingslipOptions->getReference($shipment->getShipment())
         ];
+    }
+
+    /**
+     * @param $shipment
+     *
+     * @return bool|false|string
+     */
+    private function getDeliveryDateFromPostNLOrder($shipment)
+    {
+        $deliveryDate = $shipment->getPostNLOrder()->getDeliveryDate();
+        if ($deliveryDate) {
+            return date('d-m-Y', strtotime($deliveryDate));
+        }
+
+        return false;
     }
 
     /**
