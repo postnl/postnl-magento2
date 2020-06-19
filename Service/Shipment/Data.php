@@ -120,7 +120,11 @@ class Data
     private function getDefaultShipmentData(ShipmentInterface $shipment, $address, $contact, $currentShipmentNumber)
     {
         $deliveryDate = $shipment->getDeliveryDate();
-        if (!$shipment->getDeliveryDate()) {
+        if (!$deliveryDate) {
+            $deliveryDate = date('d-m-Y', strtotime($shipment->getPostNLOrder()->getDeliveryDate()));
+        }
+
+        if (!$deliveryDate) {
             $deliveryDate = $this->deliveryDateFallback->get();
         }
 
