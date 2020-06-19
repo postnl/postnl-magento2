@@ -41,8 +41,8 @@ define([
             }
         );
 
-        var monitorInterval = window.setInterval(function() {
-            if(document.hasFocus()) {
+        var monitorInterval = window.setInterval(function () {
+            if (document.hasFocus()) {
                 window.location.reload()
                 window.clearInterval(monitorInterval)
             }
