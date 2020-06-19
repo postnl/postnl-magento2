@@ -32,7 +32,7 @@
 namespace TIG\PostNL\Service\Shipping;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Config\Provider\LetterBoxPackageConfiguration;
 
@@ -55,25 +55,25 @@ class LetterboxPackage
     private $letterBoxPackageConfiguration;
 
     /**
-     * @var CartRepositoryInterface
+     * @var OrderRepositoryInterface
      */
-    private $cartRepository;
+    private $orderRepository;
 
     /**
      * LetterboxPackage constructor.
      *
      * @param ScopeConfigInterface          $scopeConfig
      * @param LetterBoxPackageConfiguration $letterBoxPackageConfiguration
-     * @param CartRepositoryInterface       $cartRepository
+     * @param OrderRepositoryInterface      $orderRepository
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         LetterBoxPackageConfiguration $letterBoxPackageConfiguration,
-        CartRepositoryInterface $cartRepository
+        OrderRepositoryInterface $orderRepository
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->letterBoxPackageConfiguration = $letterBoxPackageConfiguration;
-        $this->cartRepository = $cartRepository;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -102,32 +102,32 @@ class LetterboxPackage
     }
 
     /**
-     * @param $product
+     * @param $orderItem
      *
      * Based on the product attribute postnl_max_qty_letterbox, a percentage
      * is calculated for each product. If, for example, the attribute is set
      * to 4, each product will weight 25%. If the products in the cart
      * have a total weight of over 100%, the order will not fit as a letterbox.
      */
-    public function fitsLetterboxPackage($product)
+    public function fitsLetterboxPackage($orderItem)
     {
-        $maximumQtyLetterbox = floatval($product->getProduct()->getPostnlMaxQtyLetterbox());
+        $maximumQtyLetterbox = floatval($orderItem->getProduct()->getPostnlMaxQtyLetterbox());
 
         if ($maximumQtyLetterbox === 0.0) {
             $this->result = false;
             return;
         }
 
-        $orderedQty = $product->getQty();
+        $orderedQty = $orderItem->getQty();
         $this->totalVolume += 1 / $maximumQtyLetterbox * $orderedQty;
-        $this->getTotalWeight($product, $orderedQty);
+        $this->getTotalWeight($orderItem, $orderedQty);
     }
 
     /**
-     * @param $product
+     * @param $orderItem
      * @param $orderedQty
      */
-    public function getTotalWeight($product, $orderedQty)
+    public function getTotalWeight($orderItem, $orderedQty)
     {
         $weightUnit = $this->scopeConfig->getValue(
             'general/locale/weight_unit',
@@ -139,13 +139,18 @@ class LetterboxPackage
             $this->maximumWeight = 4.4;
         }
 
-        $this->totalWeight += $product->getWeight() * $orderedQty;
+        $this->totalWeight += $orderItem->getWeight() * $orderedQty;
     }
 
+    /**
+     * @param \TIG\PostNL\Model\Order $order
+     *
+     * @return bool
+     */
     public function isPossibleLetterboxPackage($order)
     {
-        $quote = $this->cartRepository->get($order->getQuoteId());
-        $products = $quote->getAllItems();
+        $magentoOrder = $this->orderRepository->get($order->getQuoteId());
+        $products = $magentoOrder->getAllItems();
 
         if ($order->getProductCode() == '3085' &&
             $this->isLetterboxPackage($products, true) &&
