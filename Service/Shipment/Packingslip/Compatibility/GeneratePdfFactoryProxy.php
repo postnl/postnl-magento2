@@ -63,7 +63,7 @@ class GeneratePdfFactoryProxy
     private function getSubject()
     {
         if (!$this->subject) {
-            $this->subject = $this->objectManager->get('\Xtento\PdfCustomizer\Helper\GeneratePdf');
+            $this->subject = $this->objectManager->get(\Xtento\PdfCustomizer\Helper\GeneratePdfFactory::class);
         }
 
         return $this->subject;
