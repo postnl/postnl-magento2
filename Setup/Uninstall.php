@@ -37,6 +37,7 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UninstallInterface;
 
+// @codingStandardsIgnoreFile
 class Uninstall implements UninstallInterface
 {
     /**
@@ -65,7 +66,7 @@ class Uninstall implements UninstallInterface
              "(such as used Productcodes, T&T codes, delivery dates)? [y/N]\n";
 
         while (true) {
-            $handle = fopen ("php://stdin","r");
+            $handle = fopen("php://stdin", "r");
             $line = strtolower(trim(fgets($handle)));
             if ($line == 'yes' || $line == 'y') {
                 $this->removeTables($setup);
@@ -80,10 +81,8 @@ class Uninstall implements UninstallInterface
             echo "Please insert y or N.\n";
         }
 
-
         $this->removeEavAttributes();
         $this->removeConfigSettings($setup);
-
         $setup->endSetup();
     }
 
