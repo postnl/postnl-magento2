@@ -115,4 +115,4 @@ To remove the PostNL extension, simply make use of the uninstall command Magento
 PostNL makes use of uninstall scripts. Please make sure you add the --remove-data flag to your command.
 The uninstall script will ask you if you would also like to remove Order related PostNL data. Removing this data is optional.
 The recommended command to use is:
-- bin/magento module:uninstall TIG_PostNL --backup-db --remove-data --clear-static-content
+`bin/magento module:uninstall TIG_PostNL --backup-db --remove-data --clear-static-content`
