@@ -106,3 +106,14 @@ Open: **app/code/TIG/PostNL/view/frontend/web/css/source/deliveryoptions.less**
 
 Copy the variables to your own **theme.less** or extend them in your **extend.less**. More information:
 http://devdocs.magento.com/guides/v2.0/frontend-dev-guide/css-guide/css_quick_guide_approach.html#simple_override
+
+
+## Uninstalling the PostNL extension
+
+To remove the PostNL extension, simply make use of the uninstall command Magento provides: https://devdocs.magento.com/guides/v2.4/install-gde/install/cli/install-cli-uninstall-mods.html#instgde-cli-uninst-mod-uninst
+
+PostNL makes use of uninstall scripts. Please make sure you add the --remove-data flag to your command.
+The uninstall script will ask you if you would also like to remove Order related PostNL data. Removing this data is optional.
+The recommended command to use is:
+
+`bin/magento module:uninstall TIG_PostNL --backup-db --remove-data --clear-static-content`
