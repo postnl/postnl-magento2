@@ -85,7 +85,7 @@ class LetterboxPackage
     {
         $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
 
-        if ($calculationMode === 'manually' && $isDomestic == false) {
+        if ($calculationMode === 'manually') {
             return false;
         }
 
