@@ -81,11 +81,11 @@ class LetterboxPackage
      *
      * @return bool
      */
-    public function isLetterboxPackage($products, $isDomestic = false)
+    public function isLetterboxPackage($products)
     {
         $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
 
-        if ($calculationMode === 'manually' && $isDomestic = false) {
+        if ($calculationMode === 'manually') {
             return false;
         }
 
@@ -146,15 +146,18 @@ class LetterboxPackage
      * @param \TIG\PostNL\Model\Order $order
      *
      * @return bool
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function isPossibleLetterboxPackage($order)
     {
         $magentoOrder = $this->orderRepository->get($order->getQuoteId());
         $products = $magentoOrder->getAllItems();
+        $shippingAddress = $order->getShippingAddress();
 
         if ($order->getProductCode() == '3085' &&
-            $this->isLetterboxPackage($products, true) &&
-            $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode() === 'manually') {
+            $this->isLetterboxPackage($products) &&
+            $shippingAddress->getCountryId() == 'NL') {
             return true;
         }
 
