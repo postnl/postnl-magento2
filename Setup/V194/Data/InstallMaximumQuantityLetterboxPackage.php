@@ -78,7 +78,7 @@ class InstallMaximumQuantityLetterboxPackage extends AbstractDataInstaller
                 'type'                    => 'int',
                 'backend'                 => '',
                 'frontend'                => '',
-                'label'                   => 'Maximum quantity Letterbox Package',
+                'label'                   => __('Maximum quantity Letterbox Package'),
                 'input'                   => 'text',
                 'class'                   => '',
                 'source'                  => '',
@@ -94,7 +94,7 @@ class InstallMaximumQuantityLetterboxPackage extends AbstractDataInstaller
                 'used_in_product_listing' => true,
                 'unique'                  => false,
                 'apply_to'                => 'simple,grouped,bundle',
-                'note'                    => 'Maximum quantity for Letterbox Package.'
+                'note'                    => __('Maximum quantity for Letterbox Package.')
             ]
         );
     }
