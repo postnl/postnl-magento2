@@ -233,8 +233,8 @@ class Timeframes extends AbstractDeliveryOptions
     {
         return [
             'price'      => $price,
-            'timeframes' => [[['letterbox_package' => __('Your order will fit through the letterbox and will be
-            delivered from Tuesday to Saturday.')]]]
+            'timeframes' => [[['letterbox_package' => __('Your order will fit through the letterbox and will be '
+            . 'delivered from Tuesday to Saturday.')]]]
         ];
     }
 }
