@@ -33,6 +33,7 @@
 namespace TIG\PostNL\Config\Provider;
 
 use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
+use TIG\PostNL\Service\Shipping\LetterboxPackage;
 
 class ProductType extends AbstractSource
 {
@@ -40,18 +41,27 @@ class ProductType extends AbstractSource
     const PRODUCT_TYPE_EXTRA_AT_HOME     = 'extra_at_home';
     const PRODUCT_TYPE_REGULAR           = 'regular';
     const PRODUCT_TYPE_LETTERBOX_PACKAGE = 'letterbox_package';
+
     /**
      * @var ShippingOptions
      */
     private $shippingOptions;
 
     /**
-     * @param ShippingOptions $shippingOptions
+     * @var LetterboxPackage
+     */
+    private $letterboxPackage;
+
+    /**
+     * @param ShippingOptions  $shippingOptions
+     * @param LetterboxPackage $letterboxPackage
      */
     public function __construct(
-        ShippingOptions $shippingOptions
+        ShippingOptions $shippingOptions,
+        LetterboxPackage $letterboxPackage
     ) {
         $this->shippingOptions = $shippingOptions;
+        $this->letterboxPackage = $letterboxPackage;
     }
 
     /**
@@ -77,14 +87,23 @@ class ProductType extends AbstractSource
     }
 
     /**
+     * @param $items
+     *
      * @return array
      */
-    public function getAllTypes()
+    public function getAllTypes($items)
     {
+        if ($this->letterboxPackage->isLetterboxPackage($items, false)) {
+            return [
+                self::PRODUCT_TYPE_LETTERBOX_PACKAGE,
+                self::PRODUCT_TYPE_EXTRA_AT_HOME,
+                self::PRODUCT_TYPE_REGULAR
+            ];
+        }
+
         return [
             self::PRODUCT_TYPE_EXTRA_AT_HOME,
-            self::PRODUCT_TYPE_REGULAR,
-            self::PRODUCT_TYPE_LETTERBOX_PACKAGE
+            self::PRODUCT_TYPE_REGULAR
         ];
     }
 }
