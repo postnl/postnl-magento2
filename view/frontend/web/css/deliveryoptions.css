@@ -259,7 +259,6 @@
 .postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-option,
 .postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-option {
   float: left;
-  margin-left: 30px;
   width: 100%;
   padding-left: 30px;
 }
@@ -461,4 +460,3 @@
 #opc-shipping_method #checkout-shipping-method-load .table-checkout-shipping-method .col-price {
   min-width: 100px;
 }
-/*# sourceMappingURL=deliveryoptions.css.map */
