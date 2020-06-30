@@ -62,8 +62,8 @@ class Uninstall implements UninstallInterface
     {
         $setup->startSetup();
 
-        echo "Do you also want to remove Order related PostNL data" .
-             "(such as used Productcodes, T&T codes, delivery dates)? [y/N]\n";
+        echo "Do you also want to remove Order related PostNL data " .
+             "(Product codes, T&T codes, delivery dates, matrix rates and shipping labels)? [y/N]\n";
 
         while (true) {
             $handle = fopen("php://stdin", "r");
