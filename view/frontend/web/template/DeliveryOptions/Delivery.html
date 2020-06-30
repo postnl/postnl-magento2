@@ -56,7 +56,9 @@
                                name="deliveryday"
                                class="tig-postnl-delivery-radio" checked="checked"/>
 
-                        <span class="tig-postnl-delivery-from" data-bind="text: letterbox_package"></span>
+                        <div class="tig-postnl-delivery-fallback">
+                            <span data-bind="text: letterbox_package"></span>
+                        </div>
                     </label>
                 </li>
             </ul>
