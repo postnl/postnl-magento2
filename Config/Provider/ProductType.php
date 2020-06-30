@@ -93,17 +93,15 @@ class ProductType extends AbstractSource
      */
     public function getAllTypes($items)
     {
-        if ($this->letterboxPackage->isLetterboxPackage($items, false)) {
-            return [
-                self::PRODUCT_TYPE_LETTERBOX_PACKAGE,
-                self::PRODUCT_TYPE_EXTRA_AT_HOME,
-                self::PRODUCT_TYPE_REGULAR
-            ];
-        }
-
-        return [
+        $types = [
             self::PRODUCT_TYPE_EXTRA_AT_HOME,
             self::PRODUCT_TYPE_REGULAR
         ];
+
+        if ($this->letterboxPackage->isLetterboxPackage($items, false)) {
+            $types[] = self::PRODUCT_TYPE_LETTERBOX_PACKAGE;
+        }
+
+        return $types;
     }
 }

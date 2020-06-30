@@ -86,6 +86,7 @@ class LetterboxPackage
     {
         $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
 
+        // If the order is not a letterbox package but it could be we want to return true so the shipment type comment is updated on the order grid.
         if ($calculationMode === 'manually' && !$isPossibleLetterboxPackage) {
             return false;
         }
