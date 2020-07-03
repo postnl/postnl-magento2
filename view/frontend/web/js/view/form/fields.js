@@ -156,12 +156,11 @@ define([
                 });
             }
 
+            self.hideAddressFields(true);
+
             if (country !== 'NL') {
                 self.enableAddressFields(true);
-                self.hideAddressFields(false);
                 return;
-            } else {
-                self.hideAddressFields(true);
             }
 
             // Set a timer because we don't want to make a call at every change

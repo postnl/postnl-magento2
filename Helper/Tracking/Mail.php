@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Helper\Tracking;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\MailException;
@@ -78,6 +79,7 @@ class Mail extends AbstractTracking
      * @param Log                                $logging
      * @param AssetRepository                    $assetRepository
      * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
+     * @param ScopeConfigInterface               $scopeConfig
      */
     public function __construct(
         Context $context,
@@ -88,7 +90,8 @@ class Mail extends AbstractTracking
         Webshop $webshop,
         Log $logging,
         AssetRepository $assetRepository,
-        ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
+        ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->transportBuilder     = $transportBuilder;
         $this->postNLHelperData     = $data;
@@ -100,7 +103,8 @@ class Mail extends AbstractTracking
             $searchCriteriaBuilder,
             $webshop,
             $logging,
-            $shipmentBarcodeRepositoryInterface
+            $shipmentBarcodeRepositoryInterface,
+            $scopeConfig
         );
     }
 

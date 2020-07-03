@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Helper;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
@@ -81,6 +82,7 @@ abstract class AbstractTracking extends AbstractHelper
      * @param Webshop                            $webshop
      * @param Log                                $logging
      * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
+     * @param ScopeConfigInterface               $scopeConfig
      */
     public function __construct(
         Context $context,
@@ -88,13 +90,15 @@ abstract class AbstractTracking extends AbstractHelper
         SearchCriteriaBuilder $searchCriteriaBuilder,
         Webshop $webshop,
         Log $logging,
-        ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
+        ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->postNLShipmentRepository           = $postNLShipmentRepository;
         $this->searchCriteriaBuilder              = $searchCriteriaBuilder;
         $this->webshopConfig                      = $webshop;
         $this->logging                            = $logging;
         $this->shipmentBarcodeRepositoryInterface = $shipmentBarcodeRepositoryInterface;
+        $this->scopeConfig                        = $scopeConfig;
         parent::__construct($context);
     }
 
@@ -169,13 +173,18 @@ abstract class AbstractTracking extends AbstractHelper
     // @codingStandardsIgnoreLine
     protected function generateTrackAndTraceUrl(OrderAddressInterface $address, $trackingNumber, $type)
     {
+        $order = $address->getOrder();
+        $store = $order->getStore();
+        $storeLocale = $this->scopeConfig->getValue('general/locale/code', $store->getCode(), $store->getStoreId());
+        $language = substr($storeLocale, 3, 2);
         $params = [
-            'B=' . $trackingNumber,
-            'D=' . $address->getCountryId(),
-            'P=' . str_replace(' ', '', $address->getPostcode()),
-            'T=' . $type,
+            'B' => $trackingNumber,
+            'D' => $address->getCountryId(),
+            'P' => str_replace(' ', '', $address->getPostcode()),
+            'T' => $type,
+            'L' => $language
         ];
 
-        return $this->webshopConfig->getTrackAndTraceServiceUrl() . implode('&', $params);
+        return $this->webshopConfig->getTrackAndTraceServiceUrl() . http_build_query($params);
     }
 }

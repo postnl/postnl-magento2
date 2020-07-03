@@ -184,6 +184,30 @@ abstract class OptionsAbstract
             'pge'                  => true,
             'group'                => 'pakjegemak_options',
         ],
+        // BE Pakjegemak options
+        '4932' => [
+            'value'                => '4932',
+            'label'                => 'Post Office Belgium + Extra Cover',
+            'isExtraCover'         => true,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'pge'                  => false,
+            'group'                => 'pakjegemak_be_options',
+        ],
+        // should be re-activated around first of januari 2021 - POSTNLM2-775
+//        '4936' => [
+//            'value'                => '4936',
+//            'label'                => 'Post Office Belgium',
+//            'isExtraCover'         => false,
+//            'isExtraEarly'         => false,
+//            'isSunday'             => false,
+//            'isGuaranteedDelivery' => false,
+//            'countryLimitation'    => 'BE',
+//            'pge'                  => false,
+//            'group'                => 'pakjegemak_be_options',
+//        ],
         // EU Options
         '4952' => [
             'value'                => '4952',
@@ -642,6 +666,7 @@ abstract class OptionsAbstract
     protected $groups = [
 	    'standard_options'            => 'Domestic options',
 	    'pakjegemak_options'          => 'Post Office options',
+	    'pakjegemak_be_options'       => 'Post Office BE options',
 	    'eu_options'                  => 'EU options',
 	    'global_options'              => 'Global options',
 	    'buspakje_options'            => 'Letter Box Parcel options',
@@ -657,6 +682,7 @@ abstract class OptionsAbstract
 	protected $groupToLabel = [
 		'standard_options'            => 'Domestic',
 		'pakjegemak_options'          => 'Post Office',
+		'pakjegemak_be_options'       => 'Post Office Belgium',
 		'eu_options'                  => 'EPS',
 		'global_options'              => 'Global Pack',
 		'buspakje_options'            => 'Letter Box',
@@ -670,14 +696,15 @@ abstract class OptionsAbstract
     ];
 
     protected $typeToComment = [
-        'Daytime'     => '',
-        'Evening'     => 'Evening',
-        'ExtraAtHome' => '',
-        'Extra@Home'  => '',
-        'Sunday'      => 'Sunday',
-        'PG'          => '',
-        'EPS'         => '',
-        'GP'          => '',
+        'Daytime'           => '',
+        'Evening'           => 'Evening',
+        'ExtraAtHome'       => '',
+        'Extra@Home'        => '',
+        'Sunday'            => 'Sunday',
+        'PG'                => '',
+        'EPS'               => '',
+        'GP'                => '',
+        'Letterbox Package' => '',
     ];
 
     /**

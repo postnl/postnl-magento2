@@ -41,8 +41,9 @@ use Magento\Sales\Api\Data\OrderItemInterface;
 class ItemsToOption
 {
     private $typeToOption = [
-        ProductType::PRODUCT_TYPE_EXTRA_AT_HOME => ProductInfo::OPTION_EXTRAATHOME,
-        ProductType::PRODUCT_TYPE_REGULAR       => '',
+        ProductType::PRODUCT_TYPE_EXTRA_AT_HOME     => ProductInfo::OPTION_EXTRAATHOME,
+        ProductType::PRODUCT_TYPE_LETTERBOX_PACKAGE => ProductInfo::OPTION_LETTERBOX_PACKAGE,
+        ProductType::PRODUCT_TYPE_REGULAR           => '',
     ];
 
     /**
@@ -50,8 +51,9 @@ class ItemsToOption
      * @var array
      */
     private $priority = [
-        ProductType::PRODUCT_TYPE_EXTRA_AT_HOME => 1,
-        ProductType::PRODUCT_TYPE_REGULAR       => 2,
+        ProductType::PRODUCT_TYPE_EXTRA_AT_HOME     => 1,
+        ProductType::PRODUCT_TYPE_LETTERBOX_PACKAGE => 2,
+        ProductType::PRODUCT_TYPE_REGULAR           => 3,
     ];
 
     /**

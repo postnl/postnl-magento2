@@ -36,9 +36,10 @@ use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
 class ProductType extends AbstractSource
 {
-    const POSTNL_PRODUCT_TYPE        = 'postnl_product_type';
-    const PRODUCT_TYPE_EXTRA_AT_HOME = 'extra_at_home';
-    const PRODUCT_TYPE_REGULAR       = 'regular';
+    const POSTNL_PRODUCT_TYPE            = 'postnl_product_type';
+    const PRODUCT_TYPE_EXTRA_AT_HOME     = 'extra_at_home';
+    const PRODUCT_TYPE_REGULAR           = 'regular';
+    const PRODUCT_TYPE_LETTERBOX_PACKAGE = 'letterbox_package';
     /**
      * @var ShippingOptions
      */
@@ -68,6 +69,10 @@ class ProductType extends AbstractSource
             $options[] = ['value' => self::PRODUCT_TYPE_EXTRA_AT_HOME, 'label' => __('Extra@Home')];
         }
 
+        if ($this->shippingOptions->isLetterboxPackageActive()) {
+            $options[] = ['value' => self::PRODUCT_TYPE_LETTERBOX_PACKAGE, 'label' => __('Letterbox Package')];
+        }
+
         return $options;
     }
 
@@ -78,7 +83,8 @@ class ProductType extends AbstractSource
     {
         return [
             self::PRODUCT_TYPE_EXTRA_AT_HOME,
-            self::PRODUCT_TYPE_REGULAR
+            self::PRODUCT_TYPE_REGULAR,
+            self::PRODUCT_TYPE_LETTERBOX_PACKAGE
         ];
     }
 }
