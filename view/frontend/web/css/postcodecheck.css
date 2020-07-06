@@ -130,3 +130,7 @@ aside .tig-postnl-field-group .field > .label {
     margin-left: 8px;
     width: calc(97%);
 }
+
+.tig-postnl-field-group .field.tig-postnl-full-width {
+    max-width: 100%;
+}

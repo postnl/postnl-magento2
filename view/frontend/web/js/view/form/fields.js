@@ -156,11 +156,13 @@ define([
                 });
             }
 
-            self.hideAddressFields(true);
-
             if (country !== 'NL') {
                 self.enableAddressFields(true);
+                self.hideAddressFields(false);
+
                 return;
+            } else {
+                self.hideAddressFields(true);
             }
 
             // Set a timer because we don't want to make a call at every change
@@ -306,6 +308,26 @@ define([
         },
 
         observeCountry : function (value) {
+            var self = this;
+
+            var fields = [
+                self.parentName + '.postcode-field-group.field-group.postcode',
+                self.parentName + '.postcode-field-group.field-group.housenumber',
+                self.parentName + '.postcode-field-group.field-group.housenumber_addition',
+            ];
+
+            Registry.get(fields,
+                function (postcodeElement, housenumberElement, additionElement) {
+                    // Next line is for initial load, before field is found in jQuery
+                    postcodeElement.additionalClasses['tig-postnl-full-width'] = (value !== 'NL');
+
+                    housenumberElement.visible(value === 'NL');
+                    additionElement.visible(value === 'NL');
+
+                    var postcodeField = $('.tig-postnl-field-group div[name$=postcode]');
+                    value === 'NL' ? postcodeField.removeClass('tig-postnl-full-width') : postcodeField.addClass('tig-postnl-full-width');
+                }
+            );
             this.updateFieldData();
         }
     });
