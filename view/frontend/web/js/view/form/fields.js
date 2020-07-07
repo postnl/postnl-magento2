@@ -316,8 +316,7 @@ define([
                 self.parentName + '.postcode-field-group.field-group.housenumber_addition',
             ];
 
-            Registry.get(fields,
-                function (postcodeElement, housenumberElement, additionElement) {
+            Registry.get(fields, function (postcodeElement, housenumberElement, additionElement) {
                     // Next line is for initial load, before field is found in jQuery
                     postcodeElement.additionalClasses['tig-postnl-full-width'] = (value !== 'NL');
 
@@ -325,7 +324,9 @@ define([
                     additionElement.visible(value === 'NL');
 
                     var postcodeField = $('.tig-postnl-field-group div[name$=postcode]');
+                    /*ignore jslint start*/
                     value === 'NL' ? postcodeField.removeClass('tig-postnl-full-width') : postcodeField.addClass('tig-postnl-full-width');
+                    /*ignore jslint end*/
                 }
             );
             this.updateFieldData();
