@@ -324,9 +324,9 @@ define([
                     additionElement.visible(value === 'NL');
 
                     var postcodeField = $('.tig-postnl-field-group div[name$=postcode]');
-                    /*ignore jslint start*/
+                    /* jshint ignore:start */
                     value === 'NL' ? postcodeField.removeClass('tig-postnl-full-width') : postcodeField.addClass('tig-postnl-full-width');
-                    /*ignore jslint end*/
+                    /* jshint ignore:end */
                 }
             );
             this.updateFieldData();
