@@ -317,11 +317,11 @@ define([
             ];
 
             Registry.get(fields, function (postcodeElement, housenumberElement, additionElement) {
-                    // Next line is for initial load, before field is found in jQuery
-                    postcodeElement.additionalClasses['tig-postnl-full-width'] = (value !== 'NL');
-
                     housenumberElement.visible(value === 'NL');
                     additionElement.visible(value === 'NL');
+
+                    // Next line is for initial load, before field is found in jQuery
+                    postcodeElement.additionalClasses['tig-postnl-full-width'] = (value !== 'NL');
 
                     var postcodeField = $('.tig-postnl-field-group div[name$=postcode]');
                     /* jshint ignore:start */
