@@ -289,35 +289,26 @@
             }
 
             .tig-postnl-delivery-radio {
-              float: left;
-              margin: 0 10px 0 0;
-              width: 20px;
-              height: 21px;
+                position: absolute;
             }
 
-            .tig-postnl-delivery-data {
-              float: left;
-            }
+              .tig-postnl-delivery-time {
+                  padding-left: 30px;
+                  float: left;
+                  width: 70%;
+              }
 
-            .tig-postnl-delivery-to {
-              float: left;
-            }
-
-            .tig-postnl-delivery-dash {
-              float: left;
-              margin: 0 3px;
-            }
-
-            .tig-postnl-delivery-from {
-              float: left;
-            }
+              .tig-postnl-delivery-fallback {
+                  padding-left: 30px;
+                  float: left;
+                  width: 100%;
+              }
 
             // Right Column
             .tig-postnl-delivery-option {
               float: left;
-              margin-left: 30px;
               width: 100%;
-              position: relative;
+              padding-left: 30px;
             }
 
             @media screen and (min-width: 400px) {
@@ -326,10 +317,9 @@
               }
 
               .tig-postnl-delivery-option {
-                  position: absolute;
-                  right: 15px;
-                  float: none;
-                  width: auto;
+                  padding-left: 0;
+                  width: 30%;
+                  text-align: right;
               }
             }
           }

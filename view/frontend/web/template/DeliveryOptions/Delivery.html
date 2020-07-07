@@ -15,9 +15,11 @@
                                name="postnl_delivery_option"
                                class="tig-postnl-delivery-radio" />
 
-                        <span class="tig-postnl-delivery-from" data-bind="text: from_friendly"></span>
-                        <span class="tig-postnl-delivery-dash"> - </span>
-                        <span class="tig-postnl-delivery-to" data-bind="text: to_friendly"></span>
+                        <div class="tig-postnl-delivery-time">
+                            <span class="tig-postnl-delivery-from" data-bind="text: from_friendly"></span>
+                            <span class="tig-postnl-delivery-dash"> - </span>
+                            <span class="tig-postnl-delivery-to" data-bind="text: to_friendly"></span>
+                        </div>
 
                         <div class="tig-postnl-delivery-option">
                             <span data-bind="text: optionLabel"> </span>
@@ -38,7 +40,9 @@
                                name="deliveryday"
                                class="tig-postnl-delivery-radio" checked="checked"/>
 
-                        <span class="tig-postnl-delivery-from" data-bind="text: fallback"></span>
+                        <div class="tig-postnl-delivery-fallback">
+                            <span data-bind="text: fallback"></span>
+                        </div>
                     </label>
                 </li>
             </ul>
@@ -52,7 +56,9 @@
                                name="deliveryday"
                                class="tig-postnl-delivery-radio" checked="checked"/>
 
-                        <span class="tig-postnl-delivery-from" data-bind="text: letterbox_package"></span>
+                        <div class="tig-postnl-delivery-fallback">
+                            <span data-bind="text: letterbox_package"></span>
+                        </div>
                     </label>
                 </li>
             </ul>

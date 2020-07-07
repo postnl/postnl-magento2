@@ -78,14 +78,16 @@ class LetterboxPackage
 
     /**
      * @param $products
+     * @param $isPossibleLetterboxPackage
      *
      * @return bool
      */
-    public function isLetterboxPackage($products)
+    public function isLetterboxPackage($products, $isPossibleLetterboxPackage)
     {
         $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
 
-        if ($calculationMode === 'manually') {
+        // If the order is not a letterbox package but it could be we want to return true so the shipment type comment is updated on the order grid.
+        if ($calculationMode === 'manually' && !$isPossibleLetterboxPackage) {
             return false;
         }
 
@@ -156,7 +158,7 @@ class LetterboxPackage
         $shippingAddress = $order->getShippingAddress();
 
         if ($order->getProductCode() == '3085' &&
-            $this->isLetterboxPackage($products) &&
+            $this->isLetterboxPackage($products, true) &&
             $shippingAddress->getCountryId() == 'NL') {
             return true;
         }
