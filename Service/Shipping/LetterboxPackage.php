@@ -84,6 +84,11 @@ class LetterboxPackage
      */
     public function isLetterboxPackage($products, $isPossibleLetterboxPackage)
     {
+        $this->totalVolume   = 0;
+        $this->totalWeight   = 0;
+        $this->result        = true;
+        $this->maximumWeight = 2;
+
         $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
 
         // If the order is not a letterbox package but it could be we want to return true so the shipment type comment is updated on the order grid.
