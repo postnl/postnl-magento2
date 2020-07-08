@@ -39,10 +39,10 @@ use TIG\PostNL\Config\Provider\LetterBoxPackageConfiguration;
 // @codingStandardsIgnoreFile
 class LetterboxPackage
 {
-    public $totalVolume   = 0;
-    public $totalWeight   = 0;
-    public $result        = true;
-    public $maximumWeight = 2;
+    public $totalVolume    = 0;
+    public $totalWeight    = 0;
+    public $hasMaximumQty  = true;
+    public $maximumWeight  = 2;
 
     /**
      * @var ScopeConfigInterface
@@ -84,10 +84,9 @@ class LetterboxPackage
      */
     public function isLetterboxPackage($products, $isPossibleLetterboxPackage)
     {
-        $this->totalVolume   = 0;
-        $this->totalWeight   = 0;
-        $this->result        = true;
-        $this->maximumWeight = 2;
+        $this->totalVolume    = 0;
+        $this->totalWeight    = 0;
+        $this->hasMaximumQty  = true;
 
         $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
 
@@ -101,7 +100,7 @@ class LetterboxPackage
         }
 
         // check if all products fit in a letterbox package and the weight is equal or lower than 2 kilograms.
-        if ($this->totalVolume <= 1 && $this->totalWeight <= $this->maximumWeight && $this->result == true) {
+        if ($this->totalVolume <= 1 && $this->totalWeight <= $this->maximumWeight && $this->hasMaximumQty == true) {
             return true;
         }
 
@@ -121,7 +120,7 @@ class LetterboxPackage
         $maximumQtyLetterbox = floatval($orderItem->getProduct()->getPostnlMaxQtyLetterbox());
 
         if ($maximumQtyLetterbox === 0.0) {
-            $this->result = false;
+            $this->hasMaximumQty = false;
             return;
         }
 
