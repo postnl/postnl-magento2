@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Service\Shipping;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Store\Model\ScopeInterface;
@@ -60,20 +61,28 @@ class LetterboxPackage
     private $orderRepository;
 
     /**
+     * @var ProductRepositoryInterface
+     */
+    private $productRepository;
+
+    /**
      * LetterboxPackage constructor.
      *
      * @param ScopeConfigInterface          $scopeConfig
      * @param LetterBoxPackageConfiguration $letterBoxPackageConfiguration
      * @param OrderRepositoryInterface      $orderRepository
+     * @param ProductRepositoryInterface    $productRepository
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         LetterBoxPackageConfiguration $letterBoxPackageConfiguration,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        ProductRepositoryInterface $productRepository
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->letterBoxPackageConfiguration = $letterBoxPackageConfiguration;
         $this->orderRepository = $orderRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -108,25 +117,38 @@ class LetterboxPackage
     }
 
     /**
-     * @param $orderItem
+     * @param $productItem - Could be either a quote item, order item or shipment item
      *
      * Based on the product attribute postnl_max_qty_letterbox, a percentage
      * is calculated for each product. If, for example, the attribute is set
      * to 4, each product will weight 25%. If the products in the cart
      * have a total weight of over 100%, the order will not fit as a letterbox.
      */
-    public function fitsLetterboxPackage($orderItem)
+    public function fitsLetterboxPackage($productItem)
     {
-        $maximumQtyLetterbox = floatval($orderItem->getProduct()->getPostnlMaxQtyLetterbox());
+        $maximumQtyLetterbox = $this->getMaximumQtyLetterbox($productItem);//floatval($productItem->getProduct()->getPostnlMaxQtyLetterbox());
 
         if ($maximumQtyLetterbox === 0.0) {
             $this->hasMaximumQty = false;
             return;
         }
 
-        $orderedQty = $orderItem->getQty();
+        $orderedQty = $productItem->getQty();
         $this->totalVolume += 1 / $maximumQtyLetterbox * $orderedQty;
-        $this->getTotalWeight($orderItem, $orderedQty);
+        $this->getTotalWeight($productItem, $orderedQty);
+    }
+
+    /**
+     * @param $productItem
+     *
+     * @return float
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function getMaximumQtyLetterbox($productItem)
+    {
+        $product = $this->productRepository->getById($productItem->getProductId());
+
+        return floatval($product->getPostnlMaxQtyLetterbox());
     }
 
     /**
