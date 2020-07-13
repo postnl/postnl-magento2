@@ -126,7 +126,7 @@ class LetterboxPackage
      */
     public function fitsLetterboxPackage($productItem)
     {
-        $maximumQtyLetterbox = $this->getMaximumQtyLetterbox($productItem);//floatval($productItem->getProduct()->getPostnlMaxQtyLetterbox());
+        $maximumQtyLetterbox = $this->getMaximumQtyLetterbox($productItem);
 
         if ($maximumQtyLetterbox === 0.0) {
             $this->hasMaximumQty = false;
