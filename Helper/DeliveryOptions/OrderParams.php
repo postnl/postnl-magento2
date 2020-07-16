@@ -248,6 +248,10 @@ class OrderParams
 
         $params['address']['customer'] = isset($params['customerData']) ? $params['customerData'] : $params['address'];
 
+        if ($params['type'] !== ProductInfo::TYPE_PICKUP) {
+            return false;
+        }
+
         return $params['address'];
     }
 }
