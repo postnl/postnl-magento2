@@ -230,7 +230,7 @@ class OrderParams
      */
     private function addExtraToAddress($params)
     {
-        if (!isset($params['address'])) {
+        if (!isset($params['address']) || $params['type'] !== ProductInfo::TYPE_PICKUP) {
             return false;
         }
 
@@ -247,10 +247,6 @@ class OrderParams
         }
 
         $params['address']['customer'] = isset($params['customerData']) ? $params['customerData'] : $params['address'];
-
-        if ($params['type'] !== ProductInfo::TYPE_PICKUP) {
-            return false;
-        }
 
         return $params['address'];
     }
