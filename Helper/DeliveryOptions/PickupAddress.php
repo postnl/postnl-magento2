@@ -138,7 +138,7 @@ class PickupAddress
         $address->setPostcode($pgData['Zipcode']);
         $address->setFirstname($pgData['customer']['firstname']);
         $address->setLastname($pgData['customer']['lastname']);
-        $address->setTelephone($pgData['customer']['telephone']);
+        $address->setTelephone((array_key_exists('telephone', $pgData['customer']) ? $pgData['customer']['telephone'] : null));
         $address->save();
 
         return $address;
