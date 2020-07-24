@@ -230,7 +230,7 @@ class OrderParams
      */
     private function addExtraToAddress($params)
     {
-        if (!isset($params['address']) || $params['type'] !== ProductInfo::TYPE_PICKUP) {
+        if (!isset($params['address'])) {
             return false;
         }
 
@@ -244,6 +244,10 @@ class OrderParams
             throw new PostnlException(
                 __('Missing required parameters: customerData')
             );
+        }
+
+        if ($params['type'] !== ProductInfo::TYPE_PICKUP) {
+            return false;
         }
 
         $params['address']['customer'] = isset($params['customerData']) ? $params['customerData'] : $params['address'];
