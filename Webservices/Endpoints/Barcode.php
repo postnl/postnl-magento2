@@ -151,7 +151,7 @@ class Barcode extends AbstractEndpoint
      *
      * @return $this
      */
-    public function setProductCode($productCode)
+    public function changeProductCode($productCode)
     {
         $this->productCode = $productCode;
     }
@@ -159,11 +159,11 @@ class Barcode extends AbstractEndpoint
     /**
      * @param int $storeId
      */
-    public function setStoreId($storeId)
+    public function updateApiKey($storeId)
     {
         $this->storeId = $storeId;
         $this->soap->updateApiKey($storeId);
-        $this->customer->setStoreId($storeId);
+        $this->customer->changeStoreId($storeId);
     }
 
     /**

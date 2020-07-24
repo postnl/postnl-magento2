@@ -80,23 +80,22 @@ class RowParser
     public function parseRow($rowData, $rowCount, $websiteId, $conditionName, $conditionFullName)
     {
         if (count($rowData) < 5) { // @codingStandardsIgnoreLine
-            throw new PostnlException(__('Invalid PostNL Table Rates File Format in Row #%1', $rowCount), 'POSTNL-0247');
+            throw new PostnlException(
+                __('Invalid PostNL Table Rates File Format in Row #%1', $rowCount),
+                'POSTNL-0247'
+            );
         }
 
         $countryId = $this->getCountryId($rowData, $rowCount);
-        $regionId = $this->getRegionId($rowData, $rowCount, $countryId);
-        $zipCode = $this->getZipCode($rowData, $rowCount);
-        $conditionValue = $this->getConditionValue($rowData, $rowCount, $conditionFullName);
-        $price = $this->getPrice($rowData, $rowCount);
 
         return [
             'website_id' => $websiteId,
             'dest_country_id' => $countryId,
-            'dest_region_id' => $regionId,
-            'dest_zip' => $zipCode,
+            'dest_region_id' => $this->getRegionId($rowData, $rowCount, $countryId),
+            'dest_zip' => $this->getZipCode($rowData, $rowCount),
             'condition_name' => $conditionName,
-            'condition_value' => $conditionValue,
-            'price' => $price,
+            'condition_value' => $this->getConditionValue($rowData, $rowCount, $conditionFullName),
+            'price' => $this->getPrice($rowData, $rowCount),
         ];
     }
 

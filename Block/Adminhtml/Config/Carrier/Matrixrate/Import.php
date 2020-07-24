@@ -70,7 +70,7 @@ class Import extends AbstractElement
     public function getElementHtml()
     {
         $this->setType('file');
-        $this->importBlock->setTimeConditionName($this->getName());
+        $this->importBlock->updateTimeConditionName($this->getName());
 
         $html = $this->importBlock->toHtml();
         $html .= parent::getElementHtml();

@@ -168,8 +168,8 @@ abstract class AbstractDeliveryOptions extends Action
         $quote   = $this->checkoutSession->getQuote();
         $storeId = $quote->getStoreId();
         $shippingDuration = $this->shippingDuration->get();
-        $this->deliveryEndpoint->setStoreId($storeId);
-        $this->deliveryEndpoint->setParameters($address, $shippingDuration);
+        $this->deliveryEndpoint->updateApiKey($storeId);
+        $this->deliveryEndpoint->updateParameters($address, $shippingDuration);
         $response = $this->deliveryEndpoint->call();
 
         if (!is_object($response) || !isset($response->DeliveryDate)) {

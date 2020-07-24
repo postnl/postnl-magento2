@@ -41,7 +41,7 @@ module.exports = function (grunt) {
     var phpcsCommand = 'php -ddisplay_errors=1 vendor/bin/phpcs -p ' +
         '--runtime-set installed_paths ' +
         'vendor/squizlabs/php_codesniffer/CodeSniffer/Standards,' +
-        'vendor/magento/marketplace-eqp,' +
+        'vendor/magento/magento-coding-standard,' +
         'vendor/object-calisthenics/phpcs-calisthenics-rules/src/ ';
 
     grunt.initConfig({

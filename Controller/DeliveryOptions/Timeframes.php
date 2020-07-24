@@ -208,8 +208,8 @@ class Timeframes extends AbstractDeliveryOptions
     {
         $quote = $this->checkoutSession->getQuote();
         $storeId = $quote->getStoreId();
-        $this->timeFrameEndpoint->setStoreId($storeId);
-        $this->timeFrameEndpoint->setParameters($address, $startDate);
+        $this->timeFrameEndpoint->updateApiKey($storeId);
+        $this->timeFrameEndpoint->fillParameters($address, $startDate);
 
         return $this->timeFrameEndpoint->call();
     }

@@ -137,8 +137,8 @@ class Locations extends AbstractDeliveryOptions
 
         $quote = $this->checkoutSession->getQuote();
         $storeId = $quote->getStoreId();
-        $this->locationsEndpoint->setStoreId($storeId);
-        $this->locationsEndpoint->setParameters($address, $deliveryDate);
+        $this->locationsEndpoint->changeAPIKeyByStoreId($storeId);
+        $this->locationsEndpoint->updateParameters($address, $deliveryDate);
         $response = $this->locationsEndpoint->call();
         //@codingStandardsIgnoreLine
         if (!is_object($response) || !isset($response->GetLocationsResult->ResponseLocation)) {

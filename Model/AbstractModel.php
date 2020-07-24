@@ -65,10 +65,10 @@ class AbstractModel extends AbstractBasicModel
      */
     public function beforeSave()
     {
-        $this->setUpdatedAt($this->dateTime->gmtDate());
+        $this->changeUpdatedAt($this->dateTime->gmtDate());
 
         if (!$this->getCreatedAt()) {
-            $this->setCreatedAt($this->dateTime->gmtDate());
+            $this->changeCreatedAt($this->dateTime->gmtDate());
         }
 
         return parent::beforeSave();
@@ -79,7 +79,7 @@ class AbstractModel extends AbstractBasicModel
      *
      * @return $this
      */
-    public function setCreatedAt($value)
+    public function changeCreatedAt($value)
     {
         return $this->setData(static::FIELD_CREATED_AT, $value);
     }
@@ -97,7 +97,7 @@ class AbstractModel extends AbstractBasicModel
      *
      * @return $this
      */
-    public function setUpdatedAt($value)
+    public function changeUpdatedAt($value)
     {
         return $this->setData(static::FIELD_UPDATED_AT, $value);
     }

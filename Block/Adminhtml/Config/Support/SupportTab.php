@@ -110,4 +110,9 @@ class SupportTab extends Template implements RendererInterface
 
         return ' - ' . ucfirst($stability);
     }
+
+    public function forBusinessUrl()
+    {
+        return __('https://www.postnl.nl/zakelijke-oplossingen/webwinkels/bezorgopties-voor-mijn-klanten/');
+    }
 }

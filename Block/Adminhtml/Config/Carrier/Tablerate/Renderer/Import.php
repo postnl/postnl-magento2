@@ -58,7 +58,7 @@ class Import extends Template implements RendererInterface
     /**
      * @param $timeConditionName
      */
-    public function setTimeConditionName($timeConditionName)
+    public function updateTimeConditionName($timeConditionName)
     {
         $this->timeConditionName = $timeConditionName;
     }

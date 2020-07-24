@@ -45,7 +45,6 @@ use TIG\PostNL\Service\Shipment\ConfirmLabel;
  * Every property we use here is needed and shouldn't be moved for risk of over-
  * specifying. That's why we ignore this file.
  *
- * @package TIG\PostNL\Service\Shipment\Labelling
  * @codingStandardsIgnoreFile
  */
 class GetLabels

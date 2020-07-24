@@ -38,11 +38,6 @@ use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 
-/**
- * Class CheckIfQuoteItemsAreInStockTest
- *
- * @package TIG\PostNL\Test\Integration\Service\Quote
- */
 class CheckIfQuoteItemsAreInStockTest extends TestCase
 {
     /**

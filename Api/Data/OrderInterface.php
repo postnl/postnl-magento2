@@ -274,7 +274,7 @@ interface OrderInterface
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
-    public function setCreatedAt($value);
+    public function changeCreatedAt($value);
 
     /**
      * @return string
@@ -286,7 +286,7 @@ interface OrderInterface
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
-    public function setUpdatedAt($value);
+    public function changeUpdatedAt($value);
 
     /**
      * @return string

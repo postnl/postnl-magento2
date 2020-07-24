@@ -137,7 +137,7 @@ class Save extends AbstractDeliveryOptions
         $params        = $this->orderParams->get($this->addSessionDataToParams($params));
         $postnlOrder   = $this->getPostNLOrderByQuoteId($params['quote_id']);
 
-        $this->setPostNLOrderData($params, $postnlOrder);
+        $this->savePostNLOrderData($params, $postnlOrder);
 
         if ($type != 'pickup') {
             $this->pickupAddress->remove();
@@ -156,7 +156,7 @@ class Save extends AbstractDeliveryOptions
      *
      * @throws CouldNotSaveException
      */
-    private function setPostNLOrderData($params, $postnlOrder)
+    private function savePostNLOrderData($params, $postnlOrder)
     {
         foreach ($params as $key => $value) {
             $postnlOrder->setData($key, $value);
