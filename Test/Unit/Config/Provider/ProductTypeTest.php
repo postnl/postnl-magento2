@@ -32,6 +32,7 @@
 
 namespace TIG\PostNL\Test\Unit\Config\Provider;
 
+use Magento\Catalog\Model\Product;
 use TIG\PostNL\Config\Provider\ProductType;
 use TIG\PostNL\Test\TestCase;
 
@@ -84,7 +85,9 @@ class ProductTypeTest extends TestCase
 
     public function testHasTheCorrectTypes()
     {
-        $options = $this->getInstance()->getAllTypes();
+        $productMock = $this->getFakeMock(Product::class)->getMock();
+
+        $options = $this->getInstance()->getAllTypes($productMock);
 
         $this->assertTrue(in_array(ProductType::PRODUCT_TYPE_REGULAR, $options));
         $this->assertTrue(in_array(ProductType::PRODUCT_TYPE_EXTRA_AT_HOME, $options));

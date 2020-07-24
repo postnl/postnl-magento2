@@ -63,7 +63,7 @@ class DataHelperFactoryProxy
     private function getSubject()
     {
         if (!$this->subject) {
-            $this->subject = $this->objectManager->get('\Xtento\PdfCustomizer\Helper\Data');
+            $this->subject = $this->objectManager->get(\Xtento\PdfCustomizer\Helper\DataFactory::class);
         }
 
         return $this->subject;

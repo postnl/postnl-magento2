@@ -173,7 +173,7 @@ class SortItems
      */
     private function getProductCollection($items)
     {
-        $filters = array_merge($this->productType->getAllTypes(), [false]);
+        $filters = array_merge($this->productType->getAllTypes($items), [false]);
         return $this->productDictionary->get($items, $filters);
     }
 }

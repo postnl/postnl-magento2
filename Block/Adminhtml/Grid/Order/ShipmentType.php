@@ -99,11 +99,15 @@ class ShipmentType extends AbstractGrid
             $output = $this->shipmentType->render($order->getProductCode(), $order->getType());
         }
 
-        if ($this->letterboxPackage->isPossibleLetterboxPackage($order)) {
-            $output = 'Domestic<br><em class="possible-letterbox"  
+        try {
+            if ($this->letterboxPackage->isPossibleLetterboxPackage($order)) {
+                $output = 'Domestic<br><em class="possible-letterbox"
                        title="Standard shipment">Standard shipment (possible letterboxpackage)</em>';
-        }
+            }
 
-        return $output;
+            return $output;
+        } catch (\Exception $exception) {
+            return $output;
+        }
     }
 }

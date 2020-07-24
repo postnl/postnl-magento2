@@ -242,34 +242,25 @@
 }
 .postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-radio,
 .postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-radio {
-  float: left;
-  margin: 0 10px 0 0;
-  width: 20px;
-  height: 21px;
+  position: absolute;
 }
-.postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-data,
-.postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-data {
+.postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-time,
+.postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-time {
+  padding-left: 30px;
   float: left;
+  width: 70%;
 }
-.postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-to,
-.postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-to {
+.postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-fallback,
+.postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-fallback {
+  padding-left: 30px;
   float: left;
-}
-.postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-dash,
-.postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-dash {
-  float: left;
-  margin: 0 3px;
-}
-.postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-from,
-.postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-from {
-  float: left;
+  width: 100%;
 }
 .postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-option,
 .postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-option {
   float: left;
-  margin-left: 30px;
   width: 100%;
-  position: relative;
+  padding-left: 30px;
 }
 @media screen and (min-width: 400px) {
   .postnl-delivery-options .delivery .days .wrapper ul li .data-container,
@@ -278,10 +269,9 @@
   }
   .postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-option,
   .postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-option {
-    position: absolute;
-    right: 15px;
-    float: none;
-    width: auto;
+    padding-left: 0;
+    width: 30%;
+    text-align: right;
   }
 }
 .postnl-delivery-options .delivery .extra-service-container {
@@ -470,4 +460,3 @@
 #opc-shipping_method #checkout-shipping-method-load .table-checkout-shipping-method .col-price {
   min-width: 100px;
 }
-/*# sourceMappingURL=deliveryoptions.css.map */
