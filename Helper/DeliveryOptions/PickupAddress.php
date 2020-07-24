@@ -36,10 +36,6 @@ use Magento\Checkout\Model\Session;
 use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Model\Quote\AddressFactory;
 
-/**
- * Class PickupAddress
- * @package TIG\PostNL\Helper\DeliveryOptions
- */
 class PickupAddress
 {
     const PG_ADDRESS_TYPE = 'pakjegemak';
