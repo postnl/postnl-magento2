@@ -45,7 +45,7 @@ define(
         'Magento_Checkout/js/model/quote',
         'Amasty_Checkout/js/view/utils',
         'Amasty_Checkout/js/model/payment/payment-loading',
-        'Amasty_Checkout/js/model/cart/totals-processor/default',
+        'Amasty_Checkout/js/action/get-totals',
         'Amasty_Checkout/js/model/shipping-registry',
         'Amasty_Checkout/js/model/address-form-state',
         'Amasty_Checkout/js/model/events',
@@ -259,8 +259,13 @@ define(
                 shippingMethodObserver: function (method) {
                     this.saveInitialData();
 
-                    if (method && shippingRegistry.isEstimationHaveError()) {
-                        totalsProcessor(quote.shippingAddress());
+                    if (method &&
+                        shippingRegistry.isEstimationHaveError() ||
+                        this.source.get('params.invalid') ||
+                        shippingRegistry.isEstimationHaveError.getVersion() === 1 &&
+                        shippingRegistry.isHaveUnsavedShipping()
+                    ) {
+                        totalsProcessor();
                     }
                 },
 
