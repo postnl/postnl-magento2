@@ -246,6 +246,10 @@ class OrderParams
             );
         }
 
+        if ($params['type'] !== ProductInfo::TYPE_PICKUP) {
+            return false;
+        }
+
         $params['address']['customer'] = isset($params['customerData']) ? $params['customerData'] : $params['address'];
 
         return $params['address'];

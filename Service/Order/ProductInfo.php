@@ -174,6 +174,10 @@ class ProductInfo
             return $address;
         }
 
+        if (is_array($address) && isset($address['Countrycode'])) {
+            return $address['Countrycode'];
+        }
+
         $address = $this->quote->getShippingAddress();
 
         return $address->getCountryId();
