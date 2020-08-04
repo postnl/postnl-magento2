@@ -35,7 +35,8 @@ define([
     'underscore',
     'Magento_Ui/js/grid/sticky/sticky',
     'mageUtils',
-    'TIG_PostNL/js/grid/dataprovider'
+    'TIG_PostNL/js/grid/dataprovider',
+    'mage/translate'
 ], function (
     $,
     ko,
@@ -95,6 +96,12 @@ define([
             });
 
             return this;
+        },
+
+        translateOptions: function (option, item)
+        {
+            item.text = $.mage.__(item.text);
+            option.text = $.mage.__(option.text);
         },
 
         toggleTimeOptions: function (value) {

@@ -32,7 +32,7 @@
                         <div class="select-holder" data-bind="visible: $data.currentSelected() == 'change_product'">
                             <select class="action-select admin__control-select" id="change_product"
                                     data-bind="options:$data.optionList,
-                            optionsText: 'text', optionsValue: 'value', value: $data.defaultOption">
+                            optionsText: 'text', optionsValue: 'value', optionsAfterRender: translateOptions, value: $data.defaultOption">
                             </select>
                         </div>
                         <!-- ko if: $data.isGuaranteedActive() -->
