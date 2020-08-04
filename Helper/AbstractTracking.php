@@ -33,6 +33,7 @@ namespace TIG\PostNL\Helper;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Sales\Api\Data\OrderAddressInterface;
+use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
 use TIG\PostNL\Config\Provider\Webshop;
@@ -175,7 +176,12 @@ abstract class AbstractTracking extends AbstractHelper
     {
         $order = $address->getOrder();
         $store = $order->getStore();
-        $storeLocale = $this->scopeConfig->getValue('general/locale/code', $store->getCode(), $store->getStoreId());
+        $storeLocale = $this->scopeConfig->getValue(
+            'general/locale/code',
+            ScopeInterface::SCOPE_STORE,
+            $store->getStoreId()
+        );
+
         $language = substr($storeLocale, 3, 2);
         $params = [
             'B' => $trackingNumber,
