@@ -159,7 +159,7 @@ class Data
     {
         $deliveryDate = $shipment->getPostNLOrder()->getDeliveryDate();
         if ($deliveryDate) {
-            return date('d-m-Y', strtotime($deliveryDate));
+            return date('d-m-Y H:i:s', strtotime($deliveryDate));
         }
 
         return false;

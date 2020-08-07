@@ -367,7 +367,7 @@ interface ShipmentInterface
     public function getReturnBarcodes();
 
     /**
-     * @return Order
+     * @return \TIG\PostNL\Api\Data\OrderInterface
      */
     public function getPostNLOrder();
 }
