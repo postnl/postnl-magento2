@@ -133,6 +133,10 @@ class Range
             return $this->get('EU');
         }
 
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'pakjegemak_be_options')) {
+            return $this->get('EU');
+        }
+
         if ($this->options->doesProductMatchFlags($productCode, 'group', 'priority_options')) {
             return $this->get('PEPS');
         }
