@@ -163,7 +163,12 @@ class Customs
      */
     private function getValue($item)
     {
-        $value = $this->attributeValues->getCustomsValue($item, $this->shipment->getStoreId());
+        $value           = $this->attributeValues->getCustomsValue($item, $this->shipment->getStoreId());
+        $orderItem       = $item->getOrderItem();
+        $discountPerItem = $orderItem->getDiscountAmount() / $orderItem->getQtyOrdered();
+        $totalDiscount   = $discountPerItem * $item->getQty();
+        $value           = $value - $totalDiscount;
+
         return round($value * $this->getQty($item));
     }
 
