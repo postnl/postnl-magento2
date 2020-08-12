@@ -228,7 +228,7 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => 'BE',
-            'group'                => 'eu_options',
+            'group'                => 'be_options',
         ],
         '4941' => [
             'value'                => '4941',
@@ -238,7 +238,7 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => 'BE',
-            'group'                => 'eu_options',
+            'group'                => 'be_options',
         ],
         '4946' => [
             'value'                => '4946',
@@ -248,7 +248,7 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => 'BE',
-            'group'                => 'eu_options',
+            'group'                => 'be_options',
         ],
         '4986' => [
             'value'                => '4986',
@@ -258,7 +258,7 @@ abstract class OptionsAbstract
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => 'BE',
-            'group'                => 'eu_options',
+            'group'                => 'be_options',
         ],
         // GlobalPack
         '4945' => [
@@ -668,6 +668,7 @@ abstract class OptionsAbstract
 	    'pakjegemak_options'          => 'Post Office options',
 	    'pakjegemak_be_options'       => 'Post Office BE options',
 	    'eu_options'                  => 'EU options',
+	    'be_options'                  => 'BE options',
 	    'global_options'              => 'Global options',
 	    'buspakje_options'            => 'Letter Box Parcel options',
 	    'extra_at_home_options'       => 'Extra@Home options',
@@ -684,6 +685,7 @@ abstract class OptionsAbstract
 		'pakjegemak_options'          => 'Post Office',
 		'pakjegemak_be_options'       => 'Post Office Belgium',
 		'eu_options'                  => 'EPS',
+		'be_options'                  => 'EPS BE',
 		'global_options'              => 'Global Pack',
 		'buspakje_options'            => 'Letter Box',
 		'extra_at_home_options'       => 'Extra@Home',
