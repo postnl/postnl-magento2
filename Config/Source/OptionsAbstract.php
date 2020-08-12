@@ -260,6 +260,16 @@ abstract class OptionsAbstract
             'countryLimitation'    => 'BE',
             'group'                => 'be_options',
         ],
+        '4912' => [
+            'value'                => '4912',
+            'label'                => 'EPS Standard BE + Signature on delivery (BE)',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'be_options',
+        ],
         // GlobalPack
         '4945' => [
             'value'                => '4945',
