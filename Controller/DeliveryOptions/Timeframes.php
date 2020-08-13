@@ -153,14 +153,14 @@ class Timeframes extends AbstractDeliveryOptions
 
         if (in_array($params['address']['country'], EpsCountries::ALL) && !in_array($params['address']['country'], ['BE', 'NL'])) {
             if ($params['address']['country'] === 'ES' && $this->canaryConverter->isCanaryIsland($params['address'])) {
-                return $this->jsonResponse($this->getGlobalPackResponse($price));
+                return $this->jsonResponse($this->getGlobalPackResponse($price['price']));
             }
 
-            return $this->jsonResponse($this->getEpsCountryResponse($price));
+            return $this->jsonResponse($this->getEpsCountryResponse($price['price']));
         }
 
         if (!in_array($params['address']['country'], EpsCountries::ALL) && !in_array($params['address']['country'], ['BE', 'NL'])) {
-            return $this->jsonResponse($this->getGlobalPackResponse($price));
+            return $this->jsonResponse($this->getGlobalPackResponse($price['price']));
         }
 
         $this->addressEnhancer->set($params['address']);
