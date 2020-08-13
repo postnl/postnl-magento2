@@ -39,6 +39,7 @@ use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Service\Carrier\Price\Calculator;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
+use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Service\Quote\ShippingDuration;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
@@ -74,17 +75,23 @@ class Timeframes extends AbstractDeliveryOptions
     private $letterboxPackage;
 
     /**
-     * @param Context                      $context
-     * @param OrderRepository              $orderRepository
-     * @param Session                      $checkoutSession
-     * @param QuoteToRateRequest           $quoteToRateRequest
-     * @param AddressEnhancer              $addressEnhancer
-     * @param DeliveryDate                 $deliveryDate
-     * @param TimeFrame                    $timeFrame
-     * @param Calculator                   $calculator
-     * @param IsDeliverDaysActive          $isDeliverDaysActive
-     * @param ShippingDuration             $shippingDuration
-     * @param LetterboxPackage             $letterboxPackage
+     * @var CanaryIslandToIC
+     */
+    private $canaryConverter;
+
+    /**
+     * @param Context             $context
+     * @param OrderRepository     $orderRepository
+     * @param Session             $checkoutSession
+     * @param QuoteToRateRequest  $quoteToRateRequest
+     * @param AddressEnhancer     $addressEnhancer
+     * @param DeliveryDate        $deliveryDate
+     * @param TimeFrame           $timeFrame
+     * @param Calculator          $calculator
+     * @param IsDeliverDaysActive $isDeliverDaysActive
+     * @param ShippingDuration    $shippingDuration
+     * @param LetterboxPackage    $letterboxPackage
+     * @param CanaryIslandToIC    $canaryConverter
      */
     public function __construct(
         Context $context,
@@ -97,13 +104,15 @@ class Timeframes extends AbstractDeliveryOptions
         Calculator $calculator,
         IsDeliverDaysActive $isDeliverDaysActive,
         ShippingDuration $shippingDuration,
-        LetterboxPackage $letterboxPackage
+        LetterboxPackage $letterboxPackage,
+        CanaryIslandToIC $canaryConverter
     ) {
         $this->addressEnhancer              = $addressEnhancer;
         $this->timeFrameEndpoint            = $timeFrame;
         $this->calculator                   = $calculator;
         $this->isDeliveryDaysActive         = $isDeliverDaysActive;
         $this->letterboxPackage             = $letterboxPackage;
+        $this->canaryConverter              = $canaryConverter;
 
         parent::__construct(
             $context,
@@ -143,6 +152,10 @@ class Timeframes extends AbstractDeliveryOptions
         }
 
         if (in_array($params['address']['country'], EpsCountries::ALL) && !in_array($params['address']['country'], ['BE', 'NL'])) {
+            if ($params['address']['country'] === 'ES' && $this->canaryConverter->isCanaryIsland($params['address'])) {
+                return $this->jsonResponse($this->getGlobalPackResponse($price));
+            }
+
             return $this->jsonResponse($this->getEpsCountryResponse($price));
         }
 
@@ -244,11 +257,29 @@ class Timeframes extends AbstractDeliveryOptions
         ];
     }
 
+    /**
+     * @param $price
+     *
+     * @return array
+     */
     private function getEpsCountryResponse($price)
     {
         return [
             'price'      => $price,
             'timeframes' => [[['eps' => __('Ship to foreign country')]]]
+        ];
+    }
+
+    /**
+     * @param $price
+     *
+     * @return array
+     */
+    private function getGlobalPackResponse($price)
+    {
+        return [
+            'price' => $price,
+            'timeframes' => [[['gp' => __('Ship to foreign country')]]]
         ];
     }
 }
