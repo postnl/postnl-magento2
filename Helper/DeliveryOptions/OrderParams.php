@@ -44,43 +44,51 @@ class OrderParams
         'quote_id'                     => [
             'pickup'   => true,
             'delivery' => true,
-            'fallback' => false
+            'fallback' => false,
+            'EPS' => false
         ],
         'delivery_date'                => [
             'pickup'   => true,
             'delivery' => true,
-            'fallback' => false
+            'fallback' => false,
+            'EPS' => false
         ],
         'expected_delivery_time_start' => [
             'pickup'   => false,
             'delivery' => true,
-            'fallback' => false
+            'fallback' => false,
+            'EPS' => false
         ],
         'expected_delivery_time_end'   => [
             'pickup'   => false,
             'delivery' => true,
-            'fallback' => false
+            'fallback' => false,
+            'EPS' => false
         ],
         'is_pakjegemak'                => [
             'pickup'   => true,
             'delivery' => false,
-            'fallback' => false
+            'fallback' => false,
+            'EPS' => false
         ],
         'pg_location_code'             => [
             'pickup'   => true,
             'delivery' => false,
-            'fallback' => false
+            'fallback' => false,
+            'EPS' => false
         ],
         'pg_retail_network_id'         => [
             'pickup'   => true,
             'delivery' => false,
-            'fallback' => false
+            'fallback' => false,
+            'EPS' => false
         ],
         'pg_address'                   => [
             'pickup'   => true,
             'delivery' => false,
-            'fallback' => false
-        ]
+            'fallback' => false,
+            'EPS' => false
+        ],
     ];
     /**
      * @var FeeCalculator
@@ -180,8 +188,13 @@ class OrderParams
      */
     private function formatParamData($params)
     {
-        $option      = isset($params['option']) ? $params['option'] : 'Daytime';
-        $productInfo = $this->productInfo->get($params['type'], $option, $params['country']);
+        $option = isset($params['option']) ? $params['option'] : 'Daytime';
+
+        if (!isset($params['option']) && $params['type'] === 'EPS') {
+            $option = $params['type'];
+        }
+
+        $productInfo = $this->productInfo->get($params['type'], $option, $params['address']);
 
         return [
             'quote_id'                     => isset($params['quote_id']) ? $params['quote_id'] : '',

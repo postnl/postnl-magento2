@@ -32,8 +32,8 @@
  */
 namespace TIG\PostNL\Service\Converter;
 
-use Magento\Sales\Model\Order\Address as SalesAddress;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
+use Magento\Sales\Model\Order\Address as SalesAddress;
 
 class CanaryIslandToIC
 {
@@ -62,8 +62,11 @@ class CanaryIslandToIC
     public function isCanaryIsland($address)
     {
         $canaryIslands = [35, 38, 51, 52];
-        if ($address->getCountryId() === 'ES' && in_array(substr($address->getPostcode(), 0, 2), $canaryIslands)) {
-            return true;
+
+        if (is_array($address)) {
+            if ($address['country'] === 'ES' && in_array(substr($address['postcode'], 0, 2), $canaryIslands)) {
+                return true;
+            }
         }
 
         return false;

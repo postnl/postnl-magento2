@@ -31,18 +31,19 @@
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
+use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Context;
+use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
-use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
+use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Service\Carrier\Price\Calculator;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
+use TIG\PostNL\Service\Quote\ShippingDuration;
+use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
-use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
-use Magento\Framework\App\Action\Context;
-use Magento\Checkout\Model\Session;
-use TIG\PostNL\Service\Quote\ShippingDuration;
 
 // @codingStandardsIgnoreFile
 class Timeframes extends AbstractDeliveryOptions
@@ -132,6 +133,7 @@ class Timeframes extends AbstractDeliveryOptions
 
         $quote = $this->checkoutSession->getQuote();
         $cartItems = $quote->getAllItems();
+
         if ($this->letterboxPackage->isLetterboxPackage($cartItems, false) && $params['address']['country'] == 'NL') {
             return $this->jsonResponse($this->getLetterboxPackageResponse($price));
         }
@@ -140,10 +142,14 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getFallBackResponse(2, $price['price']));
         }
 
+        if (in_array($params['address']['country'], EpsCountries::ALL) && !in_array($params['address']['country'], ['BE', 'NL'])) {
+            return $this->jsonResponse($this->getEpsCountryResponse($price));
+        }
+
         $this->addressEnhancer->set($params['address']);
 
         try {
-            return $this->jsonResponse($this->getValidResponeType($price['price']));
+            return $this->jsonResponse($this->getValidResponseType($price['price']));
         } catch (\Exception $exception) {
             return $this->jsonResponse($this->getFallBackResponse(3, $price['price']));
         }
@@ -174,7 +180,7 @@ class Timeframes extends AbstractDeliveryOptions
      * @throws \Magento\Framework\Webapi\Exception
      * @throws \TIG\PostNL\Webservices\Api\Exception
      */
-    private function getValidResponeType($price)
+    private function getValidResponseType($price)
     {
         $address = $this->addressEnhancer->get();
 
@@ -235,6 +241,14 @@ class Timeframes extends AbstractDeliveryOptions
             'price'      => $price,
             'timeframes' => [[['letterbox_package' => __('Your order will fit through the letterbox and will be '
             . 'delivered from Tuesday to Saturday.')]]]
+        ];
+    }
+
+    private function getEpsCountryResponse($price)
+    {
+        return [
+            'price'      => $price,
+            'timeframes' => [[['eps' => __('Ship to foreign country')]]]
         ];
     }
 }

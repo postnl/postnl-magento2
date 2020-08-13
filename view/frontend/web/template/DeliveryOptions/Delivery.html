@@ -1,7 +1,7 @@
 <div class="days">
     <div data-bind="foreach: deliverydays">
         <div class="wrapper">
-            <!-- ko ifnot: $data[0].fallback || $data[0].letterbox_package -->
+            <!-- ko ifnot: $data[0].fallback || $data[0].letterbox_package || $data[0].eps -->
             <strong>
                 <span class="deliverydays-day" data-bind="text: $data[0].day"></span>
                 <span class="deliverydays-date" data-bind="text: $data[0].date"></span>
@@ -58,6 +58,22 @@
 
                         <div class="tig-postnl-delivery-fallback">
                             <span data-bind="text: letterbox_package"></span>
+                        </div>
+                    </label>
+                </li>
+            </ul>
+            <!-- /ko -->
+            <!-- ko if: $data[0].eps -->
+            <ul data-bind="foreach: $data">
+                <li data-bind="css: { 'selected-row': $parents[1].isRowSelected($data), 'odd': $parents[1].isOdd() }">
+                    <label>
+                        <input type="radio"
+                               data-bind="checked: $parents[1].selectedOption, checkedValue: $data"
+                               name="deliveryday"
+                               class="tig-postnl-delivery-radio" checked="checked"/>
+
+                        <div class="tig-postnl-delivery-fallback">
+                            <span data-bind="text: eps"></span>
                         </div>
                     </label>
                 </li>

@@ -137,8 +137,7 @@ class ProductInfo
         }
 
         // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
-        if ((empty($type) || $option == static::OPTION_DAYTIME)
-            && !in_array($country, ['BE', 'NL'])) {
+        if ($type === strtolower(static::SHIPMENT_TYPE_EPS) || $option == static::OPTION_DAYTIME) {
             $this->setEpsOption($address, $country);
 
             return $this->getInfo();
@@ -174,8 +173,14 @@ class ProductInfo
             return $address;
         }
 
-        if (is_array($address) && isset($address['Countrycode'])) {
-            return $address['Countrycode'];
+        if (is_array($address)) {
+            if (isset($address['Countrycode'])) {
+                return $address['Countrycode'];
+            }
+
+            if (isset($address['country'])) {
+                return $address['country'];
+            }
         }
 
         $address = $this->quote->getShippingAddress();

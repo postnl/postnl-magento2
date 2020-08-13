@@ -82,10 +82,6 @@ define([
                     return;
                 }
 
-                if (address.country !== 'NL' && address.country !== 'BE') {
-                    return;
-                }
-
                 this.getDeliverydays(address);
             }.bind(this));
 
@@ -118,7 +114,7 @@ define([
             State.currentSelectedShipmentType('delivery');
 
             var fee = null;
-            if (!value.fallback && !value.letterbox_package) {
+            if (!value.fallback && !value.letterbox_package && !value.eps) {
                 if (value.hasFee()) {
                     fee = value.getFee();
                 }
@@ -127,13 +123,22 @@ define([
             State.fee(fee);
             State.deliveryFee(fee);
 
+            var type = 'delivery';
+            if (typeof value.fallback !== 'undefined') {
+                type = 'fallback';
+            }
+
+            if (typeof value.eps !== 'undefined') {
+                type = 'EPS';
+            }
+
             $(document).trigger('compatible_postnl_deliveryoptions_save_before');
             $.ajax({
                 method : 'POST',
                 url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
                 data   : {
                     address: AddressFinder(),
-                    type   : (typeof value.fallback !== 'undefined') ? 'fallback' : 'delivery',
+                    type   : type,
                     date   : value.date,
                     option : value.option,
                     from   : value.from,
@@ -190,6 +195,14 @@ define([
                     return;
                 }
 
+                if (typeof data.timeframes[0][0] !== 'undefined' && "eps" in data.timeframes[0][0]) {
+                    data  = ko.utils.arrayMap(data.timeframes, function (eps) {
+                        return eps;
+                    });
+                    this.deliverydays(data);
+                    State.currentOpenPane('delivery');
+                    return;
+                }
 
                 data = ko.utils.arrayMap(data.timeframes, function (day) {
                     return ko.utils.arrayMap(day, function (timeFrame) {
