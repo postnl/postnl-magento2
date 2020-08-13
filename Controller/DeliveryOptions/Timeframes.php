@@ -159,6 +159,10 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getEpsCountryResponse($price));
         }
 
+        if (!in_array($params['address']['country'], EpsCountries::ALL) && !in_array($params['address']['country'], ['BE', 'NL'])) {
+            return $this->jsonResponse($this->getGlobalPackResponse($price));
+        }
+
         $this->addressEnhancer->set($params['address']);
 
         try {

@@ -129,8 +129,7 @@ class ProductInfo
         $type    = strtolower($type);
         $option  = strtolower($option);
 
-        if (!in_array($country, EpsCountries::ALL)
-            && !in_array($country, ['BE', 'NL'])) {
+        if ($type === strtolower(static::SHIPMENT_TYPE_GP)) {
             $this->setGlobalPackOption($country);
 
             return $this->getInfo();

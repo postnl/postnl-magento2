@@ -114,7 +114,7 @@ define([
             State.currentSelectedShipmentType('delivery');
 
             var fee = null;
-            if (!value.fallback && !value.letterbox_package && !value.eps) {
+            if (!value.fallback && !value.letterbox_package && !value.eps && !value.gp) {
                 if (value.hasFee()) {
                     fee = value.getFee();
                 }
@@ -130,6 +130,10 @@ define([
 
             if (typeof value.eps !== 'undefined') {
                 type = 'EPS';
+            }
+
+            if (typeof value.gp !== 'undefined') {
+                type = 'GP';
             }
 
             $(document).trigger('compatible_postnl_deliveryoptions_save_before');
@@ -198,6 +202,15 @@ define([
                 if (typeof data.timeframes[0][0] !== 'undefined' && "eps" in data.timeframes[0][0]) {
                     data  = ko.utils.arrayMap(data.timeframes, function (eps) {
                         return eps;
+                    });
+                    this.deliverydays(data);
+                    State.currentOpenPane('delivery');
+                    return;
+                }
+
+                if (typeof data.timeframes[0][0] !== 'undefined' && "gp" in data.timeframes[0][0]) {
+                    data  = ko.utils.arrayMap(data.timeframes, function (gp) {
+                        return gp;
                     });
                     this.deliverydays(data);
                     State.currentOpenPane('delivery');
