@@ -181,7 +181,7 @@ define([
                     return;
                 }
                 
-                if (data.letterbox_package === true && "letterbox_package" in data.timeframes[0][0]) {
+                if (data.letterbox_package === true) {
                     data  = ko.utils.arrayMap(data.timeframes, function (letterbox_package) {
                         return letterbox_package;
                     });
