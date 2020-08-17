@@ -186,9 +186,18 @@ class Timeframes extends AbstractDeliveryOptions
             ];
         }
 
+        $timeframes = $this->getPossibleDeliveryDays($address);
+        if (empty($timeframes)) {
+            return [
+                'error'      => __('No timeframes available.'),
+                'price'      => $price,
+                'timeframes' => [[['fallback' => __('At the first opportunity')]]]
+            ];
+        }
+
         return [
             'price'      => $price,
-            'timeframes' => $this->getPossibleDeliveryDays($address)
+            'timeframes' => $timeframes
         ];
     }
 
