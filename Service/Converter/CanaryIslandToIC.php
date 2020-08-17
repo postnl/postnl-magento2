@@ -63,16 +63,12 @@ class CanaryIslandToIC
     {
         $canaryIslands = [35, 38, 51, 52];
 
-        if (is_object($address)) {
-            if ($address->getCountryId() === 'ES' && in_array(substr($address->getPostcode(), 0, 2), $canaryIslands)) {
-                return true;
-            }
+        if (is_object($address) && $address->getCountryId() === 'ES' && in_array(substr($address->getPostcode(), 0, 2), $canaryIslands)) {
+            return true;
         }
 
-        if (is_array($address)) {
-            if ($address['country'] === 'ES' && in_array(substr($address['postcode'], 0, 2), $canaryIslands)) {
-                return true;
-            }
+        if (is_array($address) && $address['country'] === 'ES' && in_array(substr($address['postcode'], 0, 2), $canaryIslands)) {
+            return true;
         }
 
         return false;

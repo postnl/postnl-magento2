@@ -181,10 +181,10 @@ class Save extends AbstractDeliveryOptions
      */
     private function addSessionDataToParams($params)
     {
-        if (!isset($params['date']) && $params['type'] == 'pickup'
-            || !isset($params['date']) && $params['type'] == 'fallback'
-            || !isset($params['date']) && $params['type'] == 'EPS'
-            || !isset($params['date']) && $params['type'] == 'GP') {
+        if (!isset($params['date']) &&
+            ($params['type'] === 'pickup' || $params['type'] === 'fallback'
+             || $params['type'] === 'EPS' || $params['type'] === 'GP')
+        ) {
             $params['date'] = $this->checkoutSession->getPostNLDeliveryDate();
         }
 
