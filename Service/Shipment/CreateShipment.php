@@ -164,6 +164,10 @@ class CreateShipment
             }
         );
 
+        if (!empty($foundShipment)) {
+            $foundShipment = $foundShipment[0];
+        }
+
         return $foundShipment;
     }
 
