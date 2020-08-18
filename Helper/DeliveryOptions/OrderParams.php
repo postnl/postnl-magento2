@@ -206,7 +206,7 @@ class OrderParams
             $option = $params['type'];
         }
 
-        $productInfo = $this->productInfo->get($params['type'], $option, (isset($params['address']) ?? $params['country']));
+        $productInfo = $this->productInfo->get($params['type'], $option, $params['address']);
 
         return [
             'quote_id'                     => isset($params['quote_id']) ? $params['quote_id'] : '',

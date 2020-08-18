@@ -129,14 +129,16 @@ class ProductInfo
         $type    = strtolower($type);
         $option  = strtolower($option);
 
-        if ($type === strtolower(static::SHIPMENT_TYPE_GP)) {
+        if (!in_array($country, EpsCountries::ALL)
+            && !in_array($country, ['BE', 'NL']) || $type === strtolower(static::SHIPMENT_TYPE_GP)) {
             $this->setGlobalPackOption($country);
 
             return $this->getInfo();
         }
 
         // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
-        if ($type === strtolower(static::SHIPMENT_TYPE_EPS) || $option == static::OPTION_DAYTIME) {
+        if ((empty($type) || $option == static::OPTION_DAYTIME)
+            && !in_array($country, ['BE', 'NL']) || $type === strtolower(static::SHIPMENT_TYPE_EPS)) {
             $this->setEpsOption($address, $country);
 
             return $this->getInfo();
