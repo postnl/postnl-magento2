@@ -270,7 +270,7 @@ class Timeframes extends AbstractDeliveryOptions
     {
         return [
             'price'      => $price,
-            'timeframes' => [[['eps' => __('Ship to foreign country')]]]
+            'timeframes' => [[['eps' => __('Ship internationally')]]]
         ];
     }
 
@@ -283,7 +283,7 @@ class Timeframes extends AbstractDeliveryOptions
     {
         return [
             'price' => $price,
-            'timeframes' => [[['gp' => __('Ship to foreign country')]]]
+            'timeframes' => [[['gp' => __('Ship internationally')]]]
         ];
     }
 }

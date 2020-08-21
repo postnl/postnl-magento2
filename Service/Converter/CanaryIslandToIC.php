@@ -63,11 +63,13 @@ class CanaryIslandToIC
     {
         $canaryIslands = [35, 38, 51, 52];
 
+        // Check if the function is called from SetDefaultData as an object
         if (is_object($address) && $address->getCountryId() === 'ES' &&
             in_array(substr($address->getPostcode(), 0, 2), $canaryIslands)) {
             return true;
         }
 
+        // Check if the address is called from Save as an array
         if (is_array($address) && $address['country'] === 'ES' &&
             in_array(substr($address['postcode'], 0, 2), $canaryIslands)) {
             return true;

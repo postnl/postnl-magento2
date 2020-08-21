@@ -199,6 +199,7 @@ define([
                     return;
                 }
 
+                // Return delivery moment of type EPS if the country is an EPS country
                 if (typeof data.timeframes[0][0] !== 'undefined' && "eps" in data.timeframes[0][0]) {
                     data  = ko.utils.arrayMap(data.timeframes, function (eps) {
                         return eps;
@@ -208,6 +209,7 @@ define([
                     return;
                 }
 
+                // Return delivery moment of type GP if the country is an Global Pack country
                 if (typeof data.timeframes[0][0] !== 'undefined' && "gp" in data.timeframes[0][0]) {
                     data  = ko.utils.arrayMap(data.timeframes, function (gp) {
                         return gp;

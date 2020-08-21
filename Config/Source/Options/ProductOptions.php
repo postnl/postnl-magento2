@@ -169,10 +169,12 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getEpsProductOptions($address = false)
     {
+        // Check if the function is called from SetDefaultData as an object and check if it is a Canary Island
         if ($address && is_object($address) && $address->getCountryId() === 'ES' && $this->canaryConverter->isCanaryIsland($address)) {
             return $this->getGlobalPackOptions();
         }
 
+        // Check if the address is called from Save as an array and check if it is a Canary Island
         if ($address && is_array($address) && $address['country'] === 'ES' && $this->canaryConverter->isCanaryIsland($address)) {
             return $this->getGlobalPackOptions();
         }
