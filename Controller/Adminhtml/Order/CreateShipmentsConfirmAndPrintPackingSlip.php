@@ -155,6 +155,10 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
             return;
         }
 
+        if (is_array($shipment) && !empty($shipment)) {
+            $shipment = $shipment[0];
+        }
+
         $this->loadLabels($shipment);
     }
 
