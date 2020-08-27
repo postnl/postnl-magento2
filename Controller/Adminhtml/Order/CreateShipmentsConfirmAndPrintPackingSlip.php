@@ -31,13 +31,13 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Order;
 
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Ui\Component\MassAction\Filter;
-use Magento\Backend\App\Action\Context;
-use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use Magento\Ui\Component\MassAction\Filter;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
@@ -150,21 +150,12 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
             return;
         }
 
-        $shipment = $this->createShipment->create($order);
-        if (!$shipment) {
+        $shipments = $this->createShipment->create($order);
+        if (!$shipments) {
             return;
         }
 
-        $shipments = $this->createShipment->create($order);
-
-        // $shipments will contain a single shipment if it created a new one.
-        if (!is_array($shipments)) {
-            $shipments = [$shipments];
-        }
-
-        foreach ($shipments as $shipment) {
-            $this->loadLabels($shipment);
-        }
+        $this->loadLabels($shipments);
     }
 
     /**
@@ -185,9 +176,26 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
     }
 
     /**
+     * Handle loading shipment labels
+     *
+     * @param array $shipments
+     */
+    private function loadLabels($shipments)
+    {
+        // $shipments will contain a single shipment if it created a new one.
+        if (!is_array($shipments)) {
+            $shipments = [$shipments];
+        }
+
+        foreach ($shipments as $shipment) {
+            $this->loadLabel($shipment);
+        }
+    }
+
+    /**
      * @param Shipment $shipment
      */
-    private function loadLabels($shipment)
+    private function loadLabel($shipment)
     {
         $address  = $shipment->getShippingAddress();
 
