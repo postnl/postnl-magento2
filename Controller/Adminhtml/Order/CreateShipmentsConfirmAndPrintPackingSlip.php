@@ -155,11 +155,16 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
             return;
         }
 
-        if (is_array($shipment) && !empty($shipment)) {
-            $shipment = $shipment[0];
+        $shipments = $this->createShipment->create($order);
+
+        // $shipments will contain a single shipment if it created a new one.
+        if (!is_array($shipments)) {
+            $shipments = [$shipments];
         }
 
-        $this->loadLabels($shipment);
+        foreach ($shipments as $shipment) {
+            $this->loadLabels($shipment);
+        }
     }
 
     /**
