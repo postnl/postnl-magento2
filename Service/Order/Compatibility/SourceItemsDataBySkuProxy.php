@@ -49,11 +49,20 @@ class SourceItemsDataBySkuProxy
     private $subject;
 
     /**
-     * @param ObjectManagerInterface $objectManager
+     * @var GetSourceItemsDataBySku
      */
-    public function __construct(ObjectManagerInterface $objectManager)
-    {
+    private $proxy;
+
+    /**
+     * @param ObjectManagerInterface  $objectManager
+     * @param GetSourceItemsDataBySku $proxy
+     */
+    public function __construct(
+        ObjectManagerInterface $objectManager,
+        GetSourceItemsDataBySku $proxy
+    ) {
         $this->objectManager = $objectManager;
+        $this->proxy = $proxy;
     }
 
     /**
