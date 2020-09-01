@@ -69,18 +69,17 @@ class AttributeValues
     }
 
     /**
-     * @param string $attributeCode
+     * @param string                $attributeCode
      * @param ShipmentItemInterface $item
      *
      * @return mixed
      * @throws PostNLException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function get($attributeCode, $item)
     {
-        $orderItem = $item->getOrderItem();
-        $discountPerItem = $orderItem->getDiscountAmount() / $orderItem->getQtyOrdered();
-        $totalDiscount = $discountPerItem * $item->getQty();
-        $attributeValue = $item->getPrice() - $totalDiscount;
+        $product = $this->productRepository->get($item->getSku());
+        $attributeValue = $product->getDataUsingMethod($attributeCode);
 
         if (empty($attributeValue) && !in_array($attributeCode, $this->hasFallback)) {
             // @codingStandardsIgnoreLine
