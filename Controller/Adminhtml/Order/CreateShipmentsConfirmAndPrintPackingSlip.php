@@ -185,12 +185,11 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
         // $shipments will contain a single shipment if it created a new one.
         if (!is_array($shipments)) {
             $this->loadLabel($shipments);
+            return;
         }
 
-        if (is_array($shipments)) {
-            foreach ($shipments as $shipment) {
-                $this->loadLabel($shipment);
-            }
+        foreach ($shipments as $shipment) {
+            $this->loadLabel($shipment);
         }
     }
 
