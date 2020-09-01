@@ -45,59 +45,60 @@ class OrderParams
             'pickup'   => true,
             'delivery' => true,
             'fallback' => false,
-            'EPS' => false,
-            'GP' => false
+            'EPS'      => false,
+            'GP'       => false
         ],
         'delivery_date'                => [
             'pickup'   => true,
             'delivery' => true,
             'fallback' => false,
-            'EPS' => false,
-            'GP' => false
+            'EPS'      => false,
+            'GP'       => false
         ],
         'expected_delivery_time_start' => [
             'pickup'   => false,
             'delivery' => true,
             'fallback' => false,
-            'EPS' => false,
-            'GP' => false
+            'EPS'      => false,
+            'GP'       => false
         ],
         'expected_delivery_time_end'   => [
             'pickup'   => false,
             'delivery' => true,
             'fallback' => false,
-            'EPS' => false,
-            'GP' => false
+            'EPS'      => false,
+            'GP'       => false
         ],
         'is_pakjegemak'                => [
             'pickup'   => true,
             'delivery' => false,
             'fallback' => false,
-            'EPS' => false,
-            'GP' => false
+            'EPS'      => false,
+            'GP'       => false
         ],
         'pg_location_code'             => [
             'pickup'   => true,
             'delivery' => false,
             'fallback' => false,
-            'EPS' => false,
-            'GP' => false
+            'EPS'      => false,
+            'GP'       => false
         ],
         'pg_retail_network_id'         => [
             'pickup'   => true,
             'delivery' => false,
             'fallback' => false,
-            'EPS' => false,
-            'GP' => false
+            'EPS'      => false,
+            'GP'       => false
         ],
         'pg_address'                   => [
             'pickup'   => true,
             'delivery' => false,
             'fallback' => false,
-            'EPS' => false,
-            'GP' => false
+            'EPS'      => false,
+            'GP'       => false
         ],
     ];
+
     /**
      * @var FeeCalculator
      */
