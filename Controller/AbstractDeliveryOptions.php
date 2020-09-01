@@ -161,10 +161,6 @@ abstract class AbstractDeliveryOptions extends Action
     //@codingStandardsIgnoreLine
     protected function getDeliveryDay($address)
     {
-        if ($this->checkoutSession->getPostNLDeliveryDate()) {
-            return $this->checkoutSession->getPostNLDeliveryDate();
-        }
-
         $quote   = $this->checkoutSession->getQuote();
         $storeId = $quote->getStoreId();
         $shippingDuration = $this->shippingDuration->get();
