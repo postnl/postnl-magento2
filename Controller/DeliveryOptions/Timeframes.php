@@ -133,7 +133,7 @@ class Timeframes extends AbstractDeliveryOptions
         $quote = $this->checkoutSession->getQuote();
         $cartItems = $quote->getAllItems();
         if ($this->letterboxPackage->isLetterboxPackage($cartItems, false) && $params['address']['country'] == 'NL') {
-            return $this->jsonResponse($this->getLetterboxPackageResponse($price));
+            return $this->jsonResponse($this->getLetterboxPackageResponse($price['price']));
         }
 
         if (!$this->isDeliveryDaysActive->getValue()) {
