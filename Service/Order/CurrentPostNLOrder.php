@@ -35,6 +35,7 @@ use TIG\PostNL\Model\OrderRepository as PostNLOrderRepository;
 use TIG\PostNL\Model\Order as PostNLOrder;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SortOrderFactory;
 
 class CurrentPostNLOrder
 {
@@ -54,6 +55,11 @@ class CurrentPostNLOrder
     private $quote;
 
     /**
+     * @var SortOrderFactory
+     */
+    private $sortOrderBuilder;
+
+    /**
      * @param PostNLOrderRepository $orderRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param QuoteInterface        $quote
@@ -61,11 +67,13 @@ class CurrentPostNLOrder
     public function __construct(
         PostNLOrderRepository $orderRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        QuoteInterface $quote
+	QuoteInterface $quote,
+	SortOrderFactory $sortOrderBuilder
     ) {
         $this->postNLOrderRepository = $orderRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->quote = $quote;
+	$this->quote = $quote;
+	$this->sortOrderBuilder = $sortOrderBuilder;
     }
 
     /**
@@ -80,6 +88,9 @@ class CurrentPostNLOrder
 
         $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId);
         $searchCriteria->setPageSize(1);
+
+        $sortOrder = $this->sortOrderBuilder->create()->setField('entity_id')->setDirection('DESC')->create();
+        $searchCriteria->setSortOrders([$sortOrder]);
 
         /** @var \Magento\Framework\Api\SearchResults $list */
         $list = $this->postNLOrderRepository->getList($searchCriteria->create());
