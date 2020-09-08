@@ -175,14 +175,12 @@ class ProductInfo
             return $address;
         }
 
-        if (is_array($address)) {
-            if (isset($address['Countrycode'])) {
-                return $address['Countrycode'];
-            }
+        if (is_array($address) && isset($address['Countrycode'])) {
+            return $address['Countrycode'];
+        }
 
-            if (isset($address['country'])) {
-                return $address['country'];
-            }
+        if (is_array($address) && isset($address['country'])) {
+            return $address['country'];
         }
 
         $address = $this->quote->getShippingAddress();
