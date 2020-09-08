@@ -33,7 +33,6 @@ namespace TIG\PostNL\Service\Options;
 
 use TIG\PostNL\Config\Provider\ProductType;
 use TIG\PostNL\Service\Order\ProductInfo;
-use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use Magento\Sales\Api\Data\ShipmentItemInterface;
 use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
@@ -72,23 +71,15 @@ class ItemsToOption
     private $productTypes;
 
     /**
-     * @var QuoteInterface
-     */
-    private $quote;
-
-    /**
-     * @param QuoteInterface    $quote
      * @param ProductDictionary $productDictionary
      * @param ProductType       $type
      */
     public function __construct(
-        QuoteInterface $quote,
         ProductDictionary $productDictionary,
         ProductType $type
     ) {
         $this->productDictionary = $productDictionary;
         $this->productTypes = $type;
-        $this->quote = $quote;
     }
 
     /**
@@ -125,10 +116,14 @@ class ItemsToOption
     }
 
     /**
+     * @param $quote
+     *
      * @return string
      */
-    public function getFromQuote()
+    public function getFromQuote($quote)
     {
-        return $this->get($this->quote->getAllItems());
+        $items = $quote->getAllItems();
+
+        return $this->get($items);
     }
 }

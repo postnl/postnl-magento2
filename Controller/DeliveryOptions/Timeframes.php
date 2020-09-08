@@ -144,7 +144,7 @@ class Timeframes extends AbstractDeliveryOptions
         $cartItems = $quote->getAllItems();
 
         if ($this->letterboxPackage->isLetterboxPackage($cartItems, false) && $params['address']['country'] == 'NL') {
-            return $this->jsonResponse($this->getLetterboxPackageResponse($price));
+            return $this->jsonResponse($this->getLetterboxPackageResponse($price['price']));
         }
 
         if (!$this->isDeliveryDaysActive->getValue()) {
@@ -209,9 +209,18 @@ class Timeframes extends AbstractDeliveryOptions
             ];
         }
 
+        $timeframes = $this->getPossibleDeliveryDays($address);
+        if (empty($timeframes)) {
+            return [
+                'error'      => __('No timeframes available.'),
+                'price'      => $price,
+                'timeframes' => [[['fallback' => __('At the first opportunity')]]]
+            ];
+        }
+
         return [
             'price'      => $price,
-            'timeframes' => $this->getPossibleDeliveryDays($address)
+            'timeframes' => $timeframes
         ];
     }
 
@@ -255,8 +264,9 @@ class Timeframes extends AbstractDeliveryOptions
     private function getLetterboxPackageResponse($price)
     {
         return [
-            'price'      => $price,
-            'timeframes' => [[['letterbox_package' => __('Your order will fit through the letterbox and will be '
+            'price'             => $price,
+            'letterbox_package' => true,
+            'timeframes'        => [[['letterbox_package' => __('Your order is a letterbox package and will be '
             . 'delivered from Tuesday to Saturday.')]]]
         ];
     }
