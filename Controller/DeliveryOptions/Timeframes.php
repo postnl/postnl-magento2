@@ -151,7 +151,7 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getFallBackResponse(2, $price['price']));
         }
 
-        if ($params['address']['country'] === 'ES' && $this->canaryConverter->isCanaryIsland($params['address'])) {
+        if (in_array($params['address']['country'], EpsCountries::ALL) && $params['address']['country'] === 'ES' && $this->canaryConverter->isCanaryIsland($params['address'])) {
             return $this->jsonResponse($this->getGlobalPackResponse($price['price']));
         }
 
