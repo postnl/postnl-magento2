@@ -32,6 +32,7 @@
 
 namespace TIG\PostNL\Service\Carrier\Price;
 
+use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
 use TIG\PostNL\Config\Source\Carrier\RateType;
@@ -116,7 +117,6 @@ class Calculator
     {
         $this->store = $store;
         $price       = $this->getConfigData('price');
-        $items       = $request->getAllItems();
 
         if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
             return $this->priceResponse('0.00', '0.00');
@@ -147,9 +147,17 @@ class Calculator
             return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
         }
 
+        if (!$parcelType) {
+            try {
+                $parcelType = $this->parcelTypeFinder->get();
+            } catch (LocalizedException $exception) {
+                $parcelType = ParcelTypeFinder::DEFAULT_TYPE;
+            }
+        }
+
         $ratePrice = $this->matrixratePrice->getRate(
             $request,
-            $parcelType ?: $this->parcelTypeFinder->get(),
+            $parcelType,
             $this->store,
             $includeVat
         );
