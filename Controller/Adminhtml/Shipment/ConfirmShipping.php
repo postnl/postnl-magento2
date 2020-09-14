@@ -98,8 +98,6 @@ class ConfirmShipping extends Action
     public function execute()
     {
         $shipmentId = $this->getRequest()->getParam('shipment_id');
-
-
         $this->confirm($shipmentId);
 
         $resultDirect = $this->resultRedirectFactory->create();

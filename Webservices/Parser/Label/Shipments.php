@@ -85,13 +85,12 @@ class Shipments
         $postnlOrder = $postnlShipment->getPostNLOrder();
         $contact   = $this->getContactData($shipment);
         $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
-        $countryId = $address[0]['Countrycode'];
         if ($postnlOrder->getIsPakjegemak()) {
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
 
-        if (($this->canReturnNl($countryId)) || $this->canReturnBe($countryId)) {
-            $address[] = $this->getReturnAddressData($countryId);
+        if (($this->canReturnNl($address[0]['Countrycode'])) || $this->canReturnBe($address[0]['Countrycode'])) {
+            $address[] = $this->getReturnAddressData($address[0]['Countrycode']);
         }
 
         return $this->shipmentData->get($postnlShipment, $address, $contact, $shipmentNumber);
@@ -126,8 +125,7 @@ class Shipments
     {
         $streetData   = $this->getStreetData($shippingAddress);
         $houseNr = isset($streetData['housenumber']) ? $streetData['housenumber'] : $shippingAddress->getStreetLine(2);
-        $houseNrExt = $shippingAddress->getStreetLine(3);
-        $houseNrExt = (isset($streetData['housenumberExtension']) ? $streetData['housenumberExtension'] : $houseNrExt);
+        $houseNrExt = (isset($streetData['housenumberExtension']) ? $streetData['housenumberExtension'] : $shippingAddress->getStreetLine(3));
         $addressArray = [
             'AddressType' => $addressType,
             'FirstName'   => $this->getFirstName($shippingAddress),
