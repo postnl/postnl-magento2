@@ -125,7 +125,8 @@ class Shipments
     {
         $streetData   = $this->getStreetData($shippingAddress);
         $houseNr = isset($streetData['housenumber']) ? $streetData['housenumber'] : $shippingAddress->getStreetLine(2);
-        $houseNrExt = (isset($streetData['housenumberExtension']) ? $streetData['housenumberExtension'] : $shippingAddress->getStreetLine(3));
+        $houseNrExt = $shippingAddress->getStreetLine(3);
+        $houseNrExt = (isset($streetData['housenumberExtension']) ? $streetData['housenumberExtension'] : $houseNrExt);
         $addressArray = [
             'AddressType' => $addressType,
             'FirstName'   => $this->getFirstName($shippingAddress),
@@ -153,7 +154,6 @@ class Shipments
     {
         $this->addressEnhancer->set(['street' => $shippingAddress->getStreet()]);
         $streetData = $this->addressEnhancer->get();
-
         if (isset($streetData['error']) && $shippingAddress->getCountryId() !== 'NL'
             && $shippingAddress->getCountryId() !== 'BE') {
             return ['street' => $shippingAddress->getStreet()];
