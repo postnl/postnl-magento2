@@ -35,6 +35,7 @@ namespace TIG\PostNL\Webservices\Parser\Label;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\Order\Address;
 use TIG\PostNL\Config\Provider\ReturnOptions;
+use TIG\PostNL\Exception;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Service\Shipment\Data as ShipmentData;
@@ -163,6 +164,8 @@ class Shipments
         if (isset($streetData['error'])) {
             $message = $streetData['error']['code'] . ' - ' . $streetData['error']['message'];
             $this->messageManager->addErrorMessage($message);
+
+            return ['street' => $shippingAddress->getStreet()];
         }
 
         return $streetData;
