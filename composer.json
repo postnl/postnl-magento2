@@ -6,7 +6,7 @@
         "ext-soap": "*",
         "magento/framework": "~102.0|~103.0",
         "setasign/fpdf": "^1.8.2",
-        "setasign/fpdi": "^2.3.3",
+        "setasign/fpdi": "^2.3.2",
         "laminas/laminas-barcode" : "~2.5|~2.8"
     },
     "type": "magento2-module",
