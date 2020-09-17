@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Model;
 
+use Magento\Framework\Api\SortOrderBuilder;
 use TIG\PostNL\Api\OrderRepositoryInterface;
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Model\ResourceModel\Order\CollectionFactory;
@@ -60,6 +61,11 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     private $filterBuilder;
 
     /**
+     * @var SortOrderBuilder
+     */
+    private $sortOrderBuilder;
+
+    /**
      * OrderRepository constructor.
      *
      * @param SearchResultsInterfaceFactory $searchResultsFactory
@@ -68,6 +74,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      * @param CollectionFactory             $collectionFactory
      * @param QuoteInterface                $quote
      * @param FilterBuilder                 $filterBuilder
+     * @param SortOrderBuilder              $sortOrderBuilder
      */
     public function __construct(
         SearchResultsInterfaceFactory $searchResultsFactory,
@@ -75,7 +82,8 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         OrderFactory $orderFactory,
         CollectionFactory $collectionFactory,
         QuoteInterface $quote,
-        FilterBuilder $filterBuilder
+        FilterBuilder $filterBuilder,
+        SortOrderBuilder $sortOrderBuilder
     ) {
         $this->quoteWrapper      = $quote;
         $this->orderFactory      = $orderFactory;
@@ -83,6 +91,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         $this->filterBuilder     = $filterBuilder;
 
         parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
+        $this->sortOrderBuilder = $sortOrderBuilder;
     }
 
     /**
@@ -213,5 +222,35 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         });
 
         return isset(array_values($orders)[0]) ? array_values($orders)[0] : null;
+    }
+
+    /**
+     * Retrieve the most recent order record for a quote
+     *
+     * @param $quoteId
+     *
+     * @return mixed|null
+     * @throws \Magento\Framework\Exception\InputException
+     */
+    public function retrieveCurrentPostNLOrder($quoteId)
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId);
+
+        // Multiple records might exist, retrieve the most recent
+        $sortOrder = $this->sortOrderBuilder->create();
+        $sortOrder->setField('entity_id');
+        $sortOrder->setDirection('DESC');
+
+        $searchCriteria->setSortOrders([$sortOrder]);
+        $searchCriteria->setPageSize(1);
+
+        /** @var \Magento\Framework\Api\SearchResults $list */
+        $list = $this->getList($searchCriteria->create());
+
+        if ($list->getTotalCount()) {
+            return array_values($list->getItems())[0];
+        }
+
+        return null;
     }
 }
