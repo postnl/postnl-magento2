@@ -29,6 +29,9 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
+// @codingStandardsIgnoreFile
+
 namespace TIG\PostNL\Model;
 
 use Magento\Framework\Api\SortOrderBuilder;
@@ -64,8 +67,6 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      * @var SortOrderBuilder
      */
     private $sortOrderBuilder;
-
-    use OrderRepositoryTrait;
 
     /**
      * OrderRepository constructor.
@@ -224,5 +225,35 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         });
 
         return isset(array_values($orders)[0]) ? array_values($orders)[0] : null;
+    }
+
+    /**
+     * Retrieve the most recent order record for a quote
+     *
+     * @param $quoteId
+     *
+     * @return mixed|null
+     * @throws \Magento\Framework\Exception\InputException
+     */
+    public function retrieveCurrentPostNLOrder($quoteId)
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId);
+
+        // Multiple records might exist, retrieve the most recent
+        $sortOrder = $this->sortOrderBuilder->create();
+        $sortOrder->setField('entity_id');
+        $sortOrder->setDirection('DESC');
+
+        $searchCriteria->setSortOrders([$sortOrder]);
+        $searchCriteria->setPageSize(1);
+
+        /** @var \Magento\Framework\Api\SearchResults $list */
+        $list = $this->getList($searchCriteria->create());
+
+        if ($list->getTotalCount()) {
+            return array_values($list->getItems())[0];
+        }
+
+        return null;
     }
 }
