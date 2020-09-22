@@ -92,9 +92,9 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         $this->orderFactory      = $orderFactory;
         $this->collectionFactory = $collectionFactory;
         $this->filterBuilder     = $filterBuilder;
+        $this->sortOrderBuilder = $sortOrderBuilder;
 
         parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
-        $this->sortOrderBuilder = $sortOrderBuilder;
     }
 
     /**
