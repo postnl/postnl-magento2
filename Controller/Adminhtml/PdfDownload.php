@@ -185,7 +185,7 @@ class PdfDownload
     {
         $this->messageManager->addWarningMessage(
         // @codingStandardsIgnoreLine
-            __('No labels were created. If you\'re trying to generate Global Pack shipments, set your Label Size to A4. Please check your Label Size settings.')
+            __('No labels were created.')
         );
     }
 
