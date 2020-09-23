@@ -67,14 +67,17 @@ class Merge
     }
 
     /**
+     * Some labels simply don't fit on an A6 (e.g. Globalpack labels).
+     * Instead of simply blocking these, we'll print them as A4s.
+     *
      * @param \TIG\PostNL\Service\Pdf\Fpdi[] $labels
-     * @codingStandardsIgnoreStart
      * @param bool $createNewPdf Sometimes you want to generate a new Label PDF, for example when printing packingslips
      *                           This parameter indicates whether to reuse the existing label PDF
-     *                           @TODO Refactor to a cleaner way rather than chaining all the way to \TIG\PostNL\Service\Shipment\Label\Merge\AbstractMerger
-     * @codingStandardsIgnoreEnd
+     *
+     * @TODO Avoid chaining to \TIG\PostNL\Service\Shipment\Label\Merge\AbstractMerger
      *
      * @return string
+     * @throws \Exception
      */
     public function files(array $labels, $createNewPdf = false)
     {
@@ -84,24 +87,42 @@ class Merge
             $output = $result->Output('s');
         }
 
-        /**
-         * Some labels simply don't fit on an A6 (e.g. Globalpack labels).
-         * Instead of simply blocking these, we'll print them as A4s.
-        **/
-        $a4Labels = array_filter($labels, function($label) { return $label->shipmentType == 'GP';});
-        $a6Labels = array_filter($labels, function($label) { return $label->shipmentType != 'GP';});
+        $a4Labels = $this->getGPlabels($labels);
+        $a6Labels = $this->getNonGPlabels($labels);
 
         //  Create PDF is used for packingslips which are always A4.
         if ($this->webshop->getLabelSize() == 'A6' && !$createNewPdf) {
             $a4result = $this->a4Merger->files($a4Labels, $createNewPdf);
             $a6result = $this->a6Merger->files($a6Labels, $createNewPdf);
-
             $a4result->concatPdf($a6result);
-
 
             $output = $a4result->Output('s');
         }
 
         return $output;
+    }
+
+    /**
+     * @param $labels
+     *
+     * @return array
+     */
+    private function getGPlabels($labels)
+    {
+        return array_filter($labels, function ($label) {
+            return $label->shipmentType == 'GP';
+        });
+    }
+
+    /**
+     * @param $labels
+     *
+     * @return array
+     */
+    private function getNonGPlabels($labels)
+    {
+        return array_filter($labels, function ($label) {
+            return $label->shipmentType != 'GP';
+        });
     }
 }
