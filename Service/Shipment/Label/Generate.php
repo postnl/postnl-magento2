@@ -45,7 +45,7 @@ class Generate
      * @var Merge
      */
     private $merge;
-    
+
     /**
      * @var array
      */
@@ -84,6 +84,7 @@ class Generate
         $preparedLabels = [];
         foreach ($this->orderLabels($labels) as $label) {
             $labelResult = $this->prepare->label($label);
+            $labelResult['label']->shipmentType = $labelResult['shipment']->getShipmentType();
             $preparedLabels[] = $labelResult['label'];
         }
 

@@ -54,6 +54,7 @@ class Merge
      * @param Webshop        $webshopConfiguration
      * @param Merge\A4Merger $a4Merger
      * @param Merge\A6Merger $a6Merger
+     * @param File           $file
      */
     public function __construct(
         Webshop $webshopConfiguration,
@@ -83,10 +84,22 @@ class Merge
             $output = $result->Output('s');
         }
 
+        /**
+         * Some labels simply don't fit on an A6 (e.g. Globalpack labels).
+         * Instead of simply blocking these, we'll print them as A4s.
+        **/
+        $a4Labels = array_filter($labels, function($label) { return $label->shipmentType == 'GP';});
+        $a6Labels = array_filter($labels, function($label) { return $label->shipmentType != 'GP';});
+
         //  Create PDF is used for packingslips which are always A4.
         if ($this->webshop->getLabelSize() == 'A6' && !$createNewPdf) {
-            $result = $this->a6Merger->files($labels, $createNewPdf);
-            $output = $result->Output('s');
+            $a4result = $this->a4Merger->files($a4Labels, $createNewPdf);
+            $a6result = $this->a6Merger->files($a6Labels, $createNewPdf);
+
+            $a4result->concatPdf($a6result);
+
+
+            $output = $a4result->Output('s');
         }
 
         return $output;

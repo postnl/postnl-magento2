@@ -158,12 +158,6 @@ class PdfDownload
                 return false;
             }
 
-            /** @var ShipmentLabelInterface $label */
-            if (strtoupper($label->getType()) == ProductInfo::SHIPMENT_TYPE_GP) {
-                $this->filteredLabels[] = $label->getParentId();
-                return false;
-            }
-
             return true;
         });
     }

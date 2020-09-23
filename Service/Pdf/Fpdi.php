@@ -31,6 +31,8 @@
  */
 namespace TIG\PostNL\Service\Pdf;
 
+use TIG\PostNL\Service\Shipment\Label\File;
+
 // @codingStandardsIgnoreFile
 /**
  * Original:
@@ -38,6 +40,29 @@ namespace TIG\PostNL\Service\Pdf;
  */
 class Fpdi extends \setasign\Fpdi\Fpdi
 {
+    /**
+     * @var File
+     */
+    private $file;
+
+    /**
+     * Fpdi constructor.
+     *
+     * @param File   $file
+     * @param string $orientation
+     * @param string $unit
+     * @param string $size
+     */
+    public function __construct(
+        File $file,
+        $orientation = 'P',
+        $unit = 'mm',
+        $size = 'A4'
+    ) {
+        parent::__construct($orientation, $unit, $size);
+        $this->file = $file;
+    }
+
     const PAGE_SIZE_A6 = [105, 148];
     const PAGE_SIZE_A6_WIDTH = 105;
     const PAGE_SIZE_A6_HEIGHT = 148;
@@ -137,5 +162,26 @@ class Fpdi extends \setasign\Fpdi\Fpdi
         }
 
         parent::_endpage();
+    }
+
+    /**
+     * @param Fpdi $pdfToConcat
+     * @param $size
+     *
+     * @throws \Exception
+     */
+    public function concatPdf($pdfToConcat, $size = Fpdi::PAGE_SIZE_A6)
+    {
+        $filename = $this->file->save($pdfToConcat->Output('S'));
+
+        $pages = $this->setSourceFile($filename);
+
+        for ($page = 1; $page <= $pages; $page++) {
+            $this->AddPage('P', $size);
+            $pageId = $this->importPage($page);
+            $this->useTemplate($pageId);
+        }
+
+        $this->file->cleanup();
     }
 }
