@@ -178,6 +178,7 @@ define([
                     });
                     this.deliverydays(data);
                     State.currentOpenPane('delivery');
+                    this.selectFirstDeliveryOption();
                     return;
                 }
           
@@ -187,6 +188,7 @@ define([
                     });
                     this.deliverydays(data);
                     State.currentOpenPane('delivery');
+                    this.selectFirstDeliveryOption();
                     return;
                 }
 
@@ -197,7 +199,9 @@ define([
                         return new TimeFrame(timeFrame);
                     });
                 });
-
+                
+               this.selectFirstDeliveryOption();
+                
                 this.deliverydays(data);
             }.bind(this)).fail(function (data) {
                 if (data.statusText !== 'avoidMulticall') {
@@ -248,6 +252,13 @@ define([
             var isNL = (address !== null && address !== false && address.country === 'NL');
 
             return isActive === 1 && isNL;
-        })
+        }),
+        
+        selectFirstDeliveryOption: function () {
+            if (this.deliverydays()) {
+                this.selectedOption(this.deliverydays()[0][0]);
+                this.saveSelectedOption(this.selectedOption());
+            }
+        }
     });
 });
