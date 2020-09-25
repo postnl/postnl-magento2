@@ -256,7 +256,7 @@ define([
         
         selectFirstDeliveryOption: function () {
             var deliveryDays = this.deliverydays();
-            if (deliveryDays !== 'undefined' && deliveryDays[0] !== 'undefined' && deliveryDays[0][0] !== 'undefined') {
+            if (deliveryDays !== undefined && deliveryDays[0] !== undefined && deliveryDays[0][0] !== undefined) {
                 this.selectedOption(deliveryDays[0][0]);
                 this.saveSelectedOption(this.selectedOption());
             }
