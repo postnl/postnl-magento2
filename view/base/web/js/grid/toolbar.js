@@ -95,11 +95,6 @@ define([
                 self.toggleTimeOptions(value);
             });
 
-            this.timeOptionSelected.subscribe(function (value) {
-                console.log(value);
-                // scan selection, nothing more.
-            });
-
             return this;
         },
 
@@ -159,7 +154,11 @@ define([
 
             data[this.currentSelected()] = value;
             if (this.isGuaranteedActive() && this.showTimeOptions()) {
-                data.time = this.timeOptionSelected();
+                if (isSticky) {
+                    data.time = $('.time_option_sticky')[0].value;
+                } else {
+                    data.time = $('.time_option_toolbar')[0].value;
+                }
             }
 
             utils.submit({
