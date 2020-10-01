@@ -138,14 +138,20 @@ define([
          * - MassChangeMulticolli
          * - MassChangeProduct
          */
-        submit : function () {
+        submit : function (isSticky) {
+            // Grab the input values of the regular toolbar or the sticky toolbar
+            var selector = $('.' + this.currentSelected() + '_toolbar');
+            if (isSticky) {
+                selector = $('.' + this.currentSelected() + '_sticky');
+            }
+
             var data = this.getSelectedItems();
             if (data.selected === false) {
                 alert($.mage.__('Please select item(s)'));
                 return;
             }
 
-            var value = $('#'+this.currentSelected())[0].value;
+            var value = selector[0].value;
             if (isNaN(parseInt(value))) {
                 alert(DataProvider.getInputWarningMessage(this.currentSelected()));
                 return;

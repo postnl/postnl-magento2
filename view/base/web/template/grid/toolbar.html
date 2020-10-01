@@ -29,11 +29,11 @@
                 </select>
             </div>
             <div class="col-xs-5">
-                <input class="admin__control-text" id="change_parcel" type="number" min="1" value="1"
+                <input class="admin__control-text change_parcel_toolbar" id="change_parcel" type="number" min="1" value="1"
                        data-bind="visible: $data.currentSelected() == 'change_parcel'"/>
 
                 <div class="select-holder" data-bind="visible: $data.currentSelected() == 'change_product'">
-                    <select class="action-select admin__control-select" id="change_product"
+                    <select class="action-select admin__control-select change_product_toolbar" id="change_product"
                             data-bind="options:$data.optionList,
                             optionsText: 'text', optionsValue: 'value', value: $data.defaultOption">
                     </select>
@@ -48,7 +48,7 @@
                 <!-- /ko -->
             </div>
             <div class="col-xs-2">
-                <button class="action-secondary" type="button" click="submit">
+                <button class="action-secondary" type="button" click="function() {submit(false)}">
                     <span translate="'Submit'">Submit</span>
                 </button>
             </div>
