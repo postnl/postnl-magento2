@@ -394,7 +394,7 @@ Percent,Percentage
 "Automatically complete <strong>Dutch addresses</strong> after your customer fills in his postcode and house number.","<strong>Nederlandse adressen</strong> worden automatisch aangevuld en gecontroleerd als uw klant zijn postcode en huisnummer invult."
 "Use postcode check","Gebruik postcodecheck"
 "If you use a different address validation service, only leave the one you want to use activated.","Indien u gebruik maakt van een andere adresvalidatie dienst, laat dan alleen degene die u wilt gebruiken geactiveerd."
-"Postcode validation is only available for these supported checkouts.","Enkel voor deze ondersteunde checkouts kunt u gebruik maken van de postcodevalidatie en bezorgopties."
+"Postcode validation is only available for the supported checkouts Luma and Blank. We can not guarantee that the entire PostNL extension is compatible with the other available checkouts.","Postcodevalidatie is alleen beschikbaar voor de supported checkouts Luma en Blank. We kunnen niet garanderen dat de volledige PostNL extensie compatibel is met de andere beschikbare checkouts."
 "Download pdf directly","Download de PDF direct"
 "Open pdf in new browser window","Open de PDF in een nieuw browservenster"
 "Addition","Toevoeging"

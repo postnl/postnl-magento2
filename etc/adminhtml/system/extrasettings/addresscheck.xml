@@ -45,8 +45,7 @@
 
         <field id="checkout_compatible" type="select" translate="label comment tooltip" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Checkout usage</label>
-            <comment><![CDATA[Postcode validation is only available for these supported checkouts.]]></comment>
-            <tooltip><![CDATA[We can not guarantee that the entire PostNL extension is compatible with some of these checkouts.]]></tooltip>
+            <comment><![CDATA[Postcode validation is only available for the supported checkouts Luma and Blank. We can not guarantee that the entire PostNL extension is compatible with the other available checkouts.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Settings\Checkouts</source_model>
             <config_path>tig_postnl/addresscheck/checkout_compatible</config_path>
             <depends>
