@@ -59,12 +59,14 @@ define([
                 }
 
                 // Check if a valid zipcode has been entered
-                if (!postcodeRegex.test(quote.shippingAddress().postcode) && quote.shippingAddress().countryId === 'NL') {
-                    this.errorValidationMessage(
-                        $t("Please enter a valid zipcode.")
-                    );
+                if (quote.shippingAddress().countryId === 'NL') {
+                    if (!postcodeRegex.test(quote.shippingAddress().postcode)) {
+                        this.errorValidationMessage(
+                            $t("Please enter a valid zipcode.")
+                        );
 
-                    return false;
+                        return false;
+                    }
                 }
 
                 // deliverydays and pickupAddresses are not emptied when another country is selected.
