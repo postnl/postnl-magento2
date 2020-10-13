@@ -33,24 +33,35 @@
 namespace TIG\PostNL\Config\Provider;
 
 use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
+use TIG\PostNL\Service\Shipping\LetterboxPackage;
 
 class ProductType extends AbstractSource
 {
-    const POSTNL_PRODUCT_TYPE        = 'postnl_product_type';
-    const PRODUCT_TYPE_EXTRA_AT_HOME = 'extra_at_home';
-    const PRODUCT_TYPE_REGULAR       = 'regular';
+    const POSTNL_PRODUCT_TYPE            = 'postnl_product_type';
+    const PRODUCT_TYPE_EXTRA_AT_HOME     = 'extra_at_home';
+    const PRODUCT_TYPE_REGULAR           = 'regular';
+    const PRODUCT_TYPE_LETTERBOX_PACKAGE = 'letterbox_package';
+
     /**
      * @var ShippingOptions
      */
     private $shippingOptions;
 
     /**
-     * @param ShippingOptions $shippingOptions
+     * @var LetterboxPackage
+     */
+    private $letterboxPackage;
+
+    /**
+     * @param ShippingOptions  $shippingOptions
+     * @param LetterboxPackage $letterboxPackage
      */
     public function __construct(
-        ShippingOptions $shippingOptions
+        ShippingOptions $shippingOptions,
+        LetterboxPackage $letterboxPackage
     ) {
         $this->shippingOptions = $shippingOptions;
+        $this->letterboxPackage = $letterboxPackage;
     }
 
     /**
@@ -68,17 +79,29 @@ class ProductType extends AbstractSource
             $options[] = ['value' => self::PRODUCT_TYPE_EXTRA_AT_HOME, 'label' => __('Extra@Home')];
         }
 
+        if ($this->shippingOptions->isLetterboxPackageActive()) {
+            $options[] = ['value' => self::PRODUCT_TYPE_LETTERBOX_PACKAGE, 'label' => __('Letterbox Package')];
+        }
+
         return $options;
     }
 
     /**
+     * @param $items
+     *
      * @return array
      */
-    public function getAllTypes()
+    public function getAllTypes($items)
     {
-        return [
+        $types = [
             self::PRODUCT_TYPE_EXTRA_AT_HOME,
             self::PRODUCT_TYPE_REGULAR
         ];
+
+        if ($this->letterboxPackage->isLetterboxPackage($items, false)) {
+            $types[] = self::PRODUCT_TYPE_LETTERBOX_PACKAGE;
+        }
+
+        return $types;
     }
 }

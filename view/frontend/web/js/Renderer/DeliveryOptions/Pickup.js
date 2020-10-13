@@ -56,7 +56,7 @@ define([
             country : null,
             street : null,
             hasAddress :false,
-            pickupAddresses: []
+            pickupAddresses: ko.observableArray([])
         },
 
         initObservable : function () {
@@ -81,7 +81,7 @@ define([
                     return;
                 }
 
-                if (address.country !== 'NL') {
+                if (address.country !== 'NL' && address.country !== 'BE') {
                     return;
                 }
 
@@ -101,11 +101,10 @@ define([
              * Save the selected pickup option
              */
             this.selectedOption.subscribe(function (value) {
-                if (value === null) {
+                if (value === null || value === undefined) {
                     return;
                 }
 
-                State.selectShippingMethod();
                 State.currentSelectedShipmentType('pickup');
 
                 var dataObject = value.data,
@@ -148,7 +147,8 @@ define([
                         LocationCode : dataObject.LocationCode,
                         from: selectedFrom,
                         address: dataObject.Address,
-                        customerData : AddressFinder()
+                        customerData : AddressFinder(),
+                        stated_address_only: 0
                     }
                 }).done(function (response) {
                     $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
@@ -171,7 +171,12 @@ define([
         getPickupAddresses : function (address) {
             State.pickupOptionsAreLoading(true);
 
-            jQuery.ajax({
+            var self = this;
+            if (self.getLocationsRequest !== undefined) {
+                self.getLocationsRequest.abort('avoidMulticall');
+            }
+
+            self.getLocationsRequest = $.ajax({
                 method: 'POST',
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_locations,
                 data : {address: address}
@@ -193,6 +198,11 @@ define([
                 State.pickupOptionsAreAvailable(true);
                 State.pickupPrice(data.price);
 
+                var isDeliveryDaysActive = window.checkoutConfig.shipping.postnl.is_deliverydays_active;
+                if (isDeliveryDaysActive) {
+                    State.pickupDate(data.pickup_date);
+                }
+
                 data = data.locations.slice(0, 5);
                 data = ko.utils.arrayMap(data, function (data) {
                     return new Location(data);
@@ -200,8 +210,10 @@ define([
 
                 this.setPickupAddresses(data);
             }.bind(this)).fail(function (data) {
-                State.pickupOptionsAreAvailable(false);
-                Logger.error(data);
+                if (data.statusText !== 'avoidMulticall') {
+                    State.pickupOptionsAreAvailable(false);
+                    Logger.error(data);
+                }
             }).always(function () {
                 State.pickupOptionsAreLoading(false);
             });
@@ -214,7 +226,11 @@ define([
          * @returns {boolean}
          */
         isRowSelected: function ($data) {
-            return JSON.stringify(this.selectedOption()) == JSON.stringify($data);
+
+            if (this.selectedOption() === null || this.selectedOption() === undefined || this.selectedOption().data === undefined) {
+                return false;
+            }
+            return JSON.stringify(this.selectedOption().data) == JSON.stringify($data);
         }
     });
 });

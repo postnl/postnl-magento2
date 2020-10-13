@@ -59,6 +59,7 @@ class Quote implements QuoteInterface
      *
      * @return mixed
      */
+    // @codingStandardsIgnoreLine
     public function setQuote(MagentoQuote $quote)
     {
         $this->quote = $quote;

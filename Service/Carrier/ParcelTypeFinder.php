@@ -32,6 +32,8 @@
 
 namespace TIG\PostNL\Service\Carrier;
 
+use Magento\Checkout\Model\Session;
+use Magento\Quote\Api\CartRepositoryInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface;
 use TIG\PostNL\Service\Options\ItemsToOption;
 
@@ -50,17 +52,33 @@ class ParcelTypeFinder
     private $orderRepository;
 
     /**
+     * @var Session
+     */
+    private $checkoutSession;
+
+    /**
+     * @var CartRepositoryInterface
+     */
+    private $quoteRepository;
+
+    /**
      * ParcelTypeFinder constructor.
      *
      * @param ItemsToOption            $itemsToOption
      * @param OrderRepositoryInterface $orderRepository
+     * @param Session                  $checkoutSession
+     * @param CartRepositoryInterface  $quoteRepository
      */
     public function __construct(
         ItemsToOption $itemsToOption,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        Session $checkoutSession,
+        CartRepositoryInterface $quoteRepository
     ) {
         $this->itemsToOption = $itemsToOption;
         $this->orderRepository = $orderRepository;
+        $this->checkoutSession = $checkoutSession;
+        $this->quoteRepository = $quoteRepository;
     }
 
     /**
@@ -68,12 +86,15 @@ class ParcelTypeFinder
      */
     public function get()
     {
-        $result = $this->itemsToOption->getFromQuote();
+        $quoteId = $this->checkoutSession->getQuoteId();
+        $quote = $this->quoteRepository->get($quoteId);
+
+        $result = $this->itemsToOption->getFromQuote($quote);
         if ($result) {
             return $result;
         }
 
-        $order = $this->orderRepository->getByQuoteId();
+        $order = $this->orderRepository->getByQuoteId($quoteId);
 
         if ($order === null) {
             return static::DEFAULT_TYPE;

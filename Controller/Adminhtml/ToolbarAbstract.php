@@ -36,6 +36,9 @@ use Magento\Backend\App\Action\Context;
 use Magento\Ui\Component\MassAction\Filter;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface;
+use TIG\PostNL\Config\Source\Options\ProductOptions;
+use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Shipment\GuaranteedOptions;
 use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 use Magento\Sales\Model\Order;
@@ -83,13 +86,30 @@ abstract class ToolbarAbstract extends Action
     //@codingStandardsIgnoreLine
     protected $errors = [];
 
+    /**
+     * @var ProductOptions
+     */
+    private $options;
+
+    /**
+     * ToolbarAbstract constructor.
+     *
+     * @param Context                     $context
+     * @param Filter                      $filter
+     * @param ShipmentRepositoryInterface $shipmentRepository
+     * @param OrderRepositoryInterface    $orderRepository
+     * @param GuaranteedOptions           $guaranteedOptions
+     * @param ResetPostNLShipment         $resetPostNLShipment
+     * @param ProductOptions              $options
+     */
     public function __construct(
         Context $context,
         Filter $filter,
         ShipmentRepositoryInterface $shipmentRepository,
         OrderRepositoryInterface $orderRepository,
         GuaranteedOptions $guaranteedOptions,
-        ResetPostNLShipment $resetPostNLShipment
+        ResetPostNLShipment $resetPostNLShipment,
+        ProductOptions $options
     ) {
         parent::__construct($context);
 
@@ -98,6 +118,7 @@ abstract class ToolbarAbstract extends Action
         $this->orderRepository = $orderRepository;
         $this->guaranteedOptions = $guaranteedOptions;
         $this->resetService = $resetPostNLShipment;
+        $this->options = $options;
     }
 
     /**
@@ -123,6 +144,8 @@ abstract class ToolbarAbstract extends Action
         }
 
         if ($noError) {
+            $this->setType($postnlOrder, $productCode);
+
             $postnlOrder->setProductCode($productCode);
             $postnlOrder->setAcCharacteristic($acSettings['Characteristic']);
             $postnlOrder->setAcOption($acSettings['Option']);
@@ -180,14 +203,41 @@ abstract class ToolbarAbstract extends Action
         }
 
         if ($shipment->getMainBarcode()) {
-            $this->resetService->resetShipment($shipmentId);
+            $shipment = $this->resetService->resetShipment($shipmentId);
         }
+
+        $this->setType($shipment, $productCode);
 
         $shipment->setProductCode($productCode);
         $shipment->setAcCharacteristic($acSettings['Characteristic']);
         $shipment->setAcOption($acSettings['Option']);
         $this->shipmentRepository->save($shipment);
         return true;
+    }
+
+    /**
+     * If the merchant wants to switch the product code to Global or EU, we have to change the shipment type.
+     * We're not implementing this for Domestic (yet), because this could give various options that we can't determine
+     * with just the product code (e.g. Sunday, Evening, Daytime).
+     *
+     * @param $model
+     * @param $productCode
+     */
+    private function setType($model, $productCode)
+    {
+        $method = 'setType';
+        if ($model instanceof Shipment) {
+            $method = 'setShipmentType';
+        }
+
+        // The product type is used to determine if specific information should be added, e.g. customs information
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'global_options')) {
+            $model->$method(ProductInfo::SHIPMENT_TYPE_GP);
+        }
+
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'eu_options')) {
+            $model->$method(ProductInfo::SHIPMENT_TYPE_EPS);
+        }
     }
 
     /**

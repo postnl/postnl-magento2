@@ -32,7 +32,14 @@
 ?>
 <div id="section" class="tig-admin-col-set box">
     <div>
-        <span class="globalpack"><?php echo __('Are you planning to ship outside of the EU? Activate GlobalPack with the details you have received from PostNL. You can ignore the GlobalPack settings for domestic shipping and shipping within the EU.'); ?></span>
+        <span class="globalpack">
+
+            <?= $block->escapeHtml(
+                __('Are you planning to ship outside of the EU? ' .
+                    'Activate GlobalPack with the details you have received from PostNL. ' .
+                    'You can ignore the GlobalPack settings for domestic shipping and shipping within the EU.')
+); ?>
+        </span>
     </div>
 </div>
 

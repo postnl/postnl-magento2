@@ -34,11 +34,11 @@
 <ruleset name="TIG_PostNL">
     <description>TIG PostNL Coding Standard</description>
 
-    <config name="installed_paths" value="vendor/squizlabs/php_codesniffer/CodeSniffer/Standards,vendor/magento/marketplace-eqp,vendor/object-calisthenics/phpcs-calisthenics-rules/src/"/>
+    <config name="installed_paths" value="vendor/squizlabs/php_codesniffer/CodeSniffer/Standards,vendor/magento/magento-coding-standard,vendor/object-calisthenics/phpcs-calisthenics-rules/src/"/>
 
     <rule ref="PSR2"/>
     <rule ref="ObjectCalisthenics"/>
-    <rule ref="MEQP2"/>
+    <rule ref="Magento2"/>
 
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>

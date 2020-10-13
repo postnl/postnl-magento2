@@ -85,7 +85,6 @@ class Shipments
         $contact   = $this->getContactData($shipment);
         $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
         $countryId = $address[0]['Countrycode'];
-
         if ($postnlOrder->getIsPakjegemak()) {
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
@@ -94,9 +93,7 @@ class Shipments
             $address[] = $this->getReturnAddressData($countryId);
         }
 
-        $shipmentData = $this->shipmentData->get($postnlShipment, $address, $contact, $shipmentNumber);
-
-        return $shipmentData;
+        return $this->shipmentData->get($postnlShipment, $address, $contact, $shipmentNumber);
     }
 
     /**
@@ -157,6 +154,11 @@ class Shipments
     {
         $this->addressEnhancer->set(['street' => $shippingAddress->getStreet()]);
         $streetData = $this->addressEnhancer->get();
+
+        if (isset($streetData['error']) && $shippingAddress->getCountryId() !== 'NL'
+            && $shippingAddress->getCountryId() !== 'BE') {
+            return ['street' => $shippingAddress->getStreet()];
+        }
 
         if (isset($streetData['error'])) {
             $message = $streetData['error']['code'] . ' - ' . $streetData['error']['message'];
@@ -222,8 +224,8 @@ class Shipments
     {
         $city = 'getCity' . $countryCode;
         $company = 'getCompany' . $countryCode;
-        $houseNo = 'getHouseNumber' . $countryCode;
-        $freePostNumber  = 'getFreepostNumber' . $countryCode;
+        $street = 'getStreetName' . $countryCode;
+        $freePostNumber  = ($countryCode == 'BE' ? 'getHouseNumber' : 'getFreepostNumber') . $countryCode;
         $zipcode = 'getZipcode' . $countryCode;
 
         $data = [
@@ -232,7 +234,7 @@ class Shipments
             'CompanyName'      => $this->returnOptions->$company(),
             'Countrycode'      => $countryCode,
             'HouseNr'          => $this->returnOptions->$freePostNumber(),
-            'Street'           => 'Antwoordnummer:',
+            'Street'           => ($countryCode == 'BE' ? $this->returnOptions->$street() : 'Antwoordnummer:'),
             'Zipcode'          => strtoupper(str_replace(' ', '', $this->returnOptions->$zipcode())),
         ];
 

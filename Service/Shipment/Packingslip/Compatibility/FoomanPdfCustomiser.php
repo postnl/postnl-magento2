@@ -99,7 +99,7 @@ class FoomanPdfCustomiser
             throw new NotFoundException(__('Nothing to print'));
         }
 
-        $factory->setY(500);
+        $factory->changeY(500);
 
         return $pdfRenderer->getPdfAsString();
     }

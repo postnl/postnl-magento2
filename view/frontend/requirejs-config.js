@@ -31,6 +31,9 @@
 var config = {
     config: {
         mixins: {
+            'Magento_Checkout/js/view/shipping': {
+                'TIG_PostNL/js/view/shipping-mixin': true
+            },
             'Magento_Checkout/js/action/set-shipping-information': {
                 'TIG_PostNL/js/action/set-shipping-information-mixin': true
             },
@@ -53,8 +56,6 @@ var config = {
     },
     map: {
         '*': {
-            "Magento_Checkout/template/shipping-address/shipping-method-item.html" :
-                "TIG_PostNL/template/shipping-address/shipping-method-item.html",
             //Postcodecheck housenumber & addition in shipping and billing fields
             "Magento_Checkout/template/shipping-address/address-renderer/default.html" :
                 "TIG_PostNL/template/shipping-address/address-renderer/default.html",
@@ -64,17 +65,12 @@ var config = {
                 "TIG_PostNL/template/billing-address/details.html",
             'Amasty_CustomerAttributes/js/action/set-shipping-information-mixin' :
                 'TIG_PostNL/js/action/set-shipping-information-mixin',
-            //Magento Backwards Compatibility
-            "Magento_Checkout/template/shipping.html" :
-                "TIG_PostNL/template/shipping.html",
-            //Rubic Clean Checkout Compatibility
-            "Rubic_CleanCheckout/template/shipping-address/shipping-method-item.html":
-                "TIG_PostNL/template/shipping-address/shipping-method-item.html",
             //Amasty Checkout Compatibility
-            "Amasty_Checkout/template/onepage/shipping/methods.html" :
-                "TIG_PostNL/template/Compatibility/amasty_checkout/methods.html",
-            "Amasty_Checkout/js/view/shipping" :
-                "TIG_PostNL/js/Compatibility/amasty_checkout/shipping"
+            "Amasty_Checkout/js/view/shipping-mixin" :
+                "TIG_PostNL/js/Compatibility/amasty_checkout/shipping-mixin",
+            //Mageplaza Checkout Compatibility
+            "Mageplaza_Osc/template/container/address/shipping/address-renderer/default.html" :
+                "TIG_PostNL/template/Compatibility/mageplaza_osc/shipping-address/address-renderer/default.html",
         }
     }
 };

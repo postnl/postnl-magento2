@@ -93,9 +93,9 @@ class Rest
     public function getRequest(RestInterface $endpoint)
     {
         $this->zendClient->resetParameters();
-        $this->setUri($endpoint);
-        $this->setHeaders();
-        $this->setParameters($endpoint);
+        $this->addUri($endpoint);
+        $this->addApiKeyToHeaders();
+        $this->addParameters($endpoint);
 
         try {
             $response = $this->zendClient->request();
@@ -113,7 +113,7 @@ class Rest
     /**
      * Includes the API key into the headers.
      */
-    private function setHeaders()
+    private function addApiKeyToHeaders()
     {
         $this->zendClient->setHeaders([
             'apikey' => $this->getApiKey()
@@ -123,7 +123,7 @@ class Rest
     /**
      * @param RestInterface $endpoint
      */
-    private function setParameters(RestInterface $endpoint)
+    private function addParameters(RestInterface $endpoint)
     {
         $params = $endpoint->getRequestData();
         if ($endpoint->getMethod() == ZendClient::GET) {
@@ -158,7 +158,7 @@ class Rest
     /**
      * @param RestInterface $endpoint
      */
-    private function setUri(RestInterface $endpoint)
+    private function addUri(RestInterface $endpoint)
     {
         $url = $this->defaultConfiguration->getModusAddressApiUrl() . $endpoint->getVersion() .'/';
         $uri = $url . $endpoint->getEndpoint();

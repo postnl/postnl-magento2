@@ -43,6 +43,7 @@ class CutOffSettings implements ArrayInterface
         $options = [];
 
         for ($hour = 0; $hour < 24; $hour++) {
+            // @codingStandardsIgnoreLine
             $options = array_merge($options, $this->addHour($hour));
         }
 

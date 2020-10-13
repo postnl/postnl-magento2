@@ -34,7 +34,9 @@ namespace TIG\PostNL\Service\Shipment\Barcode;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\Globalpack;
 use TIG\PostNL\Config\Provider\PepsConfiguration;
+use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Exception as PostnlException;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 
 class Range
@@ -78,20 +80,28 @@ class Range
     ];
 
     /**
+     * @var ProductOptions
+     */
+    private $options;
+
+    /**
      * @param AccountConfiguration  $accountConfiguration
      * @param Globalpack            $globalpack
      * @param PepsConfiguration     $pepsConfiguration
+     * @param ProductOptions        $options
      */
     public function __construct(
         AccountConfiguration $accountConfiguration,
         Globalpack $globalpack,
-        PepsConfiguration $pepsConfiguration
+        PepsConfiguration $pepsConfiguration,
+        ProductOptions $options
     ) {
         $this->accountConfiguration    = $accountConfiguration;
         $this->globalpackConfiguration = $globalpack;
         $this->pepsConfiguration       = $pepsConfiguration;
+        $this->options = $options;
     }
-    
+
     /**
      * @param $barcodeType
      *
@@ -105,32 +115,35 @@ class Range
     }
 
     /**
-     * @param        $countryId
+     * @param        $productCode
      * @param null   $storeId
-     * @param string $type
      *
      * @return array|string
      * @throws PostnlException
      */
-    public function getByCountryId($countryId, $storeId = null, $type = '')
+    public function getByProductCode($productCode, $storeId = null)
     {
         $this->storeId = $storeId;
 
-        if ($type) {
-            return $this->get($type);
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'global_options')) {
+            return $this->get('GLOBAL');
         }
 
-        if ($countryId == 'NL') {
-            return $this->get('NL');
-        }
-
-        if (in_array($countryId, EpsCountries::ALL)) {
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'eu_options')) {
             return $this->get('EU');
         }
 
-        return $this->get('GLOBAL');
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'pakjegemak_be_options')) {
+            return $this->get('EU');
+        }
+
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'priority_options')) {
+            return $this->get('PEPS');
+        }
+
+        return $this->get('NL');
     }
-    
+
     /**
      * @param $type
      *
@@ -142,23 +155,23 @@ class Range
         $this->response['range'] = $this->accountConfiguration->getCustomerCode($this->storeId);
         switch ($type) {
             case 'NL':
-                $this->setNlSerie();
+                $this->updateNlSerie();
                 return;
             case 'EU':
-                $this->setEuSerie();
+                $this->updateEuSerie();
                 return;
             case 'GLOBAL':
-                $this->setGlobalPackOptions();
+                $this->updateGlobalPackOptions();
                 return;
             case 'PEPS':
-                $this->setPepsOptions();
+                $this->updatePepsOptions();
                 return;
         }
 
         $this->noBarcodeDataError($type);
     }
 
-    private function setNlSerie()
+    private function updateNlSerie()
     {
         $this->response['serie'] = static::NL_BARCODE_SERIE_LONG;
         if (strlen($this->response['range']) > 3) {
@@ -166,7 +179,7 @@ class Range
         }
     }
 
-    private function setEuSerie()
+    private function updateEuSerie()
     {
         $this->response['serie'] = static::EU_BARCODE_SERIE_LONG;
         if (strlen($this->response['range']) > 3) {
@@ -174,14 +187,14 @@ class Range
         }
     }
 
-    private function setGlobalPackOptions()
+    private function updateGlobalPackOptions()
     {
         $this->response['type']  = $this->globalpackConfiguration->getBarcodeType();
         $this->response['range'] = $this->globalpackConfiguration->getBarcodeRange();
         $this->response['serie'] = static::GLOBAL_BARCODE_SERIE;
     }
 
-    private function setPepsOptions()
+    private function updatePepsOptions()
     {
         $this->response['type']  = $this->pepsConfiguration->getBarcodeType();
         $this->response['range'] = $this->pepsConfiguration->getBarcodeRange();

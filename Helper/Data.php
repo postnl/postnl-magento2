@@ -202,12 +202,13 @@ class Data extends AbstractHelper
     }
 
     /**
+     * @param string $country
      * @return array
      */
-    public function getAllowedDeliveryOptions()
+    public function getAllowedDeliveryOptions($country = 'NL')
     {
         $deliveryOptions = [];
-        if ($this->shippingOptions->isPakjegemakActive()) {
+        if ($this->shippingOptions->isPakjegemakActive($country)) {
             $deliveryOptions [] = self::PAKJEGEMAK_DELIVERY_OPTION;
         }
 

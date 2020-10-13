@@ -31,6 +31,8 @@
  */
 namespace TIG\PostNL\Observer\TIGPostNLOrderSaveBefore;
 
+use Magento\Checkout\Model\Session;
+use Magento\Quote\Api\CartRepositoryInterface;
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Service\Order\ShipAt;
@@ -88,15 +90,27 @@ class SetDefaultData implements ObserverInterface
     ];
 
     /**
+     * @var CartRepositoryInterface
+     */
+    private $quoteRepository;
+
+    /**
+     * @var Session
+     */
+    private $checkoutSession;
+
+    /**
      * SetDefaultData constructor.
      *
-     * @param ProductInfo       $productInfo
-     * @param FirstDeliveryDate $firstDeliveryDate
-     * @param ShipAt            $shipAt
-     * @param Log               $log
-     * @param ItemsToOption     $itemsToOption
-     * @param MagentoOrder      $magentoOrder
-     * @param ShippingDuration  $shippingDuration
+     * @param ProductInfo             $productInfo
+     * @param FirstDeliveryDate       $firstDeliveryDate
+     * @param ShipAt                  $shipAt
+     * @param Log                     $log
+     * @param ItemsToOption           $itemsToOption
+     * @param MagentoOrder            $magentoOrder
+     * @param ShippingDuration        $shippingDuration
+     * @param CartRepositoryInterface $quoteRepository
+     * @param Session                 $checkoutSession
      */
     public function __construct(
         ProductInfo $productInfo,
@@ -105,7 +119,9 @@ class SetDefaultData implements ObserverInterface
         Log $log,
         ItemsToOption $itemsToOption,
         MagentoOrder $magentoOrder,
-        ShippingDuration $shippingDuration
+        ShippingDuration $shippingDuration,
+        CartRepositoryInterface $quoteRepository,
+        Session $checkoutSession
     ) {
         $this->productInfo       = $productInfo;
         $this->firstDeliveryDate = $firstDeliveryDate;
@@ -114,6 +130,8 @@ class SetDefaultData implements ObserverInterface
         $this->itemsToOption     = $itemsToOption;
         $this->magentoOrder      = $magentoOrder;
         $this->shippingDuration  = $shippingDuration;
+        $this->quoteRepository = $quoteRepository;
+        $this->checkoutSession = $checkoutSession;
     }
 
     /**
@@ -132,7 +150,7 @@ class SetDefaultData implements ObserverInterface
             $this->log->critical($exception->getTraceAsString());
         }
     }
-	
+
 	/**
 	 * @param \TIG\PostNL\Api\Data\OrderInterface $order
 	 *
@@ -188,11 +206,19 @@ class SetDefaultData implements ObserverInterface
     }
 
     /**
-     * @return string
+     * @return string|null
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getOptionFromQuote()
     {
-        return $this->itemsToOption->getFromQuote();
+        $quoteId = $this->checkoutSession->getQuoteId();
+        if ($quoteId) {
+            $quote = $this->quoteRepository->get($quoteId);
+
+            return $this->itemsToOption->getFromQuote($quote);
+        }
+
+        return null;
     }
 
     /**

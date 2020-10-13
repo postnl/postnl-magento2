@@ -36,34 +36,36 @@
 /*
 * =================================================================================================================== */
 
-
 /*** PostNL Color Pallet ***/
 
-  @postnl-orange:                 #ED8C00;
-  @postnl-blue:                   #001A73;
-  @postnl-grey:                   #868681;
-  @postnl-white:                  #fff;
-
+@postnl-orange: #ED8C00;
+@postnl-blue-dark: #27324C;
+@postnl-blue-light: #eaf7ff;
+@postnl-grey: #D4D9E3;
+@postnl-grey-light: #F3F4F7;
+@postnl-white: #fff;
 
 /*** Custom Color Pallet ***/
 
-/* Container */
-  @custom-border-color:           #ccc;
-
 /* Buttons */
-  @custom-button-active:          #eee;
-  @custom-button-hover:           #d6d6d6;
+@postnl-button-active: @postnl-orange;
+@postnl-button-inactive: @postnl-white;
+@postnl-button-inactive-hover: @postnl-grey-light;
 
-  @custom-border-radius:          3px;
+/* Border radius button group */
+@postnl-border-radius: 5px;
+@postnl-border-radius-inner: 4px;
 
-/* List */
-  @custom-list-background:        #eee;
-  @custom-list-background-even:   #f5f5f5;
-  @custom-list-hover:             #FFE0B2;
+/* Top row elements */
+@postnl-border-color: @postnl-grey;
+@postnl-top-row-background: @postnl-grey-light;
 
-  @custom-clock-color:            #1979c3;
-  @custom-clock-color-hover:      @postnl-blue;
+/* Middle row */
+@postnl-list-background: @postnl-white;
+@postnl-list-hover: @postnl-blue-light;
 
+/* Opening hours */
+@postnl-hours-background: @postnl-grey-light;
 
 /* =================================================================================================================== *
 *
@@ -74,12 +76,10 @@
 /* PostNL Branding Frontend */
 
 #label_method_regular_tig_postnl {
-
   &:before {
-    float:left;
+    float: left;
     width: 50px;
     height: 37px;
-
     content: ' ';
     background-image: url(../images/postnl_logo.png) !important;
     background-position: 0 2px;
@@ -90,482 +90,467 @@
 }
 
 /* Delivery Options */
+.postnl-delivery-options {
+  color: @postnl-blue-dark;
+  overflow: hidden;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 10px;
 
-.postnl-deliveryoptions {
-
-  .delivery_options {
-
-    .btn-group {
-      background: @custom-button-active;
-      float: left;
-      width: 100%;
-      border: 1px solid @custom-border-color;
+  * {
       box-sizing: border-box;
-      border-bottom: 0;
-      border-radius: @custom-border-radius @custom-border-radius 0 0;
+  }
+
+  .btn-group {
+    background: @postnl-button-active;
+    float: left;
+    width: 100%;
+    border: 1px solid @postnl-border-color;
+    box-sizing: border-box;
+    border-bottom: 0;
+    border-radius: @postnl-border-radius @postnl-border-radius 0 0;
+  }
+
+  button {
+    &.btn {
+      &.btn-default {
+        float: left;
+        width: 50%;
+        box-sizing: border-box;
+        border: 0;
+        background: @postnl-button-inactive;
+        text-align: left;
+        padding: 15px;
+        min-height: 55px;
+
+        & > .pickup-date {
+          font-size: 10px;
+        }
+
+        &:not(.primary) {
+          box-shadow: none;
+        }
+
+        &:nth-child(1) {
+          border-radius: @postnl-border-radius-inner 0 0 0;
+          border-right: 0;
+        }
+
+        &:nth-child(2) {
+          border-radius: 0 @postnl-border-radius-inner 0 0;
+        }
+
+        &:hover {
+          background: @postnl-button-inactive-hover;
+        }
+
+        &.button-active {
+          background: @postnl-button-active;
+          color: @postnl-white;
+        }
+
+        @media screen and (min-width: 480px) {
+          .data {
+            float: right;
+          }
+        }
+
+      }
     }
+  }
 
-    button {
-      &.btn {
+  // Remove focus on radio buttons
+  input.tig-postnl-delivery-radio,
+  input.tig-postnl-pickup-radio {
+    box-shadow: none;
 
-        &.btn-default {
-          float: left;
-          width: 50%;
+    &:active, &:hover, &:focus, &:visited {
+      box-shadow: none;
+    }
+  }
+
+  // Delivery List + Pickup List
+
+  .delivery,
+  .pickup {
+    float: left;
+    width: 100%;
+    background: @postnl-list-background;
+    border: 1px solid @postnl-border-color;
+    box-sizing: border-box;
+    border-top: 0;
+
+    ul, ol {
+      padding: 0;
+      list-style: none;
+
+      li {
+        float: left;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 0;
+        position: relative;
+
+        &.selected-row {
+            background: @postnl-list-hover;
+        }
+
+        label {
+          cursor: pointer;
           box-sizing: border-box;
-          border: 0;
-          background: white;
-          text-align: left;
-          padding: 15px;
-          min-height :60px;
-
-          &:not(.primary) {
-            box-shadow: none;
-          }
-
-          &:nth-child(1){
-            border-radius: @custom-border-radius 0 0 0;
-            border-right: 0;
-          }
-
-          &:nth-child(2){
-            border-radius: 0 @custom-border-radius 0 0;
-          }
 
           &:hover {
-            background : @custom-button-hover;
+            background: @postnl-list-hover;
           }
-
-          &.button-active {
-            background: @custom-button-active;
-            border-bottom: 1px solid @custom-list-background;
-
-            &:hover {
-              color: @postnl-blue;
-            }
-          }
-
-          @media screen and (min-width: 480px){
-            .data {
-              float:right;
-            }
-          }
-          
         }
-      }
-    }
-
-    // Remove focus on radio buttons
-    input.tig-postnl-delivery-radio,
-    input.tig-postnl-pickup-radio {
-      box-shadow: none;
-
-      &:active, &:hover, &:focus, &:visited {
-        box-shadow: none;
 
       }
     }
 
+  }
 
+  // Delivery List
 
+  .delivery {
+    border: 0;
+    background: transparent;
 
-    // Delivery List + Pickup List
-
-    .delivery,
-    .pickup{
-
-      float: left;
-      width: 100%;
-      background: @custom-list-background;
-      border: 1px solid @custom-border-color;
-      box-sizing: border-box;
+    .days {
+      border: 1px solid @postnl-border-color;
       border-top: 0;
+      overflow: hidden;
+      background: @postnl-list-background;
 
-      ul,ol {
-        padding: 0;
-        list-style: none;
+      .wrapper {
+        float: left;
+        width: 100%;
 
-        li {
+        &:nth-child(even) {
+          background: @postnl-list-background;
+        }
+
+        // Top Row
+        strong {
+          font-size: 12px;
           float: left;
           width: 100%;
           box-sizing: border-box;
-          margin-bottom: 0;
-          position: relative;
+          background: @postnl-top-row-background;
+          border-bottom: 1px solid @postnl-border-color;
+          border-top: 1px solid @postnl-border-color;
+          padding: 5px 15px;
 
-          label {
-            cursor: pointer;
-            box-sizing:border-box;
+          .deliverydays-day {
+            text-transform: uppercase;
+            display: inline-block;
 
-            &:hover {
-              background: @custom-list-hover;
-            }
-
-            &.selected-row {
-              background: @custom-list-hover !important;
-            }
+              &:after {
+                  content: ","
+              }
           }
 
+          .deliverydays-date {
+            display: inline-block;
+          }
+
+        }
+
+        &-fullwidth {
+          ul {
+            width: 100% !important;
+          }
+        }
+
+        // Bottom Row
+        ul, ol {
+          float: left;
+          width: 100%;
+
+          li {
+            float: left;
+            width: 100%;
+
+            // Left Column
+            label {
+              float: left;
+              width: 100%;
+              padding: 13px 15px 13px 15px;
+            }
+
+            @media screen and (min-width: 400px) {
+              li {
+                padding: 10px 100px 10px 20px;
+              }
+            }
+
+            .data-container {
+              display: inline-block;
+              width: calc(~'100% - 40px');
+            }
+
+            .tig-postnl-delivery-radio {
+                position: absolute;
+            }
+
+              .tig-postnl-delivery-time {
+                  padding-left: 30px;
+                  float: left;
+                  width: 70%;
+              }
+
+              .tig-postnl-delivery-fallback {
+                  padding-left: 30px;
+                  float: left;
+                  width: 100%;
+              }
+
+            // Right Column
+            .tig-postnl-delivery-option {
+              float: left;
+              width: 100%;
+              padding-left: 30px;
+            }
+
+            @media screen and (min-width: 400px) {
+              .data-container {
+                width: calc(~'100% - 100px');
+              }
+
+              .tig-postnl-delivery-option {
+                  padding-left: 0;
+                  width: 30%;
+                  text-align: right;
+              }
+            }
+          }
         }
       }
     }
 
+    .extra-service-container {
+      border: 1px solid @postnl-border-color;
+      margin-top: 25px;
+      background: @postnl-list-background;
 
+      .extra-service-header {
+        padding: 6px 15px;
+        font-size: 12px;
+        background: @postnl-blue-dark;
+        color: @postnl-white;
+        text-transform: uppercase;
 
-    // Delivery List
+        .extra-service-label {
+          font-weight: 600;
+        }
+      }
 
-    .delivery {
+      .only-stated-address {
+        padding: 0;
+        position: relative;
 
-      .days {
+        input {
+          position: absolute;
+          left: 15px;
+          transform: translateY(-50%);
+          top: 49%;
+          pointer-events: none;
+          z-index: 2;
 
-        .wrapper {
-          float:left;
+          &:not([disabled]) {
+            &:focus {
+              box-shadow: none;
+            }
+          }
+        }
+
+        label {
+          position: relative;
           width: 100%;
+          display: block;
+          box-sizing: border-box;
+          padding: 0 0 0 40px;
+          line-height: 55px;
+          cursor: pointer;
 
-          &:nth-child(even){
-            background: @custom-list-background-even;
+          &:hover {
+            background: @postnl-list-hover;
+          }
+        }
+
+        .price {
+          position: absolute;
+          right: 15px;
+          transform: translateY(-50%);
+          top: 50%;
+          pointer-events: none;
+
+            @media screen and (max-width: 399px){
+                position: relative;
+                pointer-events: none;
+                padding-left: 40px;
+                top: -15px;
+                right: unset;
+            }
+
+          &:before {
+            content: '(+ ';
           }
 
-          // Left Column
+          &:after {
+            content: ')';
+          }
+        }
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .days {
+        .wrapper {
           strong {
             float: left;
-            width: 20%;
-            box-sizing: border-box;
-            padding: 10px 10px 10px 15px;
-
-            .deliverydays-day { text-transform:uppercase; display :block; }
-            .deliverydays-date { font-size: 12px; display :block;  }
-
+            width: 100%;
           }
 
-          &-fullwidth {
-            ul {
-              width: 100% !important;
-            }
-          }
-
-          // Middle Column
           ul, ol {
             float: right;
-            width: 80%;
-
-            li {
-
-              float: left;
-              width: 100%;
-
-              label {
-                float:left;
-                width: 100%;
-                padding: 18px 20px 18px 20px;
-              }
-
-              @media screen and (min-width: 400px){
-                li {
-                  padding: 10px 100px 10px 20px;
-                }
-              }
-
-              .data-container { display: inline-block; width: calc(~'100% - 40px'); }
-
-              .tig-postnl-delivery-radio   { float:left; margin: 0 15px 0 0; width: 20px; height: 21px; }
-              .tig-postnl-delivery-data    { float:left; }
-              .tig-postnl-delivery-to      { float:left; }
-              .tig-postnl-delivery-dash    { float:left; margin: 0 3px; }
-              .tig-postnl-delivery-from    { float:left; }
-
-              // Right Column
-              .tig-postnl-delivery-option  { float:left; margin-left: 37px; width: 100%; position: relative; color: @postnl-orange; }
-              .tig-postnl-delivery-fee-container { margin-right: 10px; color: #333333; font-size: 11px; }
-
-              @media screen and (min-width: 400px){
-                .data-container { width: calc(~'100% - 100px'); }
-
-                .tig-postnl-delivery-option {
-                  position: absolute;
-                  top: 18px;
-                  right: 15px;
-                  color: @postnl-orange;
-                  overflow: hidden;
-                  float: none;
-                  margin: auto;
-                  width: auto;
-                }
-              }
-            }
-          }
-
-        }
-      }
-
-      @media screen and (max-width: 480px){
-        .days {
-          .wrapper {
-            strong {
-              float: left;
-              width: 100%;
-            }
-
-            ul, ol {
-              float: right;
-              width: 100%;
-            }
-          }
-        }
-      }
-
-    } /* End Delivery */
-
-
-
-    // Pickup List
-
-    .pickup {
-      .locations {
-        li {
-
-          // Left 1: Opening Hours
-
-          .tig-postnl-pickup-hours {
-            float:left;
-            width: 10%;
-            text-align:center;
-            margin-top: 20px;
-
-            span {
-              display:none;
-            }
-
-            &-clock {
-              height: 15px;
-              width: 15px;
-              cursor: pointer;
-              fill: @custom-clock-color;
-
-              -moz-transition: all .1s ease-in-out;
-              -ms-transition: all .1s ease-in-out;
-              -webkit-transition: all .1s ease-in-out;
-              -o-transition: all .1s ease-in-out;
-              transition: all .1s ease-in-out;
-
-              &:hover {
-                fill: @custom-clock-color-hover;
-
-                -moz-transform: scale(1.25);
-                -ms-transform: scale(1.25); /* Internet Explorer 9 */
-                -webkit-transform: scale(1.25);
-                -o-transform: scale(1.25);
-                transform: scale(1.25);
-              }
-            }
-          }
-
-          // Popup
-          .tig-postnl-pickup-list {
-            background: white;
-            float: left;
-            position: relative;
             width: 100%;
-            box-sizing: border-box;
-            padding: 0 10px 15px 10px;
-
-            .tig-postnl-pop-address-info {
-              float: left;
-              width: 100%;
-              padding: 20px 10px 15px;
-              border-bottom: 2px solid @custom-list-background;
-              box-sizing: border-box;
-
-              &:before {
-                content: ' ';
-                width: 0;
-                height: 0;
-                border-top: 25px solid @custom-list-background;
-                border-bottom: 25px solid rgba(255, 255, 255, 0);
-                border-right: 25px solid rgba(255, 255, 255, 0);
-                position: absolute;
-                top: -34px;
-                left: calc(~'50% - 0px');
-                z-index: 10;
-                transform: rotate(-135deg);
-              }
-
-
-              .tig-postnl-pop-address-one {
-                float:left;
-                width:100%;
-
-                .tig-postnl-pop-name {
-                  float:left;
-                  width:60%;
-
-                  font-weight: bold;
-                }
-
-                .tig-postnl-pop-city{
-                  float:right;
-                  width:40%;
-                  text-align:right;
-                  font-weight: bold;
-                }
-              }
-
-              .tig-postnl-pop-address-two {
-                float:left;
-                width:70%;
-              }
-
-              .tig-postnl-pop-address-three {
-                float:left;
-                width:30%;
-
-                .tig-postnl-pop-distance { float: right; }
-              }
-            }
-
-            li {
-              background: none;
-              padding: 10px;
-              width: 33.33%;
-
-              ul, li { width: 100%; padding: 0; }
-
-              &:hover { background: none; }
-
-              .pickup-list-day { font-weight: 600; }
-              .pickup-list-time { padding-left: 0; }
-
-            }
-          }
-
-          // Popup Even arrow
-          &:nth-child(even) .tig-postnl-pickup-list .tig-postnl-pop-address-info:before {
-            border-top: 25px solid @custom-list-background-even;
-          }
-
-
-          @media screen and (max-width: 530px){
-            .tig-postnl-pickup-list {
-              li {
-                width: 50%;
-              }
-            }
-          }
-
-
-          // Left 2: Distance
-
-          .tig-postnl-distance {
-            float:left;
-            line-height: 58px;
-            font-size: 11px;
-            width: 15%;
-          }
-
-
-          // Middle: Pickup Address
-
-          .tig-postnl-address-container { float:left; width: 35%; box-sizing: border-box; padding: 10px 10px 10px 0; }
-
-          .tig-postnl-pickup-name   { float:left; margin: 0 3px 0 0;  width: 100%; font-weight: bold; }
-          .tig-postnl-pickup-street { float:left; margin: 0 3px 0 0; }
-          .tig-postnl-pickup-number { float:left; margin: 0 3px 0 0; }
-          .tig-postnl-pickup-number-addition { float:left; margin: 0 3px 0 0; }
-          .tig-postnl-pickup-city { float:left; margin: 0 3px 0 0; }
-
-          // Right: Pickup Time
-
-          label {
-            padding: 10px 5px 10px 5px;
-            float:right;
-            width: 40%;
-
-            .tig-postnl-pickup-radio  {
-              float:left;
-              margin: 0 10px 0 5px;
-              width: 20px;
-              height: 40px;
-            }
-
-            .location-container {
-              display: inline-block;
-              width: calc(~'100% - 40px');
-
-              .tig-postnl-pickup-deliver,
-              .tig-postnl-pickup-early-deliver {
-                line-height: 40px;
-              }
-
-              .tig-postnl-pickup-early-deliver-fee {
-                font-size: 11px;
-              }
-            }
-          }
-
-          // Default
-
-          &:nth-child(even) {
-            background :@custom-list-background-even;
           }
         }
       }
-
-      @media screen and (max-width: 530px){
-
-        .tig-postnl-pickup-hours {
-          width:15% !important;
-        }
-
-        .tig-postnl-distance {
-          width: 20% !important;
-        }
-
-        .tig-postnl-address-container {
-          width: 65% !important;
-        }
-
-        label {
-          width: 50% !important;
-          float: left !important;
-        }
-      }
-
-      @media screen and (max-width: 480px){
-
-        label {
-          width: 100% !important;
-
-          &:hover,
-          &.selected-row {
-            border-radius :0;
-          }
-        }
-      }
-
-    } /* End PickUp */
+    }
 
   }
+  /* End Delivery */
+
+
+  // Pickup List
+
+  .pickup {
+      .tig-postnl-pickup-row {
+          strong {
+              font-size: 12px;
+              float: left;
+              width: 100%;
+              box-sizing: border-box;
+              background: @postnl-top-row-background;
+              border-bottom: 1px solid @postnl-border-color;
+              border-top: 1px solid @postnl-border-color;
+              padding: 5px 15px;
+              text-transform: uppercase;
+
+              .tig-postnl-distance {
+                  float: right;
+                  font-weight: 400;
+                  text-transform: none;
+              }
+          }
+
+          label {
+              float: left;
+              width: 100%;
+              padding: 18px 15px 18px 15px;
+
+              input {
+                  float: left;
+                  margin: 0 10px 0 0;
+                  width: 20px;
+                  height: 21px;
+                  position: absolute;
+              }
+
+              .tig-postnl-address-container {
+                  float:left;
+                  width: 70%;
+                  padding-left: 30px;
+
+                  .tig-postnl-pickup-hours-link {
+                      display: block;
+                      margin-top: 10px;
+                      color: @postnl-orange;
+
+                      .hide {
+                          display: none;
+                      }
+
+                      .show {
+                          display: block;
+                      }
+
+                      &.active {
+                          .hide {
+                              display: block;
+                          }
+
+                          .show {
+                              display: none;
+                          }
+                      }
+                  }
+              }
+
+              .tig-postnl-date-time-container {
+                  float:right;
+                  text-align: right;
+                  width: 30%;
+
+                  @media screen and (max-width: 768px) {
+                      float: left;
+                      margin-top: 10px;
+                      padding-left: 30px;
+                      text-align: left;
+                      width: 100%;
+                  }
+
+                  span {
+                      display: block;
+                  }
+
+                  .pickup-date-date {
+                      font-size: 12px;
+                  }
+              }
+
+              .tig-postnl-pickup-hours-list {
+                  float:left;
+                  width: calc(~'100% - 30px');
+                  margin-left: 30px;
+                  background: @postnl-hours-background;
+                  padding: 15px;
+                  border-radius: 5px;
+                  border: 1px solid @postnl-border-color;
+                  box-sizing: border-box;
+                  margin-top: 10px;
+
+                   li {
+                       float:left;
+                       line-height: 25px;
+                       width: 50%;
+                   }
+              }
+
+          }
+      }
+  }
+
 }
 
 /* Loading Image */
+.postnl-delivery-options {
+  position: relative;
 
-.postnl-deliveryoptions {
-  .delivery_options {
-    position :relative;
+  .tig-postnl-loading {
+    position: absolute;
 
-    .tig-postnl-loading {
-      position: absolute;
+    background: rgba(255, 255, 255, 0.65) url(../images/loading_1.gif) no-repeat center center;
+    background-size: 60px;
 
-      background:rgba(255, 255, 255, 0.65) url(../images/loading_1.gif) no-repeat center center;
-      background-size: 60px;
+    height: 100px;
+    width: 100%;
+    box-sizing: border-box;
 
-      height: 100px;
-      width: 100%;
-      box-sizing: border-box;
-
-      z-index: 10;
-    }
+    z-index: 10;
   }
 }
-
 
 /* =================================================================================================================== *
 *
@@ -580,11 +565,9 @@
       max-width: 500px;
 
       .col-price {
-        min-width:100px;
+        min-width: 100px;
       }
 
     }
   }
 }
-
-

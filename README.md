@@ -1,5 +1,7 @@
 # Postnl Magento 2
 
+![TIG PostNL tested 2.2.x versions](https://img.shields.io/badge/Tested%20with-2.2.11-%23009f3e)
+![TIG PostNL tested 2.3.x versions](https://img.shields.io/badge/Tested%20with-2.3.5-%23009f3e)
 [![Build Status](https://travis-ci.org/tig-nl/postnl-magento2.svg?branch=master)](https://travis-ci.org/tig-nl/postnl-magento2) ![Coverage Status](https://coveralls.io/repos/github/tig-nl/tig-extension-tig-postnl-magento2/badge.svg?t=uuXzu3)
 
 ## Installation
@@ -104,3 +106,14 @@ Open: **app/code/TIG/PostNL/view/frontend/web/css/source/deliveryoptions.less**
 
 Copy the variables to your own **theme.less** or extend them in your **extend.less**. More information:
 http://devdocs.magento.com/guides/v2.0/frontend-dev-guide/css-guide/css_quick_guide_approach.html#simple_override
+
+
+## Uninstalling the PostNL extension
+
+To remove the PostNL extension, simply make use of the uninstall command Magento provides: https://devdocs.magento.com/guides/v2.4/install-gde/install/cli/install-cli-uninstall-mods.html#instgde-cli-uninst-mod-uninst
+
+PostNL uses uninstall scripts. Please make sure to add the --remove-data flag to your command.
+The uninstall script will ask if you would like to remove Order related PostNL data. Removing this data is optional.
+The recommended uninstall command is:
+
+`bin/magento module:uninstall TIG_PostNL --backup-db --remove-data --clear-static-content`

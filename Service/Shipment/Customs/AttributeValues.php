@@ -48,7 +48,8 @@ class AttributeValues
     private $scopeConfig;
 
     private $hasFallback = [
-        'country_of_manufacture'
+        'country_of_manufacture',
+        'special_price'
     ];
 
     /**
@@ -69,15 +70,15 @@ class AttributeValues
     }
 
     /**
-     * @param string $attributeCode
+     * @param string                $attributeCode
      * @param ShipmentItemInterface $item
      *
      * @return mixed
      * @throws PostNLException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function get($attributeCode, $item)
     {
-        /** @var \Magento\Catalog\Model\Product $product */
         $product = $this->productRepository->get($item->getSku());
         $attributeValue = $product->getDataUsingMethod($attributeCode);
 

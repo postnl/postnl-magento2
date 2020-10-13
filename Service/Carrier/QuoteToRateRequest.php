@@ -34,7 +34,7 @@ namespace TIG\PostNL\Service\Carrier;
 
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Quote\Model\Quote\Address\RateRequestFactory;
-use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Quote\Model\Quote\Item;
 
 class QuoteToRateRequest

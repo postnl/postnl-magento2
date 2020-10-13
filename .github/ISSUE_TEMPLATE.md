@@ -46,4 +46,4 @@ Issues with outdated version will be rejected.
 ### TIG support
 
 - Please ask your question in English to ensure that your issue can help other people internationally. Nevertheless we will respond in English.
-- If you want support with installing the PostNL extension, please contact citservicedesk@postnl.nl for free support, or contact us directly at support@tig.nl for paid support plans.
+- If you want support with installing the PostNL extension, please contact digitaleklantsupport@postnl.nl for free support, or contact us directly at support@tig.nl for paid support plans.

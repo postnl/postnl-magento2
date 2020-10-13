@@ -29,51 +29,44 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Model;
+namespace TIG\PostNL\Test\Unit\Config\CheckoutConfiguration;
 
-use TIG\PostNL\Model\ShipmentBarcode;
+use TIG\PostNL\Config\CheckoutConfiguration\IsPakjegemakBeActive;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Test\TestCase;
 
-class ShipmentBarcodeTest extends TestCase
+class IsPakjegemakBeActiveTest extends TestCase
 {
-    /**
-     * @param array $args
-     *
-     * @return object
-     */
-    public function getInstance(array $args = [])
-    {
-        return $this->objectManager->getObject(ShipmentBarcode::class, $args);
-    }
+    public $instanceClass = IsPakjegemakBeActive::class;
 
-    /**
-     * @return array
-     */
-    public function getIdentitiesProvider()
+    public function getValueProvider()
     {
         return [
-            [1],
-            [2],
-            [3],
-            [4],
-            [5],
+            'is active' => [true],
+            'is not active' => [true],
         ];
     }
 
     /**
-     * @param $id
+     * @dataProvider getValueProvider
      *
-     * @dataProvider getIdentitiesProvider
+     * @param $expected
+     *
+     * @throws \Exception
      */
-    public function testGetIdentities($id)
+    public function testGetValue($expected)
     {
-        $instance = $this->getInstance();
-        $instance->setId($id);
+        $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
 
-        $result = $instance->getIdentities();
-        $expected = ShipmentBarcode::CACHE_TAG . '_' . $id;
+        $expects = $shippingOptions->expects($this->once());
+        $expects->method('isPakjegemakActive')->with('BE');
+        $expects->willReturn($expected);
 
-        $this->assertInternalType('array', $result);
-        $this->assertEquals([$expected], $result);
+        /** @var IsPakjegemakBeActive $instance */
+        $instance = $this->getInstance([
+            'shippingOptions' => $shippingOptions,
+        ]);
+
+        $this->assertEquals($expected, $instance->getValue());
     }
 }

@@ -81,4 +81,18 @@ class FeeCalculator
         $country = isset($params['country']) ? $params['country'] : 'NL';
         return $this->shippingOptions->getEveningDeliveryFee($country);
     }
+
+    /**
+     * @param array $params
+     *
+     * @return float
+     */
+    public function statedAddressOnlyFee($params)
+    {
+        if ($this->shippingOptions->isStatedAddressOnlyActive() && $params['stated_address_only']) {
+            return (float)$this->shippingOptions->getStatedAddressOnlyFee();
+        }
+
+        return (float)0.0;
+    }
 }

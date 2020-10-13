@@ -34,7 +34,7 @@ namespace TIG\PostNL\Config\Provider;
 class PostNLConfiguration extends AbstractConfigProvider
 {
     const XPATH_STABILITY = 'tig_postnl/stability';
-    const XPATH_SUPPORTED_MAGENTO_VERSION = 'tig_postnl/supported_magento_version';
+    const XPATH_TESTED_MAGENTO_VERSION = 'tig_postnl/tested_magento_version';
 
     /**
      * @param null $store
@@ -53,6 +53,6 @@ class PostNLConfiguration extends AbstractConfigProvider
      */
     public function getSupportedMagentoVersions($store = null)
     {
-        return $this->getConfigFromXpath(static::XPATH_SUPPORTED_MAGENTO_VERSION, $store);
+        return $this->getConfigFromXpath(static::XPATH_TESTED_MAGENTO_VERSION, $store);
     }
 }

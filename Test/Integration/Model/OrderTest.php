@@ -84,7 +84,7 @@ class OrderTest extends TestCase
          * We use a date in the past as this test is run within a second and so the date is not changed.
          */
         $newTime = date('Y-m-d H:i:s', strtotime('last week thursday'));
-        $model->setCreatedAt($newTime);
+        $model->changeCreatedAt($newTime);
         $this->saveModel($model);
         $this->assertNotEquals($newTime, $model->getUpdatedAt());
     }

@@ -79,13 +79,13 @@ class Barcode extends AbstractEndpoint
     /**
      * @var string
      */
-    private $countryId;
+    private $productCode;
 
     /**
      * @var string
      */
     private $type = '';
-    
+
     /**
      * @param \TIG\PostNL\Webservices\Soap                   $soap
      * @param \TIG\PostNL\Service\Shipment\Barcode\Range     $barcodeRange
@@ -104,7 +104,7 @@ class Barcode extends AbstractEndpoint
         $this->barcodeRange = $barcodeRange;
         $this->customer = $customer;
         $this->message = $message;
-        
+
         parent::__construct(
             $shipmentData
         );
@@ -123,7 +123,7 @@ class Barcode extends AbstractEndpoint
     {
         $this->validateRequiredValues();
 
-        $barcode = $this->barcodeRange->getByCountryId($this->countryId, $this->storeId, $this->type);
+        $barcode = $this->barcodeRange->getByProductCode($this->productCode, $this->storeId);
 
         $parameters = [
             'Message'  => $this->message->get(''),
@@ -147,41 +147,33 @@ class Barcode extends AbstractEndpoint
     }
 
     /**
-     * @param string $countryId
+     * @param string $productCode
      *
      * @return $this
      */
-    public function setCountryId($countryId)
+    public function changeProductCode($productCode)
     {
-        $this->countryId = $countryId;
-    }
-
-    /**
-     * @param $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
+        $this->productCode = $productCode;
     }
 
     /**
      * @param int $storeId
      */
-    public function setStoreId($storeId)
+    public function updateApiKey($storeId)
     {
         $this->storeId = $storeId;
         $this->soap->updateApiKey($storeId);
-        $this->customer->setStoreId($storeId);
+        $this->customer->changeStoreId($storeId);
     }
-    
+
     /**
      * @throws \TIG\PostNL\Exception
      */
     private function validateRequiredValues()
     {
-        if (empty($this->countryId)) {
+        if (empty($this->productCode)) {
             // @codingStandardsIgnoreLine
-            throw new PostNLException(__('Please provide the country id first by calling setCountryId'));
+            throw new PostNLException(__('Please provide the productcode first by calling setProductCode'));
         }
 
         if (empty($this->storeId)) {

@@ -29,43 +29,31 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Framework;
+namespace TIG\PostNL\Config\CheckoutConfiguration;
 
-use Magento\Framework\App\ProductMetadataInterface;
-use Magento\Framework\App\Arguments\ValidationState as MagentoValidationState;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
-class ValidationState extends MagentoValidationState
+class StatedAddressOnlyFee implements CheckoutConfigurationInterface
 {
     /**
-     * @var ProductMetadataInterface
+     * @var ShippingOptions
      */
-    private $productMetaData;
+    private $shippingOptions;
 
     /**
-     * ValidationState constructor.
-     *
-     * @param ProductMetadataInterface $productMetadata
+     * @param ShippingOptions $shippingOptions
      */
     public function __construct(
-        ProductMetadataInterface $productMetadata
+        ShippingOptions $shippingOptions
     ) {
-        $this->productMetaData = $productMetadata;
+        $this->shippingOptions = $shippingOptions;
     }
 
     /**
-     * Retrieve current validation state
-     *
-     * Magento 2.1.* uses xsd schemes that are not containing the listingToolbar component.
-     * When in developer mode these schemes are triggerd to validate the ui_definition.xml which will break the backend.
-     *
-     * @return boolean
+     * @return bool|mixed
      */
-    public function isValidationRequired()
+    public function getValue()
     {
-        if (!version_compare($this->productMetaData->getVersion(), '2.2.0', '<')) {
-            return parent::isValidationRequired();
-        }
-
-        return false;
+        return $this->shippingOptions->getStatedAddressOnlyFee();
     }
 }

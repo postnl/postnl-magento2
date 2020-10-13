@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Helper\Tracking;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\MailException;
@@ -78,6 +79,7 @@ class Mail extends AbstractTracking
      * @param Log                                $logging
      * @param AssetRepository                    $assetRepository
      * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
+     * @param ScopeConfigInterface               $scopeConfig
      */
     public function __construct(
         Context $context,
@@ -88,7 +90,8 @@ class Mail extends AbstractTracking
         Webshop $webshop,
         Log $logging,
         AssetRepository $assetRepository,
-        ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
+        ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->transportBuilder     = $transportBuilder;
         $this->postNLHelperData     = $data;
@@ -100,7 +103,8 @@ class Mail extends AbstractTracking
             $searchCriteriaBuilder,
             $webshop,
             $logging,
-            $shipmentBarcodeRepositoryInterface
+            $shipmentBarcodeRepositoryInterface,
+            $scopeConfig
         );
     }
 
@@ -130,7 +134,7 @@ class Mail extends AbstractTracking
         $template  = $this->webshopConfig->getTrackAndTraceEmailTemplate($shipment->getStoreId());
         $transport = $this->transportBuilder->setTemplateIdentifier($template);
         $transport->setTemplateOptions([
-            'area'  => \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE,
+            'area'  => \Magento\Framework\App\Area::AREA_FRONTEND,
             'store' => $shipment->getStoreId()
         ]);
 
@@ -178,7 +182,8 @@ class Mail extends AbstractTracking
             'name'            => $shippingAddress->getFirstname() . ' ' .
                 $shippingAddress->getMiddlename() . ' ' .
                 $shippingAddress->getLastname(),
-            'street'          => $this->getStreetFlattend($shippingAddress->getStreet())
+            'street'          => $this->getStreetFlattend($shippingAddress->getStreet()),
+            'delivery_date'   => $shipment->getDeliveryDateFormatted('d-m-Y')
         ];
     }
 

@@ -37,6 +37,7 @@ use TIG\PostNL\Api\Data\OrderInterface as PostNLOrder;
 use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
+use TIG\PostNL\Webservices\Api\Exception;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
 use TIG\PostNL\Webservices\Api\CutoffTimes;
@@ -122,7 +123,7 @@ class SentDate extends AbstractEndpoint
     /**
      * @return mixed
      * @throws \Magento\Framework\Webapi\Exception
-     * @throws \TIG\PostNL\Webservices\Api\Exception
+     * @throws Exception
      */
     public function call()
     {
@@ -144,7 +145,7 @@ class SentDate extends AbstractEndpoint
      * @param             $storeId
      * @param PostNLOrder $postNLOrder
      */
-    public function setParameters($address, $storeId, PostNLOrder $postNLOrder)
+    public function updateParameters($address, $storeId, PostNLOrder $postNLOrder)
     {
         $this->soap->updateApiKey($storeId);
 

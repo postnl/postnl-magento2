@@ -35,11 +35,6 @@ use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
 use Magento\Framework\View\Element\Template;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 
-/**
- * Class AccountSettings
- *
- * @package TIG\PostNL\Block\Adminhtml\Config\Comment
- */
 class AccountSettings extends Template implements RendererInterface
 {
     const EXT_URL_DELIVERYOPTIONS = 'http://www.postnl.nl/zakelijk/e-commerce/flexibele-bezorgopties';

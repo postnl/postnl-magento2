@@ -43,7 +43,6 @@
     <preference for="TIG\PostNL\Service\Wrapper\QuoteInterface" type="TIG\PostNL\Service\Wrapper\Quote" />
     <preference for="TIG\PostNL\Service\Wrapper\StoreInterface" type="TIG\PostNL\Service\Wrapper\Store" />
     <preference for="TIG\PostNL\Service\Wrapper\CheckoutSessionInterface" type="TIG\PostNL\Service\Wrapper\CheckoutSession" />
-    <preference for="\Magento\Framework\App\Arguments\ValidationState" type="TIG\PostNL\Service\Framework\ValidationState"/>
 
     <type name="\Magento\Sales\Model\Order">
         <plugin name="TIG_PostNL_Order_Shipment" type="TIG\PostNL\Plugin\Order\ShipmentPlugin" sortOrder="1"/>
@@ -107,6 +106,9 @@
     <type name="TIG\PostNL\Setup\UpgradeSchema">
         <arguments>
             <argument name="upgradeSchemaObjects" xsi:type="array">
+                <item name="v1.9.1" xsi:type="array">
+                    <item name="InstallStatedAddressOnly" xsi:type="object">TIG\PostNL\Setup\V191\Schema\InstallStatedAddressOnly</item>
+                </item>
                 <item name="v1.9.0" xsi:type="array">
                     <item name="InstallReturnBarcode" xsi:type="object">TIG\PostNL\Setup\V190\Schema\InstallReturnBarcode</item>
                     <item name="InstallReturnLabel" xsi:type="object">TIG\PostNL\Setup\V190\Schema\InstallReturnLabel</item>
@@ -188,6 +190,12 @@
                 </item>
                 <item name="v1.8.1" xsi:type="array">
                     <item name="UpdateConfigData" xsi:type="object">TIG\PostNL\Setup\V181\Data\UpdateConfigData</item>
+                </item>
+                <item name="v1.9.1" xsi:type="array">
+                    <item name="InstallDisableDeliveryDaysAttribute" xsi:type="object">TIG\PostNL\Setup\V191\Data\InstallDisableDeliveryDaysAttribute</item>
+                </item>
+                <item name="v1.9.4" xsi:type="array">
+                    <item name="InstallMaximumQuantityLetterboxPackage" xsi:type="object">TIG\PostNL\Setup\V194\Data\InstallMaximumQuantityLetterboxPackage</item>
                 </item>
             </argument>
         </arguments>
@@ -300,6 +308,7 @@
 
     <type name="Magento\Sales\Model\ResourceModel\Grid">
         <plugin name="TIG_PostNL_OrderPlace" type="TIG\PostNL\Plugin\Order\AsyncPlugin" sortOrder="1" />
+        <plugin name="TIG_PostNL_ShipmentPlace" type="TIG\PostNL\Plugin\Shipment\AsyncPlugin" sortOrder="1" />
     </type>
 
     <type name="TIG\PostNL\Plugin\Order\AsyncPlugin">
@@ -307,6 +316,15 @@
             <argument name="mainTableName" xsi:type="string">sales_order</argument>
             <argument name="gridTableName" xsi:type="string">sales_order_grid</argument>
             <argument name="orderIdField" xsi:type="string">sales_order_grid.entity_id</argument>
+            <argument name="notSyncedDataProvider" xsi:type="object">Magento\Sales\Model\ResourceModel\Provider\NotSyncedOrderDataProvider</argument>
+        </arguments>
+    </type>
+
+    <type name="TIG\PostNL\Plugin\Shipment\AsyncPlugin">
+        <arguments>
+            <argument name="mainTableName" xsi:type="string">sales_shipment</argument>
+            <argument name="gridTableName" xsi:type="string">sales_shipment_grid</argument>
+            <argument name="orderIdField" xsi:type="string">sales_shipment_grid.entity_id</argument>
             <argument name="notSyncedDataProvider" xsi:type="object">Magento\Sales\Model\ResourceModel\Provider\NotSyncedOrderDataProvider</argument>
         </arguments>
     </type>

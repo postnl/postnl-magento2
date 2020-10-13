@@ -41,16 +41,13 @@ use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\OrderRepository;
 use TIG\PostNL\Api\Data\OrderInterface;
-use Magento\Framework\DataObject\IdentityInterface;
 
 // @codingStandardsIgnoreFile
 /**
  * Too much public methods, and too much code. We can't get this file to pass the (Object Calisthenics) code inspection.
  */
-class Order extends AbstractModel implements OrderInterface, IdentityInterface
+class Order extends AbstractModel implements OrderInterface
 {
-    const CACHE_TAG = 'tig_postnl_order';
-
     const FIELD_ORDER_ID = 'order_id';
     const FIELD_QUOTE_ID = 'quote_id';
     const FIELD_TYPE = 'type';
@@ -60,6 +57,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     const FIELD_EXPECTED_DELIVERY_TIME_START = 'expected_delivery_time_start';
     const FIELD_EXPECTED_DELIVERY_TIME_END = 'expected_delivery_time_end';
     const FIELD_IS_PAKJEGEMAK = 'is_pakjegemak';
+    const FIELD_IS_STATED_ADDRESS_ONLY = 'is_stated_address_only';
     const FIELD_PG_ORDER_ADDRESS_ID = 'pg_order_address_id';
     const FIELD_PG_LOCATION_CODE = 'pg_location_code';
     const FIELD_PG_RETAIL_NETWORK_ID = 'pg_retail_network_id';
@@ -121,14 +119,6 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     {
         // @codingStandardsIgnoreLine
         $this->_init('TIG\PostNL\Model\ResourceModel\Order');
-    }
-
-    /**
-     * @return array
-     */
-    public function getIdentities()
-    {
-        return [self::CACHE_TAG . '_' . $this->getId()];
     }
 
     /**
@@ -291,6 +281,24 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     public function getIsPakjegemak()
     {
         return $this->getData(static::FIELD_IS_PAKJEGEMAK);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setIsStatedAddressOnly($value)
+    {
+        return $this->setData(static::FIELD_IS_STATED_ADDRESS_ONLY, $value);
+    }
+
+    /**
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function getIsStatedAddressOnly()
+    {
+        return $this->getData(static::FIELD_IS_STATED_ADDRESS_ONLY);
     }
 
     /**

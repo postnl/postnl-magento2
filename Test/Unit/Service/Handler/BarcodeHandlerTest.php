@@ -109,14 +109,14 @@ class BarcodeHandlerTest extends TestCase
     protected function getBarcodeMock($callReturnValue)
     {
         $barcodeMock = $this->getFakeMock('TIG\PostNL\Webservices\Endpoints\Barcode');
-        $barcodeMock->setMethods(['call', 'setStoreId']);
+        $barcodeMock->setMethods(['call', 'updateApiKey']);
         $barcodeMock = $barcodeMock->getMock();
 
         $callExpects = $barcodeMock->expects($this->once());
         $callExpects->method('call');
         $callExpects->willReturn($callReturnValue);
 
-        $barcodeMock->expects($this->once())->method('setStoreId');
+        $barcodeMock->expects($this->once())->method('updateApiKey');
 
         return $barcodeMock;
     }

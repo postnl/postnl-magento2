@@ -64,8 +64,8 @@ class Customer
     /**
      * @param $storeId
      */
-    public function setStoreId($storeId)
+    public function changeCustomerStoreId($storeId)
     {
-        $this->customer->setStoreId($storeId);
+        $this->customer->changeStoreId($storeId);
     }
 }

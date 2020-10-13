@@ -33,7 +33,6 @@ namespace TIG\PostNL\Service\Options;
 
 use TIG\PostNL\Config\Provider\ProductType;
 use TIG\PostNL\Service\Order\ProductInfo;
-use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use Magento\Sales\Api\Data\ShipmentItemInterface;
 use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
@@ -41,8 +40,9 @@ use Magento\Sales\Api\Data\OrderItemInterface;
 class ItemsToOption
 {
     private $typeToOption = [
-        ProductType::PRODUCT_TYPE_EXTRA_AT_HOME => ProductInfo::OPTION_EXTRAATHOME,
-        ProductType::PRODUCT_TYPE_REGULAR       => '',
+        ProductType::PRODUCT_TYPE_EXTRA_AT_HOME     => ProductInfo::OPTION_EXTRAATHOME,
+        ProductType::PRODUCT_TYPE_LETTERBOX_PACKAGE => ProductInfo::OPTION_LETTERBOX_PACKAGE,
+        ProductType::PRODUCT_TYPE_REGULAR           => '',
     ];
 
     /**
@@ -50,8 +50,9 @@ class ItemsToOption
      * @var array
      */
     private $priority = [
-        ProductType::PRODUCT_TYPE_EXTRA_AT_HOME => 1,
-        ProductType::PRODUCT_TYPE_REGULAR       => 2,
+        ProductType::PRODUCT_TYPE_EXTRA_AT_HOME     => 1,
+        ProductType::PRODUCT_TYPE_LETTERBOX_PACKAGE => 2,
+        ProductType::PRODUCT_TYPE_REGULAR           => 3,
     ];
 
     /**
@@ -70,23 +71,15 @@ class ItemsToOption
     private $productTypes;
 
     /**
-     * @var QuoteInterface
-     */
-    private $quote;
-
-    /**
-     * @param QuoteInterface    $quote
      * @param ProductDictionary $productDictionary
      * @param ProductType       $type
      */
     public function __construct(
-        QuoteInterface $quote,
         ProductDictionary $productDictionary,
         ProductType $type
     ) {
         $this->productDictionary = $productDictionary;
         $this->productTypes = $type;
-        $this->quote = $quote;
     }
 
     /**
@@ -96,9 +89,9 @@ class ItemsToOption
      */
     public function get($items)
     {
-        foreach ($this->productTypes->getAllTypes() as $type) {
+        foreach ($this->productTypes->getAllTypes($items) as $type) {
             $products = $this->productDictionary->get($items, [$type]);
-            $this->setCurrentType($products, $type);
+            $this->updateCurrentType($products, $type);
         }
 
         return $this->typeToOption[$this->currentType];
@@ -108,7 +101,7 @@ class ItemsToOption
      * @param $products
      * @param $type
      */
-    private function setCurrentType($products, $type)
+    private function updateCurrentType($products, $type)
     {
         if (empty($products)) {
             $type = $this->currentType;
@@ -123,10 +116,14 @@ class ItemsToOption
     }
 
     /**
+     * @param $quote
+     *
      * @return string
      */
-    public function getFromQuote()
+    public function getFromQuote($quote)
     {
-        return $this->get($this->quote->getAllItems());
+        $items = $quote->getAllItems();
+
+        return $this->get($items);
     }
 }

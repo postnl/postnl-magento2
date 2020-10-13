@@ -206,6 +206,7 @@ class EPS extends Domestic
     /**
      * @param $value
      */
+    // @codingStandardsIgnoreLine
     public function setTemplateInserted($value)
     {
         $this->templateInserted = $value;
