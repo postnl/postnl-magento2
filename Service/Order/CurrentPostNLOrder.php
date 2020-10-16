@@ -89,7 +89,7 @@ class CurrentPostNLOrder
         $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId);
         $searchCriteria->setPageSize(1);
 
-        $sortOrder = $this->sortOrderBuilder->create()->setField('entity_id')->setDirection('DESC')->create();
+        $sortOrder = $this->sortOrderBuilder->create()->setField('entity_id')->setDirection('DESC');
         $searchCriteria->setSortOrders([$sortOrder]);
 
         /** @var \Magento\Framework\Api\SearchResults $list */
