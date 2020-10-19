@@ -77,7 +77,7 @@ class ProductDictionary
         $products = $this->collectionByItems->get($items);
         return array_filter($products, function (ProductInterface $product) use ($postNLTypes, $convertLetterbox) {
             $attribute = $product->getCustomAttribute(PostNLType::POSTNL_PRODUCT_TYPE);
-            if ($convertLetterbox && $attribute->getValue() == PostNLType::PRODUCT_TYPE_LETTERBOX_PACKAGE) {
+            if ($convertLetterbox && $attribute && $attribute->getValue() == PostNLType::PRODUCT_TYPE_LETTERBOX_PACKAGE) {
                 $attribute->setValue(PostNLType::PRODUCT_TYPE_REGULAR);
             }
             $value = $attribute !== null ? $attribute->getValue() : false;
