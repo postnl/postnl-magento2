@@ -82,6 +82,8 @@ class Generate
     public function run(array $labels, $createNewPdf = false)
     {
         $preparedLabels = [];
+        $this->globalPackLabels = [];
+
         foreach ($this->orderLabels($labels) as $label) {
             $labelResult = $this->prepare->label($label);
             $preparedLabels[] = $labelResult['label'];
