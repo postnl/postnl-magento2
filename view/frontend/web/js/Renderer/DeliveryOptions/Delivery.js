@@ -115,7 +115,7 @@ define([
 
             var fee = null;
             if (!value.fallback && !value.letterbox_package && !value.eps && !value.gp) {
-                if (value.hasFee()) {
+                if (value.hasFee !== undefined && value.hasFee()) {
                     fee = value.getFee();
                 }
             }
@@ -189,7 +189,7 @@ define([
                     State.currentOpenPane('delivery');
                     return;
                 }
-          
+
                 if (data.letterbox_package === true) {
                     data  = ko.utils.arrayMap(data.timeframes, function (letterbox_package) {
                         return letterbox_package;

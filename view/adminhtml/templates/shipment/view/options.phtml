@@ -74,7 +74,9 @@
                 <li>
                     <span class="type"><?= $block->escapeHtml(__('Product option:')); ?></span>
                     <span class="value option">
-                        <?= $block->escapeHtml($block->getProductOptionValue()); ?>
+                        <?php // @codingStandardsIgnoreStart ?>
+                        <?= $block->getProductOptionValue(); ?>
+                        <?php // @codingStandardsIgnoreEnd ?>
                     </span>
                 </li>
                 <li>

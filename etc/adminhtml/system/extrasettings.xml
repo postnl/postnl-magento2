@@ -44,7 +44,6 @@
 
             <field id="label_size" translate="label tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Label size</label>
-                <tooltip><![CDATA[Some label types, like Global Pack or Combi EPS, can only be printed in A4 format.]]></tooltip>
                 <source_model>TIG\PostNL\Config\Source\Settings\LabelsizeSettings</source_model>
                 <config_path>tig_postnl/extra_settings_printer/label_size</config_path>
                 <comment><model>TIG\PostNL\Config\Comment\LabelSize</model></comment>

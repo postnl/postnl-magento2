@@ -55,24 +55,42 @@ class MergeTest extends TestCase
      */
     public function testRightMergerIsCalled($merger)
     {
-        $labels = [$this->getMock(ShipmentLabelInterface::class)];
+        $shipmentLabelDomesticMock = $this->getMock(ShipmentLabelInterface::class);
+        $shipmentLabelDomesticMock->shipmentType = 'Domestic';
+        $shipmentLabelGPMock = $this->getMock(ShipmentLabelInterface::class);
+        $shipmentLabelGPMock->shipmentType = 'GP';
+
+        $labels = [$shipmentLabelDomesticMock, $shipmentLabelGPMock];
+
+        // A4 mode should print everything A4
+        $a4Labels = [0 => $shipmentLabelDomesticMock, 1 => $shipmentLabelGPMock];
+        $a6Labels = null;
+
+        // A6 mode should print GP as A4, Domestic as A6
+        if ($merger == 'A6') {
+            $a4Labels = [1 => $shipmentLabelGPMock];
+            $a6Labels = [0 => $shipmentLabelDomesticMock];
+        }
 
         $webshopMock = $this->getFakeMock(\TIG\PostNL\Config\Provider\Webshop::class, true);
         $labelSize = $webshopMock->method('getLabelSize');
         $labelSize->willReturn($merger);
 
         $fpdiMock = $this->getMock(Fpdi::class);
+        $concatPdfMock = $fpdiMock->method('concatPdf');
+        $concatPdfMock->willReturn($fpdiMock);
 
         $a4Merger = $this->getFakeMock(Merge\A4Merger::class, true);
-        $files = $a4Merger->expects($merger == 'A4' ? $this->once() : $this->never());
+        // Expected once in A6 as well, as Globalpack will also be printed with A6 settings.
+        $files = $a4Merger->expects($this->once());
         $files->method('files');
-        $files->with($labels);
+        $files->with($a4Labels);
         $files->willReturn($fpdiMock);
 
         $a6Merger = $this->getFakeMock(Merge\A6Merger::class, true);
         $files = $a6Merger->expects($merger == 'A6' ? $this->once() : $this->never());
         $files->method('files');
-        $files->with($labels);
+        $files->with($a6Labels);
         $files->willReturn($fpdiMock);
 
         /** @var Merge $instance */
