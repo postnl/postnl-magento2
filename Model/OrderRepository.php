@@ -34,17 +34,16 @@
 
 namespace TIG\PostNL\Model;
 
-use Magento\Framework\Api\SortOrderBuilder;
-use TIG\PostNL\Api\OrderRepositoryInterface;
-use TIG\PostNL\Api\Data\OrderInterface;
-use TIG\PostNL\Model\ResourceModel\Order\CollectionFactory;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use TIG\PostNL\Api\Data\OrderInterface;
+use TIG\PostNL\Api\OrderRepositoryInterface;
+use TIG\PostNL\Model\ResourceModel\Order\CollectionFactory;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
-use Magento\Framework\Api\FilterBuilder;
 
 class OrderRepository extends AbstractRepository implements OrderRepositoryInterface
 {
@@ -64,11 +63,6 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     private $filterBuilder;
 
     /**
-     * @var SortOrderBuilder
-     */
-    private $sortOrderBuilder;
-
-    /**
      * OrderRepository constructor.
      *
      * @param SearchResultsInterfaceFactory $searchResultsFactory
@@ -77,7 +71,6 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      * @param CollectionFactory             $collectionFactory
      * @param QuoteInterface                $quote
      * @param FilterBuilder                 $filterBuilder
-     * @param SortOrderBuilder              $sortOrderBuilder
      */
     public function __construct(
         SearchResultsInterfaceFactory $searchResultsFactory,
@@ -85,14 +78,12 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         OrderFactory $orderFactory,
         CollectionFactory $collectionFactory,
         QuoteInterface $quote,
-        FilterBuilder $filterBuilder,
-        SortOrderBuilder $sortOrderBuilder
+        FilterBuilder $filterBuilder
     ) {
         $this->quoteWrapper      = $quote;
         $this->orderFactory      = $orderFactory;
         $this->collectionFactory = $collectionFactory;
         $this->filterBuilder     = $filterBuilder;
-        $this->sortOrderBuilder = $sortOrderBuilder;
 
         parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
     }
@@ -237,21 +228,12 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      */
     public function retrieveCurrentPostNLOrder($quoteId)
     {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId);
+        $collection = $this->collectionFactory->create();
+        $collection->addFieldToFilter('quote_id', $quoteId);
+        $collection->setOrder('entity_id', $collection::SORT_ORDER_DESC);
 
-        // Multiple records might exist, retrieve the most recent
-        $sortOrder = $this->sortOrderBuilder->create();
-        $sortOrder->setField('entity_id');
-        $sortOrder->setDirection('DESC');
-
-        $searchCriteria->setSortOrders([$sortOrder]);
-        $searchCriteria->setPageSize(1);
-
-        /** @var \Magento\Framework\Api\SearchResults $list */
-        $list = $this->getList($searchCriteria->create());
-
-        if ($list->getTotalCount()) {
-            return array_values($list->getItems())[0];
+        if ($collection->getSize() > 0) {
+            return $collection->getFirstItem();
         }
 
         return null;
