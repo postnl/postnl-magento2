@@ -99,7 +99,7 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
             'dateFallback'     => $fallbackMock,
             'timeframeOptions' => $optionsMock
         ]);
-        $instance->setParameters($address, 1, $orderMock);
+        $instance->updateParameters($address, 1, $orderMock);
 
         $result = $this->getProperty('requestParams', $instance);
 

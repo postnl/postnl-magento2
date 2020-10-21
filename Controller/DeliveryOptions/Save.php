@@ -137,7 +137,7 @@ class Save extends AbstractDeliveryOptions
         $params        = $this->orderParams->get($this->addSessionDataToParams($params));
         $postnlOrder   = $this->getPostNLOrderByQuoteId($params['quote_id']);
 
-        $this->setPostNLOrderData($params, $postnlOrder);
+        $this->savePostNLOrderData($params, $postnlOrder);
 
         if ($type != 'pickup') {
             $this->pickupAddress->remove();
@@ -156,7 +156,7 @@ class Save extends AbstractDeliveryOptions
      *
      * @throws CouldNotSaveException
      */
-    private function setPostNLOrderData($params, $postnlOrder)
+    private function savePostNLOrderData($params, $postnlOrder)
     {
         foreach ($params as $key => $value) {
             $postnlOrder->setData($key, $value);
@@ -181,8 +181,11 @@ class Save extends AbstractDeliveryOptions
      */
     private function addSessionDataToParams($params)
     {
-        if (!isset($params['date']) && $params['type'] == 'pickup'
-            || !isset($params['date']) && $params['type'] == 'fallback') {
+        //If no delivery date and the type is pickup, fallback, EPS or GP then retrieve the PostNL delivery date
+        if (!isset($params['date']) &&
+            ($params['type'] === 'pickup' || $params['type'] === 'fallback'
+             || $params['type'] === 'EPS' || $params['type'] === 'GP')
+        ) {
             $params['date'] = $this->checkoutSession->getPostNLDeliveryDate();
         }
 

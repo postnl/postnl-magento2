@@ -47,7 +47,7 @@ interface ShipmentBarcodeInterface
      * @param int $value
      * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
      */
-    public function setParentId($value);
+    public function changeParentId($value);
 
     /**
      * @return string
@@ -58,7 +58,7 @@ interface ShipmentBarcodeInterface
      * @param string $value
      * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
      */
-    public function setType($value);
+    public function changeType($value);
 
     /**
      * @return int
@@ -69,7 +69,7 @@ interface ShipmentBarcodeInterface
      * @param int $value
      * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
      */
-    public function setNumber($value);
+    public function changeNumber($value);
 
     /**
      * @return string
@@ -80,5 +80,5 @@ interface ShipmentBarcodeInterface
      * @param string $value
      * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
      */
-    public function setValue($value);
+    public function changeValue($value);
 }

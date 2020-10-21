@@ -60,7 +60,7 @@ class PostalcodeTest extends TestCase
     {
         $requestData = ['postcode' => '1014BA', 'housenumber' => '37'];
         $instance = $this->getInstance();
-        $instance->setRequestData($requestData);
+        $instance->updateRequestData($requestData);
 
         $result = $instance->getRequestData();
         $this->assertEquals($requestData, $result);

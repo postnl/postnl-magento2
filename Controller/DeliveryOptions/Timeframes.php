@@ -31,18 +31,22 @@
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
+use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Context;
+use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
-use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
+use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Service\Carrier\Price\Calculator;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
+use TIG\PostNL\Service\Converter\CanaryIslandToIC;
+use TIG\PostNL\Service\Quote\ShippingDuration;
+use TIG\PostNL\Service\Shipment\EpsCountries;
+use TIG\PostNL\Service\Shipping\LetterboxPackage;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
-use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
-use Magento\Framework\App\Action\Context;
-use Magento\Checkout\Model\Session;
-use TIG\PostNL\Service\Quote\ShippingDuration;
 
+// @codingStandardsIgnoreFile
 class Timeframes extends AbstractDeliveryOptions
 {
     /**
@@ -66,16 +70,28 @@ class Timeframes extends AbstractDeliveryOptions
     private $isDeliveryDaysActive;
 
     /**
-     * @param Context                      $context
-     * @param OrderRepository              $orderRepository
-     * @param Session                      $checkoutSession
-     * @param QuoteToRateRequest           $quoteToRateRequest
-     * @param AddressEnhancer              $addressEnhancer
-     * @param DeliveryDate                 $deliveryDate
-     * @param TimeFrame                    $timeFrame
-     * @param Calculator                   $calculator
-     * @param IsDeliverDaysActive          $isDeliverDaysActive
-     * @param ShippingDuration             $shippingDuration
+     * @var LetterboxPackage
+     */
+    private $letterboxPackage;
+
+    /**
+     * @var CanaryIslandToIC
+     */
+    private $canaryConverter;
+
+    /**
+     * @param Context             $context
+     * @param OrderRepository     $orderRepository
+     * @param Session             $checkoutSession
+     * @param QuoteToRateRequest  $quoteToRateRequest
+     * @param AddressEnhancer     $addressEnhancer
+     * @param DeliveryDate        $deliveryDate
+     * @param TimeFrame           $timeFrame
+     * @param Calculator          $calculator
+     * @param IsDeliverDaysActive $isDeliverDaysActive
+     * @param ShippingDuration    $shippingDuration
+     * @param LetterboxPackage    $letterboxPackage
+     * @param CanaryIslandToIC    $canaryConverter
      */
     public function __construct(
         Context $context,
@@ -87,12 +103,16 @@ class Timeframes extends AbstractDeliveryOptions
         TimeFrame $timeFrame,
         Calculator $calculator,
         IsDeliverDaysActive $isDeliverDaysActive,
-        ShippingDuration $shippingDuration
+        ShippingDuration $shippingDuration,
+        LetterboxPackage $letterboxPackage,
+        CanaryIslandToIC $canaryConverter
     ) {
         $this->addressEnhancer              = $addressEnhancer;
         $this->timeFrameEndpoint            = $timeFrame;
         $this->calculator                   = $calculator;
         $this->isDeliveryDaysActive         = $isDeliverDaysActive;
+        $this->letterboxPackage             = $letterboxPackage;
+        $this->canaryConverter              = $canaryConverter;
 
         parent::__construct(
             $context,
@@ -106,35 +126,60 @@ class Timeframes extends AbstractDeliveryOptions
 
     /**
      * @return \Magento\Framework\Controller\ResultInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \TIG\PostNL\Exception
      */
-    // @codingStandardsIgnoreStart
     public function execute()
     {
         $params = $this->getRequest()->getParams();
+
         if (!isset($params['address']) || !is_array($params['address'])) {
             return $this->jsonResponse($this->getFallBackResponse(1));
         }
 
         $price = $this->calculator->price($this->getRateRequest(), null, null, true);
 
+        $quote = $this->checkoutSession->getQuote();
+        $cartItems = $quote->getAllItems();
+
+        if ($this->letterboxPackage->isLetterboxPackage($cartItems, false) && $params['address']['country'] == 'NL') {
+            return $this->jsonResponse($this->getLetterboxPackageResponse($price['price']));
+        }
+
         if (!$this->isDeliveryDaysActive->getValue()) {
             return $this->jsonResponse($this->getFallBackResponse(2, $price['price']));
+        }
+
+        if (in_array($params['address']['country'], EpsCountries::ALL) && $params['address']['country'] === 'ES' && $this->canaryConverter->isCanaryIsland($params['address'])) {
+            return $this->jsonResponse($this->getGlobalPackResponse($price['price']));
+        }
+
+        if (in_array($params['address']['country'], EpsCountries::ALL) && !in_array($params['address']['country'], ['BE', 'NL'])) {
+            return $this->jsonResponse($this->getEpsCountryResponse($price['price']));
+        }
+
+        if (!in_array($params['address']['country'], EpsCountries::ALL) && !in_array($params['address']['country'], ['BE', 'NL'])) {
+            return $this->jsonResponse($this->getGlobalPackResponse($price['price']));
         }
 
         $this->addressEnhancer->set($params['address']);
 
         try {
-            return $this->jsonResponse($this->getValidResponeType($price['price']));
+            return $this->jsonResponse($this->getValidResponseType($price['price']));
         } catch (\Exception $exception) {
             return $this->jsonResponse($this->getFallBackResponse(3, $price['price']));
         }
     }
-    // @codingStandardsIgnoreEnd
 
     /**
      * @param $address
      *
      * @return array|\Magento\Framework\Phrase
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     private function getPossibleDeliveryDays($address)
     {
@@ -145,14 +190,18 @@ class Timeframes extends AbstractDeliveryOptions
 
     /**
      * @param $price
+     *
      * @return array|\Magento\Framework\Phrase
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
-    private function getValidResponeType($price)
+    private function getValidResponseType($price)
     {
         $address = $this->addressEnhancer->get();
 
         if (isset($address['error'])) {
-            //@codingStandardsIgnoreLine
             return [
                 'error'      => __('%1 : %2', $address['error']['code'], $address['error']['message']),
                 'price'      => $price,
@@ -160,25 +209,39 @@ class Timeframes extends AbstractDeliveryOptions
             ];
         }
 
+        $timeframes = $this->getPossibleDeliveryDays($address);
+        if (empty($timeframes)) {
+            return [
+                'error'      => __('No timeframes available.'),
+                'price'      => $price,
+                'timeframes' => [[['fallback' => __('At the first opportunity')]]]
+            ];
+        }
+
         return [
             'price'      => $price,
-            'timeframes' => $this->getPossibleDeliveryDays($address)
+            'timeframes' => $timeframes
         ];
     }
 
     /**
      * CIF call to get the timeframes.
+     *
      * @param $address
      * @param $startDate
      *
      * @return array|\Magento\Framework\Phrase
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Webapi\Exception
+     * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     private function getTimeFrames($address, $startDate)
     {
         $quote = $this->checkoutSession->getQuote();
         $storeId = $quote->getStoreId();
-        $this->timeFrameEndpoint->setStoreId($storeId);
-        $this->timeFrameEndpoint->setParameters($address, $startDate);
+        $this->timeFrameEndpoint->updateApiKey($storeId);
+        $this->timeFrameEndpoint->fillParameters($address, $startDate);
 
         return $this->timeFrameEndpoint->call();
     }
@@ -195,6 +258,42 @@ class Timeframes extends AbstractDeliveryOptions
             'error'      => __($errorMessage),
             'price'      => $price,
             'timeframes' => [[['fallback' => __('At the first opportunity')]]]
+        ];
+    }
+
+    private function getLetterboxPackageResponse($price)
+    {
+        return [
+            'price'             => $price,
+            'letterbox_package' => true,
+            'timeframes'        => [[['letterbox_package' => __('Your order is a letterbox package and will be '
+            . 'delivered from Tuesday to Saturday.')]]]
+        ];
+    }
+
+    /**
+     * @param $price
+     *
+     * @return array
+     */
+    private function getEpsCountryResponse($price)
+    {
+        return [
+            'price'      => $price,
+            'timeframes' => [[['eps' => __('Ship internationally')]]]
+        ];
+    }
+
+    /**
+     * @param $price
+     *
+     * @return array
+     */
+    private function getGlobalPackResponse($price)
+    {
+        return [
+            'price' => $price,
+            'timeframes' => [[['gp' => __('Ship internationally')]]]
         ];
     }
 }

@@ -133,8 +133,8 @@ class FirstDeliveryDate
     private function getDeliveryDate(Address $address)
     {
         try {
-            $this->endpoint->setStoreId($this->quote->getStoreId());
-            $this->endpoint->setParameters([
+            $this->endpoint->updateApiKey($this->quote->getStoreId());
+            $this->endpoint->updateParameters([
                 'country'  => $address->getCountryId(),
                 'postcode' => $address->getPostcode(),
             ]);

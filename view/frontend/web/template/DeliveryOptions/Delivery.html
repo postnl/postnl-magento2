@@ -1,7 +1,7 @@
 <div class="days">
     <div data-bind="foreach: deliverydays">
-        <div class="wrapper" data-bind="css: {'wrapper-fullwidth': $data[0].fallback}">
-            <!-- ko ifnot : $data[0].fallback -->
+        <div class="wrapper">
+            <!-- ko ifnot: $data[0].fallback || $data[0].letterbox_package || $data[0].eps || $data[0].gp -->
             <strong>
                 <span class="deliverydays-day" data-bind="text: $data[0].day"></span>
                 <span class="deliverydays-date" data-bind="text: $data[0].date"></span>
@@ -15,9 +15,11 @@
                                name="postnl_delivery_option"
                                class="tig-postnl-delivery-radio" />
 
-                        <span class="tig-postnl-delivery-from" data-bind="text: from_friendly"></span>
-                        <span class="tig-postnl-delivery-dash"> - </span>
-                        <span class="tig-postnl-delivery-to" data-bind="text: to_friendly"></span>
+                        <div class="tig-postnl-delivery-time">
+                            <span class="tig-postnl-delivery-from" data-bind="text: from_friendly"></span>
+                            <span class="tig-postnl-delivery-dash"> - </span>
+                            <span class="tig-postnl-delivery-to" data-bind="text: to_friendly"></span>
+                        </div>
 
                         <div class="tig-postnl-delivery-option">
                             <span data-bind="text: optionLabel"> </span>
@@ -38,7 +40,57 @@
                                name="deliveryday"
                                class="tig-postnl-delivery-radio" checked="checked"/>
 
-                        <span class="tig-postnl-delivery-from" data-bind="text: fallback"></span>
+                        <div class="tig-postnl-delivery-fallback">
+                            <span data-bind="text: fallback"></span>
+                        </div>
+                    </label>
+                </li>
+            </ul>
+            <!-- /ko -->
+            <!-- ko if: $data[0].letterbox_package -->
+            <ul data-bind="foreach: $data">
+                <li data-bind="css: { 'selected-row': $parents[1].isRowSelected($data), 'odd': $parents[1].isOdd() }">
+                    <label>
+                        <input type="radio"
+                               data-bind="checked: $parents[1].selectedOption, checkedValue: $data"
+                               name="deliveryday"
+                               class="tig-postnl-delivery-radio" checked="checked"/>
+
+                        <div class="tig-postnl-delivery-fallback">
+                            <span data-bind="text: letterbox_package"></span>
+                        </div>
+                    </label>
+                </li>
+            </ul>
+            <!-- /ko -->
+            <!-- ko if: $data[0].eps -->
+            <ul data-bind="foreach: $data">
+                <li data-bind="css: { 'selected-row': $parents[1].isRowSelected($data), 'odd': $parents[1].isOdd() }">
+                    <label>
+                        <input type="radio"
+                               data-bind="checked: $parents[1].selectedOption, checkedValue: $data"
+                               name="deliveryday"
+                               class="tig-postnl-delivery-radio" checked="checked"/>
+
+                        <div class="tig-postnl-delivery-fallback">
+                            <span data-bind="text: eps"></span>
+                        </div>
+                    </label>
+                </li>
+            </ul>
+            <!-- /ko -->
+            <!-- ko if: $data[0].gp -->
+            <ul data-bind="foreach: $data">
+                <li data-bind="css: { 'selected-row': $parents[1].isRowSelected($data), 'odd': $parents[1].isOdd() }">
+                    <label>
+                        <input type="radio"
+                               data-bind="checked: $parents[1].selectedOption, checkedValue: $data"
+                               name="deliveryday"
+                               class="tig-postnl-delivery-radio" checked="checked"/>
+
+                        <div class="tig-postnl-delivery-fallback">
+                            <span data-bind="text: gp"></span>
+                        </div>
                     </label>
                 </li>
             </ul>

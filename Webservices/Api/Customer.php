@@ -122,7 +122,7 @@ class Customer
     /**
      * @param $storeId
      */
-    public function setStoreId($storeId)
+    public function changeStoreId($storeId)
     {
         $this->storeId = $storeId;
     }

@@ -29,10 +29,11 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Helper\DeliveryOptions;
 
-use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Checkout\Model\Session;
+use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Model\Quote\AddressFactory;
 
 class PickupAddress
@@ -55,7 +56,7 @@ class PickupAddress
     private $addressFactory;
 
     /**
-     * @param Session        $checkoutSession
+     * @param Session $checkoutSession
      * @param AddressFactory $addressFactory
      */
     public function __construct(
@@ -63,7 +64,7 @@ class PickupAddress
         AddressFactory $addressFactory
     ) {
         $this->checkoutSession = $checkoutSession;
-        $this->addressFactory  = $addressFactory;
+        $this->addressFactory = $addressFactory;
     }
 
     /**
@@ -76,6 +77,8 @@ class PickupAddress
 
     /**
      * @param $address
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function set($address)
     {
@@ -89,6 +92,10 @@ class PickupAddress
         $quote->save();
     }
 
+    /**
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function remove()
     {
         /** @var \Magento\Quote\Model\Quote $quote */
@@ -103,6 +110,7 @@ class PickupAddress
 
         $quote->save();
     }
+
     /**
      * @param int $quoteId
      *
@@ -138,7 +146,8 @@ class PickupAddress
         $address->setPostcode($pgData['Zipcode']);
         $address->setFirstname($pgData['customer']['firstname']);
         $address->setLastname($pgData['customer']['lastname']);
-        $address->setTelephone($pgData['customer']['telephone']);
+        $telephone = isset($pgData['customer']['telephone']) ? $pgData['customer']['telephone'] : null;
+        $address->setTelephone($telephone);
         $address->save();
 
         return $address;

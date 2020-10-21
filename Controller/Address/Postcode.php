@@ -79,7 +79,7 @@ class Postcode extends Action
             return $this->returnJson($this->getErrorResponse('error', __('Postcode request validation failed')));
         }
 
-        $this->postcodeService->setRequestData($params);
+        $this->postcodeService->updateRequestData($params);
         $result = $this->postcodeService->call();
 
         if ($result === false) {

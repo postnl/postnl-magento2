@@ -31,5 +31,6 @@
  */
 ?>
 <strong style="color:#be0a0a;">
-    <?php echo __("There is no evening delivery possible for the shipping product ID check. Deactivate evening delivery if you send everything with ID check."); ?>
+    <?= $block->escapeHtml(__("There is no evening delivery possible for the shipping product ID " .
+           "check. Deactivate evening delivery if you send everything with ID check.")); ?>
 </strong>

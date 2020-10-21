@@ -89,7 +89,7 @@ class DeliveryDate extends AbstractEndpoint
      * @var Options
      */
     private $timeframeOptions;
-    
+
     /**
      * DeliveryDate constructor.
      *
@@ -113,7 +113,7 @@ class DeliveryDate extends AbstractEndpoint
         $this->message = $message;
         $this->cutoffTimes = $cutoffTimes;
         $this->timeframeOptions = $timeframeOptions;
-        
+
         parent::__construct(
             $shipmentData
         );
@@ -133,7 +133,7 @@ class DeliveryDate extends AbstractEndpoint
      * @param $shippingDuration
      *
      */
-    public function setParameters($address, $shippingDuration = '1')
+    public function updateParameters($address, $shippingDuration = '1')
     {
         $this->requestParams = [
             'GetDeliveryDate' => [
@@ -160,7 +160,7 @@ class DeliveryDate extends AbstractEndpoint
     /**
      * @param int $storeId
      */
-    public function setStoreId($storeId)
+    public function updateApiKey($storeId)
     {
         $this->soap->updateApiKey($storeId);
     }

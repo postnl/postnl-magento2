@@ -67,14 +67,22 @@ class ProductDictionary
     /**
      * @param ShipmentItemInterface[]|OrderItemInterface[]|QuoteItem[] $items
      * @param array $postNLTypes
+     * @param bool $convertLetterbox - When handling Customs data for GP in Service/Shipment/Customs/SortItems.php
+     *                                 we aren't expecting letterbox parcels, these should be considered regular
      *
      * @return ProductInterface[]
      */
-    public function get($items, array $postNLTypes)
+    public function get($items, array $postNLTypes, $convertLetterbox = false)
     {
         $products = $this->collectionByItems->get($items);
-        return array_filter($products, function (ProductInterface $product) use ($postNLTypes) {
+        return array_filter($products, function (ProductInterface $product) use ($postNLTypes, $convertLetterbox) {
             $attribute = $product->getCustomAttribute(PostNLType::POSTNL_PRODUCT_TYPE);
+            if ($convertLetterbox &&
+                $attribute &&
+                $attribute->getValue() == PostNLType::PRODUCT_TYPE_LETTERBOX_PACKAGE
+            ) {
+                $attribute->setValue(PostNLType::PRODUCT_TYPE_REGULAR);
+            }
             $value = $attribute !== null ? $attribute->getValue() : false;
             return in_array($value, $postNLTypes);
         });

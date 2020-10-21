@@ -51,6 +51,7 @@ class ShipmentTypeTest extends TestCase
             'Pickup Delivery' => ['3533', 'PG', 'Post office', '', 'Post Office + Signature on Delivery'],
             'Pickup Delivery Early' => ['3543', 'PGE', 'Post office', 'Early morning pickup', 'Post Office + Signature on Delivery + Notification'],
             'EPS' => ['4950', 'EPS', 'EPS', '', 'EU Pack Special'],
+            'Letterbox Package' => ['2928', 'Letter Box' , 'Letter Box', '', 'Letter Box Parcel Extra'],
         ];
     }
 

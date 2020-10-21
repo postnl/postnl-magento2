@@ -120,7 +120,11 @@ class Data
     private function getDefaultShipmentData(ShipmentInterface $shipment, $address, $contact, $currentShipmentNumber)
     {
         $deliveryDate = $shipment->getDeliveryDate();
-        if (!$shipment->getDeliveryDate()) {
+        if (!$deliveryDate) {
+            $deliveryDate = $this->getDeliveryDateFromPostNLOrder($shipment);
+        }
+
+        if (!$deliveryDate) {
             $deliveryDate = $this->deliveryDateFallback->get();
         }
 
@@ -144,6 +148,21 @@ class Data
             'ReturnBarcode'            => $shipment->getReturnBarcodes($currentShipmentNumber),
             'Reference'                => $this->labelAndPackingslipOptions->getReference($shipment->getShipment())
         ];
+    }
+
+    /**
+     * @param $shipment
+     *
+     * @return bool|false|string
+     */
+    private function getDeliveryDateFromPostNLOrder($shipment)
+    {
+        $deliveryDate = $shipment->getPostNLOrder()->getDeliveryDate();
+        if ($deliveryDate) {
+            return date('d-m-Y H:i:s', strtotime($deliveryDate));
+        }
+
+        return false;
     }
 
     /**

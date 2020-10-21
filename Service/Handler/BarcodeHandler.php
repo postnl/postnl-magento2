@@ -215,8 +215,8 @@ class BarcodeHandler
     {
         $magentoShipment = $shipment->getShipment();
 
-        $this->barcodeEndpoint->setProductCode($shipment->getProductCode());
-        $this->barcodeEndpoint->setStoreId($magentoShipment->getStoreId());
+        $this->barcodeEndpoint->changeProductCode($shipment->getProductCode());
+        $this->barcodeEndpoint->updateApiKey($magentoShipment->getStoreId());
         $response = $this->barcodeEndpoint->call($shipment, $isReturnBarcode);
 
         if (!is_object($response) || !isset($response->Barcode)) {

@@ -145,7 +145,7 @@ class SentDate extends AbstractEndpoint
      * @param             $storeId
      * @param PostNLOrder $postNLOrder
      */
-    public function setParameters($address, $storeId, PostNLOrder $postNLOrder)
+    public function updateParameters($address, $storeId, PostNLOrder $postNLOrder)
     {
         $this->soap->updateApiKey($storeId);
 

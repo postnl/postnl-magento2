@@ -38,5 +38,6 @@
         <attribute name="postnl_parcel_count"/>
         <attribute name="postnl_parcel_volume"/>
         <attribute name="postnl_shipping_duration"/>
+        <attribute name="postnl_max_qty_letterbox"/>
     </group>
 </config>

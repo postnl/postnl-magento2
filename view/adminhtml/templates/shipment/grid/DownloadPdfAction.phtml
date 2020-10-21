@@ -107,10 +107,10 @@ require(['ko', 'jquery', 'TIG_PostNL/js/shipment/grid/DownloadPdf'], function (k
 
         switch(action) {
             case 'ConfirmAndPrintShippingLabels':
-                downloadUrl = '<?php echo $this->getDownloadUrl(); ?>';
+                downloadUrl = '<?= $block->escapeHtml($block->getDownloadUrl()); ?>';
                 break;
             case 'PrintPackingSlip':
-                downloadUrl = '<?php echo $this->getPrintPackingSlipUrl(); ?>';
+                downloadUrl = '<?= $block->escapeHtml($block->getPrintPackingSlipUrl()); ?>';
                 break;
         }
 

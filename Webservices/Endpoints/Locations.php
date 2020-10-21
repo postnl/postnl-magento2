@@ -45,37 +45,37 @@ class Locations extends AbstractEndpoint
      * @var string
      */
     private $version = 'v2_1';
-    
+
     /**
      * @var string
      */
     private $endpoint = 'locations';
-    
+
     /**
      * @var Soap
      */
     private $soap;
-    
+
     /**
      * @var array
      */
     private $requestParams;
-    
+
     /**
      * @var ShippingOptions
      */
     private $shippingOptions;
-    
+
     /**
      * @var Data
      */
     private $postNLhelper;
-    
+
     /**
      * @var  Message
      */
     private $message;
-    
+
     /**
      * Locations constructor.
      *
@@ -96,12 +96,12 @@ class Locations extends AbstractEndpoint
         $this->shippingOptions = $shippingOptions;
         $this->postNLhelper    = $postNLhelper;
         $this->message         = $message;
-        
+
         parent::__construct(
             $shipmentData
         );
     }
-    
+
     /**
      * @return mixed
      * @throws \Magento\Framework\Webapi\Exception
@@ -110,16 +110,16 @@ class Locations extends AbstractEndpoint
     {
         return $this->soap->call($this, 'GetNearestLocations', $this->requestParams);
     }
-    
+
     /**
      * @param $address
      * @param $startDate
      */
-    public function setParameters($address, $startDate = false)
+    public function updateParameters($address, $startDate = false)
     {
         $this->requestParams = [
             'Location'    => [
-                'DeliveryOptions'    => $this->postNLhelper->getAllowedDeliveryOptions(),
+                'DeliveryOptions'    => $this->postNLhelper->getAllowedDeliveryOptions($address['country']),
                 'DeliveryDate'       => $this->getDeliveryDate($startDate),
                 'Postalcode'         => str_replace(' ', '', $address['postcode']),
                 'Options'            => ['Daytime', 'Morning'],
@@ -129,7 +129,7 @@ class Locations extends AbstractEndpoint
             'Message'     => $this->message->get('')
         ];
     }
-    
+
     /**
      * @return string
      */
@@ -137,7 +137,7 @@ class Locations extends AbstractEndpoint
     {
         return $this->version . '/' . $this->endpoint;
     }
-    
+
     /**
      * @param $startDate
      *
@@ -148,14 +148,14 @@ class Locations extends AbstractEndpoint
         if ($startDate !== false) {
             return $startDate;
         }
-        
+
         return $this->postNLhelper->getTomorrowsDate();
     }
-    
+
     /**
      * @param int $storeId
      */
-    public function setStoreId($storeId)
+    public function changeAPIKeyByStoreId($storeId)
     {
         $this->soap->updateApiKey($storeId);
     }

@@ -203,6 +203,14 @@ class ProductOptionsTest extends AbstractConfigurationTest
         ];
     }
 
+    public function pakjegemakBeOptionsProvider()
+    {
+        return [
+            'Post Office Belgium + Extra Cover' => ['4932'],
+            'Post Office Belgium' => ['4936']
+        ];
+    }
+
     /**
      * @dataProvider pakjegemakOptionsProvider
      * @param $value
@@ -212,6 +220,26 @@ class ProductOptionsTest extends AbstractConfigurationTest
         $instance = $this->getInstance();
         $this->setXpath(ProductOptions::XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION, $value);
         $this->assertEquals($value, $instance->getDefaultPakjeGemakProductOption());
+    }
+
+    public function testGetDefaultLetterBoxPackageProductOption()
+    {
+        $value                    = '2928';
+        $optionsConfigurationMock = $this->getFakeMock(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
+        $optionsConfigurationMock->setMethods(null);
+        $instance = $this->getInstance(['productOptions' => $optionsConfigurationMock->getMock()]);
+        $this->assertEquals($value, $instance->getDefaultLetterboxPackageProductOption());
+    }
+
+    /**
+     * @dataProvider pakjegemakOptionsProvider
+     * @param $value
+     */
+    public function testGetDefaultPakjegemakBeProductOption($value)
+    {
+        $instance = $this->getInstance();
+        $this->setXpath(ProductOptions::XPATH_DEFAULT_PAKJEGEMAK_BE_PRODUCT_OPTION, $value);
+        $this->assertEquals($value, $instance->getDefaultPakjeGemakBeProductOption());
     }
 
     public function sundayOptionsProvider()

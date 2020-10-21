@@ -43,7 +43,6 @@
     <preference for="TIG\PostNL\Service\Wrapper\QuoteInterface" type="TIG\PostNL\Service\Wrapper\Quote" />
     <preference for="TIG\PostNL\Service\Wrapper\StoreInterface" type="TIG\PostNL\Service\Wrapper\Store" />
     <preference for="TIG\PostNL\Service\Wrapper\CheckoutSessionInterface" type="TIG\PostNL\Service\Wrapper\CheckoutSession" />
-    <preference for="\Magento\Framework\App\Arguments\ValidationState" type="TIG\PostNL\Service\Framework\ValidationState"/>
 
     <type name="\Magento\Sales\Model\Order">
         <plugin name="TIG_PostNL_Order_Shipment" type="TIG\PostNL\Plugin\Order\ShipmentPlugin" sortOrder="1"/>
@@ -194,6 +193,9 @@
                 </item>
                 <item name="v1.9.1" xsi:type="array">
                     <item name="InstallDisableDeliveryDaysAttribute" xsi:type="object">TIG\PostNL\Setup\V191\Data\InstallDisableDeliveryDaysAttribute</item>
+                </item>
+                <item name="v1.9.4" xsi:type="array">
+                    <item name="InstallMaximumQuantityLetterboxPackage" xsi:type="object">TIG\PostNL\Setup\V194\Data\InstallMaximumQuantityLetterboxPackage</item>
                 </item>
             </argument>
         </arguments>

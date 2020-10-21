@@ -98,7 +98,7 @@ class Postalcode implements RestInterface
     /**
      * {@inheritDoc}
      */
-    public function setRequestData(array $data)
+    public function updateRequestData(array $data)
     {
         $this->data = $data;
     }

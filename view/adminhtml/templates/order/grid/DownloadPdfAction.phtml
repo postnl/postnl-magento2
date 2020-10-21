@@ -33,8 +33,9 @@
 
 <script type="text/javascript">
     /**
-     * Magento supports callbacks on the massaction, but there is no documentation at all, and the example Magento
-     * provides itself (the inline editor) seems to be hardcoded. That's why we fix it this way using jQuery and Knockout.
+     * Magento supports callbacks on the massaction, but there is no documentation at all, and the
+     * example Magento provides itself (the inline editor) seems to be hardcoded.
+     * That's why we fix it this way using jQuery and Knockout.
      */
     require(['ko', 'jquery', 'TIG_PostNL/js/shipment/grid/DownloadPdf'], function (ko, $, download) {
         var koElement, text;
@@ -107,13 +108,16 @@
 
             switch(action) {
                 case 'CreateShipmentsConfirmAndPrintShippingLabels':
-                    downloadUrl = '<?php echo $this->getConfirmAndPrintLabelsUrl(); ?>';
+
+                    downloadUrl = '<?= $block->escapeHtml($block->getConfirmAndPrintLabelsUrl()); ?>';
                     break;
                 case 'CreateShipmentsConfirmAndPrintPackingSlip':
-                    downloadUrl = '<?php echo $this->getConfirmAndPrintPackingSlipUrl(); ?>';
+                    // @codingStandardsIgnoreLine
+                    downloadUrl = '<?= $block->escapeHtml($block->getConfirmAndPrintPackingSlipUrl()); ?>';
                     break;
-                case 'CreateShipmentsAndPrintPackingSlip' :
-                    downloadUrl = '<?php echo $this->getPrintPackingSlipUrl(); ?>';
+                case 'CreateShipmentsAndPrintPackingSlip':
+                    // @codingStandardsIgnoreLine
+                    downloadUrl = '<?= $block->escapeHtml($block->getPrintPackingSlipUrl()); ?>';
             }
 
             return downloadUrl;

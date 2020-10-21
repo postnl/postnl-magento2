@@ -90,7 +90,7 @@ class CollectionByItems
      */
     public function get($items)
     {
-        $this->setFilterGroups($this->mapSkus($items));
+        $this->changeFilterGroups($this->mapSkus($items));
         $this->searchCriteriaBuilder->setFilterGroups([$this->filterGroup]);
         /** @var \Magento\Catalog\Api\Data\ProductSearchResultsInterface $products */
         $products = $this->productRepository->getList($this->searchCriteriaBuilder->create());
@@ -136,7 +136,7 @@ class CollectionByItems
     /**
      * @param array $skus
      */
-    private function setFilterGroups($skus)
+    private function changeFilterGroups($skus)
     {
         $this->filterGroup->setFilters([
             // @codingStandardsIgnoreLine

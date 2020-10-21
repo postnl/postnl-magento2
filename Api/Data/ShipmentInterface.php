@@ -32,6 +32,8 @@
 namespace TIG\PostNL\Api\Data;
 
 // @codingStandardsIgnoreFile
+use TIG\PostNL\Model\Order;
+
 /**
  * Too many public methods for the code inspection.
  */
@@ -268,7 +270,7 @@ interface ShipmentInterface
      * @param string $value
      * @return \TIG\PostNL\Api\Data\ShipmentInterface
      */
-    public function setCreatedAt($value);
+    public function changeCreatedAt($value);
 
     /**
      * @return string|null
@@ -279,7 +281,7 @@ interface ShipmentInterface
      * @param string $value
      * @return \TIG\PostNL\Api\Data\ShipmentInterface
      */
-    public function setUpdatedAt($value);
+    public function changeUpdatedAt($value);
 
     /**
      * @return string|null
@@ -363,4 +365,9 @@ interface ShipmentInterface
      * @return string|null
      */
     public function getReturnBarcodes();
+
+    /**
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function getPostNLOrder();
 }

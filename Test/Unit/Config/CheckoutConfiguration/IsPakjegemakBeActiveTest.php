@@ -29,43 +29,44 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Framework;
+namespace TIG\PostNL\Test\Unit\Config\CheckoutConfiguration;
 
-use Magento\Framework\App\ProductMetadataInterface;
-use Magento\Framework\App\Arguments\ValidationState as MagentoValidationState;
+use TIG\PostNL\Config\CheckoutConfiguration\IsPakjegemakBeActive;
+use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Test\TestCase;
 
-class ValidationState extends MagentoValidationState
+class IsPakjegemakBeActiveTest extends TestCase
 {
-    /**
-     * @var ProductMetadataInterface
-     */
-    private $productMetaData;
+    public $instanceClass = IsPakjegemakBeActive::class;
 
-    /**
-     * ValidationState constructor.
-     *
-     * @param ProductMetadataInterface $productMetadata
-     */
-    public function __construct(
-        ProductMetadataInterface $productMetadata
-    ) {
-        $this->productMetaData = $productMetadata;
+    public function getValueProvider()
+    {
+        return [
+            'is active' => [true],
+            'is not active' => [true],
+        ];
     }
 
     /**
-     * Retrieve current validation state
+     * @dataProvider getValueProvider
      *
-     * Magento 2.1.* uses xsd schemes that are not containing the listingToolbar component.
-     * When in developer mode these schemes are triggerd to validate the ui_definition.xml which will break the backend.
+     * @param $expected
      *
-     * @return boolean
+     * @throws \Exception
      */
-    public function isValidationRequired()
+    public function testGetValue($expected)
     {
-        if (!version_compare($this->productMetaData->getVersion(), '2.2.0', '<')) {
-            return parent::isValidationRequired();
-        }
+        $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
 
-        return false;
+        $expects = $shippingOptions->expects($this->once());
+        $expects->method('isPakjegemakActive')->with('BE');
+        $expects->willReturn($expected);
+
+        /** @var IsPakjegemakBeActive $instance */
+        $instance = $this->getInstance([
+            'shippingOptions' => $shippingOptions,
+        ]);
+
+        $this->assertEquals($expected, $instance->getValue());
     }
 }

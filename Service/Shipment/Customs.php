@@ -31,6 +31,8 @@
  */
 namespace TIG\PostNL\Service\Shipment;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Config\Provider\Globalpack;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Service\Shipment\Customs\SortItems;
@@ -71,20 +73,28 @@ class Customs
     ];
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
      * Customs constructor.
      *
-     * @param Globalpack      $globalpack
-     * @param SortItems       $sortItems
-     * @param AttributeValues $attributeValues
+     * @param Globalpack           $globalpack
+     * @param SortItems            $sortItems
+     * @param AttributeValues      $attributeValues
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         Globalpack $globalpack,
         SortItems $sortItems,
-        AttributeValues $attributeValues
+        AttributeValues $attributeValues,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->globalpackConfig = $globalpack;
         $this->sortItems = $sortItems;
         $this->attributeValues = $attributeValues;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -96,15 +106,15 @@ class Customs
     {
         $this->shipment = $postnlShipment->getShipment();
 
-        $this->setCustomsLicense();
-        $this->setCustomsCertificate();
-        $this->setShipmentType();
-        $this->setContentInformation();
+        $this->insertCustomsLicense();
+        $this->insertCustomsCertificate();
+        $this->insertShipmentType();
+        $this->insertContentInformation();
 
         return $this->customs;
     }
 
-    private function setCustomsCertificate()
+    private function insertCustomsCertificate()
     {
         $certificate = $this->globalpackConfig->getCertificateNumber($this->shipment->getStoreId());
         if ($certificate) {
@@ -113,7 +123,7 @@ class Customs
         }
     }
 
-    private function setCustomsLicense()
+    private function insertCustomsLicense()
     {
         $license = $this->globalpackConfig->getLicenseNumber($this->shipment->getStoreId());
         if ($license) {
@@ -122,7 +132,7 @@ class Customs
         }
     }
 
-    private function setShipmentType()
+    private function insertShipmentType()
     {
         $type = $this->globalpackConfig->getDefaultShipmentType($this->shipment->getStoreId());
         if ($type) {
@@ -138,7 +148,7 @@ class Customs
         }
     }
 
-    private function setContentInformation()
+    private function insertContentInformation()
     {
         $content = [];
         /** @var \Magento\Sales\Model\Order\Shipment\Item $item */
@@ -163,7 +173,16 @@ class Customs
      */
     private function getValue($item)
     {
-        $value = $this->attributeValues->getCustomsValue($item, $this->shipment->getStoreId());
+        $value           = $this->attributeValues->getCustomsValue($item, $this->shipment->getStoreId());
+        if (!$value) {
+            $this->attributeValues->get('price', $item);
+        }
+
+        $orderItem       = $item->getOrderItem();
+        $discountPerItem = $orderItem->getDiscountAmount() / $orderItem->getQtyOrdered();
+        $totalDiscount   = $discountPerItem * $item->getQty();
+        $value           = $value - $totalDiscount;
+
         return round($value * $this->getQty($item));
     }
 
@@ -175,8 +194,26 @@ class Customs
     private function getWeight($item)
     {
         // Divide by zero not allowed.
-        $weight = round(($item->getWeight() ?: 1) * $this->getQty($item));
+        $weight = ($item->getWeight() ?: 1) * $this->getQty($item);
+
+        // If weight unit is set to lbs convert it to kgs
+        if ($this->getWeightUnit() == 'lbs') {
+            $weight = $weight / 2.2046226218;
+        }
+
+        // convert kgs to grams because PostNL only accepts grams
+        $weight = $weight * 1000;
+        $weight = (int)$weight;
+
         return $weight <= 0 ? 1 : $weight;
+    }
+
+    public function getWeightUnit()
+    {
+        return $this->scopeConfig->getValue(
+            'general/locale/weight_unit',
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**

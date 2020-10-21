@@ -37,12 +37,14 @@
         'TIG_PostNL/js/grid/dataprovider',
         'Magento_Ui/js/grid/toolbar'
     ], function(url, DataProvider) {
-        DataProvider.setProductOptions('<?php /* @escapeNotVerified */ echo $block->getProductOptions();?>');
-        DataProvider.setDefaultOption('<?php /* @escapeNotVerified */ echo $block->getDefaultProductOption();?>');
-        DataProvider.setShowToolbar('<?php /* @escapeNotVerified */ echo $block->getShowToolbar();?>');
-        DataProvider.setGuaranteedIsActive('<?php /* @escapeNotVerified */ echo $block->isGuaranteedDeliveryActive();?>');
-        DataProvider.setCargoTimeOptions('<?php /* @escapeNotVerified */ echo $block->getCargoTimeOptions();?>');
-        DataProvider.setPackagesTimeOptions('<?php /* @escapeNotVerified */ echo $block->getPackagesTimeOptions();?>');
-        return url.setBaseUrl('<?php /* @escapeNotVerified */ echo $block->getAdminBaseUrl();?>');
+        <?php /** @codingStandardsIgnoreStart **/ ?>
+        DataProvider.setProductOptions('<?= /* @escapeNotVerified */ $block->getProductOptions();?>');
+        DataProvider.setDefaultOption('<?= /* @escapeNotVerified */ $block->getDefaultProductOption();?>');
+        DataProvider.setShowToolbar('<?= /* @escapeNotVerified */ $block->getShowToolbar();?>');
+        DataProvider.setGuaranteedIsActive('<?= /* @escapeNotVerified */ $block->isGuaranteedDeliveryActive();?>');
+        DataProvider.setCargoTimeOptions('<?= /* @escapeNotVerified */ $block->getCargoTimeOptions();?>');
+        DataProvider.setPackagesTimeOptions('<?= /* @escapeNotVerified */ $block->getPackagesTimeOptions();?>');
+        return url.setBaseUrl('<?= /* @escapeNotVerified */ $block->getAdminBaseUrl();?>');
+        <?php /** @codingStandardsIgnoreEnd **/ ?>
     })
 </script>

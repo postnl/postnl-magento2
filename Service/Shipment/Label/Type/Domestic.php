@@ -148,6 +148,7 @@ class Domestic extends AbstractType implements TypeInterface
     /**
      * @param $value
      */
+    // @codingStandardsIgnoreLine
     private function setTemplateInserted($value)
     {
         $this->templateInserted = $value;

@@ -38,8 +38,6 @@ use TIG\PostNL\Helper\Data;
  * Class SameDay
  * This will filter out days wich are the sameday as the order placementdate.
  * At this moment the extension does not support sameday delivery.
- *
- * @package TIG\PostNL\Service\Timeframe\Filters\Days
  */
 class SameDay implements DaysFilterInterface
 {

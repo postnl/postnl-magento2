@@ -28,15 +28,24 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-define(['mageUtils'], function (utils) {
-    return function (downloadUrl, data) {
-        utils.submit({ data: data }, {
-            target: '_blank',
-            action: downloadUrl
-        });
 
-        setTimeout(function () {
-            location.reload();
-        }, 500);
+define([
+    'mageUtils'
+], function (utils) {
+    return function (downloadUrl, data) {
+        utils.submit(
+            { data: data },
+            {
+                target: '_blank',
+                action: downloadUrl
+            }
+        );
+
+        var monitorInterval = window.setInterval(function () {
+            if (document.hasFocus()) {
+                window.location.reload()
+                window.clearInterval(monitorInterval)
+            }
+        }, 500)
     };
 });
