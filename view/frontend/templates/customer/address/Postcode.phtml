@@ -33,8 +33,9 @@
 <script type="text/javascript">
     require(['jquery', 'TIG_PostNL/js/Helper/Logger'], function($, Logger){
         var request = null;
+        var timer = null;
 
-        var postcodeSearch = function() {
+        var postcodeSearch = function(formData) {
             if (self.request !== undefined) {
                 self.request.abort('avoidMulticall');
             }
@@ -46,8 +47,8 @@
                 method:'GET',
                 url: '<?php echo $block->getPostcodeUrl();?>',
                 data: {
-                    housenumber : housenumber,
-                    postcode   : zipcode
+                    housenumber : formData[0],
+                    postcode   : formData[1]
                 }
             }).done(function (data) {
                 var errorMessage = $.mage.__('Unexpected error occurred. Please fill in the address details manually.');
@@ -81,31 +82,149 @@
             error.hide();
 
             if (errorMessage) {
+                enableAddressFields(true);
                 error.html(errorMessage).show();
             }
         };
 
+        var enableAddressFields = function(enableFields) {
+            //TODO: disabled fields messes with Magento's required validation system.
+            return;
+
+            var street = $('.field.street').find('.control input:eq(0)');
+            var city = $('.field.city').find('.control input');
+
+            if (enableFields === true) {
+                street.prop('disabled', false);
+                city.prop('disabled', false);
+            } else {
+                street.prop('disabled', true);
+                city.prop('disabled', true);
+            }
+        };
+
+        var hideAddressFields = function(hideFields) {
+            var streets = [
+                $('.field.street').find('.control input:eq(1)'),
+                $('.field.street').find('.control input:eq(2)'),
+                $('.field.street').find('.control input:eq(3)'),
+            ];
+
+            for (var i=0; i < streets.length; i++) {
+                if (hideFields === true) {
+                    streets[i].hide();
+                } else {
+                    streets[i].show();
+                }
+            }
+        };
+
+        var updateFieldData = function() {
+            var country = $('.field.country .control select').val();
+
+            //TODO: housenumber required validation
+
+            if (country !== 'NL') {
+                enableAddressFields(true);
+                hideAddressFields(false);
+
+                return;
+            } else {
+                hideAddressFields(true);
+            }
+
+            if (self.timer !== undefined) {
+                clearTimeout(self.timer);
+            }
+
+            self.timer = setTimeout(function() {
+                setFieldData();
+            }, 1000);
+        }.bind(timer);
+
+        var setFieldData = function() {
+            var formData = getFormData();
+
+            if (formData !== false) {
+                enableAddressFields(false);
+                postcodeSearch(formData);
+            } else {
+                enableAddressFields(true);
+            }
+        };
+
+        var getFormData = function() {
+            var postcodeRegex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
+
+            var housenumber = $('.field.tig-housenumber .control input').val();
+            var zipcode = $('.field.zip .control input').val();
+
+            if (!housenumber || !zipcode) {
+                return false;
+            }
+
+            if (!$.isNumeric(housenumber) || !postcodeRegex.test(zipcode)) {
+                var errorMessage = $.mage.__('Please enter a valid zipcode and housenumber.');
+                handleError(errorMessage);
+                return false
+            }
+
+            return [housenumber, zipcode];
+        };
+
+        var observeCountry = function() {
+            var country = $('.field.country .control select').val();
+
+            $('.field.tig-housenumber').hide();
+            $('.field.tig-housenumber-addition').hide();
+
+            if (country === 'NL') {
+                $('.field.tig-housenumber').show();
+                $('.field.tig-housenumber-addition').show();
+            }
+
+            updateFieldData();
+        };
 
         $('.field.country').insertBefore('.field.street');
-
         $('.field.zip').insertBefore('.field.street');
+
         var housenumberElement = $('.field.zip').clone();
-        housenumberElement.removeClass('zip').addClass('postnl-housenumber');
-        housenumberElement.find('label').attr('for', 'postnl-housenumber');
+        housenumberElement.removeClass('zip').addClass('tig-housenumber');
+        housenumberElement.find('label').attr('for', 'tig-housenumber');
         housenumberElement.find('label span').text('<?php echo __('House number'); ?>');
 
         var housenumberInput = housenumberElement.find('.control input');
         housenumberInput.attr('title', '<?php echo __('House number'); ?>');
-        housenumberInput.attr('name', '<?php echo __('House number'); ?>');
-        housenumberInput.attr('id', 'postnl-housenumber');
+        housenumberInput.attr('name', 'tig-housenumber');
+        housenumberInput.attr('id', 'tig-housenumber');
+        housenumberInput.val($('.field.street').find('.control input:eq(1)').val());
         housenumberInput.removeClass('validate-zip-international').addClass('validate-number');
 
-        housenumberInput.keyup(postcodeSearch);
-        $('.field.zip .control').keyup(postcodeSearch);
+        housenumberInput.keyup(updateFieldData);
+        $('.field.zip .control').keyup(updateFieldData);
 
         housenumberElement.insertAfter('.field.zip');
 
+        var housenrAdditionElement = $('.field.zip').clone();
+        housenrAdditionElement.removeClass('zip').removeClass('required').addClass('tig-housenumber-addition');
+        housenrAdditionElement.find('label').attr('for', 'tig-housenumber-addition');
+        housenrAdditionElement.find('label span').text('<?php echo __('House number addition'); ?>');
+
+        var housenrAdditionInput = housenrAdditionElement.find('.control input');
+        housenrAdditionInput.attr('title', '<?php echo __('House number addition'); ?>');
+        housenrAdditionInput.attr('name', 'tig-housenumber-addition');
+        housenrAdditionInput.attr('id', 'tig-housenumber-addition');
+        housenrAdditionInput.val($('.field.street').find('.control input:eq(2)').val());
+        housenrAdditionInput.removeClass('validate-zip-international');
+
+        housenrAdditionElement.insertAfter('.field.tig-housenumber');
+
         var validationMessage = '<div class="tig-postnl-validation-message"></div>';
-        $(validationMessage).insertAfter('.field.postnl-housenumber');
+        $(validationMessage).insertAfter('.field.tig-housenumber-addition');
+
+        $('.field.country .control select').change(observeCountry);
+
+        observeCountry();
     });
 </script>
