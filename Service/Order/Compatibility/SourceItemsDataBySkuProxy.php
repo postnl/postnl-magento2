@@ -32,7 +32,6 @@
 namespace TIG\PostNL\Service\Order\Compatibility;
 
 use Magento\Framework\ObjectManagerInterface;
-use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySkuFactory\Proxy as GetSourceItemsDataBySku;
 
 // @codingStandardsIgnoreFile
 class SourceItemsDataBySkuProxy
@@ -49,20 +48,12 @@ class SourceItemsDataBySkuProxy
     private $subject;
 
     /**
-     * @var GetSourceItemsDataBySku
-     */
-    private $proxy;
-
-    /**
      * @param ObjectManagerInterface  $objectManager
-     * @param GetSourceItemsDataBySku $proxy
      */
     public function __construct(
-        ObjectManagerInterface $objectManager,
-        GetSourceItemsDataBySku $proxy
+        ObjectManagerInterface $objectManager
     ) {
         $this->objectManager = $objectManager;
-        $this->proxy = $proxy;
     }
 
     /**
@@ -71,7 +62,7 @@ class SourceItemsDataBySkuProxy
     private function getSubject()
     {
         if (!$this->subject) {
-            $this->subject = $this->objectManager->get(GetSourceItemsDataBySku::class);
+            $this->subject = $this->objectManager->get(\Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySkuFactory\Proxy::class);
         }
         return $this->subject;
     }
