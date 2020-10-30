@@ -30,11 +30,9 @@
  */
 /* jshint ignore:start */
 define([
-    'jquery',
     'mage/utils/wrapper',
     'uiRegistry'
 ], function (
-    $,
     wrapper,
     Registry
 ) {
