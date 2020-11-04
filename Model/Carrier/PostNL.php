@@ -204,7 +204,6 @@ class PostNL extends AbstractCarrier implements CarrierInterface
         /** @noinspection PhpUndefinedMethodInspection */
         $method->setCost($amount['cost']);
         /** @noinspection PhpUndefinedMethodInspection */
-        $method->setCost($amount['cost']);
         $method->setPrice($amount['price']);
 
         return $method;
