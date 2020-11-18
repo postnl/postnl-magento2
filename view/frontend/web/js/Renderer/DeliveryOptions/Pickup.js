@@ -56,7 +56,8 @@ define([
             country : null,
             street : null,
             hasAddress :false,
-            pickupAddresses: ko.observableArray([])
+            pickupAddresses: ko.observableArray([]),
+            currentLocationAddress: null
         },
 
         initObservable : function () {
@@ -169,9 +170,17 @@ define([
          * @param address
          */
         getPickupAddresses : function (address) {
+            var self = this;
+
+            // Avoid getting delivery days multiple times
+            var addressAsString = JSON.stringify({'postcode': address.postcode, 'housenumber': address.housenumber});
+            if (this.pickupAddresses() !== undefined && this.currentLocationAddress === addressAsString) {
+                return;
+            }
+
+            this.currentLocationAddress = addressAsString;
             State.pickupOptionsAreLoading(true);
 
-            var self = this;
             if (self.getLocationsRequest !== undefined) {
                 self.getLocationsRequest.abort('avoidMulticall');
             }
