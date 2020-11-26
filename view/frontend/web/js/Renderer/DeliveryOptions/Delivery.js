@@ -153,7 +153,9 @@ define([
                 }
             }).done(function (response) {
                 $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
-                setShippingInformationAction();
+                if (window.checkoutConfig.shipping.postnl.onestepcheckout_active) {
+                    setShippingInformationAction();
+                }
             });
         },
 
@@ -187,6 +189,10 @@ define([
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_timeframes,
                 data : {address: address}
             }).done(function (data) {
+                // If the deliverydays are reloaded, the first one is automatically selected.
+                // Show this by switching to the delivery pane.
+                State.currentOpenPane('delivery');
+
                 State.deliveryOptionsAreAvailable(true);
                 State.deliveryPrice(data.price);
 
@@ -201,7 +207,7 @@ define([
                         return fallback;
                     });
                     this.deliverydays(data);
-                    State.currentOpenPane('delivery');
+
                     this.selectFirstDeliveryOption();
                     return;
                 }
@@ -211,7 +217,6 @@ define([
                         return letterbox_package;
                     });
                     this.deliverydays(data);
-                    State.currentOpenPane('delivery');
                     this.selectFirstDeliveryOption();
                     return;
                 }

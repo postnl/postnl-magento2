@@ -36,7 +36,8 @@ define([
     'TIG_PostNL/js/Helper/AddressFinder',
     'TIG_PostNL/js/Helper/Logger',
     'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Models/Location'
+    'TIG_PostNL/js/Models/Location',
+    'Magento_Checkout/js/action/set-shipping-information'
 ], function (
     Component,
     ko,
@@ -45,7 +46,8 @@ define([
     AddressFinder,
     Logger,
     State,
-    Location
+    Location,
+    setShippingInformationAction
 ) {
     'use strict';
 
@@ -153,6 +155,9 @@ define([
                     }
                 }).done(function (response) {
                     $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
+                    if (window.checkoutConfig.shipping.postnl.onestepcheckout_active) {
+                        setShippingInformationAction();
+                    }
                 });
 
             }.bind(this));
