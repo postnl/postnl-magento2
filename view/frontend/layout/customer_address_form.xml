@@ -37,7 +37,7 @@
 
     <body>
         <referenceContainer name="content">
-            <block class="TIG\PostNL\Block\Frontend\Customer\Address\Edit" name="customer_address_postcode" cacheable="false" />
+            <block class="TIG\PostNL\Block\Frontend\Customer\Address\Edit" name="customer_address_postcode" />
         </referenceContainer>
     </body>
 </page>
