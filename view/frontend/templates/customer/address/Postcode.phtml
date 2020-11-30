@@ -187,7 +187,11 @@
         };
 
         $('.field.country').insertBefore('.field.street');
-        $('.field.zip').insertBefore('.field.street');
+
+        var postNLContainer = $('<div/>', {'class': 'tig-postnl-field-group tig-postnl-field-group-account field fieldset'});
+        postNLContainer.insertAfter('.field.country');
+
+        $('.field.zip').appendTo(postNLContainer);
 
         var housenumberElement = $('.field.zip').clone();
         housenumberElement.removeClass('zip').addClass('tig-housenumber');
@@ -199,17 +203,17 @@
         housenumberInput.attr('name', 'tig-housenumber');
         housenumberInput.attr('id', 'tig-housenumber');
         housenumberInput.val($('.field.street').find('.control input:eq(1)').val());
-        housenumberInput.removeClass('validate-zip-international').addClass('validate-number');
+        housenumberInput.removeClass('validate-zip-international').addClass('validate-number').addClass('required-entry');
 
         housenumberInput.keyup(updateFieldData);
         $('.field.zip .control').keyup(updateFieldData);
 
-        housenumberElement.insertAfter('.field.zip');
+        housenumberElement.appendTo(postNLContainer);
 
         var housenrAdditionElement = $('.field.zip').clone();
         housenrAdditionElement.removeClass('zip').removeClass('required').addClass('tig-housenumber-addition');
         housenrAdditionElement.find('label').attr('for', 'tig-housenumber-addition');
-        housenrAdditionElement.find('label span').text('<?php echo __('House number addition'); ?>');
+        housenrAdditionElement.find('label span').text('<?php echo __('Addition'); ?>');
 
         var housenrAdditionInput = housenrAdditionElement.find('.control input');
         housenrAdditionInput.attr('title', '<?php echo __('House number addition'); ?>');
@@ -218,10 +222,10 @@
         housenrAdditionInput.val($('.field.street').find('.control input:eq(2)').val());
         housenrAdditionInput.removeClass('validate-zip-international');
 
-        housenrAdditionElement.insertAfter('.field.tig-housenumber');
+        housenrAdditionElement.appendTo(postNLContainer);
 
         var validationMessage = '<div class="tig-postnl-validation-message"></div>';
-        $(validationMessage).insertAfter('.field.tig-housenumber-addition');
+        $(validationMessage).insertAfter('.tig-postnl-field-group');
 
         $('.field.country .control select').change(observeCountry);
 
