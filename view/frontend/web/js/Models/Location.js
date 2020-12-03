@@ -71,8 +71,9 @@ define([
         /**
          * Toggle the pickup hours visibility.
          */
-        this.toggle = function () {
+        this.toggle = function (data, element) {
             this.expanded(!this.expanded());
+            $(element.currentTarget).toggleClass('active');
         };
 
         /**
@@ -190,7 +191,7 @@ define([
             return data.sort(function (a, b) {
                 var day1 = a.index.toLowerCase();
                 var day2 = b.index.toLowerCase();
-                return daysSorting[day1] > daysSorting[day2];
+                return daysSorting[day1] - daysSorting[day2];
             }.bind(this));
         };
     };

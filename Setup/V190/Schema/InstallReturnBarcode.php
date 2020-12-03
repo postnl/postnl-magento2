@@ -29,51 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Model;
 
-use TIG\PostNL\Model\ShipmentBarcode;
-use TIG\PostNL\Test\TestCase;
+namespace TIG\PostNL\Setup\V190\Schema;
 
-class ShipmentBarcodeTest extends TestCase
+use TIG\PostNL\Setup\AbstractColumnsInstaller;
+
+class InstallReturnBarcode extends AbstractColumnsInstaller
 {
-    /**
-     * @param array $args
-     *
-     * @return object
-     */
-    public function getInstance(array $args = [])
-    {
-        return $this->objectManager->getObject(ShipmentBarcode::class, $args);
-    }
+    const TABLE_NAME = 'tig_postnl_shipment';
 
-    /**
-     * @return array
-     */
-    public function getIdentitiesProvider()
+    // @codingStandardsIgnoreLine
+    protected $columns = [
+        'return_barcode'
+    ];
+
+    public function installReturnBarcodeColumn()
     {
         return [
-            [1],
-            [2],
-            [3],
-            [4],
-            [5],
+            // @codingStandardsIgnoreLine
+            'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            'length'   => 32,
+            'nullable' => true,
+            'default'  => null,
+            'comment'  => 'Return Barcode'
         ];
-    }
-
-    /**
-     * @param $id
-     *
-     * @dataProvider getIdentitiesProvider
-     */
-    public function testGetIdentities($id)
-    {
-        $instance = $this->getInstance();
-        $instance->setId($id);
-
-        $result = $instance->getIdentities();
-        $expected = ShipmentBarcode::CACHE_TAG . '_' . $id;
-
-        $this->assertInternalType('array', $result);
-        $this->assertEquals([$expected], $result);
     }
 }

@@ -41,8 +41,8 @@ class Collection extends AbstractCollection
     {
         // @codingStandardsIgnoreLine
         $this->_init(
-            'TIG\PostNL\Model\Carrier\Matrixrate',
-            'TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate'
+            \TIG\PostNL\Model\Carrier\Matrixrate::class,
+            \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate::class
         );
     }
 }

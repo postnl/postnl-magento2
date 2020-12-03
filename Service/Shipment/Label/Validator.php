@@ -31,8 +31,8 @@
  */
 namespace TIG\PostNL\Service\Shipment\Label;
 
-use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
@@ -132,6 +132,10 @@ class Validator
             return $this->validateGlobalPack($shipment);
         }
 
+        if ($shipment->isBuspakjeShipment()) {
+            $this->showLetterboxPackageNotice();
+        }
+
         return $this->validatePeps($shipment);
     }
 
@@ -177,5 +181,13 @@ class Validator
         }
 
         return true;
+    }
+
+    private function showLetterboxPackageNotice()
+    {
+        // @codingStandardsIgnoreStart
+        $this->messages['notices'][] = __('Please note, a letterbox package may not exceed 38 x 26.5 x 3.2 cm 
+        (14.96 x 10.43 x 1.25 in) in size and 2 kg (4.4 lbs) in weight.');
+        // @codingStandardsIgnoreEnd
     }
 }

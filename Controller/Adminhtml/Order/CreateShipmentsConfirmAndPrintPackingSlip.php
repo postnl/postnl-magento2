@@ -31,12 +31,13 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Order;
 
-use Magento\Framework\App\ResponseInterface;
-use Magento\Ui\Component\MassAction\Filter;
 use Magento\Backend\App\Action\Context;
-use Magento\Sales\Model\Order\Shipment;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use Magento\Ui\Component\MassAction\Filter;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
@@ -99,14 +100,22 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
      * Dispatch request
      *
      * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
-     * @throws \Magento\Framework\Exception\NotFoundException
+     * @throws \Zend_Pdf_Exception
      */
     public function execute()
     {
-        $packingSlips = $this->createShipmentsAndLoadPackingSlips();
+        $this->createShipmentsAndLoadPackingSlips();
         $this->handleErrors();
 
-        return $packingSlips;
+        if (empty($this->labels)) {
+            $this->messageManager->addErrorMessage(
+                __('[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information')
+            );
+
+            return $this->_redirect($this->_redirect->getRefererUrl());
+        }
+
+        return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
     }
 
     /**
@@ -115,13 +124,17 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
     private function createShipmentsAndLoadPackingSlips()
     {
         $collection = $this->collectionFactory->create();
-        $collection = $this->filter->getCollection($collection);
+
+        try {
+            $collection = $this->filter->getCollection($collection);
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addWarningMessage($exception->getMessage());
+            return;
+        }
 
         foreach ($collection as $order) {
             $this->handleOrderToShipment($order);
         }
-
-        return $this->getPdf->get($this->labels, GetPdf::FILETYPE_PACKINGSLIP);
     }
 
     /**
@@ -137,15 +150,12 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
             return;
         }
 
-        $shipment = $this->createShipment->create($order);
-        if (!$shipment) {
+        $shipments = $this->createShipment->create($order);
+        if (!$shipments) {
             return;
         }
 
-        $address  = $shipment->getShippingAddress();
-        $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
-        $this->setTracks($shipment);
-        $this->setPackingslip($shipment->getId());
+        $this->loadLabels($shipments);
     }
 
     /**
@@ -163,5 +173,43 @@ class CreateShipmentsConfirmAndPrintPackingSlip extends LabelAbstract
         }
 
         return $this;
+    }
+
+    /**
+     * Handle loading shipment labels
+     *
+     * @param $shipments
+     */
+    private function loadLabels($shipments)
+    {
+        // $shipments will contain a single shipment if it created a new one.
+        if (!is_array($shipments)) {
+            $this->loadLabel($shipments);
+            return;
+        }
+
+        foreach ($shipments as $shipment) {
+            $this->loadLabel($shipment);
+        }
+    }
+
+    /**
+     * @param Shipment $shipment
+     */
+    private function loadLabel($shipment)
+    {
+        $address  = $shipment->getShippingAddress();
+
+        try {
+            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addErrorMessage(
+                __('[POSTNL-0070] - Unable to generate barcode for shipment #%1', $shipment->getIncrementId())
+            );
+            return;
+        }
+
+        $this->setTracks($shipment);
+        $this->setPackingslip($shipment->getId());
     }
 }

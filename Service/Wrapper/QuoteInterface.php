@@ -40,6 +40,7 @@ interface QuoteInterface
      *
      * @return mixed
      */
+    // @codingStandardsIgnoreLine
     public function setQuote(MagentoQuote $quote);
 
     /**

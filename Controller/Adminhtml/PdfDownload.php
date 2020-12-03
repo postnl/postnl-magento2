@@ -31,16 +31,16 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml;
 
-use Magento\Framework\App\Filesystem\DirectoryList;
-use TIG\PostNL\Service\Framework\FileFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Message\ManagerInterface;
-use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
+use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Config\Source\Settings\LabelsizeSettings;
+use TIG\PostNL\Service\Framework\FileFactory;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Shipment\Label\Generate as LabelGenerate;
 use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
 use TIG\PostNL\Service\Shipment\ShipmentService as Shipment;
-use TIG\PostNL\Service\Order\ProductInfo;
 
 // @codingStandardsIgnoreFile
 class PdfDownload
@@ -154,14 +154,7 @@ class PdfDownload
     private function filterLabel($labels)
     {
         return array_filter($labels, function ($label) {
-
             if (is_array($label)) {
-                return false;
-            }
-
-            /** @var ShipmentLabelInterface $label */
-            if (strtoupper($label->getType()) == ProductInfo::SHIPMENT_TYPE_GP) {
-                $this->filteredLabels[] = $label->getParentId();
                 return false;
             }
 
@@ -171,8 +164,7 @@ class PdfDownload
 
     /**
      * @return string
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     private function getShipmentIds()
     {
@@ -193,7 +185,7 @@ class PdfDownload
     {
         $this->messageManager->addWarningMessage(
         // @codingStandardsIgnoreLine
-            __('No labels were created. If you\'re trying to generate Global Pack shipments, set your Label Size to A4. Please check your Label Size settings.')
+            __('No labels were created.')
         );
     }
 
@@ -204,7 +196,8 @@ class PdfDownload
     {
         $this->messageManager->addNoticeMessage(
         // @codingStandardsIgnoreLine
-            __('Not all labels were created. Please check your Label Size settings. Labels are not generated for the following Shipment(s): %1',
+            __(
+                'Not all labels were created. Please check your Label Size settings. Labels are not generated for the following Shipment(s): %1',
                 $this->getShipmentIds()
             )
         );
@@ -215,6 +208,7 @@ class PdfDownload
      * @param $filename
      *
      * @return string
+     * @throws \TIG\PostNL\Exception
      */
     // @codingStandardsIgnoreStart
     private function generateLabel($labels, $filename)

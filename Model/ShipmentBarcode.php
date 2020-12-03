@@ -32,15 +32,12 @@
 namespace TIG\PostNL\Model;
 
 use TIG\PostNL\Api\Data\ShipmentBarcodeInterface;
-use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel as MagentoModel;
 
-class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface, IdentityInterface
+class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface
 {
-    const CACHE_TAG = 'tig_postnl_shipment_barcode';
-
     const BARCODE_TYPE_SHIPMENT = 'shipment';
-    const BARCODE_TYPE_RETURN   = 'return';
+    const BARCODE_TYPE_RETURN = 'return';
 
     const FIELD_PARENT_ID = 'parent_id';
     const FIELD_TYPE = 'type';
@@ -64,14 +61,6 @@ class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface, 
     }
 
     /**
-     * @return array
-     */
-    public function getIdentities()
-    {
-        return [self::CACHE_TAG . '_' . $this->getId()];
-    }
-
-    /**
      * @return int
      */
     public function getParentId()
@@ -84,7 +73,7 @@ class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface, 
      *
      * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
      */
-    public function setParentId($value)
+    public function changeParentId($value)
     {
         return $this->setData(static::FIELD_PARENT_ID, $value);
     }
@@ -102,7 +91,7 @@ class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface, 
      *
      * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
      */
-    public function setType($value)
+    public function changeType($value)
     {
         return $this->setData(static::FIELD_TYPE, $value);
     }
@@ -120,7 +109,7 @@ class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface, 
      *
      * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
      */
-    public function setNumber($value)
+    public function changeNumber($value)
     {
         return $this->setData(static::FIELD_NUMBER, $value);
     }
@@ -138,7 +127,7 @@ class ShipmentBarcode extends MagentoModel implements ShipmentBarcodeInterface, 
      *
      * @return \TIG\PostNL\Api\Data\ShipmentBarcodeInterface
      */
-    public function setValue($value)
+    public function changeValue($value)
     {
         return $this->setData(static::FIELD_VALUE, $value);
     }

@@ -33,11 +33,9 @@ namespace TIG\PostNL\Unit\Controller\Adminhtml\Shipment;
 
 use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\ResourceModel\Order\Shipment\Collection;
 use TIG\PostNL\Controller\Adminhtml\Shipment\MassPrintPackingslip;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
-use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Test\TestCase;
 
 class MassPrintPackingslipTest extends TestCase
@@ -104,18 +102,14 @@ class MassPrintPackingslipTest extends TestCase
         return $shipmentMock;
     }
 
-    public function testLoadLabels()
+    public function testLoadLabel()
     {
-        $shipmentMock1 = $this->getShipmentMock(1, 'NL');
-        $shipmentMock2 = $this->getShipmentMock(2, 'BE');
-        $shipmentArray = [$shipmentMock1, $shipmentMock2];
+        $shipmentMock = $this->getShipmentMock(1, 'NL');
 
         $barcodeHandlerMock = $this->getFakeMock(BarcodeHandler::class)->setMethods(['prepareShipment'])->getMock();
-        $barcodeHandlerMock->expects($this->exactly(count($shipmentArray)))
-            ->method('prepareShipment')
-            ->withConsecutive([1, 'NL'], [2, 'BE']);
+        $barcodeHandlerMock->expects($this->exactly(1))->method('prepareShipment')->with(1, 'NL');
 
         $instance = $this->getInstance(['barcodeHandler' => $barcodeHandlerMock]);
-        $this->invokeArgs('loadLabels', [$shipmentArray], $instance);
+        $this->invokeArgs('loadLabel', [$shipmentMock], $instance);
     }
 }

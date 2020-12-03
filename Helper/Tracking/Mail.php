@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Helper\Tracking;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\MailException;
@@ -44,6 +45,7 @@ use TIG\PostNL\Helper\AbstractTracking;
 use TIG\PostNL\Helper\Data as PostNLHelper;
 use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
 
 class Mail extends AbstractTracking
 {
@@ -68,14 +70,16 @@ class Mail extends AbstractTracking
     private $assetRepository;
 
     /**
-     * @param Context                  $context
-     * @param PostNLShipmentRepository $postNLShipmentRepository
-     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
-     * @param TransportBuilder         $transportBuilder
-     * @param PostNLHelper             $data
-     * @param Webshop                  $webshop
-     * @param Log                      $logging
-     * @param AssetRepository          $assetRepository
+     * @param Context                            $context
+     * @param PostNLShipmentRepository           $postNLShipmentRepository
+     * @param SearchCriteriaBuilder              $searchCriteriaBuilder
+     * @param TransportBuilder                   $transportBuilder
+     * @param PostNLHelper                       $data
+     * @param Webshop                            $webshop
+     * @param Log                                $logging
+     * @param AssetRepository                    $assetRepository
+     * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
+     * @param ScopeConfigInterface               $scopeConfig
      */
     public function __construct(
         Context $context,
@@ -85,7 +89,9 @@ class Mail extends AbstractTracking
         PostNLHelper $data,
         Webshop $webshop,
         Log $logging,
-        AssetRepository $assetRepository
+        AssetRepository $assetRepository,
+        ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->transportBuilder     = $transportBuilder;
         $this->postNLHelperData     = $data;
@@ -96,7 +102,9 @@ class Mail extends AbstractTracking
             $postNLShipmentRepository,
             $searchCriteriaBuilder,
             $webshop,
-            $logging
+            $logging,
+            $shipmentBarcodeRepositoryInterface,
+            $scopeConfig
         );
     }
 
@@ -126,7 +134,7 @@ class Mail extends AbstractTracking
         $template  = $this->webshopConfig->getTrackAndTraceEmailTemplate($shipment->getStoreId());
         $transport = $this->transportBuilder->setTemplateIdentifier($template);
         $transport->setTemplateOptions([
-            'area'  => \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE,
+            'area'  => \Magento\Framework\App\Area::AREA_FRONTEND,
             'store' => $shipment->getStoreId()
         ]);
 
@@ -136,9 +144,10 @@ class Mail extends AbstractTracking
             $this->getTemplateVars($order, $url)
         );
 
-        $transport->setFrom('general');
         if (method_exists($transport, 'setFromByScope')) {
             $transport->setFromByScope('general', $shipment->getStoreId());
+        } else {
+            $transport->setFrom('general');
         }
 
         $address = $shipment->getShippingAddress();
@@ -173,7 +182,8 @@ class Mail extends AbstractTracking
             'name'            => $shippingAddress->getFirstname() . ' ' .
                 $shippingAddress->getMiddlename() . ' ' .
                 $shippingAddress->getLastname(),
-            'street'          => $this->getStreetFlattend($shippingAddress->getStreet())
+            'street'          => $this->getStreetFlattend($shippingAddress->getStreet()),
+            'delivery_date'   => $shipment->getDeliveryDateFormatted('d-m-Y')
         ];
     }
 

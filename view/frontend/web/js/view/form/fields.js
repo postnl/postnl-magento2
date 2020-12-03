@@ -58,7 +58,38 @@ define([
             this._super()
                 ._setClasses();
 
+            if (window.checkoutConfig.shipping.postnl.checkout_extension == 'mageplaza') {
+                this.setMageplazaPrefilter();
+            }
+
             return this;
+        },
+
+        setMageplazaPrefilter : function () {
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                var optionsArray;
+                if (options.url.indexOf('checkout-information') >= 0) {
+                    optionsArray = JSON.parse(options.data);
+                    if (Object.keys(optionsArray.customerAttributes).length < 1) {
+                        optionsArray.customerAttributes = {
+                            tig_housenumber: $(".tig-postnl-field-group div[name='shippingAddress.custom_attributes.tig_housenumber'] input").val(),
+                            tig_housenumber_addition: $(".tig-postnl-field-group div[name='shippingAddress.custom_attributes.tig_housenumber_addition'] input").val()
+                        };
+                    }
+                    options.data = JSON.stringify(optionsArray);
+                }
+
+                if (options.url.indexOf('payment-information') >= 0 && options.data) {
+                    optionsArray = JSON.parse(options.data);
+                    if (optionsArray.billingAddress.extension_attributes === undefined) {
+                        optionsArray.billingAddress.extension_attributes = {
+                            tig_housenumber: $(".tig-postnl-field-group div[name='billingAddress.custom_attributes.tig_housenumber'] input").val(),
+                            tig_housenumber_addition: $(".tig-postnl-field-group div[name='billingAddress.custom_attributes.tig_housenumber_addition'] input").val()
+                        };
+                    }
+                    options.data = JSON.stringify(optionsArray);
+                }
+            }.bind(this));
         },
 
         enableAddressFields : function (enableFields) {
@@ -112,9 +143,23 @@ define([
                 country = countryElement.value();
             });
 
+            if (country !== 'NL' && country !== 'BE') {
+                // In some countries housenumber is not required
+                Registry.get([this.parentName + '.postcode-field-group.field-group.housenumber'], function (housenumberElement) {
+                    housenumberElement.required(false);
+                    housenumberElement.validation['required-entry'] = false;
+                });
+            } else {
+                Registry.get([this.parentName + '.postcode-field-group.field-group.housenumber'], function (housenumberElement) {
+                    housenumberElement.required(true);
+                    housenumberElement.validation['required-entry'] = true;
+                });
+            }
+
             if (country !== 'NL') {
                 self.enableAddressFields(true);
                 self.hideAddressFields(false);
+
                 return;
             } else {
                 self.hideAddressFields(true);
@@ -263,6 +308,26 @@ define([
         },
 
         observeCountry : function (value) {
+            var self = this;
+
+            var fields = [
+                self.parentName + '.postcode-field-group.field-group.postcode',
+                self.parentName + '.postcode-field-group.field-group.housenumber',
+                self.parentName + '.postcode-field-group.field-group.housenumber_addition',
+            ];
+
+            Registry.get(fields, function (postcodeElement, housenumberElement, additionElement) {
+                // Next line is for initial load, before field is found in jQuery
+                postcodeElement.additionalClasses['tig-postnl-full-width'] = (value !== 'NL');
+
+                housenumberElement.visible(value === 'NL');
+                additionElement.visible(value === 'NL');
+
+                var postcodeField = $('.tig-postnl-field-group div[name$=postcode]');
+                /* jshint ignore:start */
+                value === 'NL' ? postcodeField.removeClass('tig-postnl-full-width') : postcodeField.addClass('tig-postnl-full-width');
+                /* jshint ignore:end */
+            });
             this.updateFieldData();
         }
     });

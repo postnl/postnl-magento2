@@ -57,7 +57,7 @@ class PostNLConfigurationTest extends AbstractConfigurationTest
     public function testGetSupportedMagentoVersions($value)
     {
         $instance = $this->getInstance();
-        $this->setXpath(PostNLConfiguration::XPATH_SUPPORTED_MAGENTO_VERSION, $value);
+        $this->setXpath(PostNLConfiguration::XPATH_TESTED_MAGENTO_VERSION, $value);
         $this->assertEquals($value, $instance->getSupportedMagentoVersions());
     }
 }

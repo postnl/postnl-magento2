@@ -38,11 +38,6 @@ use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 
-/**
- * Class CheckIfQuoteItemsAreInStockTest
- *
- * @package TIG\PostNL\Test\Integration\Service\Quote
- */
 class CheckIfQuoteItemsAreInStockTest extends TestCase
 {
     /**
@@ -72,18 +67,13 @@ class CheckIfQuoteItemsAreInStockTest extends TestCase
         /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $this->getObject(Quote::class)->load('instock01', 'reserved_order_id');
 
-        $checkoutSession        = $this->getFakeMock(CheckoutSession::class)->getMock();
-        $checkoutSessionExpects = $checkoutSession->method('getQuote');
-        $checkoutSessionExpects->willReturn($quote);
-
         $instance = $this->getInstance(
             [
-                'checkoutSession'         => $checkoutSession,
                 '$stockRegistryInterface' => $this->stockRegistryInterfaceMock,
                 '$stockConfiguration'     => $this->stockConfigurationMock,
             ]
         );
-        $result   = $instance->getValue();
+        $result   = $instance->getValue($quote);
 
         $this->assertEquals(true, $result);
     }
@@ -97,18 +87,13 @@ class CheckIfQuoteItemsAreInStockTest extends TestCase
 
         $quote->getItemsCollection()->getFirstItem()->setQty(101);
 
-        $checkoutSession        = $this->getFakeMock(CheckoutSession::class)->getMock();
-        $checkoutSessionExpects = $checkoutSession->method('getQuote');
-        $checkoutSessionExpects->willReturn($quote);
-
         $instance = $this->getInstance(
             [
-                'checkoutSession'         => $checkoutSession,
                 '$stockRegistryInterface' => $this->stockRegistryInterfaceMock,
                 '$stockConfiguration'     => $this->stockConfigurationMock,
             ]
         );
-        $result   = $instance->getValue();
+        $result   = $instance->getValue($quote);
 
         $this->assertEquals(false, $result);
     }

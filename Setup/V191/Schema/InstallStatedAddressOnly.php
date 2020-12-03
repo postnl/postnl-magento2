@@ -29,51 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Unit\Model;
 
-use TIG\PostNL\Model\ShipmentLabel;
-use TIG\PostNL\Test\TestCase;
+namespace TIG\PostNL\Setup\V191\Schema;
 
-class ShipmentLabelTest extends TestCase
+use TIG\PostNL\Setup\AbstractColumnsInstaller;
+
+class InstallStatedAddressOnly extends AbstractColumnsInstaller
 {
-    /**
-     * @param array $args
-     *
-     * @return object
-     */
-    public function getInstance(array $args = [])
-    {
-        return $this->objectManager->getObject(ShipmentLabel::class, $args);
-    }
+    const TABLE_NAME = 'tig_postnl_order';
 
-    /**
-     * @return array
-     */
-    public function getIdentitiesProvider()
+    // @codingStandardsIgnoreLine
+    protected $columns = [
+        'is_stated_address_only'
+    ];
+
+    public function installIsStatedAddressOnlyColumn()
     {
         return [
-            [1],
-            [2],
-            [3],
-            [4],
-            [5],
+            // @codingStandardsIgnoreLine
+            'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
+            'nullable' => false,
+            'default'  => 0,
+            'comment'  => 'Customer selected Stated Address Only in frontend',
+            'after' => 'is_pakjegemak',
         ];
-    }
-
-    /**
-     * @param $id
-     *
-     * @dataProvider getIdentitiesProvider
-     */
-    public function testGetIdentities($id)
-    {
-        $instance = $this->getInstance();
-        $instance->setId($id);
-
-        $result = $instance->getIdentities();
-        $expected = ShipmentLabel::CACHE_TAG . '_' . $id;
-
-        $this->assertInternalType('array', $result);
-        $this->assertEquals([$expected], $result);
     }
 }

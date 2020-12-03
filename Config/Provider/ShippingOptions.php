@@ -42,6 +42,7 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE       = 'tig_postnl/delivery_days/deliverydays_active';
     const XPATH_SHIPPING_OPTION_MAX_DELIVERYDAYS          = 'tig_postnl/delivery_days/max_deliverydays';
     const XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE         = 'tig_postnl/post_offices/pakjegemak_active';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_BE_ACTIVE      = 'tig_postnl/post_offices/pakjegemak_be_active';
     const XPATH_SHIPPING_OPTION_EVENING_ACTIVE            = 'tig_postnl/evening_delivery_nl/eveningdelivery_active';
     const XPATH_SHIPPING_OPTION_EVENING_BE_ACTIVE         = 'tig_postnl/evening_delivery_be/eveningdelivery_be_active';
     const XPATH_SHIPPING_OPTION_EVENING_FEE               = 'tig_postnl/evening_delivery_nl/eveningdelivery_fee';
@@ -57,6 +58,9 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_EPS_BUSINESS_ACTIVE       = 'tig_postnl/eps/business_active';
     const XPATH_SHIPPING_OPTIONS_PEPS_ACTIVE              = 'tig_postnl/peps/active';
     const XPATH_SHIPPING_OPTIONS_GLOBALPACK_ACTIVE        = 'tig_postnl/globalpack/enabled';
+    const XPATH_SHIPPING_OPTION_STATED_ADDRESS_ACTIVE     = 'tig_postnl/delivery_settings/stated_address_only_active';
+    const XPATH_SHIPPING_OPTION_STATED_ADDRESS_FEE        = 'tig_postnl/delivery_settings/stated_address_only_fee';
+    const XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_ACTIVE  = 'tig_postnl/letterbox_package/letterbox_package_active';
 
     private $defaultMaxDeliverydays = '5';
 
@@ -105,10 +109,14 @@ class ShippingOptions extends AbstractConfigProvider
     }
 
     /**
+     * @param string $country
      * @return mixed
      */
-    public function isPakjegemakActive()
+    public function isPakjegemakActive($country = 'NL')
     {
+        if ('BE' === $country){
+            return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_BE_ACTIVE);
+        }
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE);
     }
 
@@ -232,6 +240,34 @@ class ShippingOptions extends AbstractConfigProvider
     public function canUseGlobalPack()
     {
         return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTIONS_GLOBALPACK_ACTIVE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatedAddressOnlyActive()
+    {
+        return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_STATED_ADDRESS_ACTIVE);
+    }
+
+    /**
+     * @return float
+     */
+    public function getStatedAddressOnlyFee()
+    {
+        if (!$this->isStatedAddressOnlyActive()) {
+            return (float)0.0;
+        }
+
+        return (float) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_STATED_ADDRESS_FEE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLetterboxPackageActive()
+    {
+        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_ACTIVE);
     }
 }
 /**

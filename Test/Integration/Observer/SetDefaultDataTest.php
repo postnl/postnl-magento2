@@ -123,7 +123,7 @@ class SetDefaultDataTest extends TestCase
         $this->getInstance()->execute($observer);
 
         $this->assertEquals(3085, $postNLOrder->getProductCode());
-        $this->assertEquals(ProductInfo::SHIPMENT_TYPE_EXTRAATHOME, $postNLOrder->getType());
+        $this->assertEquals(ProductInfo::SHIPMENT_TYPE_DAYTIME, $postNLOrder->getType());
     }
 
     /**

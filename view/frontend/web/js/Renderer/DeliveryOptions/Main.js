@@ -54,12 +54,21 @@ define([
             shipmentType: State.currentOpenPane,
             deliveryPrice: State.deliveryPrice,
             pickupPrice: State.pickupPrice,
+            statedDeliveryPrice: State.statedDeliveryPrice,
+            pickupDate: State.pickupDate,
             deliveryFee: State.deliveryFee,
-            pickupFee: State.pickupFee
+            pickupFee: State.pickupFee,
+            statedDeliveryFee: State.statedDeliveryFee
         },
 
 
         initObservable: function () {
+            this.selectedMethod = ko.computed(function () {
+                var method = quote.shippingMethod();
+                var selectedMethod = method != null ? method.carrier_code + '_' + method.method_code : null;
+                return selectedMethod;
+            }, this);
+
             this._super().observe([
                 'shipmentType'
             ]);
@@ -69,26 +78,34 @@ define([
             return this;
         },
 
-        canUseDeliveryOptions: ko.computed(function () {
+        canUsePostNLDeliveryOptions: ko.computed(function () {
+            var deliveryOptionsActive = window.checkoutConfig.shipping.postnl.shippingoptions_active;
+            var deliveryDaysActive = window.checkoutConfig.shipping.postnl.is_deliverydays_active;
+            var pakjegemakActive = window.checkoutConfig.shipping.postnl.pakjegemak_active === 1;
 
+            return deliveryOptionsActive && (deliveryDaysActive || pakjegemakActive);
+        }),
+
+        canUseDeliveryOptions: ko.computed(function () {
             var address = AddressFinder();
 
             if (address === null || address === false) {
                 return false;
             }
 
-            return (address.country === 'NL' || address.country === 'BE');
+            return true;
         }),
 
         canUsePickupLocations: ko.computed(function () {
-
             var isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
+            var isActiveBe = window.checkoutConfig.shipping.postnl.pakjegemak_be_active;
             var pickupOptionsAreAvailable = State.pickupOptionsAreAvailable();
 
             var address = AddressFinder();
             var isNL = (address !== null && address !== false && address.country === 'NL');
+            var isBE = (address !== null && address !== false && address.country === 'BE');
 
-            return isActive === 1 && isNL && pickupOptionsAreAvailable;
+            return ((isActive === 1 && isNL) || (isActiveBe === 1 && isBE)) && pickupOptionsAreAvailable;
         }),
 
         setDelivery: function () {

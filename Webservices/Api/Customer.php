@@ -33,6 +33,7 @@ namespace TIG\PostNL\Webservices\Api;
 
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 
 class Customer
 {
@@ -53,25 +54,35 @@ class Customer
      */
     private $storeId = null;
 
+    /** @var ReturnOptions  */
+    private $returnOptions;
+
     /**
      * @param AccountConfiguration $accountConfiguration
      * @param AddressConfiguration $addressConfiguration
+     * @param ReturnOptions        $returnOptions
      */
     public function __construct(
         AccountConfiguration $accountConfiguration,
-        AddressConfiguration $addressConfiguration
+        AddressConfiguration $addressConfiguration,
+        ReturnOptions $returnOptions
     ) {
         $this->accountConfiguration = $accountConfiguration;
         $this->addressConfiguration = $addressConfiguration;
+        $this->returnOptions = $returnOptions;
     }
 
     /**
+     * @param      $shipment
+     * @param bool $isReturnBarcode
+     *
      * @return array
      */
-    public function get()
+    public function get($shipment = false, $isReturnBarcode = false)
     {
         $customer = [
-            'CustomerCode'   => $this->accountConfiguration->getCustomerCode($this->storeId),
+            'CustomerCode'   => $isReturnBarcode ? $this->getReturnCustomerCode($shipment) :
+                $this->accountConfiguration->getCustomerCode($this->storeId),
             'CustomerNumber' => $this->accountConfiguration->getCustomerNumber($this->storeId),
         ];
 
@@ -111,8 +122,29 @@ class Customer
     /**
      * @param $storeId
      */
-    public function setStoreId($storeId)
+    public function changeStoreId($storeId)
     {
         $this->storeId = $storeId;
+    }
+
+    /**
+     * @param $shipment
+     *
+     * @return integer
+     * @throws \TIG\PostNL\Exception
+     */
+    public function getReturnCustomerCode($shipment)
+    {
+        $shippingAddress = $shipment->getShippingAddress();
+
+        if ($shippingAddress->getCountryId() == 'NL') {
+            return $this->returnOptions->getCustomerCodeNL();
+        }
+
+        if ($shippingAddress->getCountryId() == 'BE') {
+            return $this->returnOptions->getCustomerCodeBE();
+        }
+
+        throw new \TIG\PostNL\Exception('No customer code set for Returns');
     }
 }

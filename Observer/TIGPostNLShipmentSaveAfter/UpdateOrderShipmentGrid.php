@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -45,12 +46,20 @@ class UpdateOrderShipmentGrid implements ObserverInterface
     private $shipmentGrid;
 
     /**
-     * @param GridInterface $shipmentGrid
+     * @var ScopeConfigInterface
+     */
+    private $globalConfig;
+
+    /**
+     * @param GridInterface        $shipmentGrid
+     * @param ScopeConfigInterface $globalConfig
      */
     public function __construct(
-        GridInterface $shipmentGrid
+        GridInterface $shipmentGrid,
+        ScopeConfigInterface $globalConfig
     ) {
         $this->shipmentGrid = $shipmentGrid;
+        $this->globalConfig = $globalConfig;
     }
 
     /**
@@ -60,6 +69,10 @@ class UpdateOrderShipmentGrid implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
+        if ($this->globalConfig->getValue('dev/grid/async_indexing')) {
+            return;
+        }
+
         /** @var Shipment $shipment */
         $shipment = $observer->getData('data_object');
         $shipmentId = $shipment->getShipmentId();

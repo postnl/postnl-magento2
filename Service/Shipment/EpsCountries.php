@@ -37,7 +37,7 @@ class EpsCountries
      * Array of countries to which PostNL ships using EPS. Other EU countries are shipped, using Global Pack.
      * https://developer.postnl.nl/browse-apis/send-and-track/products/ => Destination EU
      *
-     * Parcels to the Channel Islands, the Canary Islands and Malta can only be sent with the Global Pack product.
+     * Parcels to the Channel Islands and the Canary Islands can only be sent with the Global Pack product.
      *
      * ==== Great Britain ====
      * 'GG', // Guernsey
@@ -88,5 +88,8 @@ class EpsCountries
         'ES', // Spain (Including Balearic Islands. Excluding Canary Islands, Melilla and Ceuta)
         'SE', // Sweden
         'MC', // Monaco (Is its own country, Is EPS because France is EPS)
+        'MT', // Malta
+        'HR', // Croatia
+        'CY'  // Cyprus
     ];
 }

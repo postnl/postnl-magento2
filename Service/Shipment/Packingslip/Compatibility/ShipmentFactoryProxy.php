@@ -61,7 +61,7 @@ class ShipmentFactoryProxy
     private function getSubject()
     {
         if (!$this->subject) {
-            $this->subject = $this->objectManager->get(\Fooman\PdfCustomiser\Block\ShipmentFactoryProxy::class);
+            $this->subject = $this->objectManager->get(\Fooman\PdfCustomiser\Block\ShipmentFactory\Proxy::class);
         }
         return $this->subject;
     }

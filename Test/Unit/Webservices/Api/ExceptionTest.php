@@ -117,11 +117,11 @@ class ExceptionTest extends TestCase
         $exception = new PostNLException($message);
 
         if ($requestXml !== null) {
-            $exception->setRequestXml($requestXml);
+            $exception->changeRequestXml($requestXml);
         }
 
         if ($responseXml !== null) {
-            $exception->setResponseXml($responseXml);
+            $exception->changeResponseXml($responseXml);
         }
 
         foreach ($errors as $error) {
@@ -138,7 +138,7 @@ class ExceptionTest extends TestCase
         $exception = new PostNLException('test');
 
         $xml = 'testxml';
-        $exception->setRequestXml($xml);
+        $exception->changeRequestXml($xml);
 
         $this->assertEquals($xml, $exception->getRequestXml());
     }
@@ -148,7 +148,7 @@ class ExceptionTest extends TestCase
         $exception = new PostNLException('test');
 
         $xml = 'testxml';
-        $exception->setResponseXml($xml);
+        $exception->changeResponseXml($xml);
 
         $this->assertEquals($xml, $exception->getResponseXml());
     }

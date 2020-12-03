@@ -34,33 +34,60 @@ namespace TIG\PostNL\Service\Order;
 
 use Magento\Quote\Model\Quote\Address;
 use TIG\PostNL\Api\Data\OrderInterface;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 
 class FirstDeliveryDate
 {
-    /**
-     * @var DeliveryDate
-     */
+    /** @var DeliveryDate */
     private $endpoint;
 
-    /**
-     * @var QuoteInterface
-     */
+    /** @var QuoteInterface */
     private $quote;
+
+    /** @var ShippingOptions $shippingConfig */
+    private $shippingConfig;
 
     /**
      * FirstDeliveryDate constructor.
      *
      * @param DeliveryDate   $endpoint
      * @param QuoteInterface $quote
+     * @param ShippingOptions $shippingConfig
      */
     public function __construct(
         DeliveryDate $endpoint,
-        QuoteInterface $quote
+        QuoteInterface $quote,
+        ShippingOptions $shippingConfig
     ) {
         $this->endpoint = $endpoint;
         $this->quote = $quote;
+        $this->shippingConfig = $shippingConfig;
+    }
+
+    /**
+     * @param $postcode
+     * @param $country
+     *
+     * @return string|null
+     */
+    public function get($postcode, $country)
+    {
+        $address = $this->quote->getShippingAddress();
+
+        if ($address === null) {
+            return null;
+        }
+
+        $address->setPostcode($postcode);
+        $address->setCountryId($country);
+
+        if (!$this->validateCountry($address)) {
+            return null;
+        }
+
+        return $this->getDeliveryDate($address);
     }
 
     /**
@@ -77,6 +104,12 @@ class FirstDeliveryDate
 
         if (!$this->validateCountry($address)) {
             return null;
+        }
+
+        if (!$this->shippingConfig->isDeliverydaysActive()) {
+            $order->setDeliveryDate(null);
+
+            return $order;
         }
 
         $order->setDeliveryDate($this->getDeliveryDate($address));
@@ -100,8 +133,8 @@ class FirstDeliveryDate
     private function getDeliveryDate(Address $address)
     {
         try {
-            $this->endpoint->setStoreId($this->quote->getStoreId());
-            $this->endpoint->setParameters([
+            $this->endpoint->updateApiKey($this->quote->getStoreId());
+            $this->endpoint->updateParameters([
                 'country'  => $address->getCountryId(),
                 'postcode' => $address->getPostcode(),
             ]);

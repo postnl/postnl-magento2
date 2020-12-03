@@ -51,12 +51,12 @@ class Labelling extends AbstractEndpoint
      * @var Customer
      */
     private $customer;
-    
+
     /**
      * @var Message
      */
     private $message;
-    
+
     /**
      * @var string
      */
@@ -66,12 +66,12 @@ class Labelling extends AbstractEndpoint
      * @var string
      */
     private $endpoint = 'label';
-    
+
     /**
      * @var array
      */
     private $requestParams;
-    
+
     /**
      * Labelling constructor.
      *
@@ -89,12 +89,12 @@ class Labelling extends AbstractEndpoint
         $this->soap     = $soap;
         $this->customer = $customer;
         $this->message  = $message;
-        
+
         parent::__construct(
             $shipmentData
         );
     }
-    
+
     /**
      * @return mixed
      * @throws \Magento\Framework\Webapi\Exception
@@ -104,7 +104,7 @@ class Labelling extends AbstractEndpoint
     {
         return $this->soap->call($this, 'GenerateLabel', $this->requestParams);
     }
-    
+
     /**
      * @param Shipment|ShipmentInterface $shipment
      * @param int                        $currentShipmentNumber
@@ -113,19 +113,19 @@ class Labelling extends AbstractEndpoint
     {
         $storeId = $shipment->getShipment()->getStoreId();
         $this->soap->updateApiKey($storeId);
-        $this->customer->setStoreId($storeId);
-        
+        $this->customer->changeCustomerStoreId($storeId);
+
         $barcode     = $shipment->getMainBarcode();
         $printerType = ['Printertype' => 'GraphicFile|PDF'];
         $message     = $this->message->get($barcode, $printerType);
-        
+
         $this->requestParams = [
             'Message'   => $message,
             'Customer'  => $this->customer->get(),
             'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
     }
-    
+
     /**
      * @return string
      */

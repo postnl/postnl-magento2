@@ -35,7 +35,6 @@ namespace TIG\PostNL\Model;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
-use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
@@ -53,10 +52,8 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 /**
  * Too much public methods, and too much code. We can't get this file to pass the (Object Calistenics) code inspection.
  */
-class Shipment extends AbstractModel implements ShipmentInterface, IdentityInterface
+class Shipment extends AbstractModel implements ShipmentInterface
 {
-    const CACHE_TAG                  = 'tig_postnl_shipment';
-
     const FIELD_SHIPMENT_ID          = 'shipment_id';
 
     const FIELD_ORDER_ID             = 'order_id';
@@ -94,6 +91,8 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     const FIELD_DOWNPARTNER_LOCATION = 'downpartner_location';
 
     const FIELD_DOWNPARTNER_BARCODE  = 'downpartner_barcode';
+
+    const FIELD_RETURN_BARCODE = 'return_barcode';
 
     /**
      * @var string
@@ -190,14 +189,6 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     {
         // @codingStandardsIgnoreLine
         $this->_init('TIG\PostNL\Model\ResourceModel\Shipment');
-    }
-
-    /**
-     * @return array
-     */
-    public function getIdentities()
-    {
-        return [self::CACHE_TAG . '_' . $this->getId()];
     }
 
     /**
@@ -394,7 +385,23 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
             return $this->getMainBarcode();
         }
 
-        $barcode = $this->barcodeRepository->getForShipment($this, $currentShipmentNumber);
+        $barcode = $this->barcodeRepository->getForShipment($this, $currentShipmentNumber, $type = 'shipment');
+
+        if (!$barcode) {
+            return null;
+        }
+
+        return $barcode->getValue();
+    }
+
+    /**
+     * @param int $currentShipmentNumber
+     *
+     * @return string|null
+     */
+    public function getReturnBarcodes($currentShipmentNumber = 1)
+    {
+        $barcode = $this->barcodeRepository->getForShipment($this, $currentShipmentNumber, $type = 'return');
 
         if (!$barcode) {
             return null;
@@ -742,6 +749,34 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
     /**
      * @return bool
      */
+    public function isBuspakjeShipment()
+    {
+        $productCodeOptions = $this->getProductCodeOptions();
+
+        if ($productCodeOptions == null) {
+            return false;
+        }
+
+        return $productCodeOptions['group'] == 'buspakje_options';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDomesticShipment()
+    {
+        $productCodeOptions = $this->getProductCodeOptions();
+
+        if ($productCodeOptions == null) {
+            return false;
+        }
+
+        return $productCodeOptions['group'] == 'standard_options';
+    }
+
+    /**
+     * @return bool
+     */
     public function isIDCheck()
     {
         $productCodeOptions = $this->getProductCodeOptions();
@@ -887,5 +922,23 @@ class Shipment extends AbstractModel implements ShipmentInterface, IdentityInter
          */
         // @codingStandardsIgnoreLine
         return new \DateTime($deliveryDate);
+    }
+
+    /**
+     * @param string
+     *
+     * @return $this
+     */
+    public function setReturnBarcode($value)
+    {
+        return $this->setData(static::FIELD_RETURN_BARCODE, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getReturnBarcode()
+    {
+        return $this->getData(static::FIELD_RETURN_BARCODE);
     }
 }

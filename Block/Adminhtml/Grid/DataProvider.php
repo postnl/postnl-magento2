@@ -111,7 +111,10 @@ class DataProvider extends Template implements BlockInterface
 
         $options = [];
         foreach ($supportedTypes as $key => $option) {
-            $options[] = ['value' => (string) $key, 'text' => $option['label']];
+            $options[] = [
+                'value' => (string) $key,
+                'text' => __($option['label'])
+            ];
         }
 
         return \Zend_Json::encode($options);

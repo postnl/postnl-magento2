@@ -92,7 +92,7 @@ abstract class OptionsAbstract
             'statedAddressOnly'    => true,
             'isBelgiumOnly'        => false,
             'countryLimitation'    => 'NL',
-            'group'                => 'standard_options',
+            'group'                => 'only_stated_address_options',
         ],
         '3389' => [
             'value'                => '3389',
@@ -115,7 +115,7 @@ abstract class OptionsAbstract
             'statedAddressOnly'    => true,
             'isBelgiumOnly'        => false,
             'countryLimitation'    => 'NL',
-            'group'                => 'standard_options',
+            'group'                => 'only_stated_address_options',
         ],
         '3090' => [
             'value'                => '3090',
@@ -137,7 +137,7 @@ abstract class OptionsAbstract
             'isSameDay'            => true,
             'statedAddressOnly'    => true,
             'countryLimitation'    => 'NL',
-            'group'                => 'standard_options',
+            'group'                => 'only_stated_address_options',
         ],
         // Pakjegemak Options
         '3534' => [
@@ -184,6 +184,30 @@ abstract class OptionsAbstract
             'pge'                  => true,
             'group'                => 'pakjegemak_options',
         ],
+        // BE Pakjegemak options
+        '4932' => [
+            'value'                => '4932',
+            'label'                => 'Post Office Belgium + Extra Cover',
+            'isExtraCover'         => true,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'pge'                  => false,
+            'group'                => 'pakjegemak_be_options',
+        ],
+        // should be re-activated around first of januari 2021 - POSTNLM2-775
+//        '4936' => [
+//            'value'                => '4936',
+//            'label'                => 'Post Office Belgium',
+//            'isExtraCover'         => false,
+//            'isExtraEarly'         => false,
+//            'isSunday'             => false,
+//            'isGuaranteedDelivery' => false,
+//            'countryLimitation'    => 'BE',
+//            'pge'                  => false,
+//            'group'                => 'pakjegemak_be_options',
+//        ],
         // EU Options
         '4952' => [
             'value'                => '4952',
@@ -642,6 +666,7 @@ abstract class OptionsAbstract
     protected $groups = [
 	    'standard_options'            => 'Domestic options',
 	    'pakjegemak_options'          => 'Post Office options',
+	    'pakjegemak_be_options'       => 'Post Office BE options',
 	    'eu_options'                  => 'EU options',
 	    'global_options'              => 'Global options',
 	    'buspakje_options'            => 'Letter Box Parcel options',
@@ -650,12 +675,14 @@ abstract class OptionsAbstract
 	    'id_check_pakjegemak_options' => 'ID Check Post Office options',
 	    'cargo_options'               => 'Cargo options',
 	    'eps_package_options'         => 'Package options',
-	    'priority_options'            => 'Priority EPS'
+	    'priority_options'            => 'Priority EPS',
+        'only_stated_address_options' => 'Only Stated Address options'
     ];
 
 	protected $groupToLabel = [
 		'standard_options'            => 'Domestic',
 		'pakjegemak_options'          => 'Post Office',
+		'pakjegemak_be_options'       => 'Post Office Belgium',
 		'eu_options'                  => 'EPS',
 		'global_options'              => 'Global Pack',
 		'buspakje_options'            => 'Letter Box',
@@ -664,18 +691,20 @@ abstract class OptionsAbstract
 		'id_check_pakjegemak_options' => 'ID Check Post Office',
 		'cargo_options'               => 'Cargo',
 		'eps_package_options'         => 'Package',
-		'priority_options'            => 'Priority (EPS / Globalpack)'
+		'priority_options'            => 'Priority (EPS / Globalpack)',
+        'only_stated_address_options' => 'Delivery to stated address only'
     ];
 
     protected $typeToComment = [
-        'Daytime'     => '',
-        'Evening'     => 'Evening',
-        'ExtraAtHome' => '',
-        'Extra@Home'  => '',
-        'Sunday'      => 'Sunday',
-        'PG'          => '',
-        'EPS'         => '',
-        'GP'          => '',
+        'Daytime'           => '',
+        'Evening'           => 'Evening',
+        'ExtraAtHome'       => '',
+        'Extra@Home'        => '',
+        'Sunday'            => 'Sunday',
+        'PG'                => '',
+        'EPS'               => '',
+        'GP'                => '',
+        'Letterbox Package' => '',
     ];
 
     /**

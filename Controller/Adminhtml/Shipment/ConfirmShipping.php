@@ -98,16 +98,7 @@ class ConfirmShipping extends Action
     public function execute()
     {
         $shipmentId = $this->getRequest()->getParam('shipment_id');
-
-        $this->setRequestData($shipmentId);
-        $this->confirm();
-        $this->setConfirmedAt($shipmentId);
-        $this->setTrack($shipmentId);
-
-        $this->messageManager->addSuccessMessage(
-        // @codingStandardsIgnoreLine
-            __('Shipment successfully confirmed')->getText()
-        );
+        $this->confirm($shipmentId);
 
         $resultDirect = $this->resultRedirectFactory->create();
         return $resultDirect->setPath('sales/shipment/view', ['shipment_id' => $shipmentId]);
@@ -116,10 +107,18 @@ class ConfirmShipping extends Action
     /**
      * @return \Magento\Framework\App\ResponseInterface|mixed|\stdClass
      */
-    private function confirm()
+    private function confirm($shipmentId)
     {
         try {
-            return $this->confirming->call();
+            $this->updateRequestData($shipmentId);
+            $this->confirming->call();
+            $this->updateConfirmedAt($shipmentId);
+            $this->insertTrack($shipmentId);
+
+            $this->messageManager->addSuccessMessage(
+            // @codingStandardsIgnoreLine
+                __('Shipment successfully confirmed')->getText()
+            );
         } catch (Exception $exception) {
             $this->messageManager->addErrorMessage(
             // @codingStandardsIgnoreLine
@@ -133,7 +132,8 @@ class ConfirmShipping extends Action
      * @param int $shipmentId
      *
      */
-    private function setRequestData($shipmentId)
+    // @codingStandardsIgnoreLine
+    private function updateRequestData($shipmentId)
     {
         $postNLShipment = $this->postnlShipmentRepository->getByShipmentId($shipmentId);
         $this->confirming->setParameters($postNLShipment);
@@ -142,7 +142,7 @@ class ConfirmShipping extends Action
     /**
      * @param $shipmentId
      */
-    private function setConfirmedAt($shipmentId)
+    private function updateConfirmedAt($shipmentId)
     {
         $postNLShipment = $this->postnlShipmentRepository->getByShipmentId($shipmentId);
         $postNLShipment->setConfirmedAt($this->helper->getDate());
@@ -153,7 +153,7 @@ class ConfirmShipping extends Action
     /**
      * @param int $shipmentId
      */
-    private function setTrack($shipmentId)
+    private function insertTrack($shipmentId)
     {
         $shipment = $this->shipmentRepository->get($shipmentId);
         if (!$shipment->getTracks()) {

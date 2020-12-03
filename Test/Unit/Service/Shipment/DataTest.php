@@ -33,6 +33,7 @@ namespace TIG\PostNL\Test\Unit\Service\Shipment;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
+use TIG\PostNL\Model\Order;
 use TIG\PostNL\Service\Shipment\Data;
 use TIG\PostNL\Service\Shipment\ProductOptions;
 use TIG\PostNL\Test\TestCase;
@@ -191,15 +192,17 @@ class DataTest extends TestCase
             'DownPartnerID'            => '12345',
             'DownPartnerLocation'      => '112345',
             'ProductCodeDelivery'      => '3085',
-            'Reference'                => '0000000012'
+            'ReturnBarcode'            => null,
+            'Reference'                => '0000000012',
         ];
 
         $this->mockFunction($this->shipmentMock, 'getMainBarcode', $shipmentData['Barcode']);
         $this->mockFunction($this->shipmentMock, 'getTotalWeight', $shipmentData['Dimension']['Weight']);
-        $this->mockFunction($this->shipmentMock, 'getDeliveryDateFormatted', $shipmentData['DeliveryDate']);
+        $this->mockFunction($this->shipmentMock, 'getDeliveryDate', $shipmentData['DeliveryDate']);
         $this->mockFunction($this->shipmentMock, 'getDownpartnerId', $shipmentData['DownPartnerID']);
         $this->mockFunction($this->shipmentMock, 'getDownpartnerLocation', $shipmentData['DownPartnerLocation']);
         $this->mockFunction($this->shipmentMock, 'getProductCode', $shipmentData['ProductCodeDelivery']);
+        $this->mockFunction($this->shipmentMock, 'getReturnBarcodes', $shipmentData['ReturnBarcode']);
 
         $this->mockFunction($this->packingslipOptionsMock, 'getReference', $shipmentData['Reference']);
 
@@ -215,6 +218,9 @@ class DataTest extends TestCase
     {
         $productOptions = $this->getFakeMock(ProductOptions::class, true);
         $this->mockFunction($productOptions, 'get', $response);
+        $orderMock = $this->getFakeMock(Order::class, true);
+        $this->mockFunction($orderMock, 'getDeliveryDate', null);
+        $this->mockFunction($this->shipmentMock, 'getPostNLOrder', $orderMock);
 
         $address = $this->getAddress();
         $contact = $this->getContact();
@@ -232,6 +238,9 @@ class DataTest extends TestCase
     {
         $this->mockFunction($this->shipmentMock, 'isExtraCover', !!$amount);
         $this->mockFunction($this->shipmentMock, 'getExtraCoverAmount', $amount);
+        $orderMock = $this->getFakeMock(Order::class, true);
+        $this->mockFunction($orderMock, 'getDeliveryDate', null);
+        $this->mockFunction($this->shipmentMock, 'getPostNLOrder', $orderMock);
 
         $address = $this->getAddress();
         $contact = $this->getContact();
@@ -254,6 +263,9 @@ class DataTest extends TestCase
         $address = $this->getAddress();
         $contact = $this->getContact();
         $this->mockFunction($this->shipmentMock, 'getParcelCount', $count);
+        $orderMock = $this->getFakeMock(Order::class, true);
+        $this->mockFunction($orderMock, 'getDeliveryDate', null);
+        $this->mockFunction($this->shipmentMock, 'getPostNLOrder', $orderMock);
 
         /** @var Data $instance */
         $instance = $this->getInstance();

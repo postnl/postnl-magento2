@@ -109,11 +109,11 @@ class CreatePostNLOrder implements ObserverInterface
             $postnlOrder = $this->orderRepository->create();
         }
 
-        $this->setProductCode($postnlOrder, $magentoOrder);
+        $this->updateProductCode($postnlOrder, $magentoOrder);
         $postnlOrder->setData('order_id', $magentoOrder->getId());
         $postnlOrder->setData('quote_id', $magentoOrder->getQuoteId());
-
-        $postnlOrder->setData('parcel_count', $this->parcelCount->get($magentoOrder));
+        $parcelCount = $this->parcelCount->get($magentoOrder);
+        $postnlOrder->setData('parcel_count', $parcelCount > 0 ? $parcelCount : 1);
 
         $this->orderRepository->save($postnlOrder);
     }
@@ -174,7 +174,7 @@ class CreatePostNLOrder implements ObserverInterface
      * @param $postnlOrder
      * @param $magentoOrder
      */
-    private function setProductCode(OrderInterface $postnlOrder, MagentoOrder $magentoOrder)
+    private function updateProductCode(OrderInterface $postnlOrder, MagentoOrder $magentoOrder)
     {
         /**
          * If the product code is not set by the user then calculate it and save it also. It is possible that it is not

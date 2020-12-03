@@ -38,7 +38,7 @@ use TIG\PostNL\Config\Provider\PostNLConfiguration;
 
 class SupportTab extends Template implements RendererInterface
 {
-    const POSTNL_VERSION = '1.8.1';
+    const POSTNL_VERSION = '1.9.5';
 
     const XPATH_SUPPORTED_MAGENTO_VERSION = 'tig_postnl/supported_magento_version';
 
@@ -109,5 +109,10 @@ class SupportTab extends Template implements RendererInterface
         }
 
         return ' - ' . ucfirst($stability);
+    }
+
+    public function forBusinessUrl()
+    {
+        return __('https://www.postnl.nl/zakelijke-oplossingen/webwinkels/bezorgopties-voor-mijn-klanten/');
     }
 }

@@ -44,44 +44,61 @@ class OrderParams
         'quote_id'                     => [
             'pickup'   => true,
             'delivery' => true,
-            'fallback' => false
+            'fallback' => false,
+            'EPS'      => false,
+            'GP'       => false
         ],
         'delivery_date'                => [
             'pickup'   => true,
             'delivery' => true,
-            'fallback' => true
+            'fallback' => false,
+            'EPS'      => false,
+            'GP'       => false
         ],
         'expected_delivery_time_start' => [
             'pickup'   => false,
             'delivery' => true,
-            'fallback' => false
+            'fallback' => false,
+            'EPS'      => false,
+            'GP'       => false
         ],
         'expected_delivery_time_end'   => [
             'pickup'   => false,
             'delivery' => true,
-            'fallback' => false
+            'fallback' => false,
+            'EPS'      => false,
+            'GP'       => false
         ],
         'is_pakjegemak'                => [
             'pickup'   => true,
             'delivery' => false,
-            'fallback' => false
+            'fallback' => false,
+            'EPS'      => false,
+            'GP'       => false
         ],
         'pg_location_code'             => [
             'pickup'   => true,
             'delivery' => false,
-            'fallback' => false
+            'fallback' => false,
+            'EPS'      => false,
+            'GP'       => false
         ],
         'pg_retail_network_id'         => [
             'pickup'   => true,
             'delivery' => false,
-            'fallback' => false
+            'fallback' => false,
+            'EPS'      => false,
+            'GP'       => false
         ],
         'pg_address'                   => [
             'pickup'   => true,
             'delivery' => false,
-            'fallback' => false
-        ]
+            'fallback' => false,
+            'EPS'      => false,
+            'GP'       => false
+        ],
     ];
+
     /**
      * @var FeeCalculator
      */
@@ -96,7 +113,7 @@ class OrderParams
      * @var ProductOptions
      */
     private $productOptions;
-    
+
     /**
      * @param FeeCalculator  $feeCalculator
      * @param ProductInfo    $productInfo
@@ -111,7 +128,7 @@ class OrderParams
         $this->productInfo    = $productInfo;
         $this->productOptions = $productOptions;
     }
-    
+
     /**
      * @param $params
      *
@@ -124,17 +141,17 @@ class OrderParams
         $params              = $this->formatParamData($params);
         $params              = array_merge($params, $this->getAcInformation($params));
         $requiredOrderParams = $this->requiredOrderParamsMissing($type, $params);
-        
+
         if (!empty($requiredOrderParams)) {
             throw new PostnlException(
             // @todo POSTNL-XXX toevoegen
                 __('Missing required parameters: %1', implode(', ', $requiredOrderParams))
             );
         }
-        
+
         return $params;
     }
-    
+
     /**
      * @param string $type
      * @param array  $params
@@ -144,16 +161,16 @@ class OrderParams
     private function requiredOrderParamsMissing($type, $params)
     {
         $requiredList = $this->setRequiredList($type);
-        
+
         $missing = array_filter($requiredList, function ($value, $key) use ($params) {
             $paramValue = isset($params[$key]) && !empty($params[$key]) ? $params[$key] : false;
-            
+
             return !$paramValue && true == $value;
         }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
-        
+
         return array_keys($missing);
     }
-    
+
     /**
      * @param $type
      *
@@ -165,10 +182,10 @@ class OrderParams
         foreach ($this->optionParams as $key => $value) {
             $list[$key] = $value[$type];
         }
-        
+
         return $list;
     }
-    
+
     /**
      * If you want to store the param inside the tig_postnl_order table,
      * you need to give the keys the same name as the column names.
@@ -180,9 +197,18 @@ class OrderParams
      */
     private function formatParamData($params)
     {
-        $option      = isset($params['option']) ? $params['option'] : 'Daytime';
-        $productInfo = $this->productInfo->get($params['type'], $option, $params['country']);
-        
+        $option = isset($params['option']) ? $params['option'] : 'Daytime';
+
+        if (!isset($params['option']) && $params['type'] === 'EPS') {
+            $option = $params['type'];
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'GP') {
+            $option = $params['type'];
+        }
+
+        $productInfo = $this->productInfo->get($params['type'], $option, $params['address']);
+
         return [
             'quote_id'                     => isset($params['quote_id']) ? $params['quote_id'] : '',
             'delivery_date'                => isset($params['date']) ? $params['date'] : '',
@@ -194,11 +220,12 @@ class OrderParams
             'pg_address'                   => $this->addExtraToAddress($params),
             'type'                         => $option,
             'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : '',
-            'fee'                          => $this->feeCalculator->get($params),
+            'fee'                          => $this->feeCalculator->get($params) + $this->feeCalculator->statedAddressOnlyFee($params),
             'product_code'                 => $productInfo['code'],
+            'stated_address_only'          => isset($params['stated_address_only']) ? $params['stated_address_only'] : false,
         ];
     }
-    
+
     /**
      * Get the AgentCodes for specific type consignments
      *
@@ -214,13 +241,13 @@ class OrderParams
         if (!$acOptions) {
             return [];
         }
-        
+
         return [
             'ac_characteristic' => $acOptions['Characteristic'],
             'ac_option'         => $acOptions['Option']
         ];
     }
-    
+
     /**
      * @param $params
      *
@@ -232,21 +259,25 @@ class OrderParams
         if (!isset($params['address'])) {
             return false;
         }
-        
+
         if ($params['type'] == 'fallback') {
             $params['customerData'] = $params['address'];
         }
-        
+
         $params['address']['Name'] = isset($params['name']) ? $params['name'] : '';
-        
+
         if ($params['type'] == ProductInfo::TYPE_PICKUP && !isset($params['customerData'])) {
             throw new PostnlException(
                 __('Missing required parameters: customerData')
             );
         }
-        
+
+        if ($params['type'] !== ProductInfo::TYPE_PICKUP) {
+            return false;
+        }
+
         $params['address']['customer'] = isset($params['customerData']) ? $params['customerData'] : $params['address'];
-        
+
         return $params['address'];
     }
 }

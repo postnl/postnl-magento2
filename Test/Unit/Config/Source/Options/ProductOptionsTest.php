@@ -41,6 +41,7 @@ class ProductOptionsTest extends TestCase
     protected $groups = [
         'standard_options'              => 'Domestic options',
         'pakjegemak_options'            => 'Post Office options',
+        'pakjegemak_be_options'         => 'Post Office Belgium options',
         'eu_options'                    => 'EU options',
         'global_options'                => 'Global options',
         'buspakje_options'              => 'Letter Box Parcel options',
@@ -111,6 +112,7 @@ class ProductOptionsTest extends TestCase
         return [
             [$this->groups, ['Domestic options',
                              'Post Office options',
+                             'Post Office Belgium options',
                              'EU options',
                              'Global options',
                              'Letter Box Parcel options',
@@ -173,8 +175,8 @@ class ProductOptionsTest extends TestCase
     {
         return [
             ['3085', 'Daytime', ['label' => 'Domestic', 'type' => '', 'comment' => 'Standard shipment']],
-            ['3089', 'Daytime', ['label' => 'Domestic', 'type' => '', 'comment' => 'Signature on delivery + Delivery to stated address only']],
-            ['3089', 'Evening', ['label' => 'Domestic', 'type' => 'Evening', 'comment' => 'Signature on delivery + Delivery to stated address only']],
+            ['3089', 'Daytime', ['label' => 'Delivery to stated address only', 'type' => '', 'comment' => 'Signature on delivery + Delivery to stated address only']],
+            ['3089', 'Evening', ['label' => 'Delivery to stated address only', 'type' => 'Evening', 'comment' => 'Signature on delivery + Delivery to stated address only']],
             ['3534', 'PG',      ['label' => 'Post Office', 'type' => '', 'comment' => 'Post Office + Extra Cover']],
             ['4952', 'Daytime', ['label' => 'EPS', 'type' => '', 'comment' => 'EU Pack Special Consumer']],
             ['4945', 'Daytime', ['label' => 'Global Pack', 'type' => '', 'comment' => 'GlobalPack']],

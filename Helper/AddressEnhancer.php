@@ -38,9 +38,9 @@ use TIG\PostNL\Config\Provider\Webshop as Config;
 class AddressEnhancer
 {
     // @codingStandardsIgnoreLine
-    const STREET_SPLIT_NAME_FROM_NUMBER = '/^(?P<street>\d*[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\-\.]+)[,\s]+(?P<number>\d+)\s*(?P<addition>[\wäöüß\d\-\/]*)$/i';
+    const STREET_SPLIT_NAME_FROM_NUMBER = '/^(?P<street>\d*[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\‘\`\-\.]+)[,\s]+(?P<number>\d+)\s*(?P<addition>[\wäöüß\d\-\/]*)$/i';
     // @codingStandardsIgnoreLine
-    const STREET_SPLIT_NUMBER_FROM_NAME = '/^(?P<number>\d+)\s*(?P<street>[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\-\.]*)$/i';
+    const STREET_SPLIT_NUMBER_FROM_NAME = '/^(?P<number>\d+)\s*(?P<street>[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\‘\`\-\.]*)$/i';
 
     /** @var Config $config */
     private $config;
@@ -69,8 +69,16 @@ class AddressEnhancer
     {
         $this->address = $address;
 
-        if (!$this->config->getIsAddressCheckEnabled()) {
+        if (!$this->config->getIsAddressCheckEnabled() ||
+            // If an address is parsed as a 1-liner, we still have to extract the housenumber
+            !is_array($address['street']) ||
+            !isset($address['street'][1])
+        ) {
             $this->address = $this->appendHouseNumber($address);
+        }
+
+        if (empty($this->address['housenumber']) && isset($this->address['street'][1])) {
+            $this->address['housenumber'] = $this->address['street'][1];
         }
     }
 
@@ -162,6 +170,7 @@ class AddressEnhancer
     // @codingStandardsIgnoreLine
     protected function extractIndividual($address, $result)
     {
+        // @codingStandardsIgnoreLine
         if (count($address['street']) == 3) {
             $result['street']     = $address['street'][0];
             $result['number']     = $address['street'][1];
@@ -170,11 +179,11 @@ class AddressEnhancer
             $address['street'][2] = '';
             unset($result['error']);
         }
-
+        // @codingStandardsIgnoreLine
         if (count($address['street']) == 2) {
             $tmpAddress           = $this->extractHousenumber(['street' => [$address['street'][0]]]);
             $result['street']     = $address['street'][0];
-            $result['number']     = $tmpAddress['housenumber'];
+            $result['number']     = isset($tmpAddress['housenumber']) ? $tmpAddress['housenumber'] : null;
             $result['addition']   = $address['street'][1];
             $address['street'][1] = '';
             unset($result['error']);

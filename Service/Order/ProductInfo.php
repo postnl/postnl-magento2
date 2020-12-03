@@ -50,20 +50,41 @@ class ProductInfo
     /** @var string */
     private $type = null;
 
-    const TYPE_PICKUP               = 'pickup';
-    const TYPE_DELIVERY             = 'delivery';
-    const OPTION_PG                 = 'pg';
-    const OPTION_SUNDAY             = 'sunday';
-    const OPTION_DAYTIME            = 'daytime';
-    const OPTION_EVENING            = 'evening';
-    const OPTION_EXTRAATHOME        = 'extra@home';
-    const SHIPMENT_TYPE_PG          = 'PG';
-    const SHIPMENT_TYPE_EPS         = 'EPS';
-    const SHIPMENT_TYPE_GP          = 'GP';
-    const SHIPMENT_TYPE_SUNDAY      = 'Sunday';
-    const SHIPMENT_TYPE_EVENING     = 'Evening';
-    const SHIPMENT_TYPE_DAYTIME     = 'Daytime';
-    const SHIPMENT_TYPE_EXTRAATHOME = 'Extra@Home';
+    const TYPE_PICKUP                     = 'pickup';
+
+    const TYPE_DELIVERY                   = 'delivery';
+
+    const OPTION_PG                       = 'pg';
+
+    const OPTION_PGE                      = 'pge';
+
+    const OPTION_SUNDAY                   = 'sunday';
+
+    const OPTION_DAYTIME                  = 'daytime';
+
+    const OPTION_EVENING                  = 'evening';
+
+    const OPTION_EXTRAATHOME              = 'extra@home';
+
+    const OPTION_LETTERBOX_PACKAGE        = 'letterbox_package';
+
+    const SHIPMENT_TYPE_PG                = 'PG';
+
+    const SHIPMENT_TYPE_PGE               = 'PGE';
+
+    const SHIPMENT_TYPE_EPS               = 'EPS';
+
+    const SHIPMENT_TYPE_GP                = 'GP';
+
+    const SHIPMENT_TYPE_SUNDAY            = 'Sunday';
+
+    const SHIPMENT_TYPE_EVENING           = 'Evening';
+
+    const SHIPMENT_TYPE_DAYTIME           = 'Daytime';
+
+    const SHIPMENT_TYPE_EXTRAATHOME       = 'Extra@Home';
+
+    const SHIPMENT_TYPE_LETTERBOX_PACKAGE = 'Letterbox Package';
 
     /** @var ProductOptionsConfiguration */
     private $productOptionsConfiguration;
@@ -73,6 +94,10 @@ class ProductInfo
 
     /** @var QuoteInterface */
     private $quote;
+    /**
+     * @var ProductOptionsFinder
+     */
+    private $productOptions;
 
     /**
      * @param ProductOptionsConfiguration $productOptionsConfiguration
@@ -104,8 +129,9 @@ class ProductInfo
         $type    = strtolower($type);
         $option  = strtolower($option);
 
+        // Check if the country is not an ESP country or BE/NL and if it is Global Pack
         if (!in_array($country, EpsCountries::ALL)
-            && !in_array($country, ['BE', 'NL'])) {
+            && !in_array($country, ['BE', 'NL']) || $type === strtolower(static::SHIPMENT_TYPE_GP)) {
             $this->setGlobalPackOption($country);
 
             return $this->getInfo();
@@ -113,14 +139,14 @@ class ProductInfo
 
         // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
         if ((empty($type) || $option == static::OPTION_DAYTIME)
-            && !in_array($country, ['BE', 'NL'])) {
+            && !in_array($country, ['BE', 'NL']) || $type === strtolower(static::SHIPMENT_TYPE_EPS)) {
             $this->setEpsOption($address, $country);
 
             return $this->getInfo();
         }
 
         if ($type == static::TYPE_PICKUP) {
-            $this->setPakjegemakProductOption();
+            $this->setPakjegemakProductOption($option, $country);
 
             return $this->getInfo();
         }
@@ -147,6 +173,14 @@ class ProductInfo
          */
         if (is_string($address)) {
             return $address;
+        }
+
+        if (is_array($address) && isset($address['Countrycode'])) {
+            return $address['Countrycode'];
+        }
+
+        if (is_array($address) && isset($address['country'])) {
+            return $address['country'];
         }
 
         $address = $this->quote->getShippingAddress();
@@ -179,7 +213,7 @@ class ProductInfo
     }
 
     /**
-     * Malta, Cyprus, Serbia and Croatia are Global Pack countries and EU PEPS countries. That's why
+     * It's possible that a country is not considered EPS, but does fall in the EU PEPS country list. That's why
      * we need a method specifically to switch back to PEPS if it is enabled for EPS.
      *
      * @param null $country
@@ -240,10 +274,28 @@ class ProductInfo
         return $this->productOptionsConfiguration->checkProductByFlags($code, 'group', 'priority_options');
     }
 
-    private function setPakjegemakProductOption()
+    /**
+     * @param string $option
+     * @param null $country
+     */
+    private function setPakjegemakProductOption($option, $country = 'NL')
     {
-        $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
+        if ($option == static::OPTION_PGE) {
+            $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakEarlyProductOption();
+            $this->type = static::SHIPMENT_TYPE_PGE;
+
+            return;
+        }
+
         $this->type = static::SHIPMENT_TYPE_PG;
+
+        if ($country === 'BE') {
+            $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakBeProductOption();
+
+            return;
+        }
+
+        $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
     }
 
     /**
@@ -259,20 +311,24 @@ class ProductInfo
                 $this->code = $this->productOptionsConfiguration->getDefaultEveningProductOption($country);
                 $this->type = static::SHIPMENT_TYPE_EVENING;
 
-                return;
+                break;
             case static::OPTION_SUNDAY:
                 $this->code = $this->productOptionsConfiguration->getDefaultSundayProductOption();
                 $this->type = static::SHIPMENT_TYPE_SUNDAY;
 
-                return;
+                break;
             case static::OPTION_EXTRAATHOME:
                 $this->code = $this->productOptionsConfiguration->getDefaultExtraAtHomeProductOption();
                 $this->type = static::SHIPMENT_TYPE_EXTRAATHOME;
 
-                return;
-        }
+                break;
+            case static::OPTION_LETTERBOX_PACKAGE:
+                $this->code = $this->productOptionsConfiguration->getDefaultLetterboxPackageProductOption();
+                $this->type = static::SHIPMENT_TYPE_LETTERBOX_PACKAGE;
 
-        $this->setDefaultProductOption($country);
+                break;
+            default: $this->setDefaultProductOption($country);
+        }
     }
 
     /**
@@ -280,13 +336,16 @@ class ProductInfo
      */
     private function setDefaultProductOption($country)
     {
-        $this->type = static::SHIPMENT_TYPE_DAYTIME;
+        $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
         if ($country == 'BE') {
             $this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
-            return;
         }
 
-        $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
+        $this->type = static::SHIPMENT_TYPE_DAYTIME;
+
+        if ($country != 'NL') {
+            return;
+        }
 
         /** @var Quote $magentoQuote */
         $magentoQuote         = $this->quote->getQuote();

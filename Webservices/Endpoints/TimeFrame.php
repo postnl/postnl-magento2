@@ -80,7 +80,7 @@ class TimeFrame extends AbstractEndpoint
      * @var Options
      */
     private $timeframeOptions;
-    
+
     /**
      * TimeFrame constructor.
      *
@@ -104,12 +104,12 @@ class TimeFrame extends AbstractEndpoint
         $this->timerFramesParser = $timerFramesParser;
         $this->postNLhelper = $postNLhelper;
         $this->timeframeOptions = $timeframeOptions;
-        
+
         parent::__construct(
             $shipmentData
         );
     }
-    
+
     /**
      * @param bool $parseTimeFrames
      *
@@ -143,7 +143,7 @@ class TimeFrame extends AbstractEndpoint
      * @param $startDate
      *
      */
-    public function setParameters($address, $startDate)
+    public function fillParameters($address, $startDate)
     {
         $this->requestParams = [
             'Timeframe' => [
@@ -188,7 +188,7 @@ class TimeFrame extends AbstractEndpoint
     /**
      * @param int $storeId
      */
-    public function setStoreId($storeId)
+    public function updateApiKey($storeId)
     {
         $this->soap->updateApiKey($storeId);
     }

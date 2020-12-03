@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
+use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Backend\App\Action\Context;
@@ -93,13 +94,11 @@ class MassPrintShippingLabel extends LabelAbstract
      * Dispatch request
      *
      * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
-     * @throws \Magento\Framework\Exception\NotFoundException
+     * @throws \Zend_Pdf_Exception
      */
     public function execute()
     {
-        $collection = $this->collectionFactory->create();
-        $collection = $this->filter->getCollection($collection);
-        $this->loadLabels($collection);
+        $this->loadLabels();
 
         if (empty($this->labels)) {
             $this->messageManager->addErrorMessage(
@@ -114,16 +113,41 @@ class MassPrintShippingLabel extends LabelAbstract
     }
 
     /**
-     * @param $collection
+     * Load the labels for the shipments
      */
-    private function loadLabels($collection)
+    private function loadLabels()
     {
-        /** @var Shipment $shipment */
-        foreach ($collection as $shipment) {
-            $address = $shipment->getShippingAddress();
-            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
-            $this->setTracks($shipment);
-            $this->setLabel($shipment->getId());
+        $collection = $this->collectionFactory->create();
+
+        try {
+            $collection = $this->filter->getCollection($collection);
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addWarningMessage($exception->getMessage());
+            return;
         }
+
+        foreach ($collection as $shipment) {
+            $this->loadLabel($shipment);
+        }
+    }
+
+    /**
+     * @param Shipment $shipment
+     */
+    private function loadLabel($shipment)
+    {
+        $address = $shipment->getShippingAddress();
+
+        try {
+            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addErrorMessage(
+                __('[POSTNL-0070] - Unable to generate barcode for shipment #%1', $shipment->getIncrementId())
+            );
+            return;
+        }
+
+        $this->setTracks($shipment);
+        $this->setLabel($shipment->getId());
     }
 }

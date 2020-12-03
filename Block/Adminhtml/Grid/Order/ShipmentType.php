@@ -37,6 +37,7 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use TIG\PostNL\Api\OrderRepositoryInterface;
 use TIG\PostNL\Block\Adminhtml\Renderer\ShipmentType as Renderer;
+use TIG\PostNL\Service\Shipping\LetterboxPackage;
 
 class ShipmentType extends AbstractGrid
 {
@@ -51,18 +52,25 @@ class ShipmentType extends AbstractGrid
     private $shipmentType;
 
     /**
-     * @param ContextInterface         $context
-     * @param UiComponentFactory       $uiComponentFactory
-     * @param OrderRepositoryInterface $orderRepository
-     * @param Renderer                 $shipmentType
-     * @param array                    $components
-     * @param array                    $data
+     * @var LetterboxPackage
+     */
+    private $letterboxPackage;
+
+    /**
+     * @param ContextInterface              $context
+     * @param UiComponentFactory            $uiComponentFactory
+     * @param OrderRepositoryInterface      $orderRepository
+     * @param Renderer                      $shipmentType
+     * @param LetterboxPackage              $letterboxPackage
+     * @param array                         $components
+     * @param array                         $data
      */
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
         OrderRepositoryInterface $orderRepository,
         Renderer $shipmentType,
+        LetterboxPackage $letterboxPackage,
         array $components = [],
         array $data = []
     ) {
@@ -70,6 +78,7 @@ class ShipmentType extends AbstractGrid
 
         $this->orderRepository = $orderRepository;
         $this->shipmentType    = $shipmentType;
+        $this->letterboxPackage = $letterboxPackage;
     }
 
     /**
@@ -90,6 +99,15 @@ class ShipmentType extends AbstractGrid
             $output = $this->shipmentType->render($order->getProductCode(), $order->getType());
         }
 
-        return $output;
+        try {
+            if ($this->letterboxPackage->isPossibleLetterboxPackage($order)) {
+                $output = 'Domestic<br><em class="possible-letterbox"
+                       title="Standard shipment">Standard shipment (possible letterboxpackage)</em>';
+            }
+
+            return $output;
+        } catch (\Exception $exception) {
+            return $output;
+        }
     }
 }

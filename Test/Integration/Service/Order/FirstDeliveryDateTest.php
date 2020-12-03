@@ -59,6 +59,10 @@ class FirstDeliveryDateTest extends TestCase
         $call = $endpoint->method('call');
         $call->willReturn((object)['DeliveryDate' => '2016-11-19']);
 
+        $shippingConfig = $this->getFakeMock(\ TIG\PostNL\Config\Provider\ShippingOptions::class, true);
+        $isDeliverydaysActive = $shippingConfig->method('isDeliverydaysActive');
+        $isDeliverydaysActive->willReturn(true);
+
         $address = $this->getObject(\Magento\Quote\Model\Quote\Address::class);
         $address->setCountryId('NL');
 
@@ -68,7 +72,7 @@ class FirstDeliveryDateTest extends TestCase
         $getShippingAddress->willReturn($address);
 
         $order = $this->getOrder();
-        $this->getInstance(['quote' => $quote, 'endpoint' => $endpoint])->set($order);
+        $this->getInstance(['quote' => $quote, 'endpoint' => $endpoint, 'shippingConfig' => $shippingConfig])->set($order);
 
         $this->assertEquals('2016-11-19', $order->getDeliveryDate());
     }

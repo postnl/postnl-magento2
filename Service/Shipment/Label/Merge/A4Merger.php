@@ -89,9 +89,9 @@ class A4Merger extends AbstractMerger implements MergeInterface
         for ($pageNo = 1; $pageNo <= $count; $pageNo++) {
             $templateId   = $this->pdf->importPage($pageNo);
             $templateSize = $this->pdf->getTemplateSize($templateId);
-            $this->setCurrentLabelType($templateSize);
+            $this->changeCurrentLabelType($templateSize);
             $this->addPageToPdf($templateId, $templateSize, $count);
-            $this->setLastLabelType();
+            $this->lastLabelType = $this->currentLabelType;
         }
     }
 
@@ -106,7 +106,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
     {
         $orientation = $templateSize['width'] > $templateSize['height'] ? 'L' :'P';
 
-        if ($this->shouldAddNewPage($orientation) || $this->isNewLabelType()) {
+        if ($this->shouldAddNewPage($orientation)) {
             $this->labelCounter = $this->isNewLabelType() ? 1 : 0;
             $this->pdf->AddPage('P', 'A4');
         }
@@ -182,7 +182,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
     /**
      * @param $templateSize
      */
-    private function setCurrentLabelType($templateSize)
+    private function changeCurrentLabelType($templateSize)
     {
         if ($templateSize['width'] > 210 && $templateSize['height'] > 297) {
             // Globalpack
@@ -192,13 +192,5 @@ class A4Merger extends AbstractMerger implements MergeInterface
 
         //  Regular Label
         $this->currentLabelType = 'RL';
-    }
-
-    /**
-     * Register last label type
-     */
-    private function setLastLabelType()
-    {
-        $this->lastLabelType = $this->currentLabelType;
     }
 }

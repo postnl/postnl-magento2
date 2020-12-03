@@ -112,8 +112,8 @@ class Barcode implements ItemsInterface
             return $packingSlip;
         }
 
-        $this->setFileName();
-        $this->setBarcodeValue($shipment);
+        $this->getFileName();
+        $this->getBarcodeValue($shipment);
 
         // @codingStandardsIgnoreLine
         $pdf = new \Zend_Pdf();
@@ -181,7 +181,7 @@ class Barcode implements ItemsInterface
     /**
      * @param ShipmentInterface $shipment
      */
-    private function setBarcodeValue($shipment)
+    private function getBarcodeValue($shipment)
     {
         $this->barcodeValue = $shipment->getIncrementId();
         $valueType          = $this->barcodeSettings->getValue($this->storeId);
@@ -192,7 +192,7 @@ class Barcode implements ItemsInterface
         }
     }
 
-    private function setFileName()
+    private function getFileName()
     {
         $pathFile = $this->directoryList->getPath('var') . DIRECTORY_SEPARATOR . static::TMP_BARCODE_PATH;
         $this->ioFile->checkAndCreateFolder($pathFile);

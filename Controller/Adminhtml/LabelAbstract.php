@@ -122,7 +122,7 @@ abstract class LabelAbstract extends Action
         $labels = $this->getLabels->get($shipmentId);
 
         if (empty($labels)) {
-            return;
+            return $this->messageManager->addErrorMessage(__('[POSTNL-0070] - Unable to generate barcode for shipment #%1.', $shipmentId));
         }
 
         $this->labels = array_merge($this->labels, $labels);

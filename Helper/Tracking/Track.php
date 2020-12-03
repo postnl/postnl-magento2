@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Helper\Tracking;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use TIG\PostNL\Helper\AbstractTracking;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
@@ -43,7 +44,10 @@ use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Sales\Model\Order\ShipmentRepository;
+use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
+use TIG\PostNL\Service\Handler\BarcodeHandler;
 
+// @codingStandardsIgnoreFile
 class Track extends AbstractTracking
 {
     /**
@@ -66,16 +70,22 @@ class Track extends AbstractTracking
      */
     private $shipmentRepository;
 
+    /** @var BarcodeHandler */
+    private $barcodeHandler;
+
     /**
-     * @param Context                  $context
-     * @param ShipmentRepository       $shipmentRepository
-     * @param TrackFactory             $trackFactory
-     * @param PostNLShipmentRepository $postNLShipmentRepository
-     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
-     * @param StatusFactory            $statusFactory
-     * @param Mail                     $mail
-     * @param Webshop                  $webshop
-     * @param Log                      $logging
+     * @param Context                            $context
+     * @param ShipmentRepository                 $shipmentRepository
+     * @param TrackFactory                       $trackFactory
+     * @param PostNLShipmentRepository           $postNLShipmentRepository
+     * @param SearchCriteriaBuilder              $searchCriteriaBuilder
+     * @param StatusFactory                      $statusFactory
+     * @param Mail                               $mail
+     * @param Webshop                            $webshop
+     * @param Log                                $logging
+     * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
+     * @param BarcodeHandler                     $barcodeHandler
+     * @param ScopeConfigInterface               $scopeConfig
      */
     public function __construct(
         Context $context,
@@ -86,24 +96,32 @@ class Track extends AbstractTracking
         StatusFactory $statusFactory,
         Mail $mail,
         Webshop $webshop,
-        Log $logging
+        Log $logging,
+        ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface,
+        BarcodeHandler $barcodeHandler,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->trackFactory             = $trackFactory;
         $this->trackStatusFactory       = $statusFactory;
         $this->trackAndTraceEmail       = $mail;
         $this->shipmentRepository       = $shipmentRepository;
+        $this->barcodeHandler           = $barcodeHandler;
 
         parent::__construct(
             $context,
             $postNLShipmentRepository,
             $searchCriteriaBuilder,
             $webshop,
-            $logging
+            $logging,
+            $shipmentBarcodeRepositoryInterface,
+            $scopeConfig
         );
     }
 
     /**
      * @param Shipment|ShipmentInterface $shipment
+     *
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
     public function set($shipment)
     {
@@ -115,12 +133,21 @@ class Track extends AbstractTracking
         }
 
         $this->addTrackingNumbersToShipment($shipment, $trackingNumbers);
+
+        $postNLShipment = $this->getPostNLShipment($shipment->getId());
+        $shippingAddress = $shipment->getShippingAddress();
+
+        if ($this->barcodeHandler->canAddReturnBarcodes($shippingAddress->getCountryId(), $postNLShipment)) {
+            $this->addReturnTrackingNumbersToShipment($postNLShipment);
+        }
+
     }
 
     /**
      * @param $tracking
      *
      * @return \Magento\Shipping\Model\Tracking\Result
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function get($tracking)
     {
@@ -179,6 +206,34 @@ class Track extends AbstractTracking
     }
 
     /**
+     * @param $postNLShipment
+     *
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     */
+    private function addReturnTrackingNumbersToShipment($postNLShipment)
+    {
+        $shipment = $postNLShipment->getShipment();
+        $this->logging->addDebug('Adding return trackingnumbers to shipment_id : '. $shipment->getId());
+        $returnItems = $this->getList($postNLShipment);
+
+        foreach ($returnItems as $item) {
+            $track = $this->trackFactory->create();
+            $track->setNumber($item->getValue());
+            $track->setCarrierCode('tig_postnl');
+            $track->setTitle(__('PostNL Return'));
+            /** @noinspection PhpUndefinedMethodInspection */
+            $shipment->addTrack($track);
+        }
+
+        /**
+         * @codingStandardsIgnoreLine
+         * @todo : Recalculate packages and set correct data.
+         */
+        $shipment->setPackages([]);
+        $this->shipmentRepository->save($shipment);
+    }
+
+    /**
      * @notice : Because the tracks key is cached within the data object it could be this will result in an empty array.
      *           When this happends core Magento will trow an Exception because its will try
      *           to add an item on an non-object.
@@ -189,7 +244,7 @@ class Track extends AbstractTracking
     private function resetTrackingKey($shipment)
     {
         $data = $shipment->getData();
-        if (isset($data['tracks']) && count($data['tracks']) === 0) {
+        if (isset($data['tracks']) && empty($data['tracks'])) {
             unset($data['tracks']);
         }
 
@@ -212,5 +267,32 @@ class Track extends AbstractTracking
             $this->getTrackAndTraceUrl($postnlShipment->getMainBarcode())
         );
         $this->trackAndTraceEmail->send();
+    }
+
+    /**
+     * @param $postNLShipment
+     *
+     * @return \Magento\Framework\Api\ExtensibleDataInterface[]
+     */
+    private function getList($postNLShipment)
+    {
+        $this->searchCriteriaBuilder->addFilter('parent_id', $postNLShipment->getId());
+        $this->searchCriteriaBuilder->addFilter('type', 'return');
+        $searchCriteria = $this->searchCriteriaBuilder->create();
+
+        $result = $this->shipmentBarcodeRepositoryInterface->getList($searchCriteria);
+        $list = $result->getItems();
+
+        return $list;
+    }
+
+    /**
+     * @param $shipmentId
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface|null
+     */
+    private function getPostNLShipment($shipmentId)
+    {
+        return $this->postNLShipmentRepository->getByShipmentId($shipmentId);
     }
 }
