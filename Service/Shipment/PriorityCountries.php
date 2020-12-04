@@ -65,7 +65,8 @@ class PriorityCountries
         'SG',
         'TH',
         'TR',
-        'US'
+        'US',
+        'GB'
     ];
 
     // NOT ROW
