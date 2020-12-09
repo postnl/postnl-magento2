@@ -73,8 +73,6 @@
                     var errorMessage = $.mage.__(message);
                     handleError(errorMessage);
                 }
-            }).always(function (data) {
-                Logger.info(data);
             });
         }.bind(request);
 
@@ -89,18 +87,15 @@
         };
 
         var enableAddressFields = function(enableFields) {
-            //TODO: disabled fields messes with Magento's required validation system.
-            return;
-
             var street = $('.field.street').find('.control input:eq(0)');
             var city = $('.field.city').find('.control input');
 
             if (enableFields === true) {
-                street.prop('disabled', false);
-                city.prop('disabled', false);
+                street.prop('readonly', false).removeClass('_disabled');
+                city.prop('readonly', false).removeClass('_disabled');
             } else {
-                street.prop('disabled', true);
-                city.prop('disabled', true);
+                street.prop('readonly', true).addClass('_disabled');
+                city.prop('readonly', true).addClass('_disabled');
             }
         };
 
@@ -126,10 +121,12 @@
             if (country !== 'NL') {
                 enableAddressFields(true);
                 hideAddressFields(false);
+                $('.tig-postnl-field-group-account').removeClass('tig-postnl-field-group');
 
                 return;
             } else {
                 hideAddressFields(true);
+                $('.tig-postnl-field-group-account').addClass('tig-postnl-field-group');
             }
 
             if (self.timer !== undefined) {

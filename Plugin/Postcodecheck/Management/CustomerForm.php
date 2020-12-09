@@ -51,6 +51,10 @@ class CustomerForm
 
     public function afterExtractData(Form $subject, $result, RequestInterface $request)
     {
+        if ($request->getPostValue('country_id') != 'NL') {
+            return $result;
+        }
+
         $housenumber = $request->getPostValue('tig-housenumber');
         $housenrAddition = $request->getPostValue('tig-housenumber-addition');
 
