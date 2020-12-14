@@ -95,11 +95,6 @@ define([
                 self.toggleTimeOptions(value);
             });
 
-            this.timeOptionSelected.subscribe(function (value) {
-                console.log(value);
-                // scan selection, nothing more.
-            });
-
             return this;
         },
 
@@ -138,14 +133,20 @@ define([
          * - MassChangeMulticolli
          * - MassChangeProduct
          */
-        submit : function () {
+        submit : function (isSticky) {
+            // Grab the input values of the regular toolbar or the sticky toolbar
+            var selector = $('.' + this.currentSelected() + '_toolbar');
+            if (isSticky) {
+                selector = $('.' + this.currentSelected() + '_sticky');
+            }
+
             var data = this.getSelectedItems();
             if (data.selected === false) {
                 alert($.mage.__('Please select item(s)'));
                 return;
             }
 
-            var value = $('#'+this.currentSelected())[0].value;
+            var value = selector[0].value;
             if (isNaN(parseInt(value))) {
                 alert(DataProvider.getInputWarningMessage(this.currentSelected()));
                 return;
@@ -153,7 +154,11 @@ define([
 
             data[this.currentSelected()] = value;
             if (this.isGuaranteedActive() && this.showTimeOptions()) {
-                data.time = this.timeOptionSelected();
+                if (isSticky) {
+                    data.time = $('.time_option_sticky')[0].value;
+                } else {
+                    data.time = $('.time_option_toolbar')[0].value;
+                }
             }
 
             utils.submit({

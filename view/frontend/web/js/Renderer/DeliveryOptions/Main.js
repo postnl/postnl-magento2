@@ -93,7 +93,7 @@ define([
                 return false;
             }
 
-            return  (address.country === 'NL' || address.country === 'BE');
+            return true;
         }),
 
         canUsePickupLocations: ko.computed(function () {

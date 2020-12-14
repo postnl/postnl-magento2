@@ -35,6 +35,7 @@ namespace TIG\PostNL\Webservices\Parser\Label;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\Order\Address;
 use TIG\PostNL\Config\Provider\ReturnOptions;
+use TIG\PostNL\Exception;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Service\Shipment\Data as ShipmentData;
@@ -84,13 +85,12 @@ class Shipments
         $postnlOrder = $postnlShipment->getPostNLOrder();
         $contact   = $this->getContactData($shipment);
         $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
-        $countryId = $address[0]['Countrycode'];
         if ($postnlOrder->getIsPakjegemak()) {
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
 
-        if (($this->canReturnNl($countryId)) || $this->canReturnBe($countryId)) {
-            $address[] = $this->getReturnAddressData($countryId);
+        if (($this->canReturnNl($address[0]['Countrycode'])) || $this->canReturnBe($address[0]['Countrycode'])) {
+            $address[] = $this->getReturnAddressData($address[0]['Countrycode']);
         }
 
         return $this->shipmentData->get($postnlShipment, $address, $contact, $shipmentNumber);
@@ -154,7 +154,6 @@ class Shipments
     {
         $this->addressEnhancer->set(['street' => $shippingAddress->getStreet()]);
         $streetData = $this->addressEnhancer->get();
-
         if (isset($streetData['error']) && $shippingAddress->getCountryId() !== 'NL'
             && $shippingAddress->getCountryId() !== 'BE') {
             return ['street' => $shippingAddress->getStreet()];
@@ -163,6 +162,8 @@ class Shipments
         if (isset($streetData['error'])) {
             $message = $streetData['error']['code'] . ' - ' . $streetData['error']['message'];
             $this->messageManager->addErrorMessage($message);
+
+            return ['street' => $shippingAddress->getStreet()];
         }
 
         return $streetData;
