@@ -8,11 +8,9 @@
     <!-- ko text: address().prefix --><!-- /ko --> <!-- ko text: address().firstname --><!-- /ko --> <!-- ko text: address().middlename --><!-- /ko -->
     <!-- ko text: address().lastname --><!-- /ko --> <!-- ko text: address().suffix --><!-- /ko --><br/>
     <!-- ko text: _.values(address().street).join(", ") --><!-- /ko -->
-    <!-- ko foreach: { data: address().extension_attributes, as: 'element' } -->
-        <!-- ko foreach: { data: Object.keys(element), as: 'attribute' } -->
-            <!-- ko if: (typeof element[attribute] === "string" && (attribute === "tig_housenumber" || attribute === "tig_housenumber_addition")) -->
-                <!-- ko text: element[attribute] --><!-- /ko -->
-            <!-- /ko -->
+    <!-- ko foreach: { data: address().customAttributes, as: 'element' } -->
+        <!-- ko if: (element.attribute_code === "tig_housenumber" || element.attribute_code === "tig_housenumber_addition") -->
+            <!-- ko text: element.value --><!-- /ko -->
         <!-- /ko -->
     <!-- /ko -->
     <br/>
