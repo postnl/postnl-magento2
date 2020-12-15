@@ -47,3 +47,6 @@ which grunt
 if [ $? != "0" ]; then
     npm install grunt-cli -g
 fi
+
+# Pecl automatically installs xdebug 3.x, but Magento doesn't support it yet. Use this to downgrade.
+pecl install xdebug-2.9.8

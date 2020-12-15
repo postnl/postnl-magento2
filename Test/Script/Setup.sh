@@ -93,7 +93,5 @@ chmod -R 6777 "${BUILD_DIR}/dev/"
 if [[ $MAGENTO_VERSION != "2.1"* ]]; then chmod -R 6777 "${BUILD_DIR}/generated/"; fi
 chmod -R 6777 "${BUILD_DIR}/vendor/phpunit/phpunit/phpunit"
 
-# Add support for xdebug 3.x: https://github.com/magento/magento2/issues/28961
-( cd ${BUILD_DIR} && echo "MFTF_DEBUG=1" > /tmp/magento2/dev/tests/acceptance/.env )
 
 ( cd ${BUILD_DIR} && php -d memory_limit=2048M bin/magento setup:upgrade )
