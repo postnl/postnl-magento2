@@ -215,7 +215,9 @@ class CheckIfQuoteItemsAreInStock
      */
     private function hasMultiStockInventoryStock($item, $requiredQuantity, $minimumQuantity)
     {
-        if ($this->moduleManager->isEnabled('Magento_InventoryCatalogAdminUi')) {
+        if ($this->moduleManager->isEnabled('Magento_InventoryCatalogAdminUi') &&
+            method_exists(\Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku::class, 'execute')
+        ) {
             try {
                 /** @var SourceItemsDataBySkuProxy $sourceItemsDataBySku */
                 $sourceItemsDataBySku = $this->sourceItemsDataBySkuProxy->create();
