@@ -82,10 +82,6 @@ define([
                     return;
                 }
 
-                if (address.country !== 'NL' && address.country !== 'BE') {
-                    return;
-                }
-
                 this.getDeliverydays(address);
             }.bind(this));
 
@@ -118,8 +114,8 @@ define([
             State.currentSelectedShipmentType('delivery');
 
             var fee = null;
-            if (!value.fallback && !value.letterbox_package) {
-                if (value.hasFee()) {
+            if (!value.fallback && !value.letterbox_package && !value.eps && !value.gp) {
+                if (value.hasFee !== undefined && value.hasFee()) {
                     fee = value.getFee();
                 }
             }
@@ -127,13 +123,26 @@ define([
             State.fee(fee);
             State.deliveryFee(fee);
 
+            var type = 'delivery';
+            if (typeof value.fallback !== 'undefined') {
+                type = 'fallback';
+            }
+
+            if (typeof value.eps !== 'undefined') {
+                type = 'EPS';
+            }
+
+            if (typeof value.gp !== 'undefined') {
+                type = 'GP';
+            }
+
             $(document).trigger('compatible_postnl_deliveryoptions_save_before');
             $.ajax({
                 method : 'POST',
                 url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
                 data   : {
                     address: AddressFinder(),
-                    type   : (typeof value.fallback !== 'undefined') ? 'fallback' : 'delivery',
+                    type   : type,
                     date   : value.date,
                     option : value.option,
                     from   : value.from,
@@ -180,7 +189,7 @@ define([
                     State.currentOpenPane('delivery');
                     return;
                 }
-          
+
                 if (data.letterbox_package === true) {
                     data  = ko.utils.arrayMap(data.timeframes, function (letterbox_package) {
                         return letterbox_package;
@@ -190,6 +199,25 @@ define([
                     return;
                 }
 
+                // Return delivery moment of type EPS if the country is an EPS country
+                if (typeof data.timeframes[0][0] !== 'undefined' && "eps" in data.timeframes[0][0]) {
+                    data  = ko.utils.arrayMap(data.timeframes, function (eps) {
+                        return eps;
+                    });
+                    this.deliverydays(data);
+                    State.currentOpenPane('delivery');
+                    return;
+                }
+
+                // Return delivery moment of type GP if the country is an Global Pack country
+                if (typeof data.timeframes[0][0] !== 'undefined' && "gp" in data.timeframes[0][0]) {
+                    data  = ko.utils.arrayMap(data.timeframes, function (gp) {
+                        return gp;
+                    });
+                    this.deliverydays(data);
+                    State.currentOpenPane('delivery');
+                    return;
+                }
 
                 data = ko.utils.arrayMap(data.timeframes, function (day) {
                     return ko.utils.arrayMap(day, function (timeFrame) {

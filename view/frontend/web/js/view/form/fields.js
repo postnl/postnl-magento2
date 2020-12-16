@@ -81,7 +81,7 @@ define([
 
                 if (options.url.indexOf('payment-information') >= 0 && options.data) {
                     optionsArray = JSON.parse(options.data);
-                    if (optionsArray.billingAddress.extension_attributes === undefined) {
+                    if (optionsArray.billingAddress !== undefined && optionsArray.billingAddress.extension_attributes === undefined) {
                         optionsArray.billingAddress.extension_attributes = {
                             tig_housenumber: $(".tig-postnl-field-group div[name='billingAddress.custom_attributes.tig_housenumber'] input").val(),
                             tig_housenumber_addition: $(".tig-postnl-field-group div[name='billingAddress.custom_attributes.tig_housenumber_addition'] input").val()

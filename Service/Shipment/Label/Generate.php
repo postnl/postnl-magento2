@@ -45,7 +45,7 @@ class Generate
      * @var Merge
      */
     private $merge;
-    
+
     /**
      * @var array
      */
@@ -82,8 +82,11 @@ class Generate
     public function run(array $labels, $createNewPdf = false)
     {
         $preparedLabels = [];
+        $this->globalPackLabels = [];
+
         foreach ($this->orderLabels($labels) as $label) {
             $labelResult = $this->prepare->label($label);
+            $labelResult['label']->shipmentType = $labelResult['shipment']->getShipmentType();
             $preparedLabels[] = $labelResult['label'];
         }
 
