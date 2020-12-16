@@ -240,7 +240,7 @@ class CheckIfQuoteItemsAreInStock
             $sourceQty += $source['quantity'];
         }
 
-        if (($sourceQty - $minimumQuantity) > $requiredQuantity) {
+        if (($sourceQty - $minimumQuantity) >= $requiredQuantity) {
             return true;
         }
 
