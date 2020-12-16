@@ -83,17 +83,7 @@
                 return koElement;
             }
 
-            text = $(element).text();
-
-
-            var selectedElement = null;
-            ko.utils.arrayForEach(koElement.actions(), function (element) {
-                if (element.label == text && element.type.toLowerCase().indexOf('postnl') !== -1) {
-                    selectedElement = element;
-                }
-            });
-
-            return selectedElement;
+            return null;
         }
 
         /**
