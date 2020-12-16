@@ -206,14 +206,19 @@ class SetDefaultData implements ObserverInterface
     }
 
     /**
-     * @return string
+     * @return string|null
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getOptionFromQuote()
     {
         $quoteId = $this->checkoutSession->getQuoteId();
-        $quote = $this->quoteRepository->get($quoteId);
+        if ($quoteId) {
+            $quote = $this->quoteRepository->get($quoteId);
 
-        return $this->itemsToOption->getFromQuote($quote);
+            return $this->itemsToOption->getFromQuote($quote);
+        }
+
+        return null;
     }
 
     /**

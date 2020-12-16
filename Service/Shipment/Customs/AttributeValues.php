@@ -48,7 +48,8 @@ class AttributeValues
     private $scopeConfig;
 
     private $hasFallback = [
-        'country_of_manufacture'
+        'country_of_manufacture',
+        'special_price'
     ];
 
     /**

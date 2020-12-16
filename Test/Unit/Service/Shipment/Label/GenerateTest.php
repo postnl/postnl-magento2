@@ -31,7 +31,11 @@
  */
 namespace TIG\PostNL\Test\Unit\Service\Shipment\Label;
 
+use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Service\Shipment\Label\Generate;
+use TIG\PostNL\Service\Shipment\Label\Merge;
+use TIG\PostNL\Service\Shipment\Label\Prepare;
+use TIG\PostNL\Service\Shipment\Label\Type\Domestic;
 use TIG\PostNL\Test\TestCase;
 
 class GenerateTest extends TestCase
@@ -40,11 +44,20 @@ class GenerateTest extends TestCase
 
     public function testThePrepareClassIsCalled()
     {
-        $prepareMock = $this->getFakeMock(\TIG\PostNL\Service\Shipment\Label\Prepare::class, true);
+        $prepareMock = $this->getFakeMock(Prepare::class, true);
         $labelExpects = $prepareMock->expects($this->exactly(2));
         $labelExpects->method('label');
 
-        $mergeMock = $this->getFakeMock(\TIG\PostNL\Service\Shipment\Label\Merge::class, true);
+        $shipmentMock = $this->getFakeMock(Shipment::class, true);
+        $shipmentTypeExpects = $shipmentMock->expects($this->exactly(2));
+        $shipmentTypeExpects->method('getShipmentType');
+        $shipmentTypeExpects->willReturn('Domestic');
+
+        $labelMock = $this->getFakeMock(Domestic::class, true);
+
+        $labelExpects->willReturn(['shipment' => $shipmentMock, 'label' => $labelMock]);
+
+        $mergeMock = $this->getFakeMock(Merge::class, true);
         $pdfsExpects = $mergeMock->expects($this->once());
         $pdfsExpects->method('files');
         $pdfsExpects->willReturn('randomstring');
