@@ -29,18 +29,21 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
+// @codingStandardsIgnoreFile
+
 namespace TIG\PostNL\Model;
 
-use TIG\PostNL\Api\OrderRepositoryInterface;
-use TIG\PostNL\Api\Data\OrderInterface;
-use TIG\PostNL\Model\ResourceModel\Order\CollectionFactory;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use TIG\PostNL\Api\Data\OrderInterface;
+use TIG\PostNL\Api\OrderRepositoryInterface;
+use TIG\PostNL\Model\ResourceModel\Order\CollectionFactory;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
-use Magento\Framework\Api\FilterBuilder;
 
 class OrderRepository extends AbstractRepository implements OrderRepositoryInterface
 {
@@ -213,5 +216,26 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         });
 
         return isset(array_values($orders)[0]) ? array_values($orders)[0] : null;
+    }
+
+    /**
+     * Retrieve the most recent order record for a quote
+     *
+     * @param $quoteId
+     *
+     * @return mixed|null
+     * @throws \Magento\Framework\Exception\InputException
+     */
+    public function retrieveCurrentPostNLOrder($quoteId)
+    {
+        $collection = $this->collectionFactory->create();
+        $collection->addFieldToFilter('quote_id', $quoteId);
+        $collection->setOrder('entity_id', $collection::SORT_ORDER_DESC);
+
+        if ($collection->getSize() > 0) {
+            return $collection->getFirstItem();
+        }
+
+        return null;
     }
 }
