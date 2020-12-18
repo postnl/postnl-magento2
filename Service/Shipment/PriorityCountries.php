@@ -42,7 +42,7 @@ class PriorityCountries
      *
      * https://jira.tig.nl/browse/POSTNLM2-741
      */
-    
+
     // ROW
     const GLOBALPACK = [
         'AU',
@@ -65,9 +65,10 @@ class PriorityCountries
         'SG',
         'TH',
         'TR',
-        'US'
+        'US',
+        'GB'
     ];
-    
+
     // NOT ROW
     /**
      * Belgium does't have to be enlisted in priority, because regular EPS
@@ -82,7 +83,6 @@ class PriorityCountries
         'ES',
         'FI',
         'FR',
-        'GB',
         'GR',
         'HR',
         'HU',

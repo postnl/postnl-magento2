@@ -31,27 +31,51 @@
  */
 namespace TIG\PostNL\Test\Unit\Helper\DeliveryOptions;
 
-use TIG\PostNL\Test\TestCase;
 use TIG\PostNL\Helper\DeliveryOptions\OrderParams;
 use TIG\PostNL\Service\Order\FeeCalculator;
 use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Shipment\ProductOptions;
+use TIG\PostNL\Test\TestCase;
 
 class OrderParamsTest extends TestCase
 {
     protected $instanceClass = OrderParams::class;
 
-    private $validDaytimeParams = [
-        'type' => 'delivery',
-        'option' => 'daytime',
-        'country' => 'NL',
-        'quote_id' => '1',
-        'date' => '2018-06-11',
-        'from' => '12:00:00',
-        'to' => '19:00:00'
-    ];
+    public function getValidParams()
+    {
+        return [
+            'Netherlands' => [[
+                'type'     => 'delivery',
+                'option'   => 'daytime',
+                'country'  => 'NL',
+                'quote_id' => '1',
+                'date'     => '2018-06-11',
+                'from'     => '12:00:00',
+                'to'       => '19:00:00',
+                'address'  => ['postcode' => '1037BA', 'country' => 'NL']],
+                'daytime'
+            ],
+            'LaPalma' => [[
+              'type'     => 'GP',
+              'country'  => 'ES',
+              'quote_id' => '1',
+              'date'     => '2020-08-18',
+              'from'     => '',
+              'to'       => '',
+              'address'  => ['postcode' => '38712', 'country' => 'ES']],
+              'GP'
+            ]
+        ];
+    }
 
-    public function testGet()
+    /**
+     * @param $option
+     * @param $expectedType
+     *
+     * @dataProvider getValidParams
+     * @throws \Exception
+     */
+    public function testGet($option, $expectedType)
     {
         $productMock = [
             'code' => '3085',
@@ -73,9 +97,11 @@ class OrderParamsTest extends TestCase
             'productOptions' => $productOptionsMock
         ]);
 
-        $result = $instance->get($this->validDaytimeParams);
+        $result = $instance->get($option);
+
         $this->assertArrayHasKey('product_code', $result);
         $this->assertArrayHasKey('type', $result);
         $this->assertArrayHasKey('fee', $result);
+        $this->assertEquals($expectedType, $result['type']);
     }
 }

@@ -116,7 +116,7 @@ class ShipmentTest extends TestCase
     public function canChangeParcelCountProvider()
     {
         return [
-            'not confirmed, not domestic' => [false, false, false],
+            'not confirmed, not domestic' => [false, false, true],
             'confirmed, not domestic' => [true, false, false],
             'not confirmed, domestic' => [false, true, true],
             'confirmed, domestic' => [true, true, false],
