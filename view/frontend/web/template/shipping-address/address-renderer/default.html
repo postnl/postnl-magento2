@@ -9,7 +9,7 @@
     <!-- ko text: address().lastname --><!-- /ko --> <!-- ko text: address().suffix --><!-- /ko --><br/>
     <!-- ko text: _.values(address().street).join(", ") --><!-- /ko -->
     <!-- ko foreach: { data: address().customAttributes, as: 'element' } -->
-        <!-- ko if: (element.attribute_code === "tig_housenumber" || element.attribute_code === "tig_housenumber_addition") -->
+        <!-- ko if: (element.attribute_code === "tig_housenumber" || element.attribute_code === "tig_housenumber_addition" && element.value) -->
             <!-- ko text: element.value --><!-- /ko -->
         <!-- /ko -->
     <!-- /ko -->
