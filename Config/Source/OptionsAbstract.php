@@ -196,18 +196,17 @@ abstract class OptionsAbstract
             'pge'                  => false,
             'group'                => 'pakjegemak_be_options',
         ],
-        // should be re-activated around first of januari 2021 - POSTNLM2-775
-//        '4936' => [
-//            'value'                => '4936',
-//            'label'                => 'Post Office Belgium',
-//            'isExtraCover'         => false,
-//            'isExtraEarly'         => false,
-//            'isSunday'             => false,
-//            'isGuaranteedDelivery' => false,
-//            'countryLimitation'    => 'BE',
-//            'pge'                  => false,
-//            'group'                => 'pakjegemak_be_options',
-//        ],
+        '4936' => [
+            'value'                => '4936',
+            'label'                => 'Post Office Belgium',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'pge'                  => false,
+            'group'                => 'pakjegemak_be_options',
+        ],
         // EU Options
         '4952' => [
             'value'                => '4952',
