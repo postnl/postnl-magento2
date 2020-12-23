@@ -896,10 +896,6 @@ class Shipment extends AbstractModel implements ShipmentInterface
             return false;
         }
 
-        if ($this->getShippingAddress()->getCountryId() != 'NL') {
-            return false;
-        }
-
         return true;
     }
 

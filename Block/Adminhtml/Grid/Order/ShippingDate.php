@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Grid\Order;
 
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -72,11 +73,18 @@ class ShippingDate extends AbstractGrid
     private $shippingDateRenderer;
 
     /**
+     * @var TimezoneInterface
+     */
+    private $timezone;
+
+    /**
      * @param ContextInterface            $context
      * @param UiComponentFactory          $uiComponentFactory
      * @param ShipmentRepositoryInterface $shipmentRepository
+     * @param OrderRepositoryInterface    $orderRepository
      * @param SearchCriteriaBuilder       $searchCriteriaBuilder
      * @param ShippingDateRenderer        $shippingDateRenderer
+     * @param TimezoneInterface           $timezone
      * @param array                       $components
      * @param array                       $data
      */
@@ -87,6 +95,7 @@ class ShippingDate extends AbstractGrid
         OrderRepositoryInterface $orderRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         ShippingDateRenderer $shippingDateRenderer,
+        TimezoneInterface $timezone,
         array $components = [],
         array $data = []
     ) {
@@ -96,6 +105,25 @@ class ShippingDate extends AbstractGrid
         $this->shipmentRepository = $shipmentRepository;
         $this->orderRepository = $orderRepository;
         $this->shippingDateRenderer = $shippingDateRenderer;
+        $this->timezone = $timezone;
+    }
+
+    public function prepare()
+    {
+        parent::prepare();
+
+        $config = $this->getData('config');
+        $config['filter'] = [
+            'filterType' => 'dateRange',
+            'templates' => [
+                'date' => [
+                    'options' => [
+                        'dateFormat' => $config['dateFormat'] ?? $this->timezone->getDateFormatWithLongYear()
+                    ]
+                ]
+            ]
+        ];
+        $this->setData('config', $config);
     }
 
     /**
