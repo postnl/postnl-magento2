@@ -37,7 +37,8 @@ define([
     'TIG_PostNL/js/Helper/AddressFinder',
     'TIG_PostNL/js/Helper/Logger',
     'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Models/TimeFrame'
+    'TIG_PostNL/js/Models/TimeFrame',
+    'Magento_Checkout/js/action/set-shipping-information'
 ], function (
     Component,
     ko,
@@ -47,7 +48,8 @@ define([
     AddressFinder,
     Logger,
     State,
-    TimeFrame
+    TimeFrame,
+    setShippingInformationAction
 ) {
     'use strict';
 
@@ -59,7 +61,8 @@ define([
             street: null,
             hasAddress:false,
             deliverydays: ko.observableArray([]),
-            odd: false
+            odd: false,
+            currentDeliveryAddress: null
         },
 
         initObservable: function () {
@@ -102,6 +105,13 @@ define([
             this.selectedOption.subscribe(function (value) {
                 this.saveSelectedOption(value);
             }.bind(this));
+
+            quote.shippingMethod.subscribe(function (shippingMethod) {
+                if (shippingMethod.carrier_code === 'tig_postnl') {
+                    this.selectFirstDeliveryOption();
+                }
+            }.bind(this));
+
 
             return this;
         },
@@ -152,6 +162,9 @@ define([
                 }
             }).done(function (response) {
                 $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
+                if (window.checkoutConfig.shipping.postnl.onestepcheckout_active) {
+                    setShippingInformationAction();
+                }
             });
         },
 
@@ -161,17 +174,34 @@ define([
          * @param address
          */
         getDeliverydays: function (address) {
-            State.deliveryOptionsAreLoading(true);
             var self = this;
+
+            // Avoid getting delivery days multiple times
+            var addressAsString = JSON.stringify({'postcode': address.postcode, 'housenumber': address.housenumber});
+            if (this.deliverydays() !== undefined && this.currentDeliveryAddress === addressAsString) {
+                return;
+            }
+
+            this.currentDeliveryAddress = addressAsString;
+
+            State.deliveryOptionsAreLoading(true);
+
             if (self.getDeliveryDayRequest !== undefined) {
                 self.getDeliveryDayRequest.abort('avoidMulticall');
             }
+
+            // About to receive new delivery days. Deselect the current one.
+            this.selectedOption(null);
 
             self.getDeliveryDayRequest = $.ajax({
                 method: 'POST',
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_timeframes,
                 data : {address: address}
             }).done(function (data) {
+                // If the deliverydays are reloaded, the first one is automatically selected.
+                // Show this by switching to the delivery pane.
+                State.currentOpenPane('delivery');
+
                 State.deliveryOptionsAreAvailable(true);
                 State.deliveryPrice(data.price);
 
@@ -186,7 +216,8 @@ define([
                         return fallback;
                     });
                     this.deliverydays(data);
-                    State.currentOpenPane('delivery');
+
+                    this.selectFirstDeliveryOption();
                     return;
                 }
 
@@ -195,7 +226,7 @@ define([
                         return letterbox_package;
                     });
                     this.deliverydays(data);
-                    State.currentOpenPane('delivery');
+                    this.selectFirstDeliveryOption();
                     return;
                 }
 
@@ -227,6 +258,7 @@ define([
                 });
 
                 this.deliverydays(data);
+                this.selectFirstDeliveryOption();
             }.bind(this)).fail(function (data) {
                 if (data.statusText !== 'avoidMulticall') {
                     State.deliveryOptionsAreAvailable(false);
@@ -276,6 +308,18 @@ define([
             var isNL = (address !== null && address !== false && address.country === 'NL');
 
             return isActive === 1 && isNL;
-        })
+        }),
+
+        selectFirstDeliveryOption: function () {
+            // Only select the first option if there is none defined
+            if (this.selectedOption() !== undefined && this.selectedOption() != null) {
+                return;
+            }
+
+            var deliveryDays = this.deliverydays();
+            if (deliveryDays !== undefined && deliveryDays[0] !== undefined && deliveryDays[0][0] !== undefined) {
+                this.selectedOption(deliveryDays[0][0]);
+            }
+        }
     });
 });
