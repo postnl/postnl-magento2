@@ -174,6 +174,9 @@ define([
          * @param address
          */
         getDeliverydays: function (address) {
+            // Unfortunately the "this" context shows the "Window" context, while the "this" context
+            // should be the UiClass context. When assigning the "this" context to something, both
+            // the assigned AND the this context will change to the UiClass.
             var self = this;
 
             // Avoid getting delivery days multiple times
