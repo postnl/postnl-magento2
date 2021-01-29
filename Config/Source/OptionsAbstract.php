@@ -185,17 +185,6 @@ abstract class OptionsAbstract
             'group'                => 'pakjegemak_options',
         ],
         // BE Pakjegemak options
-        '4932' => [
-            'value'                => '4932',
-            'label'                => 'Post Office Belgium + Extra Cover',
-            'isExtraCover'         => true,
-            'isExtraEarly'         => false,
-            'isSunday'             => false,
-            'isGuaranteedDelivery' => false,
-            'countryLimitation'    => 'BE',
-            'pge'                  => false,
-            'group'                => 'pakjegemak_be_options',
-        ],
         '4936' => [
             'value'                => '4936',
             'label'                => 'Post Office Belgium',
@@ -218,16 +207,6 @@ abstract class OptionsAbstract
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => false,
             'group'                => 'eu_options',
-        ],
-        '4938' => [
-            'value'                => '4938',
-            'label'                => 'Deliver to stated address only + Signature on delivery (BE)',
-            'isEvening'            => true,
-            'isExtraCover'         => false,
-            'isSunday'             => false,
-            'isGuaranteedDelivery' => false,
-            'countryLimitation'    => 'BE',
-            'group'                => 'be_options',
         ],
         '4941' => [
             'value'                => '4941',
