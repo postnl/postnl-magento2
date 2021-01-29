@@ -32,8 +32,8 @@
 
 namespace TIG\PostNL\Helper;
 
-use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Config\Provider\Webshop as Config;
+use TIG\PostNL\Exception as PostnlException;
 
 class AddressEnhancer
 {
@@ -69,7 +69,8 @@ class AddressEnhancer
     {
         $this->address = $address;
 
-        if (!$this->config->getIsAddressCheckEnabled() ||
+        if ($this->address['country'] !== 'NL' ||
+            !$this->config->getIsAddressCheckEnabled() ||
             // If an address is parsed as a 1-liner, we still have to extract the housenumber
             !is_array($address['street']) ||
             !isset($address['street'][1])
