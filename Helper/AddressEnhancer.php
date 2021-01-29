@@ -69,7 +69,7 @@ class AddressEnhancer
     {
         $this->address = $address;
 
-        if ($this->address['country'] !== 'NL' ||
+        if ((isset($this->address['country']) && $this->address['country'] !== 'NL') ||
             !$this->config->getIsAddressCheckEnabled() ||
             // If an address is parsed as a 1-liner, we still have to extract the housenumber
             !is_array($address['street']) ||
