@@ -210,7 +210,7 @@ abstract class OptionsAbstract
         ],
         '4941' => [
             'value'                => '4941',
-            'label'                => 'Deliver to stated address only (BE)',
+            'label'                => 'Belgium Standard, deliver to stated address only',
             'isEvening'            => true,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -220,7 +220,7 @@ abstract class OptionsAbstract
         ],
         '4946' => [
             'value'                => '4946',
-            'label'                => 'EPS Standard BE',
+            'label'                => 'Belgium standard',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -230,7 +230,7 @@ abstract class OptionsAbstract
         ],
         '4986' => [
             'value'                => '4986',
-            'label'                => 'EPS Standard BE (Mon/Fri)',
+            'label'                => 'Belgium standard (Mon/Fri)',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -240,7 +240,7 @@ abstract class OptionsAbstract
         ],
         '4912' => [
             'value'                => '4912',
-            'label'                => 'EPS Standard BE + Signature on delivery (BE)',
+            'label'                => 'Belgium standard + Signature on delivery',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -250,7 +250,7 @@ abstract class OptionsAbstract
         ],
         '4914' => [
             'value'                => '4914',
-            'label'                => 'EPS Standard BE + Signature on delivery + Extra Cover (BE)',
+            'label'                => 'Belgium standard + Signature on delivery + Extra Cover',
             'isExtraCover'         => true,
             'isEvening'            => false,
             'isSunday'             => false,
