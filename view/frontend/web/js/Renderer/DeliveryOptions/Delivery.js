@@ -180,7 +180,7 @@ define([
             var self = this;
 
             // Avoid getting delivery days multiple times
-            var addressAsString = JSON.stringify({'postcode': address.postcode, 'housenumber': address.housenumber});
+            var addressAsString = JSON.stringify({'postcode': address.postcode, 'street': address.street, 'housenumber': address.housenumber});
             if (this.deliverydays() !== undefined && this.currentDeliveryAddress === addressAsString) {
                 return;
             }
