@@ -152,7 +152,10 @@ class Shipments
      */
     private function getStreetData($shippingAddress)
     {
-        $this->addressEnhancer->set(['street' => $shippingAddress->getStreet(), 'country' => $shippingAddress->getCountryId()]);
+        $this->addressEnhancer->set([
+            'street' => $shippingAddress->getStreet(),
+            'country' => $shippingAddress->getCountryId()
+        ]);
         $streetData = $this->addressEnhancer->get();
         if (isset($streetData['error']) && $shippingAddress->getCountryId() !== 'NL'
             && $shippingAddress->getCountryId() !== 'BE') {
