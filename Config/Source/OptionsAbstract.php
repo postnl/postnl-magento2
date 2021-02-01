@@ -185,17 +185,6 @@ abstract class OptionsAbstract
             'group'                => 'pakjegemak_options',
         ],
         // BE Pakjegemak options
-        '4932' => [
-            'value'                => '4932',
-            'label'                => 'Post Office Belgium + Extra Cover',
-            'isExtraCover'         => true,
-            'isExtraEarly'         => false,
-            'isSunday'             => false,
-            'isGuaranteedDelivery' => false,
-            'countryLimitation'    => 'BE',
-            'pge'                  => false,
-            'group'                => 'pakjegemak_be_options',
-        ],
         '4936' => [
             'value'                => '4936',
             'label'                => 'Post Office Belgium',
@@ -219,19 +208,9 @@ abstract class OptionsAbstract
             'countryLimitation'    => false,
             'group'                => 'eu_options',
         ],
-        '4938' => [
-            'value'                => '4938',
-            'label'                => 'Deliver to stated address only + Signature on delivery (BE)',
-            'isEvening'            => true,
-            'isExtraCover'         => false,
-            'isSunday'             => false,
-            'isGuaranteedDelivery' => false,
-            'countryLimitation'    => 'BE',
-            'group'                => 'be_options',
-        ],
         '4941' => [
             'value'                => '4941',
-            'label'                => 'Deliver to stated address only (BE)',
+            'label'                => 'Belgium Standard, deliver to stated address only',
             'isEvening'            => true,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -241,7 +220,7 @@ abstract class OptionsAbstract
         ],
         '4946' => [
             'value'                => '4946',
-            'label'                => 'EPS Standard BE',
+            'label'                => 'Belgium standard',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -251,7 +230,7 @@ abstract class OptionsAbstract
         ],
         '4986' => [
             'value'                => '4986',
-            'label'                => 'EPS Standard BE (Mon/Fri)',
+            'label'                => 'Belgium standard (Mon/Fri)',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -261,7 +240,7 @@ abstract class OptionsAbstract
         ],
         '4912' => [
             'value'                => '4912',
-            'label'                => 'EPS Standard BE + Signature on delivery (BE)',
+            'label'                => 'Belgium standard + Signature on delivery',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -271,7 +250,7 @@ abstract class OptionsAbstract
         ],
         '4914' => [
             'value'                => '4914',
-            'label'                => 'EPS Standard BE + Signature on delivery + Extra Cover (BE)',
+            'label'                => 'Belgium standard + Signature on delivery + Extra Cover',
             'isExtraCover'         => true,
             'isEvening'            => false,
             'isSunday'             => false,

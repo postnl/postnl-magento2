@@ -152,7 +152,10 @@ class Shipments
      */
     private function getStreetData($shippingAddress)
     {
-        $this->addressEnhancer->set(['street' => $shippingAddress->getStreet()]);
+        $this->addressEnhancer->set([
+            'street' => $shippingAddress->getStreet(),
+            'country' => $shippingAddress->getCountryId()
+        ]);
         $streetData = $this->addressEnhancer->get();
         if (isset($streetData['error']) && $shippingAddress->getCountryId() !== 'NL'
             && $shippingAddress->getCountryId() !== 'BE') {
@@ -162,7 +165,6 @@ class Shipments
         if (isset($streetData['error'])) {
             $message = $streetData['error']['code'] . ' - ' . $streetData['error']['message'];
             $this->messageManager->addErrorMessage($message);
-
             return ['street' => $shippingAddress->getStreet()];
         }
 
@@ -212,7 +214,6 @@ class Shipments
         if ($countryCode == 'NL' || $countryCode == 'BE') {
             return $this->getReturnAddress($countryCode);
         }
-
         return false;
     }
 
@@ -228,7 +229,6 @@ class Shipments
         $street = 'getStreetName' . $countryCode;
         $freePostNumber  = ($countryCode == 'BE' ? 'getHouseNumber' : 'getFreepostNumber') . $countryCode;
         $zipcode = 'getZipcode' . $countryCode;
-
         $data = [
             'AddressType'      => '08',
             'City'             => $this->returnOptions->$city(),
@@ -238,7 +238,6 @@ class Shipments
             'Street'           => ($countryCode == 'BE' ? $this->returnOptions->$street() : 'Antwoordnummer:'),
             'Zipcode'          => strtoupper(str_replace(' ', '', $this->returnOptions->$zipcode())),
         ];
-
         return $data;
     }
 }
