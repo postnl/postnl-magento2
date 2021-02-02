@@ -65,7 +65,7 @@ define([
         timer = setTimeout(function () {
             valueUpdateNotifier.notifySubscribers();
         });
-    }
+    };
 
     var RegistryFields = [
         'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.0',
@@ -77,7 +77,7 @@ define([
         RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.housenumber');
     } else {
         RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode');
-        RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.1')
+        RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.1');
     }
 
     uiRegistry.get(RegistryFields, function (streetFirstLine, countryField, postcodeField, houseNumberField) {
@@ -88,7 +88,7 @@ define([
 
         setTimeout(function() {
             notifySubscribers();
-        }, 2000)
+        }, 2000);
         streetFirstLine.value.subscribe(function () {
             notifySubscribers();
         });
