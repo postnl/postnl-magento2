@@ -106,13 +106,6 @@ define([
                 this.saveSelectedOption(value);
             }.bind(this));
 
-            quote.shippingMethod.subscribe(function (shippingMethod) {
-                if (shippingMethod.carrier_code === 'tig_postnl') {
-                    this.selectFirstDeliveryOption();
-                }
-            }.bind(this));
-
-
             return this;
         },
 
