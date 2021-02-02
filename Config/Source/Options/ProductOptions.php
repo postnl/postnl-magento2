@@ -197,9 +197,9 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
      */
     public function getBeOptions()
     {
-        $euOptions = $this->getProductOptions(['group' => 'be_options']);
+        $beOptions = $this->getProductOptions(['group' => 'be_options']);
 
-        return $euOptions;
+        return $beOptions;
     }
 
     /**
