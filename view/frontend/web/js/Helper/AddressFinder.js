@@ -32,12 +32,14 @@ define([
     'ko',
     'Magento_Checkout/js/model/quote',
     'jquery',
-    'Magento_Customer/js/model/customer'
+    'Magento_Customer/js/model/customer',
+    'uiRegistry'
 ], function (
     ko,
     quote,
     $,
-    customer
+    customer,
+    uiRegistry
 ) {
     'use strict';
 
@@ -55,29 +57,62 @@ define([
         allFieldsExists = true,
         valueUpdateNotifier = ko.observable(null);
 
+    var notifySubscribers = function () {
+        if (typeof timer !== 'undefined') {
+            clearTimeout(timer);
+        }
+
+        timer = setTimeout(function () {
+            valueUpdateNotifier.notifySubscribers();
+        });
+    };
+
+    var RegistryFields = [
+        'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.0',
+        'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.country_id'
+    ];
+
+    if (window.checkoutConfig.shipping.postnl.is_postcodecheck_active) {
+        RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.postcode');
+        RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.housenumber');
+    } else {
+        RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode');
+        RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.1');
+    }
+
+    uiRegistry.get(RegistryFields, function (streetFirstLine, countryField, postcodeField, houseNumberField) {
+        // Notify first time in case address information is stored in quote
+        if (countryCode === undefined) {
+            countryCode = countryField.value();
+        }
+
+        setTimeout(function() {
+            notifySubscribers();
+        }, 2000);
+        streetFirstLine.value.subscribe(function () {
+            notifySubscribers();
+        });
+
+        countryField.value.subscribe(function (val) {
+            countryCode = val;
+            notifySubscribers();
+        });
+
+        postcodeField.value.subscribe(function () {
+            notifySubscribers();
+        });
+
+        houseNumberField.value.subscribe(function () {
+            notifySubscribers();
+        });
+    });
+
     var fields = [
         "input[name*='street[0]']",
         "input[name*='street[1]']",
         "input[name*='postcode']",
         "select[name*='country_id']"
     ];
-
-    /**
-     * Without cookie data Magento is not observing the fields so the AddressFinder is never triggered.
-     * The Timeout is needed so it gives the Notifier the chance to retrieve the correct country code,
-     * and not the default value.
-     */
-    $(document).on('change', fields.join(','), function () {
-        // Clear timeout if exists.
-        if (typeof timer !== 'undefined') {
-            clearTimeout(timer);
-        }
-
-        timer = setTimeout(function () {
-            countryCode = $("select[name*='country_id']").val();
-            valueUpdateNotifier.notifySubscribers();
-        }, 500);
-    });
 
     /**
      * Collect the needed information from the quote
