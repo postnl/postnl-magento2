@@ -50,7 +50,7 @@ define([
         housenumber : null,
         firstname   : null,
         lastname    : null
-    }
+    };
 
     /**
      * Collect the needed information from the quote
@@ -88,7 +88,7 @@ define([
                 country: countryField.value(),
                 firstname: firstnameField.value(),
                 lastname: lastnameField.value()
-            }
+            };
         });
 
         // Some merchants disable the telephone field. Adding this to the previous part will stop the entire get function
@@ -100,7 +100,7 @@ define([
             return false;
         }
 
-        var nlRegex = new RegExp('^[1-9][0-9]{3}\s?[a-zA-Z]{2}$')
+        var nlRegex = new RegExp('^[1-9][0-9]{3}\s?[a-zA-Z]{2}$');
         // No regex required for BE, valid BE zipcodes are between 1000 and 9999.
         if ((address.country === 'NL' && !nlRegex.test(address.postcode)) ||
             (address.country === 'BE' && !(address.postcode >= 1000 && address.postcode <= 9999))) {
