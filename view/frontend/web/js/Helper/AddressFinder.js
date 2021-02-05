@@ -57,7 +57,8 @@ define([
      */
     return ko.computed(function () {
         /**
-         * Force AddressFinder subscribers to run - TODO: Find out what causes this to work.
+         * Force AddressFinder subscribers to run - the ko.computed function will read the
+         * quote.shippingAddress() value. When the quote.shippingAddress() changes, our code willrun
          */
         var shippingAddress = quote.shippingAddress();
 
@@ -75,10 +76,6 @@ define([
             RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode');
             RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.1');
         }
-
-
-        address.telephone  = $("input[name*='telephone']").val();
-
 
         uiRegistry.get(RegistryFields, function (firstnameField, lastnameField, streetFirstLine, countryField, postcodeField, houseNumberField) {
             address = {
