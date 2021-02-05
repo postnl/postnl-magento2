@@ -78,10 +78,16 @@ define([
         }
 
         uiRegistry.get(RegistryFields, function (firstnameField, lastnameField, streetFirstLine, countryField, postcodeField, houseNumberField) {
+            // BE doesn't show the postcode service fields - or it might be disabled
+            var housenumber = houseNumberField.value();
+            if (!housenumber) {
+                housenumber = streetFirstLine.value().replace(/\D/g,'');
+            }
+
             address = {
                 street: [streetFirstLine.value()],
                 postcode: postcodeField.value(),
-                housenumber: houseNumberField.value(),
+                housenumber: housenumber,
                 country: countryField.value(),
                 firstname: firstnameField.value(),
                 lastname: lastnameField.value()
