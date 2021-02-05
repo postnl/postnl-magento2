@@ -62,7 +62,7 @@ define([
             hasAddress:false,
             deliverydays: ko.observableArray([]),
             odd: false,
-            currentDeliveryAddress: null
+            currentDeliveryAddress: ko.observable(null)
         },
 
         initObservable: function () {
@@ -172,13 +172,18 @@ define([
             // the assigned AND the this context will change to the UiClass.
             var self = this;
 
-            // Avoid getting delivery days multiple times
-            var addressAsString = JSON.stringify({'postcode': address.postcode, 'street': address.street, 'housenumber': address.housenumber});
-            if (this.deliverydays() !== undefined && this.currentDeliveryAddress === addressAsString) {
+            // Avoid getting delivery days multiple times.
+            // Regex for street used, housenumbers can be stored in the street field and the actual street is not relevant.
+            var addressAsString = JSON.stringify({
+                'postcode': address.postcode,
+                'street': address.street[0].replace(/\D/g,''),
+                'housenumber': address.housenumber
+            });
+            if (this.deliverydays() !== undefined && this.currentDeliveryAddress() === addressAsString) {
                 return;
             }
 
-            this.currentDeliveryAddress = addressAsString;
+            this.currentDeliveryAddress(addressAsString);
 
             State.deliveryOptionsAreLoading(true);
 
