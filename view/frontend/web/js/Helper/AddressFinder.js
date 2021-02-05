@@ -44,9 +44,9 @@ define([
     'use strict';
 
     var address = {
-        postcode    : null,
         country     : null,
         street      : null,
+        postcode    : null,
         housenumber : null,
         firstname   : null,
         lastname    : null
@@ -62,14 +62,18 @@ define([
          */
         var shippingAddress = quote.shippingAddress();
 
+        // Country is required to determine which fields are used.
+        uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.country_id', function (countryField) {
+            address.country = countryField.value();
+        });
+
         var RegistryFields = [
             'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.firstname',
             'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.lastname',
-            'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.0',
-            'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.country_id'
+            'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.0'
         ];
 
-        if (window.checkoutConfig.shipping.postnl.is_postcodecheck_active || window.checkoutConfig.postcode.postcode_active) {
+        if (address.country === 'NL' && (window.checkoutConfig.shipping.postnl.is_postcodecheck_active || window.checkoutConfig.postcode.postcode_active)) {
             RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.postcode');
             RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.housenumber');
         } else {
@@ -77,21 +81,18 @@ define([
             RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.1');
         }
 
-        uiRegistry.get(RegistryFields, function (firstnameField, lastnameField, streetFirstLine, countryField, postcodeField, houseNumberField) {
-            // BE doesn't show the postcode service fields - or it might be disabled
+        uiRegistry.get(RegistryFields, function (firstnameField, lastnameField, streetFirstLine, postcodeField, houseNumberField) {
+            // The housenumber value could be empty, and could have been included in the first address line.
             var housenumber = houseNumberField.value();
             if (!housenumber) {
                 housenumber = streetFirstLine.value().replace(/\D/g,'');
             }
 
-            address = {
-                street: [streetFirstLine.value()],
-                postcode: postcodeField.value(),
-                housenumber: housenumber,
-                country: countryField.value(),
-                firstname: firstnameField.value(),
-                lastname: lastnameField.value()
-            };
+            address.street = [streetFirstLine.value()];
+            address.postcode = postcodeField.value();
+            address.housenumber = housenumber;
+            address.firstname = firstnameField.value();
+            address.lastname = lastnameField.value();
         });
 
         // Some merchants disable the telephone field. Adding this to the previous part will stop the entire get function
