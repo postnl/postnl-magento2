@@ -61,7 +61,7 @@ define([
         // Check specifically on street - we need one anyway, and it's to prevent undefined errors when searching for street[1]
         if (customer.isLoggedIn() && shippingAddress && shippingAddress.street) {
             var housenumber = shippingAddress.street[1];
-            if (!housenumber) {
+            if (!housenumber && shippingAddress.street[0] !== undefined) {
                 housenumber = shippingAddress.street[0].replace(/\D/g,'');
             }
 
@@ -75,7 +75,7 @@ define([
                 country: shippingAddress.countryId
             };
 
-            if (address.country && address.postcode && address.street[0] && address.housenumber) {
+            if (address.country && address.postcode && address.street !== undefined && address.street[0] && address.housenumber) {
                 return address;
             }
         }
@@ -102,7 +102,7 @@ define([
         uiRegistry.get(RegistryFields, function (firstnameField, lastnameField, streetFirstLine, postcodeField, houseNumberField) {
             // The housenumber value could be empty, and could have been included in the first address line.
             var housenumber = houseNumberField.value();
-            if (!housenumber) {
+            if (!housenumber && streetFirstLine.value() !== undefined) {
                 housenumber = streetFirstLine.value().replace(/\D/g,'');
             }
 
