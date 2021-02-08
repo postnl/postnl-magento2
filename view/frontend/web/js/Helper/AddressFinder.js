@@ -56,11 +56,28 @@ define([
      * Collect the needed information from the quote
      */
     return ko.computed(function () {
-        /**
-         * Force AddressFinder subscribers to run - the ko.computed function will read the
-         * quote.shippingAddress() value. When the quote.shippingAddress() changes, our code willrun
-         */
         var shippingAddress = quote.shippingAddress();
+
+        if (customer.isLoggedIn() && shippingAddress) {
+            var housenumber = shippingAddress.street[1];
+            if (!housenumber) {
+                housenumber = shippingAddress.street[0].replace(/\D/g,'');
+            }
+
+            address = {
+                street: shippingAddress.street[0],
+                postcode: shippingAddress.postcode,
+                housenumber: housenumber,
+                firstname: shippingAddress.firstname,
+                lastname: shippingAddress.lastname,
+                telephone: shippingAddress.telephone,
+                country: shippingAddress.countryId
+            };
+
+            if (address.country && address.postcode && address.street[0] && address.housenumber) {
+                return address;
+            }
+        }
 
         // Country is required to determine which fields are used.
         uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.country_id', function (countryField) {
