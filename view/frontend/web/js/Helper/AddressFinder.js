@@ -58,7 +58,8 @@ define([
     return ko.computed(function () {
         var shippingAddress = quote.shippingAddress();
 
-        if (customer.isLoggedIn() && shippingAddress) {
+        // Check specifically on street - we need one anyway, and it's to prevent undefined errors when searching for street[1]
+        if (customer.isLoggedIn() && shippingAddress && shippingAddress.street) {
             var housenumber = shippingAddress.street[1];
             if (!housenumber) {
                 housenumber = shippingAddress.street[0].replace(/\D/g,'');
