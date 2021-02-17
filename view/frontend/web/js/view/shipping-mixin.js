@@ -77,7 +77,7 @@ define([
 
                 if (checkedOption === undefined) {
                     this.errorValidationMessage(
-                        $t("Please select a PostNL delivery option before continuing. If no options are visible, please make sure you've entered your address information correctly.")
+                        $t('Please select a PostNL delivery option before continuing. If no options are visible, please make sure you\'ve entered your address information correctly.')
                     );
 
                     return false;
