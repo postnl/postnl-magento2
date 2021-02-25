@@ -5,43 +5,31 @@
  */
 -->
 <div class="shipping-address-item" data-bind="css: isSelected() ? 'selected-item' : 'not-selected-item'">
-    <!-- ko text: address().prefix --><!-- /ko --> <!-- ko text: address().firstname --><!-- /ko --> <!-- ko text: address().middlename --><!-- /ko -->
-    <!-- ko text: address().lastname --><!-- /ko --> <!-- ko text: address().suffix --><!-- /ko --><br/>
-    <!-- ko text: _.values(address().street).join(", ") --><!-- /ko -->
-    <!-- ko foreach: { data: address().customAttributes, as: 'element' } -->
-        <!-- ko if: (element.attribute_code === "tig_housenumber" || element.attribute_code === "tig_housenumber_addition" && element.value) -->
-            <!-- ko text: element.value --><!-- /ko -->
-        <!-- /ko -->
-    <!-- /ko -->
-    <br/>
-    <!-- ko text: address().city --><!-- /ko -->, <span data-bind="html: address().region"></span> <!-- ko text: address().postcode --><!-- /ko --><br/>
-    <!-- ko text: getCountryName(address().countryId) --><!-- /ko --><br/>
-    <!-- ko if: (address().telephone) -->
-        <a data-bind="text: address().telephone, attr: {'href': 'tel:' + address().telephone}"></a>
-    <!-- /ko --><br/>
-    <!-- ko foreach: { data: address().customAttributes, as: 'element' } -->
-        <!-- ko foreach: { data: Object.keys(element), as: 'attribute' } -->
+    <text args="address().prefix"/> <text args="address().firstname"/> <text args="address().middlename"/>
+    <text args="address().lastname"/> <text args="address().suffix"/><br/>
+    <text args="_.values(address().street).join(', ')"/>
+    <each args="data: address().customAttributes, as: 'element'">
+        <div class="tig-billing-housenumber" if="element['attribute_code'] == 'tig_housenumber' || element['attribute_code'] == 'tig_housenumber_addition'">
+            <text args="element.value"/>
+        </div>
+    </each><br/>
+    <text args="address().city "/>, <span text="address().region"></span> <text args="address().postcode"/><br/>
+    <text args="getCountryName(address().countryId)"/><br/>
+    <a if="address().telephone" attr="'href': 'tel:' + address().telephone" text="address().telephone"></a><br/>
 
-            <!-- ko if: (!(element['attribute_code'] === "tig_housenumber" || element['attribute_code'] === "tig_housenumber_addition")) -->
+    <each args="data: address().customAttributes, as: 'element'">
+        <div if="element['attribute_code'] != 'tig_housenumber' && element['attribute_code'] != 'tig_housenumber_addition'">
+            <text args="$parent.getCustomAttributeLabel(element)"/>
+            <br/>
+        </div>
+    </each>
 
-                <!-- ko if: (typeof element[attribute] === "object") -->
-                    <!-- ko text: element[attribute].value --><!-- /ko -->
-                <!-- /ko -->
-                <!-- ko if: (typeof element[attribute] === "string" && !(attribute === "tig_housenumber" || attribute === "tig_housenumber_addition")) -->
-                    <!-- ko text: element[attribute] --><!-- /ko -->
-                <!-- /ko --><br/>
-
-            <!-- /ko -->
-
-        <!-- /ko -->
-    <!-- /ko -->
-    <!-- ko if: (address().isEditable()) -->
-    <button type="button"
+    <button visible="!address().isEditable()"
+            type="button"
             class="action edit-address-link"
             data-bind="click: editAddress, visible: address().isEditable()">
-        <span data-bind="i18n: 'Edit'"></span>
+        <span translate="'Edit'"></span>
     </button>
-    <!-- /ko -->
     <button type="button" data-bind="click: selectAddress" class="action action-select-shipping-item">
         <span data-bind="i18n: 'Ship Here'"></span>
     </button>
