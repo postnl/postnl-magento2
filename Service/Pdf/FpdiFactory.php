@@ -95,7 +95,7 @@ class FpdiFactory
     {
         // @codingStandardsIgnoreLine
         return $this->objectManager->create(Fpdi::class, [
-            'file' => File::class,
+            'file' => $this->file,
             'orientation' => 'P',
             'unit' => 'mm',
             'size' => 'A4',
