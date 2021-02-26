@@ -9,7 +9,7 @@
     <text args="address().lastname"/> <text args="address().suffix"/><br/>
     <text args="_.values(address().street).join(', ')"/>
     <each args="data: address().customAttributes, as: 'element'">
-        <div class="tig-billing-housenumber" if="element['attribute_code'] == 'tig_housenumber' || element['attribute_code'] == 'tig_housenumber_addition'">
+        <div class="tig-housenumber" if="element['attribute_code'] == 'tig_housenumber' || element['attribute_code'] == 'tig_housenumber_addition'">
             <text args="element.value"/>
         </div>
     </each><br/>
