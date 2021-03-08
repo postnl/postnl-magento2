@@ -108,7 +108,9 @@ class AsyncPlugin extends Grid
     {
         foreach ($this->notSyncedIds as $shipmentId) {
             $postNLShipment = $this->shipmentRepository->getByShipmentId($shipmentId);
-
+            if (!$postNLShipment) {
+                continue;
+            }
             $connection = $this->resourceConnection->getConnection();
 
             $binds = [
