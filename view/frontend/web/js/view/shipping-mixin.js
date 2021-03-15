@@ -61,7 +61,7 @@ define([
                 // Check if a valid zipcode has been entered
                 if (quote.shippingAddress().countryId === 'NL' && !postcodeRegex.test(quote.shippingAddress().postcode)) {
                     this.errorValidationMessage(
-                        $t("Please enter a valid zipcode.")
+                        $t('Please enter a valid zipcode.')
                     );
 
                     return false;
@@ -77,7 +77,7 @@ define([
 
                 if (checkedOption === undefined) {
                     this.errorValidationMessage(
-                        $t("Please select a PostNL delivery option before continuing. If no options are visible, please make sure you've entered your address information correctly.")
+                        $t('Please select a PostNL delivery option before continuing. If no options are visible, please make sure you\'ve entered your address information correctly.')
                     );
 
                     return false;

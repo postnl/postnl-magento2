@@ -4,6 +4,11 @@
     cursor: not-allowed;
 }
 
+input._disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
 aside .tig-postnl-field-group .field > .label {
     font-weight : 700;
 }
@@ -45,7 +50,6 @@ aside .tig-postnl-field-group .field > .label {
     width: 100%;
     max-width: calc(100%/3);
 }
-
 
 .tig-postnl-field-group .field span {
     overflow: hidden;
@@ -133,4 +137,14 @@ aside .tig-postnl-field-group .field > .label {
 
 .tig-postnl-field-group .field.tig-postnl-full-width {
     max-width: 100%;
+}
+
+/* Account Address Edit Page ============================================================================================ */
+.tig-postnl-field-group-account .field span {
+    max-width: 100%;
+}
+
+.tig-postnl-field-group-account .field:last-child,
+.tig-postnl-field-group-account .field {
+    margin-bottom: 0;
 }

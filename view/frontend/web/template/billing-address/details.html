@@ -4,47 +4,30 @@
  * See COPYING.txt for license details.
  */
 -->
-<div class="billing-address-details" data-bind="if: isAddressDetailsVisible() && currentBillingAddress()">
-    <!-- ko text: currentBillingAddress().prefix --><!-- /ko --> <!-- ko text: currentBillingAddress().firstname --><!-- /ko --> <!-- ko text: currentBillingAddress().middlename --><!-- /ko -->
-    <!-- ko text: currentBillingAddress().lastname --><!-- /ko --> <!-- ko text: currentBillingAddress().suffix --><!-- /ko --><br/>
-    <!-- ko text: currentBillingAddress().street --><!-- /ko -->
-    <!-- ko foreach: { data: currentBillingAddress().customAttributes, as: 'element' } -->
-        <!-- ko foreach: { data: Object.keys(element), as: 'attribute' } -->
-            <!-- ko if: (typeof element[attribute] === "string" && (attribute === "tig_housenumber" || attribute === "tig_housenumber_addition")) -->
-                <!-- ko text: element[attribute] --><!-- /ko -->
-            <!-- /ko -->
+<div if="isAddressDetailsVisible() && currentBillingAddress()" class="billing-address-details">
+    <text args="currentBillingAddress().prefix"/> <text args="currentBillingAddress().firstname"/> <text args="currentBillingAddress().middlename"/>
+    <text args="currentBillingAddress().lastname"/> <text args="currentBillingAddress().suffix"/><br/>
+    <text args="_.values(currentBillingAddress().street).join(', ')"/>
+    <each args="data: currentBillingAddress().customAttributes, as: 'element'">
+        <div class="tig-housenumber" if="element['attribute_code'] == 'tig_housenumber' || element['attribute_code'] == 'tig_housenumber_addition'">
+            <text args="element.value"/>
+        </div>
+    </each><br/>
+    <text args="currentBillingAddress().city "/>, <span text="currentBillingAddress().region"></span> <text args="currentBillingAddress().postcode"/><br/>
+    <text args="getCountryName(currentBillingAddress().countryId)"/><br/>
+    <a if="currentBillingAddress().telephone" attr="'href': 'tel:' + currentBillingAddress().telephone" text="currentBillingAddress().telephone"></a><br/>
 
-            <!-- ko if: attribute !== "attribute_code" && (element['attribute_code'] === "tig_housenumber" || element['attribute_code'] === "tig_housenumber_addition") -->
-                <!-- ko text: element[attribute] --><!-- /ko -->
-            <!-- /ko -->
+    <each args="data: currentBillingAddress().customAttributes, as: 'element'">
+        <div if="element['attribute_code'] != 'tig_housenumber' && element['attribute_code'] != 'tig_housenumber_addition'">
+            <text args="$parent.getCustomAttributeLabel(element)"/>
+            <br/>
+        </div>
+    </each>
 
-        <!-- /ko -->
-    <!-- /ko -->
-    <br/>
-    <!-- ko text: currentBillingAddress().city --><!-- /ko -->, <span data-bind="html: currentBillingAddress().region"></span> <!-- ko text: currentBillingAddress().postcode --><!-- /ko --><br/>
-    <!-- ko text: getCountryName(currentBillingAddress().countryId) --><!-- /ko --><br/>
-    <!-- ko if: (currentBillingAddress().telephone) -->
-        <a data-bind="text: currentBillingAddress().telephone, attr: {'href': 'tel:' + currentBillingAddress().telephone}"></a>
-    <!-- /ko --><br/>
-    <!-- ko foreach: { data: currentBillingAddress().customAttributes, as: 'element' } -->
-        <!-- ko foreach: { data: Object.keys(element), as: 'attribute' } -->
-
-            <!-- ko if: (!(element['attribute_code'] == "tig_housenumber" || element['attribute_code'] == "tig_housenumber_addition")) -->
-
-                <!-- ko if: (typeof element[attribute] === "object") -->
-                    <!-- ko text: element[attribute].value --><!-- /ko -->
-                <!-- /ko -->
-                <!-- ko if: (typeof element[attribute] === "string" && !(attribute === "tig_housenumber" || attribute === "tig_housenumber_addition")) -->
-                    <!-- ko text: element[attribute] --><!-- /ko -->
-                <!-- /ko --><br/>
-
-            <!-- /ko -->
-
-        <!-- /ko -->
-    <!-- /ko -->
-    <button type="button"
+    <button visible="!isAddressSameAsShipping()"
+            type="button"
             class="action action-edit-address"
-            data-bind="visible: !isAddressSameAsShipping(), click: editAddress">
-        <span data-bind="i18n: 'Edit'"></span>
+            click="editAddress">
+        <span translate="'Edit'"></span>
     </button>
 </div>
