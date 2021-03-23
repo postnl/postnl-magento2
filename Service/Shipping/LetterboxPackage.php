@@ -31,7 +31,6 @@
  */
 namespace TIG\PostNL\Service\Shipping;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
@@ -65,11 +64,6 @@ class LetterboxPackage
     private $orderRepository;
 
     /**
-     * @var ProductRepositoryInterface
-     */
-    private $productRepository;
-
-    /**
      * @var CollectionFactory
      */
     private $productCollectionFactory;
@@ -80,20 +74,17 @@ class LetterboxPackage
      * @param ScopeConfigInterface          $scopeConfig
      * @param LetterBoxPackageConfiguration $letterBoxPackageConfiguration
      * @param OrderRepositoryInterface      $orderRepository
-     * @param ProductRepositoryInterface    $productRepository
      * @param CollectionFactory             $productCollectionFactory
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         LetterBoxPackageConfiguration $letterBoxPackageConfiguration,
         OrderRepositoryInterface $orderRepository,
-        ProductRepositoryInterface $productRepository,
         CollectionFactory $productCollectionFactory
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->letterBoxPackageConfiguration = $letterBoxPackageConfiguration;
         $this->orderRepository = $orderRepository;
-        $this->productRepository = $productRepository;
         $this->productCollectionFactory = $productCollectionFactory;
     }
 
