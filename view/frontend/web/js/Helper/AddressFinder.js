@@ -96,19 +96,24 @@ define([
             RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.housenumber');
         } else {
             RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode');
-            RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.1');
+            uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.1', function (houseNumberField) {
+                address.housenumber = houseNumberField.value();
+            });
         }
 
-        uiRegistry.get(RegistryFields, function (firstnameField, lastnameField, streetFirstLine, postcodeField, houseNumberField) {
-            // The housenumber value could be empty, and could have been included in the first address line.
-            var housenumber = houseNumberField.value();
-            if (!housenumber && streetFirstLine.value() !== undefined) {
-                housenumber = streetFirstLine.value().replace(/\D/g,'');
+        uiRegistry.get(RegistryFields, function (firstnameField, lastnameField, streetFirstLine, postcodeField) {
+            var street = streetFirstLine.value();
+            if (!address.housenumber && streetFirstLine.value() !== undefined) {
+                address.housenumber = streetFirstLine.value().replace(/\D/g,'');
+
             }
 
-            address.street = [streetFirstLine.value()];
+            if (address.housenumber) {
+                street = streetFirstLine.value().split(address.housenumber)[0].trim();
+            }
+
+            address.street = [street];
             address.postcode = postcodeField.value();
-            address.housenumber = housenumber;
             address.firstname = firstnameField.value();
             address.lastname = lastnameField.value();
         });
