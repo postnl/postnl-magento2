@@ -99,8 +99,8 @@ abstract class CalculateAbstract
 
         /** @var ProductInterface $product */
         $product = $products[$productId];
-        $productVolume = $product->getCustomAttribute(static::ATTRIBUTE_VOLUME);
-        return ($productVolume->getValue() * $this->getQty($item));
+        $productVolume = $product->getData(static::ATTRIBUTE_VOLUME);
+        return ($productVolume * $this->getQty($item));
     }
 
     /**

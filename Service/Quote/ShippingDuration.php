@@ -99,11 +99,11 @@ class ShippingDuration
         $products = $this->productCollection->getByIds($quote->getAllItems());
 
         $shippingDurations = array_map(function (ProductInterface $product) {
-            $attribute = $product->getCustomAttribute(static::ATTRIBUTE_CODE);
-            if (!$attribute) {
+            $attribute = $product->getData(static::ATTRIBUTE_CODE);
+            if (!isset($attribute)) {
                 return $this->webshopConfiguration->getShippingDuration();
             }
-            return $attribute->getValue();
+            return $attribute;
         }, $products);
 
         $itemsDuration = $this->getItemsDuration($shippingDurations);
