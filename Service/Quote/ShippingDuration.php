@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Service\Quote;
 
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use TIG\PostNL\Service\Wrapper\QuoteInterface as CheckoutSession;
 use Magento\Quote\Model\Quote as MagentoQuote;
 use TIG\PostNL\Config\Provider\Webshop;
@@ -57,20 +58,28 @@ class ShippingDuration
     private $productCollection;
 
     /**
+     * @var CollectionFactory
+     */
+    private $productCollectionFactory;
+
+    /**
      * ShippingDuration constructor.
      *
-     * @param CheckoutSession       $checkoutSession
-     * @param Webshop               $webshopConfiguration
+     * @param CheckoutSession   $checkoutSession
+     * @param Webshop           $webshopConfiguration
      * @param CollectionByItems $collectionByItems
+     * @param CollectionFactory $productCollectionFactory
      */
     public function __construct(
         CheckoutSession $checkoutSession,
         Webshop $webshopConfiguration,
-        CollectionByItems $collectionByItems
+        CollectionByItems $collectionByItems,
+        CollectionFactory $productCollectionFactory
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->webshopConfiguration = $webshopConfiguration;
         $this->productCollection = $collectionByItems;
+        $this->productCollectionFactory = $productCollectionFactory;
     }
 
     /**
@@ -96,14 +105,19 @@ class ShippingDuration
     private function getProvidedByQuote($quote)
     {
         $store    = $quote->getStoreId();
-        $products = $this->productCollection->getByIds($quote->getAllItems());
+        $productIds = [];
+        foreach ($quote->getAllItems() as $item) {
+            $productIds[] = $item->getProductId();
+        }
+        $productCollection = $this->productCollectionFactory->create();
+        $productCollection->addFieldToFilter('entity_id', ['in => ?', $productIds]);
+        $products = $productCollection->getItems();
 
         $shippingDurations = array_map(function (ProductInterface $product) {
-            $attribute = $product->getCustomAttribute(static::ATTRIBUTE_CODE);
-            if (!$attribute) {
+            if ($product->getData(static::ATTRIBUTE_CODE) === null) {
                 return $this->webshopConfiguration->getShippingDuration();
             }
-            return $attribute->getValue();
+            return $product->getData(static::ATTRIBUTE_CODE);
         }, $products);
 
         $itemsDuration = $this->getItemsDuration($shippingDurations);
