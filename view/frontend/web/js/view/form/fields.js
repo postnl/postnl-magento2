@@ -317,6 +317,12 @@ define([
             ];
 
             Registry.get(fields, function (postcodeElement, housenumberElement, additionElement) {
+                // Empty elements when the country has been switched
+                if (value !== 'NL') {
+                    housenumberElement.value('');
+                    additionElement.value('');
+                }
+                
                 // Next line is for initial load, before field is found in jQuery
                 postcodeElement.additionalClasses['tig-postnl-full-width'] = (value !== 'NL');
 
