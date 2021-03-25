@@ -91,7 +91,8 @@ $product->setTypeId(Type::TYPE_SIMPLE)
     ])
     ->setCanSaveCustomOptions(true)
     ->setHasOptions(true)
-    ->setCustomAttribute('postnl_product_type', 'regular');
+    ->setCustomAttribute('postnl_product_type', 'regular')
+    ->setPostnlProductType('regular');
 
 /** @var ProductRepositoryInterface $productRepositoryFactory */
 $productRepositoryFactory = $objectManager->create(ProductRepositoryInterface::class);
