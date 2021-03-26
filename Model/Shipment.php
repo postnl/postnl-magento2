@@ -186,7 +186,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
         $this->productOptions          = $productOptions;
         $this->barcodeRepository       = $barcodeRepository;
         $this->productRepository       = $productRepository;
-        $this->customs = $customs;
+        $this->customs                 = $customs;
     }
 
     /**
