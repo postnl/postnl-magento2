@@ -252,7 +252,10 @@ class Data
     {
         // Devision by zero not allowed.
         $weight = round(($weight ?: 1) / ($count ?: 1));
-        return $weight <= 0 ? 1 : $weight;
+        // convert kgs to grams because PostNL only accepts grams
+        $weight = $weight * 1000;
+
+        return $weight <= 1000 ? 1000 : $weight;
     }
 
     /**

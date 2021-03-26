@@ -205,7 +205,7 @@ class Customs
         $weight = $weight * 1000;
         $weight = (int)$weight;
 
-        return $weight <= 0 ? 1 : $weight;
+        return $weight <= 1000 ? 1000 : $weight;
     }
 
     public function getWeightUnit()
