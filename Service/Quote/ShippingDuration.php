@@ -31,10 +31,10 @@
  */
 namespace TIG\PostNL\Service\Quote;
 
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use TIG\PostNL\Service\Wrapper\QuoteInterface as CheckoutSession;
 use Magento\Quote\Model\Quote as MagentoQuote;
 use TIG\PostNL\Config\Provider\Webshop;
-use TIG\PostNL\Service\Product\CollectionByItems;
 use Magento\Catalog\Api\Data\ProductInterface;
 
 class ShippingDuration
@@ -52,25 +52,25 @@ class ShippingDuration
     private $webshopConfiguration;
 
     /**
-     * @var CollectionByItems
+     * @var CollectionFactory
      */
-    private $productCollection;
+    private $productCollectionFactory;
 
     /**
      * ShippingDuration constructor.
      *
-     * @param CheckoutSession       $checkoutSession
-     * @param Webshop               $webshopConfiguration
-     * @param CollectionByItems $collectionByItems
+     * @param CheckoutSession   $checkoutSession
+     * @param Webshop           $webshopConfiguration
+     * @param CollectionFactory $productCollectionFactory
      */
     public function __construct(
         CheckoutSession $checkoutSession,
         Webshop $webshopConfiguration,
-        CollectionByItems $collectionByItems
+        CollectionFactory $productCollectionFactory
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->webshopConfiguration = $webshopConfiguration;
-        $this->productCollection = $collectionByItems;
+        $this->productCollectionFactory = $productCollectionFactory;
     }
 
     /**
@@ -96,14 +96,13 @@ class ShippingDuration
     private function getProvidedByQuote($quote)
     {
         $store    = $quote->getStoreId();
-        $products = $this->productCollection->getByIds($quote->getAllItems());
+        $products = $this->getProductsFromQuote($quote);
 
         $shippingDurations = array_map(function (ProductInterface $product) {
-            $attribute = $product->getCustomAttribute(static::ATTRIBUTE_CODE);
-            if (!$attribute) {
+            if ($product->getData(static::ATTRIBUTE_CODE) === null) {
                 return $this->webshopConfiguration->getShippingDuration();
             }
-            return $attribute->getValue();
+            return $product->getData(static::ATTRIBUTE_CODE);
         }, $products);
 
         $itemsDuration = $this->getItemsDuration($shippingDurations);
@@ -112,6 +111,24 @@ class ShippingDuration
         }
 
         return $itemsDuration < 0 ? 1 : round($itemsDuration, 0);
+    }
+
+    /**
+     * @param $quote
+     *
+     * @return \Magento\Framework\DataObject[]
+     */
+    private function getProductsFromQuote($quote)
+    {
+        $productIds = [];
+        foreach ($quote->getAllItems() as $item) {
+            $productIds[] = $item->getProductId();
+        }
+
+        $productCollection = $this->productCollectionFactory->create();
+        $productCollection = $productCollection->addFieldToFilter('entity_id', ['in => ?', $productIds]);
+
+        return $productCollection->getItems();
     }
 
     /**

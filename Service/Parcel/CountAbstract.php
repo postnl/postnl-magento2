@@ -203,9 +203,9 @@ abstract class CountAbstract extends CollectAbstract
 
         /** @var ProductInterface $product */
         $product            = $this->products[$item->getId()];
-        $productParcelCount = $product->getCustomAttribute(self::ATTRIBUTE_PARCEL_COUNT);
+        $productParcelCount = $product->getData(self::ATTRIBUTE_PARCEL_COUNT);
         if ($productParcelCount) {
-            return ($productParcelCount->getValue() * $this->quantities[$item->getId()]);
+            return ($productParcelCount * $this->quantities[$item->getId()]);
         }
 
         return 0;

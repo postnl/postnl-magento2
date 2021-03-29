@@ -93,7 +93,10 @@ $product->setTypeId(Type::TYPE_SIMPLE)
     ->setHasOptions(true)
     ->setCustomAttribute('postnl_product_type', 'extra_at_home')
     ->setCustomAttribute('postnl_parcel_count', 2)
-    ->setCustomAttribute('postnl_parcel_volume', 50000);
+    ->setCustomAttribute('postnl_parcel_volume', 50000)
+    ->setPostnlProductType('extra_at_home')
+    ->setPostnlParcelCount(2)
+    ->setPostnlParcelVolume(50000);
 
 /** @var ProductRepositoryInterface $productRepositoryFactory */
 $productRepositoryFactory = $objectManager->create(ProductRepositoryInterface::class);

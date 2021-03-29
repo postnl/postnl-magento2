@@ -75,16 +75,15 @@ class ProductDictionary
     public function get($items, array $postNLTypes, $convertLetterbox = false)
     {
         $products = $this->collectionByItems->get($items);
+
         return array_filter($products, function (ProductInterface $product) use ($postNLTypes, $convertLetterbox) {
-            $attribute = $product->getCustomAttribute(PostNLType::POSTNL_PRODUCT_TYPE);
             if ($convertLetterbox &&
-                $attribute &&
-                $attribute->getValue() == PostNLType::PRODUCT_TYPE_LETTERBOX_PACKAGE
+                $product->getData(PostNLType::POSTNL_PRODUCT_TYPE) == PostNLType::PRODUCT_TYPE_LETTERBOX_PACKAGE
             ) {
-                $attribute->setValue(PostNLType::PRODUCT_TYPE_REGULAR);
+                $product->setData(PostNLType::POSTNL_PRODUCT_TYPE, PostNLType::PRODUCT_TYPE_REGULAR);
             }
-            $value = $attribute !== null ? $attribute->getValue() : false;
-            return in_array($value, $postNLTypes);
+
+            return in_array($product->getData(PostNLType::POSTNL_PRODUCT_TYPE), $postNLTypes);
         });
     }
 
