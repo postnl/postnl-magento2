@@ -122,7 +122,7 @@ define([
             return false;
         }
 
-        var nlRegex = new RegExp('^[1-9][0-9]{3}\s?[a-zA-Z]{2}$');
+        var nlRegex = new RegExp('^[1-9][0-9]{3} ?[a-zA-Z]{2}$');
         // No regex required for BE, valid BE zipcodes are between 1000 and 9999.
         if ((address.country === 'NL' && !nlRegex.test(address.postcode)) ||
             (address.country === 'BE' && !(address.postcode >= 1000 && address.postcode <= 9999))) {
