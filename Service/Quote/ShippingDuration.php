@@ -35,7 +35,6 @@ use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use TIG\PostNL\Service\Wrapper\QuoteInterface as CheckoutSession;
 use Magento\Quote\Model\Quote as MagentoQuote;
 use TIG\PostNL\Config\Provider\Webshop;
-use TIG\PostNL\Service\Product\CollectionByItems;
 use Magento\Catalog\Api\Data\ProductInterface;
 
 class ShippingDuration
@@ -53,11 +52,6 @@ class ShippingDuration
     private $webshopConfiguration;
 
     /**
-     * @var CollectionByItems
-     */
-    private $productCollection;
-
-    /**
      * @var CollectionFactory
      */
     private $productCollectionFactory;
@@ -67,18 +61,15 @@ class ShippingDuration
      *
      * @param CheckoutSession   $checkoutSession
      * @param Webshop           $webshopConfiguration
-     * @param CollectionByItems $collectionByItems
      * @param CollectionFactory $productCollectionFactory
      */
     public function __construct(
         CheckoutSession $checkoutSession,
         Webshop $webshopConfiguration,
-        CollectionByItems $collectionByItems,
         CollectionFactory $productCollectionFactory
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->webshopConfiguration = $webshopConfiguration;
-        $this->productCollection = $collectionByItems;
         $this->productCollectionFactory = $productCollectionFactory;
     }
 
@@ -110,7 +101,7 @@ class ShippingDuration
             $productIds[] = $item->getProductId();
         }
         $productCollection = $this->productCollectionFactory->create();
-        $productCollection->addFieldToFilter('entity_id', ['in => ?', $productIds]);
+        $productCollection = $productCollection->addFieldToFilter('entity_id', ['in => ?', $productIds]);
         $products = $productCollection->getItems();
 
         $shippingDurations = array_map(function (ProductInterface $product) {

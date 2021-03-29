@@ -36,7 +36,6 @@ use TIG\PostNL\Test\Integration\TestCase;
 use Magento\Quote\Model\Quote;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Config\Provider\Webshop;
-use TIG\PostNL\Service\Product\CollectionByItems;
 
 class ShippingDurationTest extends TestCase
 {
@@ -69,9 +68,26 @@ class ShippingDurationTest extends TestCase
         $webshopExpects = $webshopConfiguration->expects($this->any())->method('getShippingDuration');
         $webshopExpects->willReturn('1');
 
+        $productRepository = $this->getObject(\Magento\Catalog\Api\ProductRepositoryInterface::class);
+        /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
+        $product = $productRepository->get('simple_in_stock');
+
+        $productsMock = $this->getFakeMock(\Magento\Framework\Data\Collection\AbstractDb::class)->getMock();
+        $productsExpects = $productsMock->method('getItems');
+        $productsExpects->willReturn([$product]);
+
+        $productCollection = $this->getFakeMock(\Magento\Catalog\Model\ResourceModel\Product\Collection::class)->getMock();
+        $productCollectionExpects = $productCollection->method('addFieldToFilter');
+        $productCollectionExpects->willReturn($productsMock);
+
+        $productCollectionFactory = $this->getFakeMock(\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory::class)->getMock();
+        $productCollectionFactoryExpects = $productCollectionFactory->method('create');
+        $productCollectionFactoryExpects->willReturn($productCollection);
+
         $instance = $this->getInstance([
             'checkoutSession' => $checkoutSession,
-            'webshopConfiguration' => $webshopConfiguration
+            'webshopConfiguration' => $webshopConfiguration,
+            'productCollectionFactory' => $productCollectionFactory
         ]);
 
         $restult = $instance->get();
