@@ -96,13 +96,7 @@ class ShippingDuration
     private function getProvidedByQuote($quote)
     {
         $store    = $quote->getStoreId();
-        $productIds = [];
-        foreach ($quote->getAllItems() as $item) {
-            $productIds[] = $item->getProductId();
-        }
-        $productCollection = $this->productCollectionFactory->create();
-        $productCollection = $productCollection->addFieldToFilter('entity_id', ['in => ?', $productIds]);
-        $products = $productCollection->getItems();
+        $products = $this->getProductsFromQuote($quote);
 
         $shippingDurations = array_map(function (ProductInterface $product) {
             if ($product->getData(static::ATTRIBUTE_CODE) === null) {
@@ -117,6 +111,24 @@ class ShippingDuration
         }
 
         return $itemsDuration < 0 ? 1 : round($itemsDuration, 0);
+    }
+
+    /**
+     * @param $quote
+     *
+     * @return \Magento\Framework\DataObject[]
+     */
+    private function getProductsFromQuote($quote)
+    {
+        $productIds = [];
+        foreach ($quote->getAllItems() as $item) {
+            $productIds[] = $item->getProductId();
+        }
+
+        $productCollection = $this->productCollectionFactory->create();
+        $productCollection = $productCollection->addFieldToFilter('entity_id', ['in => ?', $productIds]);
+
+        return $productCollection->getItems();
     }
 
     /**
