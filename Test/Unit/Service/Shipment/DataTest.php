@@ -187,7 +187,7 @@ class DataTest extends TestCase
             'CollectionTimeStampEnd'   => '',
             'CollectionTimeStampStart' => '',
             'Contacts'                 => ['Contact' => $contact],
-            'Dimension'                => ['Weight'  => round(100)],
+            'Dimension'                => ['Weight'  => round(100000)],
             'DeliveryDate'             => '19-11-2016',
             'DownPartnerID'            => '12345',
             'DownPartnerLocation'      => '112345',

@@ -32,20 +32,21 @@
 
 namespace TIG\PostNL\Model;
 
-use Magento\Framework\Stdlib\DateTime\DateTime;
-use TIG\PostNL\Api\Data\ShipmentInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
+use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\Order\AddressFactory;
-use Magento\Sales\Model\Order\ShipmentRepository as OrderShipmentRepository;
 use Magento\Sales\Model\Order\Shipment\Item;
+use Magento\Sales\Model\Order\ShipmentRepository as OrderShipmentRepository;
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
-use Magento\Catalog\Api\ProductRepositoryInterface;
+use TIG\PostNL\Service\Shipment\Customs;
 
 // @codingStandardsIgnoreFile
 
@@ -139,6 +140,10 @@ class Shipment extends AbstractModel implements ShipmentInterface
      * @var ProductRepositoryInterface
      */
     private $productRepository;
+    /**
+     * @var Customs
+     */
+    private $customs;
 
     /**
      * @param Context                            $context
@@ -151,6 +156,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
      * @param ProductOptions                     $productOptions
      * @param ShipmentBarcodeRepositoryInterface $barcodeRepository
      * @param ProductRepositoryInterface         $productRepository
+     * @param Customs                            $customs
      * @param AbstractResource                   $resource
      * @param AbstractDb                         $resourceCollection
      * @param array                              $data
@@ -166,6 +172,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
         ProductOptions $productOptions,
         ShipmentBarcodeRepositoryInterface $barcodeRepository,
         ProductRepositoryInterface $productRepository,
+        Customs $customs,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -179,6 +186,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
         $this->productOptions          = $productOptions;
         $this->barcodeRepository       = $barcodeRepository;
         $this->productRepository       = $productRepository;
+        $this->customs                 = $customs;
     }
 
     /**
@@ -300,6 +308,14 @@ class Shipment extends AbstractModel implements ShipmentInterface
         /** @var Item $item */
         foreach ($items as $item) {
             $weight += ($item->getWeight() * $item->getQty());
+        }
+
+        if ($this->customs->getWeightUnit() == 'lbs') {
+            //convert Kgs to Lb
+            $weight = $weight / 2.20462262;
+            $weight = $weight > 1 ? $weight : 1;
+
+            return $weight;
         }
 
         if ($weight < 1) {
