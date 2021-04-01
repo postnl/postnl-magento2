@@ -93,7 +93,7 @@ define([
 
         if ((address.country === 'NL' && window.checkoutConfig.shipping.postnl.is_postcodecheck_active) || (window.checkoutConfig.postcode !== undefined && window.checkoutConfig.postcode.postcode_active)) {
             RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.postcode');
-            // RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.housenumber');
+            RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.housenumber');
         } else {
             RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode');
             uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.1', function (houseNumberField) {
