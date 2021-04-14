@@ -108,6 +108,9 @@ class AsyncPlugin extends Grid
     {
         foreach ($this->notSyncedIds as $orderId) {
             $postNLOrder = $this->orderRepository->getByOrderId($orderId);
+            if (!$postNLOrder) {
+                continue;
+            }
             $shipAt = $postNLOrder->getShipAt();
             $productCode = $postNLOrder->getProductCode();
             $confirmed = $postNLOrder->getConfirmed();
