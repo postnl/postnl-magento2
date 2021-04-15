@@ -78,11 +78,7 @@ class CustomerForm
             ScopeInterface::SCOPE_STORE
         );
 
-        if (!$isEnabled) {
-            return $result;
-        }
-
-        if ($request->getPostValue('country_id') != 'NL') {
+        if (!$isEnabled || $request->getPostValue('country_id') != 'NL') {
             return $result;
         }
 
