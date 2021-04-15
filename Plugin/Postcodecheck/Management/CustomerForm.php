@@ -33,29 +33,60 @@ namespace TIG\PostNL\Plugin\Postcodecheck\Management;
 
 use Magento\Customer\Model\Metadata\Form;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Config\Provider\Webshop;
 
 class CustomerForm
 {
+    const TIG_ENABLE_POSTCODE_CHECK = 'tig_postnl/addresscheck/enable_postcodecheck';
+
     /** @var Webshop */
     private $webshopConfig;
 
     /**
-     * @param Webshop $webshopConfig
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
+     * @param Webshop              $webshopConfig
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
-        Webshop $webshopConfig
+        Webshop $webshopConfig,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->webshopConfig = $webshopConfig;
+        $this->scopeConfig   = $scopeConfig;
     }
 
+    /**
+     * @param Form             $subject
+     * @param                  $result
+     * @param RequestInterface $request
+     *
+     * @return mixed
+     * @see    \Magento\Customer\Model\Metadata\Form::extractData
+     * @plugin after
+     *
+     */
     public function afterExtractData(Form $subject, $result, RequestInterface $request)
     {
+        $isEnabled = $this->scopeConfig->getValue(
+            self::TIG_ENABLE_POSTCODE_CHECK,
+            ScopeInterface::SCOPE_STORE
+        );
+
+        if (!$isEnabled) {
+            return $result;
+        }
+
         if ($request->getPostValue('country_id') != 'NL') {
             return $result;
         }
 
-        $housenumber = $request->getPostValue('tig-housenumber');
+        $housenumber     = $request->getPostValue('tig-housenumber');
         $housenrAddition = $request->getPostValue('tig-housenumber-addition');
 
         $result['street'] = [
