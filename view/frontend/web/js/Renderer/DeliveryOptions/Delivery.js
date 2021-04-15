@@ -238,6 +238,7 @@ define([
                     });
                     this.deliverydays(data);
                     State.currentOpenPane('delivery');
+                    this.selectFirstDeliveryOption();
                     return;
                 }
 
@@ -248,6 +249,7 @@ define([
                     });
                     this.deliverydays(data);
                     State.currentOpenPane('delivery');
+                    this.selectFirstDeliveryOption();
                     return;
                 }
 
