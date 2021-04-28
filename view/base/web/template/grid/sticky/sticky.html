@@ -43,6 +43,12 @@
                             </select>
                         </div>
                         <!-- /ko -->
+                        <div class="select-holder" data-bind="visible: $data.currentSelected() == 'choose_print_start_position'">
+                            <select class="action-select admin__control-select choose_print_start_position_toolbar"
+                                    id="choose_print_start_position" data-bind="options:$data.labelStartPositionOptions,
+                                    optionsText: 'text', optionsValue: 'value'">
+                            </select>
+                        </div>
                     </div>
                     <div class="col-xs-2">
                         <button class="action-secondary" type="button" click="function() {submit(true)}">

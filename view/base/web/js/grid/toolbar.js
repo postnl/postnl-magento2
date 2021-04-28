@@ -54,12 +54,14 @@ define([
             },
             actionList : ko.observableArray([
                 {text: $.mage.__('Change productcode'), value: 'change_product'},
-                {text: $.mage.__('Change parcel count'), value: 'change_parcel'}
+                {text: $.mage.__('Change parcel count'), value: 'change_parcel'},
+                {text: $.mage.__('Choose printing start position'), value: 'choose_print_start_position'}
             ]),
             defaultOption : ko.observable(DataProvider.getDefaultOption()),
             optionList : ko.observableArray(
                 DataProvider.getProductOptions()
             ),
+            labelStartPositionOptions : ko.observable(DataProvider.getLabelStartPositionOptions()),
             showToolbar : ko.observable(DataProvider.getShowToolbar()),
             jsLoaded : true,
             isGuaranteedActive : ko.observable(DataProvider.getGuaranteedIsActive()),
@@ -80,7 +82,7 @@ define([
             ]);
 
             this.currentSelected.subscribe(function (value) {
-                if (value === 'change_parcel') {
+                if (value !== 'change_product') {
                     self.showTimeOptions(false);
                     return;
                 }
