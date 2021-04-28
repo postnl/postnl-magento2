@@ -129,11 +129,10 @@ class Range
             return $this->get('GLOBAL');
         }
 
-        if ($this->options->doesProductMatchFlags($productCode, 'group', 'eu_options')) {
-            return $this->get('EU');
-        }
-
-        if ($this->options->doesProductMatchFlags($productCode, 'group', 'pakjegemak_be_options')) {
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'eu_options') ||
+            $this->options->doesProductMatchFlags($productCode, 'group', 'be_options') ||
+            $this->options->doesProductMatchFlags($productCode, 'group', 'pakjegemak_be_options')
+        ) {
             return $this->get('EU');
         }
 

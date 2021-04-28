@@ -94,9 +94,8 @@ class DefaultOptions implements ArrayInterface
      */
     public function getBeProducts()
     {
-        $beProducts[] = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
         $beProducts[] = $this->shippingOptions->canUseCargoProducts() ? $this->productOptions->getCargoOptions() : [];
-        $beProducts[] = $this->productOptions->getEuOptions();
+        $beProducts[] = $this->productOptions->getBeOptions();
 
         return call_user_func_array("array_merge", $beProducts);
     }

@@ -37,7 +37,8 @@ define([
     'TIG_PostNL/js/Helper/AddressFinder',
     'TIG_PostNL/js/Helper/Logger',
     'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Models/TimeFrame'
+    'TIG_PostNL/js/Models/TimeFrame',
+    'Magento_Checkout/js/action/set-shipping-information'
 ], function (
     Component,
     ko,
@@ -47,7 +48,8 @@ define([
     AddressFinder,
     Logger,
     State,
-    TimeFrame
+    TimeFrame,
+    setShippingInformationAction
 ) {
     'use strict';
 
@@ -59,7 +61,8 @@ define([
             street: null,
             hasAddress:false,
             deliverydays: ko.observableArray([]),
-            odd: false
+            odd: false,
+            currentDeliveryAddress: ko.observable(null)
         },
 
         initObservable: function () {
@@ -79,10 +82,6 @@ define([
                 }
 
                 if (!address || JSON.stringify(address) == JSON.stringify(oldAddress)) {
-                    return;
-                }
-
-                if (address.country !== 'NL' && address.country !== 'BE') {
                     return;
                 }
 
@@ -118,8 +117,8 @@ define([
             State.currentSelectedShipmentType('delivery');
 
             var fee = null;
-            if (!value.fallback && !value.letterbox_package) {
-                if (value.hasFee()) {
+            if (!value.fallback && !value.letterbox_package && !value.eps && !value.gp) {
+                if (value.hasFee !== undefined && value.hasFee()) {
                     fee = value.getFee();
                 }
             }
@@ -127,13 +126,26 @@ define([
             State.fee(fee);
             State.deliveryFee(fee);
 
+            var type = 'delivery';
+            if (typeof value.fallback !== 'undefined') {
+                type = 'fallback';
+            }
+
+            if (typeof value.eps !== 'undefined') {
+                type = 'EPS';
+            }
+
+            if (typeof value.gp !== 'undefined') {
+                type = 'GP';
+            }
+
             $(document).trigger('compatible_postnl_deliveryoptions_save_before');
             $.ajax({
                 method : 'POST',
                 url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
                 data   : {
                     address: AddressFinder(),
-                    type   : (typeof value.fallback !== 'undefined') ? 'fallback' : 'delivery',
+                    type   : type,
                     date   : value.date,
                     option : value.option,
                     from   : value.from,
@@ -143,6 +155,9 @@ define([
                 }
             }).done(function (response) {
                 $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
+                if (window.checkoutConfig.shipping.postnl.onestepcheckout_active) {
+                    setShippingInformationAction();
+                }
             });
         },
 
@@ -152,17 +167,42 @@ define([
          * @param address
          */
         getDeliverydays: function (address) {
-            State.deliveryOptionsAreLoading(true);
+            // Unfortunately the "this" context shows the "Window" context, while the "this" context
+            // should be the UiClass context. When assigning the "this" context to something, both
+            // the assigned AND the this context will change to the UiClass.
             var self = this;
+
+            // Avoid getting delivery days multiple times.
+            // Regex for street used, housenumbers can be stored in the street field and the actual street is not relevant.
+            var addressAsString = JSON.stringify({
+                'postcode': address.postcode,
+                'street': address.street[0].replace(/\D/g,''),
+                'housenumber': address.housenumber
+            });
+            if (this.deliverydays() !== undefined && this.currentDeliveryAddress() === addressAsString) {
+                return;
+            }
+
+            this.currentDeliveryAddress(addressAsString);
+
+            State.deliveryOptionsAreLoading(true);
+
             if (self.getDeliveryDayRequest !== undefined) {
                 self.getDeliveryDayRequest.abort('avoidMulticall');
             }
+
+            // About to receive new delivery days. Deselect the current one.
+            this.selectedOption(null);
 
             self.getDeliveryDayRequest = $.ajax({
                 method: 'POST',
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_timeframes,
                 data : {address: address}
             }).done(function (data) {
+                // If the deliverydays are reloaded, the first one is automatically selected.
+                // Show this by switching to the delivery pane.
+                State.currentOpenPane('delivery');
+
                 State.deliveryOptionsAreAvailable(true);
                 State.deliveryPrice(data.price);
 
@@ -177,19 +217,41 @@ define([
                         return fallback;
                     });
                     this.deliverydays(data);
-                    State.currentOpenPane('delivery');
+
+                    this.selectFirstDeliveryOption();
                     return;
                 }
-          
+
                 if (data.letterbox_package === true) {
                     data  = ko.utils.arrayMap(data.timeframes, function (letterbox_package) {
                         return letterbox_package;
                     });
                     this.deliverydays(data);
-                    State.currentOpenPane('delivery');
+                    this.selectFirstDeliveryOption();
                     return;
                 }
 
+                // Return delivery moment of type EPS if the country is an EPS country
+                if (typeof data.timeframes[0][0] !== 'undefined' && "eps" in data.timeframes[0][0]) {
+                    data  = ko.utils.arrayMap(data.timeframes, function (eps) {
+                        return eps;
+                    });
+                    this.deliverydays(data);
+                    State.currentOpenPane('delivery');
+                    this.selectFirstDeliveryOption();
+                    return;
+                }
+
+                // Return delivery moment of type GP if the country is an Global Pack country
+                if (typeof data.timeframes[0][0] !== 'undefined' && "gp" in data.timeframes[0][0]) {
+                    data  = ko.utils.arrayMap(data.timeframes, function (gp) {
+                        return gp;
+                    });
+                    this.deliverydays(data);
+                    State.currentOpenPane('delivery');
+                    this.selectFirstDeliveryOption();
+                    return;
+                }
 
                 data = ko.utils.arrayMap(data.timeframes, function (day) {
                     return ko.utils.arrayMap(day, function (timeFrame) {
@@ -199,6 +261,7 @@ define([
                 });
 
                 this.deliverydays(data);
+                this.selectFirstDeliveryOption();
             }.bind(this)).fail(function (data) {
                 if (data.statusText !== 'avoidMulticall') {
                     State.deliveryOptionsAreAvailable(false);
@@ -248,6 +311,18 @@ define([
             var isNL = (address !== null && address !== false && address.country === 'NL');
 
             return isActive === 1 && isNL;
-        })
+        }),
+
+        selectFirstDeliveryOption: function () {
+            // Only select the first option if there is none defined
+            if (this.selectedOption() !== undefined && this.selectedOption() != null) {
+                return;
+            }
+
+            var deliveryDays = this.deliverydays();
+            if (deliveryDays !== undefined && deliveryDays[0] !== undefined && deliveryDays[0][0] !== undefined) {
+                this.selectedOption(deliveryDays[0][0]);
+            }
+        }
     });
 });

@@ -30,6 +30,7 @@ try {
         ->setVisibility(\Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH)
         ->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
         ->setCustomAttribute('postnl_shipping_duration', 3)
+        ->setPostnlShippingDuration(3)
         ->setStockData(
             [
                 'qty'                   => 50,

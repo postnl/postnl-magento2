@@ -187,7 +187,8 @@ class DataTest extends TestCase
             'CollectionTimeStampEnd'   => '',
             'CollectionTimeStampStart' => '',
             'Contacts'                 => ['Contact' => $contact],
-            'Dimension'                => ['Weight'  => round(100)],
+            // shipmentData is also used as expected values. We expect grams
+            'Dimension'                => ['Weight'  => 2250],
             'DeliveryDate'             => '19-11-2016',
             'DownPartnerID'            => '12345',
             'DownPartnerLocation'      => '112345',
@@ -197,7 +198,8 @@ class DataTest extends TestCase
         ];
 
         $this->mockFunction($this->shipmentMock, 'getMainBarcode', $shipmentData['Barcode']);
-        $this->mockFunction($this->shipmentMock, 'getTotalWeight', $shipmentData['Dimension']['Weight']);
+        // The function assumes Kilograms going in, which gets multiplied by 1000.
+        $this->mockFunction($this->shipmentMock, 'getTotalWeight', $shipmentData['Dimension']['Weight'] / 1000);
         $this->mockFunction($this->shipmentMock, 'getDeliveryDate', $shipmentData['DeliveryDate']);
         $this->mockFunction($this->shipmentMock, 'getDownpartnerId', $shipmentData['DownPartnerID']);
         $this->mockFunction($this->shipmentMock, 'getDownpartnerLocation', $shipmentData['DownPartnerLocation']);

@@ -72,9 +72,7 @@ class CollectionByAttributeValue
     {
         $products = $this->collectionByItems->get($items);
         return array_filter($products, function (ProductInterface $product) use ($code, $matchedValue) {
-            $attribute = $product->getCustomAttribute($code);
-            $value = $attribute !== null ? $attribute->getValue() : false;
-            return in_array($value, $matchedValue);
+            return in_array($product->getData($code), $matchedValue);
         });
     }
 
@@ -92,9 +90,7 @@ class CollectionByAttributeValue
     {
         $products = $this->collectionByItems->get($items);
         return array_filter($products, function (ProductInterface $product) use ($code, $minValue) {
-            $attribute = $product->getCustomAttribute($code);
-            $value = $attribute !== null ? $attribute->getValue() : false;
-            return ($value > $minValue);
+            return ($product->getData($code) > $minValue);
         });
     }
 }

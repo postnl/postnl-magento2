@@ -59,6 +59,7 @@
                 <item name="is_postcodecheck_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsPostcodecheckActive</item>
                 <item name="checkout_extension" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\CheckoutExtension</item>
                 <item name="is_delivery_days_disabled" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsDeliveryDaysDisabled</item>
+                <item name="onestepcheckout_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsOnestepcheckoutActive</item>
             </argument>
         </arguments>
     </type>
@@ -68,9 +69,7 @@
         <arguments>
             <!-- Order is important, cutoff times must be processed last -->
             <argument name="dayFilters" xsi:type="array">
-                <item name="sunday" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\Sunday</item>
                 <item name="sameday" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\SameDay</item>
-                <item name="shipmentdays" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\ShipmentDays</item>
                 <item name="cutoff" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\CutOffTimes</item>
             </argument>
             <argument name="optionsFilters" xsi:type="array">

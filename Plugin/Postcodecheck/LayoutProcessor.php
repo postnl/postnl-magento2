@@ -138,7 +138,7 @@ class LayoutProcessor
 
             $billingForm['children']['form-fields']['children'] = $this->processAddress(
                 $billingForm['children']['form-fields']['children'],
-                $billingForm['dataScopePrefix'],
+                isset($billingForm['dataScopePrefix']) ? $billingForm['dataScopePrefix'] : '',
                 []
             );
 
@@ -166,7 +166,7 @@ class LayoutProcessor
 
         $billingFields['children']['form-fields']['children'] = $this->processAddress(
             $billingFields['children']['form-fields']['children'],
-            $billingFields['dataScopePrefix'],
+            isset($billingFields['dataScopePrefix']) ? $billingFields['dataScopePrefix'] : '',
             []
         );
 

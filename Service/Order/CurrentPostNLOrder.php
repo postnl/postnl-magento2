@@ -69,8 +69,12 @@ class CurrentPostNLOrder
     }
 
     /**
+     * Retrieve the current PostNL order
+     *
      * @param int $quoteId
+     *
      * @return PostNLOrder|null
+     * @throws \Magento\Framework\Exception\InputException
      */
     public function get($quoteId = null)
     {
@@ -78,17 +82,7 @@ class CurrentPostNLOrder
             $quoteId = $this->getQuoteId();
         }
 
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId);
-        $searchCriteria->setPageSize(1);
-
-        /** @var \Magento\Framework\Api\SearchResults $list */
-        $list = $this->postNLOrderRepository->getList($searchCriteria->create());
-
-        if ($list->getTotalCount()) {
-            return array_values($list->getItems())[0];
-        }
-
-        return null;
+        return $this->postNLOrderRepository->retrieveCurrentPostNLOrder($quoteId);
     }
 
     /**

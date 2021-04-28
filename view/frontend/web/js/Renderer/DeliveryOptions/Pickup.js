@@ -36,7 +36,8 @@ define([
     'TIG_PostNL/js/Helper/AddressFinder',
     'TIG_PostNL/js/Helper/Logger',
     'TIG_PostNL/js/Helper/State',
-    'TIG_PostNL/js/Models/Location'
+    'TIG_PostNL/js/Models/Location',
+    'Magento_Checkout/js/action/set-shipping-information'
 ], function (
     Component,
     ko,
@@ -45,7 +46,8 @@ define([
     AddressFinder,
     Logger,
     State,
-    Location
+    Location,
+    setShippingInformationAction
 ) {
     'use strict';
 
@@ -56,7 +58,8 @@ define([
             country : null,
             street : null,
             hasAddress :false,
-            pickupAddresses: ko.observableArray([])
+            pickupAddresses: ko.observableArray([]),
+            currentLocationAddress: null
         },
 
         initObservable : function () {
@@ -152,6 +155,9 @@ define([
                     }
                 }).done(function (response) {
                     $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
+                    if (window.checkoutConfig.shipping.postnl.onestepcheckout_active) {
+                        setShippingInformationAction();
+                    }
                 });
 
             }.bind(this));
@@ -169,9 +175,17 @@ define([
          * @param address
          */
         getPickupAddresses : function (address) {
+            var self = this;
+
+            // Avoid getting delivery days multiple times
+            var addressAsString = JSON.stringify({'postcode': address.postcode, 'housenumber': address.housenumber});
+            if (this.pickupAddresses() !== undefined && this.currentLocationAddress === addressAsString) {
+                return;
+            }
+
+            this.currentLocationAddress = addressAsString;
             State.pickupOptionsAreLoading(true);
 
-            var self = this;
             if (self.getLocationsRequest !== undefined) {
                 self.getLocationsRequest.abort('avoidMulticall');
             }

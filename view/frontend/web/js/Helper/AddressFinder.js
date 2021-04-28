@@ -32,128 +32,107 @@ define([
     'ko',
     'Magento_Checkout/js/model/quote',
     'jquery',
-    'Magento_Customer/js/model/customer'
+    'Magento_Customer/js/model/customer',
+    'uiRegistry'
 ], function (
     ko,
     quote,
     $,
-    customer
+    customer,
+    uiRegistry
 ) {
     'use strict';
 
     var address = {
-            postcode    : null,
-            country     : null,
-            street      : null,
-            firstname   : null,
-            lastname    : null,
-            telephone   : null,
-            housenumber : null
-        },
-        countryCode,
-        timer,
-        allFieldsExists = true,
-        valueUpdateNotifier = ko.observable(null);
-
-    var fields = [
-        "input[name*='street[0]']",
-        "input[name*='street[1]']",
-        "input[name*='postcode']",
-        "select[name*='country_id']"
-    ];
-
-    /**
-     * Without cookie data Magento is not observing the fields so the AddressFinder is never triggered.
-     * The Timeout is needed so it gives the Notifier the chance to retrieve the correct country code,
-     * and not the default value.
-     */
-    $(document).on('change', fields.join(','), function () {
-        // Clear timeout if exists.
-        if (typeof timer !== 'undefined') {
-            clearTimeout(timer);
-        }
-
-        timer = setTimeout(function () {
-            countryCode = $("select[name*='country_id']").val();
-            valueUpdateNotifier.notifySubscribers();
-        }, 500);
-    });
+        country     : null,
+        street      : null,
+        postcode    : null,
+        housenumber : null,
+        firstname   : null,
+        lastname    : null
+    };
 
     /**
      * Collect the needed information from the quote
      */
     return ko.computed(function () {
-        valueUpdateNotifier();
-
-        var housenumber;
-        if (window.checkoutConfig.postcode !== undefined ||
-            window.checkoutConfig.shipping.postnl.is_postcodecheck_active) {
-            housenumber = $("input[name*='tig_housenumber']").val();
-        }
-
-        /**
-         * The street is not always available on the first run.
-         */
         var shippingAddress = quote.shippingAddress();
-        var quoteStreet = [];
-        if (shippingAddress) {
-            quoteStreet = (typeof shippingAddress.street === 'undefined') ? [] : shippingAddress.street;
-        }
 
-        if (customer.isLoggedIn() && shippingAddress && quoteStreet.length > 0) {
+        // Check specifically on street - we need one anyway, and it's to prevent undefined errors when searching for street[1]
+        if (customer.isLoggedIn() && shippingAddress && shippingAddress.street) {
+            var housenumber = shippingAddress.street[1];
+            if (!housenumber && shippingAddress.street[0] !== undefined) {
+                housenumber = shippingAddress.street[0].replace(/\D/g,'');
+            }
+
             address = {
-                street: quoteStreet,
+                street: shippingAddress.street[0],
                 postcode: shippingAddress.postcode,
-                lastname: shippingAddress.lastname,
+                housenumber: housenumber,
                 firstname: shippingAddress.firstname,
+                lastname: shippingAddress.lastname,
                 telephone: shippingAddress.telephone,
-                country: shippingAddress.countryId,
-                housenumber : housenumber
+                country: shippingAddress.countryId
             };
 
-            return address;
+            if (address.country && address.postcode && address.street !== undefined && address.street[0] && address.housenumber) {
+                return address;
+            }
         }
 
-        allFieldsExists = true;
-        $.each(fields, function () {
-            /** Second street may not exist and is therefor not required and should only be observed. */
-            if (!$(this).length && this !== "input[name*='street[1]']") {
-                allFieldsExists = false;
-                return false;
-            }
+        // Country is required to determine which fields are used.
+        uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.country_id', function (countryField) {
+            address.country = countryField.value();
         });
 
-        if (!allFieldsExists) {
-            return null;
+        var RegistryFields = [
+            'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.firstname',
+            'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.lastname',
+            'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.0'
+        ];
+
+        if ((address.country === 'NL' && window.checkoutConfig.shipping.postnl.is_postcodecheck_active) || (window.checkoutConfig.postcode !== undefined && window.checkoutConfig.postcode.postcode_active)) {
+            RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.postcode');
+            RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode-field-group.field-group.housenumber');
+        } else {
+            RegistryFields.push('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode');
+            uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street.1', function (houseNumberField) {
+                address.housenumber = houseNumberField.value();
+            });
         }
 
-        /**
-         * Unfortunately Magento does not always fill all fields, so get them ourselves.
-         */
-        address.street = {
-            0 : $("input[name*='street[0]']").val(),
-            1 : $("input[name*='street[1]']").val()
-        };
+        uiRegistry.get(RegistryFields, function (firstnameField, lastnameField, streetFirstLine, postcodeField, houseNumberField) {
+            if (houseNumberField !== undefined) {
+                // The housenumber value could be empty, and could have been included in the first address line.
+                address.housenumber = houseNumberField.value();
+            }
 
-        if (housenumber !== undefined) {
-            address.housenumber = housenumber;
+            if (!address.housenumber && streetFirstLine.value() !== undefined) {
+                address.housenumber = streetFirstLine.value().replace(/\D/g,'');
+            }
+
+            address.street = [streetFirstLine.value()];
+            address.postcode = postcodeField.value();
+            address.firstname = firstnameField.value();
+            address.lastname = lastnameField.value();
+        });
+
+        // Some merchants disable the telephone field. Adding this to the previous part will stop the entire get function
+        uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.telephone', function (telephoneField) {
+            address.telephone = telephoneField.value();
+        });
+
+        if (!address.country || !address.postcode || !address.street[0] || !address.housenumber) {
+            return false;
         }
 
-        address.postcode   = $("input[name*='postcode']").val();
-        address.firstname  = $("input[name*='firstname']").val();
-        address.lastname   = $("input[name*='lastname']").val();
-        address.telephone  = $("input[name*='telephone']").val();
-
-        if (!address.country || address.country !== countryCode) {
-            address.country = $("select[name*='country_id']").val();
-        }
-
-        if (!address.country || !address.postcode || !address.street[0]) {
+        var nlRegex = new RegExp('^[1-9][0-9]{3} ?[a-zA-Z]{2}$');
+        // No regex required for BE, valid BE zipcodes are between 1000 and 9999.
+        if ((address.country === 'NL' && !nlRegex.test(address.postcode)) ||
+            (address.country === 'BE' && !(address.postcode >= 1000 && address.postcode <= 9999))) {
             return false;
         }
 
         return address;
-
-
     }.bind(this));
 });

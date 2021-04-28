@@ -78,6 +78,7 @@ class FpdiFactory
         if (!$this->moduleManager->isEnabled('Fooman_PrintOrderPdf')) {
             // @codingStandardsIgnoreLine
             return $this->objectManager->create(Fpdi::class, [
+                'file' => $this->file,
                 'orientation' => 'P',
                 'unit' => 'mm',
                 'size' => 'A4',
@@ -94,6 +95,7 @@ class FpdiFactory
     {
         // @codingStandardsIgnoreLine
         return $this->objectManager->create(Fpdi::class, [
+            'file' => $this->file,
             'orientation' => 'P',
             'unit' => 'mm',
             'size' => 'A4',

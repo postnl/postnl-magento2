@@ -239,7 +239,7 @@ class BarcodeHandler
     {
         /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
         $barcodeModel = $this->shipmentBarcodeFactory->create();
-        $barcodeModel->setParentId($shipmentId);
+        $barcodeModel->changeParentId($shipmentId);
         $barcodeModel->setType(ShipmentBarcode::BARCODE_TYPE_SHIPMENT);
 
         if ($isReturnBarcode) {
