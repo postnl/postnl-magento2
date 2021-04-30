@@ -534,3 +534,4 @@ Percent,Percentage
 "Please enter a valid zipcode.","Vul s.v.p. een valide postcode in."
 "When shipping with extra cover is selected, the shipment will be insured up to a maximum of €5.000,-","Indien u kiest voor een zending met verhoogd aansprakelijkheid wordt deze zending tot maximaal €5.000,- verzekerd"
 "Belgium standard + Signature on delivery + Extra Cover","België verhoogd aansprakelijk + handtekening voor ontvangst"
+"When printing multiple labels simultaneously you may choose where the printer will start printing. The printer will start the bottom right on all pages after the first.","Wanneer u meerdere labels tegelijk afdrukt, kunt u aangeven waar de printer moet beginnen op de pagina. De printer zal voor alle pagina's na de eerste rechtsonder beginnen."

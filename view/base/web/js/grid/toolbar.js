@@ -62,6 +62,7 @@ define([
                 DataProvider.getProductOptions()
             ),
             labelStartPositionOptions : ko.observable(DataProvider.getLabelStartPositionOptions()),
+            startPositionSelected : ko.observable('0'),
             showToolbar : ko.observable(DataProvider.getShowToolbar()),
             jsLoaded : true,
             isGuaranteedActive : ko.observable(DataProvider.getGuaranteedIsActive()),
