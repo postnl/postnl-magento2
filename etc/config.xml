@@ -58,7 +58,6 @@
 
             <extra_settings_printer>
                 <label_size>A6</label_size>
-                <first_label_position>0</first_label_position>
                 <label_response>inline</label_response>
             </extra_settings_printer>
 
