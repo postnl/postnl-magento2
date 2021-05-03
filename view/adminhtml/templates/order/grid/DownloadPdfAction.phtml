@@ -64,11 +64,11 @@
          */
         function getFormData(element) {
             var selections = getKoScope(element.parentElement.parentNode).getSelections();
-            var starPositionOption = $('#choose_print_start_position');
+            var startPositionOption = $('#choose_print_start_position');
             var printStartPosition = 0;
 
-            if (starPositionOption.is(':visible') && starPositionOption.length > 0) {
-                printStartPosition = starPositionOption.val();
+            if (startPositionOption.is(':visible') && startPositionOption.length > 0) {
+                printStartPosition = startPositionOption.val();
             }
 
             return {
