@@ -30,10 +30,10 @@
  */
 define([
     'jquery',
-    'Magento_Checkout/js/model/quote',
+    'Magento_Checkout/js/model/quote'
 ], function (
     $,
-    quote,
+    quote
 ) {
     'use strict';
 
