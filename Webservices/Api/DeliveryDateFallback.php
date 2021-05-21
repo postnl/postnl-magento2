@@ -70,7 +70,7 @@ class DeliveryDateFallback
         }
 
         $date = $this->getDate($nextDay);
-        while (!in_array(date('N', strtotime($date)), $shippingDays)) {
+        while (!in_array(date('N', strtotime($date)), $shippingDays) && count($shippingDays)) {
             $date = $this->getDate($date . '+1 day');
         }
 
