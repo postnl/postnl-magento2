@@ -183,7 +183,7 @@ class Customs
         $totalDiscount   = $discountPerItem * $item->getQty();
         $value           = $value - $totalDiscount;
 
-        return ($value * $this->getQty($item));
+        return round($value * $this->getQty($item), 2);
     }
 
     /**
