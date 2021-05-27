@@ -65,7 +65,7 @@ define([
                 housenumber = shippingAddress.street[0].replace(/\D/g,'');
             }
 
-            var tempAddress = {
+            address = {
                 street: shippingAddress.street[0],
                 postcode: shippingAddress.postcode,
                 housenumber: housenumber,
@@ -75,8 +75,8 @@ define([
                 country: shippingAddress.countryId
             };
 
-            if (tempAddress.country && tempAddress.postcode && tempAddress.street !== undefined && tempAddress.street[0]) {
-                return tempAddress;
+            if (address.country && address.postcode && address.street !== undefined && address.street[0] && address.housenumber) {
+                return address;
             }
         }
 
