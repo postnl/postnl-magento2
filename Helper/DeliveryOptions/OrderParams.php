@@ -36,6 +36,7 @@ namespace TIG\PostNL\Helper\DeliveryOptions;
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Service\Order\FeeCalculator;
 use TIG\PostNL\Service\Order\ProductInfo;
+use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipment\ProductOptions;
 
 class OrderParams
@@ -205,6 +206,18 @@ class OrderParams
 
         if (!isset($params['option']) && $params['type'] === 'GP') {
             $option = $params['type'];
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] == 'NL') {
+            $option = 'Daytime';
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] !== 'NL' && in_array($params['country'], EpsCountries::ALL)) {
+            $option = 'EPS';
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] !== 'NL' && !in_array($params['country'], EpsCountries::ALL)) {
+            $option = 'GP';
         }
 
         $productInfo = $this->productInfo->get($params['type'], $option, $params['address']);
