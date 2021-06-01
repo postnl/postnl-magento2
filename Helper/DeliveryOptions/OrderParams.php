@@ -198,6 +198,36 @@ class OrderParams
      */
     private function formatParamData($params)
     {
+        $option = $this->getOption($params);
+
+        $productInfo = $this->productInfo->get($params['type'], $option, $params['address']);
+
+        return [
+            'quote_id'                     => isset($params['quote_id']) ? $params['quote_id'] : '',
+            'delivery_date'                => isset($params['date']) ? $params['date'] : '',
+            'expected_delivery_time_start' => isset($params['from']) ? $params['from'] : '',
+            'expected_delivery_time_end'   => isset($params['to']) ? $params['to'] : '',
+            'is_pakjegemak'                => $params['type'] == 'pickup' ? 1 : 0,
+            'pg_location_code'             => isset($params['LocationCode']) ? $params['LocationCode'] : '',
+            'pg_retail_network_id'         => isset($params['RetailNetworkID']) ? $params['RetailNetworkID'] : '',
+            'pg_address'                   => $this->addExtraToAddress($params),
+            'type'                         => $option,
+            'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : '',
+            'fee'                          => $this->feeCalculator->get($params) + $this->feeCalculator->statedAddressOnlyFee($params),
+            'product_code'                 => $productInfo['code'],
+            'stated_address_only'          => isset($params['stated_address_only']) ? $params['stated_address_only'] : false,
+        ];
+    }
+
+    /**
+     * Determine the option
+     *
+     * @param $params
+     *
+     * @return mixed|string
+     */
+    private function getOption($params)
+    {
         $option = isset($params['option']) ? $params['option'] : 'Daytime';
 
         if (!isset($params['option']) && $params['type'] === 'EPS') {
@@ -220,23 +250,7 @@ class OrderParams
             $option = 'GP';
         }
 
-        $productInfo = $this->productInfo->get($params['type'], $option, $params['address']);
-
-        return [
-            'quote_id'                     => isset($params['quote_id']) ? $params['quote_id'] : '',
-            'delivery_date'                => isset($params['date']) ? $params['date'] : '',
-            'expected_delivery_time_start' => isset($params['from']) ? $params['from'] : '',
-            'expected_delivery_time_end'   => isset($params['to']) ? $params['to'] : '',
-            'is_pakjegemak'                => $params['type'] == 'pickup' ? 1 : 0,
-            'pg_location_code'             => isset($params['LocationCode']) ? $params['LocationCode'] : '',
-            'pg_retail_network_id'         => isset($params['RetailNetworkID']) ? $params['RetailNetworkID'] : '',
-            'pg_address'                   => $this->addExtraToAddress($params),
-            'type'                         => $option,
-            'opening_hours'                => isset($params['OpeningHours']) ? $params['OpeningHours'] : '',
-            'fee'                          => $this->feeCalculator->get($params) + $this->feeCalculator->statedAddressOnlyFee($params),
-            'product_code'                 => $productInfo['code'],
-            'stated_address_only'          => isset($params['stated_address_only']) ? $params['stated_address_only'] : false,
-        ];
+        return $option;
     }
 
     /**
