@@ -80,6 +80,9 @@ class ShippingDurationTest extends TestCase
         $productCollectionExpects = $productCollection->method('addFieldToFilter');
         $productCollectionExpects->willReturn($productsMock);
 
+        $productCollectionExpects = $productCollection->method('addAttributeToSelect');
+        $productCollectionExpects->willReturn($productsMock);
+
         $productCollectionFactory = $this->getFakeMock(\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory::class)->getMock();
         $productCollectionFactoryExpects = $productCollectionFactory->method('create');
         $productCollectionFactoryExpects->willReturn($productCollection);
