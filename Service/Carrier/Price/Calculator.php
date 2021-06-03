@@ -32,6 +32,7 @@
 
 namespace TIG\PostNL\Service\Carrier\Price;
 
+use Klarna\Core\Model\Fpt\Rate;
 use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
@@ -111,12 +112,13 @@ class Calculator
      * @param             $store
      * @param bool        $includeVat
      *
-     * @return array
+     * @return array | bool
      */
     public function price(RateRequest $request, $parcelType = null, $store = null, $includeVat = false)
     {
         $this->store = $store;
         $price       = $this->getConfigData('price');
+        $rateType    = $this->getConfigData('rate_type');
 
         if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
             return $this->priceResponse('0.00', '0.00');
@@ -128,7 +130,7 @@ class Calculator
             return $ratePrice;
         }
 
-        return $this->priceResponse($price, $price);
+        return false;
     }
 
     /**
