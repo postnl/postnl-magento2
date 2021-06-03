@@ -193,6 +193,7 @@ class PostNL extends AbstractCarrier implements CarrierInterface
         $method = $this->rateMethodFactory->create();
         $amount = $this->getAmount($request);
 
+        // Hide PostNL if no amount could be calculated.
         if (!$amount) {
             return false;
         }

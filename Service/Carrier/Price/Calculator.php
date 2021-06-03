@@ -124,13 +124,22 @@ class Calculator
             return $this->priceResponse('0.00', '0.00');
         }
 
+        if ($rateType === RateType::CARRIER_RATE_TYPE_FLAT) {
+            return $this->priceResponse($price, $price);
+        }
+
         $ratePrice = $this->getRatePrice($this->getConfigData('rate_type'), $request, $parcelType, $includeVat);
 
         if ($ratePrice) {
             return $ratePrice;
         }
 
-        return false;
+        // Don't return a price if it can't be found in the Matrix or Table rate.
+        if ($rateType !== RateType::CARRIER_RATE_TYPE_FLAT) {
+            return false;
+        }
+
+        return $this->priceResponse($price, $price);
     }
 
     /**
