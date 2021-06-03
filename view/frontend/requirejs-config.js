@@ -52,6 +52,9 @@ var config = {
             'Magento_Checkout/js/action/set-payment-information': {
                 'TIG_PostNL/js/action/set-billing-address-mixin': true
             },
+            'Magento_Checkout/js/view/billing-address': {
+                'TIG_PostNL/js/view/billing-address-mixin': true
+            },
             'Onestepcheckout_Iosc/js/ajax': {
                 'TIG_PostNL/js/view/onestepcheckout/ajax-mixin': true
             }
