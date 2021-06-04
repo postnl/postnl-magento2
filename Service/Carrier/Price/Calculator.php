@@ -117,46 +117,7 @@ class Calculator
     public function price(RateRequest $request, $parcelType = null, $store = null, $includeVat = false)
     {
         $this->store = $store;
-        $price       = $this->getConfigData('price');
         $rateType    = $this->getConfigData('rate_type');
-
-        if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
-            return $this->priceResponse('0.00', '0.00');
-        }
-
-        if ($rateType === RateType::CARRIER_RATE_TYPE_FLAT) {
-            return $this->priceResponse($price, $price);
-        }
-
-        $ratePrice = $this->getRatePrice($this->getConfigData('rate_type'), $request, $parcelType, $includeVat);
-
-        if ($ratePrice) {
-            return $ratePrice;
-        }
-
-        // Don't return a price if it can't be found in the Matrix or Table rate.
-        if ($rateType !== RateType::CARRIER_RATE_TYPE_FLAT) {
-            return false;
-        }
-
-        return $this->priceResponse($price, $price);
-    }
-
-    /**
-     * @param $rateType
-     * @param $request
-     * @param $parcelType
-     * @param $includeVat
-     *
-     * @return array|bool
-     */
-    private function getRatePrice($rateType, $request, $parcelType, $includeVat)
-    {
-        if ($rateType == RateType::CARRIER_RATE_TYPE_TABLE) {
-            $ratePrice = $this->getTableratePrice($request);
-
-            return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
-        }
 
         if (!$parcelType) {
             try {
@@ -166,17 +127,30 @@ class Calculator
             }
         }
 
-        $ratePrice = $this->matrixratePrice->getRate(
-            $request,
-            $parcelType,
-            $this->store,
-            $includeVat
-        );
-        if ($this->getConfigData('rate_type') == RateType::CARRIER_RATE_TYPE_MATRIX && $ratePrice !== false) {
-            return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
+        if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
+            $rateType = 'free';
         }
 
-        return false;
+        switch ($rateType) {
+            case 'free':
+                return $this->priceResponse('0.00', '0.00');
+            case 'matrix':
+                $ratePrice = $this->matrixratePrice->getRate($request, $parcelType, $this->store, $includeVat);
+                if ($ratePrice !== false) {
+                    return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
+                }
+
+                return false;
+            case 'table':
+                $ratePrice = $this->getTableratePrice($request);
+
+                return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
+            case 'flat':
+            default:
+                $price = $this->getConfigData('price');
+
+                return $this->priceResponse($price, $price);
+        }
     }
 
     /**

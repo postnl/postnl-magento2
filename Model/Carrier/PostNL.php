@@ -194,7 +194,7 @@ class PostNL extends AbstractCarrier implements CarrierInterface
         $amount = $this->getAmount($request);
 
         // Hide PostNL if no amount could be calculated.
-        if (!$amount) {
+        if ($amount === false) {
             return false;
         }
 
@@ -222,7 +222,7 @@ class PostNL extends AbstractCarrier implements CarrierInterface
     {
         $amount = $this->calculator->price($request, null, $this->getStore());
 
-        if (!$amount) {
+        if ($amount === false) {
             return false;
         }
 
