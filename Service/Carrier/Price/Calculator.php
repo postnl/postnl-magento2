@@ -135,7 +135,7 @@ class Calculator
         }
 
         // Don't return a price if it can't be found in the Matrix or Table rate.
-        if ($rateType !== RateType::CARRIER_RATE_TYPE_FLAT) {
+        if ($rateType === RateType::CARRIER_RATE_TYPE_MATRIX && !$ratePrice) {
             return false;
         }
 
