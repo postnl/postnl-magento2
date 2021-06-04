@@ -154,9 +154,11 @@ class PostNL extends AbstractCarrier implements CarrierInterface
 
         $method = $this->getMethod($request);
 
-        $result->append($method);
+        if ($method) {
+            return $result->append($method);
+        }
 
-        return $result;
+        return false;
     }
 
     /**
