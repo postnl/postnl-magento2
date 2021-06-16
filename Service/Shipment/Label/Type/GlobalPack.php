@@ -44,7 +44,7 @@ class GlobalPack extends EPS
      * @var array
      */
     private $excludedCountries = ["US"];
-    
+
     /**
      * @param ShipmentLabelInterface $label
      *
@@ -60,17 +60,20 @@ class GlobalPack extends EPS
         $productCode = $label->getProductCode();
         $shipment    = $label->getShipment();
         $filename    = $this->saveTempLabel($label);
-        
+
         $this->createPdf();
         $count = $this->pdf->setSourceFile($filename);
-        
+
         for ($pageNo = 1; $pageNo <= $count; $pageNo++) {
             $this->processLabels($shipment, $pageNo, $productCode);
+
+            // Reset templateInserted so that subsequent pages will be included
+            $this->setTemplateInserted(false);
         }
-        
+
         return $this->pdf;
     }
-    
+
     /**
      * @param ShipmentInterface $shipment
      * @param                   $page
@@ -90,12 +93,12 @@ class GlobalPack extends EPS
             $countryId = $shipment->getShipmentCountry();
             $this->insertRotated($page, $countryId);
         }
-        
+
         if (!$this->getTemplateInserted()) {
             $this->insertRegular($page);
         }
     }
-    
+
     /**
      * @param $country string
      *
@@ -105,7 +108,7 @@ class GlobalPack extends EPS
     {
         return in_array($country, $this->excludedCountries);
     }
-    
+
     /**
      * Since Priority GP has its own resolution and size, we override this
      * method.
@@ -120,20 +123,20 @@ class GlobalPack extends EPS
     {
         $this->setTemplateInserted(true);
         $this->pdf->AddPage('P', Fpdi::PAGE_SIZE_A6);
-        
+
         $pageId = $this->pdf->importPage($page);
-        
+
         if (!$this->isExcludedCountry($countryId)) {
             $this->pdf->Rotate(90);
             $this->pdf->useTemplate($pageId, -130, 0, 150, 210);
             $this->pdf->Rotate(0);
-            
+
             return;
         }
-        
+
         $this->pdf->useTemplate($pageId, 0, 0, 103, 150);
     }
-    
+
     /**
      * This method is used for regular GlobalPack labels.
      *
@@ -148,11 +151,11 @@ class GlobalPack extends EPS
     private function insertRegular($page)
     {
         $this->setTemplateInserted(true);
-        
+
         $templateId   = $this->pdf->importPage($page);
         $templateSize = $this->pdf->getTemplateSize($templateId);
         $orientation  = $templateSize['width'] > $templateSize['height'] ? 'L' : 'P';
-        
+
         $this->pdf->AddPage($orientation, [$templateSize['width'], $templateSize['height']]);
         $this->pdf->useTemplate($templateId, 0, 0, $templateSize['width'], $templateSize['height']);
     }
