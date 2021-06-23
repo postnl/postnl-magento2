@@ -125,7 +125,12 @@ class AddressEnhancer
     // @codingStandardsIgnoreLine
     protected function extractHousenumber($address)
     {
-        $street  = implode(' ', $address['street']);
+        $street = $address['street'];
+
+        if (is_array($address['street'])) {
+            $street  = implode(' ', $address['street']);
+        }
+
         $matched = preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER, trim($street), $result);
         if (!$matched) {
             $result = $this->extractStreetFromNumber($street);
