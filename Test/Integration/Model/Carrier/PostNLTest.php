@@ -75,6 +75,8 @@ class PostNLTest extends TestCase
         $this->request->setWebsiteId(1);
         $this->request->setPackageWeight(100);
         $this->request->setPackageValue(100);
+
+        $this->loadMatrixrates();
     }
 
     public function getInstance(array $args = [])
@@ -162,8 +164,6 @@ class PostNLTest extends TestCase
             $this->markTestSkipped('We expect the \Magento\TestFramework\App\Config in $this->config, but this was' .
                 'only introduced in 2.1.3. That\'s why we skip this test for lower versions.');
         }
-
-        $this->loadMatrixrates();
 
         $this->config->setValue(
             'carriers/tig_postnl/rate_type',
