@@ -41,21 +41,23 @@ define([
         return Component.extend({
             tigHouseNumber: function() {
                 if (quote.billingAddress().customAttributes.length > 0) {
-                    var houseNumberString = "";
+                    var houseNumber = "";
+                    var houseNumberAddition = "";
+
                     var customAttributes = quote.billingAddress().customAttributes;
 
                     // check if custom attribute exists and is not empty
                     customAttributes.forEach(function (attribute) {
                         if (attribute.attribute_code === "tig_housenumber" && attribute.value !== "") {
-                            houseNumberString = attribute.value;
+                            houseNumber = attribute.value;
                         }
 
                         if (attribute.attribute_code === "tig_housenumber_addition" && attribute.value !== "") {
-                            houseNumberString += " " + attribute.value;
+                            houseNumberAddition = attribute.value;
                         }
                     });
 
-                    return houseNumberString;
+                    return houseNumber + (houseNumberAddition ? " "  + houseNumberAddition : "");
                 }
             }
         });
