@@ -4,14 +4,14 @@
  * See COPYING.txt for license details.
  */
 -->
-<div if="visible()">
+<if args="visible()">
     <text args="address().prefix"/> <text args="address().firstname"/> <text args="address().middlename"/>
     <text args="address().lastname"/> <text args="address().suffix"/><br/>
     <text args="address().street.join(', ')"/>
     <each args="data: address().customAttributes, as: 'element'">
-        <div class="tig-housenumber" if="element['attribute_code'] == 'tig_housenumber' || element['attribute_code'] == 'tig_housenumber_addition'">
+        <if args="element['attribute_code'] == 'tig_housenumber' || element['attribute_code'] == 'tig_housenumber_addition'">
             <text args="element.value"/>
-        </div>
+        </if>
     </each><br/>
     <text args="address().city "/>, <span text="address().region"></span> <text args="address().postcode"/><br/>
     <text args="getCountryName(address().countryId)"/><br/>
@@ -23,4 +23,4 @@
             <br/>
         </div>
     </each>
-</div>
+</if>
