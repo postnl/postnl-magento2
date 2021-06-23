@@ -41,7 +41,6 @@ class Webshop extends AbstractConfigProvider
 {
 
     const XPATH_WEBSHOP_LABEL_SIZE          = 'tig_postnl/extra_settings_printer/label_size';
-    const XPATH_WEBSHOP_FIRST_LABEL_POSITION= 'tig_postnl/extra_settings_printer/first_label_position';
     const XPATH_WEBSHOP_LABEL_RESPONSE      = 'tig_postnl/extra_settings_printer/label_response';
     const XPATH_WEBSHOP_CUTOFFTIME          = 'tig_postnl/postnl_settings/cutoff_time';
     const XPATH_WEBSHOP_SATURDAY_CUTOFFTIME = 'tig_postnl/postnl_settings/saturday_cutoff_time';
@@ -88,14 +87,6 @@ class Webshop extends AbstractConfigProvider
     public function getLabelSize()
     {
         return $this->getConfigFromXpath(self::XPATH_WEBSHOP_LABEL_SIZE);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFirstLabelPosition()
-    {
-        return $this->getConfigFromXpath(self::XPATH_WEBSHOP_FIRST_LABEL_POSITION);
     }
 
     /**

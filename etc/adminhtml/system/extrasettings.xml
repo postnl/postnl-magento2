@@ -49,16 +49,6 @@
                 <comment><model>TIG\PostNL\Config\Comment\LabelSize</model></comment>
             </field>
 
-            <field id="first_label_position" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>First label position</label>
-                <comment>Define where on an A4 format the first label should be printed. Subsequent labels will follow the regular order after the first label.</comment>
-                <source_model>TIG\PostNL\Config\Source\Settings\FirstLabelPosition</source_model>
-                <config_path>tig_postnl/extra_settings_printer/first_label_position</config_path>
-                <depends>
-                    <field id="label_size">A4</field>
-                </depends>
-            </field>
-
             <field id="label_response" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Response</label>
                 <comment>Download or open the pdf in a new browser window.</comment>

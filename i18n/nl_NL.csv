@@ -526,7 +526,6 @@ Percent,Percentage
 "Top Right","Rechtsboven"
 "Top Left","Linksboven"
 "First label position","Positie van eerste label"
-"Define where on an A4 format the first label should be printed. Subsequent labels will follow the regular order after the first label.","Bepaal waar de eerste label op een A4 formaat geprint moet worden. Opvolgende labels volgen na de eerste label de reguliere volgorde."
 "Belgium standard + Signature on delivery","België standaard + Handtekening voor ontvangst"
 "EU options","EU opties"
 "BE options","BE opties"
@@ -534,3 +533,5 @@ Percent,Percentage
 "Please enter a valid zipcode.","Vul s.v.p. een valide postcode in."
 "When shipping with extra cover is selected, the shipment will be insured up to a maximum of €5.000,-","Indien u kiest voor een zending met verhoogd aansprakelijkheid wordt deze zending tot maximaal €5.000,- verzekerd"
 "Belgium standard + Signature on delivery + Extra Cover","België verhoogd aansprakelijk + handtekening voor ontvangst"
+"When printing multiple labels simultaneously you may choose where the printer will start printing. The printer will start the bottom right on all pages after the first.","Wanneer u meerdere labels tegelijk afdrukt, kunt u aangeven waar de printer moet beginnen op de pagina. De printer zal voor alle pagina's na de eerste rechtsonder beginnen."
+"Choose printing start position","Kies printer startpositie"

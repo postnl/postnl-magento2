@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Service\Shipment\Label\Merge;
 
-use TIG\PostNL\Config\Provider\Webshop;
+use Magento\Framework\App\RequestInterface;
 use TIG\PostNL\Service\Pdf\Fpdi;
 use TIG\PostNL\Service\Pdf\FpdiFactory;
 use TIG\PostNL\Service\Shipment\Label\File;
@@ -53,22 +53,22 @@ class A4Merger extends AbstractMerger implements MergeInterface
      */
     private $lastLabelType = null;
 
-    /** @var Webshop */
-    private $webshopConfig;
+    /** @var RequestInterface */
+    private $request;
 
     /**
-     * @param FpdiFactory $fpdiFactory
-     * @param File        $file
-     * @param Webshop     $webshopConfig
+     * @param FpdiFactory      $fpdiFactory
+     * @param File             $file
+     * @param RequestInterface $request
      */
     public function __construct(
         FpdiFactory $fpdiFactory,
         File $file,
-        Webshop $webshopConfig
+        RequestInterface $request
     ) {
         parent::__construct($fpdiFactory, $file);
 
-        $this->webshopConfig = $webshopConfig;
+        $this->request = $request;
     }
 
     /**
@@ -84,7 +84,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
     public function files(array $labels, $createNewPdf = false)
     {
         if ($this->labelCounter == null) {
-            $this->labelCounter = $this->webshopConfig->getFirstLabelPosition();
+            $this->labelCounter = $this->request->getParam('printStartPosition');
         }
 
         //By resetting the counter, labels will start in the bottom-right when creating a new PDF
