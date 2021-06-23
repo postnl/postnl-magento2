@@ -154,9 +154,11 @@ class PostNL extends AbstractCarrier implements CarrierInterface
 
         $method = $this->getMethod($request);
 
-        $result->append($method);
+        if ($method) {
+            return $result->append($method);
+        }
 
-        return $result;
+        return false;
     }
 
     /**
@@ -185,13 +187,18 @@ class PostNL extends AbstractCarrier implements CarrierInterface
     /**
      * @param RateRequest $request
      *
-     * @return \Magento\Quote\Model\Quote\Address\RateResult\Method
+     * @return \Magento\Quote\Model\Quote\Address\RateResult\Method | bool
      */
     private function getMethod(RateRequest $request)
     {
         /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
         $method = $this->rateMethodFactory->create();
         $amount = $this->getAmount($request);
+
+        // Hide PostNL if no amount could be calculated.
+        if ($amount === false) {
+            return false;
+        }
 
         /** @noinspection PhpUndefinedMethodInspection */
         $method->setCarrier('tig_postnl');
@@ -211,11 +218,15 @@ class PostNL extends AbstractCarrier implements CarrierInterface
     /**
      * @param RateRequest $request
      *
-     * @return array
+     * @return bool | array
      */
-    private function getAmount(RateRequest $request): array
+    private function getAmount(RateRequest $request)
     {
         $amount = $this->calculator->price($request, null, $this->getStore());
+
+        if ($amount === false) {
+            return false;
+        }
 
         if ($amount['price'] == '0') {
             return [
