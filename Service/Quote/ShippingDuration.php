@@ -126,7 +126,10 @@ class ShippingDuration
         }
 
         $productCollection = $this->productCollectionFactory->create();
-        $productCollection = $productCollection->addFieldToFilter('entity_id', ['in => ?', $productIds]);
+        // @codingStandardsIgnoreStart
+        $productCollection = $productCollection->addFieldToFilter('entity_id', ['in' => $productIds])
+                                               ->addAttributeToSelect('postnl_shipping_duration');
+        // @codingStandardsIgnoreEnd
 
         return $productCollection->getItems();
     }

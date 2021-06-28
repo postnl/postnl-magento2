@@ -32,6 +32,7 @@
 
 namespace TIG\PostNL\Service\Carrier\Price;
 
+use Klarna\Core\Model\Fpt\Rate;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Tax\Helper\Data;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
@@ -119,7 +120,7 @@ class Calculator
      * @param             $store
      * @param bool        $includeVat
      *
-     * @return array
+     * @return array | bool
      */
     public function price(RateRequest $request, $parcelType = null, $store = null, $includeVat = false)
     {
@@ -167,17 +168,30 @@ class Calculator
             }
         }
 
-        $ratePrice = $this->matrixratePrice->getRate(
-            $request,
-            $parcelType,
-            $this->store,
-            $includeVat
-        );
-        if ($this->getConfigData('rate_type') == RateType::CARRIER_RATE_TYPE_MATRIX && $ratePrice !== false) {
-            return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
+        if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
+            $rateType = 'free';
         }
 
-        return false;
+        switch ($rateType) {
+            case 'free':
+                return $this->priceResponse('0.00', '0.00');
+            case 'matrix':
+                $ratePrice = $this->matrixratePrice->getRate($request, $parcelType, $this->store, $includeVat);
+                if ($ratePrice !== false) {
+                    return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
+                }
+
+                return false;
+            case 'table':
+                $ratePrice = $this->getTableratePrice($request);
+
+                return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
+            case 'flat':
+            default:
+                $price = $this->getConfigData('price');
+
+                return $this->priceResponse($price, $price);
+        }
     }
 
     /**

@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Shipment\Label;
 
 use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Service\Pdf\Fpdi;
 
 class Merge
 {
@@ -70,7 +71,7 @@ class Merge
      * Some labels simply don't fit on an A6 (e.g. Globalpack labels).
      * Instead of simply blocking these, we'll print them as A4s.
      *
-     * @param \TIG\PostNL\Service\Pdf\Fpdi[] $labels
+     * @param Fpdi[] $labels
      * @param bool $createNewPdf Sometimes you want to generate a new Label PDF, for example when printing packingslips
      *                           This parameter indicates whether to reuse the existing label PDF
      *
@@ -87,19 +88,39 @@ class Merge
             $output = $result->Output('s');
         }
 
-        $a4Labels = $this->getGPlabels($labels);
-        $a6Labels = $this->getNonGPlabels($labels);
-
         //  Create PDF is used for packingslips which are always A4.
         if ($this->webshop->getLabelSize() == 'A6' && !$createNewPdf) {
-            $a4result = $this->a4Merger->files($a4Labels, $createNewPdf);
-            $a6result = $this->a6Merger->files($a6Labels, $createNewPdf);
-            $a4result->concatPdf($a6result);
-
-            $output = $a4result->Output('s');
+            $result = $this->mergeA6Labels($labels, $createNewPdf);
+            $output = $result->Output('s');
         }
 
         return $output;
+    }
+
+    /**
+     * @param Fpdi[] $labels
+     * @param bool   $createNewPdf
+     *
+     * @return Fpdi
+     * @throws \Exception
+     */
+    private function mergeA6Labels($labels, $createNewPdf)
+    {
+        $a4Labels = $this->getGPlabels($labels);
+        $a6Labels = $this->getNonGPlabels($labels);
+
+        $a4result = $this->a4Merger->files($a4Labels, $createNewPdf);
+
+        /** There might be no A6 labels, i.e. when only GP labels are printed.
+         * Concatting an empty pdf at the end of an pdf will result in adding an empty page,
+         * therefore check if there are A6 labels to merge.
+         */
+        if (!empty($a6Labels)) {
+            $a6result = $this->a6Merger->files($a6Labels, $createNewPdf);
+            $a4result->concatPdf($a6result);
+        }
+
+        return $a4result;
     }
 
     /**
