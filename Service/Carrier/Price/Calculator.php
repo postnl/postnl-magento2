@@ -34,6 +34,7 @@ namespace TIG\PostNL\Service\Carrier\Price;
 
 use Klarna\Core\Model\Fpt\Rate;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Tax\Helper\Data;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
 use TIG\PostNL\Config\Source\Carrier\RateType;
@@ -79,6 +80,10 @@ class Calculator
      * @var LetterboxPackage
      */
     private $letterboxPackage;
+    /**
+     * @var Data
+     */
+    private $taxHelper;
 
     /**
      * Calculator constructor.
@@ -88,7 +93,8 @@ class Calculator
      * @param Matrixrate           $matrixratePrice
      * @param Tablerate            $tablerateShippingPrice
      * @param ParcelTypeFinder     $parcelTypeFinder
-     * @param LetterboxPackage    $letterboxPackage
+     * @param LetterboxPackage     $letterboxPackage
+     * @param Data                 $taxHelper
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -96,7 +102,8 @@ class Calculator
         Matrixrate $matrixratePrice,
         Tablerate $tablerateShippingPrice,
         ParcelTypeFinder $parcelTypeFinder,
-        LetterboxPackage $letterboxPackage
+        LetterboxPackage $letterboxPackage,
+        Data $taxHelper
     ) {
         $this->scopeConfig            = $scopeConfig;
         $this->getFreeBoxes           = $getFreeBoxes;
@@ -104,6 +111,7 @@ class Calculator
         $this->tablerateShippingPrice = $tablerateShippingPrice;
         $this->parcelTypeFinder       = $parcelTypeFinder;
         $this->letterboxPackage       = $letterboxPackage;
+        $this->taxHelper = $taxHelper;
     }
 
     /**
@@ -117,7 +125,40 @@ class Calculator
     public function price(RateRequest $request, $parcelType = null, $store = null, $includeVat = false)
     {
         $this->store = $store;
-        $rateType    = $this->getConfigData('rate_type');
+        $price       = $this->getConfigData('price');
+
+        if ($includeVat) {
+            $price = $this->taxHelper->getShippingPrice($price, true);
+        }
+
+        if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
+            return $this->priceResponse('0.00', '0.00');
+        }
+
+        $ratePrice = $this->getRatePrice($this->getConfigData('rate_type'), $request, $parcelType, $includeVat);
+
+        if ($ratePrice) {
+            return $ratePrice;
+        }
+
+        return $this->priceResponse($price, $price);
+    }
+
+    /**
+     * @param $rateType
+     * @param $request
+     * @param $parcelType
+     * @param $includeVat
+     *
+     * @return array|bool
+     */
+    private function getRatePrice($rateType, $request, $parcelType, $includeVat)
+    {
+        if ($rateType == RateType::CARRIER_RATE_TYPE_TABLE) {
+            $ratePrice = $this->getTableratePrice($request);
+
+            return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
+        }
 
         if (!$parcelType) {
             try {
