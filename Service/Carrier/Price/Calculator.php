@@ -125,11 +125,6 @@ class Calculator
     public function price(RateRequest $request, $parcelType = null, $store = null, $includeVat = false)
     {
         $this->store = $store;
-        $price       = $this->getConfigData('price');
-
-        if ($includeVat) {
-            $price = $this->taxHelper->getShippingPrice($price, true);
-        }
 
         if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
             return $this->priceResponse('0.00', '0.00');
@@ -141,7 +136,7 @@ class Calculator
             return $ratePrice;
         }
 
-        return $this->priceResponse($price, $price);
+        return false;
     }
 
     /**
