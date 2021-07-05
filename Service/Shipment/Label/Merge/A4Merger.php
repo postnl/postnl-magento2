@@ -31,14 +31,17 @@
  */
 namespace TIG\PostNL\Service\Shipment\Label\Merge;
 
+use Magento\Framework\App\RequestInterface;
 use TIG\PostNL\Service\Pdf\Fpdi;
+use TIG\PostNL\Service\Pdf\FpdiFactory;
+use TIG\PostNL\Service\Shipment\Label\File;
 
 class A4Merger extends AbstractMerger implements MergeInterface
 {
     /**
      * @var int
      */
-    private $labelCounter = 0;
+    private $labelCounter = null;
 
     /**
      * @var null
@@ -49,6 +52,24 @@ class A4Merger extends AbstractMerger implements MergeInterface
      * @var null
      */
     private $lastLabelType = null;
+
+    /** @var RequestInterface */
+    private $request;
+
+    /**
+     * @param FpdiFactory      $fpdiFactory
+     * @param File             $file
+     * @param RequestInterface $request
+     */
+    public function __construct(
+        FpdiFactory $fpdiFactory,
+        File $file,
+        RequestInterface $request
+    ) {
+        parent::__construct($fpdiFactory, $file);
+
+        $this->request = $request;
+    }
 
     /**
      * @param Fpdi[] $labels
@@ -62,6 +83,10 @@ class A4Merger extends AbstractMerger implements MergeInterface
      */
     public function files(array $labels, $createNewPdf = false)
     {
+        if ($this->labelCounter == null) {
+            $this->labelCounter = $this->request->getParam('printStartPosition');
+        }
+
         //By resetting the counter, labels will start in the bottom-right when creating a new PDF
         if ($createNewPdf) {
             $this->labelCounter = 0;
@@ -111,7 +136,7 @@ class A4Merger extends AbstractMerger implements MergeInterface
             $this->pdf->AddPage('P', 'A4');
         }
 
-        if ($this->pdf->PageNo() == 0 || $this->labelCounter == 0) {
+        if ($this->pdf->PageNo() == 0 || $this->currentLabelType == 'GP' || $this->isNewLabelType()) {
             $this->pdf->AddPage('P', 'A4');
         }
 

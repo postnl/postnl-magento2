@@ -36,6 +36,7 @@ define(['jquery', 'mage/url'], function ($, url) {
     var isGuaranteedActive = 0;
     var cargoOptions = '';
     var packageOptions = '';
+    var labelStartPositionOptions = '';
 
     return {
 
@@ -81,6 +82,18 @@ define(['jquery', 'mage/url'], function ($, url) {
             }
 
             return JSON.parse(packageOptions);
+        },
+
+        setLabelStartPositionOptions: function (options) {
+            labelStartPositionOptions = options;
+        },
+
+        getLabelStartPositionOptions: function () {
+            if (!labelStartPositionOptions) {
+                return null;
+            }
+
+            return JSON.parse(labelStartPositionOptions);
         },
 
         setShowToolbar: function (showToolbar) {

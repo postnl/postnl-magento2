@@ -43,9 +43,25 @@
                             </select>
                         </div>
                         <!-- /ko -->
+                        <div class="select-holder" data-bind="visible: $data.currentSelected() == 'choose_print_start_position'">
+                            <select class="action-select admin__control-select choose_print_start_position_toolbar"
+                                    id="choose_print_start_position" data-bind="options:$data.labelStartPositionOptions,
+                                    optionsText: 'text', optionsValue: 'value', value:$data.startPositionSelected">
+                            </select>
+                        </div>
                     </div>
                     <div class="col-xs-2">
-                        <button class="action-secondary" type="button" click="function() {submit(true)}">
+                        <div class="tooltip" data-bind="visible: $data.currentSelected() == 'choose_print_start_position'">
+                            <span class="help">
+                                <span />
+                            </span>
+                            <span class="tooltip-content"
+                                  translate="'When printing multiple labels simultaneously you may choose where the printer will start printing. The printer will start the bottom right on all pages after the first.'">
+                                When printing multiple labels simultaneously you may choose where the printer will start printing. The printer will start the bottom right on all pages after the first.
+                            </span>
+                        </div>
+                        <button class="action-secondary" type="button" click="function() {submit(true)}"
+                                data-bind="visible: $data.currentSelected() != 'choose_print_start_position'">
                             <span translate="'Submit'">Submit</span>
                         </button>
                     </div>
