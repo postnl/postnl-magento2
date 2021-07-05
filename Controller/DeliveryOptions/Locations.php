@@ -106,7 +106,7 @@ class Locations extends AbstractDeliveryOptions
             return $this->jsonResponse(__('No Address data found.'));
         }
         $this->addressEnhancer->set($params['address']);
-        $price = $this->calculatePrice();
+        $price = $this->priceCalculator->getPriceWithTax($this->getRateRequest());
         $postcode = $params['address']['postcode'] ?? '';
         $country  = $params['address']['country'] ?? '';
         try {
@@ -164,17 +164,5 @@ class Locations extends AbstractDeliveryOptions
         }
 
         return $this->getLocations($address);
-    }
-
-    /**
-     * Calculate price including or excluding tax
-     *
-     * @return mixed
-     */
-    private function calculatePrice()
-    {
-        $price = $this->priceCalculator->price($this->getRateRequest(), 'pakjegemak');
-
-        return $this->priceCalculator->getPriceWithTax($price);
     }
 }

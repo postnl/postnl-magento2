@@ -138,8 +138,7 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getFallBackResponse(1));
         }
 
-        $price = $this->calculator->price($this->getRateRequest());
-        $price = $this->calculator->getPriceWithTax($price);
+        $price = $this->calculator->getPriceWithTax($this->getRateRequest());
 
         $quote = $this->checkoutSession->getQuote();
         $cartItems = $quote->getAllItems();

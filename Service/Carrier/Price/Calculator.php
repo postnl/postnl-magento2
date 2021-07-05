@@ -263,6 +263,7 @@ class Calculator
     public function getPriceWithTax($price)
     {
         $includeVat = $this->taxHelper->getShippingPriceDisplayType();
+        $price = $this->price($price);
 
         if ($includeVat) {
             $price['price'] = $this->taxHelper->getShippingPrice($price['price'], true);
