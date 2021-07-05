@@ -260,10 +260,10 @@ class Calculator
      *
      * @return mixed
      */
-    public function getPriceWithTax($price)
+    public function getPriceWithTax(RateRequest $request, $parcelType = null)
     {
         $includeVat = $this->taxHelper->getShippingPriceDisplayType();
-        $price = $this->price($price);
+        $price = $this->price($request, $parcelType);
 
         if ($includeVat) {
             $price['price'] = $this->taxHelper->getShippingPrice($price['price'], true);
