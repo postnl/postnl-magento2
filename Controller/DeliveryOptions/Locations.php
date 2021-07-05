@@ -106,7 +106,7 @@ class Locations extends AbstractDeliveryOptions
             return $this->jsonResponse(__('No Address data found.'));
         }
         $this->addressEnhancer->set($params['address']);
-        $price    = $this->priceCalculator->price($this->getRateRequest(), 'pakjegemak', null, true);
+        $price = $this->priceCalculator->getPriceWithTax($this->getRateRequest(), 'pakjegemak');
         $postcode = $params['address']['postcode'] ?? '';
         $country  = $params['address']['country'] ?? '';
         try {
