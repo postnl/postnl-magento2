@@ -180,11 +180,12 @@ class OrderParams
     private function setRequiredList($type)
     {
         $list = [];
-        foreach ($this->optionParams as $key => $value) {
-            if ($type === 'Letterbox Package') {
-                return $list;
-            }
 
+        if ($type === 'Letterbox Package') {
+            return $list;
+        }
+
+        foreach ($this->optionParams as $key => $value) {
             $list[$key] = $value[$type];
         }
 
