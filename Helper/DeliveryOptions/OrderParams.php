@@ -180,6 +180,11 @@ class OrderParams
     private function setRequiredList($type)
     {
         $list = [];
+
+        if ($type === 'Letterbox Package') {
+            return $list;
+        }
+
         foreach ($this->optionParams as $key => $value) {
             $list[$key] = $value[$type];
         }
@@ -248,6 +253,10 @@ class OrderParams
 
         if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] !== 'NL' && !in_array($params['country'], EpsCountries::ALL)) {
             $option = 'GP';
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'Letterbox Package' && $params['country'] == 'NL') {
+            $option = 'letterbox_package';
         }
 
         return $option;
