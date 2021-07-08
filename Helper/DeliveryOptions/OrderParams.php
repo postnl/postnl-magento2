@@ -255,7 +255,7 @@ class OrderParams
         }
 
         if (!isset($params['option']) && $params['type'] === 'Letterbox Package' && $params['country'] == 'NL') {
-            $option = 'Letterbox Package';
+            $option = 'letterbox_package';
         }
 
         return $option;

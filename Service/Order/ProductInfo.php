@@ -66,7 +66,7 @@ class ProductInfo
 
     const OPTION_EXTRAATHOME              = 'extra@home';
 
-    const OPTION_LETTERBOX_PACKAGE        = 'letterbox package';
+    const OPTION_LETTERBOX_PACKAGE        = 'letterbox_package';
 
     const SHIPMENT_TYPE_PG                = 'PG';
 
