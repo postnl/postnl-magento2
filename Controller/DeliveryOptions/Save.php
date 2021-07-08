@@ -184,7 +184,8 @@ class Save extends AbstractDeliveryOptions
         //If no delivery date and the type is pickup, fallback, EPS or GP then retrieve the PostNL delivery date
         if (!isset($params['date']) &&
             ($params['type'] === 'pickup' || $params['type'] === 'fallback'
-             || $params['type'] === 'EPS' || $params['type'] === 'GP')
+             || $params['type'] === 'EPS' || $params['type'] === 'GP'
+             || $params['type'] === 'letterbox_package')
         ) {
             $params['date'] = $this->checkoutSession->getPostNLDeliveryDate();
         }
@@ -192,7 +193,7 @@ class Save extends AbstractDeliveryOptions
         $params['quote_id'] = $this->checkoutSession->getQuoteId();
 
         // Recalculate the delivery date if it's unknown for pickup
-        if (!$params['date'] && $params['type'] == 'pickup') {
+        if (!isset($params['date']) && $params['type'] == 'pickup') {
             $params['address']['country'] = $params['address']['Countrycode'];
             $params['address']['postcode'] = $params['address']['Zipcode'];
             $params['date'] = $this->getDeliveryDay($params['address']);

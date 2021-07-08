@@ -181,6 +181,10 @@ class OrderParams
     {
         $list = [];
         foreach ($this->optionParams as $key => $value) {
+            if ($type === 'letterbox_package') {
+                return $list;
+            }
+
             $list[$key] = $value[$type];
         }
 
@@ -248,6 +252,10 @@ class OrderParams
 
         if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] !== 'NL' && !in_array($params['country'], EpsCountries::ALL)) {
             $option = 'GP';
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'letterbox_package' && $params['country'] == 'NL') {
+            $option = 'letterbox_package';
         }
 
         return $option;
