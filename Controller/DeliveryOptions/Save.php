@@ -185,7 +185,7 @@ class Save extends AbstractDeliveryOptions
         if (!isset($params['date']) &&
             ($params['type'] === 'pickup' || $params['type'] === 'fallback'
              || $params['type'] === 'EPS' || $params['type'] === 'GP'
-             || $params['type'] === 'letterbox_package')
+             || $params['type'] === 'Letterbox Package')
         ) {
             $params['date'] = $this->checkoutSession->getPostNLDeliveryDate();
         }

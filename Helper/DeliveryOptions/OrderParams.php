@@ -181,7 +181,7 @@ class OrderParams
     {
         $list = [];
         foreach ($this->optionParams as $key => $value) {
-            if ($type === 'letterbox_package') {
+            if ($type === 'Letterbox Package') {
                 return $list;
             }
 
@@ -254,8 +254,8 @@ class OrderParams
             $option = 'GP';
         }
 
-        if (!isset($params['option']) && $params['type'] === 'letterbox_package' && $params['country'] == 'NL') {
-            $option = 'letterbox_package';
+        if (!isset($params['option']) && $params['type'] === 'Letterbox Package' && $params['country'] == 'NL') {
+            $option = 'Letterbox Package';
         }
 
         return $option;

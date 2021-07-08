@@ -132,7 +132,7 @@ define([
             }
             
             if (typeof value.letterbox_package !== 'undefined') {
-                type = 'letterbox_package'
+                type = 'Letterbox Package';
             }
 
             if (typeof value.eps !== 'undefined') {
