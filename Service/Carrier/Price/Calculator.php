@@ -265,7 +265,7 @@ class Calculator
         $includeVat = $this->taxHelper->getShippingPriceDisplayType();
         $price = $this->price($request, $parcelType);
 
-        if ($includeVat) {
+        if ($includeVat && isset($price['price'])) {
             $price['price'] = $this->taxHelper->getShippingPrice($price['price'], true);
         }
 
