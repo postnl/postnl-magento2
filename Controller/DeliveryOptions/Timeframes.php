@@ -125,7 +125,7 @@ class Timeframes extends AbstractDeliveryOptions
     }
 
     /**
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return bool|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \TIG\PostNL\Exception
@@ -148,18 +148,18 @@ class Timeframes extends AbstractDeliveryOptions
         }
 
         if (!$this->isDeliveryDaysActive->getValue()) {
-            return $this->jsonResponse($this->getFallBackResponse(2, $price['price']));
+            return $this->jsonResponse($this->getFallBackResponse(2, $price['price']) && isset($price['price']));
         }
 
-        if (in_array($params['address']['country'], EpsCountries::ALL) && $params['address']['country'] === 'ES' && $this->canaryConverter->isCanaryIsland($params['address'])) {
+        if (in_array($params['address']['country'], EpsCountries::ALL) && $params['address']['country'] === 'ES' && $this->canaryConverter->isCanaryIsland($params['address']) && isset($price['price'])) {
             return $this->jsonResponse($this->getGlobalPackResponse($price['price']));
         }
 
-        if (in_array($params['address']['country'], EpsCountries::ALL) && !in_array($params['address']['country'], ['BE', 'NL'])) {
+        if (in_array($params['address']['country'], EpsCountries::ALL) && !in_array($params['address']['country'], ['BE', 'NL']) && isset($price['price'])) {
             return $this->jsonResponse($this->getEpsCountryResponse($price['price']));
         }
 
-        if (!in_array($params['address']['country'], EpsCountries::ALL) && !in_array($params['address']['country'], ['BE', 'NL'])) {
+        if (!in_array($params['address']['country'], EpsCountries::ALL) && !in_array($params['address']['country'], ['BE', 'NL']) && isset($price['price'])) {
             return $this->jsonResponse($this->getGlobalPackResponse($price['price']));
         }
 
@@ -169,6 +169,8 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getValidResponseType($price['price']));
         } catch (\Exception $exception) {
             return $this->jsonResponse($this->getFallBackResponse(3, $price['price']));
+        } finally {
+            return false;
         }
     }
 
