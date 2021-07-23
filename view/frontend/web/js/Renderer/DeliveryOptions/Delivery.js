@@ -227,7 +227,7 @@ define([
                 }
                 
                 if (data === '') {
-                    return false
+                    return false;
                 }
 
                 if (data.letterbox_package === true) {
