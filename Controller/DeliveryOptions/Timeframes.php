@@ -169,8 +169,6 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getValidResponseType($price['price']));
         } catch (\Exception $exception) {
             return $this->jsonResponse($this->getFallBackResponse(3, $price['price']));
-        } finally {
-            return false;
         }
     }
 
