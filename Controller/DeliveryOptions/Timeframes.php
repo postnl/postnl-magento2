@@ -166,11 +166,12 @@ class Timeframes extends AbstractDeliveryOptions
         $this->addressEnhancer->set($params['address']);
 
         try {
+            if (!isset($price['price'])) {
+                return false;
+            }
             return $this->jsonResponse($this->getValidResponseType($price['price']));
         } catch (\Exception $exception) {
             return $this->jsonResponse($this->getFallBackResponse(3, $price['price']));
-        } finally {
-            return false;
         }
     }
 
