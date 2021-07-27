@@ -140,6 +140,10 @@ class Timeframes extends AbstractDeliveryOptions
 
         $price = $this->calculator->getPriceWithTax($this->getRateRequest());
 
+        if ($price === false) {
+            return $price;
+        }
+
         $quote = $this->checkoutSession->getQuote();
         $cartItems = $quote->getAllItems();
 
@@ -166,9 +170,6 @@ class Timeframes extends AbstractDeliveryOptions
         $this->addressEnhancer->set($params['address']);
 
         try {
-            if (!isset($price['price'])) {
-                return false;
-            }
             return $this->jsonResponse($this->getValidResponseType($price['price']));
         } catch (\Exception $exception) {
             return $this->jsonResponse($this->getFallBackResponse(3, $price['price']));
