@@ -125,7 +125,7 @@ class Timeframes extends AbstractDeliveryOptions
     }
 
     /**
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return bool|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \TIG\PostNL\Exception
@@ -140,10 +140,14 @@ class Timeframes extends AbstractDeliveryOptions
 
         $price = $this->calculator->getPriceWithTax($this->getRateRequest());
 
+        if ($price === false) {
+            return $price;
+        }
+
         $quote = $this->checkoutSession->getQuote();
         $cartItems = $quote->getAllItems();
 
-        if ($this->letterboxPackage->isLetterboxPackage($cartItems, false) && $params['address']['country'] == 'NL' && isset($price['price'])) {
+        if ($this->letterboxPackage->isLetterboxPackage($cartItems, false) && $params['address']['country'] == 'NL') {
             return $this->jsonResponse($this->getLetterboxPackageResponse($price['price']));
         }
 
