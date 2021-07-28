@@ -225,6 +225,10 @@ define([
                     this.selectFirstDeliveryOption();
                     return;
                 }
+                
+                if (data === '') {
+                    return false;
+                }
 
                 if (data.letterbox_package === true) {
                     data  = ko.utils.arrayMap(data.timeframes, function (letterbox_package) {
