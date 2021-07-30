@@ -140,8 +140,8 @@ class Timeframes extends AbstractDeliveryOptions
 
         $price = $this->calculator->getPriceWithTax($this->getRateRequest());
 
-        if ($price === false) {
-            return $price;
+        if (!isset($price['price'])) {
+            return false;
         }
 
         $quote = $this->checkoutSession->getQuote();
