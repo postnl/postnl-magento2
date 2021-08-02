@@ -497,5 +497,5 @@ Percent,Percent
 "Please enter a valid zipcode.","Please enter a valid zipcode."
 "When shipping with extra cover is selected, the shipment will be insured up to a maximum of €5.000,-","When shipping with extra cover is selected, the shipment will be insured up to a maximum of €5.000,-"
 "Belgium standard + Signature on delivery + Extra Cover","Belgium standard + Signature on delivery + Extra Cover"
-"When printing multiple labels simultaneously you may choose where the printer will start printing. The printer will start the bottom right on all pages after the first.", "When printing multiple labels simultaneously you may choose where the printer will start printing. The printer will start the bottom right on all pages after the first."
+"Determine the position of the first shipping label when you're printing the labels on an A4. De printing order of the labels are bottom right, bottom left, top right, top left.","Determine the position of the first shipping label when you're printing the labels on an A4. De printing order of the labels are bottom right, bottom left, top right, top left."
 "Choose printing start position","Choose printing start position"
