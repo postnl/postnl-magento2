@@ -130,6 +130,10 @@ define([
             if (typeof value.fallback !== 'undefined') {
                 type = 'fallback';
             }
+            
+            if (typeof value.letterbox_package !== 'undefined') {
+                type = 'Letterbox Package';
+            }
 
             if (typeof value.eps !== 'undefined') {
                 type = 'EPS';
@@ -220,6 +224,10 @@ define([
 
                     this.selectFirstDeliveryOption();
                     return;
+                }
+                
+                if (data === '') {
+                    return false;
                 }
 
                 if (data.letterbox_package === true) {

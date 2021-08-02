@@ -705,6 +705,7 @@ abstract class OptionsAbstract
         'EPS'               => '',
         'GP'                => '',
         'Letterbox Package' => '',
+        'letterbox_package' => '',
     ];
 
     /**
