@@ -185,10 +185,6 @@ class Calculator
             default:
                 $price = $this->getConfigData('price');
 
-                if ($includeVat) {
-                    $price = $this->taxHelper->getShippingPrice($price, true);
-                }
-
                 return $this->priceResponse($price, $price);
         }
     }
