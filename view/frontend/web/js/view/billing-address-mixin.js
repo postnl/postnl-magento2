@@ -40,11 +40,10 @@ define([
     return function (Component) {
         return Component.extend({
             tigHouseNumber: function() {
-                if (quote.billingAddress().customAttributes.length > 0) {
+                var customAttributes = quote.billingAddress().customAttributes;
+                if (customAttributes && customAttributes.length > 0) {
                     var houseNumber = "";
                     var houseNumberAddition = "";
-
-                    var customAttributes = quote.billingAddress().customAttributes;
 
                     // check if custom attribute exists and is not empty
                     customAttributes.forEach(function (attribute) {
