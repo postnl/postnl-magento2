@@ -63,10 +63,17 @@ require(['ko', 'jquery', 'TIG_PostNL/js/shipment/grid/DownloadPdf'], function (k
      */
     function getFormData(element) {
         var selections = getKoScope(element.parentElement.parentNode).getSelections();
+        var startPositionOption = $('#choose_print_start_position');
+        var printStartPosition = 0;
+
+        if (startPositionOption.is(':visible') && startPositionOption.length > 0) {
+            printStartPosition = startPositionOption.val();
+        }
 
         return {
             namespace: 'sales_order_shipment_grid',
-            selected: selections.selected
+            selected: selections.selected,
+            printStartPosition: printStartPosition
         };
     }
 

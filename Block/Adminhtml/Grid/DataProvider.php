@@ -34,6 +34,7 @@ namespace TIG\PostNL\Block\Adminhtml\Grid;
 use Magento\Backend\Block\Template;
 use Magento\Framework\View\Element\BlockInterface;
 use Magento\Framework\App\DeploymentConfig\Reader;
+use TIG\PostNL\Config\Source\Options\FirstLabelPosition;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Config\Provider\Webshop as WebshopConfig;
 use TIG\PostNL\Config\Provider\ProductOptions as OptionConfig;
@@ -75,15 +76,21 @@ class DataProvider extends Template implements BlockInterface
     private $guaranteedOptions;
 
     /**
+     * @var FirstLabelPosition
+     */
+    private $firstLabelPosition;
+
+    /**
      * DataProvider constructor.
      *
-     * @param Template\Context  $context
-     * @param Reader            $reader
-     * @param ProductOptions    $productOptions
-     * @param OptionConfig      $optionConfig
-     * @param WebshopConfig     $webshopConfig
-     * @param GuaranteedOptions $guaranteedOptions
-     * @param array             $data
+     * @param Template\Context   $context
+     * @param Reader             $reader
+     * @param ProductOptions     $productOptions
+     * @param OptionConfig       $optionConfig
+     * @param WebshopConfig      $webshopConfig
+     * @param GuaranteedOptions  $guaranteedOptions
+     * @param FirstLabelPosition $firstLabelPosition
+     * @param array              $data
      */
     public function __construct(
         Template\Context $context,
@@ -92,6 +99,7 @@ class DataProvider extends Template implements BlockInterface
         OptionConfig $optionConfig,
         WebshopConfig $webshopConfig,
         GuaranteedOptions $guaranteedOptions,
+        FirstLabelPosition $firstLabelPosition,
         array $data = []
     ) {
         $this->configReader = $reader;
@@ -99,6 +107,7 @@ class DataProvider extends Template implements BlockInterface
         $this->optionConfig = $optionConfig;
         $this->webshopConfig = $webshopConfig;
         $this->guaranteedOptions = $guaranteedOptions;
+        $this->firstLabelPosition = $firstLabelPosition;
         parent::__construct($context, $data);
     }
 
@@ -186,6 +195,24 @@ class DataProvider extends Template implements BlockInterface
         }, $packagesOptions);
 
         return $this->returnTimeOptions($options);
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelStartPositionOptions()
+    {
+        $startPositions = $this->firstLabelPosition->toOptionArray();
+
+        $options = [];
+        foreach ($startPositions as $key => $option) {
+            $options[] = [
+                'value' => $option['value'],
+                'text' => $option['label']
+            ];
+        }
+
+        return \Zend_Json::encode($options);
     }
 
     /**

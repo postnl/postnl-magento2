@@ -36,6 +36,7 @@ namespace TIG\PostNL\Helper\DeliveryOptions;
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Service\Order\FeeCalculator;
 use TIG\PostNL\Service\Order\ProductInfo;
+use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipment\ProductOptions;
 
 class OrderParams
@@ -179,6 +180,11 @@ class OrderParams
     private function setRequiredList($type)
     {
         $list = [];
+
+        if ($type === 'Letterbox Package') {
+            return $list;
+        }
+
         foreach ($this->optionParams as $key => $value) {
             $list[$key] = $value[$type];
         }
@@ -197,15 +203,7 @@ class OrderParams
      */
     private function formatParamData($params)
     {
-        $option = isset($params['option']) ? $params['option'] : 'Daytime';
-
-        if (!isset($params['option']) && $params['type'] === 'EPS') {
-            $option = $params['type'];
-        }
-
-        if (!isset($params['option']) && $params['type'] === 'GP') {
-            $option = $params['type'];
-        }
+        $option = $this->getOption($params);
 
         $productInfo = $this->productInfo->get($params['type'], $option, $params['address']);
 
@@ -224,6 +222,44 @@ class OrderParams
             'product_code'                 => $productInfo['code'],
             'stated_address_only'          => isset($params['stated_address_only']) ? $params['stated_address_only'] : false,
         ];
+    }
+
+    /**
+     * Determine the option
+     *
+     * @param $params
+     *
+     * @return mixed|string
+     */
+    private function getOption($params)
+    {
+        $option = isset($params['option']) ? $params['option'] : 'Daytime';
+
+        if (!isset($params['option']) && $params['type'] === 'EPS') {
+            $option = $params['type'];
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'GP') {
+            $option = $params['type'];
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] == 'NL') {
+            $option = 'Daytime';
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] !== 'NL' && in_array($params['country'], EpsCountries::ALL)) {
+            $option = 'EPS';
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] !== 'NL' && !in_array($params['country'], EpsCountries::ALL)) {
+            $option = 'GP';
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'Letterbox Package' && $params['country'] == 'NL') {
+            $option = 'letterbox_package';
+        }
+
+        return $option;
     }
 
     /**
