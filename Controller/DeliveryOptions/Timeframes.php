@@ -134,7 +134,7 @@ class Timeframes extends AbstractDeliveryOptions
     }
 
     /**
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return bool|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \TIG\PostNL\Exception
@@ -149,15 +149,15 @@ class Timeframes extends AbstractDeliveryOptions
 
         $price = $this->calculator->getPriceWithTax($this->getRateRequest());
 
+        if (!isset($price['price'])) {
+            return false;
+        }
+
         $quote = $this->checkoutSession->getQuote();
         $cartItems = $quote->getAllItems();
 
         if ($this->letterboxPackage->isLetterboxPackage($cartItems, false) && $params['address']['country'] == 'NL') {
             return $this->jsonResponse($this->getLetterboxPackageResponse($price['price']));
-        }
-
-        if (!$this->isDeliveryDaysActive->getValue()) {
-            return $this->jsonResponse($this->getFallBackResponse(2, $price['price']));
         }
 
         if (in_array($params['address']['country'], EpsCountries::ALL) && $params['address']['country'] === 'ES' && $this->canaryConverter->isCanaryIsland($params['address'])) {
@@ -170,6 +170,10 @@ class Timeframes extends AbstractDeliveryOptions
 
         if (!in_array($params['address']['country'], EpsCountries::ALL) && !in_array($params['address']['country'], ['BE', 'NL'])) {
             return $this->jsonResponse($this->getGlobalPackResponse($price['price']));
+        }
+
+        if (!$this->isDeliveryDaysActive->getValue()) {
+            return $this->jsonResponse($this->getFallBackResponse(2, $price['price']));
         }
 
         $this->addressEnhancer->set($params['address']);
