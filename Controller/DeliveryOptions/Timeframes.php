@@ -34,6 +34,7 @@ namespace TIG\PostNL\Controller\DeliveryOptions;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\OrderRepository;
@@ -80,18 +81,24 @@ class Timeframes extends AbstractDeliveryOptions
     private $canaryConverter;
 
     /**
-     * @param Context             $context
-     * @param OrderRepository     $orderRepository
-     * @param Session             $checkoutSession
-     * @param QuoteToRateRequest  $quoteToRateRequest
-     * @param AddressEnhancer     $addressEnhancer
-     * @param DeliveryDate        $deliveryDate
-     * @param TimeFrame           $timeFrame
-     * @param Calculator          $calculator
-     * @param IsDeliverDaysActive $isDeliverDaysActive
-     * @param ShippingDuration    $shippingDuration
-     * @param LetterboxPackage    $letterboxPackage
-     * @param CanaryIslandToIC    $canaryConverter
+     * @var AddressConfiguration
+     */
+    private $addressConfiguration;
+
+    /**
+     * @param Context              $context
+     * @param OrderRepository      $orderRepository
+     * @param Session              $checkoutSession
+     * @param QuoteToRateRequest   $quoteToRateRequest
+     * @param AddressEnhancer      $addressEnhancer
+     * @param DeliveryDate         $deliveryDate
+     * @param TimeFrame            $timeFrame
+     * @param Calculator           $calculator
+     * @param IsDeliverDaysActive  $isDeliverDaysActive
+     * @param ShippingDuration     $shippingDuration
+     * @param LetterboxPackage     $letterboxPackage
+     * @param CanaryIslandToIC     $canaryConverter
+     * @param AddressConfiguration $addressConfiguration
      */
     public function __construct(
         Context $context,
@@ -105,7 +112,8 @@ class Timeframes extends AbstractDeliveryOptions
         IsDeliverDaysActive $isDeliverDaysActive,
         ShippingDuration $shippingDuration,
         LetterboxPackage $letterboxPackage,
-        CanaryIslandToIC $canaryConverter
+        CanaryIslandToIC $canaryConverter,
+        AddressConfiguration $addressConfiguration
     ) {
         $this->addressEnhancer              = $addressEnhancer;
         $this->timeFrameEndpoint            = $timeFrame;
@@ -113,6 +121,7 @@ class Timeframes extends AbstractDeliveryOptions
         $this->isDeliveryDaysActive         = $isDeliverDaysActive;
         $this->letterboxPackage             = $letterboxPackage;
         $this->canaryConverter              = $canaryConverter;
+        $this->addressConfiguration         = $addressConfiguration;
 
         parent::__construct(
             $context,
@@ -155,7 +164,7 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getGlobalPackResponse($price['price']));
         }
 
-        if (in_array($params['address']['country'], EpsCountries::ALL) && !in_array($params['address']['country'], ['BE', 'NL'])) {
+        if ($this->isEpsCountry($params)) {
             return $this->jsonResponse($this->getEpsCountryResponse($price['price']));
         }
 
@@ -170,6 +179,30 @@ class Timeframes extends AbstractDeliveryOptions
         } catch (\Exception $exception) {
             return $this->jsonResponse($this->getFallBackResponse(3, $price['price']));
         }
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return bool
+     */
+    private function isEpsCountry($params)
+    {
+        if (!in_array($params['address']['country'], EpsCountries::ALL)) {
+            return false;
+        }
+
+        // NL to BE/NL shipments are not EPS shipments
+        if (!in_array($params['address']['country'], ['BE', 'NL']) && $this->addressConfiguration->getCountry() == 'NL') {
+            return true;
+        }
+
+        // BE to BE shipments is not EPS, but BE to NL is
+        if (!in_array($params['address']['country'], ['BE']) && $this->addressConfiguration->getCountry() == 'BE') {
+            return true;
+        }
+
+        return false;
     }
 
     /**

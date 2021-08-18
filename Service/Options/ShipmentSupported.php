@@ -32,6 +32,7 @@
 
 namespace TIG\PostNL\Service\Options;
 
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ProductOptions as OptionsProvider;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Service\Shipment\EpsCountries;
@@ -50,16 +51,23 @@ class ShipmentSupported
     private $optionsProvider;
 
     /**
-     * @var array
+     * @var AddressConfiguration
      */
-    private $allowedCountries = ['NL', 'BE'];
+    private $addressConfiguration;
 
+    /**
+     * @param ProductOptions       $productOptions
+     * @param OptionsProvider      $optionsProvider
+     * @param AddressConfiguration $addressConfiguration
+     */
     public function __construct(
         ProductOptions $productOptions,
-        OptionsProvider $optionsProvider
+        OptionsProvider $optionsProvider,
+        AddressConfiguration $addressConfiguration
     ) {
         $this->productOptions  = $productOptions;
         $this->optionsProvider = $optionsProvider;
+        $this->addressConfiguration = $addressConfiguration;
     }
 
     /**
@@ -101,16 +109,11 @@ class ShipmentSupported
     // @codingStandardsIgnoreStart
     private function getProductOptionsByCountry($country)
     {
-        if (in_array($country, $this->allowedCountries)) {
+        if (in_array($country, ['NL', 'BE']) && $this->addressConfiguration->getCountry() == 'NL') {
             $options[] = $this->getProductOptions($country);
         }
 
-        // BE shouldn't get EU options anymore, as BE has its own product codes
-        if ($country === 'BE') {
-            $options[] = $this->productOptions->getBeOptions();
-        } elseif (in_array($country, EpsCountries::ALL)) {
-            $options[] = $this->productOptions->getEpsProductOptions();
-        }
+        $options[] = $this->getEpsProductOptions($country);
 
         if (in_array($country, array_merge(PriorityCountries::GLOBALPACK, PriorityCountries::EPS))) {
             $options[] = $this->productOptions->getPriorityOptions();
@@ -125,6 +128,33 @@ class ShipmentSupported
         return $options;
     }
     // @codingStandardsIgnoreEnd
+
+    /**
+     * @param string $country
+     *
+     * @return array
+     */
+    private function getEpsProductOptions($country)
+    {
+        $options = [];
+
+        // BE to BE options
+        if ($country === 'BE' && $this->addressConfiguration->getCountry() == 'BE') {
+            $options = $this->productOptions->getBeDomesticOptions();
+        }
+
+        // NL to BE options
+        if ($country === 'BE' && $this->addressConfiguration->getCountry() == 'NL') {
+            $options = $this->productOptions->getBeOptions();
+        }
+
+        // To NL and other EU countries
+        if ($country !== 'BE' && in_array($country, EpsCountries::ALL)) {
+            $options = $this->productOptions->getEpsProductOptions();
+        }
+
+        return $options;
+    }
 
     /**
      * @param $country

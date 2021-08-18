@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to support@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact support@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ -->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <field id="returns_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+        <label>Activate returns</label>
+        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        <config_path>tig_postnl/returns/returns_active</config_path>
+    </field>
+
+    <field id="company" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Company</label>
+        <config_path>tig_postnl/returns/company</config_path>
+        <depends>
+            <field id="returns_active">1</field>
+        </depends>
+        <validate>required-entry</validate>
+    </field>
+
+    <field id="freepost_number" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Freepost number</label>
+        <comment><![CDATA[You can apply for a freepost number on <a href='http://www.postnl.nl/zakelijke-oplossingen/ontvangen/antwoordnummer/?searchResult=position1' target='_blank' title='Request a freepost number.'>this</a> page.]]></comment>
+        <config_path>tig_postnl/returns/freepost_number</config_path>
+        <depends>
+            <field id="returns_active">1</field>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+        </depends>
+        <validate>required-entry</validate>
+    </field>
+
+    <field id="zipcode" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Zipcode</label>
+        <config_path>tig_postnl/returns/zipcode</config_path>
+        <depends>
+            <field id="returns_active">1</field>
+        </depends>
+        <validate>required-entry</validate>
+    </field>
+
+    <field id="streetname" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Street name</label>
+        <config_path>tig_postnl/returns/streetname</config_path>
+        <depends>
+            <field id="returns_active">1</field>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">BE</field>
+        </depends>
+        <validate>required-entry</validate>
+    </field>
+
+    <field id="housenumber" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Housenumber</label>
+        <config_path>tig_postnl/returns/housenumber</config_path>
+        <depends>
+            <field id="returns_active">1</field>
+        </depends>
+        <validate>required-entry</validate>
+    </field>
+
+    <field id="city" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>City</label>
+        <config_path>tig_postnl/returns/city</config_path>
+        <depends>
+            <field id="returns_active">1</field>
+        </depends>
+        <validate>required-entry</validate>
+    </field>
+
+    <field id="customer_code" translate="label comment" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Customer code</label>
+        <config_path>tig_postnl/returns/customer_code</config_path>
+        <depends>
+            <field id="returns_active">1</field>
+        </depends>
+        <validate>required-entry</validate>
+    </field>
+</include>

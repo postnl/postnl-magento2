@@ -141,6 +141,17 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     }
 
     /**
+     * Returns options if group equals pakjegemak_be_domestic_options
+     * @return array
+     */
+    public function getPakjeGemakBeDomesticOptions()
+    {
+        $flags = [];
+        $flags['groups'][] = ['group' => 'pakjegemak_be_domestic_options'];
+        return $this->getProductOptions($flags);
+    }
+
+    /**
      * Returns options if group equals standard_options
      * @return array
      */
@@ -201,6 +212,17 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
 
         return $beOptions;
     }
+
+    /**
+     * @return array
+     */
+    public function getBeDomesticOptions()
+    {
+        $beDomesticOptions = $this->getProductOptions(['group' => 'standard_be_options']);
+
+        return $beDomesticOptions;
+    }
+
 
     /**
      * @return array

@@ -35,6 +35,7 @@ namespace TIG\PostNL\Service\Order;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Sales\Model\Order\Address as SalesAddress;
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Shipment\EpsCountries;
@@ -92,6 +93,9 @@ class ProductInfo
     /** @var ProductOptionsFinder */
     private $productOptionsFinder;
 
+    /** @var AddressConfiguration */
+    private $addressConfiguration;
+
     /** @var QuoteInterface */
     private $quote;
     /**
@@ -102,15 +106,18 @@ class ProductInfo
     /**
      * @param ProductOptionsConfiguration $productOptionsConfiguration
      * @param ProductOptionsFinder        $productOptionsFinder
+     * @param AddressConfiguration        $addressConfiguration
      * @param QuoteInterface              $quote
      */
     public function __construct(
         ProductOptionsConfiguration $productOptionsConfiguration,
         ProductOptionsFinder $productOptionsFinder,
+        AddressConfiguration $addressConfiguration,
         QuoteInterface $quote
     ) {
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->productOptionsFinder        = $productOptionsFinder;
+        $this->addressConfiguration        = $addressConfiguration;
         $this->quote                       = $quote;
     }
 
@@ -289,9 +296,13 @@ class ProductInfo
 
         $this->type = static::SHIPMENT_TYPE_PG;
 
-        if ($country === 'BE') {
+        if ($country == 'BE' && $this->addressConfiguration->getCountry() == 'NL') {
             $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakBeProductOption();
+            return;
+        }
 
+        if ($country == 'BE' && $this->addressConfiguration->getCountry() == 'BE') {
+            $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakBeDomesticProductOption();
             return;
         }
 
@@ -337,8 +348,13 @@ class ProductInfo
     private function setDefaultProductOption($country)
     {
         $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
-        if ($country == 'BE') {
+
+        if ($country == 'BE' && $this->addressConfiguration->getCountry() == 'NL') {
             $this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
+        }
+
+        if ($country == 'BE' && $this->addressConfiguration->getCountry() == 'BE') {
+            $this->code = $this->productOptionsConfiguration->getDefaultBeDomesticProductOption();
         }
 
         $this->type = static::SHIPMENT_TYPE_DAYTIME;
