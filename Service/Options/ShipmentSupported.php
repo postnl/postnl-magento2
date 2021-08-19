@@ -109,7 +109,7 @@ class ShipmentSupported
     // @codingStandardsIgnoreStart
     private function getProductOptionsByCountry($country)
     {
-        if (in_array($country, ['NL', 'BE']) && $this->addressConfiguration->getCountry() == 'NL') {
+        if ($country == 'NL' && $this->addressConfiguration->getCountry() == 'NL') {
             $options[] = $this->getProductOptions($country);
         }
 
@@ -140,12 +140,18 @@ class ShipmentSupported
 
         // BE to BE options
         if ($country === 'BE' && $this->addressConfiguration->getCountry() == 'BE') {
-            $options = $this->productOptions->getBeDomesticOptions();
+            $options = $this->getBeDomesticOptions();
         }
 
         // NL to BE options
         if ($country === 'BE' && $this->addressConfiguration->getCountry() == 'NL') {
-            $options = $this->productOptions->getBeOptions();
+            $options[] = $this->getProductOptions($country);
+            $options[] = $this->productOptions->getBeOptions();
+
+            // getProductOptions() retrieve ALL options of a country.
+            // We don't want BE Domestic options though, so those need to be filtered out of the list.
+            $options = call_user_func_array("array_merge", $options);
+            $options = array_filter($options, [$this, 'filterBeDomesticOption']);
         }
 
         // To NL and other EU countries
@@ -154,6 +160,38 @@ class ShipmentSupported
         }
 
         return $options;
+    }
+
+    /**
+     * @return array
+     */
+    private function getBeDomesticOptions()
+    {
+        $beDomesticOptions[] = $this->productOptions->getBeDomesticOptions();
+        $beDomesticOptions[] = $this->productOptions->getPakjeGemakBeDomesticOptions();
+        $beDomesticOptions = call_user_func_array("array_merge", $beDomesticOptions);
+
+        return $beDomesticOptions;
+    }
+
+    /**
+     * @param $productOption
+     *
+     * @return bool
+     */
+    private function filterBeDomesticOption($productOption)
+    {
+        $isNotBeDomestic = true;
+        $beDomesticOptions = $this->getBeDomesticOptions();
+
+        foreach ($beDomesticOptions as $domesticOption) {
+            if ($productOption['value'] === $domesticOption['value']) {
+                $isNotBeDomestic = false;
+                break;
+            }
+        }
+
+        return $isNotBeDomestic;
     }
 
     /**
