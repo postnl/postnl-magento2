@@ -134,6 +134,7 @@ class ShipmentSupported
      *
      * @return array
      */
+    // @codingStandardsIgnoreStart
     private function getEpsProductOptions($country)
     {
         $options = [];
@@ -161,6 +162,7 @@ class ShipmentSupported
 
         return $options;
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * @return array
@@ -169,6 +171,8 @@ class ShipmentSupported
     {
         $beDomesticOptions[] = $this->productOptions->getBeDomesticOptions();
         $beDomesticOptions[] = $this->productOptions->getPakjeGemakBeDomesticOptions();
+
+        // @codingStandardsIgnoreLine
         $beDomesticOptions = call_user_func_array("array_merge", $beDomesticOptions);
 
         return $beDomesticOptions;
