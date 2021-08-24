@@ -79,6 +79,7 @@ class QuoteToRateRequest
         $rateRequest->setDestRegionId($address->getRegionId());
         $rateRequest->setOrderSubtotal($this->quote->getSubtotal());
         $rateRequest->setFreeShipping((bool)$address->getFreeShipping());
+        $rateRequest->setPackageValueWithDiscount($address->getBaseSubtotalWithDiscount());
 
         return $rateRequest;
     }
