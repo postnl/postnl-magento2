@@ -32,11 +32,11 @@
 
 namespace TIG\PostNL\Service\Options;
 
-use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ProductOptions as OptionsProvider;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipment\PriorityCountries;
+use TIG\PostNL\Service\Validation\CountryShipping;
 
 class ShipmentSupported
 {
@@ -50,24 +50,22 @@ class ShipmentSupported
      */
     private $optionsProvider;
 
-    /**
-     * @var AddressConfiguration
-     */
-    private $addressConfiguration;
+    /** @var CountryShipping */
+    private $countryShipping;
 
     /**
      * @param ProductOptions       $productOptions
      * @param OptionsProvider      $optionsProvider
-     * @param AddressConfiguration $addressConfiguration
+     * @param CountryShipping      $countryShipping
      */
     public function __construct(
         ProductOptions $productOptions,
         OptionsProvider $optionsProvider,
-        AddressConfiguration $addressConfiguration
+        CountryShipping $countryShipping
     ) {
         $this->productOptions  = $productOptions;
         $this->optionsProvider = $optionsProvider;
-        $this->addressConfiguration = $addressConfiguration;
+        $this->countryShipping = $countryShipping;
     }
 
     /**
@@ -109,7 +107,7 @@ class ShipmentSupported
     // @codingStandardsIgnoreStart
     private function getProductOptionsByCountry($country)
     {
-        if ($country == 'NL' && $this->addressConfiguration->getCountry() == 'NL') {
+        if ($this->countryShipping->isShippingNLDomestic($country)) {
             $options[] = $this->getProductOptions($country);
         }
 
@@ -140,12 +138,12 @@ class ShipmentSupported
         $options = [];
 
         // BE to BE options
-        if ($country === 'BE' && $this->addressConfiguration->getCountry() == 'BE') {
+        if ($this->countryShipping->isShippingBEDomestic($country)) {
             $options = $this->getBeDomesticOptions();
         }
 
         // NL to BE options
-        if ($country === 'BE' && $this->addressConfiguration->getCountry() == 'NL') {
+        if ($this->countryShipping->isShippingNLtoBE($country)) {
             $options[] = $this->getProductOptions($country);
             $options[] = $this->productOptions->getBeOptions();
 

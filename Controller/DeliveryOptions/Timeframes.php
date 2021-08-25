@@ -34,7 +34,6 @@ namespace TIG\PostNL\Controller\DeliveryOptions;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
-use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\OrderRepository;
@@ -44,6 +43,7 @@ use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Service\Quote\ShippingDuration;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
+use TIG\PostNL\Service\Validation\CountryShipping;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
 
@@ -80,25 +80,23 @@ class Timeframes extends AbstractDeliveryOptions
      */
     private $canaryConverter;
 
-    /**
-     * @var AddressConfiguration
-     */
-    private $addressConfiguration;
+    /** @var CountryShipping */
+    private $countryShipping;
 
     /**
-     * @param Context              $context
-     * @param OrderRepository      $orderRepository
-     * @param Session              $checkoutSession
-     * @param QuoteToRateRequest   $quoteToRateRequest
-     * @param AddressEnhancer      $addressEnhancer
-     * @param DeliveryDate         $deliveryDate
-     * @param TimeFrame            $timeFrame
-     * @param Calculator           $calculator
-     * @param IsDeliverDaysActive  $isDeliverDaysActive
-     * @param ShippingDuration     $shippingDuration
-     * @param LetterboxPackage     $letterboxPackage
-     * @param CanaryIslandToIC     $canaryConverter
-     * @param AddressConfiguration $addressConfiguration
+     * @param Context             $context
+     * @param OrderRepository     $orderRepository
+     * @param Session             $checkoutSession
+     * @param QuoteToRateRequest  $quoteToRateRequest
+     * @param AddressEnhancer     $addressEnhancer
+     * @param DeliveryDate        $deliveryDate
+     * @param TimeFrame           $timeFrame
+     * @param Calculator          $calculator
+     * @param IsDeliverDaysActive $isDeliverDaysActive
+     * @param ShippingDuration    $shippingDuration
+     * @param LetterboxPackage    $letterboxPackage
+     * @param CanaryIslandToIC    $canaryConverter
+     * @param CountryShipping     $countryShipping
      */
     public function __construct(
         Context $context,
@@ -113,7 +111,7 @@ class Timeframes extends AbstractDeliveryOptions
         ShippingDuration $shippingDuration,
         LetterboxPackage $letterboxPackage,
         CanaryIslandToIC $canaryConverter,
-        AddressConfiguration $addressConfiguration
+        CountryShipping $countryShipping
     ) {
         $this->addressEnhancer              = $addressEnhancer;
         $this->timeFrameEndpoint            = $timeFrame;
@@ -121,7 +119,7 @@ class Timeframes extends AbstractDeliveryOptions
         $this->isDeliveryDaysActive         = $isDeliverDaysActive;
         $this->letterboxPackage             = $letterboxPackage;
         $this->canaryConverter              = $canaryConverter;
-        $this->addressConfiguration         = $addressConfiguration;
+        $this->countryShipping              = $countryShipping;
 
         parent::__construct(
             $context,
@@ -197,12 +195,12 @@ class Timeframes extends AbstractDeliveryOptions
         }
 
         // NL to BE/NL shipments are not EPS shipments
-        if (!in_array($params['address']['country'], ['BE', 'NL']) && $this->addressConfiguration->getCountry() == 'NL') {
+        if ($this->countryShipping->isShippingNLToEps($params['address']['country'])) {
             return true;
         }
 
         // BE to BE shipments is not EPS, but BE to NL is
-        if (!in_array($params['address']['country'], ['BE']) && $this->addressConfiguration->getCountry() == 'BE') {
+        if (!$this->countryShipping->isShippingBEDomestic($params['address']['country'])) {
             return true;
         }
 
