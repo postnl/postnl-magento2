@@ -47,7 +47,6 @@ if [ $? != "0" ]; then
     composer global require "squizlabs/php_codesniffer=*"
 fi
 
-composer self-update --1
 composer install
 
 npm install

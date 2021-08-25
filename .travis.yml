@@ -27,6 +27,7 @@ matrix:
 
 before_script:
   - export PATH=$PATH:$HOME/.composer/vendor/bin
+  - composer self-update --1
   - composer config -a -g http-basic.repo.magento.com $MAGENTO_USERNAME $MAGENTO_PASSWORD
   - bash Test/Script/ManageDependencies.sh
   - bash Test/Script/Setup.sh
