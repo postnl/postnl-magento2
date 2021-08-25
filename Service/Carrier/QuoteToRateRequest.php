@@ -67,7 +67,6 @@ class QuoteToRateRequest
 
         /** @var RateRequest $rateRequest */
         $rateRequest = $this->rateRequestFactory->create();
-
         $rateRequest->setWebsiteId($store->getWebsiteId());
         $rateRequest->setDestStreet($address->getStreetFull());
         $rateRequest->setDestPostcode($address->getPostcode());
