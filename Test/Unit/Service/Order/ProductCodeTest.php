@@ -35,6 +35,7 @@ use Magento\Quote\Model\Quote;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Service\Order\ProductInfo;
+use TIG\PostNL\Service\Validation\CountryShipping;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Test\TestCase;
 
@@ -155,9 +156,11 @@ class ProductCodeTest extends TestCase
         $addressConfigurationMock = $this->getFakeMock(AddressConfiguration::class, true);
         $addressConfigurationMock->method('getCountry')->willReturn($senderCountry);
 
+        $countryShipping = $this->getObject(CountryShipping::class, ['addressConfiguration' => $addressConfigurationMock]);
+
         $instance = $this->getInstance([
             'productOptionsFinder' => $productOptionsFinder,
-            'addressConfiguration' => $addressConfigurationMock
+            'countryShipping' => $countryShipping
         ]);
 
         $result = $instance->get($type, $option, $address);
