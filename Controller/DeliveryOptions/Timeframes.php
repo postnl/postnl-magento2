@@ -200,7 +200,7 @@ class Timeframes extends AbstractDeliveryOptions
         }
 
         // BE to BE shipments is not EPS, but BE to NL is
-        if (!$this->countryShipping->isShippingBEDomestic($params['address']['country'])) {
+        if ($this->countryShipping->isShippingBEToEps($params['address']['country'])) {
             return true;
         }
 
