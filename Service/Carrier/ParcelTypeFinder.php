@@ -83,13 +83,19 @@ class ParcelTypeFinder
 
     /**
      * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function get()
+    public function get($quote = null)
     {
-        $quoteId = $this->checkoutSession->getQuoteId();
-        $quote = $this->quoteRepository->get($quoteId);
+        if (is_null($quote)) {
+            $quoteId = $this->checkoutSession->getQuoteId();
+            $quote   = $this->quoteRepository->get($quoteId);
+        } else {
+            $quoteId = $quote->getId();
+        }
 
         $result = $this->itemsToOption->getFromQuote($quote);
+
         if ($result) {
             return $result;
         }
