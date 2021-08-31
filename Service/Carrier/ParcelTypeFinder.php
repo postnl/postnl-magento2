@@ -87,15 +87,14 @@ class ParcelTypeFinder
      */
     public function get($quote = null)
     {
-        if (is_null($quote)) {
+        if ($quote === null) {
             $quoteId = $this->checkoutSession->getQuoteId();
             $quote   = $this->quoteRepository->get($quoteId);
-        } else {
-            $quoteId = $quote->getId();
         }
 
-        $result = $this->itemsToOption->getFromQuote($quote);
+        $quoteId = $quote->getId();
 
+        $result = $this->itemsToOption->getFromQuote($quote);
         if ($result) {
             return $result;
         }
