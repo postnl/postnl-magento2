@@ -128,9 +128,8 @@ class PickupAddress
     }
 
     /**
-     * @param $pgData
+     * @param                            $pgData
      * @param \Magento\Quote\Model\Quote $quote
-     *
      * @return \Magento\Quote\Model\Quote\Address
      */
     private function create($pgData, $quote)
@@ -163,6 +162,9 @@ class PickupAddress
         $houseNr = $address['HouseNr'];
         $houseNrExt = isset($address['HouseNrExt']) ? $address['HouseNrExt'] : null;
 
-        return [$address['Street'], $houseNr, $houseNrExt];
+        $test = [$address['Street'], $houseNr, $houseNrExt];
+        $test = (implode("\n", $test));
+
+        return $test;
     }
 }
