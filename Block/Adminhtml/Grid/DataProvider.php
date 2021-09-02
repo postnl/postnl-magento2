@@ -153,10 +153,13 @@ class DataProvider extends Template implements BlockInterface
      */
     private function filterNlDomesticOption($productOption)
     {
+        // countryLimitation is used for country destination.
+        // Since all BE > NL shipments are EPS, most NL domestic product codes can be filtered right away via this check
         if ($productOption['countryLimitation'] == 'NL') {
             return false;
         }
 
+        // These are NL > BE shipments, which aren't possible since the shipments come from BE.
         $flags['groups'][] = ['group' => 'be_options'];
         $flags['groups'][] = ['group' => 'pakjegemak_be_options'];
 
