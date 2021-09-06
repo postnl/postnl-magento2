@@ -70,17 +70,11 @@ class DeliveryDateFallback
         }
 
         $date = $this->getDate($nextDay);
-        $day  = $this->helper->getDayOrWeekNumber($nextDay);
-        if ($day == 7) {
-            $nextDay = $date .'+1 day';
+        while (!in_array(date('N', strtotime($date)), $shippingDays) && count($shippingDays)) {
+            $date = $this->getDate($date . '+1 day');
         }
 
-        $day = $this->helper->getDayOrWeekNumber($nextDay);
-        if ($day == 1 && !in_array(0, $shippingDays)) {
-            $nextDay = $date. '+2 day';
-        }
-
-        return $this->getDate($nextDay);
+        return $this->getDate($date);
     }
 
     /**
