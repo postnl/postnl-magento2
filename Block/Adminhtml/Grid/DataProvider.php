@@ -39,6 +39,7 @@ use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\Webshop as WebshopConfig;
 use TIG\PostNL\Config\Provider\ProductOptions as OptionConfig;
+use TIG\PostNL\Service\Filter\DomesticOptions;
 use TIG\PostNL\Service\Options\GuaranteedOptions;
 
 class DataProvider extends Template implements BlockInterface
@@ -82,22 +83,22 @@ class DataProvider extends Template implements BlockInterface
     private $firstLabelPosition;
 
     /**
-     * @var AddressConfiguration
+     * @var DomesticOptions
      */
-    private $addressConfiguration;
+    private $domesticOptionsFilter;
 
     /**
      * DataProvider constructor.
      *
-     * @param Template\Context     $context
-     * @param Reader               $reader
-     * @param ProductOptions       $productOptions
-     * @param OptionConfig         $optionConfig
-     * @param WebshopConfig        $webshopConfig
-     * @param GuaranteedOptions    $guaranteedOptions
-     * @param FirstLabelPosition   $firstLabelPosition
-     * @param AddressConfiguration $addressConfiguration
-     * @param array                $data
+     * @param Template\Context   $context
+     * @param Reader             $reader
+     * @param ProductOptions     $productOptions
+     * @param OptionConfig       $optionConfig
+     * @param WebshopConfig      $webshopConfig
+     * @param GuaranteedOptions  $guaranteedOptions
+     * @param FirstLabelPosition $firstLabelPosition
+     * @param DomesticOptions    $domesticOptionsFilter
+     * @param array              $data
      */
     public function __construct(
         Template\Context $context,
@@ -107,7 +108,7 @@ class DataProvider extends Template implements BlockInterface
         WebshopConfig $webshopConfig,
         GuaranteedOptions $guaranteedOptions,
         FirstLabelPosition $firstLabelPosition,
-        AddressConfiguration $addressConfiguration,
+        DomesticOptions $domesticOptionsFilter,
         array $data = []
     ) {
         $this->configReader = $reader;
@@ -116,7 +117,7 @@ class DataProvider extends Template implements BlockInterface
         $this->webshopConfig = $webshopConfig;
         $this->guaranteedOptions = $guaranteedOptions;
         $this->firstLabelPosition = $firstLabelPosition;
-        $this->addressConfiguration = $addressConfiguration;
+        $this->domesticOptionsFilter = $domesticOptionsFilter;
         parent::__construct($context, $data);
     }
 
@@ -126,14 +127,7 @@ class DataProvider extends Template implements BlockInterface
     public function getProductOptions()
     {
         $supportedTypes = $this->productOptions->get();
-        $country = $this->addressConfiguration->getCountry();
-
-        if ($country == 'NL') {
-            $supportedTypes = array_filter($supportedTypes, [$this, 'filterBeDomesticOption']);
-        }
-        if ($country == 'BE') {
-            $supportedTypes = array_filter($supportedTypes, [$this, 'filterNlDomesticOption']);
-        }
+        $supportedTypes = $this->domesticOptionsFilter->filter($supportedTypes);
 
         $options = [];
         foreach ($supportedTypes as $key => $option) {
@@ -144,68 +138,6 @@ class DataProvider extends Template implements BlockInterface
         }
 
         return \Zend_Json::encode($options);
-    }
-
-    /**
-     * @param $productOption
-     *
-     * @return bool
-     */
-    private function filterNlDomesticOption($productOption)
-    {
-        // countryLimitation is used for country destination.
-        // Since all BE > NL shipments are EPS, most NL domestic product codes can be filtered right away via this check
-        if ($productOption['countryLimitation'] == 'NL') {
-            return false;
-        }
-
-        // These are NL > BE shipments, which aren't possible since the shipments come from BE.
-        $flags['groups'][] = ['group' => 'be_options'];
-        $flags['groups'][] = ['group' => 'pakjegemak_be_options'];
-
-        $domesticOptions = $this->productOptions->getProductOptions($flags);
-
-        $isNotDomestic = $this->isNotDomestic($productOption, $domesticOptions);
-
-        return $isNotDomestic;
-    }
-
-    /**
-     * @param $productOption
-     *
-     * @return bool
-     */
-    private function filterBeDomesticOption($productOption)
-    {
-        $beDomesticOptions[] = $this->productOptions->getBeDomesticOptions();
-        $beDomesticOptions[] = $this->productOptions->getPakjeGemakBeDomesticOptions();
-
-        // @codingStandardsIgnoreLine
-        $beDomesticOptions = call_user_func_array("array_merge", $beDomesticOptions);
-
-        $isNotDomestic = $this->isNotDomestic($productOption, $beDomesticOptions);
-
-        return $isNotDomestic;
-    }
-
-    /**
-     * @param $option
-     * @param $domesticOptions
-     *
-     * @return bool
-     */
-    private function isNotDomestic($option, $domesticOptions)
-    {
-        $isNotDomestic = true;
-
-        foreach ($domesticOptions as $domesticOption) {
-            if ($option['value'] === $domesticOption['value']) {
-                $isNotDomestic = false;
-                break;
-            }
-        }
-
-        return $isNotDomestic;
     }
 
     /**
