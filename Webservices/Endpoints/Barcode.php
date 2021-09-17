@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Exception as PostNLException;
 use TIG\PostNL\Service\Shipment\Barcode\Range as BarcodeRange;
 use TIG\PostNL\Webservices\AbstractEndpoint;
@@ -87,23 +88,31 @@ class Barcode extends AbstractEndpoint
     private $type = '';
 
     /**
+     * @var ReturnOptions
+     */
+    private $returnOptions;
+
+    /**
      * @param \TIG\PostNL\Webservices\Soap                   $soap
      * @param \TIG\PostNL\Service\Shipment\Barcode\Range     $barcodeRange
      * @param \TIG\PostNL\Webservices\Api\Customer           $customer
      * @param \TIG\PostNL\Webservices\Api\Message            $message
      * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
+     * @param ReturnOptions                                  $returnOptions
      */
     public function __construct(
         Soap $soap,
         BarcodeRange $barcodeRange,
         Customer $customer,
         Message $message,
-        ShipmentData $shipmentData
+        ShipmentData $shipmentData,
+        ReturnOptions $returnOptions
     ) {
-        $this->soap = $soap;
-        $this->barcodeRange = $barcodeRange;
-        $this->customer = $customer;
-        $this->message = $message;
+        $this->soap          = $soap;
+        $this->barcodeRange  = $barcodeRange;
+        $this->customer      = $customer;
+        $this->message       = $message;
+        $this->returnOptions = $returnOptions;
 
         parent::__construct(
             $shipmentData
@@ -134,6 +143,10 @@ class Barcode extends AbstractEndpoint
                 'Serie' => $barcode['serie'],
             ],
         ];
+
+        if ($isReturnBarcode) {
+            $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCode();
+        }
 
         return $this->soap->call($this, 'GenerateBarcode', $parameters);
     }
