@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Exception as PostNLException;
 use TIG\PostNL\Service\Shipment\Barcode\Range as BarcodeRange;
@@ -93,12 +94,18 @@ class Barcode extends AbstractEndpoint
     private $returnOptions;
 
     /**
+     * @var AddressConfiguration
+     */
+    private $addressConfiguration;
+
+    /**
      * @param \TIG\PostNL\Webservices\Soap                   $soap
      * @param \TIG\PostNL\Service\Shipment\Barcode\Range     $barcodeRange
      * @param \TIG\PostNL\Webservices\Api\Customer           $customer
      * @param \TIG\PostNL\Webservices\Api\Message            $message
      * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
      * @param ReturnOptions                                  $returnOptions
+     * @param AddressConfiguration                           $addressConfiguration
      */
     public function __construct(
         Soap $soap,
@@ -106,13 +113,15 @@ class Barcode extends AbstractEndpoint
         Customer $customer,
         Message $message,
         ShipmentData $shipmentData,
-        ReturnOptions $returnOptions
+        ReturnOptions $returnOptions,
+        AddressConfiguration $addressConfiguration
     ) {
-        $this->soap          = $soap;
-        $this->barcodeRange  = $barcodeRange;
-        $this->customer      = $customer;
-        $this->message       = $message;
-        $this->returnOptions = $returnOptions;
+        $this->soap                 = $soap;
+        $this->barcodeRange         = $barcodeRange;
+        $this->customer             = $customer;
+        $this->message              = $message;
+        $this->returnOptions        = $returnOptions;
+        $this->addressConfiguration = $addressConfiguration;
 
         parent::__construct(
             $shipmentData
@@ -132,7 +141,10 @@ class Barcode extends AbstractEndpoint
     {
         $this->validateRequiredValues();
 
-        $barcode = $this->barcodeRange->getByProductCode($this->productCode, $this->storeId);
+        $barcode         = $this->barcodeRange->getByProductCode($this->productCode, $this->storeId);
+        $sendersCountry  = $this->addressConfiguration->getCountry();
+        $shippingAddress = $shipment->getShippingAddress();
+        $shippingCountry = $shippingAddress->getCountryId();
 
         $parameters = [
             'Message'  => $this->message->get(''),
@@ -144,7 +156,7 @@ class Barcode extends AbstractEndpoint
             ],
         ];
 
-        if ($isReturnBarcode) {
+        if ($isReturnBarcode && $sendersCountry === 'NL' && $shippingCountry === 'BE') {
             $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCode();
         }
 
