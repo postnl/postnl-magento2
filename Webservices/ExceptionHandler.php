@@ -40,7 +40,7 @@ class ExceptionHandler
     /**
      * CIF error namespace.
      */
-    const ERROR_NAMESPACE = 'http://postnl.nl/cif/services/common/';
+    const ERROR_NAMESPACE = 'https://postnl.nl/cif/services/common/';
 
     /**
      * The error number CIF uses for the 'shipment not found' error.
