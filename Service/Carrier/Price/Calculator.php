@@ -149,12 +149,6 @@ class Calculator
      */
     private function getRatePrice($rateType, $request, $parcelType, $includeVat)
     {
-        if ($rateType == RateType::CARRIER_RATE_TYPE_TABLE) {
-            $ratePrice = $this->getTableratePrice($request);
-
-            return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
-        }
-
         if (!$parcelType) {
             $quote = null;
             $requestItems = $request->getAllItems();
@@ -178,18 +172,21 @@ class Calculator
         switch ($rateType) {
             case 'free':
                 return $this->priceResponse('0.00', '0.00');
-            case 'matrix':
+            case RateType::CARRIER_RATE_TYPE_MATRIX:
                 $ratePrice = $this->matrixratePrice->getRate($request, $parcelType, $this->store, $includeVat);
                 if ($ratePrice !== false) {
                     return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
                 }
 
                 return false;
-            case 'table':
+            case RateType::CARRIER_RATE_TYPE_TABLE:
                 $ratePrice = $this->getTableratePrice($request);
+                if ($ratePrice !== false) {
+                    return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
+                }
 
-                return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
-            case 'flat':
+                return false;
+            case RateType::CARRIER_RATE_TYPE_FLAT:
             default:
                 $price = $this->getConfigData('price');
 
@@ -214,7 +211,7 @@ class Calculator
     /**
      * @param RateRequest $request
      *
-     * @return array
+     * @return array|bool
      */
     private function getTableratePrice(RateRequest $request)
     {
@@ -222,6 +219,10 @@ class Calculator
 
         $includeVirtualPrice = $this->getConfigFlag('include_virtual_price');
         $ratePrice = $this->tablerateShippingPrice->getTableratePrice($request, $includeVirtualPrice);
+
+        if (!$ratePrice) {
+            return false;
+        }
 
         return [
             'price' => $ratePrice['price'],
