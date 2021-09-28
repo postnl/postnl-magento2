@@ -32,15 +32,15 @@
 
 namespace TIG\PostNL\Service\Carrier\Price;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Tax\Helper\Data;
+use TIG\PostNL\Config\Source\Carrier\RateType;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
-use TIG\PostNL\Config\Source\Carrier\RateType;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Quote\Model\Quote\Address\RateRequest;
 
 // @codingStandardsIgnoreFile
 class Calculator
@@ -150,8 +150,16 @@ class Calculator
     private function getRatePrice($rateType, $request, $parcelType, $includeVat)
     {
         if (!$parcelType) {
+            $quote = null;
+            $requestItems = $request->getAllItems();
+
+            if ($requestItems) {
+                $requestItem = reset($requestItems);
+                $quote = $requestItem->getQuote();
+            }
+
             try {
-                $parcelType = $this->parcelTypeFinder->get();
+                $parcelType = $this->parcelTypeFinder->get($quote);
             } catch (LocalizedException $exception) {
                 $parcelType = ParcelTypeFinder::DEFAULT_TYPE;
             }
