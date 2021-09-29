@@ -113,7 +113,7 @@ class Locations extends AbstractDeliveryOptions
             return $this->jsonResponse([
                 'price'       => $price['price'],
                 'locations'   => $this->getValidResponeType(),
-                'pickup_date' => $this->firstDeliveryDate->get($postcode, $country)
+                'pickup_date' => $this->getDeliveryDay($this->addressEnhancer->get())
             ]);
         } catch (\Exception $exception) {
             return $this->jsonResponse([
