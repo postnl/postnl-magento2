@@ -92,7 +92,9 @@ class ParcelTypeFinder
             $quote   = $this->quoteRepository->get($quoteId);
         }
 
-        $quoteId = $quote->getId();
+        if ($quote) {
+            $quoteId = $quote->getId();
+        }
 
         $result = $this->itemsToOption->getFromQuote($quote);
         if ($result) {
