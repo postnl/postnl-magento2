@@ -87,14 +87,8 @@ class ParcelTypeFinder
      */
     public function get($quote = null)
     {
-        if ($quote === null) {
-            $quoteId = $this->checkoutSession->getQuoteId();
-            $quote   = $this->quoteRepository->get($quoteId);
-        }
-
-        if ($quote) {
-            $quoteId = $quote->getId();
-        }
+        $quoteId = $quote === null ? $this->checkoutSession->getQuoteId() : $quote->getId();
+        $quote   = $quote === null ? $this->quoteRepository->get($quoteId) : $quote;
 
         $result = $this->itemsToOption->getFromQuote($quote);
         if ($result) {
@@ -102,11 +96,9 @@ class ParcelTypeFinder
         }
 
         $order = $this->orderRepository->getByQuoteId($quoteId);
-
         if ($order === null) {
             return static::DEFAULT_TYPE;
         }
-
         return $this->parseDatabaseValue($order->getType());
     }
 
