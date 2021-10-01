@@ -32,15 +32,15 @@
 
 namespace TIG\PostNL\Service\Carrier\Price;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Tax\Helper\Data;
+use TIG\PostNL\Config\Source\Carrier\RateType;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
-use TIG\PostNL\Config\Source\Carrier\RateType;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Quote\Model\Quote\Address\RateRequest;
 
 // @codingStandardsIgnoreFile
 class Calculator
@@ -149,15 +149,17 @@ class Calculator
      */
     private function getRatePrice($rateType, $request, $parcelType, $includeVat)
     {
-        if ($rateType == RateType::CARRIER_RATE_TYPE_TABLE) {
-            $ratePrice = $this->getTableratePrice($request);
-
-            return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
-        }
-
         if (!$parcelType) {
+            $quote = null;
+            $requestItems = $request->getAllItems();
+
+            if ($requestItems) {
+                $requestItem = reset($requestItems);
+                $quote = $requestItem->getQuote();
+            }
+
             try {
-                $parcelType = $this->parcelTypeFinder->get();
+                $parcelType = $this->parcelTypeFinder->get($quote);
             } catch (LocalizedException $exception) {
                 $parcelType = ParcelTypeFinder::DEFAULT_TYPE;
             }
@@ -170,18 +172,21 @@ class Calculator
         switch ($rateType) {
             case 'free':
                 return $this->priceResponse('0.00', '0.00');
-            case 'matrix':
+            case RateType::CARRIER_RATE_TYPE_MATRIX:
                 $ratePrice = $this->matrixratePrice->getRate($request, $parcelType, $this->store, $includeVat);
                 if ($ratePrice !== false) {
                     return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
                 }
 
                 return false;
-            case 'table':
+            case RateType::CARRIER_RATE_TYPE_TABLE:
                 $ratePrice = $this->getTableratePrice($request);
+                if ($ratePrice !== false) {
+                    return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
+                }
 
-                return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
-            case 'flat':
+                return false;
+            case RateType::CARRIER_RATE_TYPE_FLAT:
             default:
                 $price = $this->getConfigData('price');
 
@@ -206,7 +211,7 @@ class Calculator
     /**
      * @param RateRequest $request
      *
-     * @return array
+     * @return array|bool
      */
     private function getTableratePrice(RateRequest $request)
     {
@@ -214,6 +219,10 @@ class Calculator
 
         $includeVirtualPrice = $this->getConfigFlag('include_virtual_price');
         $ratePrice = $this->tablerateShippingPrice->getTableratePrice($request, $includeVirtualPrice);
+
+        if (!$ratePrice) {
+            return false;
+        }
 
         return [
             'price' => $ratePrice['price'],
