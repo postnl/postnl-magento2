@@ -128,9 +128,7 @@ class Calculator
             return $this->priceResponse('0.00', '0.00');
         }
 
-        $includeVat = $this->taxHelper->getShippingPriceDisplayType();
-
-        $ratePrice = $this->getRatePrice($this->getConfigData('rate_type'), $request, $parcelType, $includeVat);
+        $ratePrice = $this->getRatePrice($this->getConfigData('rate_type'), $request, $parcelType, true);
 
         if ($ratePrice) {
             return $ratePrice;
@@ -258,10 +256,9 @@ class Calculator
      */
     public function getPriceWithTax(RateRequest $request, $parcelType = null)
     {
-        $includeVat = $this->taxHelper->getShippingPriceDisplayType();
         $price = $this->price($request, $parcelType);
 
-        if ($includeVat && isset($price['price'])) {
+        if (isset($price['price'])) {
             $price['price'] = $this->taxHelper->getShippingPrice($price['price'], true);
         }
 
