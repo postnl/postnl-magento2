@@ -84,7 +84,7 @@ class Barcode extends AbstractEndpoint
     private $productCode;
 
     /**
-     * @var ReturnOptionsƒ
+     * @var ReturnOptions
      */
     private $returnOptions;
 
