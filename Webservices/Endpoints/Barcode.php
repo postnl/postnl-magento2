@@ -84,12 +84,7 @@ class Barcode extends AbstractEndpoint
     private $productCode;
 
     /**
-     * @var string
-     */
-    private $type = '';
-
-    /**
-     * @var ReturnOptions
+     * @var ReturnOptionsƒ
      */
     private $returnOptions;
 
@@ -156,9 +151,7 @@ class Barcode extends AbstractEndpoint
             ],
         ];
 
-        if ($isReturnBarcode && $sendersCountry === 'NL' && $shippingCountry === 'BE') {
-            $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCode();
-        }
+        $parameters = $this->isReturnNlBeNl($parameters, $isReturnBarcode, $sendersCountry, $shippingCountry);
 
         return $this->soap->call($this, 'GenerateBarcode', $parameters);
     }
@@ -205,5 +198,14 @@ class Barcode extends AbstractEndpoint
             // @codingStandardsIgnoreLine
             throw new PostNLException(__('Please provide the store id first by calling setStoreId'));
         }
+    }
+
+    public function isReturnNlBeNl($parameters, $isReturnBarcode, $sendersCountry, $shippingCountry)
+    {
+        if ($isReturnBarcode && $sendersCountry === 'NL' && $shippingCountry === 'BE') {
+            return $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCode();
+        }
+
+        return $parameters;
     }
 }
