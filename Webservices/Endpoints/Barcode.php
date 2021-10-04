@@ -140,16 +140,15 @@ class Barcode extends AbstractEndpoint
         $sendersCountry  = $this->addressConfiguration->getCountry();
         $shippingAddress = $shipment->getShippingAddress();
         $shippingCountry = $shippingAddress->getCountryId();
-
-        $parameters = [
-            'Message'  => $this->message->get(''),
-            'Customer' => $this->customer->get($shipment, $isReturnBarcode),
-            'Barcode'  => [
-                'Type'  => $barcode['type'],
-                'Range' => $barcode['range'],
-                'Serie' => $barcode['serie'],
-            ],
-        ];
+        $parameters      = [
+                'Message'  => $this->message->get(''),
+                'Customer' => $this->customer->get($shipment, $isReturnBarcode),
+                'Barcode'  => [
+                    'Type'  => $barcode['type'],
+                    'Range' => $barcode['range'],
+                    'Serie' => $barcode['serie'],
+                ],
+            ];
 
         $parameters = $this->isReturnNlBeNl($parameters, $isReturnBarcode, $sendersCountry, $shippingCountry);
 
