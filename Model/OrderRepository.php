@@ -215,11 +215,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
             return !$order->getOrderId();
         });
 
-        if (isset($orders)) {
-            $order = array_pop($orders);
-        }
-
-        return isset($order) ? $order : null;
+        return array_pop($orders);
     }
 
     /**
