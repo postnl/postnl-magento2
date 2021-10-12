@@ -47,8 +47,6 @@ class LetterboxPackage
     public $totalWeight                 = 0;
     public $hasMaximumQty               = true;
     public $maximumWeight               = 2;
-    public $configurableProduct         = false;
-    public $configurableProductQuantity = 0;
 
     /**
      * @var ScopeConfigInterface
@@ -101,8 +99,6 @@ class LetterboxPackage
         $this->totalVolume                 = 0;
         $this->totalWeight                 = 0;
         $this->hasMaximumQty               = true;
-        $this->configurableProduct         = false;
-        $this->configurableProductQuantity = 0;
 
 
         $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
@@ -149,10 +145,6 @@ class LetterboxPackage
      */
     public function fitsLetterboxPackage($product, $qty)
     {
-        if ($this->configurableProduct === true) {
-            $qty = $this->configurableProductQuantity;
-        }
-
         $maximumQtyLetterbox = floatval($product->getPostnlMaxQtyLetterbox());
 
         if ($maximumQtyLetterbox === 0.0) {
@@ -214,9 +206,8 @@ class LetterboxPackage
     {
         foreach($products as $key => $product) {
             if ($product->getProductType() === 'configurable') {
-                $this->configurableProduct = true;
                 // The configurable product will have the quantity that is ordered and not the simple product so we save it here.
-                $this->configurableProductQuantity = $product->getQty();
+                $product->getChildren()[0]->setQty($product->getQty());
                 unset($products[$key]);
             }
         }
