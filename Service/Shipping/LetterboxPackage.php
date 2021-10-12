@@ -43,10 +43,12 @@ use TIG\PostNL\Config\Provider\LetterBoxPackageConfiguration;
 // @codingStandardsIgnoreFile
 class LetterboxPackage
 {
-    public $totalVolume    = 0;
-    public $totalWeight    = 0;
-    public $hasMaximumQty  = true;
-    public $maximumWeight  = 2;
+    public $totalVolume                 = 0;
+    public $totalWeight                 = 0;
+    public $hasMaximumQty               = true;
+    public $maximumWeight               = 2;
+    public $configurableProduct         = false;
+    public $configurableProductQuantity = 0;
 
     /**
      * @var ScopeConfigInterface
@@ -96,9 +98,12 @@ class LetterboxPackage
      */
     public function isLetterboxPackage($products, $isPossibleLetterboxPackage)
     {
-        $this->totalVolume    = 0;
-        $this->totalWeight    = 0;
-        $this->hasMaximumQty  = true;
+        $this->totalVolume                 = 0;
+        $this->totalWeight                 = 0;
+        $this->hasMaximumQty               = true;
+        $this->configurableProduct         = false;
+        $this->configurableProductQuantity = 0;
+
 
         $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
 
@@ -106,6 +111,9 @@ class LetterboxPackage
         if ($calculationMode === 'manually' && !$isPossibleLetterboxPackage) {
             return false;
         }
+
+        // When a configurable product is added Magento adds both the configurable and the simple product so we need to filter the configurable product out for the calculation.
+        $products = $this->filterConfigurableProducts($products);
 
         $productIds = [];
         foreach ($products as $product) {
@@ -141,6 +149,10 @@ class LetterboxPackage
      */
     public function fitsLetterboxPackage($product, $qty)
     {
+        if ($this->configurableProduct === true) {
+            $qty = $this->configurableProductQuantity;
+        }
+
         $maximumQtyLetterbox = floatval($product->getPostnlMaxQtyLetterbox());
 
         if ($maximumQtyLetterbox === 0.0) {
@@ -191,5 +203,24 @@ class LetterboxPackage
         }
 
         return false;
+    }
+
+    /**
+     * @param $products
+     *
+     * @return mixed
+     */
+    public function filterConfigurableProducts($products)
+    {
+        foreach($products as $key => $product) {
+            if ($product->getProductType() === 'configurable') {
+                $this->configurableProduct = true;
+                // The configurable product will have the quantity that is ordered and not the simple product so we save it here.
+                $this->configurableProductQuantity = $product->getQty();
+                unset($products[$key]);
+            }
+        }
+
+        return $products;
     }
 }
