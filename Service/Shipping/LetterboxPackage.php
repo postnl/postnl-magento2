@@ -108,8 +108,10 @@ class LetterboxPackage
             return false;
         }
 
-        // When a configurable product is added Magento adds both the configurable and the simple product so we need to filter the configurable product out for the calculation.
-        $products = $this->filterConfigurableProducts($products);
+        // When a configurable product is added Magento adds both the configurable and the simple product so we need to
+        // filter the configurable product out for the calculation and set the correct quantity on the simple products.
+        $products = $this->fixConfigurableProductQty($products);
+        $products = $this->filterOutConfigurableProducts($products);
 
         $productIds = [];
         foreach ($products as $product) {
@@ -202,12 +204,21 @@ class LetterboxPackage
      *
      * @return mixed
      */
-    public function filterConfigurableProducts($products)
+    public function fixConfigurableProductQty($products)
+    {
+        foreach($products as $product) {
+            if ($product->getProductType() === 'configurable') {
+                $product->getChildren()[0]->setQty($product->getQty());
+            }
+        }
+
+        return $products;
+    }
+
+    public function filterOutConfigurableProducts($products)
     {
         foreach($products as $key => $product) {
             if ($product->getProductType() === 'configurable') {
-                // The configurable product will have the quantity that is ordered and not the simple product so we save it here.
-                $product->getChildren()[0]->setQty($product->getQty());
                 unset($products[$key]);
             }
         }
