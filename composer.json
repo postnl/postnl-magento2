@@ -11,7 +11,7 @@
     },
     "type": "magento2-module",
     "license": "CC-BY-NC-ND-3.0",
-    "version": "1.9.9",
+    "version": "1.10.0",
     "authors": [
         {
             "name": "TIG",
@@ -35,7 +35,7 @@
     },
     "require-dev": {
         "object-calisthenics/phpcs-calisthenics-rules": "^3.7",
-        "magento/magento-coding-standard": "*",
+        "magento/magento-coding-standard": "6",
         "satooshi/php-coveralls": "^1.0"
     },
     "repositories": {

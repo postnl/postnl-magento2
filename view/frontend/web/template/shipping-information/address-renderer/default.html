@@ -7,7 +7,7 @@
 <if args="visible()">
     <text args="address().prefix"/> <text args="address().firstname"/> <text args="address().middlename"/>
     <text args="address().lastname"/> <text args="address().suffix"/><br/>
-    <text args="address().street.join(', ')"/>
+    <text args="address().street.join(', ')" if="address().street"/>
     <each args="data: address().customAttributes, as: 'element'">
         <if args="element['attribute_code'] == 'tig_housenumber' || element['attribute_code'] == 'tig_housenumber_addition'">
             <text args="element.value"/>

@@ -43,10 +43,10 @@ use TIG\PostNL\Config\Provider\LetterBoxPackageConfiguration;
 // @codingStandardsIgnoreFile
 class LetterboxPackage
 {
-    public $totalVolume    = 0;
-    public $totalWeight    = 0;
-    public $hasMaximumQty  = true;
-    public $maximumWeight  = 2;
+    public $totalVolume                 = 0;
+    public $totalWeight                 = 0;
+    public $hasMaximumQty               = true;
+    public $maximumWeight               = 2;
 
     /**
      * @var ScopeConfigInterface
@@ -96,9 +96,10 @@ class LetterboxPackage
      */
     public function isLetterboxPackage($products, $isPossibleLetterboxPackage)
     {
-        $this->totalVolume    = 0;
-        $this->totalWeight    = 0;
-        $this->hasMaximumQty  = true;
+        $this->totalVolume                 = 0;
+        $this->totalWeight                 = 0;
+        $this->hasMaximumQty               = true;
+
 
         $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
 
@@ -106,6 +107,11 @@ class LetterboxPackage
         if ($calculationMode === 'manually' && !$isPossibleLetterboxPackage) {
             return false;
         }
+
+        // When a configurable product is added Magento adds both the configurable and the simple product so we need to
+        // filter the configurable product out for the calculation and set the correct quantity on the simple products.
+        $products = $this->fixConfigurableProductQty($products);
+        $products = $this->filterOutConfigurableProducts($products);
 
         $productIds = [];
         foreach ($products as $product) {
@@ -191,5 +197,32 @@ class LetterboxPackage
         }
 
         return false;
+    }
+
+    /**
+     * @param $products
+     *
+     * @return mixed
+     */
+    public function fixConfigurableProductQty($products)
+    {
+        foreach($products as $product) {
+            if ($product->getProductType() === 'configurable') {
+                $product->getChildren()[0]->setQty($product->getQty());
+            }
+        }
+
+        return $products;
+    }
+
+    public function filterOutConfigurableProducts($products)
+    {
+        foreach($products as $key => $product) {
+            if ($product->getProductType() === 'configurable') {
+                unset($products[$key]);
+            }
+        }
+
+        return $products;
     }
 }

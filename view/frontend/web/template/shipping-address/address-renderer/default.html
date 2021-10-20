@@ -7,7 +7,7 @@
 <div class="shipping-address-item" data-bind="css: isSelected() ? 'selected-item' : 'not-selected-item'">
     <text args="address().prefix"/> <text args="address().firstname"/> <text args="address().middlename"/>
     <text args="address().lastname"/> <text args="address().suffix"/><br/>
-    <text args="address().street.join(', ')"/>
+    <text args="address().street.join(', ')" if="address().street"/>
     <each args="data: address().customAttributes, as: 'element'">
         <div class="tig-housenumber" if="element['attribute_code'] == 'tig_housenumber' || element['attribute_code'] == 'tig_housenumber_addition'">
             <text args="element.value"/>
@@ -24,7 +24,7 @@
         </div>
     </each>
 
-    <button visible="!address().isEditable()"
+    <button visible="address().isEditable()"
             type="button"
             class="action edit-address-link"
             data-bind="click: editAddress, visible: address().isEditable()">
