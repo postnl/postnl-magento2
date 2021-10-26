@@ -150,7 +150,7 @@ class Barcode extends AbstractEndpoint
                 ],
             ];
 
-        $parameters = $this->isReturnNlBeNl($parameters, $isReturnBarcode, $sendersCountry, $shippingCountry);
+        $parameters = $this->updateParametersForNlBeNlReturn($parameters, $isReturnBarcode, $sendersCountry, $shippingCountry);
 
         return $this->soap->call($this, 'GenerateBarcode', $parameters);
     }
@@ -199,7 +199,7 @@ class Barcode extends AbstractEndpoint
         }
     }
 
-    public function isReturnNlBeNl($parameters, $isReturnBarcode, $sendersCountry, $shippingCountry)
+    public function updateParametersForNlBeNlReturn($parameters, $isReturnBarcode, $sendersCountry, $shippingCountry)
     {
         if ($isReturnBarcode && $sendersCountry === 'NL' && $shippingCountry === 'BE') {
             return $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCode();
