@@ -300,7 +300,9 @@ class OrderParams
             $params['customerData'] = $params['address'];
         }
 
-        $params['address']['Name'] = isset($params['name']) ? $params['name'] : '';
+        if (is_array($params)) {
+            $params['address']['Name'] = isset($params['name']) ? $params['name'] : '';
+        }
 
         if ($params['type'] == ProductInfo::TYPE_PICKUP && !isset($params['customerData'])) {
             throw new PostnlException(
