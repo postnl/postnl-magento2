@@ -300,7 +300,7 @@ class OrderParams
             $params['customerData'] = $params['address'];
         }
 
-        if (is_array($params)['address']) {
+        if (is_array($params['address'])) {
             $params['address']['Name'] = isset($params['name']) ? $params['name'] : '';
         }
 
