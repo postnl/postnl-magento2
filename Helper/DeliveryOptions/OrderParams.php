@@ -287,7 +287,7 @@ class OrderParams
     /**
      * @param $params
      *
-     * @return bool
+     * @return array|bool
      * @throws PostnlException
      */
     private function addExtraToAddress($params)
