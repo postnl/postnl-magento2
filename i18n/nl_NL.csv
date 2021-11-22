@@ -535,3 +535,5 @@ Percent,Percentage
 "Belgium standard + Signature on delivery + Extra Cover","België verhoogd aansprakelijk + handtekening voor ontvangst"
 "Determine the position of the first shipping label when you're printing the labels on an A4. De printing order of the labels are bottom right, bottom left, top right, top left.","Bepaal zelf de positie van het eerste verzendlabel wanneer jij jouw labels op een A4 afdrukt. De printvolgorde voor de labels is rechtsonder, linksonder, rechtsboven, linksboven."
 "Choose printing start position","Kies printer startpositie"
+"Your API Credentials could not be validated, check your PostNL logs for more information.","Uw API Inloggegevens kunnen niet worden gevalideerd, bekijk uw PostNL logs voor meer informatie."
+"Successfully connected to account. Don't forget to save changes.","Succesvol verbonden met account. Vergeet niet om uw wijzigingen op te slaan."
