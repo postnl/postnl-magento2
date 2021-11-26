@@ -198,6 +198,11 @@ class LetterboxPackage
         return false;
     }
 
+    /**
+     * @param $products
+     *
+     * @return mixed
+     */
     public function filterOutConfigurableProducts($products)
     {
         foreach($products as $key => $product) {
