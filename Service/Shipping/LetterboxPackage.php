@@ -39,6 +39,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Config\Provider\LetterBoxPackageConfiguration;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
 // @codingStandardsIgnoreFile
 class LetterboxPackage
@@ -67,6 +68,10 @@ class LetterboxPackage
      * @var CollectionFactory
      */
     private $productCollectionFactory;
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
 
     /**
      * LetterboxPackage constructor.
@@ -75,17 +80,20 @@ class LetterboxPackage
      * @param LetterBoxPackageConfiguration $letterBoxPackageConfiguration
      * @param OrderRepositoryInterface      $orderRepository
      * @param CollectionFactory             $productCollectionFactory
+     * @param ShippingOptions               $shippingOptions
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         LetterBoxPackageConfiguration $letterBoxPackageConfiguration,
         OrderRepositoryInterface $orderRepository,
-        CollectionFactory $productCollectionFactory
+        CollectionFactory $productCollectionFactory,
+        ShippingOptions $shippingOptions
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->letterBoxPackageConfiguration = $letterBoxPackageConfiguration;
         $this->orderRepository = $orderRepository;
         $this->productCollectionFactory = $productCollectionFactory;
+        $this->shippingOptions = $shippingOptions;
     }
 
     /**
@@ -96,10 +104,13 @@ class LetterboxPackage
      */
     public function isLetterboxPackage($products, $isPossibleLetterboxPackage)
     {
+        if ($this->shippingOptions->isLetterboxPackageActive() === false) {
+            return false;
+        }
+
         $this->totalVolume                 = 0;
         $this->totalWeight                 = 0;
         $this->hasMaximumQty               = true;
-
 
         $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
 
@@ -109,13 +120,12 @@ class LetterboxPackage
         }
 
         // When a configurable product is added Magento adds both the configurable and the simple product so we need to
-        // filter the configurable product out for the calculation and set the correct quantity on the simple products.
-        $products = $this->fixConfigurableProductQty($products);
+        // filter the configurable product out for the calculation.
         $products = $this->filterOutConfigurableProducts($products);
 
         $productIds = [];
         foreach ($products as $product) {
-            $productIds[$product->getProductId()] = $product->getQty();
+            $productIds[$product->getProductId()] = $product->getTotalQty();
         }
 
         $productCollection = $this->productCollectionFactory->create();
@@ -204,17 +214,6 @@ class LetterboxPackage
      *
      * @return mixed
      */
-    public function fixConfigurableProductQty($products)
-    {
-        foreach($products as $product) {
-            if ($product->getProductType() === 'configurable') {
-                $product->getChildren()[0]->setQty($product->getQty());
-            }
-        }
-
-        return $products;
-    }
-
     public function filterOutConfigurableProducts($products)
     {
         foreach($products as $key => $product) {
