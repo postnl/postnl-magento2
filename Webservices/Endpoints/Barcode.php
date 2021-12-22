@@ -150,7 +150,12 @@ class Barcode extends AbstractEndpoint
                 ],
             ];
 
-        $parameters = $this->updateParametersForNlBeNlReturn($parameters, $isReturnBarcode, $sendersCountry, $shippingCountry);
+        $parameters = $this->updateParametersForNlBeNlReturn(
+            $parameters,
+            $isReturnBarcode,
+            $sendersCountry,
+            $shippingCountry
+        );
 
         return $this->soap->call($this, 'GenerateBarcode', $parameters);
     }
