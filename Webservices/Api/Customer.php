@@ -112,7 +112,7 @@ class Customer
             'HouseNrExt'  => $this->addressConfiguration->getHousenumberAddition($this->storeId),
             'Zipcode'     => strtoupper(str_replace(' ', '', $this->addressConfiguration->getPostcode($this->storeId))),
             'City'        => $this->addressConfiguration->getCity($this->storeId),
-            'Countrycode' => 'NL',
+            'Countrycode' => $this->addressConfiguration->getCountry(),
             'Department'  => $this->addressConfiguration->getDepartment($this->storeId),
         ];
 
@@ -137,12 +137,8 @@ class Customer
     {
         $shippingAddress = $shipment->getShippingAddress();
 
-        if ($shippingAddress->getCountryId() == 'NL') {
-            return $this->returnOptions->getCustomerCodeNL();
-        }
-
-        if ($shippingAddress->getCountryId() == 'BE') {
-            return $this->returnOptions->getCustomerCodeBE();
+        if (in_array($shippingAddress->getCountryId(), ['NL', 'BE'])) {
+            return $this->returnOptions->getCustomerCode();
         }
 
         throw new \TIG\PostNL\Exception('No customer code set for Returns');

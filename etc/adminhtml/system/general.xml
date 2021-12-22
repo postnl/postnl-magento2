@@ -164,6 +164,12 @@
                 <validate>required-entry</validate>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/city</config_path>
             </field>
+            <field id="country" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Country</label>
+                <validate>required-entry</validate>
+                <source_model>TIG\PostNL\Config\Source\General\Country</source_model>
+                <config_path>tig_postnl/generalconfiguration_shipping_address/country</config_path>
+            </field>
         </group>
 
     </group>

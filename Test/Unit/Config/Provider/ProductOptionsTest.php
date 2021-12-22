@@ -289,4 +289,51 @@ class ProductOptionsTest extends AbstractConfigurationTest
         $this->setXpath(ProductOptions::XPATH_ALTERNATIVE_DEFAULT_PACKAGE_DELIVERY_TYPE, 1000);
         $this->assertEquals('1000', $instance->getDefaultAlternativeGuaranteedPackageDeliveryType());
     }
+
+    /**
+     * @return array
+     */
+    public function getDefaultBeDomesticProductOptionProvider()
+    {
+        return [
+            'BE Standard, stated address only' => ['4960'],
+            'BE Standard' => ['4961'],
+            'BE Standard, stated address only, signature' => ['4962'],
+            'BE Standard, signature' => ['4963'],
+            'BE Standard, extra cover' => ['4965'],
+        ];
+    }
+
+    /**
+     * @dataProvider getDefaultBeDomesticProductOptionProvider
+     *
+     * @param $value
+     */
+    public function testGetDefaultBeDomesticProductOption($value) {
+        $instance = $this->getInstance();
+        $this->setXpath(ProductOptions::XPATH_DEFAULT_BE_DOMESTIC_OPTION, $value);
+        $this->assertEquals($value, $instance->getDefaultBeDomesticProductOption());
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultPakjeGemakBeDomesticProductOptionProvider()
+    {
+        return [
+            'BE Post Offce + Extra Cover' => ['4878'],
+            'BE Post Office' => ['4880'],
+        ];
+    }
+
+    /**
+     * @dataProvider getDefaultPakjeGemakBeDomesticProductOptionProvider
+     *
+     * @param $value
+     */
+    public function testGetDefaultPakjeGemakBeDomesticProductOption($value) {
+        $instance = $this->getInstance();
+        $this->setXpath(ProductOptions::XPATH_DEFAULT_PAKJEGEMAK_BE_DOMESTIC_PRODUCT_OPTION, $value);
+        $this->assertEquals($value, $instance->getDefaultPakjeGemakBeDomesticProductOption());
+    }
 }

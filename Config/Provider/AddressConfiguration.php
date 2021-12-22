@@ -48,6 +48,7 @@ class AddressConfiguration extends AbstractConfigProvider
     const XPATH_GENERAL_HOUSENUMBER_ADDITION = 'tig_postnl/generalconfiguration_shipping_address/housenumber_addition';
     const XPATH_GENERAL_POSTCODE             = 'tig_postnl/generalconfiguration_shipping_address/postcode';
     const XPATH_GENERAL_CITY                 = 'tig_postnl/generalconfiguration_shipping_address/city';
+    const XPATH_GENERAL_COUNTRY              = 'tig_postnl/generalconfiguration_shipping_address/country';
 
     /**
      * @param null|int $store
@@ -163,12 +164,12 @@ class AddressConfiguration extends AbstractConfigProvider
     }
 
     /**
-     * At this moment only sending from NL is allowed. This may change in the future.
+     * @param null|int $store
      *
      * @return string
      */
-    public function getCountry()
+    public function getCountry($store = null)
     {
-        return 'NL';
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_COUNTRY, $store);
     }
 }

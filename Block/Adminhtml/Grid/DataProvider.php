@@ -36,8 +36,10 @@ use Magento\Framework\View\Element\BlockInterface;
 use Magento\Framework\App\DeploymentConfig\Reader;
 use TIG\PostNL\Config\Source\Options\FirstLabelPosition;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\Webshop as WebshopConfig;
 use TIG\PostNL\Config\Provider\ProductOptions as OptionConfig;
+use TIG\PostNL\Service\Filter\DomesticOptions;
 use TIG\PostNL\Service\Options\GuaranteedOptions;
 
 class DataProvider extends Template implements BlockInterface
@@ -81,6 +83,11 @@ class DataProvider extends Template implements BlockInterface
     private $firstLabelPosition;
 
     /**
+     * @var DomesticOptions
+     */
+    private $domesticOptionsFilter;
+
+    /**
      * DataProvider constructor.
      *
      * @param Template\Context   $context
@@ -90,6 +97,7 @@ class DataProvider extends Template implements BlockInterface
      * @param WebshopConfig      $webshopConfig
      * @param GuaranteedOptions  $guaranteedOptions
      * @param FirstLabelPosition $firstLabelPosition
+     * @param DomesticOptions    $domesticOptionsFilter
      * @param array              $data
      */
     public function __construct(
@@ -100,6 +108,7 @@ class DataProvider extends Template implements BlockInterface
         WebshopConfig $webshopConfig,
         GuaranteedOptions $guaranteedOptions,
         FirstLabelPosition $firstLabelPosition,
+        DomesticOptions $domesticOptionsFilter,
         array $data = []
     ) {
         $this->configReader = $reader;
@@ -108,6 +117,7 @@ class DataProvider extends Template implements BlockInterface
         $this->webshopConfig = $webshopConfig;
         $this->guaranteedOptions = $guaranteedOptions;
         $this->firstLabelPosition = $firstLabelPosition;
+        $this->domesticOptionsFilter = $domesticOptionsFilter;
         parent::__construct($context, $data);
     }
 
@@ -117,6 +127,7 @@ class DataProvider extends Template implements BlockInterface
     public function getProductOptions()
     {
         $supportedTypes = $this->productOptions->get();
+        $supportedTypes = $this->domesticOptionsFilter->filter($supportedTypes);
 
         $options = [];
         foreach ($supportedTypes as $key => $option) {
