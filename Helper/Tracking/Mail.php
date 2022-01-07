@@ -40,6 +40,7 @@ use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Mail\TransportInterface;
 use Magento\Framework\View\Asset\Repository as AssetRepository;
 use Magento\Sales\Model\Order\Shipment;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Helper\AbstractTracking;
 use TIG\PostNL\Helper\Data as PostNLHelper;
@@ -80,6 +81,7 @@ class Mail extends AbstractTracking
      * @param AssetRepository                    $assetRepository
      * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
      * @param ScopeConfigInterface               $scopeConfig
+     * @param ReturnOptions                      $returnOptions
      */
     public function __construct(
         Context $context,
@@ -91,7 +93,8 @@ class Mail extends AbstractTracking
         Log $logging,
         AssetRepository $assetRepository,
         ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        ReturnOptions $returnOptions
     ) {
         $this->transportBuilder     = $transportBuilder;
         $this->postNLHelperData     = $data;
@@ -104,7 +107,8 @@ class Mail extends AbstractTracking
             $webshop,
             $logging,
             $shipmentBarcodeRepositoryInterface,
-            $scopeConfig
+            $scopeConfig,
+            $returnOptions
         );
     }
 
