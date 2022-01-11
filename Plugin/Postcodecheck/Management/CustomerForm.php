@@ -78,7 +78,7 @@ class CustomerForm
             ScopeInterface::SCOPE_STORE
         );
 
-        if (!$isEnabled || $request->getPostValue('country_id') != 'NL') {
+        if (!$isEnabled || !array_key_exists('street', $result) || $request->getPostValue('country_id') != 'NL') {
             return $result;
         }
 
