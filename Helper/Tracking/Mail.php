@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Helper\Tracking;
 
+// @codingStandardsIgnoreFile
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Helper\Context;

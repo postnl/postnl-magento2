@@ -163,6 +163,7 @@ abstract class AbstractTracking extends AbstractHelper
     protected function getTrackAndTraceUrl($trackingNumber, $type = 'C')
     {
         $isReturn = false;
+        $returnCountry = 'NL';
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLshipmentByTracking($trackingNumber);
         /** @var \Magento\Sales\Api\Data\OrderAddressInterface $address */
@@ -172,7 +173,11 @@ abstract class AbstractTracking extends AbstractHelper
             $isReturn = true;
         }
 
-        return $this->generateTrackAndTraceUrl($address, $trackingNumber, $type, $isReturn);
+        if ($isReturn && $this->returnOptions->isReturnBEActive()) {
+            $returnCountry = 'BE';
+        }
+
+        return $this->generateTrackAndTraceUrl($address, $trackingNumber, $type, $isReturn, $returnCountry);
     }
 
     /**
@@ -185,7 +190,7 @@ abstract class AbstractTracking extends AbstractHelper
      * @return string
      */
     // @codingStandardsIgnoreLine
-    protected function generateTrackAndTraceUrl(OrderAddressInterface $address, $trackingNumber, $type ,$isReturn)
+    protected function generateTrackAndTraceUrl(OrderAddressInterface $address, $trackingNumber, $type ,$isReturn, $returnCountry)
     {
         $order = $address->getOrder();
         $store = $order->getStore();
@@ -204,9 +209,14 @@ abstract class AbstractTracking extends AbstractHelper
             'L' => $language
         ];
 
-        if ($isReturn === true) {
-            $params['P'] = $address->getCountryId();
-            $params['D'] = $this->returnOptions->getZipcode();
+        if ($isReturn === true && $returnCountry === 'NL') {
+            $params['D'] = $returnCountry;
+            $params['P'] = $this->returnOptions->getZipcodeNL();
+        }
+
+        if ($isReturn === true && $returnCountry === 'BE') {
+            $params['D'] = $returnCountry;
+            $params['P'] = $this->returnOptions->getZipcodeBE();
         }
 
         return $this->webshopConfig->getTrackAndTraceServiceUrl() . http_build_query($params);
