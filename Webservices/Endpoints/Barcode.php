@@ -202,7 +202,7 @@ class Barcode extends AbstractEndpoint
     public function updateParametersForNlBeNlReturn($parameters, $isReturnBarcode, $sendersCountry, $shippingCountry)
     {
         if ($isReturnBarcode && $sendersCountry === 'NL' && $shippingCountry === 'BE') {
-            return $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCode();
+            $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCode();
         }
 
         return $parameters;

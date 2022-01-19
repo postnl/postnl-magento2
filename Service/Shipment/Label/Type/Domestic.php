@@ -109,6 +109,10 @@ class Domestic extends AbstractType implements TypeInterface
     private function rotateReturnProduct($label)
     {
         $beProducts = array_column($this->defaultOptions->getBeProducts(), 'value');
+        $beDomesticProducts = array_column($this->defaultOptions->getBeDomesticProducts(), 'value');
+
+        $beProducts = array_merge($beProducts, $beDomesticProducts);
+
         // 4952 is the normal, but automatically falls back to 4944 - which doesn't exist in getBeProducts.
         $beProducts[] = 4944;
 
