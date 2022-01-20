@@ -120,12 +120,19 @@ class Data
     private function getDefaultShipmentData(ShipmentInterface $shipment, $address, $contact, $currentShipmentNumber)
     {
         $deliveryDate = $shipment->getDeliveryDate();
+        $postnlOrder  = $shipment->getPostNLOrder();
+        $shipmentType = $postnlOrder->getType();
+
         if (!$deliveryDate) {
             $deliveryDate = $this->getDeliveryDateFromPostNLOrder($shipment);
         }
 
         if (!$deliveryDate) {
             $deliveryDate = $this->deliveryDateFallback->get();
+        }
+
+        if ($shipmentType === 'GP') {
+            $deliveryDate = '';
         }
 
         return [
