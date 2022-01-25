@@ -112,7 +112,7 @@ class DefaultOptions implements ArrayInterface
         $beDomesticProducts[] = $this->productOptions->getBeDomesticOptions();
 
         if ($this->shippingOptions->isPakjegemakActive('BE')) {
-            $beProducts[] = $this->productOptions->getPakjeGemakBeDomesticOptions();
+            $beDomesticProducts[] = $this->productOptions->getPakjeGemakBeDomesticOptions();
         }
 
         return call_user_func_array("array_merge", $beDomesticProducts);
