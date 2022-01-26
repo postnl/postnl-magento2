@@ -75,7 +75,7 @@ define([
                 country: shippingAddress.countryId
             };
 
-            if (tempAddress.country && tempAddress.postcode && tempAddress.street !== undefined && tempAddress.street[0]) {
+            if (tempAddress.country && tempAddress.postcode && tempAddress.street !== undefined && tempAddress.street[0] && tempAddress.housenumber) {
                 return tempAddress;
             }
         }
