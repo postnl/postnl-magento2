@@ -500,4 +500,4 @@ Percent,Percent
 "Determine the position of the first shipping label when you're printing the labels on an A4. De printing order of the labels are bottom right, bottom left, top right, top left.","Determine the position of the first shipping label when you're printing the labels on an A4. De printing order of the labels are bottom right, bottom left, top right, top left."
 "Choose printing start position","Choose printing start position"
 "Your API Credentials could not be validated, check your PostNL logs for more information.","Your API Credentials could not be validated, check your PostNL logs for more information."
-"Successfully connected to account. Don't forget to save changes.","Successfully connected to account. Don't forget to save changes."
+"Successfully connected to account.","Successfully connected to account."

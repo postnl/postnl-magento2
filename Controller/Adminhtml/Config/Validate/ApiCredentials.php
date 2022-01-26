@@ -130,7 +130,7 @@ class ApiCredentials extends Action
 
         if ($validatedApiCredentials) {
             $result['error'] = false;
-            $result['message'] = __('Successfully connected to account. Don\'t forget to save changes.');
+            $result['message'] = __('Successfully connected to account.');
         }
 
         $response = $this->getResponse();
