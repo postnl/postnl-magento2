@@ -128,9 +128,7 @@ class Calculator
             return $this->priceResponse('0.00', '0.00');
         }
 
-        $includeVat = $this->taxHelper->getShippingPriceDisplayType();
-
-        $ratePrice = $this->getRatePrice($this->getConfigData('rate_type'), $request, $parcelType, $includeVat);
+        $ratePrice = $this->getRatePrice($this->getConfigData('rate_type'), $request, $parcelType);
 
         if ($ratePrice) {
             return $ratePrice;
@@ -143,11 +141,10 @@ class Calculator
      * @param $rateType
      * @param $request
      * @param $parcelType
-     * @param $includeVat
      *
      * @return array|bool
      */
-    private function getRatePrice($rateType, $request, $parcelType, $includeVat)
+    private function getRatePrice($rateType, $request, $parcelType)
     {
         if (!$parcelType) {
             $quote = null;
@@ -173,7 +170,7 @@ class Calculator
             case 'free':
                 return $this->priceResponse('0.00', '0.00');
             case RateType::CARRIER_RATE_TYPE_MATRIX:
-                $ratePrice = $this->matrixratePrice->getRate($request, $parcelType, $this->store, $includeVat);
+                $ratePrice = $this->matrixratePrice->getRate($request, $parcelType, $this->store);
                 if ($ratePrice !== false) {
                     return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
                 }
@@ -261,16 +258,16 @@ class Calculator
     /**
      * Calculate the price including or excluding tax
      *
-     * @param $price
+     * @param RateRequest $request
+     * @param             $parcelType
      *
      * @return mixed
      */
     public function getPriceWithTax(RateRequest $request, $parcelType = null)
     {
-        $includeVat = $this->taxHelper->getShippingPriceDisplayType();
         $price = $this->price($request, $parcelType);
 
-        if ($includeVat && isset($price['price'])) {
+        if (isset($price['price'])) {
             $price['price'] = $this->taxHelper->getShippingPrice($price['price'], true);
         }
 

@@ -89,11 +89,10 @@ class Matrixrate
      * @param RateRequest $request
      * @param             $parcelType
      * @param int|null    $store
-     * @param bool        $includeVat
      *
      * @return array|bool
      */
-    public function getRate(RateRequest $request, $parcelType, $store = null, $includeVat = false)
+    public function getRate(RateRequest $request, $parcelType, $store = null)
     {
         $matrixrateCollection     = $this->matrixrateCollection->addOrder('subtotal', 'DESC');
         $this->shippingVatEnabled = $this->taxHelper->shippingPriceIncludesTax($store);
@@ -108,7 +107,7 @@ class Matrixrate
         }
 
         $result = array_shift($data);
-        $result = $includeVat ? $this->handleVat($result) : $result;
+        $result = $this->handleVat($result);
 
         return ['price' => $result['price'], 'cost'  => 0];
     }

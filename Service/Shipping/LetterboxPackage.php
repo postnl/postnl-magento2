@@ -39,6 +39,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Config\Provider\LetterBoxPackageConfiguration;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 
 // @codingStandardsIgnoreFile
 class LetterboxPackage
@@ -67,6 +68,10 @@ class LetterboxPackage
      * @var CollectionFactory
      */
     private $productCollectionFactory;
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
 
     /**
      * LetterboxPackage constructor.
@@ -75,17 +80,20 @@ class LetterboxPackage
      * @param LetterBoxPackageConfiguration $letterBoxPackageConfiguration
      * @param OrderRepositoryInterface      $orderRepository
      * @param CollectionFactory             $productCollectionFactory
+     * @param ShippingOptions               $shippingOptions
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         LetterBoxPackageConfiguration $letterBoxPackageConfiguration,
         OrderRepositoryInterface $orderRepository,
-        CollectionFactory $productCollectionFactory
+        CollectionFactory $productCollectionFactory,
+        ShippingOptions $shippingOptions
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->letterBoxPackageConfiguration = $letterBoxPackageConfiguration;
         $this->orderRepository = $orderRepository;
         $this->productCollectionFactory = $productCollectionFactory;
+        $this->shippingOptions = $shippingOptions;
     }
 
     /**
@@ -96,10 +104,13 @@ class LetterboxPackage
      */
     public function isLetterboxPackage($products, $isPossibleLetterboxPackage)
     {
+        if ($this->shippingOptions->isLetterboxPackageActive() === false) {
+            return false;
+        }
+
         $this->totalVolume                 = 0;
         $this->totalWeight                 = 0;
         $this->hasMaximumQty               = true;
-
 
         $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
 
