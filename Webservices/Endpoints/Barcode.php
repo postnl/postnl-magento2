@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Exception as PostNLException;
@@ -137,9 +138,6 @@ class Barcode extends AbstractEndpoint
         $this->validateRequiredValues();
 
         $barcode         = $this->barcodeRange->getByProductCode($this->productCode, $this->storeId);
-        $sendersCountry  = $this->addressConfiguration->getCountry();
-        $shippingAddress = $shipment->getShippingAddress();
-        $shippingCountry = $shippingAddress->getCountryId();
         $parameters      = [
                 'Message'  => $this->message->get(''),
                 'Customer' => $this->customer->get($shipment, $isReturnBarcode),
@@ -150,7 +148,7 @@ class Barcode extends AbstractEndpoint
                 ],
             ];
 
-        $parameters = $this->updateParametersForNlBeNlReturn($parameters, $isReturnBarcode, $sendersCountry, $shippingCountry);
+        $parameters = $this->updateParametersForNlBeNlReturn($parameters, $isReturnBarcode, $shipment);
 
         return $this->soap->call($this, 'GenerateBarcode', $parameters);
     }
@@ -199,10 +197,21 @@ class Barcode extends AbstractEndpoint
         }
     }
 
-    public function updateParametersForNlBeNlReturn($parameters, $isReturnBarcode, $sendersCountry, $shippingCountry)
+    /**
+     * @param array             $parameters
+     * @param bool              $isReturnBarcode
+     * @param ShipmentInterface $shipment
+     *
+     * @return mixed
+     */
+    public function updateParametersForNlBeNlReturn($parameters, $isReturnBarcode, $shipment)
     {
+        $shippingAddress = $shipment->getShippingAddress();
+        $shippingCountry = $shippingAddress->getCountryId();
+        $sendersCountry = $this->addressConfiguration->getCountry();
+
         if ($isReturnBarcode && $sendersCountry === 'NL' && $shippingCountry === 'BE') {
-            return $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCode();
+            $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCode();
         }
 
         return $parameters;

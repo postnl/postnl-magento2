@@ -97,7 +97,25 @@ class DefaultOptions implements ArrayInterface
         $beProducts[] = $this->shippingOptions->canUseCargoProducts() ? $this->productOptions->getCargoOptions() : [];
         $beProducts[] = $this->productOptions->getBeOptions();
 
+        if ($this->shippingOptions->isPakjegemakActive('BE')) {
+            $beProducts[] = $this->productOptions->getPakjeGemakBeOptions();
+        }
+
         return call_user_func_array("array_merge", $beProducts);
+    }
+
+    /**
+     * @return array
+     */
+    public function getBeDomesticProducts()
+    {
+        $beDomesticProducts[] = $this->productOptions->getBeDomesticOptions();
+
+        if ($this->shippingOptions->isPakjegemakActive('BE')) {
+            $beDomesticProducts[] = $this->productOptions->getPakjeGemakBeDomesticOptions();
+        }
+
+        return call_user_func_array("array_merge", $beDomesticProducts);
     }
 
     /**
