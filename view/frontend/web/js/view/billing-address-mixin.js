@@ -57,11 +57,11 @@ define([
                         }
                     });
                     
-                    if (quote.billingAddress().street[1] !== houseNumber) {
+                    if (quote.billingAddress().street[1] !== houseNumber && quote.shippingMethod().carrier_code === 'tig_postnl') {
                         quote.billingAddress().street.splice(1,1);
                     }
                     
-                    if (quote.billingAddress().street[2] !== houseNumberAddition) {
+                    if (quote.billingAddress().street[2] !== houseNumberAddition && quote.shippingMethod().carrier_code === 'tig_postnl') {
                         quote.billingAddress().street.splice(1,1);
                     }
 
