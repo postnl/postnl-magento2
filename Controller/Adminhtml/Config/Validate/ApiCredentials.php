@@ -124,7 +124,8 @@ class ApiCredentials extends Action
             'message' => __('Your API Credentials could not be validated, check your PostNL logs for more information.')
         ];
 
-        $this->soap->updateApiKey($this->storeManager->getStore()->getId());
+        $store = $this->storeManager->getStore();
+        $this->soap->updateApiKey($store->getId());
         $customerData = $this->getCustomerData($this->getRequest());
         $validatedApiCredentials = $this->validateApiCredentials($customerData);
 
@@ -157,8 +158,8 @@ class ApiCredentials extends Action
 
         try {
             return $this->soap->call($this->barcode, 'GenerateBarcode', $parameters);
-        } catch (Exception $e) {
-            $this->logger->debug($e->getMessage());
+        } catch (Exception $exception) {
+            $this->logger->debug($exception->getMessage());
             return false;
         }
     }
