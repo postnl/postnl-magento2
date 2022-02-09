@@ -121,7 +121,7 @@ class ApiCredentials extends Action
         $result = [
             'error' => true,
             //@codingStandardsIgnoreLine
-            'message' => __('Your API Credentials could not be validated, check your PostNL logs for more information.')
+            'message' => __('Your API Credentials could not be validated, check your data in the My PostNL environment. Or check the PostNL logs.')
         ];
 
         $store = $this->storeManager->getStore();

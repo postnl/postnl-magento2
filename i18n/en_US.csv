@@ -499,5 +499,5 @@ Percent,Percent
 "Belgium standard + Signature on delivery + Extra Cover","Belgium standard + Signature on delivery + Extra Cover"
 "Determine the position of the first shipping label when you're printing the labels on an A4. De printing order of the labels are bottom right, bottom left, top right, top left.","Determine the position of the first shipping label when you're printing the labels on an A4. De printing order of the labels are bottom right, bottom left, top right, top left."
 "Choose printing start position","Choose printing start position"
-"Your API Credentials could not be validated, check your PostNL logs for more information.","Your API Credentials could not be validated, check your PostNL logs for more information."
+"Your API Credentials could not be validated, check your data in the My PostNL environment. Or check the PostNL logs.","Your API Credentials could not be validated, check your data in the My PostNL environment. Or check the PostNL logs."
 "Successfully connected to account.","Successfully connected to account."
