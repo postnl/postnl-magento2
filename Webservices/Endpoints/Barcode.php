@@ -31,6 +31,8 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use TIG\PostNL\Config\Provider\AddressConfiguration;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Exception as PostNLException;
 use TIG\PostNL\Service\Shipment\Barcode\Range as BarcodeRange;
 use TIG\PostNL\Webservices\AbstractEndpoint;
@@ -82,9 +84,14 @@ class Barcode extends AbstractEndpoint
     private $productCode;
 
     /**
-     * @var string
+     * @var AddressConfiguration
      */
-    private $type = '';
+    private $addressConfiguration;
+
+    /**
+     * @var ReturnOptions
+     */
+    private $returnOptions;
 
     /**
      * @param \TIG\PostNL\Webservices\Soap                   $soap
@@ -92,18 +99,24 @@ class Barcode extends AbstractEndpoint
      * @param \TIG\PostNL\Webservices\Api\Customer           $customer
      * @param \TIG\PostNL\Webservices\Api\Message            $message
      * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
+     * @param AddressConfiguration                           $addressConfiguration
+     * @param ReturnOptions                                  $returnOptions
      */
     public function __construct(
         Soap $soap,
         BarcodeRange $barcodeRange,
         Customer $customer,
         Message $message,
-        ShipmentData $shipmentData
+        ShipmentData $shipmentData,
+        AddressConfiguration $addressConfiguration,
+        ReturnOptions $returnOptions
     ) {
         $this->soap = $soap;
         $this->barcodeRange = $barcodeRange;
         $this->customer = $customer;
         $this->message = $message;
+        $this->addressConfiguration = $addressConfiguration;
+        $this->returnOptions = $returnOptions;
 
         parent::__construct(
             $shipmentData
@@ -124,6 +137,7 @@ class Barcode extends AbstractEndpoint
         $this->validateRequiredValues();
 
         $barcode = $this->barcodeRange->getByProductCode($this->productCode, $this->storeId);
+        $sendersCountry = $this->addressConfiguration->getCountry();
 
         $parameters = [
             'Message'  => $this->message->get(''),
@@ -134,6 +148,8 @@ class Barcode extends AbstractEndpoint
                 'Serie' => $barcode['serie'],
             ],
         ];
+
+        $parameters = $this->updateReturnParameters($parameters, $isReturnBarcode, $sendersCountry);
 
         return $this->soap->call($this, 'GenerateBarcode', $parameters);
     }
@@ -180,5 +196,25 @@ class Barcode extends AbstractEndpoint
             // @codingStandardsIgnoreLine
             throw new PostNLException(__('Please provide the store id first by calling setStoreId'));
         }
+    }
+
+    /**
+     * @param $parameters
+     * @param $isReturnBarcode
+     * @param $sendersCountry
+     *
+     * @return mixed
+     */
+    public function updateReturnParameters($parameters, $isReturnBarcode, $sendersCountry)
+    {
+        if ($isReturnBarcode && $sendersCountry === 'NL') {
+            $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCodeNL();
+        }
+
+        if ($isReturnBarcode && $sendersCountry === 'BE') {
+            $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCodeBE();
+        }
+
+        return $parameters;
     }
 }

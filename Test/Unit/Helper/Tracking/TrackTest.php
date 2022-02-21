@@ -93,6 +93,8 @@ class TrackTest extends TestCase
     {
         $type = 'C';
         $barcode = '123ABC';
+        $isReturn = false;
+        $returnCountry = 'NL';
 
         /** @var OrderAddressInterface $address */
         $address = $this->getObject(Address::class);
@@ -120,7 +122,7 @@ class TrackTest extends TestCase
             'scopeConfig' => $scopeConfigMock,
         ]);
 
-        $result = $this->invokeArgs('generateTrackAndTraceUrl', [$address, $barcode, $type], $instance);
+        $result = $this->invokeArgs('generateTrackAndTraceUrl', [$address, $barcode, $type, $isReturn, $returnCountry], $instance);
 
         $this->assertContains('B=123ABC&' . $expected, $result);
     }

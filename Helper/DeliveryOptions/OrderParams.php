@@ -287,7 +287,7 @@ class OrderParams
     /**
      * @param $params
      *
-     * @return bool
+     * @return array|bool
      * @throws PostnlException
      */
     private function addExtraToAddress($params)
@@ -300,7 +300,9 @@ class OrderParams
             $params['customerData'] = $params['address'];
         }
 
-        $params['address']['Name'] = isset($params['name']) ? $params['name'] : '';
+        if (is_array($params['address'])) {
+            $params['address']['Name'] = isset($params['name']) ? $params['name'] : '';
+        }
 
         if ($params['type'] == ProductInfo::TYPE_PICKUP && !isset($params['customerData'])) {
             throw new PostnlException(

@@ -178,7 +178,11 @@ class Customs
             $this->attributeValues->get('price', $item);
         }
 
-        $orderItem       = $item->getOrderItem();
+        $orderItem = $item->getOrderItem();
+        if ($orderItem === null) {
+            $orderItem = $item;
+        }
+
         $discountPerItem = $orderItem->getDiscountAmount() / $orderItem->getQtyOrdered();
         $totalDiscount   = $discountPerItem * $item->getQty();
         $value           = $value - $totalDiscount;

@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Helper\Tracking;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Helper\AbstractTracking;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
@@ -86,6 +87,7 @@ class Track extends AbstractTracking
      * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
      * @param BarcodeHandler                     $barcodeHandler
      * @param ScopeConfigInterface               $scopeConfig
+     * @param ReturnOptions                      $returnOptions
      */
     public function __construct(
         Context $context,
@@ -99,7 +101,8 @@ class Track extends AbstractTracking
         Log $logging,
         ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface,
         BarcodeHandler $barcodeHandler,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        ReturnOptions $returnOptions
     ) {
         $this->trackFactory             = $trackFactory;
         $this->trackStatusFactory       = $statusFactory;
@@ -114,7 +117,8 @@ class Track extends AbstractTracking
             $webshop,
             $logging,
             $shipmentBarcodeRepositoryInterface,
-            $scopeConfig
+            $scopeConfig,
+            $returnOptions
         );
     }
 
