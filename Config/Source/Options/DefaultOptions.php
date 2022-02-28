@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Config\Source\Options;
 
 use Magento\Framework\Option\ArrayInterface;
+use TIG\PostNL\Config\Provider\AbstractConfigProvider;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
 /**
@@ -41,6 +42,8 @@ use TIG\PostNL\Config\Provider\ShippingOptions;
 // @codingStandardsIgnoreFile
 class DefaultOptions implements ArrayInterface
 {
+    CONST POSTNL_SHIPPING_ADDRESS_COUNTRY = 'tig_postnl_generalconfiguration_shipping_address_country';
+
     /**
      * @var ShippingOptions
      */
@@ -86,6 +89,10 @@ class DefaultOptions implements ArrayInterface
             $flags['groups'][] = ['group' => 'eps_package_options'];
         }
 
+        if ($this->shippingOptions->canUseBeProducts()) {
+            $flags['groups'][] = ['group' => 'standard_be_options'];
+        }
+
         return $this->productOptions->getProductOptions($flags);
     }
 
@@ -97,7 +104,25 @@ class DefaultOptions implements ArrayInterface
         $beProducts[] = $this->shippingOptions->canUseCargoProducts() ? $this->productOptions->getCargoOptions() : [];
         $beProducts[] = $this->productOptions->getBeOptions();
 
+        if ($this->shippingOptions->isPakjegemakActive('BE')) {
+            $beProducts[] = $this->productOptions->getPakjeGemakBeOptions();
+        }
+
         return call_user_func_array("array_merge", $beProducts);
+    }
+
+    /**
+     * @return array
+     */
+    public function getBeDomesticProducts()
+    {
+        $beDomesticProducts[] = $this->productOptions->getBeDomesticOptions();
+
+        if ($this->shippingOptions->isPakjegemakActive('BE')) {
+            $beDomesticProducts[] = $this->productOptions->getPakjeGemakBeDomesticOptions();
+        }
+
+        return call_user_func_array("array_merge", $beDomesticProducts);
     }
 
     /**

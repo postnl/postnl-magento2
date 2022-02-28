@@ -64,7 +64,7 @@ abstract class TestCase extends TestCaseFinder
     /**
      * Basic setup
      */
-    public function setUp()
+    public function setUp(): void
     {
         /** Require functions.php to be able to use the translate function */
         $path = __DIR__ . '/../../../../app/functions.php';

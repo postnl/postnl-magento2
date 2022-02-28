@@ -36,131 +36,76 @@ namespace TIG\PostNL\Config\Provider;
  */
 class ReturnOptions extends AbstractConfigProvider
 {
-    const XPATH_RETURN_IS_ACTIVE_NL = 'tig_postnl/returns_nl/returns_nl_active';
-    const XPATH_RETURN_NL_CITY = 'tig_postnl/returns_nl/city';
-    const XPATH_RETURN_NL_COMPANY = 'tig_postnl/returns_nl/company';
-    const XPATH_RETURN_NL_HOUSENUMBER = 'tig_postnl/returns_nl/housenumber';
-    const XPATH_RETURN_NL_FREEPOST_NUMBER = 'tig_postnl/returns_nl/freepost_number';
-    const XPATH_RETURN_NL_ZIPCODE = 'tig_postnl/returns_nl/zipcode';
-    const XPATH_RETURN_NL_CUSTOMER_CODE = 'tig_postnl/returns_nl/customer_code';
-
-    const XPATH_RETURN_IS_ACTIVE_BE = 'tig_postnl/returns_be/returns_be_active';
-    const XPATH_RETURN_BE_CITY = 'tig_postnl/returns_be/city';
-    const XPATH_RETURN_BE_COMPANY = 'tig_postnl/returns_be/company';
-    const XPATH_RETURN_BE_STREETNAME = 'tig_postnl/returns_be/streetname';
-    const XPATH_RETURN_BE_HOUSENUMBER = 'tig_postnl/returns_be/housenumber';
-    const XPATH_RETURN_BE_ZIPCODE = 'tig_postnl/returns_be/zipcode';
-    const XPATH_RETURN_BE_CUSTOMER_CODE = 'tig_postnl/returns_be/customer_code';
+    const XPATH_RETURN_IS_ACTIVE = 'tig_postnl/returns/returns_active';
+    const XPATH_RETURN_CITY = 'tig_postnl/returns/city';
+    const XPATH_RETURN_COMPANY = 'tig_postnl/returns/company';
+    const XPATH_RETURN_STREETNAME = 'tig_postnl/returns/streetname';
+    const XPATH_RETURN_HOUSENUMBER = 'tig_postnl/returns/housenumber';
+    const XPATH_RETURN_FREEPOST_NUMBER = 'tig_postnl/returns/freepost_number';
+    const XPATH_RETURN_ZIPCODE = 'tig_postnl/returns/zipcode';
+    const XPATH_RETURN_CUSTOMER_CODE = 'tig_postnl/returns/customer_code';
 
     /**
      * @return bool
      */
-    public function isReturnNlActive()
+    public function isReturnActive()
     {
-        return (bool)$this->getConfigFromXpath(self::XPATH_RETURN_IS_ACTIVE_NL);
+        return (bool)$this->getConfigFromXpath(self::XPATH_RETURN_IS_ACTIVE);
     }
 
     /**
      * @return mixed
      */
-    public function getCityNL()
+    public function getCity()
     {
-        return $this->getConfigFromXpath(self::XPATH_RETURN_NL_CITY);
+        return $this->getConfigFromXpath(self::XPATH_RETURN_CITY);
     }
 
     /**
      * @return mixed
      */
-    public function getCompanyNL()
+    public function getCompany()
     {
-        return $this->getConfigFromXpath(self::XPATH_RETURN_NL_COMPANY);
+        return $this->getConfigFromXpath(self::XPATH_RETURN_COMPANY);
     }
 
     /**
      * @return mixed
      */
-    public function getHouseNumberNL()
+    public function getStreetName()
     {
-        return $this->getConfigFromXpath(self::XPATH_RETURN_NL_HOUSENUMBER);
+        return $this->getConfigFromXpath(self::XPATH_RETURN_STREETNAME);
     }
 
     /**
      * @return mixed
      */
-    public function getFreepostNumberNL()
+    public function getHouseNumber()
     {
-        return $this->getConfigFromXpath(self::XPATH_RETURN_NL_FREEPOST_NUMBER);
+        return $this->getConfigFromXpath(self::XPATH_RETURN_HOUSENUMBER);
     }
 
     /**
      * @return mixed
      */
-    public function getZipcodeNL()
+    public function getFreepostNumber()
     {
-        return $this->getConfigFromXpath(self::XPATH_RETURN_NL_ZIPCODE);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isReturnBEActive()
-    {
-        return (bool)$this->getConfigFromXpath(self::XPATH_RETURN_IS_ACTIVE_BE);
+        return $this->getConfigFromXpath(self::XPATH_RETURN_FREEPOST_NUMBER);
     }
 
     /**
      * @return mixed
      */
-    public function getCityBE()
+    public function getZipcode()
     {
-        return $this->getConfigFromXpath(self::XPATH_RETURN_BE_CITY);
+        return $this->getConfigFromXpath(self::XPATH_RETURN_ZIPCODE);
     }
 
     /**
      * @return mixed
      */
-    public function getCompanyBE()
+    public function getCustomerCode()
     {
-        return $this->getConfigFromXpath(self::XPATH_RETURN_BE_COMPANY);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStreetNameBE()
-    {
-        return $this->getConfigFromXpath(self::XPATH_RETURN_BE_STREETNAME);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHouseNumberBE()
-    {
-        return $this->getConfigFromXpath(self::XPATH_RETURN_BE_HOUSENUMBER);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getZipcodeBE()
-    {
-        return $this->getConfigFromXpath(self::XPATH_RETURN_BE_ZIPCODE);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCustomerCodeNL()
-    {
-        return $this->getConfigFromXpath(self::XPATH_RETURN_NL_CUSTOMER_CODE);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCustomerCodeBE()
-    {
-        return $this->getConfigFromXpath(self::XPATH_RETURN_BE_CUSTOMER_CODE);
+        return $this->getConfigFromXpath(self::XPATH_RETURN_CUSTOMER_CODE);
     }
 }

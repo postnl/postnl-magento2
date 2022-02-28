@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Exception as PostNLException;
@@ -84,14 +85,14 @@ class Barcode extends AbstractEndpoint
     private $productCode;
 
     /**
-     * @var AddressConfiguration
-     */
-    private $addressConfiguration;
-
-    /**
      * @var ReturnOptions
      */
     private $returnOptions;
+
+    /**
+     * @var AddressConfiguration
+     */
+    private $addressConfiguration;
 
     /**
      * @param \TIG\PostNL\Webservices\Soap                   $soap
@@ -99,8 +100,8 @@ class Barcode extends AbstractEndpoint
      * @param \TIG\PostNL\Webservices\Api\Customer           $customer
      * @param \TIG\PostNL\Webservices\Api\Message            $message
      * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
-     * @param AddressConfiguration                           $addressConfiguration
      * @param ReturnOptions                                  $returnOptions
+     * @param AddressConfiguration                           $addressConfiguration
      */
     public function __construct(
         Soap $soap,
@@ -108,15 +109,15 @@ class Barcode extends AbstractEndpoint
         Customer $customer,
         Message $message,
         ShipmentData $shipmentData,
-        AddressConfiguration $addressConfiguration,
-        ReturnOptions $returnOptions
+        ReturnOptions $returnOptions,
+        AddressConfiguration $addressConfiguration
     ) {
-        $this->soap = $soap;
-        $this->barcodeRange = $barcodeRange;
-        $this->customer = $customer;
-        $this->message = $message;
+        $this->soap                 = $soap;
+        $this->barcodeRange         = $barcodeRange;
+        $this->customer             = $customer;
+        $this->message              = $message;
+        $this->returnOptions        = $returnOptions;
         $this->addressConfiguration = $addressConfiguration;
-        $this->returnOptions = $returnOptions;
 
         parent::__construct(
             $shipmentData

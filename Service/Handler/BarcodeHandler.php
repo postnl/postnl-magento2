@@ -262,8 +262,7 @@ class BarcodeHandler
     {
         if (
             (!in_array($countryId, ['NL', 'BE']) ||
-             ($countryId == 'NL' && !$this->labelParser->canReturnNl($countryId)) ||
-             ($countryId == 'BE' && !$this->labelParser->canReturnBe($countryId)) ||
+             !$this->labelParser->canReturn($countryId) ||
              ($shipment->isExtraAtHome()) ||
              ($shipment->isBuspakjeShipment()))
         ) {
