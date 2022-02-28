@@ -38,6 +38,9 @@
         <comment><![CDATA[Please note: Some of the Packets Tracked products require specific contractual agreements with PostNL. Please contact your PostNL account manager for more information about these products.]]></comment>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+        <depends>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+        </depends>
         <field id="active" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Use Packets Tracked products</label>
             <comment>Packet Tracked is a small parcel with Track &amp; Trace. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.</comment>

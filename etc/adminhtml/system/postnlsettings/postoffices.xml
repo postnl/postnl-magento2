@@ -50,6 +50,7 @@
             <config_path>tig_postnl/post_offices/pakjegemak_active</config_path>
             <depends>
                 <field id="shippingoptions_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
             </depends>
         </field>
 
@@ -60,6 +61,7 @@
             <config_path>tig_postnl/post_offices/default_pakjegemak_option</config_path>
             <depends>
                 <field id="pakjegemak_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
             </depends>
         </field>
 
