@@ -31,7 +31,6 @@
  */
 namespace TIG\PostNL\Webservices\Endpoints;
 
-use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Exception as PostNLException;
@@ -138,7 +137,6 @@ class Barcode extends AbstractEndpoint
         $this->validateRequiredValues();
 
         $barcode = $this->barcodeRange->getByProductCode($this->productCode, $this->storeId);
-        $sendersCountry = $this->addressConfiguration->getCountry();
 
         $parameters = [
             'Message'  => $this->message->get(''),
@@ -150,7 +148,7 @@ class Barcode extends AbstractEndpoint
             ],
         ];
 
-        $parameters = $this->updateReturnParameters($parameters, $isReturnBarcode, $sendersCountry);
+        $parameters = $this->updateReturnParameters($parameters, $isReturnBarcode);
 
         return $this->soap->call($this, 'GenerateBarcode', $parameters);
     }
@@ -206,14 +204,10 @@ class Barcode extends AbstractEndpoint
      *
      * @return mixed
      */
-    public function updateReturnParameters($parameters, $isReturnBarcode, $sendersCountry)
+    public function updateReturnParameters($parameters, $isReturnBarcode)
     {
-        if ($isReturnBarcode && $sendersCountry === 'NL') {
-            $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCodeNL();
-        }
-
-        if ($isReturnBarcode && $sendersCountry === 'BE') {
-            $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCodeBE();
+        if ($isReturnBarcode) {
+            $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCode();
         }
 
         return $parameters;
