@@ -173,7 +173,7 @@ abstract class AbstractTracking extends AbstractHelper
             $isReturn = true;
         }
 
-        if ($isReturn && $this->returnOptions->isReturnBEActive()) {
+        if ($isReturn && $this->returnOptions->isReturnActive()) {
             $returnCountry = 'BE';
         }
 
@@ -209,14 +209,9 @@ abstract class AbstractTracking extends AbstractHelper
             'L' => $language
         ];
 
-        if ($isReturn === true && $returnCountry === 'NL') {
+        if ($isReturn === true) {
             $params['D'] = $returnCountry;
-            $params['P'] = $this->returnOptions->getZipcodeNL();
-        }
-
-        if ($isReturn === true && $returnCountry === 'BE') {
-            $params['D'] = $returnCountry;
-            $params['P'] = $this->returnOptions->getZipcodeBE();
+            $params['P'] = $this->returnOptions->getZipcode();
         }
 
         return $this->webshopConfig->getTrackAndTraceServiceUrl() . http_build_query($params);
