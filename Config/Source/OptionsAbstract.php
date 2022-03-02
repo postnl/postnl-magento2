@@ -228,7 +228,7 @@ abstract class OptionsAbstract
         '4965' => [
             'value'                => '4965',
             'label'                => 'Belgium standard + Extra Cover',
-            'isExtraCover'         => false,
+            'isExtraCover'         => true,
             'isEvening'            => false,
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
@@ -239,7 +239,7 @@ abstract class OptionsAbstract
         '4878' => [
             'value'                => '4878',
             'label'                => 'Belgium Post Office + Extra Cover',
-            'isExtraCover'         => false,
+            'isExtraCover'         => true,
             'isEvening'            => false,
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
