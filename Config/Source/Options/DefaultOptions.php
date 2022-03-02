@@ -200,6 +200,12 @@ class DefaultOptions implements ArrayInterface
             ['group' => 'only_stated_address_options']
         );
 
+        if ($this->shippingOptions->canUseBeProducts()) {
+            $options = [];
+            $options[] = $this->productOptions->getOptionsByCode('4960');
+            $options[] = $this->productOptions->getOptionsByCode('4962');
+        }
+
         return $options;
     }
 }
