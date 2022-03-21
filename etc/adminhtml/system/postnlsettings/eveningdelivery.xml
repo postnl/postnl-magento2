@@ -42,6 +42,7 @@
          <depends>
             <field id="shippingoptions_active">1</field>
             <field id="deliverydays_active">1</field>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
          </depends>
 
 
