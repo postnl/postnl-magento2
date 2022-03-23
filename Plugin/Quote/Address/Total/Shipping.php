@@ -84,14 +84,14 @@ class Shipping
         Quote\Address\Total $total
     ) {
         $this->subject = $subject;
-        $proceed($quote, $shippingAssignment, $total);
+        $return = $proceed($quote, $shippingAssignment, $total);
 
         $shipping = $shippingAssignment->getShipping();
         $address = $shipping->getAddress();
         $rate = $this->getRate($shipping->getMethod(), $address);
 
         if (!$rate) {
-            return $this;
+            return $return;
         }
 
         $this->processTotal($quote, $total, $rate, $address);
