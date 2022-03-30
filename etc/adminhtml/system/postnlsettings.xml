@@ -178,7 +178,7 @@
             <field id="alternative_default_option" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Alternative delivery</label>
                 <comment><![CDATA[This option will be used as default from the given amount.]]></comment>
-                <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions</source_model>
+                <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getAlternativeDeliveryOptions</source_model>
                 <config_path>tig_postnl/delivery_settings/alternative_default_option</config_path>
                 <depends>
                     <field id="use_alternative_default">1</field>

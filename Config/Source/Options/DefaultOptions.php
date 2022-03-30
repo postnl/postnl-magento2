@@ -208,4 +208,35 @@ class DefaultOptions implements ArrayInterface
 
         return $options;
     }
+
+    /**
+     * @return array
+     */
+    public function getAlternativeDeliveryOptions()
+    {
+
+        if (!$this->shippingOptions->canUseBeProducts()) {
+            $flags = [];
+            $flags['groups'][] = ['group' => 'standard_options'];
+            $flags['groups'][] = ['group' => 'buspakje_options'];
+            $flags['groups'][] = ['group' => 'only_stated_address_options'];
+            if ($this->shippingOptions->isIDCheckActive()) {
+                $flags['groups'][] = ['group' => 'id_check_options'];
+            }
+
+            if ($this->shippingOptions->canUseCargoProducts()) {
+                $flags['groups'][] = ['group' => 'cargo_options'];
+            }
+
+            if ($this->shippingOptions->canUseEpsBusinessProducts()) {
+                $flags['groups'][] = ['group' => 'eps_package_options'];
+            }
+        }
+
+        if ($this->shippingOptions->canUseBeProducts()) {
+            $flags['groups'][] = ['group' => 'standard_be_options'];
+        }
+
+        return $this->productOptions->getProductOptions($flags);
+    }
 }
