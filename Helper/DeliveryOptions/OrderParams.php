@@ -221,6 +221,7 @@ class OrderParams
             'fee'                          => $this->feeCalculator->get($params) + $this->feeCalculator->statedAddressOnlyFee($params),
             'product_code'                 => $productInfo['code'],
             'stated_address_only'          => isset($params['stated_address_only']) ? $params['stated_address_only'] : false,
+            'country'                      => $params['country']
         ];
     }
 
