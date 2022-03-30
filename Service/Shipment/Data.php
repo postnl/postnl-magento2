@@ -132,7 +132,7 @@ class Data
             $deliveryDate = $this->deliveryDateFallback->get();
         }
 
-        if ($shipmentType === ProductInfo::SHIPMENT_TYPE_GP || ProductInfo::SHIPMENT_TYPE_EPS) {
+        if ($shipmentType === ProductInfo::SHIPMENT_TYPE_GP || $shipmentType === ProductInfo::SHIPMENT_TYPE_EPS) {
             $deliveryDate = '';
         }
 
