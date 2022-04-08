@@ -359,7 +359,7 @@ class ProductInfo
 
         $this->type = static::SHIPMENT_TYPE_DAYTIME;
 
-        if ($country != 'NL') {
+        if ($country !== 'NL' && $country !== 'BE') {
             return;
         }
 
