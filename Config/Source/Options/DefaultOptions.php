@@ -42,8 +42,6 @@ use TIG\PostNL\Config\Provider\ShippingOptions;
 // @codingStandardsIgnoreFile
 class DefaultOptions implements ArrayInterface
 {
-    CONST POSTNL_SHIPPING_ADDRESS_COUNTRY = 'tig_postnl_generalconfiguration_shipping_address_country';
-
     /**
      * @var ShippingOptions
      */
