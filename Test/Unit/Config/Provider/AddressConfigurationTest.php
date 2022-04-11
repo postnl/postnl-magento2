@@ -32,15 +32,34 @@
 namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\Provider\AddressConfiguration;
-use TIG\PostNL\Test\TestCase;
+use TIG\PostNL\Config\Source\General\Country;
 
-class AddressConfigurationTest extends TestCase
+class AddressConfigurationTest extends AbstractConfigurationTest
 {
     public $instanceClass = AddressConfiguration::class;
 
-    public function testShouldReturnNLAsCountry()
+    /**
+     * @return array
+     */
+    public function countryProvider()
     {
-        $this->assertEquals('NL', $this->getInstance()->getCountry());
+        return [
+            'NL' => [Country::COUNTRY_NL],
+            'BE' => [Country::COUNTRY_BE]
+        ];
+    }
+
+    /**
+     * @dataProvider countryProvider
+     *
+     * @param $country
+     */
+    public function testShouldReturnCountry($country)
+    {
+        $instance = $this->getInstance();
+        $this->setXpath(AddressConfiguration::XPATH_GENERAL_COUNTRY, $country);
+
+        $this->assertEquals($country, $instance->getCountry());
     }
 
     public function testGetAddressInfoContainsCountry()

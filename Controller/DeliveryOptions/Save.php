@@ -38,6 +38,7 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Exception;
@@ -66,15 +67,21 @@ class Save extends AbstractDeliveryOptions
     private $productOptions;
 
     /**
-     * @param Context            $context
-     * @param OrderRepository    $orderRepository
-     * @param QuoteToRateRequest $quoteToRateRequest
-     * @param OrderParams        $orderParams
-     * @param Session            $checkoutSession
-     * @param PickupAddress      $pickupAddress
-     * @param ShippingDuration   $shippingDuration
-     * @param ProductOptions     $productOptions
-     * @param DeliveryDate       $deliveryEndpoint
+     * @var AddressConfiguration
+     */
+    private $addressConfiguration;
+
+    /**
+     * @param Context              $context
+     * @param OrderRepository      $orderRepository
+     * @param QuoteToRateRequest   $quoteToRateRequest
+     * @param OrderParams          $orderParams
+     * @param Session              $checkoutSession
+     * @param PickupAddress        $pickupAddress
+     * @param ShippingDuration     $shippingDuration
+     * @param ProductOptions       $productOptions
+     * @param DeliveryDate         $deliveryEndpoint
+     * @param AddressConfiguration $addressConfiguration
      */
     public function __construct(
         Context $context,
@@ -85,7 +92,8 @@ class Save extends AbstractDeliveryOptions
         PickupAddress $pickupAddress,
         ShippingDuration $shippingDuration,
         ProductOptions $productOptions,
-        DeliveryDate $deliveryEndpoint
+        DeliveryDate $deliveryEndpoint,
+        AddressConfiguration $addressConfiguration
     ) {
         parent::__construct(
             $context,
@@ -96,9 +104,10 @@ class Save extends AbstractDeliveryOptions
             $deliveryEndpoint
         );
 
-        $this->orderParams     = $orderParams;
-        $this->pickupAddress   = $pickupAddress;
-        $this->productOptions = $productOptions;
+        $this->orderParams          = $orderParams;
+        $this->pickupAddress        = $pickupAddress;
+        $this->productOptions       = $productOptions;
+        $this->addressConfiguration = $addressConfiguration;
     }
 
     /**
@@ -162,10 +171,11 @@ class Save extends AbstractDeliveryOptions
             $postnlOrder->setData($key, $value);
         }
 
+        $country = $this->addressConfiguration->getCountry();
         $postnlOrder->setIsStatedAddressOnly(false);
-        if (isset($params['stated_address_only']) && $params['stated_address_only']) {
+        if (isset($params['stated_address_only']) && $params['stated_address_only'] && $country === $params['country']) {
             $postnlOrder->setIsStatedAddressOnly(true);
-            $postnlOrder->setProductCode($this->productOptions->getDefaultStatedAddressOnlyProductOption());
+            $postnlOrder->setProductCode($this->productOptions->getDefaultStatedAddressOnlyProductOption($country));
         }
 
         $this->orderRepository->save($postnlOrder);

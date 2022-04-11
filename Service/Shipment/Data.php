@@ -33,6 +33,7 @@ namespace TIG\PostNL\Service\Shipment;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Volume\Items\Calculate;
 use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
 
@@ -120,12 +121,19 @@ class Data
     private function getDefaultShipmentData(ShipmentInterface $shipment, $address, $contact, $currentShipmentNumber)
     {
         $deliveryDate = $shipment->getDeliveryDate();
+        $postnlOrder  = $shipment->getPostNLOrder();
+        $shipmentType = $postnlOrder->getType();
+
         if (!$deliveryDate) {
             $deliveryDate = $this->getDeliveryDateFromPostNLOrder($shipment);
         }
 
         if (!$deliveryDate) {
             $deliveryDate = $this->deliveryDateFallback->get();
+        }
+
+        if ($shipmentType === ProductInfo::SHIPMENT_TYPE_GP || $shipmentType === ProductInfo::SHIPMENT_TYPE_EPS) {
+            $deliveryDate = '';
         }
 
         return [

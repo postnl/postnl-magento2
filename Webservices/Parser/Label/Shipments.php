@@ -34,14 +34,17 @@ namespace TIG\PostNL\Webservices\Parser\Label;
 
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\Order\Address;
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
-use TIG\PostNL\Exception;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Service\Shipment\Data as ShipmentData;
 
 class Shipments
 {
+    /** @var AddressConfiguration */
+    private $addressConfiguration;
+
     /** @var ShipmentData */
     private $shipmentData;
 
@@ -55,17 +58,20 @@ class Shipments
     private $returnOptions;
 
     /**
-     * @param ShipmentData     $shipmentData
-     * @param AddressEnhancer  $addressEnhancer
-     * @param ManagerInterface $messageManager
-     * @param ReturnOptions    $returnOptions
+     * @param AddressConfiguration $addressConfiguration
+     * @param ShipmentData         $shipmentData
+     * @param AddressEnhancer      $addressEnhancer
+     * @param ManagerInterface     $messageManager
+     * @param ReturnOptions        $returnOptions
      */
     public function __construct(
+        AddressConfiguration $addressConfiguration,
         ShipmentData $shipmentData,
         AddressEnhancer $addressEnhancer,
         ManagerInterface $messageManager,
         ReturnOptions $returnOptions
     ) {
+        $this->addressConfiguration = $addressConfiguration;
         $this->shipmentData    = $shipmentData;
         $this->addressEnhancer = $addressEnhancer;
         $this->messageManager  = $messageManager;
@@ -89,8 +95,8 @@ class Shipments
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
 
-        if (($this->canReturnNl($address[0]['Countrycode'])) || $this->canReturnBe($address[0]['Countrycode'])) {
-            $address[] = $this->getReturnAddressData($address[0]['Countrycode']);
+        if ($this->canReturn($address[0]['Countrycode'])) {
+            $address[] = $this->getReturnAddressData();
         }
 
         return $this->shipmentData->get($postnlShipment, $address, $contact, $shipmentNumber);
@@ -189,55 +195,29 @@ class Shipments
      *
      * @return bool
      */
-    public function canReturnNl($countryId)
+    public function canReturn($countryId)
     {
-        return ($this->returnOptions->isReturnNlActive() && $countryId == 'NL');
+        return ($this->returnOptions->isReturnActive() && in_array($countryId, ['NL', 'BE']));
     }
 
     /**
-     * @param $countryId
-     *
-     * @return bool
-     */
-    public function canReturnBe($countryId)
-    {
-        return ($this->returnOptions->isReturnBeActive() && $countryId == 'BE');
-    }
-
-    /**
-     * @param $countryCode
-     *
-     * @return array|bool
-     */
-    private function getReturnAddressData($countryCode)
-    {
-        if ($countryCode == 'NL' || $countryCode == 'BE') {
-            return $this->getReturnAddress($countryCode);
-        }
-        return false;
-    }
-
-    /**
-     * @param $countryCode
-     *
      * @return array
      */
-    private function getReturnAddress($countryCode)
+    private function getReturnAddressData()
     {
-        $city = 'getCity' . $countryCode;
-        $company = 'getCompany' . $countryCode;
-        $street = 'getStreetName' . $countryCode;
-        $freePostNumber  = ($countryCode == 'BE' ? 'getHouseNumber' : 'getFreepostNumber') . $countryCode;
-        $zipcode = 'getZipcode' . $countryCode;
+        $countryCode = $this->addressConfiguration->getCountry();
+        $freePostNumber  = ($countryCode == 'BE' ? 'getHouseNumber' : 'getFreepostNumber');
+
         $data = [
             'AddressType'      => '08',
-            'City'             => $this->returnOptions->$city(),
-            'CompanyName'      => $this->returnOptions->$company(),
+            'City'             => $this->returnOptions->getCity(),
+            'CompanyName'      => $this->returnOptions->getCompany(),
             'Countrycode'      => $countryCode,
             'HouseNr'          => $this->returnOptions->$freePostNumber(),
-            'Street'           => ($countryCode == 'BE' ? $this->returnOptions->$street() : 'Antwoordnummer:'),
-            'Zipcode'          => strtoupper(str_replace(' ', '', $this->returnOptions->$zipcode())),
+            'Street'           => ($countryCode == 'BE' ? $this->returnOptions->getStreetName() : 'Antwoordnummer:'),
+            'Zipcode'          => strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode())),
         ];
+
         return $data;
     }
 }

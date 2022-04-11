@@ -60,6 +60,18 @@
             <config_path>tig_postnl/delivery_settings/default_delivery_stated_address</config_path>
             <depends>
                 <field id="delivery_only_stated_address_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+            </depends>
+        </field>
+
+        <field id="default_only_stated_address_be" translate="label comment" type="select" sortOrder="37" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default delivery to stated address only</label>
+            <comment><![CDATA[Select the default product option for shipments with delivery to stated address only.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getDeliveryStatedAddressOnlyOptionsBe</source_model>
+            <config_path>tig_postnl/delivery_settings/default_delivery_stated_address_be</config_path>
+            <depends>
+                <field id="delivery_only_stated_address_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">BE</field>
             </depends>
         </field>
 

@@ -316,7 +316,7 @@ define([
             var isActive = window.checkoutConfig.shipping.postnl.stated_address_only_active;
 
             var address = AddressFinder();
-            var isNL = (address !== null && address !== false && address.country === 'NL');
+            var isNL = (address !== null && address !== false && address.country === 'NL' || address.country === 'BE');
 
             return isActive === 1 && isNL;
         }),

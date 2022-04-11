@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Config\Source\Options;
 
 use Magento\Framework\Option\ArrayInterface;
+use TIG\PostNL\Config\Provider\AbstractConfigProvider;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
 /**
@@ -86,6 +87,10 @@ class DefaultOptions implements ArrayInterface
             $flags['groups'][] = ['group' => 'eps_package_options'];
         }
 
+        if ($this->shippingOptions->canUseBeProducts()) {
+            $flags['groups'][] = ['group' => 'standard_be_options'];
+        }
+
         return $this->productOptions->getProductOptions($flags);
     }
 
@@ -97,7 +102,25 @@ class DefaultOptions implements ArrayInterface
         $beProducts[] = $this->shippingOptions->canUseCargoProducts() ? $this->productOptions->getCargoOptions() : [];
         $beProducts[] = $this->productOptions->getBeOptions();
 
+        if ($this->shippingOptions->isPakjegemakActive('BE')) {
+            $beProducts[] = $this->productOptions->getPakjeGemakBeOptions();
+        }
+
         return call_user_func_array("array_merge", $beProducts);
+    }
+
+    /**
+     * @return array
+     */
+    public function getBeDomesticProducts()
+    {
+        $beDomesticProducts[] = $this->productOptions->getBeDomesticOptions();
+
+        if ($this->shippingOptions->isPakjegemakActive('BE')) {
+            $beDomesticProducts[] = $this->productOptions->getPakjeGemakBeDomesticOptions();
+        }
+
+        return call_user_func_array("array_merge", $beDomesticProducts);
     }
 
     /**
@@ -176,5 +199,49 @@ class DefaultOptions implements ArrayInterface
         );
 
         return $options;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getDeliveryStatedAddressOnlyOptionsBe()
+    {
+        $options = [];
+        $options[] = $this->productOptions->getOptionsByCode('4960');
+        $options[] = $this->productOptions->getOptionsByCode('4962');
+
+        return $options;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAlternativeDeliveryOptions()
+    {
+
+        if (!$this->shippingOptions->canUseBeProducts()) {
+            $flags = [];
+            $flags['groups'][] = ['group' => 'standard_options'];
+            $flags['groups'][] = ['group' => 'buspakje_options'];
+            $flags['groups'][] = ['group' => 'only_stated_address_options'];
+            if ($this->shippingOptions->isIDCheckActive()) {
+                $flags['groups'][] = ['group' => 'id_check_options'];
+            }
+
+            if ($this->shippingOptions->canUseCargoProducts()) {
+                $flags['groups'][] = ['group' => 'cargo_options'];
+            }
+
+            if ($this->shippingOptions->canUseEpsBusinessProducts()) {
+                $flags['groups'][] = ['group' => 'eps_package_options'];
+            }
+        }
+
+        if ($this->shippingOptions->canUseBeProducts()) {
+            $flags['groups'][] = ['group' => 'standard_be_options'];
+        }
+
+        return $this->productOptions->getProductOptions($flags);
     }
 }

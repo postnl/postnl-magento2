@@ -35,6 +35,9 @@
         <label>Address check</label>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
         <comment><![CDATA[If you use a different address validation service, only leave the one you want to use activated.]]></comment>
+        <depends>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+        </depends>
         <field id="enable_postcode_check" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
             <label>Use postcode check</label>
             <comment><![CDATA[Contact your PostNL account manager to activate adrescheck. Note: Adrescheck only works if the plugin is in live mode.]]></comment>

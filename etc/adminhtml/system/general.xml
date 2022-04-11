@@ -84,6 +84,10 @@
                     <field id="modus">1</field>
                 </depends>
             </field>
+            <field id="validate_api_credentials" translate="label comment" type="button" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <comment><![CDATA[Please save your configuration before validating your API Credentials.]]></comment>
+                <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Validate\ApiCredentials</frontend_model>
+            </field>
             <!--Test Fields-->
             <field id="customer_number_test" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Customer number test mode</label>
@@ -163,6 +167,12 @@
                 <label>City</label>
                 <validate>required-entry</validate>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/city</config_path>
+            </field>
+            <field id="country" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Country</label>
+                <validate>required-entry</validate>
+                <source_model>TIG\PostNL\Config\Source\General\Country</source_model>
+                <config_path>tig_postnl/generalconfiguration_shipping_address/country</config_path>
             </field>
         </group>
 

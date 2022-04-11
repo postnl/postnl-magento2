@@ -50,6 +50,7 @@
             <config_path>tig_postnl/post_offices/pakjegemak_active</config_path>
             <depends>
                 <field id="shippingoptions_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
             </depends>
         </field>
 
@@ -60,6 +61,7 @@
             <config_path>tig_postnl/post_offices/default_pakjegemak_option</config_path>
             <depends>
                 <field id="pakjegemak_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
             </depends>
         </field>
 
@@ -80,6 +82,18 @@
             <config_path>tig_postnl/post_offices/default_pakjegemak_be_option</config_path>
             <depends>
                 <field id="pakjegemak_be_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+            </depends>
+        </field>
+
+        <field id="default_pakjegemak_be_domestic_option" translate="label" type="select" sortOrder="130" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Post office delivery Belgium</label>
+            <comment><![CDATA[Select the default product option for postoffice delivery shipments in Belgium.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakBeDomesticOptions</source_model>
+            <config_path>tig_postnl/post_offices/default_pakjegemak_be_domestic_option</config_path>
+            <depends>
+                <field id="pakjegemak_be_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">BE</field>
             </depends>
         </field>
 

@@ -39,6 +39,7 @@ use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipment\PriorityCountries;
+use TIG\PostNL\Service\Validation\CountryShipping;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 
 // @codingStandardsIgnoreFile
@@ -92,6 +93,9 @@ class ProductInfo
     /** @var ProductOptionsFinder */
     private $productOptionsFinder;
 
+    /** @var CountryShipping */
+    private $countryShipping;
+
     /** @var QuoteInterface */
     private $quote;
     /**
@@ -102,15 +106,18 @@ class ProductInfo
     /**
      * @param ProductOptionsConfiguration $productOptionsConfiguration
      * @param ProductOptionsFinder        $productOptionsFinder
+     * @param CountryShipping             $countryShipping
      * @param QuoteInterface              $quote
      */
     public function __construct(
         ProductOptionsConfiguration $productOptionsConfiguration,
         ProductOptionsFinder $productOptionsFinder,
+        CountryShipping $countryShipping,
         QuoteInterface $quote
     ) {
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->productOptionsFinder        = $productOptionsFinder;
+        $this->countryShipping             = $countryShipping;
         $this->quote                       = $quote;
     }
 
@@ -289,9 +296,13 @@ class ProductInfo
 
         $this->type = static::SHIPMENT_TYPE_PG;
 
-        if ($country === 'BE') {
+        if ($this->countryShipping->isShippingNLtoBE($country)) {
             $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakBeProductOption();
+            return;
+        }
 
+        if ($this->countryShipping->isShippingBEDomestic($country)) {
+            $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakBeDomesticProductOption();
             return;
         }
 
@@ -337,13 +348,18 @@ class ProductInfo
     private function setDefaultProductOption($country)
     {
         $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
-        if ($country == 'BE') {
+
+        if ($this->countryShipping->isShippingNLtoBE($country)) {
             $this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
+        }
+
+        if ($this->countryShipping->isShippingBEDomestic($country)) {
+            $this->code = $this->productOptionsConfiguration->getDefaultBeDomesticProductOption();
         }
 
         $this->type = static::SHIPMENT_TYPE_DAYTIME;
 
-        if ($country != 'NL') {
+        if ($country !== 'NL' && $country !== 'BE') {
             return;
         }
 

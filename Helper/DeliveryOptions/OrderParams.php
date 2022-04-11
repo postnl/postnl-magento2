@@ -221,6 +221,7 @@ class OrderParams
             'fee'                          => $this->feeCalculator->get($params) + $this->feeCalculator->statedAddressOnlyFee($params),
             'product_code'                 => $productInfo['code'],
             'stated_address_only'          => isset($params['stated_address_only']) ? $params['stated_address_only'] : false,
+            'country'                      => $params['country']
         ];
     }
 
@@ -287,7 +288,7 @@ class OrderParams
     /**
      * @param $params
      *
-     * @return bool
+     * @return array|bool
      * @throws PostnlException
      */
     private function addExtraToAddress($params)
@@ -300,7 +301,9 @@ class OrderParams
             $params['customerData'] = $params['address'];
         }
 
-        $params['address']['Name'] = isset($params['name']) ? $params['name'] : '';
+        if (is_array($params['address'])) {
+            $params['address']['Name'] = isset($params['name']) ? $params['name'] : '';
+        }
 
         if ($params['type'] == ProductInfo::TYPE_PICKUP && !isset($params['customerData'])) {
             throw new PostnlException(

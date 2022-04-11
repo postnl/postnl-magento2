@@ -39,6 +39,7 @@
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
         <depends>
             <field id="shippingoptions_active">1</field>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
         </depends>
 
         <field id="letterbox_package_active" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
