@@ -172,9 +172,7 @@ class Fpdi extends \setasign\Fpdi\Fpdi
      */
     public function concatPdf($pdfToConcat, $size = Fpdi::PAGE_SIZE_A6)
     {
-        $filename = $this->file->save($pdfToConcat->Output('S'));
-
-        $pages = $this->setSourceFile($filename);
+        $pages = $pdfToConcat->PageNo();
 
         for ($page = 1; $page <= $pages; $page++) {
             $this->AddPage('P', $size);
@@ -182,6 +180,7 @@ class Fpdi extends \setasign\Fpdi\Fpdi
             $this->useTemplate($pageId);
         }
 
+        $filename = $this->file->save($pdfToConcat->Output('S'));
         $this->file->cleanup();
     }
 }
