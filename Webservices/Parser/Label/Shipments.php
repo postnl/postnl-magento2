@@ -141,7 +141,7 @@ class Shipments
             'Street'      => $streetData['street'][0],
             'HouseNr'     => $houseNr,
             'HouseNrExt'  => $houseNrExt,
-            'Zipcode'     => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode())),
+            'Zipcode'     => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode() ?? '')),
             'City'        => $shippingAddress->getCity(),
             'Region'      => $shippingAddress->getRegion(),
             'Countrycode' => $shippingAddress->getCountryId(),

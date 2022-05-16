@@ -204,7 +204,7 @@ abstract class AbstractTracking extends AbstractHelper
         $params = [
             'B' => $trackingNumber,
             'D' => $address->getCountryId(),
-            'P' => str_replace(' ', '', $address->getPostcode()),
+            'P' => str_replace(' ', '', $address->getPostcode() ?? ''),
             'T' => $type,
             'L' => $language
         ];
