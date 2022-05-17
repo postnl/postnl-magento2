@@ -36,7 +36,7 @@ use Magento\Backend\App\Action\Context;
 
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
-use TIG\PostNL\Controller\AdminHtml\PdfDownload as GetPdf;
+use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
 use TIG\PostNL\Helper\Tracking\Track;
 use \Magento\Sales\Model\Order\Shipment;

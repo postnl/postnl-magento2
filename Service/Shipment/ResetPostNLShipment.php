@@ -61,6 +61,11 @@ class ResetPostNLShipment
     private $shipmentRepository;
 
     /**
+     * @var ShipmentService
+     */
+    private $shipmentService;
+
+    /**
      * @param DeleteLabel                 $labelDeleteHandler
      * @param DeleteBarcode               $barcodeDeleteHandler
      * @param DeleteTrack                 $trackDeleteHandler
