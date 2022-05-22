@@ -64,7 +64,7 @@ class Log extends Logger
      *
      * @return bool
      */
-    public function addRecord($level, $message, array $context = [])
+    public function addRecord(int $level, string $message, array $context = []): bool
     {
         if (!$this->logConfig->canLog($level)) {
             return false;
