@@ -110,7 +110,7 @@ class DeepLink
         $params = [
             'B=' . $shipment->getMainBarcode(),
             'D=' . $address->getCountryId(),
-            'P=' . str_replace(' ', '', $address->getPostcode()),
+            'P=' . str_replace(' ', '', (string)$address->getPostcode()),
             'T=' . 'B', // Business for backend, which will retuns the Mijn PostNL link.
         ];
 
