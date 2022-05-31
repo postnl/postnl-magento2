@@ -174,7 +174,7 @@ abstract class GenerateAbstract
         }
 
         if (!is_object($response) || !isset($responseShipments->ResponseShipment)) {
-            throw new PostNLException(sprintf('Invalid generateLabel response: %1', var_export($response, true)));
+            throw new PostNLException(sprintf('Invalid generateLabel response: %s', var_export($response, true)));
         }
 
         return $responseShipments->ResponseShipment;

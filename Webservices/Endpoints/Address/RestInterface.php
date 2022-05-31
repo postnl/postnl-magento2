@@ -46,7 +46,7 @@ interface RestInterface
     /**
      * @param array $data
      *
-     * @return array
+     * @return void
      */
     public function updateRequestData(array $data);
 

@@ -91,7 +91,7 @@ class Factory
      * @param $type
      * @param $value
      *
-     * @return bool
+     * @return bool|null
      */
     private function callValidator($type, $value)
     {
@@ -114,6 +114,7 @@ class Factory
             case 'duplicate-import':
                 return $this->validators['duplicateImport']->validate($value);
         }
+        return null;
     }
 
     /**
