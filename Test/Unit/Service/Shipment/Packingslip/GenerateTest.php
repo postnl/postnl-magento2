@@ -31,6 +31,8 @@
  */
 namespace TIG\PostNL\Test\Unit\Service\Shipment\Packingslip;
 
+use setasign\Fpdi\PdfParser\StreamReader;
+use setasign\Fpdi\Tcpdf\Fpdi;
 use TIG\PostNL\Service\Shipment\Packingslip\Generate;
 use TIG\PostNL\Test\TestCase;
 
@@ -64,13 +66,17 @@ class GenerateTest extends TestCase
     public function testAddLabelToPdf($pdfFiles)
     {
         $instance = $this->getInstance();
-        $pdf = new \Zend_Pdf();
+        $pdf = new Fpdi();
 
         foreach ($pdfFiles as $file) {
             $decodedPdfFile = base64_decode($file);
             $pdf = $this->invokeArgs('addLabelToPdf', [$decodedPdfFile, $pdf], $instance);
         }
 
-        $this->assertCount(count($pdfFiles), $pdf->pages);
+        $pdfFinal = new Fpdi();
+        $pdfFinalReader = StreamReader::createByString($pdf->Output());
+        $count = $pdfFinal->setSourceFile($pdfFinalReader);
+
+        $this->assertCount(count($pdfFiles), $count);
     }
 }
