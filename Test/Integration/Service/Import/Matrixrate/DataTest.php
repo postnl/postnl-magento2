@@ -46,7 +46,7 @@ class DataTest extends TestCase
      */
     private $directory;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

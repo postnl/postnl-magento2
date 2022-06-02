@@ -110,6 +110,6 @@ class TablerateTest extends TestCase
         $instance = $this->getInstance(['storeManager' => $storeManagerMock, 'csv' => $csv]);
         $result = $this->invokeArgs('getCsvData', [1, 'package_value'], $instance);
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 }

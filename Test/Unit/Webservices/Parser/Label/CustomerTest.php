@@ -42,7 +42,7 @@ class CustomerTest extends TestCase
     {
         $result = $this->getInstance()->get();
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertArrayHasKey('CollectionLocation', $result);
         $this->assertArrayHasKey('Address', $result);
     }

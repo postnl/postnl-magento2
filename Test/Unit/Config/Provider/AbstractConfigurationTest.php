@@ -46,13 +46,13 @@ use \PHPUnit\Framework\MockObject\Stub\ConsecutiveCalls;
 abstract class AbstractConfigurationTest extends TestCase
 {
     /**
-     * @var ScopeConfigInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ScopeConfigInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $scopeConfigMock;
 
     protected function initScopeConfigMock()
     {
-        $this->scopeConfigMock = $this->getMock(ScopeConfigInterface::class);
+        $this->scopeConfigMock = $this->getFakeMock(ScopeConfigInterface::class)->getMock();
     }
 
     /**
@@ -97,17 +97,11 @@ abstract class AbstractConfigurationTest extends TestCase
      */
     protected function setXpathConsecutive($xpaths = [], $returns = [])
     {
+        $this->assertEquals(count($xpaths), count($returns), "setXPath needs returns and paths to be of equal length");
+
         $getValueExpects = $this->scopeConfigMock->expects($this->any());
         $getValueExpects->method('getValue');
-        $getValueExpects->withConsecutive($this->onConsecutiveCalls($xpaths));
-
-        $class = ConsecutiveCalls::class;
-        if (class_exists('PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls')) {
-            $class = '\PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls';
-        }
-
-        $getValueExpects->will(
-            new $class($returns)
-        );
+        $getValueExpects->withConsecutive(...$xpaths);
+        $getValueExpects->willReturnOnConsecutiveCalls(...$returns);
     }
 }

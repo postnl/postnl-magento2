@@ -64,7 +64,7 @@ class Generate
             $pdf = $this->addLabelToPdf($label, $pdf);
         }
 
-        return $pdf->Output();
+        return $pdf->Output('S');
     }
 
     /**
@@ -75,10 +75,11 @@ class Generate
      */
     private function addLabelToPdf($label, $pdf)
     {
-        $stream = StreamReader::createByString($label);
-
         try {
+            $stream = StreamReader::createByString($label);
             $pageCount = $pdf->setSourceFile($stream);
+        } catch(PdfParserException $parserException) {
+            $this->logger->error('[Service\Shipment\PackingSlip\Generate] Error while parsing sourcefile: ' . $parserException->getMessage());
         } catch (PdfReaderException $readerException) {
             $this->logger->error('[Service\Shipment\PackingSlip\Generate] Error while loading sourcefile: ' . $readerException->getMessage());
             return $pdf;

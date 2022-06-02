@@ -58,7 +58,7 @@ class PostNLTest extends TestCase
      */
     private $calculator;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -187,6 +187,8 @@ class PostNLTest extends TestCase
 
         $result = $instance->collectRates($this->request);
 
+        $this->assertNotFalse($result);
+
         $rate = $result->getCheapestRate();
         $this->assertEquals($expected, $rate->getData('price'));
     }
@@ -207,6 +209,7 @@ class PostNLTest extends TestCase
 
         $rates = $result->getAllRates();
         $rate = array_shift($rates);
+
         $this->assertEquals(123123, $rate->getData('price'));
         $this->assertEquals(123123, $rate->getData('cost'));
     }

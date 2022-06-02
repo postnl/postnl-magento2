@@ -59,7 +59,7 @@ class FirstDeliveryDateTest extends TestCase
         $call = $endpoint->method('call');
         $call->willReturn((object)['DeliveryDate' => '2016-11-19']);
 
-        $shippingConfig = $this->getFakeMock(\ TIG\PostNL\Config\Provider\ShippingOptions::class, true);
+        $shippingConfig = $this->getFakeMock(\TIG\PostNL\Config\Provider\ShippingOptions::class, true);
         $isDeliverydaysActive = $shippingConfig->method('isDeliverydaysActive');
         $isDeliverydaysActive->willReturn(true);
 

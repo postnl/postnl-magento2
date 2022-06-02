@@ -142,7 +142,7 @@ abstract class LabelAbstract extends Action
             return;
         }
 
-        if (strlen($packingslip) <= 0) {
+        if (strlen((string)$packingslip) === 0) {
             return;
         }
 

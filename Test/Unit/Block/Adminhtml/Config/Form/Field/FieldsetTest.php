@@ -82,6 +82,6 @@ class FieldsetTest extends TestCase
 
         $instance = $this->getInstance(['context' => $contextMock]);
         $result   = $this->invokeArgs('_getFrontendClass', [$elementMock], $instance);
-        $this->assertContains($expected, $result);
+        $this->assertStringContainsString($expected, $result);
     }
 }
