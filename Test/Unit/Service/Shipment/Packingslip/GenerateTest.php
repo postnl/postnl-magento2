@@ -31,8 +31,8 @@
  */
 namespace TIG\PostNL\Test\Unit\Service\Shipment\Packingslip;
 
+use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\PdfParser\StreamReader;
-use setasign\Fpdi\Tcpdf\Fpdi;
 use TIG\PostNL\Service\Shipment\Packingslip\Generate;
 use TIG\PostNL\Test\TestCase;
 
@@ -55,7 +55,7 @@ class GenerateTest extends TestCase
 
         $instance = $this->getInstance();
         $result = $instance->run($decodedPdfFiles);
-        $this->assertInternalType('string', $result);
+        $this->assertIsString($result);
     }
 
     /**
@@ -74,9 +74,9 @@ class GenerateTest extends TestCase
         }
 
         $pdfFinal = new Fpdi();
-        $pdfFinalReader = StreamReader::createByString($pdf->Output());
+        $pdfFinalReader = StreamReader::createByString($pdf->Output('S'));
         $count = $pdfFinal->setSourceFile($pdfFinalReader);
 
-        $this->assertCount(count($pdfFiles), $count);
+        $this->assertCount($count, $pdfFiles);
     }
 }

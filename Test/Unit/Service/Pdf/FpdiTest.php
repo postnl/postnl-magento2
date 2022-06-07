@@ -34,7 +34,7 @@ namespace TIG\PostNL\Test\Unit\Service\Pdf;
 use TIG\PostNL\Service\Pdf\Fpdi;
 use TIG\PostNL\Test\TestCase;
 
-class GenerateTest extends TestCase
+class FpdiTest extends TestCase
 {
     public $instanceClass = Fpdi::class;
 

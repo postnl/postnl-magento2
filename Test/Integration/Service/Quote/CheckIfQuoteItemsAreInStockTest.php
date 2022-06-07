@@ -52,7 +52,7 @@ class CheckIfQuoteItemsAreInStockTest extends TestCase
 
     public $instanceClass = CheckIfQuoteItemsAreInStock::class;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

@@ -117,10 +117,9 @@ class GlobalpackTest extends AbstractConfigurationTest
     {
         $instance = $this->getInstance();
         if (!is_null($hsCheck)) {
-            $this->setXpathConsecutive(
-                [
-                Globalpack::XPATH_USE_HS_TARIFF,
-                $xpath
+            $this->setXpathConsecutive([
+                [Globalpack::XPATH_USE_HS_TARIFF],
+                [$xpath]
             ], [$hsCheck, $value]);
         }
 

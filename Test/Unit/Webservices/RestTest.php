@@ -45,39 +45,40 @@ class RestTest extends TestCase
     protected $instanceClass = Rest::class;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $zendClient;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $accountConfiguration;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $defaultConfiguration;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $handler;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $endpoint;
 
-    public function setUp()
+    public function setUp() : void
     {
+        parent::setup();
+
         $this->zendClient = $this->getMock(ZendClient::class);
         $this->accountConfiguration = $this->getFakeMock(AccountConfiguration::class, true);
         $this->defaultConfiguration = $this->getFakeMock(DefaultConfiguration::class, true);
         $this->handler = $this->getFakeMock(PostcodecheckHandler::class, true);
         $this->endpoint = $this->getFakeMock(Postalcode::class)->disableOriginalConstructor()->getMock();
 
-        return parent::setup();
     }
 
     /**

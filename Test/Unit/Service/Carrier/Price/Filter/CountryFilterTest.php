@@ -45,7 +45,7 @@ class CountryFilterTest extends TestCase
      */
     private $input = [];
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

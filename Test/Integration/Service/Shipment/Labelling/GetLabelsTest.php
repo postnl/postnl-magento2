@@ -63,7 +63,7 @@ class GetLabelsTest extends TestCase
 
         $result = $instance->get($shipment->getShipmentId());
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertEquals('random label content', base64_decode($result[0]->getLabel()));
     }
 
@@ -88,7 +88,7 @@ class GetLabelsTest extends TestCase
 
         $result = $instance->get($shipment->getShipmentId());
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertEquals('random label content', base64_decode($result[0]->getLabel()));
 
         $label = $this->getLabel($shipment);
@@ -96,7 +96,7 @@ class GetLabelsTest extends TestCase
 
         $result = $instance->get($shipment->getShipmentId());
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertEquals('random label content', base64_decode($result[0]->getLabel()));
     }
 
@@ -130,7 +130,7 @@ class GetLabelsTest extends TestCase
      * @param $shipment
      * @param $times
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getLabelWithConfirmMock($shipment,$times)
     {
@@ -154,7 +154,7 @@ class GetLabelsTest extends TestCase
     /**
      * @param \TIG\PostNL\Model\Shipment $shipment
      *
-     * @return \PHPUnit_Framework_MockObject_MockBuilder|\PHPUnit_Framework_MockObject_MockObject|\TIG\PostNL\Model\ShipmentLabel
+     * @return \PHPUnit\Framework\MockObject\MockBuilder|\PHPUnit\Framework\MockObject\MockObject|\TIG\PostNL\Model\ShipmentLabel
      */
     private function getLabel($shipment)
     {

@@ -3,6 +3,8 @@
  * Copyright © 2013-2017 Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
+use Magento\Framework\Exception\LocalizedException;
 use Magento\TestFramework\Helper\Bootstrap;
 
 require __DIR__.'/../default_rollback.php';
@@ -67,23 +69,29 @@ $store = Magento\TestFramework\Helper\Bootstrap::getObjectManager()
     ->get(\Magento\Store\Model\StoreManagerInterface::class)
     ->getStore();
 
-/** @var \Magento\Quote\Model\Quote $quote */
-$quote = Bootstrap::getObjectManager()->create(\Magento\Quote\Model\Quote::class);
-$quote->setCustomerIsGuest(true)
-    ->setStoreId($store->getId())
-    ->setReservedOrderId('notinstock01')
-    ->setBillingAddress($billingAddress)
-    ->setShippingAddress($shippingAddress)
-    ->addProduct($product);
-$quote->getPayment()->setMethod('checkmo');
-$quote->setIsMultiShipping('1');
-$quote->collectTotals();
-$quote->save();
+$couldCreateQuote = false;
+try {
+    /** @var \Magento\Quote\Model\Quote $quote */
+    $quote = Bootstrap::getObjectManager()->create(\Magento\Quote\Model\Quote::class);
+    $quote->setCustomerIsGuest(true)
+          ->setStoreId($store->getId())
+          ->setReservedOrderId('notinstock01')
+          ->setBillingAddress($billingAddress)
+          ->setShippingAddress($shippingAddress)
+          ->addProduct($product);
+    $quote->getPayment()->setMethod('checkmo');
+    $quote->setIsMultiShipping('1');
+    $quote->collectTotals();
+    $quote->save();
 
-/** @var \Magento\Quote\Model\QuoteIdMask $quoteIdMask */
-$quoteIdMask = Bootstrap::getObjectManager()
-    ->create(\Magento\Quote\Model\QuoteIdMaskFactory::class)
-    ->create();
-$quoteIdMask->setQuoteId($quote->getId());
-$quoteIdMask->setDataChanges(true);
-$quoteIdMask->save();
+    /** @var \Magento\Quote\Model\QuoteIdMask $quoteIdMask */
+    $quoteIdMask = Bootstrap::getObjectManager()
+                            ->create(\Magento\Quote\Model\QuoteIdMaskFactory::class)
+                            ->create();
+    $quoteIdMask->setQuoteId($quote->getId());
+    $quoteIdMask->setDataChanges(true);
+    $quoteIdMask->save();
+    $couldCreateQuote = true;
+}catch (LocalizedException $exception){
+    $couldCreateQuote = false;
+}

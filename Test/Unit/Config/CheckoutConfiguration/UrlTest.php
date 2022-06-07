@@ -46,30 +46,21 @@ class UrlTest extends TestCase
         $urlBuilder = $this->getMock(UrlInterface::class);
         $builderExpects = $urlBuilder->expects($this->any());
         $builderExpects->method('getUrl');
-        $builderExpects->withConsecutive(
-            $this->onConsecutiveCalls([
-                'postnl/deliveryoptions/timeframes',
-                'postnl/deliveryoptions/locations',
-                'postnl/deliveryoptions/save',
-                'postnl/pakjegemak/address',
-                'postnl/address/postcode',
-            ])
-        );
+        $builderExpects->withConsecutive(...[
+            ['postnl/deliveryoptions/timeframes'],
+            ['postnl/deliveryoptions/locations'],
+            ['postnl/deliveryoptions/save'],
+            ['postnl/pakjegemak/address'],
+            ['postnl/address/postcode'],
+        ]);
 
-        $class = ConsecutiveCalls::class;
-        if (class_exists('PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls')) {
-            $class = '\PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls';
-        }
-
-        $builderExpects->will(
-            new $class([
-                'timeframesurl',
-                'locationsurl',
-                'saveurl',
-                'pakjegemakurl',
-                'postcodecheckurl'
-            ])
-        );
+        $builderExpects->willReturnOnConsecutiveCalls(...[
+            'timeframesurl',
+            'locationsurl',
+            'saveurl',
+            'pakjegemakurl',
+            'postcodecheckurl'
+        ]);
 
         $instance = $this->getInstance([
             'urlBuilder' => $urlBuilder

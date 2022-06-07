@@ -40,14 +40,14 @@ class MassActionTest extends TestCase
     public $instanceClass = MassAction::class;
 
     /**
-     * @var ContextInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ContextInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $contextMock;
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

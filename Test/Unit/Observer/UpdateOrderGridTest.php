@@ -65,7 +65,7 @@ class UpdateOrderGridTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getOrderRepository()
     {
@@ -85,7 +85,7 @@ class UpdateOrderGridTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getGridInterface()
     {

@@ -38,12 +38,10 @@ class BarcodeTest extends TestCase
 {
     public $instanceClass = Barcode::class;
 
-    /**
-     * @expectedException \TIG\PostNL\Exception
-     * @expectedExceptionMessage Please provide the productcode first by calling setProductCode
-     */
     public function testShouldThrowAnExceptionWhenNoProductCodeIsset()
     {
+        $this->expectException(\TIG\PostNL\Exception::class);
+        $this->expectExceptionMessage("Please provide the productcode first by calling setProductCode");
         /** @var Barcode $instance */
         $this->getInstance()->call();
     }

@@ -47,7 +47,7 @@ class CreateShipmentTest extends TestCase
         $this->setProperty('errors', ['some errors', 'also an error'], $instance);
 
         $result = $instance->getErrors();
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertCount(2, $result);
     }
 
@@ -211,7 +211,7 @@ class CreateShipmentTest extends TestCase
      */
     public function testHandleExceptionForPossibleSoapErrors($errors, $message, $expected)
     {
-        $exceptionMockBuilder = $this->getMockBuilder(\Exception::class)->setConstructorArgs([$message]);
+        $exceptionMockBuilder = $this->getMockBuilder(\Exception::class)->setConstructorArgs([(string)$message]);
 
         if (null !== $errors) {
             $exceptionMockBuilder->setMethods(['getErrors']);

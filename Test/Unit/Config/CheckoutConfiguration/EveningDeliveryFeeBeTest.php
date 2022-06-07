@@ -35,7 +35,7 @@ use TIG\PostNL\Config\CheckoutConfiguration\EveningDeliveryBeFee;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Test\TestCase;
 
-class EveningDeliveryBeFeeTest extends TestCase
+class EveningDeliveryFeeBeTest extends TestCase
 {
     public $instanceClass = EveningDeliveryBeFee::class;
 

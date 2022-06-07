@@ -40,7 +40,7 @@ class ValidAddressTest extends TestCase
     public $instanceClass = ValidAddress::class;
 
     /**
-     * @var AddressConfiguration|\PHPUnit_Framework_MockObject_MockObject
+     * @var AddressConfiguration|\PHPUnit\Framework\MockObject\MockObject
      */
     private $addressMock;
 
@@ -49,7 +49,7 @@ class ValidAddressTest extends TestCase
      */
     private $instance;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

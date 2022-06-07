@@ -52,7 +52,7 @@ class CheckIfQuoteItemsCanBackorderTest extends TestCase
 
     public $instanceClass = CheckIfQuoteItemsCanBackorder::class;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

@@ -41,14 +41,14 @@ class DownloadPdfActionTest extends TestCase
     public $instanceClass = DownloadPdfAction::class;
 
     /**
-     * @var Context|\PHPUnit_Framework_MockObject_MockObject
+     * @var Context|\PHPUnit\Framework\MockObject\MockObject
      */
     private $contextMock;
 
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -87,14 +87,14 @@ class DownloadPdfActionTest extends TestCase
     {
         $this->prepareContextMock();
 
-        /** @var UrlInterface|\PHPUnit_Framework_MockObject_MockObject $urlBuilderMock */
+        /** @var UrlInterface|\PHPUnit\Framework\MockObject\MockObject $urlBuilderMock */
         $urlBuilderMock = $this->contextMock->getUrlBuilder();
         $urlBuilderMock->expects($this->once())->method('getUrl')->with($path, [])->willReturn($returnUrl);
 
         $instance = $this->getInstance();
         $result = $instance->$method();
 
-        $this->assertInternalType('string', $result);
+        $this->assertIsString($result);
         $this->assertEquals($returnUrl, $result);
     }
 
