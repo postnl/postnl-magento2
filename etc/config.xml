@@ -52,6 +52,10 @@
                 <modus>0</modus>
             </generalconfiguration_extension_status>
 
+            <generalconfiguration_shipping_address>
+                <country>NL</country>
+            </generalconfiguration_shipping_address>
+
             <developer_settings>
                 <types>300,400,500,550,600</types>
             </developer_settings>
