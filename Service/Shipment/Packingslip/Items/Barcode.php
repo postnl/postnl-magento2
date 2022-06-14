@@ -116,7 +116,7 @@ class Barcode implements ItemsInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function add($packingSlip, $shipment)
     {
@@ -132,7 +132,7 @@ class Barcode implements ItemsInterface
         $pdf = $this->loadPdfAndAddBarcode($packingSlip);
 
         $this->cleanup();
-        return $pdf->Output();
+        return $pdf->Output('S');
     }
 
     /**

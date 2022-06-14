@@ -36,10 +36,10 @@ use \Magento\Sales\Api\Data\ShipmentInterface;
 interface ItemsInterface
 {
     /**
-     * @param \Zend_Pdf|string  $packingSlip
+     * @param string  $packingSlip
      * @param ShipmentInterface $shipment
      *
-     * @return \Zend_Pdf
+     * @return string
      */
     public function add($packingSlip, $shipment);
 }
