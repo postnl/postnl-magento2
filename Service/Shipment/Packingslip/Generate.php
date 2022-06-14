@@ -75,6 +75,8 @@ class Generate
      */
     private function addLabelToPdf($label, $pdf)
     {
+        $pageCount = 0;
+
         try {
             $stream = StreamReader::createByString($label);
             $pageCount = $pdf->setSourceFile($stream);
