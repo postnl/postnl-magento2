@@ -109,5 +109,7 @@ class ResetBEDefaultOption implements DataPatchInterface
                 );
             }
         });
+
+        return $this;
     }
 }

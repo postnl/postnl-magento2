@@ -43,12 +43,11 @@ class PrepareTest extends TestCase
 {
     public $instanceClass = Prepare::class;
 
-    /**
-     * @expectedException \TIG\PostNL\Exception
-     * @expectedExceptionMessage test is not an instance of TIG\PostNL\Service\Shipment\Label\Type\TypeInterface
-     */
     public function testRequiresTheRightInterface()
     {
+        $this->expectException(\TIG\PostNL\Exception::class);
+        $this->expectExceptionMessage("test is not an instance of TIG\PostNL\Service\Shipment\Label\Type\TypeInterface");
+
         $typeConverter = $this->getObject(Type::class);
 
         $validType = $this->getMock(TypeInterface::class);
@@ -133,7 +132,7 @@ class PrepareTest extends TestCase
     /**
      * @param $type
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getLabelMock($type)
     {

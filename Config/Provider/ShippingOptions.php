@@ -276,9 +276,7 @@ class ShippingOptions extends AbstractConfigProvider
      */
     public function canUseBeProducts()
     {
-        if ($this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_COUNTRY) === 'BE') {
-            return true;
-        }
+        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_COUNTRY) === 'BE';
     }
 }
 /**

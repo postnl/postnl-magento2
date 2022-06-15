@@ -60,7 +60,7 @@ class SearchResultsTest extends TestCase
     /**
      * @param null $searchCriteria
      *
-     * @return \PHPUnit_Framework_MockObject_MockBuilder|\PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockBuilder|\PHPUnit\Framework\MockObject\MockObject
      */
     private function getSearchResults($searchCriteria = null)
     {
@@ -83,7 +83,7 @@ class SearchResultsTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getSearchCriteria()
     {

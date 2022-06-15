@@ -121,7 +121,7 @@ class FeeCalculatorTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    private function addConfigOptions($configOptions, \PHPUnit_Framework_MockObject_MockObject $instance)
+    private function addConfigOptions($configOptions, \PHPUnit\Framework\MockObject\MockObject $instance)
     {
         foreach ($configOptions as $method => $value) {
             $expected = $instance->method($method);

@@ -275,30 +275,14 @@ class ShippingOptionsTest extends AbstractConfigurationTest
     }
 
     /**
-     * @dataProvider guaranteedProvider
+     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
      * @param $shippingActive
-     * @param $expected
      */
-    public function testIsGuaranteedDeliveryActive($shippingActive, $expected)
+    public function testIsGuaranteedDeliveryActive($value)
     {
         $instance = $this->getInstance();
 
-        $xpaths = [
-            [
-                ShippingOptions::XPATH_SHIPPING_OPTION_ACITVE,
-                ScopeInterface::SCOPE_STORE,
-                null
-            ],
-            [
-                ShippingOptions::XPATH_GUARANTEED_DELIVERY_ACTIVE,
-                ScopeInterface::SCOPE_STORE,
-                null
-            ]
-        ];
-
-        $this->setXpathConsecutive($xpaths, [$shippingActive, $expected]);
-
-        $this->assertEquals($expected, $instance->isGuaranteedDeliveryActive());
-
+        $this->setXpath(ShippingOptions::XPATH_GUARANTEED_DELIVERY_ACTIVE, $value);
+        $this->assertEquals($value, $instance->isGuaranteedDeliveryActive());
     }
 }

@@ -91,7 +91,7 @@ class CsvTest extends TestCase
         $instance = $this->getInstance(['filesystem' => $filesystemMock, 'fileParser' => $fileParserMock]);
         $result = $instance->getData('somefile.csv', 1, 'package_value');
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
 
         $this->assertArrayHasKey('columns', $result);
         $this->assertArrayHasKey('records', $result);

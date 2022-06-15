@@ -122,7 +122,7 @@ class Mail extends AbstractTracking
         try {
             $this->trackAndTraceEmail->sendMessage();
         } catch (MailException $exception) {
-            $this->logging->addCritical($exception->getLogMessage());
+            $this->logging->critical($exception->getLogMessage());
         }
     }
 
@@ -158,7 +158,7 @@ class Mail extends AbstractTracking
         $address = $shipment->getShippingAddress();
         $transport->addTo($address->getEmail(), $address->getFirstname() . ' ' . $address->getLastname());
         $transport = $this->addBccEmail($transport);
-        $this->logging->addInfo('Track And Trace email build for :' . $address->getEmail());
+        $this->logging->info('Track And Trace email build for :' . $address->getEmail());
         $this->trackAndTraceEmail = $transport->getTransport();
     }
     // @codingStandardsIgnoreEnd

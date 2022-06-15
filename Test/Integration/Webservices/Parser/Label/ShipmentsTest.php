@@ -74,7 +74,7 @@ class ShipmentsTest extends TestCase
 
         $result = $instance->get($postNLShipment, 1);
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
 
         $contacts = $result['Contacts']['Contact'];
         $address  = $result['Addresses']['Address'][0];
@@ -117,7 +117,7 @@ class ShipmentsTest extends TestCase
     /**
      * @param \TIG\PostNL\Model\Shipment $shipment
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getProductOptionsMock($shipment)
     {
@@ -131,7 +131,7 @@ class ShipmentsTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getAddressEnhancerMock()
     {
@@ -145,7 +145,7 @@ class ShipmentsTest extends TestCase
 
         $enhancerMock = $this->getFakeMock(AddressEnhancer::class, true);
         $enhancerMockExpects = $enhancerMock->expects($this->any());
-        $enhancerMockExpects->method('set');
+        $enhancerMockExpects->method('get');
         $enhancerMockExpects->willReturn($return);
 
         return $enhancerMock;

@@ -46,7 +46,7 @@ class TestCase extends BaseTestCase
      */
     protected $swappedClasses = [];
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -82,7 +82,7 @@ class TestCase extends BaseTestCase
     /**
      * @param $class
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function putMockInObjectManager($class)
     {
@@ -105,7 +105,7 @@ class TestCase extends BaseTestCase
      * @param      $endpoint
      * @param null $response
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function disableEndpoint($endpoint, $response = null)
     {
@@ -117,7 +117,7 @@ class TestCase extends BaseTestCase
         return $mock;
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         if (!count($this->swappedClasses)) {
             return;

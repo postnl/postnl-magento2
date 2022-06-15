@@ -104,7 +104,7 @@ class BarcodeHandlerTest extends TestCase
     /**
      * @param $callReturnValue
      *
-     * @return \PHPUnit_Framework_MockObject_MockBuilder|\PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockBuilder|\PHPUnit\Framework\MockObject\MockObject
      */
     protected function getBarcodeMock($callReturnValue)
     {

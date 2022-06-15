@@ -190,7 +190,7 @@ class Track extends AbstractTracking
      */
     private function addTrackingNumbersToShipment($shipment, $trackingNumbers)
     {
-        $this->logging->addDebug('Adding trackingnumbers to shipment_id : '. $shipment->getId(), $trackingNumbers);
+        $this->logging->debug('Adding trackingnumbers to shipment_id : '. $shipment->getId(), $trackingNumbers);
 
         $shipment = $this->resetTrackingKey($shipment);
         foreach ($trackingNumbers as $number) {
@@ -217,7 +217,7 @@ class Track extends AbstractTracking
     private function addReturnTrackingNumbersToShipment($postNLShipment)
     {
         $shipment = $postNLShipment->getShipment();
-        $this->logging->addDebug('Adding return trackingnumbers to shipment_id : '. $shipment->getId());
+        $this->logging->debug('Adding return trackingnumbers to shipment_id : '. $shipment->getId());
         $returnItems = $this->getList($postNLShipment);
 
         foreach ($returnItems as $item) {

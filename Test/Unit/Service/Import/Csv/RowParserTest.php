@@ -83,8 +83,8 @@ class RowParserTest extends TestCase
             $this->assertEquals($websiteId, $result['website_id']);
             $this->assertEquals($conditionName, $result['condition_name']);
 
-            $this->assertInternalType('float', $result['condition_value']);
-            $this->assertInternalType('float', $result['price']);
+            $this->assertIsFloat($result['condition_value']);
+            $this->assertIsFloat($result['price']);
 
             $this->assertArrayHasKey('dest_country_id', $result);
             $this->assertArrayHasKey('dest_region_id', $result);
@@ -277,7 +277,7 @@ class RowParserTest extends TestCase
         try {
             $result = $this->invokeArgs('getConditionValue', [$rowData, $rowCount, $conditionFullName], $instance);
 
-            $this->assertNotInternalType('string', $expected);
+            $this->assertIsNotString($expected);
             $this->assertEquals($expected, $result);
         } catch (Exception $exception) {
             $this->validateCaughtException($exception, $expected);
@@ -324,7 +324,7 @@ class RowParserTest extends TestCase
         try {
             $result = $this->invokeArgs('getPrice', [$rowData, $rowCount], $instance);
 
-            $this->assertNotInternalType('string', $expected);
+            $this->assertIsNotString($expected);
             $this->assertEquals($expected, $result);
         } catch (Exception $exception) {
             $this->validateCaughtException($exception, $expected);
@@ -345,7 +345,7 @@ class RowParserTest extends TestCase
 
         $exceptionMessage = $exception->getMessage();
 
-        $this->assertInternalType('string', $exceptionMessage);
+        $this->assertIsString($exceptionMessage);
         $this->assertEquals($expected, $exceptionMessage);
     }
 }

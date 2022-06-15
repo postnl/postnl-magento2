@@ -124,6 +124,6 @@ class TrackTest extends TestCase
 
         $result = $this->invokeArgs('generateTrackAndTraceUrl', [$address, $barcode, $type, $isReturn, $returnCountry], $instance);
 
-        $this->assertContains('B=123ABC&' . $expected, $result);
+        $this->assertStringContainsString('B=123ABC&' . $expected, $result);
     }
 }

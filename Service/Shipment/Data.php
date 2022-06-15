@@ -122,7 +122,7 @@ class Data
     {
         $deliveryDate = $shipment->getDeliveryDate();
         $postnlOrder  = $shipment->getPostNLOrder();
-        $shipmentType = $postnlOrder->getType();
+        $shipmentType = $postnlOrder ? $postnlOrder->getType() : '';
 
         if (!$deliveryDate) {
             $deliveryDate = $this->getDeliveryDateFromPostNLOrder($shipment);

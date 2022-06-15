@@ -78,6 +78,8 @@ class Exception extends PostNLException
     {
         $this->requestXml = $xml;
         $this->composeMessage();
+
+        return $this;
     }
 
     /**
@@ -90,6 +92,8 @@ class Exception extends PostNLException
     {
         $this->responseXml = $xml;
         $this->composeMessage();
+
+        return $this;
     }
 
     /**
@@ -143,8 +147,9 @@ class Exception extends PostNLException
 
     /**
      * @param $message
+     * @param $xml
      *
-     * @return string
+     * @return void
      */
     private function addXml($message, $xml)
     {

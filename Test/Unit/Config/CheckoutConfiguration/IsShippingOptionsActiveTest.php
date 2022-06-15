@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Test\Unit\Config\CheckoutConfiguration;
 
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject as MockObject;
 use TIG\PostNL\Config\CheckoutConfiguration\IsShippingOptionsActive;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
@@ -53,7 +53,7 @@ class IsShippingOptionsActiveTest extends TestCase
      */
     private $accountConfiguration;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

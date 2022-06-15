@@ -85,7 +85,7 @@ class MassPrintPackingslipTest extends TestCase
      * @param $id
      * @param $country
      *
-     * @return Shipment|\PHPUnit_Framework_MockObject_MockObject
+     * @return Shipment|\PHPUnit\Framework\MockObject\MockObject
      */
     private function getShipmentMock($id, $country)
     {
