@@ -147,6 +147,7 @@ class Tablerate extends AbstractDb
             $this->logger->critical($exception);
             throw new PostnlException(__('An error occurred while importing the table rates.'), 'POSTNL-0251');
         }
+        return $this;
     }
 
     /**

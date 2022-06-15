@@ -1,49 +1,27 @@
-sudo: required
-dist: trusty
-addons:
-  apt:
-    packages:
-    - mysql-server-5.6
-    - mysql-client-core-5.6
-    - mysql-client-5.6
-
-language: php
-
-env:
-  global:
-    - CODE_COVERAGE=false
-    - DI_COMPILE=false
-
+services:
+  - docker
 matrix:
-# PHP 7.2 is only supported in Magento 2.3.2
-# PHP 7.3 is only supported in Magento 2.3.3
   include:
-    - php: 7.2
-      env: MAGENTO_VERSION=2.3.3
-    - php: 7.3
-      env: MAGENTO_VERSION=2.3.4 # DI_COMPILE=true
-    - php: 7.3
-      env: MAGENTO_VERSION=2.3.5 CODE_COVERAGE=true
-
-before_script:
-  - export PATH=$PATH:$HOME/.composer/vendor/bin
-  - composer config -a -g http-basic.repo.magento.com $MAGENTO_USERNAME $MAGENTO_PASSWORD
-  - bash Test/Script/ManageDependencies.sh
-  - bash Test/Script/Setup.sh
+    - env: MAGENTO_VERSION=2.3.7 DB_VERSION=5.7 TESTS=unit
+    - env: MAGENTO_VERSION=2.4.3-p1 DB_VERSION=8 TESTS=unit
+    - env: MAGENTO_VERSION=2.4.4 DB_VERSION=8 TESTS=unit
+    - env: MAGENTO_VERSION=2.3.7 DB_VERSION=5.7 TESTS=integration
+    - env: MAGENTO_VERSION=2.4.3-p1 DB_VERSION=8 TESTS=integration
+    - env: MAGENTO_VERSION=2.4.4 DB_VERSION=8 TESTS=integration
 
 script:
-  - if [ $CODE_COVERAGE == false ] && [ $DI_COMPILE == true ]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
-  - grunt phpcs
-  - grunt lint
-  - grunt exec:phraseTest
-  - grunt exec:ciTests
+  - docker pull registry.tig.nl/tig-docker/magento:$MAGENTO_VERSION
+  - docker run --rm --link mysql:db --link elasticsearch:es --link ampq:ampq -v $(pwd):/code:ro -e DB_NAME=integration registry.tig.nl/tig-docker/magento:$MAGENTO_VERSION test-runner -vv -n -i $MAGENTO_VERSION -m $TESTS
+before_script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin registry.tig.nl
+  - docker run --rm -d --name mysql -e MYSQL_RANDOM_ROOT_PASSWORD=true -e MYSQL_USER=integration -e MYSQL_PASSWORD=integration -e MYSQL_DATABASE=integration mysql:$DB_VERSION
+  - docker run --rm -d --name ampq rabbitmq:3.8
+  - docker run --rm -d --name elasticsearch  -e "discovery.type=single-node" elasticsearch:7.9.3
 
-after_success:
-  - bash Test/Script/AfterSuccess.sh
+after_script:
+  - docker stop mysql elasticsearch ampq
 
 cache:
   directories:
   - node_modules
-  - $HOME/.download_cache
   - $HOME/.composer
-  - $HOME/.cache/composer

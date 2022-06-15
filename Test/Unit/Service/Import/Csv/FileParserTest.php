@@ -78,7 +78,7 @@ class FileParserTest extends TestCase
         $instance = $this->getInstance(['parserErrors' => $parserErrors]);
         $result = $instance->hasErrors();
 
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertEquals($expected, $result);
     }
 
@@ -93,7 +93,7 @@ class FileParserTest extends TestCase
 
         $result = $instance->getErrors();
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertCount(2, $result);
     }
 
@@ -102,7 +102,7 @@ class FileParserTest extends TestCase
         $instance = $this->getInstance();
         $result = $instance->getColumns();
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertCount(7, $result);
     }
 
@@ -157,13 +157,8 @@ class FileParserTest extends TestCase
 
         $readInterfaceMock = $this->getFakeMock(ReadInterface::class)->getMock();
 
-        $class = ConsecutiveCalls::class;
-        if (class_exists('PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls')) {
-            $class = '\PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls';
-        }
-
         $readInterfaceMock->expects($this->atLeastOnce())->method('readCsv')->will(
-            new $class($csvRows)
+            new ConsecutiveCalls($csvRows)
         );
 
         $instance = $this->getInstance(['rowParser' => $rowParser, 'parserErrors' => $parserErrors]);
@@ -177,7 +172,7 @@ class FileParserTest extends TestCase
             }
         }
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertCount($expectedErrors, $instance->getErrors());
         $this->assertEquals($expectedValidRows, $validRows);
     }
@@ -220,7 +215,7 @@ class FileParserTest extends TestCase
         $hasErrorResult = $instance->hasErrors();
 
         $this->assertEquals($hasErrorResult, $expectedHasError);
-        $this->assertInternalType('array', $parsedRowResult);
+        $this->assertIsArray($parsedRowResult);
         $this->assertCount($expectedResultCount, $parsedRowResult);
     }
 
@@ -353,7 +348,7 @@ class FileParserTest extends TestCase
 
         $exceptionMessage = $exception->getMessage();
 
-        $this->assertInternalType('string', $exceptionMessage);
+        $this->assertIsString($exceptionMessage);
         $this->assertEquals($expected, $exceptionMessage);
     }
 }

@@ -69,8 +69,9 @@ abstract class AbstractGrid extends Column
         return null;
     }
 
+
     /**
-     * @return array
+     * @return void
      */
     // @codingStandardsIgnoreLine
     protected function handleItems()

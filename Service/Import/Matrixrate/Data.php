@@ -190,9 +190,12 @@ class Data
      */
     private function deleteData()
     {
-        $this->matrixrateCollection->addFieldToFilter('website_id', $this->websiteId);
-        $this->matrixrateCollection->clear();
-        $this->matrixrateCollection->walk('delete');
+        $deleteWebsiteData = clone $this->matrixrateCollection;
+
+        $deleteWebsiteData->addFieldToFilter('website_id', $this->websiteId);
+        $deleteWebsiteData->clear();
+        $deleteWebsiteData->walk('delete');
+
         $this->importData = [];
     }
 

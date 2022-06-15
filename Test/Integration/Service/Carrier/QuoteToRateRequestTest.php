@@ -50,7 +50,7 @@ class QuoteToRateRequestTest extends TestCase
      */
     private $instance;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -69,7 +69,7 @@ class QuoteToRateRequestTest extends TestCase
     /**
      * @magentoDataFixture Magento/Checkout/_files/quote_with_items_saved.php
      */
-    public function test sets the right quantity()
+    public function testSetsTheRightQuantity()
     {
         $request = $this->instance->get();
 
@@ -79,7 +79,7 @@ class QuoteToRateRequestTest extends TestCase
     /**
      * @magentoDataFixture Magento/Checkout/_files/quote_with_items_saved.php
      */
-    public function test sets the right weight()
+    public function testSetsTheRightWeight()
     {
         /** @var \Magento\Quote\Model\Quote\Item $item */
         foreach ($this->quote->getAllItems() as $item) {
@@ -94,7 +94,7 @@ class QuoteToRateRequestTest extends TestCase
     /**
      * @magentoDataFixture Magento/Checkout/_files/quote_with_items_saved.php
      */
-    public function test it returns the right value()
+    public function testItReturnsTheRightValue()
     {
         /** @var \Magento\Quote\Model\Quote\Item $item */
         foreach ($this->quote->getAllItems() as $item) {
@@ -106,7 +106,7 @@ class QuoteToRateRequestTest extends TestCase
         $this->assertEquals(300, $request->getPackageValue());
     }
 
-    public function test uses the correct address data()
+    public function testUsesTheCorrectAddressData()
     {
         $address = $this->quote->getShippingAddress();
         $address->setStreet($street = 'Kabelweg 37');
@@ -124,7 +124,7 @@ class QuoteToRateRequestTest extends TestCase
         $this->assertEquals($country, $request->getDestCountryId());
     }
 
-    public function test request has the correct website id()
+    public function testRequestHasTheCorrectWebsiteId()
     {
         $store = $this->quote->getStore();
         $store->setWebsiteId(1);
@@ -134,7 +134,7 @@ class QuoteToRateRequestTest extends TestCase
         $this->assertEquals(1, $request->getWebsiteId());
     }
 
-    public function test request contains the correct subtotal()
+    public function testRequestContainsTheCorrectSubtotal()
     {
         $this->quote->setSubtotal(300);
 

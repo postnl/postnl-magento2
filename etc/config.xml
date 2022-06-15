@@ -47,10 +47,14 @@
         </carriers>
         <tig_postnl>
             <stability/>
-            <tested_magento_version>2.3.5 - 2.3.7-p2, 2.4.0 - 2.4.3-p1</tested_magento_version>
+            <tested_magento_version>2.3.5 - 2.3.7-p3, 2.4.0 - 2.4.4</tested_magento_version>
             <generalconfiguration_extension_status>
                 <modus>0</modus>
             </generalconfiguration_extension_status>
+
+            <generalconfiguration_shipping_address>
+                <country>NL</country>
+            </generalconfiguration_shipping_address>
 
             <developer_settings>
                 <types>300,400,500,550,600</types>

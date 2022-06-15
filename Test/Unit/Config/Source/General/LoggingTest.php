@@ -55,7 +55,7 @@ class LoggingTest extends TestCase
     public function testEqualToMonolog()
     {
         $postnlOptions  = $this->getProperty('levels');
-        $monoLogOptions = $this->getProperty('levels', $this->getObject(Monolog::class));
+        $monoLogOptions = $this->getProperty('levels', $this->getObject(Monolog::class, ['name' => 'PostNLTestLogger']));
 
         $this->assertEquals(
             $monoLogOptions, $postnlOptions,

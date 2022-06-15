@@ -33,10 +33,10 @@
 
                                 <ul style=" list-style:square; padding-left: 30px; ">
                                     <li style=" color: #868681; vertical-align: top;">
-                                        <b style="font-weight: normal; font-size: 14px; ">{{trans "Order"}} {{var order.getIncrementId()}}</b><br/>
-                                        {{var DateAndTime}}
+                                        <b style="font-weight: normal; font-size: 14px; ">{{trans "Order"}} {{var order.increment_id}}</b><br/>
+                                        {{var dateAndTime}}
                                     </li>
-                                    {{if postnlShipment.getPostNLOrder().getDeliveryDate()}}
+                                    {{if delivery_date}}
                                     <li style=" color: #868681; vertical-align: top;">
                                         <b style="font-weight: normal; font-size: 14px; ">{{trans "Expected Delivery"}}</b><br/>
                                         {{var delivery_date}}
@@ -55,10 +55,10 @@
                                         {{var street}}
                                     </li>
                                     <li style=" color: #868681; vertical-align: top;">
-                                        {{var shippingAddress.getCity()}} {{var shippingAddress.getPostcode()}}
+                                        {{var shippingAddress.city}} {{var shippingAddress.postcode}}
                                     </li>
                                     <li style=" color: #868681; vertical-align: top;">
-                                        {{var shippingAddress.getCountryId()}}
+                                        {{var shippingAddress.country_id}}
                                     </li>
                                 </ul>
 

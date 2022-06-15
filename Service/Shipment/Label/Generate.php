@@ -105,7 +105,7 @@ class Generate
             if (is_array($label)) {
                 return false;
             }
-            if (strtoupper($label->getType()) == ProductInfo::SHIPMENT_TYPE_GP) {
+            if (strtoupper((string)$label->getType()) == ProductInfo::SHIPMENT_TYPE_GP) {
                 $this->globalPackLabels[] = $label;
                 return false;
             }

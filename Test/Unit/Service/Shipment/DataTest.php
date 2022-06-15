@@ -43,13 +43,13 @@ class DataTest extends TestCase
     public $instanceClass = Data::class;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ShipmentInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|ShipmentInterface
      */
     private $shipmentMock;
 
     private $packingslipOptionsMock;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

@@ -135,7 +135,7 @@ class ExceptionHandler
     }
 
     /**
-     * @return Api\Exception
+     * @return void
      */
     private function prepareException(Client $client)
     {

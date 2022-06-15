@@ -50,22 +50,10 @@ class ConfigTest extends TestCase
         $this->assertArrayHasKey($this->moduleName, $modulesList);
     }
 
-    public function testTheModuleIsConfiguredAndEnabledInTheTestEnvironment()
+    public function testTheModuleIsConfiguredAndEnabled()
     {
         /** @var ModuleList $moduleList */
         $moduleList = $this->getObject(ModuleList::class);
-
-        $this->assertTrue($moduleList->has($this->moduleName));
-    }
-
-    public function testTheModuleIsConfiguredAndEnabledInTheRealEnvironment()
-    {
-        $dirList = $this->getObject(DirectoryList::class, ['root' => BP]);
-        $configReader = $this->getObject(DeploymentConfigReader::class, ['dirList' => $dirList]);
-        $deploymentConfig = $this->getObject(DeploymentConfig::class, ['reader' => $configReader]);
-
-        /** @var ModuleList $moduleList */
-        $moduleList = $this->getObject(ModuleList::class, ['config' => $deploymentConfig]);
 
         $this->assertTrue($moduleList->has($this->moduleName));
     }

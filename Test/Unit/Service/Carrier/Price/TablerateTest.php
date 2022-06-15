@@ -61,7 +61,7 @@ class TablerateTest extends TestCase
         $instance = $this->getInstance(['tablerateFactory' => $tablerateFactoryMock]);
         $result = $instance->getTableratePrice($rateRequestMock, false);
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertArrayHasKey('price', $result);
         $this->assertArrayHasKey('cost', $result);
     }

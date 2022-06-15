@@ -36,7 +36,7 @@ use TIG\PostNL\Service\Shipment\Label\Generate as LabelGenerate;
 use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
 use TIG\PostNL\Test\TestCase;
 
-class CreateShipmentsConfirmAndPrintShippingLabelsTest extends TestCase
+class PdfDownloadTest extends TestCase
 {
     protected $instanceClass = PdfDownload::class;
 
