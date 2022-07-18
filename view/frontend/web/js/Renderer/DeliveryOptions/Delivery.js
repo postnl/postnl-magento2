@@ -323,7 +323,7 @@ define([
 
         selectFirstDeliveryOption: function () {
             // Only select the first option if there is none defined
-            if (this.selectedOption() !== undefined && this.selectedOption() != null) {
+            if (this.selectedOption() !== undefined && this.selectedOption() != null || sessionStorage.postnlPickupOption) {
                 return;
             }
             var deliveryDays = this.deliverydays();
