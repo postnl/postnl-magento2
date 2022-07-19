@@ -63,7 +63,7 @@ class ProductOptionsTest extends TestCase
      */
     public function testReturnsTheCorrectData($type, $flat, $isIdCheck, $expected)
     {
-        /** @var ShipmentInterface|\PHPUnit_Framework_MockObject_MockObject$shipmentMock */
+        /** @var ShipmentInterface|\PHPUnit\Framework\MockObject\MockObject$shipmentMock */
         $shipmentMock = $this->getFakeMock(ShipmentInterface::class)->getMock();
         $shipmentMock->method('getShipmentType')->willReturn($type);
         $shipmentMock->method('isIDCheck')->willReturn($isIdCheck);

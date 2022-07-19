@@ -51,7 +51,7 @@ class MatrixrateTest extends TestCase
      */
     private $instance;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -77,15 +77,15 @@ class MatrixrateTest extends TestCase
         $lines  = explode("\n", $result);
         $header = array_shift($lines);
 
-        $this->assertContains('Country', $header);
-        $this->assertContains('Province/state', $header);
-        $this->assertContains('Zipcode', $header);
-        $this->assertContains('Weight (and higher)', $header);
-        $this->assertContains('Shipping price (and higher)', $header);
-        $this->assertContains('Amount (and higher)', $header);
-        $this->assertContains('Parcel type', $header);
-        $this->assertContains('price', $header);
-        $this->assertContains('Instructions', $header);
+        $this->assertStringContainsString('Country', $header);
+        $this->assertStringContainsString('Province/state', $header);
+        $this->assertStringContainsString('Zipcode', $header);
+        $this->assertStringContainsString('Weight (and higher)', $header);
+        $this->assertStringContainsString('Shipping price (and higher)', $header);
+        $this->assertStringContainsString('Amount (and higher)', $header);
+        $this->assertStringContainsString('Parcel type', $header);
+        $this->assertStringContainsString('price', $header);
+        $this->assertStringContainsString('Instructions', $header);
     }
 
     public function testHasTheCorrectSize()

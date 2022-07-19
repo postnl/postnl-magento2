@@ -115,7 +115,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
         if ($modus == 'live') {
             $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_API_BASE_URL, 'live');
         } else {
-            $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_TEST_API_BASE_URL, 'staging', null, $this->at(0));
+            $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_TEST_API_BASE_URL, 'staging');
         }
 
         $result = $instance->getModusApiBaseUrl();
@@ -144,7 +144,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
         if ($modus == 'live') {
             $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_API_ADDRESS_URL, 'live');
         } else {
-            $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_TEST_API_ADDRESS_URL, 'staging', null, $this->at(0));
+            $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_TEST_API_ADDRESS_URL, 'staging');
         }
 
         $result = $instance->getModusAddressApiUrl();

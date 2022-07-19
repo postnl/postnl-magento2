@@ -88,5 +88,7 @@ class UpdateDisableDeliveryDaysAttribute implements DataPatchInterface
         /** @var EavSetup $eavSetup */
         $eavSetup  = $this->eavSetupFactory->create(['setup' => $this->moduleDataSetup]);
         $eavSetup->updateAttribute(Product::ENTITY, 'postnl_disable_delivery_days', 'default_value', 0);
+
+        return $this;
     }
 }

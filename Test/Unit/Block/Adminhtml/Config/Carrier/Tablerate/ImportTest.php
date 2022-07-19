@@ -50,6 +50,6 @@ class ImportTest extends TestCase
 
         $result = $instance->getElementHtml();
 
-        $this->assertInternalType('string', $result);
+        $this->assertIsString($result);
     }
 }

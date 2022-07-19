@@ -81,10 +81,10 @@ class ShipmentTypeTest extends TestCase
 
         $result = $instance->render($productCode, $shipmentType);
 
-        $this->assertContains($expectedLabel, $result);
+        $this->assertStringContainsString($expectedLabel, $result);
 
         if ($expectedType) {
-            $this->assertContains($expectedType, $result);
+            $this->assertStringContainsString($expectedType, $result);
         }
     }
 }

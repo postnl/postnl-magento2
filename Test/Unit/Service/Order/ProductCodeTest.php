@@ -58,18 +58,18 @@ class ProductCodeTest extends TestCase
     const PRODUCT_OPTION_LETTERBOX_PACKAGE = '2928';
 
     /**
-     * @var ProductOptions|\PHPUnit_Framework_MockObject_MockObject
+     * @var ProductOptions|\PHPUnit\Framework\MockObject\MockObject
      */
     private $productOptionsMock;
 
     /**
-     * @var QuoteInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var QuoteInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $quoteInterfaceMock;
 
     public $instanceClass = ProductInfo::class;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

@@ -169,6 +169,8 @@ class Barcode extends AbstractEndpoint
     public function changeProductCode($productCode)
     {
         $this->productCode = $productCode;
+
+        return $this;
     }
 
     /**

@@ -54,7 +54,7 @@ class DownloadPdfActionTest extends TestCase
         $this->setProperty('_urlBuilder', $urlBuilderMock, $instance);
         $result = $instance->getConfirmAndPrintLabelsUrl();
 
-        $this->assertInternalType('string', $result);
+        $this->assertIsString($result);
         $this->assertEquals($urlResultMock, $result);
     }
 }

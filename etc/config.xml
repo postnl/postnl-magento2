@@ -47,10 +47,14 @@
         </carriers>
         <tig_postnl>
             <stability/>
-            <tested_magento_version>2.3.5 - 2.3.7-p2, 2.4.0 - 2.4.3-p1</tested_magento_version>
+            <tested_magento_version>2.3.5 - 2.3.7-p3, 2.4.0 - 2.4.4</tested_magento_version>
             <generalconfiguration_extension_status>
                 <modus>0</modus>
             </generalconfiguration_extension_status>
+
+            <generalconfiguration_shipping_address>
+                <country>NL</country>
+            </generalconfiguration_shipping_address>
 
             <developer_settings>
                 <types>300,400,500,550,600</types>
@@ -87,6 +91,7 @@
                 <default_be_option>4946</default_be_option>
                 <default_eps_option>4952</default_eps_option>
                 <default_delivery_stated_address>3385</default_delivery_stated_address>
+                <default_delivery_stated_address_be>4960</default_delivery_stated_address_be>
                 <use_alternative_default>0</use_alternative_default>
                 <stated_address_only_fee>2</stated_address_only_fee>
             </delivery_settings>

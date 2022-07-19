@@ -95,7 +95,7 @@ class ParcelTypeFinderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockBuilder|\PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockBuilder|\PHPUnit\Framework\MockObject\MockObject
      */
     private function mockItemsToOption($response)
     {
@@ -109,7 +109,7 @@ class ParcelTypeFinderTest extends TestCase
     /**
      * @param $type
      *
-     * @return \PHPUnit_Framework_MockObject_MockBuilder|\PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockBuilder|\PHPUnit\Framework\MockObject\MockObject
      */
     private function mockOrderRepository($type)
     {

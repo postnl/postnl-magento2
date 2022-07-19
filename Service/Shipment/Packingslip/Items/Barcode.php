@@ -33,10 +33,15 @@ namespace TIG\PostNL\Service\Shipment\Packingslip\Items;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Io\File as IoFile;
+use setasign\Fpdi\Fpdi;
+use setasign\Fpdi\PdfParser\PdfParserException;
+use setasign\Fpdi\PdfParser\StreamReader;
+use setasign\Fpdi\PdfReader\PdfReaderException;
 use TIG\PostNL\Config\Provider\PackingslipBarcode;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Source\LabelAndPackingslip\BarcodeValue;
 use \Magento\Sales\Api\OrderRepositoryInterface;
+use TIG\PostNL\Logging\Log;
 use Zend\Barcode\Barcode as ZendBarcode;
 
 class Barcode implements ItemsInterface
@@ -85,25 +90,33 @@ class Barcode implements ItemsInterface
     private $barcodeValue;
 
     /**
+     * @var Log
+     */
+    private $logger;
+
+    /**
      * @param DirectoryList            $directoryList
      * @param IoFile                   $ioFile
      * @param PackingslipBarcode       $packingslipBarcode
      * @param OrderRepositoryInterface $orderRepository
+     * @param Log                      $logger
      */
     public function __construct(
         DirectoryList $directoryList,
         IoFile $ioFile,
         PackingslipBarcode $packingslipBarcode,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        Log $logger
     ) {
         $this->directoryList = $directoryList;
         $this->ioFile = $ioFile;
         $this->barcodeSettings = $packingslipBarcode;
         $this->orderRepository = $orderRepository;
+        $this->logger = $logger;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function add($packingSlip, $shipment)
     {
@@ -114,35 +127,78 @@ class Barcode implements ItemsInterface
 
         $this->getFileName();
         $this->getBarcodeValue($shipment);
+        $this->createBarcode();
 
-        // @codingStandardsIgnoreLine
-        $pdf = new \Zend_Pdf();
-        // @codingStandardsIgnoreLine
-        $packingSlip = \Zend_Pdf::parse($packingSlip);
-        /** @var \Zend_Pdf_Page $page */
-        foreach ($packingSlip->pages as $page) {
-            $pdf->pages[] = $this->addBarcodeToPage(clone $page);
-        }
+        $pdf = $this->loadPdfAndAddBarcode($packingSlip);
 
         $this->cleanup();
-        return $pdf->render();
+        return $pdf->Output('S');
     }
 
     /**
-     * @param \Zend_Pdf_Page $page
-     *
-     * @return \Zend_Pdf_Page $page
+     * @return Fpdi
      */
-    private function addBarcodeToPage($page)
-    {
-        $this->createBarcode();
-
-        $postion = $this->barcodeSettings->getPosition($this->storeId);
+    private function loadPdfAndAddBarcode($packingSlip){
         // @codingStandardsIgnoreLine
-        $barcodeImage = \Zend_Pdf_Image::imageWithPath($this->fileName);
-        $page->drawImage($barcodeImage, $postion[0], $postion[1], $postion[2], $postion[3]);
+        $pdf = new Fpdi();
+        try {
+            $stream = StreamReader::createByString($packingSlip);
+            $pageCount = $pdf->setSourceFile($stream);
+        } catch (PdfReaderException $readerException) {
+            $this->logger->error('[Service\Shipment\PackingSlip\Items\Barcode] Error while loading sourcefile: ' . $readerException->getMessage());
+            return $pdf;
+        }
 
-        return $page;
+        for($pageIndex = 0; $pageIndex < $pageCount; $pageIndex++) {
+            try {
+                $templateId = $pdf->importPage($pageIndex + 1);
+                $pageSize   = $pdf->getTemplateSize($templateId);
+
+                if ($pageSize['width'] > $pageSize['height']) {
+                    $pdf->AddPage('L', $pageSize);
+                } else {
+                    $pdf->AddPage('P', $pageSize);
+                }
+                $pdf->useTemplate($templateId);
+
+                $this->addBarcodeToPage($pdf, $pageSize);
+
+            } catch (PdfParserException $fpdiException) {
+                $this->logger->error('[Service\Shipment\PackingSlip\Items\Barcode] PdfParserException: ' . $fpdiException->getMessage());
+            } catch (PdfReaderException $readerException) {
+                $this->logger->error('[Service\Shipment\PackingSlip\Items\Barcode] ReaderException: ' . $readerException->getMessage());
+            }
+        }
+
+        return $pdf;
+    }
+
+    /**
+     * @param $units
+     *
+     * @return float
+     */
+    private function zendPdfUnitsToMM($units) {
+        return ($units / 72) * 25.4;
+    }
+
+    /**
+     * @param Fpdi $pdf
+     *
+     * @return void
+     */
+    private function addBarcodeToPage($pdf, $pageSize)
+    {
+        $position = $this->barcodeSettings->getPosition($this->storeId);
+
+        // Zend_PDF used BOTTOMLEFT as 0,0 and every point was 1/72 inch
+        $x = $this->zendPdfUnitsToMM($position[0]);
+        $y = $pageSize['height'] - $this->zendPdfUnitsToMM($position[3]);
+        $w = $this->zendPdfUnitsToMM($position[2]) - $x;
+        $h = $this->zendPdfUnitsToMM($position[3]) - $this->zendPdfUnitsToMM($position[1]);
+
+        // @codingStandardsIgnoreLine
+        $pdf->Image($this->fileName, $x,$y, $w, $h);
     }
 
     /**

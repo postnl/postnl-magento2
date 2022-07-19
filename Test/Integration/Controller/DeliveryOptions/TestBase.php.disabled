@@ -39,7 +39,7 @@ use Magento\TestFramework\TestCase\AbstractController;
 
 class TestBase extends AbstractController
 {
-    protected function setUp()
+    protected function setUp() : void
     {
         if (getenv('TRAVIS') !== false) {
             $this->markTestSkipped('Fails on Travis');
@@ -47,7 +47,7 @@ class TestBase extends AbstractController
 
         parent::setUp();
 
-        $addressEnhancer = $this->getFakeMock(\TIG\PostNL\Helper\AddressEnhancer::class, true);
+        $addressEnhancer = $this->getMockBuilder(\TIG\PostNL\Helper\AddressEnhancer::class)->getMock();
         $deliveryDate = $this->getMockBuilder(DeliveryDate::class)->disableOriginalConstructor()->getMock();
         $timeFrame = $this->getMockBuilder(TimeFrame::class)->disableOriginalConstructor()->getMock();
         $location = $this->getMockBuilder(Locations::class)->disableOriginalConstructor()->getMock();

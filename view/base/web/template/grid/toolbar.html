@@ -6,20 +6,19 @@
 -->
 <div class="admin__data-grid-header" afterRender="$data.setToolbarNode">
     <div class="admin__data-grid-header-row">
-        <div class="admin__data-grid-actions-wrap" each="getRegion('dataGridActions')" render=""/>
-        <each args="getRegion('dataGridFilters')" render=""/>
+        <div class="admin__data-grid-actions-wrap" each="getRegion('dataGridActions')" render=""></div>
+        <each args="getRegion('dataGridFilters')" render=""></each>
     </div>
     <div class="admin__data-grid-header-row row row-gutter">
-        <div class="col-xs-2" if="hasChild('listing_massaction')" ko-scope="requestChild('listing_massaction')" render=""/>
+        <div class="col-xs-2" if="hasChild('listing_massaction')" ko-scope="requestChild('listing_massaction')" render=""></div>
         <div css="
             'col-xs-10': hasChild('listing_massaction'),
             'col-xs-12': !hasChild('listing_massaction')">
             <div class="row" ko-scope="requestChild('listing_paging')">
-                <div class="col-xs-3" render="totalTmpl"/>
-                <div class="col-xs-9" render=""/>
+                <div class="col-xs-3" render="totalTmpl"></div>
+                <div class="col-xs-9" render=""></div>
             </div>
         </div>
-
         <!-- ko if: $data.jsLoaded && $data.showPostNLToolbarActions() -->
         <div class="col-xs-5 postnl-grid-toolbar">
             <div class="col-xs-5">
@@ -30,7 +29,7 @@
             </div>
             <div class="col-xs-5">
                 <input class="admin__control-text change_parcel_toolbar" id="change_parcel" type="number" min="1" value="1"
-                       data-bind="visible: $data.currentSelected() == 'change_parcel'"/>
+                       data-bind="visible: $data.currentSelected() == 'change_parcel'"></input>
 
                 <div class="select-holder" data-bind="visible: $data.currentSelected() == 'change_product'">
                     <select class="action-select admin__control-select change_product_toolbar" id="change_product"
@@ -56,7 +55,7 @@
             <div class="col-xs-2">
                 <div class="tooltip" data-bind="visible: $data.currentSelected() == 'choose_print_start_position'">
                     <span class="help">
-                        <span />
+                        <span></span>
                     </span>
                     <span class="tooltip-content"
                           translate="'Determine the position of the first shipping label when you\'re printing the labels on an A4. De printing order of the labels are bottom right, bottom left, top right, top left.'">
@@ -73,4 +72,4 @@
     </div>
 </div>
 
-<render args="stickyTmpl" if="$data.sticky"/>
+<render args="stickyTmpl" if="$data.sticky"></render>
