@@ -113,6 +113,7 @@ define([
 
                 if (typeof value.data !== 'undefined') {
                     sessionStorage.setItem("postnlPickupOption", JSON.stringify(value.data.Name));
+                    sessionStorage.removeItem("postnlDeliveryOption");
                 }
 
                 State.currentSelectedShipmentType('pickup');
@@ -290,6 +291,7 @@ define([
             if (optionIndex !== '') {
                 var result = {data: pickupAddresses[optionIndex], type: "PG"};
                 this.selectedOption(result);
+                $('.tig-postnl-pickup-radio:eq(' + optionIndex + ')').prop('checked',true);
             }
         },
     });

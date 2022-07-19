@@ -115,6 +115,7 @@ define([
             }
 
             sessionStorage.setItem("postnlDeliveryOption", JSON.stringify(value));
+            sessionStorage.removeItem("postnlPickupOption");
 
             State.currentSelectedShipmentType('delivery');
 
