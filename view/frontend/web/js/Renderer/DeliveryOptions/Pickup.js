@@ -130,7 +130,7 @@ define([
                 }
 
                 var fee = 0;
-                if (dataObject.hasFee()) {
+                if (dataObject !== 'undefined' && dataObject.hasFee()) {
                     fee = dataObject.getFee();
                 }
 
@@ -287,8 +287,10 @@ define([
                });
             }
 
-            var result = {data: pickupAddresses[optionIndex], type: "PG"};
-            this.selectedOption(result);
+            if (optionIndex !== '') {
+                var result = {data: pickupAddresses[optionIndex], type: "PG"};
+                this.selectedOption(result);
+            }
         },
     });
 });
