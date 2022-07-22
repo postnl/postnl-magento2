@@ -114,6 +114,9 @@ define([
                 return;
             }
 
+            sessionStorage.setItem("postnlDeliveryOption", JSON.stringify(value));
+            sessionStorage.removeItem("postnlPickupOption");
+
             State.currentSelectedShipmentType('delivery');
 
             var fee = null;
@@ -130,7 +133,6 @@ define([
             if (typeof value.fallback !== 'undefined') {
                 type = 'fallback';
             }
-            
             if (typeof value.letterbox_package !== 'undefined') {
                 type = 'Letterbox Package';
             }
@@ -225,7 +227,6 @@ define([
                     this.selectFirstDeliveryOption();
                     return;
                 }
-                
                 if (data === '') {
                     return false;
                 }
@@ -323,14 +324,41 @@ define([
 
         selectFirstDeliveryOption: function () {
             // Only select the first option if there is none defined
-            if (this.selectedOption() !== undefined && this.selectedOption() != null) {
+            if (this.selectedOption() !== undefined && this.selectedOption() != null || sessionStorage.postnlPickupOption) {
                 return;
             }
-
             var deliveryDays = this.deliverydays();
-            if (deliveryDays !== undefined && deliveryDays[0] !== undefined && deliveryDays[0][0] !== undefined) {
+
+
+            if(sessionStorage.postnlDeliveryOption) {
+                var previousOption = JSON.parse(sessionStorage.postnlDeliveryOption);
+                this.selectedOption(previousOption)
+                var indexes = this.getPreviousDay(previousOption, deliveryDays);
+            }
+
+            if (indexes) {
+                this.selectedOption(deliveryDays[indexes[0]][indexes[1]]);
+            }
+
+            if (deliveryDays !== undefined && deliveryDays[0] !== undefined && deliveryDays[0][0] !== undefined && sessionStorage.postnlDeliveryOption === undefined) {
                 this.selectedOption(deliveryDays[0][0]);
             }
+        },
+
+        getPreviousDay: function (option, deliveryDays) {
+            var result;
+            $.each(deliveryDays, function (deliveryDaysindex, value) {
+                if (Array.isArray(value)) {
+                    $.each(value, function (index, value) {
+                        if (value.day === option.day && value.from === option.from && value.to === option.to) {
+                            result = [deliveryDaysindex, index];
+                            return false;
+                        }
+                    })
+                }
+            })
+
+            return result;
         }
     });
 });
