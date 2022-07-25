@@ -120,6 +120,11 @@ class AddressToOrder implements ObserverInterface
         $pgAddress      = false;
         $quotePgAddress = $this->pickupAddressHelper->getPakjeGemakAddressInQuote($order->getQuoteId());
 
+        if ($quotePgAddress->getTelephone() === null) {
+            $billingAddress = $order->getBillingAddress();
+            $quotePgAddress->setTelephone($billingAddress->getTelephone());
+        }
+
         if ($quotePgAddress->getId() && $this->shouldAdd($order, $postnlOrder)) {
             $quote = $this->quoteRepository->get($order->getQuoteId());
             $quotePgAddress->setQuote($quote);
