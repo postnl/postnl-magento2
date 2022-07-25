@@ -63,6 +63,15 @@ php bin/magento maintenance:disable
 1. Download the extension directly from [github](https://github.com/tig-nl/postnl-magento2) by clicking on *Code* and then *Download ZIP*.
 2. Create the directory *app/code/TIG/PostNL* (Case-sensitive)
 3. Extract the zip and upload the code into *app/code/TIG/PostNL*
+4. Enable the PostNL Magento 2 plugin
+~~~~shell
+php bin/magento module:enable TIG_PostNL
+~~~~
+
+5. Update the Magento 2 environment:
+~~~~shell
+php bin/magento setup:upgrade
+~~~~
 
 ## Update 
 To update the PostNL Extension run the following commands:
