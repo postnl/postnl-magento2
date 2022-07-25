@@ -1,4 +1,4 @@
-<p align=center">
+<p align="center">
 <img src="view/frontend/web/images/postnl-logo-large.png" alt="PostNL Logo" style="width:300px">
 </p>
 
