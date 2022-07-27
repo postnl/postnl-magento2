@@ -333,4 +333,21 @@
         </arguments>
     </type>
 
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="postnl_matrix_grid_index_data_source" xsi:type="string">PostnlMatrixGridCollection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="PostnlMatrixGridCollection" type="TIG\PostNL\Model\ResourceModel\MatrixrateGrid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">tig_postnl_matrixrate</argument>
+            <argument name="resourceModel" xsi:type="string">TIG\PostNL\Model\ResourceModel\MatrixrateGrid</argument>
+        </arguments>
+    </virtualType>
+
+
+
 </config>

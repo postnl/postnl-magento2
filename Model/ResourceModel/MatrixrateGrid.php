@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,15 +28,22 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
-    <router id="admin">
-        <route frontName="postnl" id="postnl">
-            <module before="Magento_Backend" name="TIG_PostNL"/>
-        </route>
-        <route id="admin" frontName="matrix">
-            <module before="Magento_Backend" name="TIG_PostNL"/>
-        </route>
-    </router>
-</config>
+ */
+
+namespace TIG\PostNL\Model\ResourceModel;
+
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+
+class MatrixrateGrid extends AbstractDb
+{
+    /**
+     * Resource initialization
+     *
+     * @return void
+     */
+    // @codingStandardsIgnoreLine
+    protected function _construct()
+    {
+        $this->_init('tig_postnl_matrixrate', 'entity_id');
+    }
+}
