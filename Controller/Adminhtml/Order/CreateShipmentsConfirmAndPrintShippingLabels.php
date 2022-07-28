@@ -193,7 +193,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
     }
 
     /**
-     * @return $this
+     * @return $thisgi
      */
     private function handleErrors()
     {
