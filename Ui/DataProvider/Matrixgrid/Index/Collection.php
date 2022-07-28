@@ -1,5 +1,5 @@
 <?php
-namespace TIG\PostNL\Ui\DataProvider\Matrixgrid\Data;
+namespace TIG\PostNL\Ui\DataProvider\Matrixgrid\Index;
 
 use Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult;
 

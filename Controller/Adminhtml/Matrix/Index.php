@@ -24,8 +24,6 @@ class Index extends Action
         $resultPage = $this->resultPageFactory->create();
         $resultPage->setActiveMenu('Magento_Sales::sales');
         $resultPage->getConfig()->getTitle()->prepend((__('Matrix rates')));
-        $resultPage->getLayout();
-
 
 
         return $resultPage;
