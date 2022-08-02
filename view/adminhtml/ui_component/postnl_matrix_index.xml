@@ -10,7 +10,7 @@
                 <item name="name" xsi:type="string">add</item>
                 <item name="label" xsi:type="string" translate="true">Add New Matrixrate</item>
                 <item name="class" xsi:type="string">primary</item>
-                <item name="url" xsi:type="string">*/*/new</item>
+                <item name="url" xsi:type="string">*/*/add</item>
             </item>
         </item>
     </argument>
@@ -72,6 +72,11 @@
     </listingToolbar>
 
     <columns name="spinner_columns">
+        <editorConfig>
+            <param name="indexField" xsi:type="string">entity_id</param>
+            <param name="enabled" xsi:type="boolean">true</param>
+            <param name="selectProvider" xsi:type="string">postnl_matrix_index_data_source.ids</param>
+        </editorConfig>
         <selectionsColumn name="ids">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -80,6 +85,11 @@
                     <item name="indexField" xsi:type="string">entity_id</item>
                 </item>
             </argument>
+
+            <settings>
+                <indexField>entity_id</indexField>
+            </settings>
+
         </selectionsColumn>
         <column name="entity_id">
             <argument name="data" xsi:type="array">
@@ -90,11 +100,17 @@
                 </item>
             </argument>
         </column>
-        <column name="website_id">
+        <column name="website_id" sortOrder="100">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Website/store view</item>
+                    <item name="editor" xsi:type="array">
+                        <item name="editorType" xsi:type="string">text</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                    <item name="label" xsi:type="string" translate="true">Website</item>
                 </item>
             </argument>
         </column>
@@ -154,7 +170,7 @@
                 </item>
             </argument>
         </column>
-        <column name="subtotaal">
+        <column name="subtotal">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>
