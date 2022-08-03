@@ -4,8 +4,9 @@ namespace TIG\PostNL\Controller\Adminhtml\Matrix;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultInterface;
 use TIG\PostNL\Model\Carrier\MatrixrateRepository;
-use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection;
 use TIG\PostNL\Service\Validation\Factory;
 
 class Save extends Action
@@ -31,7 +32,7 @@ class Save extends Action
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|void
+     * @return void
      */
     public function execute()
     {
@@ -46,7 +47,6 @@ class Save extends Action
 
                 $regionValidationArray = [ 'country' => $countryCode, 'region'=> $data['destiny_region_id']];
 
-
                 $countryId      = $this->_validator->validate('country',$countryCode);
                 $region         = $this->_validator->validate('region',$regionValidationArray);
                 $weight         = $this->_validator->validate('weight',$data['weight']);
@@ -54,10 +54,6 @@ class Save extends Action
                 $quantity       = $this->_validator->validate('quantity',$data['quantity']);
                 $price          = $this->_validator->validate('price',$data['price']);
                 $parcelType     = $this->_validator->validate('parcel-type',$data['parcel_type']);
-
-//                var_dump($countryCode);
-//                var_dump($countryId);
-//                die();
 
                 $model->addData([
                     "destiny_region_id"     => $region,

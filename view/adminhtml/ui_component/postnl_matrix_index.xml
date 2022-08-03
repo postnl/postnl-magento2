@@ -44,27 +44,19 @@
         <columnsControls name="columns_controls"/>
         <filters name="listing_filters" />
 
-<!--        <massaction name="listing_massaction">-->
-<!--            <argument name="data" xsi:type="array">-->
-<!--                <item name="config" xsi:type="array">-->
-<!--                    <item name="component" xsi:type="string">Magento_Ui/js/grid/tree-massactions</item>-->
-<!--        <item name="selectProvider" xsi:type="string">dev_grid_category_listing.dev_grid_category_listing.dev_grid_category_columns.ids</item>-->
-<!--                        </item>-->
-<!--            </argument>-->
-<!--            <action name="delete">-->
-<!--                <argument name="data" xsi:type="array">-->
-<!--                    <item name="config" xsi:type="array">-->
-<!--                        <item name="type" xsi:type="string">delete</item>-->
-<!--                        <item name="label" xsi:type="string" translate="true">Delete</item>-->
-<!--                        <item name="url" xsi:type="url" path="tig_postnl/matrix/massDelete"/>-->
-<!--                        <item name="confirm" xsi:type="array">-->
-<!--                            <item name="title" xsi:type="string" translate="true">Delete Post</item>-->
-<!--                            <item name="message" xsi:type="string" translate="true">Are you sure you wan't to delete selected items?</item>-->
-<!--                        </item>-->
-<!--                    </item>-->
-<!--                </argument>-->
-<!--            </action>-->
-<!--        </massaction>-->
+        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions" class="\Magento\Catalog\Ui\Component\Product\MassAction">
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Delete selected items?</message>
+                        <title translate="true">Delete items</title>
+                    </confirm>
+                    <url path="*/*/massDelete" />
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                </settings>
+            </action>
+        </massaction>
 
         <paging name="listing_paging"/>
         <exportButton name="export_button"/>
