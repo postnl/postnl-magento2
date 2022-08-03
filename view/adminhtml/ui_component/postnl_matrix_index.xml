@@ -72,11 +72,6 @@
     </listingToolbar>
 
     <columns name="spinner_columns">
-        <editorConfig>
-            <param name="indexField" xsi:type="string">entity_id</param>
-            <param name="enabled" xsi:type="boolean">true</param>
-            <param name="selectProvider" xsi:type="string">postnl_matrix_index_data_source.ids</param>
-        </editorConfig>
         <selectionsColumn name="ids">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -85,11 +80,6 @@
                     <item name="indexField" xsi:type="string">entity_id</item>
                 </item>
             </argument>
-
-            <settings>
-                <indexField>entity_id</indexField>
-            </settings>
-
         </selectionsColumn>
         <column name="entity_id">
             <argument name="data" xsi:type="array">
@@ -226,5 +216,10 @@
                 </item>
             </argument>
         </column>
+        <actionsColumn name="actions" class="TIG\PostNL\Ui\Component\Matrix\Column\Actions">
+            <settings>
+                <label translate="true">Actions</label>
+            </settings>
+        </actionsColumn>
     </columns>
 </listing>

@@ -43,6 +43,7 @@ class Websites implements ArrayInterface
 
         if (!$isMultiselect) {
             array_unshift($options, ['value' => '', 'label' => __('--Please Select--')]);
+            array_unshift($options, ['value' => '*', 'label' => __('All websites')]);
         }
 
         return $options;

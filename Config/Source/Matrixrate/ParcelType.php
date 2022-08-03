@@ -68,6 +68,7 @@ class ParcelType implements ArrayInterface
         // @codingStandardsIgnoreEnd
         if (!$isMultiselect) {
             array_unshift($options, ['value' => '', 'label' => __('--Please Select--')]);
+            array_unshift($options, ['value' => '*', 'label' => __('All Parcel Types')]);
         }
 
         return $options;
