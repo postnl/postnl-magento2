@@ -111,13 +111,13 @@ class Edit extends  Action
          * Set Page title
          */
 
-        $resultPage->getConfig()->getTitle()->prepend('Example Module');
+        $resultPage->getConfig()->getTitle()->prepend('PostNL Module');
 
-        $pageTitltPrefix = __('Edit Page for Entity number %1',
+        $pageTitlePrefix = __('Edit Page for Entity number %1',
 
             $model->getEntityId()?$model->getEntityId(): __('New entry')
         );
-        $resultPage->getConfig()->getTitle()->prepend($pageTitltPrefix);
+        $resultPage->getConfig()->getTitle()->prepend($pageTitlePrefix);
         return $resultPage;
 
     }
