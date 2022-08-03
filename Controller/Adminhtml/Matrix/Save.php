@@ -56,6 +56,7 @@ class Save extends Action
                 $parcelType     = $this->_validator->validate('parcel-type',$data['parcel_type']);
 
                 $model->addData([
+                    'website_id'            => $data['website_id'],
                     "destiny_region_id"     => $region,
                     "destiny_zip_code"      => $data['destiny_zip_code'],
                     "weight"                => $weight,
