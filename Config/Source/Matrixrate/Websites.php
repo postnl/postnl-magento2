@@ -8,30 +8,35 @@ use Magento\Store\Model\ResourceModel\Website\CollectionFactory;
 
 class Websites implements ArrayInterface
 {
-
     protected $_options;
 
+    /**
+     * @param CollectionFactory $websiteCollectionFactory
+     */
     public function __construct(
 
         CollectionFactory $websiteCollectionFactory
     )
     {
         $this->_websiteCollectionFactory = $websiteCollectionFactory;
-
     }
 
     /**
      * Retrieve websites collection of system
      *
-     * @return Website Collection
+     * @return CollectionFactory Collection
      */
     public function getWebsiteLists()
     {
-        $collection = $this->_websiteCollectionFactory->create();
-        return $collection;
+        return $this->_websiteCollectionFactory->create();
     }
 
-    public function toOptionArray($isMultiselect = false, $foregroundWebsites = '')
+    /**
+     * @param bool $isMultiselect
+     *
+     * @return array
+     */
+    public function toOptionArray($isMultiselect = false)
     {
         if (!$this->_options) {
             $this->_options = $this->getWebsiteLists()->toOptionArray(

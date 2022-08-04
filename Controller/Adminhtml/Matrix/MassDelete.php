@@ -4,6 +4,7 @@ namespace TIG\PostNL\Controller\Adminhtml\Matrix;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Ui\Component\MassAction\Filter;
@@ -45,18 +46,17 @@ class MassDelete extends Action
     }
 
     /**
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return void
+     * @throws LocalizedException
      */
     public function execute()
     {
         $collection = $this->filter->getCollection($this->matrixrateCollection->getResourceCollection());
-
         $count = 0;
         foreach ($collection as $child) {
             $child->delete();
             $count++;
         }
-
         $this->messageManager->addSuccessMessage(__('A total of %1 record(s) have been deleted.', $count));
         $this->_redirect('*/*/index');
     }

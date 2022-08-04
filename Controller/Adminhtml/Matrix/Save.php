@@ -11,16 +11,17 @@ use TIG\PostNL\Service\Validation\Factory;
 
 class Save extends Action
 {
-    /**
-     * @var MatrixrateRepository
-     */
+    /** @var MatrixrateRepository  */
     protected $customFactory;
 
-    /**
-     * @var Factory
-     */
+    /** @var Factory  */
     protected $_validator;
 
+    /**
+     * @param Context               $context
+     * @param MatrixrateRepository  $collectionFactory
+     * @param Factory               $validator
+     */
     public function __construct(
         Context $context,
         MatrixrateRepository $collectionFactory,
@@ -39,12 +40,7 @@ class Save extends Action
         $data = $this->getRequest()->getPostValue();
         $model = $this->customFactory->create();
         try {
-
-
-
-
             foreach ($data['country_id'] as $countryCode) {
-
                 $regionValidationArray = [ 'country' => $countryCode, 'region'=> $data['destiny_region_id']];
 
                 $countryId      = $this->_validator->validate('country',$countryCode);
@@ -70,14 +66,10 @@ class Save extends Action
                 $this->customFactory->save($model);
                 $model->unsetData();
             }
-
-
-
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
         }
         $this->messageManager->addSuccessMessage( __('Insert data Successfully !') );
-
         $this->_redirect('*/*/index');
     }
 }

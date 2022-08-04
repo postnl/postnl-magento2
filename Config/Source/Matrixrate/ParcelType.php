@@ -35,14 +35,16 @@ use Magento\Framework\Option\ArrayInterface;
 
 class ParcelType implements ArrayInterface
 {
-    const PARCEL_TYPE_PAKJEGEMAK        = 'pakjegemak';
-    const PARCEL_TYPE_EXTRA_AT_HOME     = 'extra@home';
-    const PARCEL_TYPE_REGULAR           = 'regular';
-    const PARCEL_TYPE_LETTERBOX_PACKAGE = 'letterbox_package';
-
+    private const PARCEL_TYPE_PAKJEGEMAK        = 'pakjegemak';
+    private const PARCEL_TYPE_EXTRA_AT_HOME     = 'extra@home';
+    private const PARCEL_TYPE_REGULAR           = 'regular';
+    private const PARCEL_TYPE_LETTERBOX_PACKAGE = 'letterbox_package';
 
     /**
-     * @return array
+     * Option array for select option
+     *
+     * @param $isMultiselect
+     * @return array[]
      */
     public function toOptionArray($isMultiselect = false)
     {

@@ -7,22 +7,17 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
 
-/**
- * Class Actions
- */
 class Actions extends Column
 {
-    /**
-     * @var UrlInterface
-     */
+    /** @var UrlInterface  */
     protected $urlBuilder;
 
     /**
-     * @param ContextInterface $context
-     * @param UiComponentFactory $uiComponentFactory
-     * @param UrlInterface $urlBuilder
-     * @param array $components
-     * @param array $data
+     * @param ContextInterface      $context
+     * @param UiComponentFactory    $uiComponentFactory
+     * @param UrlInterface          $urlBuilder
+     * @param array                 $components
+     * @param array                 $data
      */
     public function __construct(
         ContextInterface $context,
@@ -34,7 +29,6 @@ class Actions extends Column
         $this->urlBuilder = $urlBuilder;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
-
 
     /**
      * Prepare Data Source
@@ -48,12 +42,6 @@ class Actions extends Column
             foreach ($dataSource['data']['items'] as &$item) {
                 // here we can also use the data from $item to configure some parameters of an action URL
                 $item[$this->getData('name')] = [
-                    'edit' => [
-                        'href' => $this->urlBuilder->getUrl(
-                            'postnl/matrix/edit',
-                            ['id' => $item['entity_id']]),
-                        'label' => __('Edit')
-                    ],
                     'delete' => [
                         'href' => $this->urlBuilder->getUrl(
                             'postnl/matrix/delete',
@@ -63,7 +51,6 @@ class Actions extends Column
                 ];
             }
         }
-
         return $dataSource;
     }
 }

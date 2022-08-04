@@ -14,8 +14,8 @@
         </item>
         <item name="template" xsi:type="string">templates/form/collapsible</item>
         <item name="buttons" xsi:type="array">
+            <item name="back" xsi:type="string">TIG\PostNL\Block\Adminhtml\Matrix\Back</item>
             <item name="save" xsi:type="string">TIG\PostNL\Block\Adminhtml\Matrix\Save</item>
-<!-- TODO Change save block-->
         </item>
     </argument>
     <dataSource name="postnl_matrix_index_data_source">
@@ -37,14 +37,7 @@
         </argument>
     </dataSource>
     <fieldset name="general_information">
-        <argument name="data" xsi:type="array">
-            <item name="config" xsi:type="array">
-                <item name="collapsible" xsi:type="boolean">false</item>
-                <item name="label" xsi:type="string" translate="true">General Information</item>
-                <item name="sortOrder" xsi:type="number">20</item>
-            </item>
-        </argument>
-<!--        TODO add correct fields-->
+<!--    TODO Try to add a Link to the tutorial page -->
 
         <field name="website_id">
             <argument name="data" xsi:type="array">
@@ -56,6 +49,7 @@
                 <item name="source" xsi:type="string">store</item>
                 <item name="sortOrder" xsi:type="number">0</item>
                 <item name="dataScope" xsi:type="string">website_id</item>
+                <item name="notice" xsi:type="string" translate="true">Select the store that you want to use this rate for</item>
                 <item name="component" xsi:type="string">Magento_Ui/js/form/element/select</item>
                 <item name="validation" xsi:type="array">
                     <item name="required-entry" xsi:type="boolean">true</item>
@@ -74,6 +68,7 @@
                     <item name="source" xsi:type="string">store</item>
                     <item name="sortOrder" xsi:type="number">10</item>
                     <item name="dataScope" xsi:type="string">country_id</item>
+                    <item name="notice" xsi:type="string" translate="true">When selecting multiple country's the data will output 1 row for each country</item>
                     <item name="component" xsi:type="string">Magento_Ui/js/form/element/multiselect</item>
                     <item name="validation" xsi:type="array">
                         <item name="required-entry" xsi:type="boolean">true</item>
@@ -83,43 +78,55 @@
         </field>
 
         <field name="destiny_region_id" sortOrder="20" formElement="input">
-            <settings>
-                <dataType>text</dataType>
-                <visible>true</visible>
-                <label translate="true">Region</label>
-            </settings>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Region</item>
+                    <item name="notice" xsi:type="string" translate="true">input the region or input a * sign to use all regions</item>
+                </item>
+            </argument>
         </field>
+
         <field name="destiny_zip_code" sortOrder="30" formElement="input">
-            <settings>
-                <dataType>text</dataType>
-                <visible>true</visible>
-                <label translate="true">Zip Code</label>
-            </settings>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Zip Code</item>
+                    <item name="notice" xsi:type="string" translate="true">input the zipcode or input a * sign to use all zip codes</item>
+                </item>
+            </argument>
         </field>
 
         <field name="weight" sortOrder="40" formElement="input">
-            <settings>
-                <dataType>text</dataType>
-                <visible>true</visible>
-                <label translate="true">Weight</label>
-            </settings>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">weight</item>
+                    <item name="notice" xsi:type="string" translate="true">input the weight to use</item>
+                </item>
+            </argument>
         </field>
 
         <field name="subtotal" sortOrder="50" formElement="input">
-            <settings>
-                <dataType>text</dataType>
-                <visible>true</visible>
-                <label translate="true">Subtotal</label>
-            </settings>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">subtotal</item>
+                    <item name="notice" xsi:type="string" translate="true">input the subtotal to use, This subtotal is the price that customer has in his/her cart</item>
+                </item>
+            </argument>
         </field>
 
         <field name="quantity" sortOrder="60" formElement="input">
-            <settings>
-                <dataType>int</dataType>
-                <visible>true</visible>
-                <label translate="true">Quantity</label>
-            </settings>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">quantity</item>
+                    <item name="notice" xsi:type="string" translate="true">input the quantity to use</item>
+                </item>
+            </argument>
         </field>
+
         <field name="parcel_type" sortOrder="70" formElement="select">
             <argument name="data" xsi:type="array">
                 <item name="options" xsi:type="object">TIG\PostNL\Config\Source\Matrixrate\ParcelType</item>
@@ -129,6 +136,7 @@
                     <item name="formElement" xsi:type="string">select</item>
                     <item name="source" xsi:type="string">store</item>
                     <item name="dataScope" xsi:type="string">parcel_type</item>
+                    <item name="notice" xsi:type="string" translate="true">Please select the Parcel Type</item>
                     <item name="component" xsi:type="string">Magento_Ui/js/form/element/select</item>
                     <item name="validation" xsi:type="array">
                         <item name="required-entry" xsi:type="boolean">true</item>
@@ -138,11 +146,13 @@
         </field>
 
         <field name="price" sortOrder="80" formElement="input">
-            <settings>
-                <dataType>text</dataType>
-                <visible>true</visible>
-                <label translate="true">Price</label>
-            </settings>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Price</item>
+                    <item name="notice" xsi:type="string" translate="true">input the Price, This Price will be the shipping price</item>
+                </item>
+            </argument>
         </field>
     </fieldset>
 </form>

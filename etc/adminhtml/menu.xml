@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
-    <menu>
-        <add id="TIG_PostNL::matrixrate_grid" title="Matrix Grid" module="TIG_PostNL" sortOrder="1000" parent="Magento_Sales::sales" resource="TIG_PostNL::matrix" action="postnl/matrix"/>
-    </menu>
-</config>
