@@ -56,7 +56,6 @@ class Back extends Generic implements ButtonProviderInterface
         parent::__construct($uiComponentFactory, $data);
     }
 
-
     /**
      * Create Button
      *
@@ -66,19 +65,9 @@ class Back extends Generic implements ButtonProviderInterface
     {
         return [
             'label' => __('Back'),
-            'on_click' => sprintf("location.href = '%s';", $this->getBackUrl()),
+            'on_click' => "setLocation('" . $this->action->getUrl('*/*/') . "' )",
             'class' => 'back',
             'sort_order' => 10,
         ];
-    }
-
-    /**
-     * Get back URL
-     *
-     * @return mixed
-     */
-    public function getBackUrl()
-    {
-        return $this->action->getUrl('*/*/');
     }
 }

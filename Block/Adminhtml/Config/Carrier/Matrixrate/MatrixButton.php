@@ -74,9 +74,7 @@ class MatrixButton extends AbstractElement
 
         /** @var Button $buttonBlock  */
         $buttonBlock = $layout->createBlock(Button::class);
-
         $url = $this->backendUrl->getUrl("postnl/matrix/index");
-
 
         $data = [
             'label' => __('Show Visual Matrix'),
@@ -84,7 +82,6 @@ class MatrixButton extends AbstractElement
             'class' => '',
         ];
         $buttonBlock->setData($data);
-
         $html = $buttonBlock->toHtml();
 
         return $html;
