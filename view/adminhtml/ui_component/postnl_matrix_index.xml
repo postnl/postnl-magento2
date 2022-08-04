@@ -230,7 +230,7 @@
                             <item name="required-entry" xsi:type="boolean">true</item>
                         </item>
                     </item>
-                    <item name="label" xsi:type="string" translate="true">Parcel type</item>
+                    <item name="label" xsi:type="string" translate="true">Parcel Type</item>
                 </item>
             </argument>
         </column>

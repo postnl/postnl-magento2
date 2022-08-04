@@ -138,7 +138,7 @@
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">weight</item>
+                    <item name="label" xsi:type="string" translate="true">Weight</item>
                     <item name="notice" xsi:type="string" translate="true">input the weight to use</item>
                 </item>
             </argument>
@@ -148,7 +148,7 @@
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">subtotal</item>
+                    <item name="label" xsi:type="string" translate="true">Subtotal</item>
                     <item name="notice" xsi:type="string" translate="true">input the subtotal to use, This subtotal is the price that customer has in his/her cart</item>
                 </item>
             </argument>
@@ -158,7 +158,7 @@
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">quantity</item>
+                    <item name="label" xsi:type="string" translate="true">Quantity</item>
                     <item name="notice" xsi:type="string" translate="true">input the quantity to use</item>
                 </item>
             </argument>
