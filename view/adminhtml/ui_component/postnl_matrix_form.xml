@@ -37,8 +37,14 @@
         </argument>
     </dataSource>
     <fieldset name="general_information">
-<!--    TODO Try to add a Link to the tutorial page -->
-
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="collapsible" xsi:type="boolean">false</item>
+                <item name="label" xsi:type="string" translate="true">General Information</item>
+                <item name="sortOrder" xsi:type="number">20</item>
+            </item>
+        </argument>
+        <!--    TODO Try to add a Link to the tutorial page -->
         <field name="website_id">
             <argument name="data" xsi:type="array">
             <item name="options" xsi:type="object">TIG\PostNL\Config\Source\Matrixrate\Websites</item>
