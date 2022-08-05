@@ -58,7 +58,7 @@ class Save extends Action
     ) {
         parent::__construct($context);
         $this->matrixrateRepository = $matrixrateRepository;
-        $this->_validator = $validator;
+        $this->_validator           = $validator;
     }
 
     /**
@@ -68,6 +68,7 @@ class Save extends Action
     {
         $data = $this->getRequest()->getPostValue();
         $model = $this->matrixrateRepository->create();
+
         try {
             foreach ($data['country_id'] as $countryCode) {
                 // create array for validation of the region
@@ -98,7 +99,8 @@ class Save extends Action
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
         }
-        $this->messageManager->addSuccessMessage( __('Insert data Successfully !') );
+
+        $this->messageManager->addSuccessMessage( __('Insert data Successfully!') );
         $this->_redirect('*/*/index');
     }
 }

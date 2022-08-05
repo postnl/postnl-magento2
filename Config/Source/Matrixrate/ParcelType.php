@@ -52,11 +52,11 @@ class ParcelType implements ArrayInterface
         $options = [
             [
                 'value' => self::PARCEL_TYPE_PAKJEGEMAK,
-                'label' => __('Pakjegemak'),
+                'label' => __('Post office'),
             ],
             [
                 'value' => self::PARCEL_TYPE_EXTRA_AT_HOME,
-                'label' => __('Extra at home'),
+                'label' => __('Extra@Home'),
             ],
             [
                 'value' => self::PARCEL_TYPE_REGULAR,
@@ -69,8 +69,8 @@ class ParcelType implements ArrayInterface
         ];
         // @codingStandardsIgnoreEnd
         if (!$isMultiselect) {
-            array_unshift($options, ['value' => '', 'label' => __('--Please Select--')]);
-            array_unshift($options, ['value' => '*', 'label' => __('All Parcel Types')]);
+            array_unshift($options, ['value' => '', 'label' => __('--Please select--')]);
+            array_unshift($options, ['value' => '*', 'label' => __('All parcel types')]);
         }
 
         return $options;

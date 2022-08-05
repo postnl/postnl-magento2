@@ -36,6 +36,5 @@
         <route frontName="postnl" id="postnl">
             <module before="Magento_Backend" name="TIG_PostNL"/>
         </route>
-
     </router>
 </config>

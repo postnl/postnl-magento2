@@ -47,7 +47,7 @@ class Websites implements ArrayInterface
      */
     public function __construct(
         CollectionFactory $websiteCollectionFactory
-    ){
+    ) {
         $this->_websiteCollectionFactory = $websiteCollectionFactory;
     }
 
@@ -73,9 +73,11 @@ class Websites implements ArrayInterface
                 false
             );
         }
+
         $options = $this->_options;
+
         if (!$isMultiselect) {
-            array_unshift($options, ['value' => '', 'label' => __('--Please Select--')]);
+            array_unshift($options, ['value' => '', 'label' => __('--Please select--')]);
         }
 
         return $options;

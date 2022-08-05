@@ -77,7 +77,7 @@ class MatrixButton extends AbstractElement
         $url = $this->backendUrl->getUrl("postnl/matrix/index");
 
         $data = [
-            'label' => __('Show Visual Matrix'),
+            'label' => __('Show visual matrix'),
             'onclick' => "setLocation('" . $url . "' )",
             'class' => '',
         ];

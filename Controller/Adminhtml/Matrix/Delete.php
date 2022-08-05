@@ -70,14 +70,14 @@ class Delete  extends  Action
             if($model->getEntityId()){
                 try{
                     $model->delete();
-                    $this->messageManager->addSuccessMessage(__('The record has been delete successfully'));
+                    $this->messageManager->addSuccessMessage(__('The record has been deleted successfully'));
                 } catch (\Exception $e) {
-                    $this->messageManager->addErrorMessage(__('Something went to wrong while Delete'));
+                    $this->messageManager->addErrorMessage(__('Something went wrong while deleting'));
                 }
                 return $resultRedirect->setPath('*/*/index');
             }
         }
-        $this->messageManager->addErrorMessage(__('The Record does not exits'));
+        $this->messageManager->addErrorMessage(__('The record does not exits'));
         return $resultRedirect->setPath('*/*/index');
     }
 

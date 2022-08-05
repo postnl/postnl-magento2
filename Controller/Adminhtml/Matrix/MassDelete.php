@@ -54,11 +54,11 @@ class MassDelete extends Action
     private $filter;
 
     /**
-     * @param Context $context
-     * @param PageFactory $resultPageFactory
-     * @param Registry $registry
-     * @param Filter $filter
-     * @param Matrixrate $matrixrateCollection
+     * @param Context       $context
+     * @param PageFactory   $resultPageFactory
+     * @param Registry      $registry
+     * @param Filter        $filter
+     * @param Matrixrate    $matrixrateCollection
      */
     public function __construct(
         Context $context,
@@ -67,10 +67,10 @@ class MassDelete extends Action
         Filter $filter,
         Matrixrate $matrixrateCollection
     ) {
-        $this->resultPageFactory = $resultPageFactory;
-        $this->_coreRegistry = $registry;
+        $this->resultPageFactory    = $resultPageFactory;
+        $this->_coreRegistry        = $registry;
         $this->matrixrateCollection = $matrixrateCollection;
-        $this->filter = $filter;
+        $this->filter               = $filter;
         parent::__construct($context);
     }
 
@@ -82,10 +82,12 @@ class MassDelete extends Action
     {
         $collection = $this->filter->getCollection($this->matrixrateCollection->getResourceCollection());
         $count = 0;
+
         foreach ($collection as $child) {
             $child->delete();
             $count++;
         }
+
         $this->messageManager->addSuccessMessage(__('A total of %1 record(s) have been deleted.', $count));
         $this->_redirect('*/*/index');
     }

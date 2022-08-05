@@ -65,6 +65,7 @@ class Add extends Action
     {
         $resultPage = $this->resultPageFactory->create();
         $resultPage->getConfig()->getTitle()->prepend(__('Create new matrixrate'));
+
         return $resultPage;
     }
 }

@@ -42,13 +42,13 @@
             <item name="add" xsi:type="array">
 <!--                TODO change add to Create? -->
                 <item name="name" xsi:type="string">add</item>
-                <item name="label" xsi:type="string" translate="true">Add New Matrixrate</item>
+                <item name="label" xsi:type="string" translate="true">Add a new matrixrate</item>
                 <item name="class" xsi:type="string">primary</item>
                 <item name="url" xsi:type="string">*/*/add</item>
             </item>
             <item name="back" xsi:type="array">
                 <item name="name" xsi:type="string">back</item>
-                <item name="label" xsi:type="string" translate="true">Go back to Configuration</item>
+                <item name="label" xsi:type="string" translate="true">Go back to configuration</item>
                 <item name="class" xsi:type="string">back</item>
                 <item name="url" xsi:type="string">adminhtml/system_config/edit/section/carriers</item>
             </item>

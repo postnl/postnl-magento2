@@ -50,8 +50,7 @@ class Back extends Generic implements ButtonProviderInterface
         UiComponentFactory $uiComponentFactory,
         Action $action,
         $data = []
-    )
-    {
+    ) {
         $this->action = $action;
         parent::__construct($uiComponentFactory, $data);
     }
