@@ -1,0 +1,139 @@
+<?php
+/**
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to servicedesk@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact servicedesk@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
+namespace TIG\PostNL\Controller\Adminhtml\Address;
+
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\Controller\Result\JsonFactory;
+use TIG\PostNL\Service\Handler\PostcodecheckHandler;
+use TIG\PostNL\Webservices\Endpoints\Address\Postalcode;
+
+class InternationalPostcode extends Action
+{
+    /**
+     * @var JsonFactory
+     */
+    private $jsonFactory;
+
+    /**
+     * @var Postalcode
+     */
+    private $postcodeService;
+
+    /**
+     * @var PostcodecheckHandler
+     */
+    private $handler;
+
+    public function __construct(
+        Context $context,
+        JsonFactory $jsonFactory,
+        Postalcode $postalcodeService,
+        PostcodecheckHandler $postcodecheckHandler
+    ) {
+        parent::__construct($context);
+
+        $this->jsonFactory     = $jsonFactory;
+        $this->postcodeService = $postalcodeService;
+        $this->handler         = $postcodecheckHandler;
+    }
+
+    /**
+     * @return \Magento\Framework\Controller\Result\Json
+     */
+    public function execute()
+    {
+        $params = $this->getRequest()->getParams();
+        $params = $this->handler->convertRequest($params);
+
+        $params = [
+            [
+                'CountryIso'          => 'BE',
+                'cityName'            => 'Antwerpen',
+                'PostalCode'          => '2600',
+                'streetName'          => 'Grotesteenweg',
+                'houseNumber'         => '3',
+                'houseNumberAddition' => null,
+                'addressLine'         => null,
+                'buildingName'        => null,
+                'flat'                => null,
+                'stairs'              => null,
+                'floor'               => null,
+                'door'                => null,
+                'bus'                 => '1'
+            ],
+        ];
+
+        if (!$params) {
+            return $this->returnJson($this->getErrorResponse('error', __('Postcode request validation failed')));
+        }
+
+        $this->postcodeService->updateRequestData($params);
+        $result = $this->postcodeService->call();
+
+        if ($result === false) {
+            return $this->returnJson($this->getErrorResponse(false, __('Zipcode/housenumber combination not found')));
+        }
+
+        if ($result === 'error') {
+            return $this->returnJson($this->getErrorResponse('error', __('Postcode response validation failed')));
+        }
+
+        return $this->returnJson($result);
+    }
+
+    /**
+     * @param $status string|bool
+     * @param $error string
+     *
+     * @return array
+     */
+    private function getErrorResponse($status, $error)
+    {
+        $responseArray = [
+            'status' => $status,
+            'error'  => $error
+        ];
+        return $responseArray;
+    }
+
+    /**
+     * @param $data
+     *
+     * @return \Magento\Framework\Controller\Result\Json
+     */
+    private function returnJson($data)
+    {
+        $response = $this->jsonFactory->create();
+        return $response->setData($data);
+    }
+}
