@@ -100,7 +100,7 @@ class Save extends Action
             $this->messageManager->addErrorMessage(__($e->getMessage()));
         }
 
-        $this->messageManager->addSuccessMessage( __('Insert data Successfully!') );
+        $this->messageManager->addSuccessMessage( __('Data inserted successfully!') );
         $this->_redirect('*/*/index');
     }
 }
