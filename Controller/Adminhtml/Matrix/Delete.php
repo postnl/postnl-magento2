@@ -77,7 +77,7 @@ class Delete  extends  Action
                 return $resultRedirect->setPath('*/*/index');
             }
         }
-        $this->messageManager->addErrorMessage(__('The record does not exits'));
+        $this->messageManager->addErrorMessage(__('The record does not exists'));
         return $resultRedirect->setPath('*/*/index');
     }
 

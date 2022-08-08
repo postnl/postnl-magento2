@@ -174,7 +174,7 @@
                             <item name="required-entry" xsi:type="boolean">true</item>
                         </item>
                     </item>
-                    <item name="label" xsi:type="string" translate="true">Zip code</item>
+                    <item name="label" xsi:type="string" translate="true">Zipcode</item>
                 </item>
             </argument>
         </column>

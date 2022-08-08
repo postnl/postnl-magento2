@@ -128,7 +128,7 @@
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Zip code</item>
+                    <item name="label" xsi:type="string" translate="true">Zipcode</item>
                     <item name="notice" xsi:type="string" translate="true">Fill in the zipcode or use a * sign to use all zip codes</item>
                 </item>
             </argument>
@@ -149,7 +149,7 @@
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Subtotal</item>
-                    <item name="notice" xsi:type="string" translate="true">Fill in the minimal subtotal for this rate, This subtotal is the price that customer has in his/her cart</item>
+                    <item name="notice" xsi:type="string" translate="true">Fill in the minimal subtotal for this rate, this subtotal is the price that customer has in his/her cart</item>
                 </item>
             </argument>
         </field>
