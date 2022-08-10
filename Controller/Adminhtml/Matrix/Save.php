@@ -74,7 +74,7 @@ class Save extends Action
                 // create array for validation of the region
                 $regionValidationArray = [ 'country' => $countryCode, 'region'=> $data['destiny_region_id']];
                 // validate the data
-                $countryId      = $this->_validator->validate('country',$countryCode);
+                $countryId      = $this->_validator->validate('country',$countryCode,$data['website_id']);
                 $region         = $this->_validator->validate('region',$regionValidationArray);
                 $weight         = $this->_validator->validate('weight',$data['weight']);
                 $subtotal       = $this->_validator->validate('subtotal',$data['subtotal']);

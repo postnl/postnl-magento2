@@ -97,7 +97,7 @@ class Row
             return false;
         }
 
-        if (($country = $this->validation->validate('country', $line[0])) === false) {
+        if (($country = $this->validation->validate('country', $line[0], $website)) === false) {
             $this->errors[] = __('Invalid country "%1" in row #%2.', $line[0], $row);
             return false;
         }
