@@ -36,6 +36,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use TIG\PostNL\Model\Carrier\MatrixrateRepository;
+use TIG\PostNL\Service\MatrixGrid\ErrorHandler;
 use TIG\PostNL\Service\Validation\Factory;
 
 class Save extends Action
@@ -46,19 +47,24 @@ class Save extends Action
     /** @var Factory  */
     protected $_validator;
 
+    protected $_errorHandler;
+
     /**
      * @param Context               $context
      * @param MatrixrateRepository  $matrixrateRepository
      * @param Factory               $validator
+     * @param ErrorHandler          $errorHandler
      */
     public function __construct(
         Context $context,
         MatrixrateRepository $matrixrateRepository,
-        Factory $validator
+        Factory $validator,
+        ErrorHandler $errorHandler
     ) {
         parent::__construct($context);
         $this->matrixrateRepository = $matrixrateRepository;
         $this->_validator           = $validator;
+        $this->_errorHandler        = $errorHandler;
     }
 
     /**
@@ -71,30 +77,14 @@ class Save extends Action
 
         try {
             foreach ($data['country_id'] as $countryCode) {
-                // create array for validation of the region
-                $regionValidationArray = [ 'country' => $countryCode, 'region'=> $data['destiny_region_id']];
-                // validate the data
-                $countryId      = $this->_validator->validate('country',$countryCode,$data['website_id']);
-                $region         = $this->_validator->validate('region',$regionValidationArray);
-                $weight         = $this->_validator->validate('weight',$data['weight']);
-                $subtotal       = $this->_validator->validate('subtotal',$data['subtotal']);
-                $quantity       = $this->_validator->validate('quantity',$data['quantity']);
-                $price          = $this->_validator->validate('price',$data['price']);
-                $parcelType     = $this->_validator->validate('parcel-type',$data['parcel_type']);
-                // add data to the database
-                $model->addData([
-                    'website_id'            => $data['website_id'],
-                    "destiny_region_id"     => $region,
-                    "destiny_zip_code"      => $data['destiny_zip_code'],
-                    "weight"                => $weight,
-                    "subtotal"              => $subtotal,
-                    "quantity"              => $quantity,
-                    "price"                 => $price,
-                    "parcel_type"           => $parcelType,
-                    "destiny_country_id"    => $countryId
-                ]);
-                $this->matrixrateRepository->save($model);
-                $model->unsetData();
+                // validate the data and catch the error's
+                $validatedAraay = $this->_errorHandler->process($data,$countryCode);
+
+                if ($validatedAraay){
+                    $model->addData($validatedAraay);
+                    $this->matrixrateRepository->save($model);
+                    $model->unsetData();
+                }
             }
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
