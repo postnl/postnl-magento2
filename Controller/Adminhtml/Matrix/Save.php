@@ -78,19 +78,37 @@ class Save extends Action
         try {
             foreach ($data['country_id'] as $countryCode) {
                 // validate the data and catch the error's
-                $validatedAraay = $this->_errorHandler->process($data,$countryCode);
+                $validatedArray = $this->_errorHandler->process($data,$countryCode);
 
-                if ($validatedAraay){
-                    $model->addData($validatedAraay);
-                    $this->matrixrateRepository->save($model);
-                    $model->unsetData();
+                if (!$validatedArray){
+                    $this->showErrors();
+                    $this->_redirect('*/*/index');
+                    return false;
                 }
+
+                $model->addData($validatedArray);
+                $this->matrixrateRepository->save($model);
+                $model->unsetData();
             }
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
+            $this->_redirect('*/*/index');
         }
 
         $this->messageManager->addSuccessMessage( __('Data inserted successfully!') );
         $this->_redirect('*/*/index');
+    }
+
+    /**
+     * Add error messages.
+     *
+     * @return void
+     */
+    public function showErrors(){
+        $errorArray = $this->_errorHandler->getErrors();
+
+        foreach ($errorArray as $error) {
+            $this->messageManager->addErrorMessage($error);
+        }
     }
 }
