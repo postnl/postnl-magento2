@@ -101,4 +101,13 @@
         </depends>
         <validate>required-entry</validate>
     </field>
+
+    <field id="smart_returns_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+        <label>Activate Smart returns</label>
+        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        <config_path>tig_postnl/returns/smart_returns_active</config_path>
+        <depends>
+            <field id="returns_active">1</field>
+        </depends>
+    </field>
 </include>

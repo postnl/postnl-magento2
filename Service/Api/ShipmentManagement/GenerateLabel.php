@@ -77,7 +77,7 @@ class GenerateLabel
         $shipment = $postnlShipment->getShipment();
         $shippingAddress = $shipment->getShippingAddress();
 
-        $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
+        $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId(), false);
         $labels = $this->getLabels->get($shipment->getId(), false);
 
         if (empty($labels)) {

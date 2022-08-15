@@ -367,6 +367,18 @@ interface ShipmentInterface
     public function getReturnBarcodes();
 
     /**
+     * @param $value
+     *
+     * @return TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function setIsSmartReturn($value);
+
+    /**
+     * @return boolean
+     */
+    public function getIsSmartReturn();
+
+    /**
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
     public function getPostNLOrder();

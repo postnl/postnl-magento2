@@ -33,6 +33,7 @@ namespace TIG\PostNL\Service\Shipment;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Volume\Items\Calculate;
 use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
@@ -71,12 +72,18 @@ class Data
     private $deliveryDateFallback;
 
     /**
+     * @var ReturnOptions
+     */
+    private $returnOptions;
+
+    /**
      * @param ProductOptions             $productOptions
      * @param ContentDescription         $contentDescription
      * @param Calculate                  $calculate
      * @param LabelAndPackingslipOptions $labelAndPackingslipOptions
      * @param Customs                    $customs
      * @param DeliveryDateFallback       $deliveryDateFallback
+     * @param ReturnOptions              $returnOptions
      */
     public function __construct(
         ProductOptions $productOptions,
@@ -84,7 +91,8 @@ class Data
         Calculate $calculate,
         LabelAndPackingslipOptions $labelAndPackingslipOptions,
         Customs $customs,
-        DeliveryDateFallback $deliveryDateFallback
+        DeliveryDateFallback $deliveryDateFallback,
+        ReturnOptions $returnOptions
     ) {
         $this->productOptions = $productOptions;
         $this->contentDescription = $contentDescription;
@@ -92,6 +100,7 @@ class Data
         $this->labelAndPackingslipOptions = $labelAndPackingslipOptions;
         $this->customsInfo = $customs;
         $this->deliveryDateFallback = $deliveryDateFallback;
+        $this->returnOptions = $returnOptions;
     }
 
     /**
@@ -209,6 +218,12 @@ class Data
             $shipmentData['ProductOptions'] = $productOptions;
         }
 
+        $smartReturnActive = $this->returnOptions->isSmartReturnActive();
+        if ($smartReturnActive && $shipment->getIsSmartReturn()) {
+            $shipmentData['ProductOptions'] = $this->getSmartReturnOptions();
+            $shipmentData['ProductCodeDelivery'] = '2285';
+        }
+
         return $shipmentData;
     }
     // @codingStandardsIgnoreEnd
@@ -280,6 +295,16 @@ class Data
                 'GroupSequence' => $currentShipmentNumber,
                 'GroupType'     => '03',
                 'MainBarcode'   => $shipment->getMainBarcode(),
+            ]
+        ];
+    }
+
+    private function getSmartReturnOptions()
+    {
+        return [
+            'ProductOption' => [
+                'Characteristic' => '152',
+                'Option'         => '025'
             ]
         ];
     }

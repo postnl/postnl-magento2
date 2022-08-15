@@ -131,15 +131,20 @@ class BarcodeHandler
      *
      * @throws LocalizedException
      */
-    public function prepareShipment($magentoShipmentId, $countryId)
+    public function prepareShipment($magentoShipmentId, $countryId, $smartReturns)
     {
         $this->countryId = $countryId;
+        $shipment = $this->shipmentRepository->getByShipmentId($magentoShipmentId);
+
+        if ($smartReturns) {
+            $shipment->setIsSmartReturn(true);
+            $this->shipmentRepository->save($shipment);
+        }
 
         if (!$this->validateShipment($magentoShipmentId, $countryId)) {
             return;
         }
 
-        $shipment = $this->shipmentRepository->getByShipmentId($magentoShipmentId);
         $magentoShipment = $shipment->getShipment();
         $this->storeId = $magentoShipment->getStoreId();
 
@@ -287,6 +292,10 @@ class BarcodeHandler
 
         if ($isPrepared && $this->canAddReturnBarcodes($countryId, $shipment) && !$shipment->getReturnBarcodes()) {
             $this->resetPostNLShipment->resetShipment($magentoShipmentId);
+            return true;
+        }
+
+        if ($shipment->getIsSmartReturn()) {
             return true;
         }
 

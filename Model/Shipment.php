@@ -93,7 +93,9 @@ class Shipment extends AbstractModel implements ShipmentInterface
 
     const FIELD_DOWNPARTNER_BARCODE  = 'downpartner_barcode';
 
-    const FIELD_RETURN_BARCODE = 'return_barcode';
+    const FIELD_RETURN_BARCODE       = 'return_barcode';
+
+    const FIELD_IS_SMART_RETURN      = 'is_smart_return';
 
     /**
      * @var string
@@ -959,5 +961,23 @@ class Shipment extends AbstractModel implements ShipmentInterface
     public function getReturnBarcode()
     {
         return $this->getData(static::FIELD_RETURN_BARCODE);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setIsSmartReturn($value)
+    {
+        return $this->setData(static::FIELD_IS_SMART_RETURN, $value);
+    }
+
+    /**
+     * @return array|bool|mixed|null
+     */
+    public function getIsSmartReturn()
+    {
+        return $this->getData(static::FIELD_IS_SMART_RETURN);
     }
 }

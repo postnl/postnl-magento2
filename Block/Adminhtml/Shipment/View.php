@@ -74,7 +74,7 @@ class View extends MagentoView
 
         parent::__construct($context, $registry, $data);
     }
-    
+
     protected function _construct()
     {
         parent::_construct();
@@ -108,6 +108,7 @@ class View extends MagentoView
         $this->setPostNLPrintLabelButtonData();
         $this->setPostNLPrintLabelWithoutConfirmButton();
         $this->setPostNLPrintPackingslipButton();
+        $this->setPostNLSendSmartReturnButton();
     }
 
     /**
@@ -150,7 +151,7 @@ class View extends MagentoView
     {
         $postNLShipment = $this->getPostNLShipment();
         $mainBarcode    = $postNLShipment->getMainBarcode();
-        
+
         $this->buttonList->add(
             'postnl_print_without_confirm',
             [
@@ -181,6 +182,18 @@ class View extends MagentoView
                 'label' => __('PostNL - Confirm'),
                 'class' => 'save primary',
                 'onclick' => 'setLocation(\'' . $this->getConfirmUrl() . '\')',
+            ]
+        );
+    }
+
+    private function setPostNLSendSmartReturnButton()
+    {
+        $this->buttonList->add(
+            'postnl_send_smart_return',
+            [
+                'label' => __('PostNL - Send Smart Return'),
+                'class' => 'save primary',
+                'onclick' => 'setLocation(\'' . $this->getSendSmartReturnUrl() . '\')',
             ]
         );
     }
@@ -262,7 +275,21 @@ class View extends MagentoView
             ]
         );
     }
-    
+
+    private function getSendSmartReturnUrl()
+    {
+        /** @var PostNLShipment $postNLShipment */
+        $postNLShipment = $this->getPostNLShipment();
+
+        return $this->getUrl(
+            'postnl/shipment/GetSmartReturnLabel',
+            [
+                'postnl_shipment_id' => $postNLShipment->getId(),
+                'shipment_id'        => $this->getShipment()->getId(),
+            ]
+        );
+    }
+
     /**
      * @return \TIG\PostNL\Api\Data\ShipmentInterface|null
      */
