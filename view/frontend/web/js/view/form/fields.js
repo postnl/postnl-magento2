@@ -193,18 +193,20 @@ define([
             var self = this;
             var postcode;
             var housenumber;
-
+            var country;
             var postcodeRegex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
 
             // Wait for the form to load, once loaded get the values of housenumber and postcode
             var fields = [
                 this.parentName + '.postcode-field-group.field-group.housenumber',
-                this.parentName + '.postcode-field-group.field-group.postcode'
+                this.parentName + '.postcode-field-group.field-group.postcode',
+                this.parentName + '.country_id'
             ];
 
-            Registry.get(fields, function (housenumberElement, postcodeElement) {
+            Registry.get(fields, function (housenumberElement, postcodeElement, countryElement) {
                 housenumber = housenumberElement.value();
                 postcode = postcodeElement.value();
+                country = countryElement.value();
             });
 
             if (!postcode || !housenumber) {
@@ -212,7 +214,7 @@ define([
             }
 
             if ($.isNumeric(housenumber) && postcodeRegex.test(postcode)) {
-                return [housenumber, postcode];
+                return [housenumber, postcode, country];
             }
 
             if (self.request !== undefined || !postcodeRegex.test(postcode)) {
@@ -235,7 +237,8 @@ define([
                 url: window.checkoutConfig.shipping.postnl.urls.address_postcode,
                 data: {
                     housenumber: formData[0],
-                    postcode: formData[1]
+                    postcode: formData[1],
+                    country: formData[2]
                 },
             }).done(function (data) {
                 self.handleResponse(data);
@@ -322,7 +325,7 @@ define([
                     housenumberElement.value('');
                     additionElement.value('');
                 }
-                
+
                 // Next line is for initial load, before field is found in jQuery
                 postcodeElement.additionalClasses['tig-postnl-full-width'] = (value !== 'NL');
 
