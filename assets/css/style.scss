@@ -103,4 +103,13 @@ main {
     border-radius: 10px;
     margin-bottom: 20px;
   }
+  .hide {
+    display: none;
+  }
+  input {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 1px solid $postnl-primary;
+    width: 100%;
+  }
 }
