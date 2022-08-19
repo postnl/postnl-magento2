@@ -56,12 +56,13 @@
                 data: params,
                 dataType: 'json'
             }).done(function (response) {
+                debugger;
                 if(response.error === true) {
                     jQuery('#international_address_validation_message_span .success').hide();
                     jQuery('#international_address_validation_message_span .error').text(response.message).fadeIn(200);
                 } else {
                     jQuery('#international_address_validation_message_span .error').hide();
-                    jQuery('#international_address_validation_message_span .success').text(response.message).fadeIn(200);
+                    jQuery('#international_address_validation_message_span .success').text('Succesfully validated International Address Check').fadeIn(200);
                 }
             });
         });

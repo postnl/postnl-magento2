@@ -44,11 +44,6 @@ class InternationalAddressValidation extends Action
      */
     private $jsonFactory;
 
-    /**
-     * @var PostcodecheckHandler
-     */
-    private $handler;
-
     /** @var InternationalAddressCheck  */
     private $internationalAddressCheck;
 
@@ -59,15 +54,15 @@ class InternationalAddressValidation extends Action
      * @param InternationalAddressCheck $internationalAddressCheck
      */
     public function __construct(
-        Context $context,
-        JsonFactory $jsonFactory,
-        PostcodecheckHandler $postcodecheckHandler,
+        Context                   $context,
+        JsonFactory               $jsonFactory,
+        PostcodecheckHandler      $postcodecheckHandler,
         InternationalAddressCheck $internationalAddressCheck
     ) {
         parent::__construct($context);
 
-        $this->jsonFactory     = $jsonFactory;
-        $this->handler         = $postcodecheckHandler;
+        $this->jsonFactory               = $jsonFactory;
+        $this->handler                   = $postcodecheckHandler;
         $this->internationalAddressCheck = $internationalAddressCheck;
     }
 
@@ -76,16 +71,13 @@ class InternationalAddressValidation extends Action
      */
     public function execute()
     {
-        $params = $this->getRequest()->getParams();
-        $params = $this->handler->convertRequest($params);
-
         $params =
             [
-                'CountryIso'          => 'BE',
-                'cityName'            => 'Antwerpen',
-                'PostalCode'          => '2600',
-                'streetName'          => 'Grotesteenweg',
-                'houseNumber'         => '3',
+                'CountryIso'          => 'NL',
+                'cityName'            => 'Amsterdam',
+                'PostalCode'          => '1014 BA',
+                'streetName'          => 'Kabelweg',
+                'houseNumber'         => '37',
                 'houseNumberAddition' => null,
                 'addressLine'         => null,
                 'buildingName'        => null,
@@ -93,36 +85,29 @@ class InternationalAddressValidation extends Action
                 'stairs'              => null,
                 'floor'               => null,
                 'door'                => null,
-                'bus'                 => '1'
+                'bus'                 => null
             ];
 
         $this->internationalAddressCheck->updateRequestData($params);
         $result = $this->internationalAddressCheck->call();
 
         if ($result === false) {
-            return $this->returnJson($this->getErrorResponse(false, __('Zipcode/housenumber combination not found')));
+            $result = [
+                'error' => true,
+                //@codingStandardsIgnoreLine
+                'message' => __('Your API Credentials could not be validated.')
+            ];
         }
 
         if ($result === 'error') {
-            return $this->returnJson($this->getErrorResponse('error', __('Postcode response validation failed')));
+            $result = [
+                'error' => true,
+                //@codingStandardsIgnoreLine
+                'message' => __('Something went wrong while validating your credentials.')
+            ];
         }
 
         return $this->returnJson($result);
-    }
-
-    /**
-     * @param $status string|bool
-     * @param $error string
-     *
-     * @return array
-     */
-    private function getErrorResponse($status, $error)
-    {
-        $responseArray = [
-            'status' => $status,
-            'error'  => $error
-        ];
-        return $responseArray;
     }
 
     /**
