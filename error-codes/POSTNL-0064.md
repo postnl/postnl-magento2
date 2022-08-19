@@ -2,6 +2,10 @@
 title: "Maximaal aantal labels overschreden"
 code: POSTNL-0064
 ---
+### Probleem
 
+Er wordt geprobeerd teveel labels te printen.
 
-<p><h3>Probleem</h3></p><p>Er wordt geprobeerd teveel labels te printen. </p><p><h3>Oplossing</h3></p><p>Zie artikel <a href="/display/SDPOSTNL/%5BPOSTNL-0014%5D+Maximaal+aantal+labels">POSTNL-0014</a> voor de oplossing.</p>
+### Oplossing
+
+Zie artikel [POSTNL-0014](/display/SDPOSTNL/%5BPOSTNL-0014%5D+Maximaal+aantal+labels) voor de oplossing.

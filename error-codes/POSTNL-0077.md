@@ -1,13 +1,34 @@
 ---
-
 title: "Niet mogelijk om Track&Trace e-mail te sturen"
-
 code: POSTNL-0077
-
 ---
 
+### Probleem
 
+Het is momenteel niet mogelijk om voor deze zending de track & trace e-mail te versturen.
 
-<p></p><h3>Probleem</h3><p>Het is momenteel niet mogelijk om voor deze zending de track &amp; trace e-mail te versturen.</p><p></p><h3>Oplossing</h3><p>Dit kan o.a. voorkomen als de Track &amp; Trace e-mail al verzonden is voor deze zending of als het geselecteerde e-mail template niet beschikbaar is.</p><p>Vanaf versie 1.4.1 is het een bekend probleem dat de Track&amp;Trace e-mail niet verzonden kan worden. Dit komt meestal doordat, tijdens de upgrade, de standaard template niet kan worden gevonden door Magento. Om dit op te lossen, kan het onderstaande stappenplan gevolgd worden:&Acirc;&nbsp;</p><p>- Navigeer naar Systeem-&gt;Transactionele E-Mails.&Acirc;&nbsp;</p><p>- Selecteer hier als sjabloon 'PostNL Track &amp; Trace e-mail'&Acirc;&nbsp;</p><p>- Laad het sjabloon in</p><p>- Geef het template een naam</p><p>- Sla het sjabloon op<span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="{{site.baseurl}}/assets/images/POSTNL-0077_0.png" data-image-src="/download/attachments/8553785/Screen_Shot_2014-12-18_at_11.12_.10_.png?version=1&amp;modificationDate=1496072971000&amp;api=v2" data-unresolved-comment-count="0" data-linked-resource-id="14876905" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Screen_Shot_2014-12-18_at_11.12_.10_.png" data-base-url="https://docs.tig.nl" data-linked-resource-content-type="image/png" data-linked-resource-container-id="8553785" data-linked-resource-container-version="4" alt=""></span></p><p>&Acirc;&nbsp;</p><p>- Navigeer naar Systeem-&gt;configuratie-&gt;PostNL-&gt;Geavanceerde instellingen-&gt;Track&amp;Trace</p><p>- Selecteer het nieuw gemaakte Track &amp;&Acirc;&nbsp;Trace template als gebruikte template</p><p>- Sla de configuratie op</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="{{site.baseurl}}/assets/images/POSTNL-0077_1.png" data-image-src="/download/attachments/8553785/Screen%20Shot%202016-03-25%20at%2000.04.34.png?version=1&amp;modificationDate=1496072979000&amp;api=v2" data-unresolved-comment-count="0" data-linked-resource-id="14876906" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Screen Shot 2016-03-25 at 00.04.34.png" data-base-url="https://docs.tig.nl" data-linked-resource-content-type="image/png" data-linked-resource-container-id="8553785" data-linked-resource-container-version="4" alt=""></span></p></div>
+### Oplossing
 
+Dit kan o.a. voorkomen als de Track & Trace e-mail al verzonden is voor deze zending of als het geselecteerde e-mail template niet beschikbaar is.
 
+Vanaf versie 1.4.1 is het een bekend probleem dat de Track&Trace e-mail niet verzonden kan worden. Dit komt meestal doordat, tijdens de upgrade, de standaard template niet kan worden gevonden door Magento. Om dit op te lossen, kan het onderstaande stappenplan gevolgd worden:Â 
+
+\- Navigeer naar Systeem->Transactionele E-Mails.Â 
+
+\- Selecteer hier als sjabloon 'PostNL Track & Trace e-mail'Â 
+
+\- Laad het sjabloon in
+
+\- Geef het template een naam
+
+\- Sla het sjabloon op![]({{site.baseurl}}/assets/images/POSTNL-0077_0.png)
+
+Â 
+
+\- Navigeer naar Systeem->configuratie->PostNL->Geavanceerde instellingen->Track&Trace
+
+\- Selecteer het nieuw gemaakte Track &Â Trace template als gebruikte template
+
+\- Sla de configuratie op
+
+![]({{site.baseurl}}/assets/images/POSTNL-0077_1.png)

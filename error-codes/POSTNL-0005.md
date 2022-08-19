@@ -1,13 +1,63 @@
 ---
-
 title: "Gescheiden adresregels"
-
 code: POSTNL-0005
-
 ---
 
+### Probleem
 
+Op dit moment wordt er in de shop geen gebruik gemaakt van de gescheiden adres regels. Dit kan problemen veroorzaken bij het printen van verzend-labels. Bij internationale adressen is het zelfs noodzakelijk om gescheiden adres regels te hebben.
 
-<p></p><h3>Probleem</h3><p>Op dit moment wordt er in de shop geen gebruik gemaakt van de gescheiden adres regels. Dit kan problemen veroorzaken bij het printen van verzend-labels. Bij internationale adressen is het zelfs noodzakelijk om gescheiden adres regels te hebben.</p><p></p><h3>Oplossing</h3><p>Magento Community</p><p>a.) Ga in uw Magento beheeromgeving naar <em style="font-size: 1.0em;line-height: 1.45em;">Systeem &gt; Configuratie </em>en klik links onder het kopje&Acirc;&nbsp;</p><p>&Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp;<em>Klanten</em> op <em>Klant Configuratie.</em></p><p>b.) Klik vervolgens op het kopje <em>Naam en Adresinstellingen</em>.</p><p>c.) Voer bij het veld <em>Aantal regels in adres</em> het getal <em>3</em> in en klik op de <em>Sla Configuratie op </em>button.</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="{{site.baseurl}}/assets/images/POSTNL-0005_0.png" data-image-src="/download/attachments/8553720/screen1.png?version=1&amp;modificationDate=1496072647000&amp;api=v2" data-unresolved-comment-count="0" data-linked-resource-id="14876893" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="screen1.png" data-base-url="https://docs.tig.nl" data-linked-resource-content-type="image/png" data-linked-resource-container-id="8553720" data-linked-resource-container-version="4" alt=""></span></p><p>Ga verder bij stap d.</p><p><span style="text-decoration: underline;">Magento Enterprise<br></span>Volg deze a,b,c stappen alleen wanneer u een Magento Enterprise webshop heeft.</p><p>a.) Ga in uw Magento beheeromgeving naar <em>Klanten &gt; Attributen &gt; Beheer klant adresgegevens.</em></p><p>b.) Klik op de attribuutcode <em>street.</em></p><p>c.) Voer bij het veld <em>lijn telling het</em> getal <em>3</em> in en klik op de <em>sla eigenschap op button.</em></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="{{site.baseurl}}/assets/images/POSTNL-0005_1.png" data-image-src="/download/attachments/8553720/screen2.png?version=1&amp;modificationDate=1496072656000&amp;api=v2" data-unresolved-comment-count="0" data-linked-resource-id="14876894" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="screen2.png" data-base-url="https://docs.tig.nl" data-linked-resource-content-type="image/png" data-linked-resource-container-id="8553720" data-linked-resource-container-version="4" alt=""></span>&Acirc;&nbsp;</p><p><br></p><p>&Acirc;&nbsp;</p><p>Vervolgstappen voor Magento Community en Magento Enterprise</p><p>d.) Ga weer <em>naar Systeem &gt; Configuratie</em> en klik op <em>PostNL</em>. Klik op het kopje Winkel Instellingen.</p><p>e.) Zet een vinkje achter 'Deel straatnaam velden op'<em>.</em></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="{{site.baseurl}}/assets/images/POSTNL-0005_2.png" data-image-src="/download/attachments/8553720/Screen_Shot_2014-12-10_at_15.40_.24_.png?version=1&amp;modificationDate=1496072663000&amp;api=v2" data-unresolved-comment-count="0" data-linked-resource-id="14876895" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Screen_Shot_2014-12-10_at_15.40_.24_.png" data-base-url="https://docs.tig.nl" data-linked-resource-content-type="image/png" data-linked-resource-container-id="8553720" data-linked-resource-container-version="4" alt=""></span>&Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp;</p><p>f.) Kies bij <em>Straatnaam veld </em>de gewenste adresregel<em>.</em></p><p>g.) Kies bij <em>Huisnummer veld </em>de gewenste adresregel.</p><p>h.) Zet een vinkje achter 'Deel huisnummer op'<em>.</em></p><p>i.) Kies bij <em>Huisnummer extensie veld</em> de gewenste adresregel en klik op de <em>Sla configuratie op&Acirc;&nbsp;</em>button.</p><p><strong>Let op: </strong>Zorg dat voor straatnaam, huisnummer en huisnummer extensie verschillende&Acirc;&nbsp;velden worden gebruikt.</p><p>j.)&Acirc;&nbsp;&Acirc;&nbsp; Eventueel kunt u voor <em style="font-size: 1.0em;line-height: 1.45em;">Gebied, Gebouw naam, Afdeling naam, Deurcode</em> en<em style="font-size: 1.0em;line-height: 1.45em;"> Verdieping</em> nog aparte&Acirc;&nbsp;adresvelden aanmaken. Hiervoor moet u het getal dat u bij stap <em style="font-size: 1.0em;line-height: 1.45em;">c </em>heeft ingevoerd aanpassen.&Acirc;&nbsp;</p><p><strong style="font-size: 1.0em;line-height: 1.45em;">Let op: </strong>Voor Magento Community kunnen er maximaal 4 adresregels worden ingesteld. &Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp; &Acirc;&nbsp;&Acirc;&nbsp;</p><p>De adresgegevens zijn nu juist ingesteld. Vergeet niet de velden in de frontend goed te labelen. Hoe dit moet kun je <a href="https://confluence.tig.nl/hc/nl/articles/210515658" class="external-link" rel="nofollow">hier</a> vinden.</p></div>
+### Oplossing
 
+Magento Community
 
+a.) Ga in uw Magento beheeromgeving naar _Systeem > Configuratie_ en klik links onder het kopjeÂ 
+
+Â  Â  Â  Â _Klanten_ op _Klant Configuratie._
+
+b.) Klik vervolgens op het kopje _Naam en Adresinstellingen_.
+
+c.) Voer bij het veld _Aantal regels in adres_ het getal _3_ in en klik op de _Sla Configuratie op_ button.
+
+![]({{site.baseurl}}/assets/images/POSTNL-0005_0.png)
+
+Ga verder bij stap d.
+
+Magento Enterprise  
+Volg deze a,b,c stappen alleen wanneer u een Magento Enterprise webshop heeft.
+
+a.) Ga in uw Magento beheeromgeving naar _Klanten > Attributen > Beheer klant adresgegevens._
+
+b.) Klik op de attribuutcode _street._
+
+c.) Voer bij het veld _lijn telling het_ getal _3_ in en klik op de _sla eigenschap op button._
+
+![]({{site.baseurl}}/assets/images/POSTNL-0005_1.png)Â 
+
+  
+
+Â 
+
+Vervolgstappen voor Magento Community en Magento Enterprise
+
+d.) Ga weer _naar Systeem > Configuratie_ en klik op _PostNL_. Klik op het kopje Winkel Instellingen.
+
+e.) Zet een vinkje achter 'Deel straatnaam velden op'_._
+
+![]({{site.baseurl}}/assets/images/POSTNL-0005_2.png)Â  Â  Â  Â  Â  Â  Â  Â  Â  Â 
+
+f.) Kies bij _Straatnaam veld_ de gewenste adresregel_._
+
+g.) Kies bij _Huisnummer veld_ de gewenste adresregel.
+
+h.) Zet een vinkje achter 'Deel huisnummer op'_._
+
+i.) Kies bij _Huisnummer extensie veld_ de gewenste adresregel en klik op de _Sla configuratie opÂ _button.
+
+**Let op:** Zorg dat voor straatnaam, huisnummer en huisnummer extensie verschillendeÂ velden worden gebruikt.
+
+j.)Â Â  Eventueel kunt u voor _Gebied, Gebouw naam, Afdeling naam, Deurcode_ en _Verdieping_ nog aparteÂ adresvelden aanmaken. Hiervoor moet u het getal dat u bij stap _c_ heeft ingevoerd aanpassen.Â 
+
+**Let op:** Voor Magento Community kunnen er maximaal 4 adresregels worden ingesteld. Â  Â  Â  Â  Â  Â  Â Â 
+
+De adresgegevens zijn nu juist ingesteld. Vergeet niet de velden in de frontend goed te labelen. Hoe dit moet kun je [hier](https://confluence.tig.nl/hc/nl/articles/210515658) vinden.

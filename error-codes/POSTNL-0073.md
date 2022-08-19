@@ -2,6 +2,10 @@
 title: "De actie updateShippingStatus is niet beschikbaar"
 code: POSTNL-0073
 ---
+### Probleem
 
+Op dit moment is het niet mogelijk om de actie "updateShippingStatus" uit te voeren. PostNL heeft een onverwachte reactie gestuurd op dit verzoek.
 
-<p><h3>Probleem</h3></p><p>Op dit moment is het niet mogelijk om de actie "updateShippingStatus" uit te voeren. PostNL heeft een onverwachte reactie gestuurd op dit verzoek.</p><p><h3>Oplossing</h3></p><p>Dit wijst op een (tijdelijk) probleem in de communicatie tussen PostNL en de extensie. Probeer het later nog eens. Als het probleem zich blijft voordoen, neem dan contact op met uw technisch beheerder.</p>
+### Oplossing
+
+Dit wijst op een (tijdelijk) probleem in de communicatie tussen PostNL en de extensie. Probeer het later nog eens. Als het probleem zich blijft voordoen, neem dan contact op met uw technisch beheerder.

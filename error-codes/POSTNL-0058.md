@@ -2,10 +2,10 @@
 title: "Ongeldig generateLabelsWithoutConfirm antwoord"
 code: POSTNL-0058
 ---
+### Probleem
 
+Bij het verzoek "generateLabelsWithoutConfirm" heeft PostNL een onverwachte reactie gestuurd.
 
-<p><h3>Probleem</h3></p>
-<p>Bij het verzoek "generateLabelsWithoutConfirm" heeft PostNL een onverwachte reactie gestuurd.</p>
-<p><h3>Oplossing</h3></p>
-<p>Dit wijst op een (tijdelijk) probleem in de communicatie tussen PostNL en de extensie. Probeer het later nog eens. Als het probleem zich blijft voordoen, neem dan contact op met uw technisch beheerder.</p>
-<p></p>
+### Oplossing
+
+Dit wijst op een (tijdelijk) probleem in de communicatie tussen PostNL en de extensie. Probeer het later nog eens. Als het probleem zich blijft voordoen, neem dan contact op met uw technisch beheerder.
