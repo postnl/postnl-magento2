@@ -31,10 +31,11 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
-use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\ShipmentRepository;
+use TIG\PostNL\Controller\Adminhtml\Order\Email;
+use TIG\PostNL\Service\Api\ShipmentManagement;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
@@ -46,16 +47,24 @@ class GetSmartReturnLabel extends LabelAbstract
     /** @var ShipmentRepository */
     private $shipmentRepository;
 
+    /** @var Email  */
+    private $email;
+
+    /** @var ShipmentManagement  */
+    private $shipmentManagement;
+
     /**
-     * PrintShippingLabel constructor.
+     * GetSmartReturnLabel constructor.
      *
-     * @param Context            $context
-     * @param GetLabels          $getLabels
-     * @param GetPdf             $getPdf
-     * @param ShipmentRepository $shipmentRepository
-     * @param Track              $track
-     * @param BarcodeHandler     $barcodeHandler
-     * @param GetPackingslip     $getPackingSlip
+     * @param Context                     $context
+     * @param GetLabels                   $getLabels
+     * @param GetPdf                      $getPdf
+     * @param ShipmentRepository          $shipmentRepository
+     * @param Track                       $track
+     * @param BarcodeHandler              $barcodeHandler
+     * @param GetPackingslip              $getPackingSlip
+     * @param Email                       $email
+     * @param ShipmentManagement          $shipmentManagement
      */
     public function __construct(
         Context $context,
@@ -64,7 +73,9 @@ class GetSmartReturnLabel extends LabelAbstract
         ShipmentRepository $shipmentRepository,
         Track $track,
         BarcodeHandler $barcodeHandler,
-        GetPackingslip $getPackingSlip
+        GetPackingslip $getPackingSlip,
+        Email $email,
+        ShipmentManagement $shipmentManagement
     ) {
         parent::__construct(
             $context,
@@ -76,18 +87,21 @@ class GetSmartReturnLabel extends LabelAbstract
         );
 
         $this->shipmentRepository = $shipmentRepository;
+        $this->email              = $email;
+        $this->shipmentManagement = $shipmentManagement;
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|\Magento\Framework\Message\ManagerInterface
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Zend_Pdf_Exception
      */
     public function execute()
     {
-        $labels = $this->getLabels();
+        $magentoShipment = $this->getShipment();
+        $this->shipmentManagement->generateLabel($magentoShipment->getId(), true);
+        $labels = $this->getLabels->get($magentoShipment->getId());
 
         if (empty($labels)) {
             $this->messageManager->addErrorMessage(
@@ -98,7 +112,11 @@ class GetSmartReturnLabel extends LabelAbstract
             return $this->_redirect($this->_redirect->getRefererUrl());
         }
 
-        return $this->getPdf->get($labels);
+        // send email
+        $this->email->sendEmail($magentoShipment, $labels);
+        $this->messageManager->addSuccessMessage(__('Succesfully send out all Smart Return labels'));
+
+        return $this->_redirect($this->_redirect->getRefererUrl());
     }
 
     /**
@@ -110,30 +128,5 @@ class GetSmartReturnLabel extends LabelAbstract
     {
         $shipmentId = $this->getRequest()->getParam('shipment_id');
         return $this->shipmentRepository->get($shipmentId);
-    }
-
-    /**
-     * @return array|\Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    private function getLabels()
-    {
-        $shipment = $this->getShipment();
-        $shippingAddress = $shipment->getShippingAddress();
-
-        try {
-            $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId(), true);
-        } catch (LocalizedException $exception) {
-            $this->messageManager->addErrorMessage(
-                __('[POSTNL-0070] - Unable to generate barcode for shipment #%1', $shipment->getIncrementId())
-            );
-            return [];
-        }
-
-        $labels = $this->getLabels->get($shipment->getId(), false);
-
-        return $labels;
     }
 }

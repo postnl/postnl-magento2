@@ -295,10 +295,6 @@ class BarcodeHandler
             return true;
         }
 
-        if ($shipment->getIsSmartReturn()) {
-            return true;
-        }
-
         if ($isPrepared) {
             return false;
         }
