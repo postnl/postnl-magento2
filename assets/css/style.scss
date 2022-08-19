@@ -1,0 +1,106 @@
+---
+---
+
+// Check https://github.com/pages-themes/cayman/blob/master/_sass/variables.scss for variables
+
+$postnl-text: #606c71;
+$postnl-primary: #ed7000;
+
+// Headers
+$header-heading-color: #fff !default;
+
+// Text
+$section-headings-color: #ed7000;
+$body-text-color: $postnl-text;
+$body-link-color: $postnl-primary;
+$blockquote-text-color: #819198 !default;
+
+// Code
+$code-bg-color: #f3f6fa !default;
+$code-text-color: #567482 !default;
+
+// Borders
+$border-color: #dce6f0 !default;
+$table-border-color: #e9ebec !default;
+$hr-border-color: #eff0f1 !default;
+
+@import "{{ site.theme }}";
+
+@mixin only-large {
+  @media screen and (max-width: #{$large-breakpoint}) {
+    @content;
+  }
+}
+
+@font-face {
+  font-family: "PostNL-Regular";
+  src: url("PostNL-Regular.ttf") format("truetype");
+}
+
+body {
+  padding: 0;
+  font-family: "PostNL-Regular","Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #606c71;
+}
+
+.page-header {
+  //background-image: url('{{ site.baseurl }}/assets/images/pakketten_tcm9-150316.jpeg');
+  //background-size: cover;
+  //background-position: bottom;
+
+}
+
+.container {
+  & {
+    display: flex;
+  }
+  main {
+    & {
+      flex-grow: 1;
+    }
+  }
+  nav {
+    & {
+      max-width: 24em;
+      padding-left: 40px;
+      @include only-large {
+        display: none;
+      }
+    }
+    ul {
+      position: sticky;
+      top: 20px;
+      padding: 5px;
+    }
+    .active {
+      background-color: #ccc;
+    }
+  }
+}
+
+main {
+  h1 {
+    border-bottom: 1px solid #ed7000;
+  }
+
+  em {
+    font-style: normal;
+    border: $postnl-primary 1px solid;
+    border-radius: 5px;
+    padding: 2px;
+  }
+}
+
+.error-code-page{
+  nav > ul > li > ul > li > ul {
+    display: none;
+  }
+  .block {
+    padding: 10px;
+    border: $postnl-primary 1px solid;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+}
