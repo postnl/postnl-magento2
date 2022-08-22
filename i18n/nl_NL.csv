@@ -543,3 +543,7 @@ Percent,Percentage
 "Successfully connected to account.","Succesvol verbonden met account."
 "Validate API Credentials","Valideer API Gegevens"
 "Please save your configuration before validating your API Credentials.","Sla uw configuratie op voordat u uw API gegevens valideert."
+"Something went wrong while validating your credentials.","Er is iets fout gegaan tijdens het valideren van uw API gegevens."
+"Your API Credentials could not be validated.","Uw API credentials konden niet gevalideerd worden."
+"Validate International Address Check","Valideer Internationale Address Check"
+"Succesfully validated International Address Check","De International Address Check succesvol gevalideerd"
