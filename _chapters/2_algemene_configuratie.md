@@ -1,5 +1,5 @@
 ## Algemene configuratie en accountinformatie
-Nadat de PostNL extensie is geïnstalleerd is deze in de backend van de Magento webshop terug te vinden onder Winkels > Configuratie > Sales > PostNL.
+Nadat de PostNL extensie is geïnstalleerd is deze in de backend van de Magento webshop terug te vinden onder *Winkels → Configuratie → Sales → PostNL*.
 
 ### Accountinstellingen
 Om gebruik te kunnen maken van de plugin dient u eerst de Accountinstellingen en het adres van de afzender in te stellen.

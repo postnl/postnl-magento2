@@ -31,18 +31,18 @@ Het is ook mogelijk om de extensie handmatig te installeren, doorloop daarvoor d
  2. Maak een folder aan in de root folder waar de Magento installatie zich bevindt: `app/code/TIG/PostNL` (Hoofdlettergevoelig)
  3. De inhoud van de zip dient vervolgens in de folder `app/code/TIG/PostNL` geplaatst te worden 
  4. PostNL Magento 2 extensie inschakelen
-   ```shell
-   php bin/magento module:enable TIG_PostNL
-   ```
+```shell
+php bin/magento module:enable TIG_PostNL
+```
  5. PostNL Magento 2 extensie inschakelen
-    ```shell
-    php bin/magento setup:upgrade
-    ```
+```shell
+php bin/magento setup:upgrade
+```
  6. *Alleen productie modus* Wanneer de Magento 2 webshop in production mode draait, dan moet ook de static content opnieuw worden gedeployed:
-    ```shell
-    php bin/magento setup:di:compile
-    php bin/magento setup:static-content:deploy
-    ```
+```shell
+php bin/magento setup:di:compile
+php bin/magento setup:static-content:deploy
+```
 
 ### Extensie updaten
 

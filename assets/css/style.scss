@@ -85,11 +85,20 @@ main {
     border-bottom: 1px solid #ed7000;
   }
 
+  p {
+    font-size: 16px;
+  }
+
   em {
     font-style: normal;
     border: $postnl-primary 1px solid;
     border-radius: 5px;
-    padding: 2px;
+    padding: 0px 5px;
+    display: inline-block;
+  }
+
+  li {
+    font-size: 16px;
   }
 }
 

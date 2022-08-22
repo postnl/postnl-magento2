@@ -8,7 +8,7 @@ U hebt wereldwijd verzenden nodig, als u pakketten buiten Europa wil versturen. 
 
 [https://www.postnl.nl/versturen/pakket-versturen/pakket-buitenland/](https://www.postnl.nl/versturen/pakket-versturen/pakket-buitenland/)
 
-De instellingen voor wereldwijd verzenden staan onder: `Stores → Configuration → Sales → PostNL`, de instellingen staan onder Worldwide Shipping. Hier heeft u de optie op de extensie aan en uit te zetten en de standaard verzend methode in te stellen.
+De instellingen voor wereldwijd verzenden staan onder: *Stores → Configuration → Sales → PostNL*, de instellingen staan onder Worldwide Shipping. Hier heeft u de optie op de extensie aan en uit te zetten en de standaard verzend methode in te stellen.
 
 ![Wereldwijde verzending instellingen]({{ site.baseurl }}/assets/images/4_worldwide_header.png "Magento 2 Admin - PostNL Wereldwijd")
 
@@ -17,7 +17,7 @@ Activeer de barcode instellingen voor wereldwijd verzenden voor uw klanten. De e
 
 PostNL geeft u een barcode die u kunt gebruiken voor het versturen van pakketten naar landen buiten Europa.
 
-De instellingen voor barcode instellingen voor wereldwijd verzenden staan onder: `Stores → Configuration → Sales → PostNL`, de instellingen staan onder `Worldwide Shipping → Barcode Settings`. Hier kunt u het barcode type (bestaande uit twee letters) invoeren en de barcode range (bestaande uit vier cijfers) die u heeft ontvangen van PostNL.
+De instellingen voor barcode instellingen voor wereldwijd verzenden staan onder: *Stores → Configuration → Sales → PostNL*, de instellingen staan onder *Worldwide Shipping -> Barcode Settings*. Hier kunt u het barcode type (bestaande uit twee letters) invoeren en de barcode range (bestaande uit vier cijfers) die u heeft ontvangen van PostNL.
 
 ![Wereldwijde verzending barcode]({{ site.baseurl }}/assets/images/4_worldwide_barcode.png "Magento 2 Admin - PostNL Wereldwijd Barcode")
 
@@ -26,7 +26,7 @@ Activeer douane instellingen voor uw klanten. Als u klanten hebt die vaak verzen
 
 De extensie bied de mogelijkheid om aan te geven wat voor soort verzend methode u aan uw klanten wil aanbieden.
 
-De instellingen voor douane instellingen voor wereldwijd verzenden staan onder: `Stores → Configuration → Sales → PostNL`, de instellingen staan onder `Worldwide Shipping → Customs Settings`.
+De instellingen voor douane instellingen voor wereldwijd verzenden staan onder: *Stores → Configuration -> Sales -> PostNL*, de instellingen staan onder *Worldwide Shipping -> Customs Settings*.
 Hier kunt u een licentie en certificaat nummer invullen (in dien u daarover beschikt) en een verzend methode kiezen. Zoals bijvoorbeeld gift, documents of commercial goods.
 
 
