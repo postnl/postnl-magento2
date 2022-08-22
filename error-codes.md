@@ -8,9 +8,8 @@ Voor specifieke gevallen kan een artikel geschreven zijn. Hieronder vind je een 
 
 <input type="text" id="search" placeholder="Search..."/>
 
-
-
-{% for page in site.pages %}
+{% assign errorcodes = site.pages | reverse  %}
+{% for page in errorcodes %}
 {% if page.dir == "/error-codes/" %}
 <div class="block" data-code="{{page.code | uri_escape}}" data-title="{{page.title | uri_escape}}">
     <h2 id="{{page.code}}" data-navigation-title="{{page.code}}">[{{page.code}}] {{page.title}}</h2>
