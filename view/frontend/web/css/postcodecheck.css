@@ -32,6 +32,10 @@ aside .tig-postnl-field-group .field > .label {
     margin-bottom: 16px;
 }
 
+.tig-postnl-success {
+    color: green;
+}
+
 .tig-postnl-field-group {
     float: left;
     width: 100%;

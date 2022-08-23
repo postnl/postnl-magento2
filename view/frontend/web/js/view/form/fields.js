@@ -46,9 +46,13 @@ define([
             isLoading : false,
             message   : ko.observable(null),
             imports   : {
-                observePostcode    : '${ $.parentName }.postcode-field-group.field-group.postcode:value',
-                observeHousenumber : '${ $.parentName }.postcode-field-group.field-group.housenumber:value',
-                observeCountry     : '${ $.parentName }.country_id:value'
+                observePostcode        : '${ $.parentName }.postcode-field-group.field-group.postcode:value',
+                observeHousenumber     : '${ $.parentName }.postcode-field-group.field-group.housenumber:value',
+                observeCountry         : '${ $.parentName }.country_id:value',
+                observeMagentoPostcode : '${ $.parentName }.postcode:value',
+                observeMagentoCity     : '${ $.parentName }.city:value',
+                observeMagentoStreet0  : '${ $.parentName }.street.0:value',
+                observeMagentoStreet1  : '${ $.parentName }.street.1:value'
             },
             timer : undefined,
             value : ko.observable('')
@@ -149,6 +153,8 @@ define([
                     housenumberElement.required(false);
                     housenumberElement.validation['required-entry'] = false;
                 });
+
+                self.checkInternationalAddress();
             } else {
                 Registry.get([this.parentName + '.postcode-field-group.field-group.housenumber'], function (housenumberElement) {
                     housenumberElement.required(true);
@@ -175,6 +181,71 @@ define([
             }, 1000);
         },
 
+        checkInternationalAddress : function () {
+            var self = this;
+            var formData = self.getInternationalFormData();
+            self.isLoading(false);
+
+            if (!window.checkoutConfig.shipping.postnl.is_international_address_active || formData === false) {
+                return;
+            }
+
+            self.isLoading(true);
+
+            if (self.request !== undefined) {
+                self.request.abort('avoidMulticall');
+            }
+
+            self.request = $.ajax({
+                method:'GET',
+                url: window.checkoutConfig.shipping.postnl.urls.international_address,
+                data: {
+                    street: formData[0],
+                    postcode: formData[1],
+                    city: formData[2],
+                    country: formData[3]
+                },
+            }).done(function (data) {
+                self.handleInternationalResponse(data);
+            }).fail(function (data) {
+                if (data.statusText !== 'avoidMulticall') {
+                    var errorMessage = $.mage.__('Unexpected error occurred. Please fill in the address details manually.');
+                    self.handleError(errorMessage);
+                }
+            }).always(function (data) {
+                self.isLoading(false);
+            });
+        },
+
+        handleInternationalResponse : function (data) {
+            var self = this;
+            var validationElement = $('.tig-postnl-validation-message');
+            var message = $.mage.__('The address could not be validated.');
+
+            if (data.status === false) {
+                validationElement.removeClass('tig-postnl-success');
+                message = $.mage.__('Sorry, we could not validate your address. Please check if the correct address has been filled.');
+                self.handleError(message);
+            }
+
+            if (data.status === true) {
+                validationElement.addClass('tig-postnl-success');
+                message = 'Your address is valid!';
+
+                if (data.addressCount > 1) {
+                    message = message + ' However, multiple matching addresses has been found. Please check if the correct address has been filled.';
+                }
+
+                message = $.mage.__(message);
+
+                self.handleError(message);
+            }
+
+            if (data.error) {
+                console.error(data.error);
+            }
+        },
+
         setFieldData : function () {
             var self = this;
             var formData = self.getFormData();
@@ -187,6 +258,41 @@ define([
                 self.isLoading(false);
                 self.enableAddressFields(true);
             }
+        },
+
+        getInternationalFormData : function () {
+            var self = this;
+            var street;
+            var postcode;
+            var city;
+            var country;
+
+            var fields = [
+                this.parentName + '.street.0',
+                this.parentName + '.street.1',
+                this.parentName + '.street.2',
+                this.parentName + '.street.3',
+                this.parentName + '.postcode',
+                this.parentName + '.city',
+                this.parentName + '.country_id',
+            ];
+
+            Registry.get(fields, function (
+                street0Element, street1Element, street2Element, street3Element,
+                postcodeElement, cityElement, countryElement
+            ) {
+                street = street0Element.value() + ' ' + street1Element.value() + ' ' +
+                    street2Element.value() + ' ' + street3Element.value();
+                postcode = postcodeElement.value();
+                city = cityElement.value();
+                country = countryElement.value();
+            });
+
+            if (!street || !postcode || !city || !country) {
+                return false;
+            }
+
+            return [street, postcode, city, country];
         },
 
         getFormData : function () {
@@ -307,6 +413,30 @@ define([
             }
         },
 
+        observeMagentoPostcode : function (value) {
+            if (value) {
+                this.updateFieldData();
+            }
+        },
+
+        observeMagentoCity : function (value) {
+            if (value) {
+                this.updateFieldData();
+            }
+        },
+
+        observeMagentoStreet0 : function (value) {
+            if (value) {
+                this.updateFieldData();
+            }
+        },
+
+        observeMagentoStreet1 : function (value) {
+            if (value) {
+                this.updateFieldData();
+            }
+        },
+
         observeCountry : function (value) {
             var self = this;
 
@@ -322,7 +452,7 @@ define([
                     housenumberElement.value('');
                     additionElement.value('');
                 }
-                
+
                 // Next line is for initial load, before field is found in jQuery
                 postcodeElement.additionalClasses['tig-postnl-full-width'] = (value !== 'NL');
 
