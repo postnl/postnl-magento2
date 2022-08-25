@@ -1,0 +1,71 @@
+<?php
+/**
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to support@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact support@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
+?>
+
+<?php /** @var $block \TIG\PostNL\Block\Adminhtml\Config\Validate\InternationalAddressValidation */ ?>
+
+<?= $block->getButtonHtml() ?>
+<span id="international_address_validation_message_span" class="message_span">
+    <span class="international-address-validation-message error" style="display: none;"></span>
+    <span class="international-address-validation-message success" style="display: none;"></span>
+</span>
+
+<script>
+    require([
+        'jquery',
+        'prototype'
+    ], function(jQuery){
+        jQuery('#validate_international_address_check').click(function () {
+            var params = {
+                form_key: "<?= $block->getFormKey(); ?>",
+                isAjax: true
+            };
+
+            jQuery.ajax({
+                showLoader: true,
+                url: "<?= $block->getAjaxUrl(); ?>",
+                data: params,
+                dataType: 'json'
+            }).done(function (response) {
+                debugger;
+                if(response.error === true) {
+                    jQuery('#international_address_validation_message_span .success').hide();
+                    jQuery('#international_address_validation_message_span .error').text(response.message).fadeIn(200);
+                } else {
+                    jQuery('#international_address_validation_message_span .error').hide();
+                    jQuery('#international_address_validation_message_span .success').text('Succesfully validated International Address Check').fadeIn(200);
+                }
+            });
+        });
+
+    });
+</script>

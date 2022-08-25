@@ -507,3 +507,7 @@ Percent,Percent
 "Belgium Post Office + Extra Cover","Belgium Post Office + Extra Cover"
 "Validate API Credentials","Validate API Credentials"
 "Please save your configuration before validating your API Credentials.","Please save your configuration before validating your API Credentials."
+"Your API Credentials could not be validated.","Your API Credentials could not be validated."
+"Something went wrong while validating your credentials.","Something went wrong while validating your credentials."
+"Validate International Address Check","Validate International Address Check"
+"Succesfully validated International Address Check","Succesfully validated International Address Check"
