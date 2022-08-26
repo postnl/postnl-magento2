@@ -48,11 +48,9 @@ class InternationalAddressHandler
     }
 
     /**
-     * TODO: check possible response errors
-     *
      * @param $params
      *
-     * @return bool|mixed
+     * @return bool|int
      */
     public function convertResponse($params)
     {
@@ -105,10 +103,10 @@ class InternationalAddressHandler
         }
 
         return [
-            'addressLine'  => trim($params['street']),
-            'postalCode' => $params['postcode'],
-            'cityName' => $params['city'],
-            'countryIso' => $params['country'],
+            'addressLine' => trim($params['street']),
+            'postalCode'  => $params['postcode'],
+            'cityName'    => $params['city'],
+            'countryIso'  => $params['country'],
         ];
     }
 

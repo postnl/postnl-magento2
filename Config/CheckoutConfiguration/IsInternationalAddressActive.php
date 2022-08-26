@@ -41,7 +41,7 @@ class IsInternationalAddressActive implements CheckoutConfigurationInterface
     private $webshopConfig;
 
     /**
-     * IsPostcodecheckActive constructor.
+     * IsInternationalAddressActive constructor
      *
      * @param Webshop $webshop
      */

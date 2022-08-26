@@ -38,13 +38,16 @@ use TIG\PostNL\Config\Source\Options\ProductOptions;
 
 class DefaultConfiguration extends AbstractConfigProvider
 {
-    const XPATH_ENDPOINTS_API_BASE_URL = 'tig_postnl/endpoints/api_base_url';
+    //Base API URLs are used for SOAP calls that are used for most PostNL API calls
+    const XPATH_ENDPOINTS_API_BASE_URL      = 'tig_postnl/endpoints/api_base_url';
     const XPATH_ENDPOINTS_TEST_API_BASE_URL = 'tig_postnl/endpoints/test_api_base_url';
 
-    const XPATH_ENDPOINTS_API_ADDRESS_URL = 'tig_postnl/endpoints/address_api_url';
+    //Address API URLs are used for postcode check REST calls
+    const XPATH_ENDPOINTS_API_ADDRESS_URL      = 'tig_postnl/endpoints/address_api_url';
     const XPATH_ENDPOINTS_TEST_API_ADDRESS_URL = 'tig_postnl/endpoints/address_test_api_url';
 
-    const XPATH_ENDPOINTS_API_URL = 'tig_postnl/endpoints/api_url';
+    //API URLs are used for other REST calls, such as the International Address Check
+    const XPATH_ENDPOINTS_API_URL      = 'tig_postnl/endpoints/api_url';
     const XPATH_ENDPOINTS_TEST_API_URL = 'tig_postnl/endpoints/test_api_url';
 
     const XPATH_BARCODE_GLOBAL_TYPE  = 'postnl/barcode/global_type';

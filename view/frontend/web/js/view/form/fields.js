@@ -52,7 +52,9 @@ define([
                 observeMagentoPostcode : '${ $.parentName }.postcode:value',
                 observeMagentoCity     : '${ $.parentName }.city:value',
                 observeMagentoStreet0  : '${ $.parentName }.street.0:value',
-                observeMagentoStreet1  : '${ $.parentName }.street.1:value'
+                observeMagentoStreet1  : '${ $.parentName }.street.1:value',
+                observeMagentoStreet2  : '${ $.parentName }.street.2:value',
+                observeMagentoStreet3  : '${ $.parentName }.street.3:value'
             },
             timer : undefined,
             value : ko.observable('')
@@ -182,7 +184,7 @@ define([
         },
 
         checkInternationalAddress : function () {
-            var self = this;
+            var self     = this;
             var formData = self.getInternationalFormData();
             self.isLoading(false);
 
@@ -218,9 +220,9 @@ define([
         },
 
         handleInternationalResponse : function (data) {
-            var self = this;
+            var self              = this;
             var validationElement = $('.tig-postnl-validation-message');
-            var message = $.mage.__('The address could not be validated.');
+            var message           = $.mage.__('The address could not be validated.');
 
             if (data.status === false) {
                 validationElement.removeClass('tig-postnl-success');
@@ -275,10 +277,10 @@ define([
             ];
 
             Registry.get(fields, function (streetElement, postcodeElement, cityElement, countryElement) {
-                street = streetElement.value();
+                street   = streetElement.value();
                 postcode = postcodeElement.value();
-                city = cityElement.value();
-                country = countryElement.value();
+                city     = cityElement.value();
+                country  = countryElement.value();
             });
 
             street = street + self.getStreetFormData();
@@ -292,7 +294,7 @@ define([
 
         getStreetFormData : function ()
         {
-            var self = this;
+            var self   = this;
             var street = '';
 
             var streetFields = [
@@ -449,6 +451,18 @@ define([
         },
 
         observeMagentoStreet1 : function (value) {
+            if (value) {
+                this.updateFieldData();
+            }
+        },
+
+        observeMagentoStreet2 : function (value) {
+            if (value) {
+                this.updateFieldData();
+            }
+        },
+
+        observeMagentoStreet3 : function (value) {
             if (value) {
                 this.updateFieldData();
             }

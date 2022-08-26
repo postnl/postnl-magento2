@@ -48,17 +48,23 @@ class Address extends Action
     /** @var InternationalAddressHandler */
     private $handler;
 
+    /**
+     * @param Context                     $context
+     * @param JsonFactory                 $jsonFactory
+     * @param InternationalAddressCheck   $addressCheckService
+     * @param InternationalAddressHandler $internationalAddressHandler
+     */
     public function __construct(
-        Context $context,
-        JsonFactory $jsonFactory,
-        InternationalAddressCheck $addressCheckService,
-        InternationalAddressHandler $postcodecheckHandler
+        Context                     $context,
+        JsonFactory                 $jsonFactory,
+        InternationalAddressCheck   $addressCheckService,
+        InternationalAddressHandler $internationalAddressHandler
     ) {
         parent::__construct($context);
 
         $this->jsonFactory         = $jsonFactory;
         $this->addressCheckService = $addressCheckService;
-        $this->handler             = $postcodecheckHandler;
+        $this->handler             = $internationalAddressHandler;
     }
 
     /**
@@ -74,7 +80,8 @@ class Address extends Action
         }
 
         $this->addressCheckService->updateRequestData($params);
-        $result = $this->addressCheckService->call();
+
+        $result          = $this->addressCheckService->call();
         $formattedResult = $this->handler->convertResponse($result);
 
         if (!$formattedResult) {
@@ -86,7 +93,7 @@ class Address extends Action
         }
 
         $response = [
-            'status' => true,
+            'status'       => true,
             'addressCount' => $formattedResult
         ];
 
