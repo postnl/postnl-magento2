@@ -547,3 +547,12 @@ Percent,Percentage
 "Your API Credentials could not be validated.","Uw API credentials konden niet gevalideerd worden."
 "Validate International Address Check","Valideer Internationale Address Check"
 "Succesfully validated International Address Check","De International Address Check succesvol gevalideerd"
+"Address request validation failed","Address request validation failed"
+"No addresses found","Geen adressen gevonden"
+"International address check response validation failed","Internationaal adres response is niet valide"
+"Error received getting address data from PostNL.","Een fout is opgetreden tijdens het ophalen van adres gegevens van PostNL."
+"The address could not be validated.","Het adres kon niet gevalideerd worden."
+"Sorry, we could not validate your address. Please check if the correct address has been filled.","Uw adres kon niet gevalideerd worden. Controleer s.v.p. dat uw gegevens correct zijn."
+"Your address is valid!","Uw adres is valide!"
+"Your address is valid! However, multiple matching addresses has been found. Please check if the correct address has been filled.",
+"Uw adres is valide! Echter zijn er meerdere overeenkomende adressen gevonden. Controleer s.v.p. of u de correcte adres ingevuld hebt."
