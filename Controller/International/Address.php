@@ -34,7 +34,7 @@ namespace TIG\PostNL\Controller\International;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\Result\JsonFactory;
-use TIG\PostNL\Webservices\Endpoints\Address\Postalcode;
+use TIG\PostNL\Webservices\Endpoints\Address\InternationalAddressCheck;
 use TIG\PostNL\Service\Handler\InternationalAddressHandler;
 
 class Address extends Action
@@ -42,8 +42,8 @@ class Address extends Action
     /** @var JsonFactory */
     private $jsonFactory;
 
-    /** @var Postalcode */
-    private $postcodeService;
+    /** @var InternationalAddressCheck */
+    private $addressCheckService;
 
     /** @var InternationalAddressHandler */
     private $handler;
@@ -51,14 +51,14 @@ class Address extends Action
     public function __construct(
         Context $context,
         JsonFactory $jsonFactory,
-        Postalcode $postalcodeService,
+        InternationalAddressCheck $addressCheckService,
         InternationalAddressHandler $postcodecheckHandler
     ) {
         parent::__construct($context);
 
-        $this->jsonFactory     = $jsonFactory;
-        $this->postcodeService = $postalcodeService;
-        $this->handler         = $postcodecheckHandler;
+        $this->jsonFactory         = $jsonFactory;
+        $this->addressCheckService = $addressCheckService;
+        $this->handler             = $postcodecheckHandler;
     }
 
     /**
@@ -73,18 +73,24 @@ class Address extends Action
             return $this->returnJson($this->getErrorResponse('error', __('Address request validation failed')));
         }
 
-        $result = [
+        $this->addressCheckService->updateRequestData($params);
+        $result = $this->addressCheckService->call();
+        $formattedResult = $this->handler->convertResponse($result);
+
+        if (!$formattedResult) {
+            return $this->returnJson($this->getErrorResponse(false, __('No addresses found')));
+        }
+
+        if ($formattedResult === 'error') {
+            return $this->returnJson($this->getErrorResponse('error', __('International address check response validation failed')));
+        }
+
+        $response = [
             'status' => true,
-            'addressCount' => 2
+            'addressCount' => $formattedResult
         ];
 
-        //TODO: Implement international address API call
-//        $this->postcodeService->updateRequestData($params);
-//        $result = $this->postcodeService->call();
-
-//        return $this->returnJson($this->getErrorResponse(false, __('International address check response validation failed')));
-
-        return $this->returnJson($result);
+        return $this->returnJson($response);
     }
 
     /**

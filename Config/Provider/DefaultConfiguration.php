@@ -43,7 +43,9 @@ class DefaultConfiguration extends AbstractConfigProvider
 
     const XPATH_ENDPOINTS_API_ADDRESS_URL = 'tig_postnl/endpoints/address_api_url';
     const XPATH_ENDPOINTS_TEST_API_ADDRESS_URL = 'tig_postnl/endpoints/address_test_api_url';
-    const XPATH_ENDPOINTS_API_INTERNATIONAL = 'tig_postnl/endpoints/address_international_api_url';
+
+    const XPATH_ENDPOINTS_API_URL = 'tig_postnl/endpoints/api_url';
+    const XPATH_ENDPOINTS_TEST_API_URL = 'tig_postnl/endpoints/test_api_url';
 
     const XPATH_BARCODE_GLOBAL_TYPE  = 'postnl/barcode/global_type';
     const XPATH_BARCODE_GLOBAL_RANGE = 'postnl/barcode/global_range';
@@ -144,10 +146,30 @@ class DefaultConfiguration extends AbstractConfigProvider
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getInternationalAddressCheckApiUrl()
+    public function getModusApiUrl()
     {
-        return $this->getConfigFromXpath(static::XPATH_ENDPOINTS_API_INTERNATIONAL);
+        if ($this->accountConfiguration->isModusLive()) {
+            return $this->getApiUrl();
+        }
+
+        return $this->getTestApiUrl();
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiUrl()
+    {
+        return $this->getConfigFromXpath(static::XPATH_ENDPOINTS_API_URL);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTestApiUrl()
+    {
+        return $this->getConfigFromXpath(static::XPATH_ENDPOINTS_TEST_API_URL);
     }
 }

@@ -64,4 +64,9 @@ interface RestInterface
      * @return string
      */
     public function getVersion();
+
+    /**
+     * @return bool
+     */
+    public function useAddressUri();
 }

@@ -269,30 +269,47 @@ define([
 
             var fields = [
                 this.parentName + '.street.0',
-                this.parentName + '.street.1',
-                this.parentName + '.street.2',
-                this.parentName + '.street.3',
                 this.parentName + '.postcode',
                 this.parentName + '.city',
-                this.parentName + '.country_id',
+                this.parentName + '.country_id'
             ];
 
-            Registry.get(fields, function (
-                street0Element, street1Element, street2Element, street3Element,
-                postcodeElement, cityElement, countryElement
-            ) {
-                street = street0Element.value() + ' ' + street1Element.value() + ' ' +
-                    street2Element.value() + ' ' + street3Element.value();
+            Registry.get(fields, function (streetElement, postcodeElement, cityElement, countryElement) {
+                street = streetElement.value();
                 postcode = postcodeElement.value();
                 city = cityElement.value();
                 country = countryElement.value();
             });
+
+            street = street + self.getStreetFormData();
 
             if (!street || !postcode || !city || !country) {
                 return false;
             }
 
             return [street, postcode, city, country];
+        },
+
+        getStreetFormData : function ()
+        {
+            var self = this;
+            var street = '';
+
+            var streetFields = [
+                this.parentName + '.street.1',
+                this.parentName + '.street.2',
+                this.parentName + '.street.3'
+            ];
+
+            for (var i=0; i < streetFields.length; i++) {
+                Registry.get(streetFields[i], function (streetLine) {
+                    if (streetLine.value().length > 0) {
+                        street += ' ' + streetLine.value();
+                    }
+                });
+            }
+
+            return street;
         },
 
         getFormData : function () {

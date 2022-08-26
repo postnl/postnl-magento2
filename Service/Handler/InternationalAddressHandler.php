@@ -68,8 +68,8 @@ class InternationalAddressHandler
             return 'error';
         }
 
-        if ($this->validateParams($params[0], ['street', 'postcode', 'city', 'country'])) {
-            return $params[0];
+        if ($this->validateParams($params[0], ['streetName', 'houseNumber', 'postalCode', 'cityName', 'countryName'])) {
+            return count($params);
         }
 
         return false;
