@@ -124,3 +124,17 @@ aside .tig-postnl-field-group .field > .label {
 .tig-postnl-field-group-account .field {
     margin-bottom: 0;
 }
+
+.tig-postnl-international-addresses .tig-postnl-address span {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 4px;
+    border-radius: 5px;
+    border: 1px solid;
+    cursor: pointer;
+}
+
+.tig-postnl-international-addresses .tig-postnl-address span:hover {
+    border: 3px solid;
+    margin: 2px;
+}

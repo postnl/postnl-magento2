@@ -76,53 +76,29 @@ class Address extends Action
         $params = $this->handler->convertRequest($params);
 
         if (!$params) {
-            return $this->returnJson($this->getErrorResponse('error', __('Address request validation failed')));
+            return $this->returnJson(400, [
+                'message' => __('Address request validation failed')
+            ]);
         }
 
         $this->addressCheckService->updateRequestData($params);
 
         $result          = $this->addressCheckService->call();
-        $formattedResult = $this->handler->convertResponse($result);
+        list($statusCode, $formattedResult) = $this->handler->convertResponse($result, $params);
 
-        if (!$formattedResult) {
-            return $this->returnJson($this->getErrorResponse(false, __('No addresses found')));
-        }
-
-        if ($formattedResult === 'error') {
-            return $this->returnJson($this->getErrorResponse('error', __('International address check response validation failed')));
-        }
-
-        $response = [
-            'status'       => true,
-            'addressCount' => $formattedResult
-        ];
-
-        return $this->returnJson($response);
+        return $this->returnJson($statusCode, $formattedResult);
     }
 
     /**
-     * @param $status string|bool
-     * @param $error string
-     *
-     * @return array
-     */
-    private function getErrorResponse($status, $error)
-    {
-        $responseArray = [
-            'status' => $status,
-            'error'  => $error
-        ];
-        return $responseArray;
-    }
-
-    /**
+     * @param $statusCode
      * @param $data
      *
      * @return \Magento\Framework\Controller\Result\Json
      */
-    private function returnJson($data)
+    private function returnJson($statusCode, $data)
     {
         $response = $this->jsonFactory->create();
+        $response->setHttpResponseCode($statusCode);
         return $response->setData($data);
     }
 }

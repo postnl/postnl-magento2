@@ -45,6 +45,8 @@ define([
             template  : 'TIG_Postcode/checkout/field-group',
             isLoading : false,
             message   : ko.observable(null),
+            messageClasses: ko.observable({}),
+            addresses : ko.observable([]),
             imports   : {
                 observePostcode        : '${ $.parentName }.postcode-field-group.field-group.postcode:value',
                 observeHousenumber     : '${ $.parentName }.postcode-field-group.field-group.housenumber:value',
@@ -221,31 +223,17 @@ define([
 
         handleInternationalResponse : function (data) {
             var self              = this;
-            var validationElement = $('.tig-postnl-validation-message');
-            var message           = $.mage.__('The address could not be validated.');
+            var message           = data.message;
 
-            if (data.status === false) {
-                validationElement.removeClass('tig-postnl-success');
-                message = $.mage.__('Sorry, we could not validate your address. Please check if the correct address has been filled.');
-                self.handleError(message);
+            self.handleError(message);
+            if (data.addressMatchesFirst === true) {
+                this.messageClasses({'tig-postnl-success': true});
+                this.addresses([]);
+                return;
             }
 
-            if (data.status === true) {
-                validationElement.addClass('tig-postnl-success');
-                message = 'Your address is valid!';
-
-                if (data.addressCount > 1) {
-                    message = message + ' However, multiple matching addresses has been found. Please check if the correct address has been filled.';
-                }
-
-                message = $.mage.__(message);
-
-                self.handleError(message);
-            }
-
-            if (data.error) {
-                console.error(data.error);
-            }
+            this.messageClasses({'tig-postnl-success': false});
+            this.addresses(data.addresses);
         },
 
         setFieldData : function () {
@@ -404,13 +392,10 @@ define([
 
         handleError : function (errorMessage) {
             var self = this;
-            var error = $('.tig-postnl-validation-message');
-            error.hide();
+            this.message(errorMessage);
 
             if (errorMessage) {
                 self.enableAddressFields(true);
-
-                error.html(errorMessage).show();
             }
         },
 
@@ -418,6 +403,25 @@ define([
             this._super().observe(['isLoading', 'value']);
 
             return this;
+        },
+
+        setAddress: function(data) {
+            this.addresses([]);
+            this.handleError();
+
+            var fields = [
+                this.parentName + '.street.0',
+                this.parentName + '.postcode',
+                this.parentName + '.city',
+                this.parentName + '.country_id'
+            ];
+
+            Registry.get(fields, function (streetElement, postcodeElement, cityElement, countryElement) {
+                streetElement.value(data.formattedAddress[0]);
+                postcodeElement.value(data.postalCode);
+                cityElement.value(data.cityName);
+                countryElement.value(data.countryIso2);
+            });
         },
 
         observeHousenumber : function (value) {

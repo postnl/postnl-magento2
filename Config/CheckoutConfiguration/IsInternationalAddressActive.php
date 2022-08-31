@@ -56,6 +56,6 @@ class IsInternationalAddressActive implements CheckoutConfigurationInterface
      */
     public function getValue()
     {
-        return (bool) $this->webshopConfig->getIsInternationalAddressEnabled();
+        return (bool) $this->webshopConfig->getIsInternationalAddressEnabled() && $this->webshopConfig->getIsAddressCheckEnabled();
     }
 }

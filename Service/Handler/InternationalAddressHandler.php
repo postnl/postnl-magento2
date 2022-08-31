@@ -49,29 +49,46 @@ class InternationalAddressHandler
 
     /**
      * @param $params
+     * @param $input
      *
-     * @return bool|int
+     * @return array
      */
-    public function convertResponse($params)
+    public function convertResponse($params, $input)
     {
         $params = $this->formatParams($params);
 
         if (empty($params)) {
-            return false;
+            return [200, [
+                'addressCount' => 0,
+                'addressMatchesFirst' => false,
+                'message' => __('Sorry, we could not validate your address. Please check if the correct address has been filled.')
+            ]];
         }
 
         if (isset($params['errors']) || isset($params['fault']) || !isset($params[0])) {
             //@codingStandardsIgnoreLine
             $this->logger->critical(__('Error received getting address data from PostNL.'), $params);
-            return 'error';
+            return [500, [
+                'message' => 'International address check response validation failed'
+            ]];
         }
 
-        if ($this->validateParams($params[0], ['streetName', 'houseNumber', 'postalCode', 'cityName', 'countryName'])) {
-            return count($params);
+        if (!$this->validateParams($params[0], ['streetName', 'houseNumber', 'postalCode', 'cityName', 'countryName'])) {
+            $this->logger->critical(__('Error received getting address data from PostNL.'), $params);
+            return [500, [
+                'message' => 'International address check response validation failed'
+            ]];
         }
 
-        return false;
+        $addressMatch = $this->doAdressesMatch($params[0], $input);
+        return [200, [
+            'addressCount' => count($params),
+            'addressMatchesFirst' => $addressMatch,
+            'message' => $addressMatch ?  __('Your address is valid!') : __('Your address does not match our records, please select one of the addresses below'),
+            'addresses' => $params
+        ]];
     }
+
 
     /**
      * @param $params
@@ -137,11 +154,32 @@ class InternationalAddressHandler
      */
     private function checkKeys($data, $keysToContain)
     {
-        $check = 0;
-        foreach ($keysToContain as $key) {
-            array_key_exists($key, $data)?: $check++;
-        }
+        return empty(array_diff($keysToContain, array_keys($data)));
+    }
 
-        return $check == 0;
+    /**
+     * @param $data
+     * @param $input
+     * @param $keysToContain
+     *
+     * @return bool
+     */
+    private function doAdressesMatch($data, $input)
+    {
+        if ($data['cityName'] !== $input['cityName']) {
+            return false;
+        }
+        if ($data['postalCode'] !== $input['postalCode']){
+            return false;
+        }
+        if ($data['countryIso2'] !== $input['countryIso']){
+            return false;
+        }
+        foreach ($data['formattedAddress'] as $addressLine) {
+            if (strtolower($addressLine) === strtolower($input['addressLine'])) {
+                return true;
+            }
+        }
+        return false;
     }
 }

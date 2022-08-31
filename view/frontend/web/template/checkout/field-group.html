@@ -4,4 +4,9 @@
     <!--/ko-->
 </div>
 <div class="tig-postnl-loading" data-bind="blockLoader: isLoading"></div>
-<div class="tig-postnl-validation-message" data-bind="text : message"></div>
+<div class="tig-postnl-validation-message" data-bind="html: message, css: messageClasses"></div>
+<div class="tig-postnl-international-addresses">
+    <div class="tig-postnl-address" data-bind="foreach: addresses">
+        <span data-bind="html: formattedAddress.join('<br />'),  click: function() {$parent.setAddress($data);}"></span>
+    </div>
+</div>
