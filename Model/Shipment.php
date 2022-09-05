@@ -97,6 +97,8 @@ class Shipment extends AbstractModel implements ShipmentInterface
 
     const FIELD_IS_SMART_RETURN      = 'is_smart_return';
 
+    const FIELD_SMART_RETURN_BARCODE = 'smart_return_barcode';
+
     /**
      * @var string
      */
@@ -979,5 +981,23 @@ class Shipment extends AbstractModel implements ShipmentInterface
     public function getIsSmartReturn()
     {
         return $this->getData(static::FIELD_IS_SMART_RETURN);
+    }
+
+    /**
+     * @param string
+     *
+     * @return $this
+     */
+    public function setSmartReturnBarcode($value)
+    {
+        return $this->setData(static::FIELD_SMART_RETURN_BARCODE, $value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getSmartReturnBarcode()
+    {
+        return $this->getData(static::FIELD_SMART_RETURN_BARCODE);
     }
 }
