@@ -55,11 +55,17 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface
     // @codingStandardsIgnoreLine
     protected $_eventPrefix = 'tig_postnl_shipment_label';
 
-    /**
-     * @var ShipmentRepositoryInterface
-     */
+    /** @var ShipmentRepositoryInterface  */
     private $shipmentRepository;
 
+    /**
+     * @param Context                     $context
+     * @param Registry                    $registry
+     * @param ShipmentRepositoryInterface $shipmentRepository
+     * @param AbstractResource|null       $resource
+     * @param AbstractDb|null             $resourceCollection
+     * @param array                       $data
+     */
     public function __construct(
         Context $context,
         Registry $registry,

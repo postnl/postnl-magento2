@@ -199,6 +199,11 @@ class BarcodeHandler
         for ($count = 1; $count <= $parcelCount; $count++) {
             $returnBarcode = $this->generate($shipment, $isReturnBarcode);
             $this->createBarcode($shipment->getId(), $count, $returnBarcode, $isReturnBarcode);
+
+            if ($shipment->getIsSmartReturn()) {
+                $shipment->setSmartReturnBarcode($returnBarcode);
+            }
+
             $shipment->setReturnBarcode($returnBarcode);
             $this->shipmentRepository->save($shipment);
         }

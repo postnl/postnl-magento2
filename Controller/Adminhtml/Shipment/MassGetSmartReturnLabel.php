@@ -31,6 +31,8 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
+use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
+use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use Magento\Backend\App\Action\Context;
 use TIG\PostNL\Controller\Adminhtml\Order\Email;
@@ -57,31 +59,41 @@ class MassGetSmartReturnLabel extends LabelAbstract
     /** @var Filter  */
     private $filter;
 
+    /** @var ShipmentLabelRepositoryInterface  */
+    private $shipmentLabel;
+
+    /** @var ShipmentRepositoryInterface  */
+    private $shipmentRepository;
+
     /**
      * GetSmartReturnLabel constructor.
      *
-     * @param Context            $context
-     * @param GetLabels          $getLabels
-     * @param GetPdf             $getPdf
-     * @param Track              $track
-     * @param BarcodeHandler     $barcodeHandler
-     * @param GetPackingslip     $getPackingSlip
-     * @param Email              $email
-     * @param ShipmentManagement $shipmentManagement
-     * @param ShipmentCollectionFactory  $collectionFactory
-     * @param Filter             $filter
+     * @param Context                          $context
+     * @param GetLabels                        $getLabels
+     * @param GetPdf                           $getPdf
+     * @param Track                            $track
+     * @param BarcodeHandler                   $barcodeHandler
+     * @param GetPackingslip                   $getPackingSlip
+     * @param Email                            $email
+     * @param ShipmentManagement               $shipmentManagement
+     * @param ShipmentCollectionFactory        $collectionFactory
+     * @param Filter                           $filter
+     * @param ShipmentLabelRepositoryInterface $shipmentLabel
+     * @param ShipmentRepositoryInterface      $shipmentRepository
      */
     public function __construct(
-        Context $context,
-        GetLabels $getLabels,
-        GetPdf $getPdf,
-        Track $track,
-        BarcodeHandler $barcodeHandler,
-        GetPackingslip $getPackingSlip,
-        Email $email,
-        ShipmentManagement $shipmentManagement,
-        ShipmentCollectionFactory $collectionFactory,
-        Filter $filter
+        Context                          $context,
+        GetLabels                        $getLabels,
+        GetPdf                           $getPdf,
+        Track                            $track,
+        BarcodeHandler                   $barcodeHandler,
+        GetPackingslip                   $getPackingSlip,
+        Email                            $email,
+        ShipmentManagement               $shipmentManagement,
+        ShipmentCollectionFactory        $collectionFactory,
+        Filter                           $filter,
+        ShipmentLabelRepositoryInterface $shipmentLabel,
+        ShipmentRepositoryInterface      $shipmentRepository
     ) {
         parent::__construct(
             $context,
@@ -94,8 +106,10 @@ class MassGetSmartReturnLabel extends LabelAbstract
 
         $this->email              = $email;
         $this->shipmentManagement = $shipmentManagement;
-        $this->collectionFactory = $collectionFactory;
-        $this->filter = $filter;
+        $this->collectionFactory  = $collectionFactory;
+        $this->filter             = $filter;
+        $this->shipmentLabel      = $shipmentLabel;
+        $this->shipmentRepository = $shipmentRepository;
     }
 
     /**
@@ -109,6 +123,16 @@ class MassGetSmartReturnLabel extends LabelAbstract
         $magentoShipments = $this->getShipment();
 
         foreach ($magentoShipments as $magentoShipment) {
+            //Check if there are already labels generated for this shipment.
+            $postnlShipment = $this->shipmentRepository->getByShipmentId($magentoShipment->getId());
+            $labels         = $this->shipmentLabel->getByShipmentId($postnlShipment->getEntityId());
+
+            if ($labels) {
+                $this->email->sendEmail($magentoShipment, $labels);
+                $labels = null;
+                continue;
+            }
+
             $this->shipmentManagement->generateLabel($magentoShipment->getId(), true);
             $labels = $this->getLabels->get($magentoShipment->getId());
 
@@ -121,7 +145,6 @@ class MassGetSmartReturnLabel extends LabelAbstract
                 return $this->_redirect($this->_redirect->getRefererUrl());
             }
 
-            // send email
             $this->email->sendEmail($magentoShipment, $labels);
         }
 
