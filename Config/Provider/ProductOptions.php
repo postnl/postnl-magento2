@@ -293,7 +293,7 @@ class ProductOptions extends AbstractConfigProvider
         }
 
         if ($country === 'BE' && $shopCountry === 'NL') {
-            return static::NL_TO_BE_PRODUCT_CODE;
+            return $this->productOptions->getOptionsByCode('4941')['value'];
         }
 
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS);
