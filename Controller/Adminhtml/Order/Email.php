@@ -86,7 +86,7 @@ class Email
         $fromName    = $this->scopeConfig->getValue('trans_email/ident_sales/name');
         $toEmail     = $shippingAddress->getEmail();
         $fileContent = $this->getLabel($labels);
-        $fileName    = 'test';
+        $fileName    = 'test.pdf';
 
         try {
             $templateVars = [
@@ -107,7 +107,11 @@ class Email
                                                 ->setTemplateOptions($templateOptions)
                                                 ->setTemplateVars($templateVars)
                                                 ->setFrom($from)
-                                                ->addAttachment($fileContent, $fileName, 'text/pdf')
+                                                ->addAttachment(
+                                                    base64_decode($fileContent),
+                                                    'text/pdf',
+                                                    \Laminas\Mime\Mime::DISPOSITION_ATTACHMENT,  \Laminas\Mime\Mime::ENCODING_BASE64,
+                                                    'test.pdf')
                                                 ->addTo($toEmail)
                                                 ->getTransport();
             $transport->sendMessage();
