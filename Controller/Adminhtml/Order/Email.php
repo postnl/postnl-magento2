@@ -81,7 +81,7 @@ class Email
     public function sendEmail($shipment, $labels)
     {
         $shippingAddress = $shipment->getShippingAddress();
-        $templateId  = '7';
+        $templateId  = '1';
         $fromEmail   = $this->scopeConfig->getValue('trans_email/ident_sales/email');
         $fromName    = $this->scopeConfig->getValue('trans_email/ident_sales/name');
         $toEmail     = $shippingAddress->getEmail();
@@ -107,10 +107,9 @@ class Email
                                                 ->setTemplateOptions($templateOptions)
                                                 ->setTemplateVars($templateVars)
                                                 ->setFrom($from)
+                                                ->addAttachment($fileContent, $fileName, 'text/pdf')
                                                 ->addTo($toEmail)
                                                 ->getTransport();
-            $attachmentPart = $this->transportBuilder->addAttachment($fileContent, $fileName);
-            $transport->getMessage()->getBody()->addPart($attachmentPart);
             $transport->sendMessage();
             $this->state->resume();
         } catch (\Exception $e) {
