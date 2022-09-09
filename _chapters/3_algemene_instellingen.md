@@ -2,7 +2,7 @@
 Nadat de PostNL extensie is geïnstalleerd is deze in de backend van de Magento webshop terug te vinden onder *Winkels → Configuratie → Sales → PostNL*.
 
 ### Verzendinstellingen
-De *overkomstduur* is het aantal dagen dat de bestelling nodig heeft om bezorgd te worden nadat deze is geplaatst. In combinatie met de ingestelde *cut-off tijden* en de *verzenddagen* bepaald de plugin wanneer de klant de bestelling kan verwachten.
+De *overkomstduur* is het aantal dagen dat de bestelling nodig heeft om bezorgd te worden nadat deze is geplaatst. In combinatie met de ingestelde *cut-off tijden* en de *verzenddagen* bepaald de extensie wanneer de klant de bestelling kan verwachten.
 ![Verzend instellingen]({{ site.baseurl }}/assets/images/3_verzend_instellingen.png "Magento 2 Admin - PostNL Verzenden")
 
 ### Bezorginstellingen
@@ -143,12 +143,10 @@ Bij de handmatige optie kan een bestelling op twee plaatsen aangemerkt worden al
 
 
 ### Retourinstellingen
-Activeer retourenen voor Nederland en België voor uw klanten. De extensie maakt automatisch retour labels aan voor Nederland/België.
+Retouren zijn beschikbaar voor Nederland en België. Na activatie dient het retouradres ingevuld te worden, waarbij het land afhankelijk is van het geozken verzendland.
+De extensie voegt na de activatie automatisch retourlabels toe bij het printen van de labels voor Nederland / België.
 
-Om retour labels voor Nederland/België te kunnen laten generen hebt u een antwoordnummer en een apart klantnummer nodig.
-U kunt hiervoor contact opnemen met uw account manager.
+> Om retourlabels te kunnen laten generen is een antwoordnummer en een apart klantnummer nodig. Hiervoor akn contact opgenomen met uw account manager of het kan [hier](https://www.postnl.nl/zakelijke-oplossingen/ontvangen/antwoordnummer/) aangevraagd worden.
 
-De instellingen voor retourenen Nederland/België staan onder: *Stores → Configuration → Sales → PostNL*, de instellingen staan onder `PostNL Settings → Returns`.
-Je kan hier apart voor Nederland en België de retourlabel optie uit en aan zetten.
 ![Retour instellingen]({{ site.baseurl }}/assets/images/3_retour_instellingen.png "Magento 2 Admin - PostNL Retouren")
 
