@@ -32,6 +32,7 @@
 
 namespace TIG\PostNL\Controller\Adminhtml\Order;
 
+use Laminas\Mime\Mime;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Mail\Template\TransportBuilder;
@@ -81,12 +82,12 @@ class Email
     public function sendEmail($shipment, $labels)
     {
         $shippingAddress = $shipment->getShippingAddress();
-        $templateId  = '1';
+        $templateId  = 'tig_postnl_smart_returns';
+        $fileName    = 'smart_return_label.pdf';
         $fromEmail   = $this->scopeConfig->getValue('trans_email/ident_sales/email');
         $fromName    = $this->scopeConfig->getValue('trans_email/ident_sales/name');
         $toEmail     = $shippingAddress->getEmail();
         $fileContent = $this->getLabel($labels);
-        $fileName    = 'test.pdf';
 
         try {
             $templateVars = [
@@ -110,8 +111,8 @@ class Email
                                                 ->addAttachment(
                                                     base64_decode($fileContent),
                                                     'text/pdf',
-                                                    \Laminas\Mime\Mime::DISPOSITION_ATTACHMENT,  \Laminas\Mime\Mime::ENCODING_BASE64,
-                                                    'test.pdf')
+                                                    Mime::DISPOSITION_ATTACHMENT,  Mime::ENCODING_BASE64,
+                                                    $fileName)
                                                 ->addTo($toEmail)
                                                 ->getTransport();
             $transport->sendMessage();
