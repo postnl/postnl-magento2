@@ -1,6 +1,6 @@
 ## Installatie van de extensie
 
-Voordat er gestart wordt met de installatie van de officiële PostNL Magento 2 extensie of het updaten daarvan adviseren wij altijd om eerst een backup te maken en de extensie eerst op een staging of test omgeving te installeren.
+Voordat er gestart wordt met de installatie van de officiële PostNL Magento 2 extensie of het updaten daarvan adviseren wij altijd om eerst een backup te maken en de extensie eerst op een staging of testomgeving te installeren.
 
 ### Installatie met composer (aanbevolen)
 Wij adviseren net zoals Magento om de extensie te installeren middels composer. Log hiervoor in middels SSH op uw server en navigeer naar de Magento 2 installatie. Voer hier vervolgens de onder staande commando's uit.
@@ -56,7 +56,7 @@ php bin/magento setup:upgrade
 ### Extensie deïnstalleren
 Om de PostNL Magento 2 extensie te deïnstalleren kan er gebruik gemaakt worden van de deïnstallatie commando's die [Magento aanbiedt](https://devdocs.magento.com/guides/v2.4/install-gde/install/cli/install-cli-uninstall-mods.html#instgde-cli-uninst-mod-uninst)
 
-De extensie maakt gebruik van deïnstallatiescripts. Voeg de `--remove-data` to aan het commando, het script zal dan vragen of order gerelateerde PostNL gegevens verwijderd dienen te worden. Het verwijderen van deze gegevens is optioneel. Het aanbevolen deïstallatiescript is alsvolgt:
+De extensie maakt gebruik van deïnstallatiescripts. Voeg de `--remove-data` to aan het commando, het script zal dan vragen of order gerelateerde PostNL gegevens verwijderd dienen te worden. Het verwijderen van deze gegevens is optioneel. Het aanbevolen deïstallatiescript is als volgt:
 ```shell
 php bin/magento module:uninstall TIG_PostNL --backup-db --remove-data --clear-static-content
 ```

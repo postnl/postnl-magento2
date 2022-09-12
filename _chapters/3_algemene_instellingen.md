@@ -68,7 +68,7 @@ Wanneer deze optie is geactiveerd en de configuratie is opgeslagen, dan verschij
 ![PostNL ID Check]({{ site.baseurl }}/assets/images/3_bezorging_id_check.png "PostNL ID Check")
 
 #### Cargo
-Met PostNL Cargo is het mogelijk om palletzendingen te versturen naar verschillende landen binnen Europa. Wanner deze optie geactiveerd wordt, dan zullen er extra productopties beschikbaar gemaakt worden. 
+Met PostNL Cargo is het mogelijk om palletzendingen te versturen naar verschillende landen binnen Europa. Wanneer deze optie geactiveerd wordt, dan zullen er extra productopties beschikbaar gemaakt worden. 
 >**Let op:** Om gebruik te kunnen maken van PostNL Cargo dient u eerst uw PostNL Pakketten accountmanager te raadplegen.
 
 ![PostNL Cargo]({{ site.baseurl }}/assets/images/3_bezorging_cargo.png "PostNL Cargo")
@@ -100,7 +100,7 @@ Op productniveau kan er ingesteld worden welke producten verzonden moeten worden
 ![PostNL Extra@Home]({{ site.baseurl }}/assets/images/3_bezorging_extra@home.png "PostNL Extra@Home")
 
 #### Track and Trace
-Activeer Track and Trace voor uw klanten. Wanneer u track&trace heeft geactiveerd, word er automatisch een Track and Trace mail voor de order gestuurd naar de klant.
+Activeer Track and Trace voor uw klanten. Wanneer u track&trace heeft geactiveerd, wordt er automatisch een Track and Trace mail voor de order gestuurd naar de klant.
 Voor de Track and Trace e-mails kunnen ook een BCC e-mails opgegeven worden, deze kunnen komma gescheiden ingevoerd worden.
 
 ![PostNL Track and Trace]({{ site.baseurl }}/assets/images/3_bezorging_track_trace.png "PostNL Track and Trace")
@@ -129,7 +129,7 @@ Binnen de extensie zijn er twee opties om gebruik te maken van brievenbuspakjes:
 
 Om een pakketje automatisch als brievenbuspakje te markeren zijn een paar punten belangrijk:
 
-- Bij de producten dient het gewicht correct ingesteld te zijn, het maximale gewicht van een brievnbuspakje is 2 kg.
+- Bij de producten dient het gewicht correct ingesteld te zijn, het maximale gewicht van een brievenbuspakje is 2 kg.
 - Bij de producten moet onder de tab PostNL `Soort` op *Brievenbuspakje* gezet worden en de `Maximale hoeveelheid Brievenbuspakje` moet ingesteld zijn.
 
 ![PostNL Brievenbuspakje productinstellingen]({{ site.baseurl }}/assets/images/3_bezorging_brievenbuspakje_productinstellingen.png "PostNL Brievenbuspakje productinstellingen")
@@ -143,10 +143,10 @@ Bij de handmatige optie kan een bestelling op twee plaatsen aangemerkt worden al
 
 
 ### Retourinstellingen
-Retouren zijn beschikbaar voor Nederland en België. Na activatie dient het retouradres ingevuld te worden, waarbij het land afhankelijk is van het geozken verzendland.
+Retouren zijn beschikbaar voor Nederland en België. Na activatie dient het retouradres ingevuld te worden, waarbij het land afhankelijk is van het gekozen verzendland.
 De extensie voegt na de activatie automatisch retourlabels toe bij het printen van de labels voor Nederland / België.
 
-> Om retourlabels te kunnen laten generen is een antwoordnummer en een apart klantnummer nodig. Hiervoor akn contact opgenomen met uw account manager of het kan [hier](https://www.postnl.nl/zakelijke-oplossingen/ontvangen/antwoordnummer/) aangevraagd worden.
+> Om retourlabels te kunnen laten generen is een antwoordnummer en een apart klantnummer nodig. Hiervoor kan contact opgenomen met uw accountmanager of het kan [hier](https://www.postnl.nl/zakelijke-oplossingen/ontvangen/antwoordnummer/) aangevraagd worden.
 
 ![Retour instellingen]({{ site.baseurl }}/assets/images/3_retour_instellingen.png "Magento 2 Admin - PostNL Retouren")
 
