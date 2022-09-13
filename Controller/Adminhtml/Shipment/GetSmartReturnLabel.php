@@ -118,15 +118,6 @@ class GetSmartReturnLabel extends LabelAbstract
         //Check if there are already labels generated for this shipment.
         $postnlShipment = $this->shipmentRepositoryInterface->getByShipmentId($magentoShipment->getId());
         $labels         = $this->shipmentLabel->getByShipmentId($postnlShipment->getEntityId());
-        $isSmartReturn  = $postnlShipment->getIsSmartReturn();
-
-        if (!$isSmartReturn) {
-            $this->messageManager->addErrorMessage(
-                __('Shipment with id: ' . $magentoShipment->getId() . ' is not a Smart Return shipment')
-            );
-
-            return $this->_redirect($this->_redirect->getRefererUrl());
-        }
 
         if ($labels) {
             $this->email->sendEmail($magentoShipment, $labels);

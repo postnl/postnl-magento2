@@ -83,7 +83,7 @@ class Email
     {
         $shippingAddress = $shipment->getShippingAddress();
         $templateId  = 'tig_postnl_smart_returns';
-        $fileName    = 'smart_return_label.pdf';
+        $fileName    = 'SmartReturnLabel.pdf';
         $fromEmail   = $this->scopeConfig->getValue('trans_email/ident_sales/email');
         $fromName    = $this->scopeConfig->getValue('trans_email/ident_sales/name');
         $toEmail     = $shippingAddress->getEmail();
