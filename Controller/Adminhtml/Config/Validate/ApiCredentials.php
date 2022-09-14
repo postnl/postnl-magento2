@@ -124,8 +124,13 @@ class ApiCredentials extends Action
             'message' => __('Your API Credentials could not be validated, check your data in the My PostNL environment. Or check the PostNL logs.')
         ];
 
-        $store = $this->storeManager->getStore();
-        $this->soap->updateApiKey($store->getId());
+        $storeId = $this->getRequest()->getParam('storeId');
+
+        if ($storeId === '') {
+            $storeId = $this->storeManager->getStore()->getId();
+        }
+
+        $this->soap->updateApiKey($storeId);
         $customerData = $this->getCustomerData($this->getRequest());
         $validatedApiCredentials = $this->validateApiCredentials($customerData);
 
