@@ -5,7 +5,7 @@ Onder de printerinstellingen kan het formaat van de labels ingesteld worden, waa
 Daarnaast kan er gekozen worden om de pdf direct te downloaden of om deze in een nieuw venster te openen.
 ![Logging]({{ site.baseurl }}/assets/images/5_extra_printer.png "PostNL Magento 2 printerinstellingen")
 
-### Label- en packingslipopties
+### Label- en packingslip opties
 Binnen de PostNL extensie is er de opties om labels te printen of of pakbonnen te printen. Voor beide opties zijn er configuraties beschikbaar.
 
 Op de labels verschijnt linksboven een referentie, hierbij kan er gekozen worden om hiervoor geen waarde, zending ID, bestelling ID of een eigen waarde weer te geven. 
@@ -23,7 +23,7 @@ Er kan ook worden gekozen om het op basis van een vooraf gedefinieerd aantal pak
 Op de pakbonnen kan een barcode geprint worden, na het scannen zal deze de bijpassende order erbij zoeken in het order grid. 
 Standaard wordt de barcode rechtsboven op de pakbon geprint, deze positie kan naar wens aangepast worden op basis van coördinaten op de PDF.
 
-Voor de barcode kan er gekozen worden uit diverse type barcodes te weten *Code 25*, *Code 39*, *Code 128*, *RoyalMail*.
+Voor de barcode kan er gekozen worden uit diverse type barcodes te weten *Code 25*, *Code 39*, *Code 128*, *Royal Mail*.
 ![Logging]({{ site.baseurl }}/assets/images/5_extra_barcode_pakbon.png "PostNL Magento 2 barcode pakbon")
 
 ### Adresvalidatie
