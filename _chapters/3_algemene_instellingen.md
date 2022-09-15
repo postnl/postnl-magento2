@@ -5,7 +5,7 @@ Nadat de PostNL extensie is geïnstalleerd is deze in de backend van de Magento 
 De *overkomstduur* is het aantal dagen dat de bestelling nodig heeft om bezorgd te worden nadat deze is geplaatst. In combinatie met de ingestelde *cut-off tijden* en de *verzenddagen* bepaald de extensie wanneer de klant de bestelling kan verwachten.
 ![Verzend instellingen]({{ site.baseurl }}/assets/images/3_verzend_instellingen.png "Magento 2 Admin - PostNL Verzenden")
 
-### Bezorginstellingen
+### Bezorg instellingen
 
 #### Avondbezorging
 Activeer avondbezorging om klanten de optie te bieden om hun pakket 's avonds bezorgd te krijgen. De extensie toont deze optie automatisch voor afleveradressen
@@ -19,10 +19,10 @@ Voor avondbezorging kan een alternatieve productoptie ingesteld worden, standaar
 
 ![Avondbezorging]({{ site.baseurl }}/assets/images/3_bezorging_avondbezorging.png "PostNL Avondbezorging")
 
-#### Zondagbezorging
+#### Zondag bezorging
 Activeer zondagbezorging om klanten de optie te bieden om hun bestelling op zondag te ontvangen. Na activatie zal zondagbezorging verschijnen als bezorgdag in de checkout.
 
-Er kan voor zondagbezorging een toeslag ingesteld worden, deze wordt opgeteld bij de verzendkosten. Laat het veld leeg om geen toeslag in rekening te brengen.
+Er kan voor zondag bezorging een toeslag ingesteld worden, deze wordt opgeteld bij de verzendkosten. Laat het veld leeg om geen toeslag in rekening te brengen.
 
 Voor zondagbezorging kan een alternatieve productoptie ingesteld worden, standaard staat deze op `Lever alleen aan opgegeven adres`.
 
@@ -54,7 +54,7 @@ Er kan een standaard productoptie ingesteld voor verzendingen die niet bij buren
 
 ![PostNL niet bij buren leveren]({{ site.baseurl }}/assets/images/3_bezorging_niet_bij_buren.png "PostNL niet bij buren leveren")
 
-#### Voorraadinstellingen
+#### Voorraad instellingen
 Standaard worden de bezorgopties alleen weergegeven voor producten die op voorraad zijn, maar er kan ook gekozen worden om deze altijd weer te geven ongeacht de voorraad status.
 
 ![Voorraadinstellingen]({{ site.baseurl }}/assets/images/3_bezorging_voorraadinstellingen.png "PostNL Voorraadinstellingen")
@@ -63,7 +63,7 @@ Standaard worden de bezorgopties alleen weergegeven voor producten die op voorra
 Activeer de ID check om bestelling te versturen met een leeftijdscheck. 
 Voor deze bestellingen zal de pakketbezorger de leeftijd van de ontvanger van het pakket controleren.
 
-Wanneer deze optie is geactiveerd en de configuratie is opgeslagen, dan verschijnen de ID check productopties in de dropdown met productopties.
+Wanneer deze optie is geactiveerd en de configuratie is opgeslagen, dan verschijnen de ID check productopties in de dropdown met product opties.
 
 ![PostNL ID Check]({{ site.baseurl }}/assets/images/3_bezorging_id_check.png "PostNL ID Check")
 
@@ -82,10 +82,10 @@ Nadat u deze instelling heeft ingeschakeld kan de productoptie geselecteerd word
 ![PostNL Pakjes Tracked]({{ site.baseurl }}/assets/images/3_bezorging_pakjes_tracked.png "PostNL Pakjes Tracked")
 
 #### EU en België
-Voor bestellingen naar België en de EU kan standaard een specifieke productoptie ingesteld. Om ook de EU business productopties terug te kunnen zien in de dropdown, dient de optie *Gebruik EU business* op "Ja" gezet te worden en daarna dient de configuratie opgeslagen te worden.
+Voor bestellingen naar België en de EU kan standaard een specifieke product optie ingesteld. Om ook de EU business product opties terug te kunnen zien in de dropdown, dient de optie *Gebruik EU business* op "Ja" gezet te worden en daarna dient de configuratie opgeslagen te worden.
 
 De standaard geselecteerde productoptie wordt automatisch als *Zending Type* ingesteld voor de overeenkomstige bestellingen. 
-Bij het bestellingenoverzicht zijn deze terug te vinden in de kolom *Zending Type*.
+Bij het bestellingen overzicht zijn deze terug te vinden in de kolom *Zending Type*.
 
 ![PostNL EU en België]({{ site.baseurl }}/assets/images/3_bezorging_eu_belgie.png "PostNL EU en Belgie")
 
@@ -137,12 +137,12 @@ Om een pakketje automatisch als brievenbuspakje te markeren zijn een paar punten
 **Handmatig**
 
 Bij de handmatige optie kan een bestelling op twee plaatsen aangemerkt worden als brievenbuspakje:
-- **Bestellingenoverzicht:** In het bestellingenoverzicht kunt u van één of meerdere bestellingen de verzendoptie wijzigen. Selecteer de bestellingen waarvan u de verzendoptie wil wijzigen, selecteer in de PostNL actie balk ‘Verander productcode’ en selecteer vervolgens de bezorgoptie *Brievenbuspakje Extra*.
-- **Per bestelling:** Open hiervoor vanuit het bestellingenoverzicht een bestelling en klik op de optie om de bestelling te versturen. Onderaan de pagina kan er vervolgens bij de Verzending opties een *PostNL Bezorgoptie* geselecteerd worden. Kies in dit geval voor *Brievenbuspakje Extra*.
+- **Bestellingen overzicht:** In het bestellingen overzicht kunt u van één of meerdere bestellingen de verzendoptie wijzigen. Selecteer de bestellingen waarvan u de verzendoptie wil wijzigen, selecteer in de PostNL actiebalk ‘Verander productcode’ en selecteer vervolgens de bezorgoptie *Brievenbuspakje Extra*.
+- **Per bestelling:** Open hiervoor vanuit het bestellingen overzicht een bestelling en klik op de optie om de bestelling te versturen. Onderaan de pagina kan er vervolgens bij de Verzending opties een *PostNL Bezorgoptie* geselecteerd worden. Kies in dit geval voor *Brievenbuspakje Extra*.
   ![PostNL Brievenbuspakje verzenden]({{ site.baseurl }}/assets/images/3_bezorging_brievenbuspakje_verzenden.png "PostNL Brievenbuspakje verzenden")
 
 
-### Retourinstellingen
+### Retour instellingen
 Retouren zijn beschikbaar voor Nederland en België. Na activatie dient het retouradres ingevuld te worden, waarbij het land afhankelijk is van het gekozen verzendland.
 De extensie voegt na de activatie automatisch retourlabels toe bij het printen van de labels voor Nederland / België.
 
