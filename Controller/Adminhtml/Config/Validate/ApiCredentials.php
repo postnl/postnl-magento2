@@ -176,8 +176,15 @@ class ApiCredentials extends Action
      */
     public function getCustomerData($request)
     {
+        $modus          = $request->getParam('modus');
         $customerCode   = $request->getParam('customer_code');
         $customerNumber = $request->getParam('customer_number');
+
+        if ($modus === '2') {
+            $customerCode   = $request->getParam('test_customer_code');
+            $customerNumber = $request->getParam('test_customer_number');
+        }
+
         $customerData['CustomerCode']   = $customerCode;
         $customerData['CustomerNumber'] = $customerNumber;
 
