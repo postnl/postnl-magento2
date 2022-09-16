@@ -98,6 +98,23 @@ class LayoutProcessor
         return $jsLayout;
     }
 
+    private function addInternationalAddressBlock($fieldset, $scope){
+        $fieldset['tig_postnl_address_validator_info'] = [
+            'component' => 'TIG_PostNL/js/view/form/international-check',
+            'type'      => 'none',
+            'provider'  => 'checkoutProvider',
+            'sortOrder' => 9999,
+            'config'    => [
+                'customScope' => $scope,
+                'template'    => 'TIG_PostNL/checkout/international-check',
+                'additionalClasses' => $this->webshopConfig->getCheckoutCompatibleForAddressCheck()
+            ],
+            'dataScope' => '',
+            'visible'   => true
+        ];
+        return $fieldset;
+    }
+
     /**
      * @param $jsLayout
      *
@@ -109,6 +126,7 @@ class LayoutProcessor
                            ['children']['shippingAddress']['children']['shipping-address-fieldset']['children'];
 
         $shippingFields = $this->processAddress($shippingFields, 'shippingAddress', []);
+        $shippingFields = $this->addInternationalAddressBlock($shippingFields, 'shippingAddress');
 
         $this->setAdditionalClass($shippingFields, 'postcode', true);
         $this->setAdditionalClass($shippingFields, 'city');
@@ -142,6 +160,11 @@ class LayoutProcessor
                 []
             );
 
+            $billingForm['children']['form-fields']['children'] = $this->addInternationalAddressBlock(
+                $billingForm['children']['form-fields']['children'],
+                $billingForm['dataScopePrefix'] ?? ''
+            );
+
             $this->setAdditionalClass($billingForm['children']['form-fields']['children'], 'postcode', true);
             $this->setAdditionalClass($billingForm['children']['form-fields']['children'], 'city');
             $this->setAdditionalClass($billingForm['children']['form-fields']['children'], 'street');
@@ -168,6 +191,11 @@ class LayoutProcessor
             $billingFields['children']['form-fields']['children'],
             isset($billingFields['dataScopePrefix']) ? $billingFields['dataScopePrefix'] : '',
             []
+        );
+
+        $billingFields['children']['form-fields']['children'] = $this->addInternationalAddressBlock(
+            $billingFields['children']['form-fields']['children'],
+            $billingFields['dataScopePrefix'] ?? ''
         );
 
         $this->setAdditionalClass($billingFields['children']['form-fields']['children'], 'postcode', true);

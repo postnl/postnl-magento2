@@ -45,8 +45,6 @@ define([
             template  : 'TIG_Postcode/checkout/field-group',
             isLoading : false,
             message   : ko.observable(null),
-            messageClasses: ko.observable({}),
-            addresses : ko.observable([]),
             imports   : {
                 observePostcode        : '${ $.parentName }.postcode-field-group.field-group.postcode:value',
                 observeHousenumber     : '${ $.parentName }.postcode-field-group.field-group.housenumber:value',
@@ -143,7 +141,6 @@ define([
 
         updateFieldData : function () {
             var self = this;
-
             var country;
 
             // Only apply the postcode check for NL
@@ -151,14 +148,13 @@ define([
                 country = countryElement.value();
             });
 
-            if (country !== 'NL' && country !== 'BE') {
+            if (country !== 'NL') {
                 // In some countries housenumber is not required
                 Registry.get([this.parentName + '.postcode-field-group.field-group.housenumber'], function (housenumberElement) {
                     housenumberElement.required(false);
                     housenumberElement.validation['required-entry'] = false;
                 });
 
-                self.checkInternationalAddress();
             } else {
                 Registry.get([this.parentName + '.postcode-field-group.field-group.housenumber'], function (housenumberElement) {
                     housenumberElement.required(true);
@@ -185,57 +181,6 @@ define([
             }, 1000);
         },
 
-        checkInternationalAddress : function () {
-            var self     = this;
-            var formData = self.getInternationalFormData();
-            self.isLoading(false);
-
-            if (!window.checkoutConfig.shipping.postnl.is_international_address_active || formData === false) {
-                return;
-            }
-
-            self.isLoading(true);
-
-            if (self.request !== undefined) {
-                self.request.abort('avoidMulticall');
-            }
-
-            self.request = $.ajax({
-                method:'GET',
-                url: window.checkoutConfig.shipping.postnl.urls.international_address,
-                data: {
-                    street: formData[0],
-                    postcode: formData[1],
-                    city: formData[2],
-                    country: formData[3]
-                },
-            }).done(function (data) {
-                self.handleInternationalResponse(data);
-            }).fail(function (data) {
-                if (data.statusText !== 'avoidMulticall') {
-                    var errorMessage = $.mage.__('Unexpected error occurred. Please fill in the address details manually.');
-                    self.handleError(errorMessage);
-                }
-            }).always(function (data) {
-                self.isLoading(false);
-            });
-        },
-
-        handleInternationalResponse : function (data) {
-            var self              = this;
-            var message           = data.message;
-
-            self.handleError(message);
-            if (data.addressMatchesFirst === true) {
-                this.messageClasses({'tig-postnl-success': true});
-                this.addresses([]);
-                return;
-            }
-
-            this.messageClasses({'tig-postnl-success': false});
-            this.addresses(data.addresses);
-        },
-
         setFieldData : function () {
             var self = this;
             var formData = self.getFormData();
@@ -248,36 +193,6 @@ define([
                 self.isLoading(false);
                 self.enableAddressFields(true);
             }
-        },
-
-        getInternationalFormData : function () {
-            var self = this;
-            var street;
-            var postcode;
-            var city;
-            var country;
-
-            var fields = [
-                this.parentName + '.street.0',
-                this.parentName + '.postcode',
-                this.parentName + '.city',
-                this.parentName + '.country_id'
-            ];
-
-            Registry.get(fields, function (streetElement, postcodeElement, cityElement, countryElement) {
-                street   = streetElement.value();
-                postcode = postcodeElement.value();
-                city     = cityElement.value();
-                country  = countryElement.value();
-            });
-
-            street = street + self.getStreetFormData();
-
-            if (!street || !postcode || !city || !country) {
-                return false;
-            }
-
-            return [street, postcode, city, country];
         },
 
         getStreetFormData : function ()
@@ -403,25 +318,6 @@ define([
             this._super().observe(['isLoading', 'value']);
 
             return this;
-        },
-
-        setAddress: function(data) {
-            this.addresses([]);
-            this.handleError();
-
-            var fields = [
-                this.parentName + '.street.0',
-                this.parentName + '.postcode',
-                this.parentName + '.city',
-                this.parentName + '.country_id'
-            ];
-
-            Registry.get(fields, function (streetElement, postcodeElement, cityElement, countryElement) {
-                streetElement.value(data.formattedAddress[0]);
-                postcodeElement.value(data.postalCode);
-                cityElement.value(data.cityName);
-                countryElement.value(data.countryIso2);
-            });
         },
 
         observeHousenumber : function (value) {
