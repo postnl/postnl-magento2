@@ -82,12 +82,12 @@ class Email
     public function sendEmail($shipment, $labels)
     {
         $shippingAddress = $shipment->getShippingAddress();
-        $templateId  = 'tig_postnl_smart_returns';
-        $fileName    = 'SmartReturnLabel.pdf';
-        $fromEmail   = $this->scopeConfig->getValue('trans_email/ident_sales/email');
-        $fromName    = $this->scopeConfig->getValue('trans_email/ident_sales/name');
-        $toEmail     = $shippingAddress->getEmail();
-        $fileContent = $this->getLabel($labels);
+        $templateId      = 'tig_postnl_smart_returns';
+        $fileName        = 'SmartReturnLabel.pdf';
+        $fromEmail       = $this->scopeConfig->getValue('trans_email/ident_sales/email');
+        $fromName        = $this->scopeConfig->getValue('trans_email/ident_sales/name');
+        $toEmail         = $shippingAddress->getEmail();
+        $fileContent     = $this->getLabel($labels);
 
         try {
             $templateVars = [
