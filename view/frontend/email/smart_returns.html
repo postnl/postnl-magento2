@@ -1,86 +1,21 @@
-<!--
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
--->
-<!--@subject {{trans "Header"}} @-->
-<!--@vars {
-"var logo_url":"Email Logo Image URL",
-"var logo_alt":"Email Logo Alt Text",
-"var logo_height":"Email Logo Image Height",
-"var logo_width":"Email Logo Image Width",
-"var template_styles|raw":"Template CSS"
-} @-->
+{{template config_path="design/email/header_template"}}
+<tr>
+    <td class="main-content">
+        <!-- Begin Content -->
+        <!--@subject {{trans "Footer"}} @-->
+        <!--@vars {
+        "var store.frontend_name":"Store Name"
+        } @-->
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <style type="text/css">
-        {{var template_styles|raw}}
+        Beste {{var name}},<br><br>
 
-        {{css file="css/email.css"}}
-    </style>
-</head>
-<body>
-{{inlinecss file="css/email-inline.css"}}
+        Jouw retouraanvraag is verwerkt. Print het retour-label met behulp van bijgevoegde barcode.<br><br>
 
-<!-- Begin wrapper table -->
-<table class="wrapper" width="100%">
-    <tr>
-        <td class="wrapper-inner" align="center">
-            <table class="main" align="center">
-                <tr>
-                    <td class="header">
-                        <a class="logo" href="{{store url=""}}">
-                        <img
-                            {{if logo_width}}
-                            width="{{var logo_width}}"
-                            {{else}}
-                            width="180"
-                            {{/if}}
+        1. Ga naar het dichtsbijzijnde PostNL punt.<br>
+        2. Scan de barcode en ontvang een retourlabel.<br>
+        3. Plak het label op het pakket en lever het pakket in.<br>
 
-                        {{if logo_height}}
-                        height="{{var logo_height}}"
-                        {{/if}}
-
-                        src="{{var logo_url}}"
-                        alt="{{var logo_alt}}"
-                        border="0"
-                        />
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="main-content">
-                        <!-- Begin Content -->
-                        <!--@subject {{trans "Footer"}} @-->
-                        <!--@vars {
-                        "var store.frontend_name":"Store Name"
-                        } @-->
-
-                        Beste {{var name}},<br><br>
-
-                        Jouw retouraanvraag is verwerkt. Print het retour-label met behulp van bijgevoegde barcode.<br><br>
-
-                        1. Ga naar het dichtsbijzijnde PostNL punt.<br>
-                        2. Scan de barcode en ontvang een retourlabel.<br>
-                        3. Plak het label op het pakket en lever het pakket in.<br>
-
-                        <!-- End Content -->
-                    </td>
-                </tr>
-                <tr>
-                    <td class="footer">
-                        <p class="closing">{{trans "Thank you, %store_name" store_name=$store.frontend_name}}!</p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
-<!-- End wrapper table -->
-</body>
+        <!-- End Content -->
+    </td>
+</tr>
+{{template config_path="design/email/footer_template"}}
