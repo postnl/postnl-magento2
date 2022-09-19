@@ -56,7 +56,7 @@ define([
 
         initialize : function () {
             this._super()
-                ._setClasses();
+            ._setClasses();
 
             if (window.checkoutConfig.shipping.postnl.checkout_extension == 'mageplaza') {
                 this.setMageplazaPrefilter();
@@ -193,13 +193,13 @@ define([
             var self = this;
             var postcode;
             var housenumber;
+
             var postcodeRegex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
 
             // Wait for the form to load, once loaded get the values of housenumber and postcode
             var fields = [
                 this.parentName + '.postcode-field-group.field-group.housenumber',
-                this.parentName + '.postcode-field-group.field-group.postcode',
-                this.parentName + '.country_id'
+                this.parentName + '.postcode-field-group.field-group.postcode'
             ];
 
             Registry.get(fields, function (housenumberElement, postcodeElement) {
@@ -322,6 +322,7 @@ define([
                     housenumberElement.value('');
                     additionElement.value('');
                 }
+
                 // Next line is for initial load, before field is found in jQuery
                 postcodeElement.additionalClasses['tig-postnl-full-width'] = (value !== 'NL');
 
