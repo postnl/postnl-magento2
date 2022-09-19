@@ -94,6 +94,7 @@ class ErrorHandler
             'price'              => $price,
         ];
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * @return bool
