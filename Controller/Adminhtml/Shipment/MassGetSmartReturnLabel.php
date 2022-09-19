@@ -34,7 +34,6 @@ namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
-use Magento\Backend\App\Action\Context;
 use TIG\PostNL\Controller\Adminhtml\Order\Email;
 use TIG\PostNL\Service\Api\ShipmentManagement;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
@@ -44,6 +43,7 @@ use TIG\PostNL\Service\Handler\BarcodeHandler;
 use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 use Magento\Ui\Component\MassAction\Filter;
+use Magento\Backend\App\Action\Context;
 
 class MassGetSmartReturnLabel extends LabelAbstract
 {
@@ -125,7 +125,7 @@ class MassGetSmartReturnLabel extends LabelAbstract
         foreach ($magentoShipments as $magentoShipment) {
             //Check if there are already labels generated for this shipment.
             $postnlShipment = $this->shipmentRepository->getByShipmentId($magentoShipment->getId());
-            $labels = $this->shipmentLabel->getByShipmentId($postnlShipment->getEntityId());
+            $labels         = $this->shipmentLabel->getByShipmentId($postnlShipment->getEntityId());
 
             if ($labels) {
                 $this->email->sendEmail($magentoShipment, $labels);

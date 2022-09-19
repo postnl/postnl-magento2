@@ -65,18 +65,18 @@ class Email
      * @param StateInterface        $state
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig,
+        ScopeConfigInterface  $scopeConfig,
         StoreManagerInterface $storeManager,
-        TransportBuilder $transportBuilder,
-        LoggerInterface $logger,
-        StateInterface $state,
+        TransportBuilder      $transportBuilder,
+        LoggerInterface       $logger,
+        StateInterface        $state,
     ) {
 
-        $this->scopeConfig = $scopeConfig;
-        $this->storeManager = $storeManager;
+        $this->scopeConfig      = $scopeConfig;
+        $this->storeManager     = $storeManager;
         $this->transportBuilder = $transportBuilder;
-        $this->logger = $logger;
-        $this->state = $state;
+        $this->logger           = $logger;
+        $this->state            = $state;
     }
 
     public function sendEmail($shipment, $labels)

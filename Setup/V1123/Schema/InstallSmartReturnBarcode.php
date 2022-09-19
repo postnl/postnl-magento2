@@ -43,6 +43,9 @@ class InstallSmartReturnBarcode extends AbstractColumnsInstaller
         'smart_return_barcode'
     ];
 
+    /**
+     * @return array
+     */
     public function installSmartReturnBarcodeColumn()
     {
         return [

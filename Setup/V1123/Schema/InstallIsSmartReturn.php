@@ -43,12 +43,15 @@ class InstallIsSmartReturn extends AbstractColumnsInstaller
         'is_smart_return'
     ];
 
+    /**
+     * @return array
+     */
     public function installIsSmartReturnColumn()
     {
         return [
             // @codingStandardsIgnoreLine
-            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
-            'default' => 0,
+            'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
+            'default'  => 0,
             'nullable' => false,
             'comment'  => 'Is Smart Return'
         ];

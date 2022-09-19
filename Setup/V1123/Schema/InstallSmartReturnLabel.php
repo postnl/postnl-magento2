@@ -43,6 +43,9 @@ class InstallSmartReturnLabel extends AbstractColumnsInstaller
         'smart_return_label'
     ];
 
+    /**
+     * @return array
+     */
     public function installSmartReturnLabelColumn()
     {
         return [

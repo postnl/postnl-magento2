@@ -86,21 +86,21 @@ class Data
      * @param ReturnOptions              $returnOptions
      */
     public function __construct(
-        ProductOptions $productOptions,
-        ContentDescription $contentDescription,
-        Calculate $calculate,
+        ProductOptions             $productOptions,
+        ContentDescription         $contentDescription,
+        Calculate                  $calculate,
         LabelAndPackingslipOptions $labelAndPackingslipOptions,
-        Customs $customs,
-        DeliveryDateFallback $deliveryDateFallback,
-        ReturnOptions $returnOptions
+        Customs                    $customs,
+        DeliveryDateFallback       $deliveryDateFallback,
+        ReturnOptions              $returnOptions
     ) {
-        $this->productOptions = $productOptions;
-        $this->contentDescription = $contentDescription;
-        $this->shipmentVolume = $calculate;
+        $this->productOptions             = $productOptions;
+        $this->contentDescription         = $contentDescription;
+        $this->shipmentVolume             = $calculate;
         $this->labelAndPackingslipOptions = $labelAndPackingslipOptions;
-        $this->customsInfo = $customs;
-        $this->deliveryDateFallback = $deliveryDateFallback;
-        $this->returnOptions = $returnOptions;
+        $this->customsInfo                = $customs;
+        $this->deliveryDateFallback       = $deliveryDateFallback;
+        $this->returnOptions              = $returnOptions;
     }
 
     /**
@@ -220,7 +220,7 @@ class Data
 
         $smartReturnActive = $this->returnOptions->isSmartReturnActive();
         if ($smartReturnActive && $shipment->getIsSmartReturn()) {
-            $shipmentData['ProductOptions'] = $this->getSmartReturnOptions();
+            $shipmentData['ProductOptions']      = $this->getSmartReturnOptions();
             $shipmentData['ProductCodeDelivery'] = '2285';
         }
 
@@ -299,6 +299,9 @@ class Data
         ];
     }
 
+    /**
+     * @return array
+     */
     private function getSmartReturnOptions()
     {
         return [

@@ -34,7 +34,6 @@ namespace TIG\PostNL\Model\Mail\Template;
 
 use Laminas\Mime\Mime;
 use Laminas\Mime\Part;
-
 use Laminas\Mime\Message as MimeMessage;
 use Magento\Framework\Mail\MessageInterface;
 
@@ -45,6 +44,10 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
      */
     private $parts = [];
 
+    /**
+     * @return $this|TransportBuilder
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     protected function prepareMessage()
     {
         parent::prepareMessage();
@@ -60,23 +63,41 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
         return $this;
     }
 
+    /**
+     * @param $body
+     * @param string $mimeType
+     * @param string $disposition
+     * @param string $encoding
+     * @param $filename
+     *
+     * @return $this
+     */
     public function addAttachment(
         $body,
-        $mimeType = Mime::TYPE_OCTETSTREAM,
-        $disposition = Mime::DISPOSITION_ATTACHMENT,
-        $encoding = Mime::ENCODING_BASE64,
-        $filename = null
+        string $mimeType    = Mime::TYPE_OCTETSTREAM,
+        string $disposition = Mime::DISPOSITION_ATTACHMENT,
+        string $encoding    = Mime::ENCODING_BASE64,
+        $filename    = null
     ) {
         $this->parts[] = $this->createMimePart($body, $mimeType, $disposition, $encoding, $filename);
         return $this;
     }
 
+    /**
+     * @param $content
+     * @param string $type
+     * @param string $disposition
+     * @param string $encoding
+     * @param $filename
+     *
+     * @return Part
+     */
     private function createMimePart(
         $content,
-        $type = Mime::TYPE_OCTETSTREAM,
-        $disposition = Mime::DISPOSITION_ATTACHMENT,
-        $encoding = Mime::ENCODING_BASE64,
-        $filename = null
+        string $type        = Mime::TYPE_OCTETSTREAM,
+        string $disposition = Mime::DISPOSITION_ATTACHMENT,
+        string $encoding    = Mime::ENCODING_BASE64,
+        $filename    = null
     ) {
         $mimePart = new Part($content);
         $mimePart->setType($type);
@@ -90,6 +111,11 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
         return $mimePart;
     }
 
+    /**
+     * @param MessageInterface $message
+     *
+     * @return MimeMessage
+     */
     private function getMimeMessage(MessageInterface $message)
     {
         $body = $message->getBody();
@@ -98,7 +124,6 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
             return $body;
         }
 
-        /** @var MimeMessage $mimeMessage */
         $mimeMessage = new MimeMessage();
 
         if ($body) {

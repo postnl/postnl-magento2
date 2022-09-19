@@ -34,8 +34,6 @@ namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
-use Magento\Backend\App\Action\Context;
-use Magento\Sales\Model\Order\ShipmentRepository;
 use TIG\PostNL\Controller\Adminhtml\Order\Email;
 use TIG\PostNL\Service\Api\ShipmentManagement;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
@@ -43,6 +41,8 @@ use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
 use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
+use Magento\Backend\App\Action\Context;
+use Magento\Sales\Model\Order\ShipmentRepository;
 
 class GetSmartReturnLabel extends LabelAbstract
 {
@@ -152,6 +152,7 @@ class GetSmartReturnLabel extends LabelAbstract
     private function getShipment()
     {
         $shipmentId = $this->getRequest()->getParam('shipment_id');
+
         return $this->shipmentRepository->get($shipmentId);
     }
 }
