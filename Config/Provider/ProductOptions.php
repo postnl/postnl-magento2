@@ -58,7 +58,7 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_PACKAGE_DELIVERY_TYPE                 = 'tig_postnl/delivery_settings/default_package_type';
     const XPATH_ALTERNATIVE_DEFAULT_PACKAGE_DELIVERY_TYPE     = 'tig_postnl/delivery_settings/alternative_package_type';
     const XPATH_DEFAULT_EPS_PRODUCT_OPTION                    = 'tig_postnl/delivery_settings/default_eps_option';
-        const XPATH_DEFAULT_GP_PRODUCT_OPTION                 = 'tig_postnl/globalpack/default_gp_option';
+    const XPATH_DEFAULT_GP_PRODUCT_OPTION                     = 'tig_postnl/globalpack/default_gp_option';
     const XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS       = 'tig_postnl/delivery_settings/default_delivery_stated_address';
     const XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS_BE    = 'tig_postnl/delivery_settings/default_delivery_stated_address_be';
 
@@ -286,10 +286,14 @@ class ProductOptions extends AbstractConfigProvider
     /**
      * @return mixed
      */
-    public function getDefaultStatedAddressOnlyProductOption($country)
+    public function getDefaultStatedAddressOnlyProductOption($country, $shopCountry)
     {
-        if ($country === 'BE') {
+        if ($shopCountry === 'BE') {
             return $this->getConfigFromXpath(static::XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS_BE);
+        }
+
+        if ($country === 'BE' && $shopCountry === 'NL') {
+            return $this->productOptions->getOptionsByCode('4941')['value'];
         }
 
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS);

@@ -361,7 +361,7 @@
     margin-top:-7px;
     margin-right: 3px;
 
-    background-image: url(../images/logo_tig.png) !important;
+    background-image: url(../images/TIG_Logo.svg) !important;
     background-size: 30px !important;
     background-repeat:no-repeat;
     content: ' ';
@@ -385,7 +385,7 @@
 }
 
 .postnl-config-page .page-main-actions .page-actions .page-actions-inner:after {
-    background-image: url(../images/logo_tig.png) !important;
+    background-image: url(../images/TIG_Logo.svg) !important;
     background-repeat: no-repeat;
     content: ' ';
     width: 50px;
@@ -410,7 +410,7 @@
 }
 
 #carriers_tig_postnl-head {
-    background-image: url(../images/logo_tig.png);
+    background-image: url(../images/TIG_Logo.svg);
     background-repeat: no-repeat;
     background-size: 35px;
     background-position: calc(100% - 50px) 15px;
