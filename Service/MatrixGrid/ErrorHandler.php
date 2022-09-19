@@ -3,7 +3,6 @@
 namespace TIG\PostNL\Service\MatrixGrid;
 
 use TIG\PostNL\Service\Validation\Factory;
-use TIG\PostNL\Service\Wrapper\StoreInterface;
 
 class ErrorHandler
 {
@@ -84,15 +83,15 @@ class ErrorHandler
         }
 
         return [
-            'website_id' => $data['website_id'],
+            'website_id'         => $data['website_id'],
             'destiny_country_id' => $country,
-            'destiny_region_id' => $region,
-            'destiny_zip_code' => $data['destiny_zip_code'],
-            'weight' => $weight,
-            'subtotal' => $subtotal,
-            'quantity' => $quantity,
-            'parcel_type' => $parcelType,
-            'price' => $price,
+            'destiny_region_id'  => $region,
+            'destiny_zip_code'   => $data['destiny_zip_code'],
+            'weight'             => $weight,
+            'subtotal'           => $subtotal,
+            'quantity'           => $quantity,
+            'parcel_type'        => $parcelType,
+            'price'              => $price,
         ];
     }
 

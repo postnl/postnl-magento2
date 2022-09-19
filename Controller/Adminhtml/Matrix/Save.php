@@ -86,11 +86,13 @@ class Save extends Action
                 }
 
                 $model->addData($validatedArray);
-                $this->matrixrateRepository->save($model);
+                $record      = $this->matrixrateRepository->save($model);
+                $entityIds[] = $record->getEntityId();
                 $model->unsetData();
             }
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
+            $this->deleteAlreadyAddedRecords($entityIds);
             $this->_redirect($this->_redirect->getRefererUrl());
             return;
         }
@@ -110,6 +112,20 @@ class Save extends Action
 
         foreach ($errorArray as $error) {
             $this->messageManager->addErrorMessage($error);
+        }
+    }
+
+    /**
+     * @param $entityIds
+     *
+     * @return void
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
+     */
+    public function deleteAlreadyAddedRecords($entityIds)
+    {
+        foreach ($entityIds as $entityId) {
+            $matrixRate = $this->matrixrateRepository->getById($entityId);
+            $this->matrixrateRepository->delete($matrixRate);
         }
     }
 }
