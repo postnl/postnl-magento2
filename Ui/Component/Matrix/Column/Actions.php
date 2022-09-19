@@ -49,9 +49,9 @@ class Actions extends Column
      * @param array                 $data
      */
     public function __construct(
-        ContextInterface $context,
+        ContextInterface   $context,
         UiComponentFactory $uiComponentFactory,
-        UrlInterface $urlBuilder,
+        UrlInterface       $urlBuilder,
         array $components = [],
         array $data = []
     ) {
@@ -74,7 +74,8 @@ class Actions extends Column
                     'delete' => [
                         'href' => $this->urlBuilder->getUrl(
                             'postnl/matrix/delete',
-                            ['id' => $item['entity_id']]),
+                            ['id' => $item['entity_id']]
+                        ),
                         'label' => __('Delete')
                     ]
                 ];

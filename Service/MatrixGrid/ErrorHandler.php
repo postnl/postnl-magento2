@@ -51,7 +51,7 @@ class ErrorHandler
         }
 
         if (($region = $this->validation->validate('region', $regionValidationArray)) === false) {
-            $this->errors[] = __('Invalid region/state "%1".', $regionValidationArray[1]);
+            $this->errors[] = __('Invalid region/state "%1".', $regionValidationArray['region']);
             return false;
         }
 

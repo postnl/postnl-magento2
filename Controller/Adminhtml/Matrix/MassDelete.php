@@ -61,11 +61,11 @@ class MassDelete extends Action
      * @param Matrixrate    $matrixrateCollection
      */
     public function __construct(
-        Context $context,
+        Context     $context,
         PageFactory $resultPageFactory,
-        Registry $registry,
-        Filter $filter,
-        Matrixrate $matrixrateCollection
+        Registry    $registry,
+        Filter      $filter,
+        Matrixrate  $matrixrateCollection
     ) {
         $this->resultPageFactory    = $resultPageFactory;
         $this->_coreRegistry        = $registry;
@@ -81,7 +81,7 @@ class MassDelete extends Action
     public function execute()
     {
         $collection = $this->filter->getCollection($this->matrixrateCollection->getResourceCollection());
-        $count = 0;
+        $count      = 0;
 
         foreach ($collection as $child) {
             $child->delete();

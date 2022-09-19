@@ -84,21 +84,21 @@ class Country implements ContractInterface
      * @param RegionInformationFactory  $regionInformationFactory
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig,
-        StoreManagerInterface $storeManager,
-        AllowedCountries $allowedCountries,
-        CountryCollection $countryCollection,
-        DirectoryHelper $directoryHelper,
+        ScopeConfigInterface      $scopeConfig,
+        StoreManagerInterface     $storeManager,
+        AllowedCountries          $allowedCountries,
+        CountryCollection         $countryCollection,
+        DirectoryHelper           $directoryHelper,
         CountryInformationFactory $countryInformationFactory,
-        RegionInformationFactory $regionInformationFactory
+        RegionInformationFactory  $regionInformationFactory
     ) {
-        $this->scopeConfig = $scopeConfig;
-        $this->storeManager = $storeManager;
-        $this->allowedCountries = $allowedCountries;
-        $this->countryCollection = $countryCollection;
-        $this->directoryHelper = $directoryHelper;
+        $this->scopeConfig               = $scopeConfig;
+        $this->storeManager              = $storeManager;
+        $this->allowedCountries          = $allowedCountries;
+        $this->countryCollection         = $countryCollection;
+        $this->directoryHelper           = $directoryHelper;
         $this->countryInformationFactory = $countryInformationFactory;
-        $this->regionInformationFactory = $regionInformationFactory;
+        $this->regionInformationFactory  = $regionInformationFactory;
     }
 
     /**
@@ -144,8 +144,7 @@ class Country implements ContractInterface
      */
     private function validateArray($line)
     {
-        $parts = explode(',', $line);
-
+        $parts  = explode(',', $line);
         $pieces = array_map(function ($part) {
             return $this->validateSingle($part);
         }, $parts);
@@ -193,16 +192,12 @@ class Country implements ContractInterface
 
     private function getCountriesInfo()
     {
-        $countriesInfo = [];
-
-        $website = $this->storeManager->getWebsite($this->websiteId);
-
-        $storeLocale = $this->scopeConfig->getValue('general/locale/code', ScopeInterface::SCOPE_WEBSITE, $website);
-
-        $allowedCountries = $this->allowedCountries->getAllowedCountries(ScopeInterface::SCOPE_WEBSITE, $website);
+        $countriesInfo     = [];
+        $website           = $this->storeManager->getWebsite($this->websiteId);
+        $storeLocale       = $this->scopeConfig->getValue('general/locale/code', ScopeInterface::SCOPE_WEBSITE, $website);
+        $allowedCountries  = $this->allowedCountries->getAllowedCountries(ScopeInterface::SCOPE_WEBSITE, $website);
         $countryCollection = $this->countryCollection->addFieldToFilter("country_id", ['in' => $allowedCountries]);
-
-        $regions = $this->directoryHelper->getRegionData();
+        $regions           = $this->directoryHelper->getRegionData();
 
         foreach ($countryCollection as $data) {
             $countryInfo = $this->setCountryInfo($data, $regions, $storeLocale);

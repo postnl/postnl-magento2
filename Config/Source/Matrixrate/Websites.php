@@ -69,9 +69,7 @@ class Websites implements ArrayInterface
     public function toOptionArray($isMultiselect = false)
     {
         if (!$this->_options) {
-            $this->_options = $this->getWebsiteLists()->toOptionArray(
-                false
-            );
+            $this->_options = $this->getWebsiteLists()->toOptionArray(false);
         }
 
         $options = $this->_options;

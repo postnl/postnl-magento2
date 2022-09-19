@@ -36,7 +36,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Redirect;
 use TIG\PostNL\Model\Carrier\MatrixrateRepository;
 
-class Delete  extends  Action
+class Delete extends Action
 {
     /**
      * @var MatrixrateRepository
@@ -48,7 +48,7 @@ class Delete  extends  Action
      * @param MatrixrateRepository  $matrixrateRepository
      */
     public function __construct(
-        Context $context,
+        Context              $context,
         MatrixrateRepository $matrixrateRepository
     ) {
         $this->matrixrateRepository = $matrixrateRepository;
@@ -63,22 +63,23 @@ class Delete  extends  Action
         $resultRedirect = $this->resultRedirectFactory->create();
         $id = $this->getRequest()->getParam('id');
 
-        if($id){
+        if ($id) {
             $model = $this->matrixrateRepository->create();
             $model->load($id);
 
-            if($model->getEntityId()){
-                try{
+            if ($model->getEntityId()) {
+                try {
                     $model->delete();
                     $this->messageManager->addSuccessMessage(__('The record has been deleted successfully'));
                 } catch (\Exception $e) {
                     $this->messageManager->addErrorMessage(__('Something went wrong while deleting'));
                 }
+
                 return $resultRedirect->setPath('*/*/index');
             }
         }
         $this->messageManager->addErrorMessage(__('The record does not exists'));
+
         return $resultRedirect->setPath('*/*/index');
     }
-
 }

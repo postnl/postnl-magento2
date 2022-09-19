@@ -33,8 +33,6 @@ namespace TIG\PostNL\Controller\Adminhtml\Matrix;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\ResultInterface;
 use TIG\PostNL\Model\Carrier\MatrixrateRepository;
 use TIG\PostNL\Service\MatrixGrid\ErrorHandler;
 use TIG\PostNL\Service\Validation\Factory;
@@ -47,6 +45,7 @@ class Save extends Action
     /** @var Factory  */
     protected $_validator;
 
+    /** @var ErrorHandler  */
     protected $_errorHandler;
 
     /**
@@ -56,10 +55,10 @@ class Save extends Action
      * @param ErrorHandler          $errorHandler
      */
     public function __construct(
-        Context $context,
+        Context              $context,
         MatrixrateRepository $matrixrateRepository,
-        Factory $validator,
-        ErrorHandler $errorHandler
+        Factory              $validator,
+        ErrorHandler         $errorHandler
     ) {
         parent::__construct($context);
         $this->matrixrateRepository = $matrixrateRepository;
@@ -72,18 +71,18 @@ class Save extends Action
      */
     public function execute()
     {
-        $data = $this->getRequest()->getPostValue();
+        $data  = $this->getRequest()->getPostValue();
         $model = $this->matrixrateRepository->create();
 
         try {
             foreach ($data['country_id'] as $countryCode) {
                 // validate the data and catch the error's
-                $validatedArray = $this->_errorHandler->process($data,$countryCode);
+                $validatedArray = $this->_errorHandler->process($data, $countryCode);
 
-                if (!$validatedArray){
+                if (!$validatedArray) {
                     $this->showErrors();
-                    $this->_redirect('*/*/index');
-                    return false;
+                    $this->_redirect($this->_redirect->getRefererUrl());
+                    return;
                 }
 
                 $model->addData($validatedArray);
@@ -92,10 +91,11 @@ class Save extends Action
             }
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
-            $this->_redirect('*/*/index');
+            $this->_redirect($this->_redirect->getRefererUrl());
+            return;
         }
 
-        $this->messageManager->addSuccessMessage( __('Data inserted successfully!') );
+        $this->messageManager->addSuccessMessage(__('Data inserted successfully!'));
         $this->_redirect('*/*/index');
     }
 
@@ -104,7 +104,8 @@ class Save extends Action
      *
      * @return void
      */
-    public function showErrors(){
+    public function showErrors()
+    {
         $errorArray = $this->_errorHandler->getErrors();
 
         foreach ($errorArray as $error) {

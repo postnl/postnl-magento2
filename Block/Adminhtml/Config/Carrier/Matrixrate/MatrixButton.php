@@ -47,17 +47,17 @@ class MatrixButton extends AbstractElement
     /**
      * Import constructor.
      *
-     * @param Factory $factoryElement
+     * @param Factory           $factoryElement
      * @param CollectionFactory $factoryCollection
-     * @param Escaper $escaper
-     * @param UrlInterface $backendUrl
-     * @param array $data
+     * @param Escaper           $escaper
+     * @param UrlInterface      $backendUrl
+     * @param array             $data
      */
     public function __construct(
-        Factory $factoryElement,
+        Factory           $factoryElement,
         CollectionFactory $factoryCollection,
-        Escaper $escaper,
-        UrlInterface $backendUrl,
+        Escaper           $escaper,
+        UrlInterface      $backendUrl,
         array $data = []
     ) {
         parent::__construct($factoryElement, $factoryCollection, $escaper, $data);
@@ -69,18 +69,17 @@ class MatrixButton extends AbstractElement
      */
     public function getElementHtml()
     {
-        $form = $this->getForm()->getParent();
+        $form   = $this->getForm()->getParent();
         $layout = $form->getLayout();
 
         /** @var Button $buttonBlock  */
         $buttonBlock = $layout->createBlock(Button::class);
-        $url = $this->backendUrl->getUrl("postnl/matrix/index");
-
-        $data = [
-            'label' => __('Show visual matrix'),
-            'onclick' => "setLocation('" . $url . "' )",
-            'class' => '',
-        ];
+        $url         = $this->backendUrl->getUrl("postnl/matrix/index");
+        $data        = [
+                     'label' => __('Show visual matrix'),
+                     'onclick' => "setLocation('" . $url . "' )",
+                     'class' => '',
+                 ];
         $buttonBlock->setData($data);
         $html = $buttonBlock->toHtml();
 

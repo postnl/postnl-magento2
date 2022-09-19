@@ -80,6 +80,7 @@ class Factory
         }
 
         $result = $this->callValidator($type, $value, $websiteId);
+
         if ($result !== null) {
             return $result;
         }
