@@ -33,6 +33,8 @@ namespace TIG\PostNL\Controller\Adminhtml\Matrix;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Model\Carrier\MatrixrateRepository;
 use TIG\PostNL\Service\MatrixGrid\ErrorHandler;
 use TIG\PostNL\Service\Validation\Factory;
@@ -90,9 +92,17 @@ class Save extends Action
                 $entityIds[] = $record->getEntityId();
                 $model->unsetData();
             }
-        } catch (\Exception $e) {
+        } catch (CouldNotSaveException $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
-            $this->deleteAlreadyAddedRecords($entityIds);
+
+            if (isset($entityIds)) {
+                $this->deleteAlreadyAddedRecords($entityIds);
+            }
+
+            $this->_redirect($this->_redirect->getRefererUrl());
+            return;
+        } catch (LocalizedException $e) {
+            $this->messageManager->addErrorMessage(__($e->getMessage()));
             $this->_redirect($this->_redirect->getRefererUrl());
             return;
         }
