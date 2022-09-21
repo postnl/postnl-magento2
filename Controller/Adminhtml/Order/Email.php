@@ -39,6 +39,7 @@ use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Translate\Inline\StateInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 
 class Email
 {
@@ -57,12 +58,16 @@ class Email
     /** @var StateInterface  */
     private $state;
 
+    /** @var ReturnOptions  */
+    private $returnOptions;
+
     /**
      * @param ScopeConfigInterface  $scopeConfig
      * @param StoreManagerInterface $storeManager
      * @param TransportBuilder      $transportBuilder
      * @param LoggerInterface       $logger
      * @param StateInterface        $state
+     * @param ReturnOptions         $returnOptions
      */
     public function __construct(
         ScopeConfigInterface  $scopeConfig,
@@ -70,20 +75,27 @@ class Email
         TransportBuilder      $transportBuilder,
         LoggerInterface       $logger,
         StateInterface        $state,
+        ReturnOptions         $returnOptions
     ) {
-
         $this->scopeConfig      = $scopeConfig;
         $this->storeManager     = $storeManager;
         $this->transportBuilder = $transportBuilder;
         $this->logger           = $logger;
         $this->state            = $state;
+        $this->returnOptions    = $returnOptions;
     }
 
+    /**
+     * @param $shipment
+     * @param $labels
+     *
+     * @return void
+     */
     public function sendEmail($shipment, $labels)
     {
         $shippingAddress = $shipment->getShippingAddress();
-        $templateId      = 'tig_postnl_smart_returns';
-        $fileName        = 'SmartReturnLabel.pdf';
+        $templateId      = $this->returnOptions->getEmailTemplate();
+        $fileName        = 'SmartReturnLabel' . $shipment->getOrderId() . '.pdf';
         $fromEmail       = $this->scopeConfig->getValue('trans_email/ident_sales/email');
         $fromName        = $this->scopeConfig->getValue('trans_email/ident_sales/name');
         $toEmail         = $shippingAddress->getEmail();
@@ -96,8 +108,7 @@ class Email
             ];
 
             $storeId = $this->storeManager->getStore()->getId();
-
-            $from = ['email' => $fromEmail, 'name' => $fromName];
+            $from    = ['email' => $fromEmail, 'name' => $fromName];
             $this->state->suspend();
 
             $templateOptions = [
@@ -111,8 +122,10 @@ class Email
                                                 ->addAttachment(
                                                     base64_decode($fileContent),
                                                     'text/pdf',
-                                                    Mime::DISPOSITION_ATTACHMENT,  Mime::ENCODING_BASE64,
-                                                    $fileName)
+                                                    Mime::DISPOSITION_ATTACHMENT,
+                                                    Mime::ENCODING_BASE64,
+                                                    $fileName
+                                                )
                                                 ->addTo($toEmail)
                                                 ->getTransport();
             $transport->sendMessage();
@@ -127,13 +140,14 @@ class Email
      *
      * @return mixed
      */
-    public function getLabel($labels) {
+    public function getLabel($labels)
+    {
         foreach ($labels as $key => $label) {
-            if ($label->getReturnLabel() === '1') {
+            if ($label->getProductCode() === '2285' && $label->getReturnLabel() !== '1') {
                 $returnLabels[$key] = $label->getEntityId();
             }
         }
-        $key = array_keys($returnLabels,max($returnLabels))[0];
+        $key = array_keys($returnLabels, max($returnLabels))[0];
 
         return $labels[$key]->getLabel();
     }

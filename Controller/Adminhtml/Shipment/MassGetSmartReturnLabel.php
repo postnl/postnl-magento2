@@ -123,16 +123,6 @@ class MassGetSmartReturnLabel extends LabelAbstract
         $magentoShipments = $this->getShipment();
 
         foreach ($magentoShipments as $magentoShipment) {
-            //Check if there are already labels generated for this shipment.
-            $postnlShipment = $this->shipmentRepository->getByShipmentId($magentoShipment->getId());
-            $labels         = $this->shipmentLabel->getByShipmentId($postnlShipment->getEntityId());
-
-            if ($labels) {
-                $this->email->sendEmail($magentoShipment, $labels);
-                $labels = null;
-                continue;
-            }
-
             $this->shipmentManagement->generateLabel($magentoShipment->getId(), true);
             $labels = $this->getLabels->get($magentoShipment->getId());
 

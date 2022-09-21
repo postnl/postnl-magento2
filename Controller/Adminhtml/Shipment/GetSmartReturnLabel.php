@@ -31,18 +31,18 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
+use Magento\Backend\App\Action\Context;
+use Magento\Sales\Model\Order\ShipmentRepository;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use TIG\PostNL\Controller\Adminhtml\Order\Email;
-use TIG\PostNL\Service\Api\ShipmentManagement;
-use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Service\Api\ShipmentManagement;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
+use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
-use Magento\Backend\App\Action\Context;
-use Magento\Sales\Model\Order\ShipmentRepository;
 
 class GetSmartReturnLabel extends LabelAbstract
 {
@@ -114,14 +114,13 @@ class GetSmartReturnLabel extends LabelAbstract
     public function execute()
     {
         $magentoShipment = $this->getShipment();
+        $countryId       = $magentoShipment->getShippingAddress()->getCountryId();
 
-        //Check if there are already labels generated for this shipment.
-        $postnlShipment = $this->shipmentRepositoryInterface->getByShipmentId($magentoShipment->getId());
-        $labels         = $this->shipmentLabel->getByShipmentId($postnlShipment->getEntityId());
-
-        if ($labels) {
-            $this->email->sendEmail($magentoShipment, $labels);
-            $this->messageManager->addSuccessMessage(__('Succesfully send out all Smart Return labels'));
+        if ($countryId !== 'NL') {
+            $this->messageManager->addErrorMessage(
+            // @codingStandardsIgnoreLine
+                __('Smart Returns is only available for NL shipments.')
+            );
 
             return $this->_redirect($this->_redirect->getRefererUrl());
         }

@@ -178,6 +178,9 @@
                 <barcode_range>NL</barcode_range>
             </peps>
 
+            <returns>
+                <template>tig_postnl_postnl_settings_returns_template</template>
+            </returns>
         </tig_postnl>
     </default>
 </config>

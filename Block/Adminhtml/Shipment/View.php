@@ -31,14 +31,14 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Shipment;
 
-use TIG\PostNL\Config\Validator\ValidAddress;
-use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
-use TIG\PostNL\Model\Shipment as PostNLShipment;
 use Magento\Backend\Block\Widget\Context;
-use Magento\Framework\Registry;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Api\AbstractExtensibleObject;
+use Magento\Framework\Registry;
 use Magento\Shipping\Block\Adminhtml\View as MagentoView;
+use TIG\PostNL\Config\Provider\ReturnOptions;
+use TIG\PostNL\Config\Validator\ValidAddress;
+use TIG\PostNL\Model\Shipment as PostNLShipment;
+use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 
 // @codingStandardsIgnoreFile
 class View extends MagentoView
@@ -52,12 +52,16 @@ class View extends MagentoView
     /** @var \TIG\PostNL\Config\Validator\ValidAddress $validAddress */
     private $validAddress;
 
+    /** @var ReturnOptions  */
+    private $returnOptions;
+
     /**
      * @param Context                  $context
      * @param Registry                 $registry
      * @param PostNLShipmentRepository $shipmentRepository
      * @param SearchCriteriaBuilder    $searchCriteriaBuilder
      * @param ValidAddress             $validAddress
+     * @param ReturnOptions            $returnOptions
      * @param array                    $data
      */
     public function __construct(
@@ -66,11 +70,13 @@ class View extends MagentoView
         PostNLShipmentRepository $shipmentRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         ValidAddress $validAddress,
+        ReturnOptions $returnOptions,
         array $data = []
     ) {
         $this->postNLShipmentRepository = $shipmentRepository;
         $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
-        $this->validAddress = $validAddress;
+        $this->validAddress             = $validAddress;
+        $this->returnOptions            = $returnOptions;
 
         parent::__construct($context, $registry, $data);
     }
@@ -108,7 +114,10 @@ class View extends MagentoView
         $this->setPostNLPrintLabelButtonData();
         $this->setPostNLPrintLabelWithoutConfirmButton();
         $this->setPostNLPrintPackingslipButton();
-        $this->setPostNLSendSmartReturnButton();
+
+        if ($this->returnOptions->isSmartReturnActive()) {
+            $this->setPostNLSendSmartReturnButton();
+        }
     }
 
     /**
@@ -121,7 +130,7 @@ class View extends MagentoView
             [
                 'label' => __('PostNL - Confirm And Print Shipment Label'),
                 'class' => 'save primary',
-                'onclick' => 'download(\'' .$this->getLabelUrl() .'\')'
+                'onclick' => 'download(\'' . $this->getLabelUrl() . '\')'
             ]
         );
     }
@@ -136,11 +145,10 @@ class View extends MagentoView
             [
                 'label'   => __('PostNL - Cancel Confirmation'),
                 'class'   => 'delete primary',
-                'onclick' =>
-                    'deleteConfirm(\'' . __(
+                'onclick' => 'deleteConfirm(\'' . __(
                         'Are you sure that you wish to reset the confirmation status of this shipment?'
                         . ' You will need to confirm this shipment with PostNL again before you can send it.'
-                        .' This action will remove all barcodes'
+                        . ' This action will remove all barcodes'
                         . ' and labels associated with this shipment. You can not undo this action.'
                     ) . '\', \'' . $this->getCancelConfirmationUrl() . '\')'
             ]
@@ -157,7 +165,7 @@ class View extends MagentoView
             [
                 'label' => $mainBarcode ? __('PostNL - Print Label') : __('PostNL - Generate Label'),
                 'class' => 'save primary',
-                'onclick' => 'download(\'' .$this->getLabelWithoutConfirmUrl() .'\')'
+                'onclick' => 'download(\'' . $this->getLabelWithoutConfirmUrl() . '\')'
             ]
         );
     }
@@ -169,7 +177,7 @@ class View extends MagentoView
             [
                 'label' => __('PostNL - Print Packingslip'),
                 'class' => 'save primary',
-                'onclick' => 'download(\'' .$this->getPackingslipUrl() .'\')'
+                'onclick' => 'download(\'' . $this->getPackingslipUrl() . '\')'
             ]
         );
     }
@@ -223,7 +231,8 @@ class View extends MagentoView
     {
         return $this->getUrl(
             'postnl/shipment/confirmAndPrintShippingLabel',
-            ['shipment_id' => $this->getShipment()->getId()]);
+            ['shipment_id' => $this->getShipment()->getId()]
+        );
     }
 
     /**
