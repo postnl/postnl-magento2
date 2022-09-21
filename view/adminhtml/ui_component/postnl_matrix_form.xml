@@ -55,17 +55,16 @@
             <argument name="name" xsi:type="string">postnl_matrix_index_data_source</argument>
             <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
             <argument name="requestFieldName" xsi:type="string">entity_id</argument>
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="submit_url" xsi:type="url" path="*/*/save"/>
-                </item>
-            </argument>
         </argument>
         <argument name="data" xsi:type="array">
             <item name="js_config" xsi:type="array">
                 <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
             </item>
         </argument>
+        <settings>
+            <validateUrl path="postnl/matrix/validate"/>
+            <submitUrl path="postnl/matrix/save"/>
+        </settings>
     </dataSource>
     <fieldset name="general_information">
         <argument name="data" xsi:type="array">
@@ -86,7 +85,7 @@
                 <item name="source" xsi:type="string">store</item>
                 <item name="sortOrder" xsi:type="number">0</item>
                 <item name="dataScope" xsi:type="string">website_id</item>
-                <item name="notice" xsi:type="string" translate="true">Select the store that you want to use this rate for</item>
+                <item name="notice" xsi:type="string" translate="true">The store that you want to use this rate for</item>
                 <item name="component" xsi:type="string">Magento_Ui/js/form/element/select</item>
                 <item name="validation" xsi:type="array">
                     <item name="required-entry" xsi:type="boolean">true</item>
@@ -119,7 +118,7 @@
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Region</item>
-                    <item name="notice" xsi:type="string" translate="true">Fill in the region or use a * sign to use all regions</item>
+                    <item name="notice" xsi:type="string" translate="true">The region id for the region. Example: Virginia region id = "61". Or use "*" to use all regions</item>
                 </item>
             </argument>
         </field>
@@ -139,7 +138,7 @@
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Weight</item>
-                    <item name="notice" xsi:type="string" translate="true">Fill in the minimal weight for this rate</item>
+                    <item name="notice" xsi:type="string" translate="true">The minimal weight in kg or lbs</item>
                 </item>
             </argument>
         </field>
@@ -149,7 +148,7 @@
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Subtotal</item>
-                    <item name="notice" xsi:type="string" translate="true">Fill in the minimal subtotal for this rate, this subtotal is the price that the customer has in his/her cart</item>
+                    <item name="notice" xsi:type="string" translate="true">The minimal subtotal, this subtotal is the price that the customer has in his/her cart. Make sure to use '.' instead of ','</item>
                 </item>
             </argument>
         </field>
@@ -159,7 +158,7 @@
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Quantity</item>
-                    <item name="notice" xsi:type="string" translate="true">Fill in the minimal quantity for this rate</item>
+                    <item name="notice" xsi:type="string" translate="true">The minimal quantity</item>
                 </item>
             </argument>
         </field>
@@ -173,7 +172,7 @@
                     <item name="formElement" xsi:type="string">select</item>
                     <item name="source" xsi:type="string">store</item>
                     <item name="dataScope" xsi:type="string">parcel_type</item>
-                    <item name="notice" xsi:type="string" translate="true">Please select the parcel type</item>
+                    <item name="notice" xsi:type="string" translate="true">The parcel type</item>
                     <item name="component" xsi:type="string">Magento_Ui/js/form/element/select</item>
                     <item name="validation" xsi:type="array">
                         <item name="required-entry" xsi:type="boolean">true</item>
@@ -187,7 +186,7 @@
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Price</item>
-                    <item name="notice" xsi:type="string" translate="true">Fill in the shipping price</item>
+                    <item name="notice" xsi:type="string" translate="true">The shipping price. Make sure to use '.' instead of ','</item>
                 </item>
             </argument>
         </field>

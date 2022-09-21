@@ -41,32 +41,26 @@ class ErrorHandler
         // TODO add correct Data to show within the error message
         if (!is_array($data) || empty($data)) {
             $this->errors[] = __('Invalid PostNL matrix rates format in row #%s', $data);
-            return false;
         }
 
         if (($country = $this->validation->validate('country', $countryCode, $data['website_id'])) === false) {
             $this->errors[] = __('Invalid country "%1".', $countryCode);
-            return false;
         }
 
         if (($region = $this->validation->validate('region', $regionValidationArray)) === false) {
             $this->errors[] = __('Invalid region/state "%1".', $regionValidationArray['region']);
-            return false;
         }
 
         if (($weight = $this->validation->validate('weight', $data['weight'])) === false) {
             $this->errors[] = __('Invalid weight "%1".', $data['weight'], $data);
-            return false;
         }
 
         if (($subtotal = $this->validation->validate('subtotal', $data['subtotal'])) === false) {
             $this->errors[] = __('Invalid subtotal "%1".', $data['subtotal'], $data);
-            return false;
         }
 
         if (($quantity = $this->validation->validate('quantity', $data['quantity'])) === false) {
             $this->errors[] = __('Invalid quantity "%1".', $data['quantity'], $data);
-            return false;
         }
 
         if (($parcelType = $this->validation->validate('parcel-type', $data['parcel_type'])) === false) {
@@ -74,11 +68,13 @@ class ErrorHandler
                 'Invalid parcel type "%1".',
                 $data['parcel_type'],
             );
-            return false;
         }
 
         if (($price = $this->validation->validate('price', $data['price'])) === false) {
             $this->errors[] = __('Invalid shipping price "%1" in row #%2.', $data['price'], $data);
+        }
+
+        if ($this->errors) {
             return false;
         }
 

@@ -34,18 +34,13 @@ namespace TIG\PostNL\Controller\Adminhtml\Matrix;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Model\Carrier\MatrixrateRepository;
 use TIG\PostNL\Service\MatrixGrid\ErrorHandler;
-use TIG\PostNL\Service\Validation\Factory;
 
 class Save extends Action
 {
     /** @var MatrixrateRepository  */
     protected $matrixrateRepository;
-
-    /** @var Factory  */
-    protected $_validator;
 
     /** @var ErrorHandler  */
     protected $_errorHandler;
@@ -53,23 +48,20 @@ class Save extends Action
     /**
      * @param Context               $context
      * @param MatrixrateRepository  $matrixrateRepository
-     * @param Factory               $validator
      * @param ErrorHandler          $errorHandler
      */
     public function __construct(
         Context              $context,
         MatrixrateRepository $matrixrateRepository,
-        Factory              $validator,
         ErrorHandler         $errorHandler
     ) {
         parent::__construct($context);
         $this->matrixrateRepository = $matrixrateRepository;
-        $this->_validator           = $validator;
         $this->_errorHandler        = $errorHandler;
     }
 
     /**
-     * @return void
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|void
      */
     public function execute()
     {
@@ -78,64 +70,17 @@ class Save extends Action
 
         try {
             foreach ($data['country_id'] as $countryCode) {
-                // validate the data and catch the error's
-                $validatedArray = $this->_errorHandler->process($data, $countryCode);
-
-                if (!$validatedArray) {
-                    $this->showErrors();
-                    $this->_redirect($this->_redirect->getRefererUrl());
-                    return;
-                }
-
-                $model->addData($validatedArray);
-                $record      = $this->matrixrateRepository->save($model);
-                $entityIds[] = $record->getEntityId();
+                $model->addData($data);
+                $this->matrixrateRepository->save($model);
                 $model->unsetData();
             }
         } catch (CouldNotSaveException $e) {
-            $this->messageManager->addErrorMessage(__($e->getMessage()));
-
-            if (isset($entityIds)) {
-                $this->deleteAlreadyAddedRecords($entityIds);
-            }
-
-            $this->_redirect($this->_redirect->getRefererUrl());
-            return;
-        } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
             $this->_redirect($this->_redirect->getRefererUrl());
             return;
         }
 
         $this->messageManager->addSuccessMessage(__('Data inserted successfully!'));
-        $this->_redirect('*/*/index');
-    }
-
-    /**
-     * Add error messages.
-     *
-     * @return void
-     */
-    public function showErrors()
-    {
-        $errorArray = $this->_errorHandler->getErrors();
-
-        foreach ($errorArray as $error) {
-            $this->messageManager->addErrorMessage($error);
-        }
-    }
-
-    /**
-     * @param $entityIds
-     *
-     * @return void
-     * @throws \Magento\Framework\Exception\CouldNotDeleteException
-     */
-    public function deleteAlreadyAddedRecords($entityIds)
-    {
-        foreach ($entityIds as $entityId) {
-            $matrixRate = $this->matrixrateRepository->getById($entityId);
-            $this->matrixrateRepository->delete($matrixRate);
-        }
+        $this->_redirect($this->_redirect->getRefererUrl());
     }
 }

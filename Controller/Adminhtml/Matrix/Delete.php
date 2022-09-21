@@ -44,15 +44,23 @@ class Delete extends Action
     private $matrixrateRepository;
 
     /**
-     * @param Context               $context
-     * @param MatrixrateRepository  $matrixrateRepository
+     * @var \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection
+     */
+    private $collection;
+
+    /**
+     * @param Context                                                       $context
+     * @param MatrixrateRepository                                          $matrixrateRepository
+     * @param \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection $collection
      */
     public function __construct(
         Context              $context,
-        MatrixrateRepository $matrixrateRepository
+        MatrixrateRepository $matrixrateRepository,
+        \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection $collection
     ) {
         $this->matrixrateRepository = $matrixrateRepository;
         parent::__construct($context);
+        $this->collection = $collection;
     }
 
     /**
@@ -64,12 +72,11 @@ class Delete extends Action
         $id = $this->getRequest()->getParam('id');
 
         if ($id) {
-            $model = $this->matrixrateRepository->create();
-            $model->load($id);
+            $model = $this->collection->getItemById($id);
 
             if ($model->getEntityId()) {
                 try {
-                    $model->delete();
+                    $this->matrixrateRepository->delete($model);
                     $this->messageManager->addSuccessMessage(__('The record has been deleted successfully'));
                 } catch (\Exception $e) {
                     $this->messageManager->addErrorMessage(__('Something went wrong while deleting'));
