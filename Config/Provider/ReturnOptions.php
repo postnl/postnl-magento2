@@ -45,7 +45,7 @@ class ReturnOptions extends AbstractConfigProvider
     const XPATH_RETURN_ZIPCODE              = 'tig_postnl/returns/zipcode';
     const XPATH_RETURN_CUSTOMER_CODE        = 'tig_postnl/returns/customer_code';
     const XPATH_SMART_RETURN_IS_ACTIVE      = 'tig_postnl/returns/smart_returns_active';
-    const XPATH_SMART_RETURN_EMAIL_TEMPLATE = 'tig_postnl/returns/template';
+    const XPATH_SMART_RETURN_EMAIL_TEMPLATE = 'tig_postnl/returns/smart_returns_template';
 
     /**
      * @return bool
