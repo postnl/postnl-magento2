@@ -31,19 +31,19 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
+use Magento\Backend\App\Action\Context;
+use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
+use Magento\Ui\Component\MassAction\Filter;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use TIG\PostNL\Controller\Adminhtml\Order\Email;
-use TIG\PostNL\Service\Api\ShipmentManagement;
-use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
+use TIG\PostNL\Service\Api\ShipmentManagement;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
+use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
-use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
-use Magento\Ui\Component\MassAction\Filter;
-use Magento\Backend\App\Action\Context;
 
 class MassGetSmartReturnLabel extends LabelAbstract
 {
@@ -123,8 +123,21 @@ class MassGetSmartReturnLabel extends LabelAbstract
         $magentoShipments = $this->getShipment();
 
         foreach ($magentoShipments as $magentoShipment) {
+            $countryId = $magentoShipment->getShippingAddress()->getCountryId();
+
+            if ($countryId !== 'NL') {
+                $this->messageManager->addErrorMessage(
+                // @codingStandardsIgnoreLine
+                    __('Smart Returns is only available for NL shipments.')
+                );
+
+                return $this->_redirect($this->_redirect->getRefererUrl());
+            }
+        }
+
+        foreach ($magentoShipments as $magentoShipment) {
             $this->shipmentManagement->generateLabel($magentoShipment->getId(), true);
-            $labels = $this->getLabels->get($magentoShipment->getId());
+            $labels = $this->getLabels->get($magentoShipment->getId(), false);
 
             if (empty($labels)) {
                 $this->messageManager->addErrorMessage(

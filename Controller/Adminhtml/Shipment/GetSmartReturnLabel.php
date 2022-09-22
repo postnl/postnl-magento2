@@ -126,7 +126,7 @@ class GetSmartReturnLabel extends LabelAbstract
         }
 
         $this->shipmentManagement->generateLabel($magentoShipment->getId(), true);
-        $labels = $this->getLabels->get($magentoShipment->getId());
+        $labels = $this->getLabels->get($magentoShipment->getId(), false);
 
         if (empty($labels)) {
             $this->messageManager->addErrorMessage(
