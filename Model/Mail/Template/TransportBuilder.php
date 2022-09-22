@@ -32,9 +32,9 @@
 
 namespace TIG\PostNL\Model\Mail\Template;
 
+use Laminas\Mime\Message as MimeMessage;
 use Laminas\Mime\Mime;
 use Laminas\Mime\Part;
-use Laminas\Mime\Message as MimeMessage;
 use Magento\Framework\Mail\MessageInterface;
 
 class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
@@ -54,10 +54,7 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
 
         $mimeMessage = $this->getMimeMessage($this->message);
 
-        foreach ($this->parts as $part) {
-            $mimeMessage->addPart($part);
-        }
-
+        $mimeMessage->addPart($this->parts);
         $this->message->setBody($mimeMessage);
 
         return $this;
@@ -79,7 +76,7 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
         string $encoding    = Mime::ENCODING_BASE64,
         $filename    = null
     ) {
-        $this->parts[] = $this->createMimePart($body, $mimeType, $disposition, $encoding, $filename);
+        $this->parts = $this->createMimePart($body, $mimeType, $disposition, $encoding, $filename);
         return $this;
     }
 
