@@ -519,3 +519,6 @@ Percent,Percent
 "Sorry, we could not validate your address. Please check if the correct address has been filled.","Sorry, we could not validate your address. Please check if the correct address has been filled."
 "Your address is valid!","Your address is valid!"
 "Your address is valid! However, multiple matching addresses has been found. Please check if the correct address has been filled.","Your address is valid! However, multiple matching addresses has been found. Please check if the correct address has been filled."
+"Enable International Address Validation","Enable International Address Validation"
+"Enable the international address validation. Do note that you need to pay extra for this","Enable the international address validation. Do note that you need to pay extra for this"
+"Please save your configuration before validating your International Address Check.","Please save your configuration before validating your International Address Check."

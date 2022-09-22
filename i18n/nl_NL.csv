@@ -556,3 +556,6 @@ Percent,Percentage
 "Your address is valid!","Uw adres is valide!"
 "Your address is valid! However, multiple matching addresses has been found. Please check if the correct address has been filled.",
 "Uw adres is valide! Echter zijn er meerdere overeenkomende adressen gevonden. Controleer s.v.p. of u de correcte adres ingevuld hebt."
+"Enable International Address Validation","Internationale Adresvalidatie Inschakelen"
+"Enable the international address validation. Do note that you need to pay extra for this","Schakel de internationale adresvalidatie in. Houd er rekening mee dat u hiervoor extra moet betalen"
+"Please save your configuration before validating your International Address Check.","Slaw uw configuratie op voordat u uw internationale adrescontrole valideert."

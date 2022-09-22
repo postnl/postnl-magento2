@@ -61,7 +61,6 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_GP_PRODUCT_OPTION                     = 'tig_postnl/globalpack/default_gp_option';
     const XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS       = 'tig_postnl/delivery_settings/default_delivery_stated_address';
     const XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS_BE    = 'tig_postnl/delivery_settings/default_delivery_stated_address_be';
-    const XPATH_NL_TO_BE_PRODUCT_CODE                         = '4941';
 
     /**
      * Since 1.5.1 all product options are automaticly supported.
@@ -294,7 +293,7 @@ class ProductOptions extends AbstractConfigProvider
         }
 
         if ($country === 'BE' && $shopCountry === 'NL') {
-            return static::XPATH_NL_TO_BE_PRODUCT_CODE;
+            return $this->productOptions->getOptionsByCode('4941')['value'];
         }
 
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS);
