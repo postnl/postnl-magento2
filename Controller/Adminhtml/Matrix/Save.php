@@ -71,6 +71,8 @@ class Save extends Action
         try {
             foreach ($data['country_id'] as $countryCode) {
                 $model->addData($data);
+                $model->setData('destiny_country_id', $countryCode);
+                $model->unsetData('country_id');
                 $this->matrixrateRepository->save($model);
                 $model->unsetData();
             }
