@@ -95,7 +95,7 @@ class Email
     {
         $shippingAddress = $shipment->getShippingAddress();
         $templateId      = $this->returnOptions->getEmailTemplate();
-        $fileName        = 'SmartReturnLabel' . $shipment->getOrderId() . '.pdf';
+        $fileName        = 'SmartReturnLabel' . $shipment->getIncrementId() . '.pdf';
         $fromEmail       = $this->scopeConfig->getValue('trans_email/ident_sales/email');
         $fromName        = $this->scopeConfig->getValue('trans_email/ident_sales/name');
         $toEmail         = $shippingAddress->getEmail();
