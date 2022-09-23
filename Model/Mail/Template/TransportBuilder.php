@@ -54,8 +54,10 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
 
         $mimeMessage = $this->getMimeMessage($this->message);
 
-        $mimeMessage->addPart($this->parts);
-        $this->message->setBody($mimeMessage);
+        if ($this->parts instanceof Part) {
+            $mimeMessage->addPart($this->parts);
+            $this->message->setBody($mimeMessage);
+        }
 
         return $this;
     }
