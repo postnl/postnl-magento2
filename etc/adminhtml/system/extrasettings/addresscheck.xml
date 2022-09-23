@@ -70,7 +70,6 @@
             <comment><![CDATA[Please save your configuration before validating your International Address Check.]]></comment>
             <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Validate\InternationalAddressValidation</frontend_model>
             <depends>
-                <field id="enable_postcode_check">1</field>
                 <field id="international_address_enable">1</field>
             </depends>
         </field>
