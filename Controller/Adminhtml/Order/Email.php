@@ -103,9 +103,10 @@ class Email
 
         try {
             $templateVars = [
-                'name'        => $shippingAddress->getName(),
-                'email'       => $toEmail,
-                'ordernumber' => $shipment->getOrder()->getIncrementId(),
+                'name'           => $shippingAddress->getName(),
+                'email'          => $toEmail,
+                'ordernumber'    => $shipment->getOrder()->getIncrementId(),
+                'shipmentnumber' => $shipment->getIncrementId()
             ];
 
             $storeId = $this->storeManager->getStore()->getId();
