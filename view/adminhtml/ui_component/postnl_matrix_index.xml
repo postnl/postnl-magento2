@@ -122,7 +122,7 @@
                 </item>
             </argument>
         </column>
-        <column name="website_id" sortOrder="100">
+        <column name="website_id" sortOrder="100" class="TIG\PostNL\Ui\Component\Matrix\Listing\Columns\Website">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>
@@ -136,7 +136,7 @@
                 </item>
             </argument>
         </column>
-        <column name="destiny_country_id">
+        <column name="destiny_country_id" class="TIG\PostNL\Ui\Component\Matrix\Listing\Columns\Country">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>
@@ -178,7 +178,7 @@
                 </item>
             </argument>
         </column>
-        <column name="weight">
+        <column name="weight" class="TIG\PostNL\Ui\Component\Matrix\Listing\Columns\Price">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>
@@ -192,7 +192,7 @@
                 </item>
             </argument>
         </column>
-        <column name="subtotal">
+        <column name="subtotal" class="TIG\PostNL\Ui\Component\Matrix\Listing\Columns\Price">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>
@@ -234,7 +234,7 @@
                 </item>
             </argument>
         </column>
-        <column name="price">
+        <column name="price" class="TIG\PostNL\Ui\Component\Matrix\Listing\Columns\Price">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>

@@ -119,6 +119,9 @@
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Region</item>
                     <item name="notice" xsi:type="string" translate="true">The region id for the region. Example: Virginia region id = "61". Or use "*" to use all regions</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
                 </item>
             </argument>
         </field>
@@ -139,6 +142,9 @@
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Weight</item>
                     <item name="notice" xsi:type="string" translate="true">The minimal weight in kg or lbs</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
                 </item>
             </argument>
         </field>
@@ -149,6 +155,9 @@
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Subtotal</item>
                     <item name="notice" xsi:type="string" translate="true">The minimal subtotal, this subtotal is the price that the customer has in his/her cart. Make sure to use '.' instead of ','</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
                 </item>
             </argument>
         </field>
@@ -159,6 +168,9 @@
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Quantity</item>
                     <item name="notice" xsi:type="string" translate="true">The minimal quantity</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
                 </item>
             </argument>
         </field>
@@ -187,6 +199,9 @@
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Price</item>
                     <item name="notice" xsi:type="string" translate="true">The shipping price. Make sure to use '.' instead of ','</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
                 </item>
             </argument>
         </field>

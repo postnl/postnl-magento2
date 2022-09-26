@@ -35,6 +35,7 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Redirect;
 use TIG\PostNL\Model\Carrier\MatrixrateRepository;
+use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection;
 
 class Delete extends Action
 {
@@ -44,23 +45,23 @@ class Delete extends Action
     private $matrixrateRepository;
 
     /**
-     * @var \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection
+     * @var Collection
      */
     private $collection;
 
     /**
-     * @param Context                                                       $context
-     * @param MatrixrateRepository                                          $matrixrateRepository
-     * @param \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection $collection
+     * @param Context              $context
+     * @param MatrixrateRepository $matrixrateRepository
+     * @param Collection           $collection
      */
     public function __construct(
         Context              $context,
         MatrixrateRepository $matrixrateRepository,
-        \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection $collection
+        Collection           $collection
     ) {
         $this->matrixrateRepository = $matrixrateRepository;
+        $this->collection           = $collection;
         parent::__construct($context);
-        $this->collection = $collection;
     }
 
     /**
@@ -69,7 +70,7 @@ class Delete extends Action
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
-        $id = $this->getRequest()->getParam('id');
+        $id             = $this->getRequest()->getParam('id');
 
         if ($id) {
             $model = $this->collection->getItemById($id);
