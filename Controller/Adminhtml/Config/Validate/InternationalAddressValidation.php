@@ -39,9 +39,7 @@ use TIG\PostNL\Webservices\Endpoints\Address\InternationalAddressCheck;
 
 class InternationalAddressValidation extends Action
 {
-    /**
-     * @var JsonFactory
-     */
+    /** @var JsonFactory  */
     private $jsonFactory;
 
     /** @var InternationalAddressCheck  */
