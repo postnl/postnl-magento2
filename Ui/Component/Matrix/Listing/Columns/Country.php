@@ -69,11 +69,17 @@ class Country extends Column
     {
         if (isset($dataSource['data']['items'])) {
             $fieldName = $this->getData('name');
+
             foreach ($dataSource['data']['items'] as & $item) {
-                if (isset($item[$fieldName])) {
-                    $countryInformation = $this->countryInformationAcquirer->getCountryInfo($item[$fieldName]);
-                    $item[$fieldName]   = $countryInformation->getFullNameLocale();
+                $itemList = explode(',',$item[$fieldName]);
+                $countryNameList = [];
+
+                foreach ($itemList as $value) {
+                    $countryInfo = $this->countryInformationAcquirer->getCountryInfo($value);
+                    $countryNameList[] = $countryInfo->getFullNameLocale();
                 }
+
+                $item[$fieldName] = implode(', ',$countryNameList);
             }
         }
 
