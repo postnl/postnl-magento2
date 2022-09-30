@@ -35,9 +35,6 @@ class ErrorHandler
     // @codingStandardsIgnoreStart
     public function process($data, $countryCode)
     {
-        // create array for validation of the region
-        $regionValidationArray = [ 'country' => $countryCode, 'region'=> $data['destiny_region_id']];
-
         // TODO add correct Data to show within the error message
         if (!is_array($data) || empty($data)) {
             $this->errors[] = __('Invalid PostNL matrix rates format in row #%s', $data);
@@ -45,10 +42,6 @@ class ErrorHandler
 
         if (($country = $this->validation->validate('country', $countryCode, $data['website_id'])) === false) {
             $this->errors[] = __('Invalid country "%1".', $countryCode);
-        }
-
-        if (($region = $this->validation->validate('region', $regionValidationArray)) === false) {
-            $this->errors[] = __('Invalid region/state "%1".', $regionValidationArray['region']);
         }
 
         if (($weight = $this->validation->validate('weight', $data['weight'])) === false) {
@@ -81,7 +74,7 @@ class ErrorHandler
         return [
             'website_id'         => $data['website_id'],
             'destiny_country_id' => $country,
-            'destiny_region_id'  => $region,
+            'destiny_region_id'  => 0,
             'destiny_zip_code'   => $data['destiny_zip_code'],
             'weight'             => $weight,
             'subtotal'           => $subtotal,
