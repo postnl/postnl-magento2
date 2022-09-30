@@ -10,7 +10,7 @@ Binnen de PostNL extensie is er de opties om labels te printen of of pakbonnen t
 
 Op de labels verschijnt linksboven een referentie, hierbij kan er gekozen worden om hiervoor geen waarde, zending ID, bestelling ID of een eigen waarde weer te geven. 
 Bij deze laatste optie kan bijvoorbeeld een voorvoegsel toegevoegd worden aan het zending ID. 
-Hiervoor kunnen de volgende variabelen gebruikt worden: `{{var shipment_increment_id}}`, `{{var order_increment_id}}` en `{{var store_frontend_name}}`. 
+Hiervoor kunnen de volgende variabelen gebruikt worden: {% raw %}`{{var shipment_increment_id}}`, `{{var order_increment_id}}` en `{{var store_frontend_name}}`{% endraw %}. 
 De uiteindelijke tekst mag niet meer zijn dan 28 karakters.
 
 Standaard wordt het aantal pakketten berekend op het gewicht, waarbij 20kg als maximaal gewicht wordt genomen. 
