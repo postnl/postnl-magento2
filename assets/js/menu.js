@@ -1,6 +1,7 @@
 const headers = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
 
 function buildList(list, level = 1, chapter = [0]){
+    const startNumberAtlevel = 2;
     const listItems = [];
     for (const index in list) {
         const element = list[index];
@@ -15,24 +16,29 @@ function buildList(list, level = 1, chapter = [0]){
             subItems.push(list[remainderIndex]);
         }
         // Increment chapter
-        if (!( level - 1 in chapter)) {
-            chapter[level-1] = 0;
+        if (!( level - startNumberAtlevel in chapter)) {
+            chapter[level-startNumberAtlevel] = 0;
         }
-        chapter[level-1] += 1;
-        const chapterNumber = chapter.slice(0,level).join('.');
-        element.innerText = chapterNumber + " " + element.innerText;
+
+        if (level >= startNumberAtlevel) {
+            chapter[level-startNumberAtlevel] += 1;
+            const chapterNumber = chapter.slice(0,level).join('.');
+            element.innerText = chapterNumber + " " + element.innerText;
+        }
 
         var text = element.innerText;
         if ('navigationTitle' in element.dataset) {
             text = element.dataset.navigationTitle;
         }
-        const chapterSub = chapter.slice(0,level);
 
+        const chapterSub = chapter.slice(0,level);
         listItems.push("<li><a href='#" + element.id + "'>" + text + "</a>" + buildList(subItems, level + 1, chapterSub) + "</li>");
     }
-    if (listItems.length == 0){
+
+    if (listItems.length === 0){
         return '';
     }
+
     return '<ul>' + listItems.join("") + "</ul>";
 }
 
