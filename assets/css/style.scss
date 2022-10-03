@@ -62,6 +62,9 @@ body {
     }
   }
   nav {
+    a {
+      color: $body-text-color;
+    }
     & {
       max-width: 24em;
       padding-left: 40px;
@@ -69,13 +72,30 @@ body {
         display: none;
       }
     }
+
+    & > ul, & > ul > li, & > ul > li > ul, & > ul > li > ul li {
+      display: block !important;
+    }
     ul {
+      margin: 0;
+      padding-left: 10px;
+    }
+    ul, li {
+      & {
+        display: none;
+      }
+
+      .expand, .expand li {
+        display: block;
+      }
+    }
+    & > ul {
       position: sticky;
       top: 20px;
       padding: 5px;
     }
     .active {
-      background-color: #ccc;
+      color: $body-link-color;
     }
   }
 }
@@ -101,6 +121,7 @@ main {
     font-size: 16px;
   }
 }
+
 
 .error-code-page{
   nav > ul > li > ul > li > ul {
