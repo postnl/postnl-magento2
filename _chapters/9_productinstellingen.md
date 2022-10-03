@@ -1,6 +1,6 @@
 ## Productinstellingen
 Binnen de PostNL extensie is het mogelijk om op productniveau specifieke instellingen te maken die alleen voor dat product van toepassing zijn. Standaard verschijnen deze opties in een losse tab in de backend wanneer een product wordt geopend.
-![Productinstellingen]({{ site.baseurl }}/assets/images/8_productinstellingen.png "PostNL Magento 2 productinstellingen")
+![Productinstellingen]({{ site.baseurl }}/assets/images/9_productinstellingen.png "PostNL Magento 2 productinstellingen")
 
 Per product kan er worden aangegeven wat voor een soort product het is, standaard worden deze op `normaal` gezet. Voor de opties `Brievenbuspakje` en ` Extra@Home` zijn aanvullende instellingen mogelijk.
 
