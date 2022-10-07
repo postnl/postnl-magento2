@@ -133,8 +133,8 @@ class ProductInfo
     public function get($type = '', $option = '', $address = null)
     {
         $country = $this->getCountryCode($address);
-        $type    = strtolower($type);
-        $option  = strtolower($option);
+        $type    = $type ? strtolower($type) : '';
+        $option  = $option ? strtolower($option) : '';
 
         // Check if the country is not an ESP country or BE/NL and if it is Global Pack
         if (!in_array($country, EpsCountries::ALL)
