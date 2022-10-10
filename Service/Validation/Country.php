@@ -190,6 +190,9 @@ class Country implements ContractInterface
         return $this->countryList;
     }
 
+    /**
+     * @return array
+     */
     private function getCountriesInfo()
     {
         $countriesInfo     = [];
