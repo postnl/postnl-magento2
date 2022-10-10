@@ -70,7 +70,7 @@ class Country extends Column
         if (isset($dataSource['data']['items'])) {
             $fieldName = $this->getData('name');
 
-            foreach ($dataSource['data']['items'] as & $item) {
+            foreach ($dataSource['data']['items'] as &$item) {
                 $itemList        = explode(',',$item[$fieldName]);
                 $countryNameList = [];
 

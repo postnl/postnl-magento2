@@ -45,7 +45,7 @@ class Price extends Column
     {
         if (isset($dataSource['data']['items'])) {
             $fieldName = $this->getData('name');
-            foreach ($dataSource['data']['items'] as & $item) {
+            foreach ($dataSource['data']['items'] as &$item) {
                 if (isset($item[$fieldName])) {
                     $item[$fieldName] = number_format((float)$item[$fieldName], 2, '.', '');
                 }

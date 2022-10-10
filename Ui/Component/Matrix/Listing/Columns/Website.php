@@ -69,7 +69,7 @@ class Website extends Column
     {
         if (isset($dataSource['data']['items'])) {
             $fieldName = $this->getData('name');
-            foreach ($dataSource['data']['items'] as & $item) {
+            foreach ($dataSource['data']['items'] as &$item) {
                 if (isset($item[$fieldName])) {
                     $websiteInformation = $this->websiteRepository->getById($item[$fieldName]);
                     $item[$fieldName]   = $websiteInformation->getName();
