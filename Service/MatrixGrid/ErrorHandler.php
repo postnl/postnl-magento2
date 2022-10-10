@@ -35,7 +35,6 @@ class ErrorHandler
     // @codingStandardsIgnoreStart
     public function process($data, $countryCode)
     {
-        // TODO add correct Data to show within the error message
         if (!is_array($data) || empty($data)) {
             $this->errors[] = __('Invalid PostNL matrix rates format in row #%s', $data);
         }

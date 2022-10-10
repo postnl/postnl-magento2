@@ -74,7 +74,7 @@
                 <item name="sortOrder" xsi:type="number">20</item>
             </item>
         </argument>
-        <!--    TODO Try to add a Link to the tutorial page -->
+        <!--    TODO add a Link to the docs -->
         <field name="website_id">
             <argument name="data" xsi:type="array">
             <item name="options" xsi:type="object">TIG\PostNL\Config\Source\Matrixrate\Websites</item>

@@ -40,7 +40,6 @@
         <item name="spinner" xsi:type="string">spinner_columns</item>
         <item name="buttons" xsi:type="array">
             <item name="add" xsi:type="array">
-<!--                TODO change add to Create? -->
                 <item name="name" xsi:type="string">add</item>
                 <item name="label" xsi:type="string" translate="true">Add a new matrixrate</item>
                 <item name="class" xsi:type="string">primary</item>
@@ -97,11 +96,7 @@
         <paging name="listing_paging"/>
     </listingToolbar>
 
-<!--    TODO can we add a data shower for the ID's?? -->
-<!--    TODO make sure the website ID shows the Full website name-->
-<!--    TODO maeke the country show full country name? -->
-<!--    TODO Maybe add Inline edit?-->
-
+<!-- TODO add Inline edit -->
 
     <columns name="spinner_columns">
         <selectionsColumn name="ids">
