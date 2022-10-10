@@ -34,6 +34,7 @@ namespace TIG\PostNL\Controller\Adminhtml\Matrix;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Redirect;
+use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Model\Carrier\MatrixrateRepository;
 use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection;
 
@@ -50,6 +51,11 @@ class Delete extends Action
     private $collection;
 
     /**
+     * @var Log
+     */
+    private $logger;
+
+    /**
      * @param Context              $context
      * @param MatrixrateRepository $matrixrateRepository
      * @param Collection           $collection
@@ -57,10 +63,12 @@ class Delete extends Action
     public function __construct(
         Context              $context,
         MatrixrateRepository $matrixrateRepository,
-        Collection           $collection
+        Collection           $collection,
+        Log                  $logger
     ) {
         $this->matrixrateRepository = $matrixrateRepository;
         $this->collection           = $collection;
+        $this->logger               = $logger;
         parent::__construct($context);
     }
 
@@ -81,6 +89,7 @@ class Delete extends Action
                     $this->messageManager->addSuccessMessage(__('The record has been deleted successfully'));
                 } catch (\Exception $e) {
                     $this->messageManager->addErrorMessage(__('Something went wrong while deleting'));
+                    $this->logger->error($e->getMessage());
                 }
 
                 return $resultRedirect->setPath('*/*/index');
