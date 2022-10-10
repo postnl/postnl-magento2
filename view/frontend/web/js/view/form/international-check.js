@@ -207,6 +207,12 @@ define([
             }
         },
 
+        observeCountry : function (value) {
+            if (value) {
+                this.updateFieldData();
+            }
+        },
+
         observeMagentoStreet0 : function (value) {
             if (value) {
                 this.updateFieldData();

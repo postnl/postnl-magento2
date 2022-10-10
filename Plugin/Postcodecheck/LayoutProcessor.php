@@ -103,7 +103,7 @@ class LayoutProcessor
             'component' => 'TIG_PostNL/js/view/form/international-check',
             'type'      => 'none',
             'provider'  => 'checkoutProvider',
-            'sortOrder' => 9999,
+            'sortOrder' => '105',
             'config'    => [
                 'customScope' => $scope,
                 'template'    => 'TIG_PostNL/checkout/international-check',
