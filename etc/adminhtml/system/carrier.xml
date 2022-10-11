@@ -96,6 +96,12 @@
                     <field id="rate_type">matrix</field>
                 </depends>
             </field>
+            <field id="matrixrate_visual" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Carrier\Matrixrate\MatrixButton" sortOrder="115" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Go to visual matrix</label>
+                <depends>
+                    <field id="rate_type">matrix</field>
+                </depends>
+            </field>
             <field id="include_virtual_price" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Include Virtual Products in Price Calculation</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

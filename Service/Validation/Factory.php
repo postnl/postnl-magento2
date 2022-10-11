@@ -73,13 +73,14 @@ class Factory
      * @return bool|mixed
      * @throws PostNLException
      */
-    public function validate($type, $value)
+    public function validate($type, $value, $websiteId = null)
     {
         foreach ($this->validators as $validator) {
             $this->checkImplementation($validator);
         }
 
-        $result = $this->callValidator($type, $value);
+        $result = $this->callValidator($type, $value, $websiteId);
+
         if ($result !== null) {
             return $result;
         }
@@ -93,7 +94,7 @@ class Factory
      *
      * @return bool|null
      */
-    private function callValidator($type, $value)
+    private function callValidator($type, $value, $websiteId)
     {
         switch ($type) {
             case 'price':
@@ -106,6 +107,7 @@ class Factory
                 return $this->validators['parcelType']->validate($value);
 
             case 'country':
+                $this->validators['country']->setWebsiteId($websiteId);
                 return $this->validators['country']->validate($value);
 
             case 'region':
