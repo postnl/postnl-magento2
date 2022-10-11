@@ -51,7 +51,7 @@ class QuoteToRateRequest
 
     public function __construct(
         RateRequestFactory $rateRequestFactory,
-        CheckoutSession $session
+        CheckoutSession    $session
     ) {
         $this->rateRequestFactory = $rateRequestFactory;
         $this->quote              = $session->getQuote();
@@ -62,7 +62,7 @@ class QuoteToRateRequest
      */
     public function get()
     {
-        $store = $this->quote->getStore();
+        $store   = $this->quote->getStore();
         $address = $this->quote->getShippingAddress();
 
         /** @var RateRequest $rateRequest */
@@ -101,12 +101,15 @@ class QuoteToRateRequest
     private function getWeight()
     {
         $weight = array_map(function (Item $item) {
-            return $item->getRowWeight();
+            return $item->getWeight();
         }, $this->quote->getAllItems());
 
         return array_sum($weight);
     }
 
+    /**
+     * @return float|int
+     */
     private function getValue()
     {
         $price = array_map(function (Item $item) {

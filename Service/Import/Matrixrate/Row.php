@@ -70,10 +70,10 @@ class Row
      */
     public function __construct(
         StoreInterface $store,
-        Factory $validation
+        Factory        $validation
     ) {
         $this->validation = $validation;
-        $this->store = $store;
+        $this->store      = $store;
     }
 
     /**
@@ -97,7 +97,7 @@ class Row
             return false;
         }
 
-        if (($country = $this->validation->validate('country', $line[0])) === false) {
+        if (($country = $this->validation->validate('country', $line[0], $website)) === false) {
             $this->errors[] = __('Invalid country "%1" in row #%2.', $line[0], $row);
             return false;
         }
@@ -138,7 +138,8 @@ class Row
         }
 
         if ($this->validation->validate('duplicate-import', $line) === false) {
-            $this->errors[] = __('Duplicate row #%1 (country "%2", region/state "%3", zip "%4", weight "%5", ' .
+            $this->errors[] = __(
+                'Duplicate row #%1 (country "%2", region/state "%3", zip "%4", weight "%5", ' .
                 'subtotal "%6", quantity "%7" and parcel type "%8").',
                 $row,
                 $line[0],
@@ -154,15 +155,15 @@ class Row
         }
 
         return [
-            'website_id' => $website,
+            'website_id'         => $website,
             'destiny_country_id' => $country,
-            'destiny_region_id' => $region,
-            'destiny_zip_code' => $line[2],
-            'weight' => $weight,
-            'subtotal' => $subtotal,
-            'quantity' => $quantity,
-            'parcel_type' => $parcelType,
-            'price' => $price,
+            'destiny_region_id'  => $region,
+            'destiny_zip_code'   => $line[2],
+            'weight'             => $weight,
+            'subtotal'           => $subtotal,
+            'quantity'           => $quantity,
+            'parcel_type'        => $parcelType,
+            'price'              => $price,
         ];
     }
     // @codingStandardsIgnoreEnd
