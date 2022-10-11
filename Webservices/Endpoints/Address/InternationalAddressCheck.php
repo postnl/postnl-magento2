@@ -41,6 +41,11 @@ class InternationalAddressCheck implements RestInterface
     private $restApi;
 
     /**
+     * @var bool
+     */
+    private $useAddressUri = false;
+
+    /**
      * @var string
      */
     private $endpoint = 'address/international/';
@@ -117,5 +122,13 @@ class InternationalAddressCheck implements RestInterface
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function useAddressUri()
+    {
+        return $this->useAddressUri;
     }
 }

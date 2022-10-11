@@ -50,8 +50,8 @@ class InternationalAddressValidation extends Field
      * @param SecureHtmlRenderer|null $secureRenderer
      */
     public function __construct(
-        Context $context,
-        array $data = [],
+        Context             $context,
+        array               $data = [],
         ?SecureHtmlRenderer $secureRenderer = null
     ) {
         parent::__construct($context, $data, $secureRenderer);
@@ -103,7 +103,7 @@ class InternationalAddressValidation extends Field
      */
     public function getButtonHtml()
     {
-        $layout = $this->getLayout();
+        $layout      = $this->getLayout();
         $buttonBlock = $layout->createBlock(Button::class);
         $buttonBlock->setData(
             [
