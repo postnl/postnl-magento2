@@ -32,6 +32,10 @@ aside .tig-postnl-field-group .field > .label {
     margin-bottom: 16px;
 }
 
+.tig-postnl-success {
+    color: green;
+}
+
 .tig-postnl-field-group {
     float: left;
     width: 100%;
@@ -119,4 +123,15 @@ aside .tig-postnl-field-group .field > .label {
 .tig-postnl-field-group-account .field:last-child,
 .tig-postnl-field-group-account .field {
     margin-bottom: 0;
+}
+
+.tig-postnl-international-addresses .tig-postnl-header {
+    font-weight: 300;
+    font-size: 2rem;
+    border-bottom: 1px solid #cccccc;
+    margin-bottom: 15px;
+}
+
+.tig-postnl-international-addresses .tig-postnl-address li:hover {
+    font-weight: bolder;
 }

@@ -156,6 +156,8 @@
                 <test_api_base_url>https://api-sandbox.postnl.nl/shipment/</test_api_base_url>
                 <address_api_url>https://api.postnl.nl/shipment/checkout/</address_api_url>
                 <address_test_api_url>https://api-sandbox.postnl.nl/shipment/checkout/</address_test_api_url>
+                <api_url>https://api.postnl.nl/</api_url>
+                <test_api_url>https://api-sandbox.postnl.nl/</test_api_url>
             </endpoints>
 
             <globalpack>

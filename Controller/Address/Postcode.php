@@ -81,6 +81,7 @@ class Postcode extends Action
 
         $this->postcodeService->updateRequestData($params);
         $result = $this->postcodeService->call();
+        $result = $this->handler->convertResponse($result);
 
         if ($result === false) {
             return $this->returnJson($this->getErrorResponse(false, __('Zipcode/housenumber combination not found')));

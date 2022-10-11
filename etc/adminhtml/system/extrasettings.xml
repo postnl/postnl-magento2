@@ -80,6 +80,5 @@
 
         <include path="TIG_PostNL::system/extrasettings/labelandpackingslip.xml"/>
         <include path="TIG_PostNL::system/extrasettings/addresscheck.xml"/>
-        <include path="TIG_PostNL::system/extrasettings/international_address.xml"/>
     </group>
 </include>
