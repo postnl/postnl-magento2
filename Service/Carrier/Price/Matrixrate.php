@@ -33,8 +33,8 @@
 namespace TIG\PostNL\Service\Carrier\Price;
 
 use Magento\Quote\Model\Quote\Address\RateRequest;
-use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection;
 use Magento\Tax\Helper\Data;
+use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection;
 
 class Matrixrate
 {
@@ -76,13 +76,13 @@ class Matrixrate
      * @param Data                 $taxHelper
      */
     public function __construct(
-        Collection $matrixrateCollection,
+        Collection           $matrixrateCollection,
         Filter\CountryFilter $countryFilter,
-        Data $taxHelper
+        Data                 $taxHelper
     ) {
         $this->matrixrateCollection = $matrixrateCollection;
-        $this->countryFilter = $countryFilter;
-        $this->taxHelper = $taxHelper;
+        $this->countryFilter        = $countryFilter;
+        $this->taxHelper            = $taxHelper;
     }
 
     /**
@@ -94,7 +94,7 @@ class Matrixrate
      */
     public function getRate(RateRequest $request, $parcelType, $store = null)
     {
-        $matrixrateCollection     = $this->matrixrateCollection->addOrder('subtotal', 'DESC')->addOrder('weight', 'DESC');
+        $matrixrateCollection     = $this->matrixrateCollection->addOrder('subtotal', 'DESC')->addOrder('weight', 'DESC')->addOrder('destiny_country_id', 'DESC');
         $this->shippingVatEnabled = $this->taxHelper->shippingPriceIncludesTax($store);
         $parcelType               = $parcelType ?: 'regular';
         $collection               = $matrixrateCollection->toArray();
@@ -124,6 +124,7 @@ class Matrixrate
         if (!$this->shippingVatEnabled) {
             return $result;
         }
+
         $result['price'] = $this->taxHelper->getShippingPrice($result['price'], true);
 
         return $result;
@@ -141,7 +142,6 @@ class Matrixrate
     private function filterData($data)
     {
         $data = $this->countryFilter->filter($this->request, $data);
-
         $data = array_filter($data, [$this, 'byWebsite']);
         $data = array_filter($data, [$this, 'byWeight']);
         $data = array_filter($data, [$this, 'bySubtotal']);
@@ -179,6 +179,7 @@ class Matrixrate
     private function bySubtotal($row)
     {
         $subtotal = $this->request->getBaseSubtotalInclTax();
+
         if (!$subtotal) {
             $subtotal = $this->request->getPackageValue();
         }

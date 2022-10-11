@@ -79,6 +79,7 @@ class Calculator
      * @var LetterboxPackage
      */
     private $letterboxPackage;
+
     /**
      * @var Data
      */
@@ -97,12 +98,12 @@ class Calculator
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        GetFreeBoxes $getFreeBoxes,
-        Matrixrate $matrixratePrice,
-        Tablerate $tablerateShippingPrice,
-        ParcelTypeFinder $parcelTypeFinder,
-        LetterboxPackage $letterboxPackage,
-        Data $taxHelper
+        GetFreeBoxes         $getFreeBoxes,
+        Matrixrate           $matrixratePrice,
+        Tablerate            $tablerateShippingPrice,
+        ParcelTypeFinder     $parcelTypeFinder,
+        LetterboxPackage     $letterboxPackage,
+        Data                 $taxHelper
     ) {
         $this->scopeConfig            = $scopeConfig;
         $this->getFreeBoxes           = $getFreeBoxes;
@@ -110,7 +111,7 @@ class Calculator
         $this->tablerateShippingPrice = $tablerateShippingPrice;
         $this->parcelTypeFinder       = $parcelTypeFinder;
         $this->letterboxPackage       = $letterboxPackage;
-        $this->taxHelper = $taxHelper;
+        $this->taxHelper              = $taxHelper;
     }
 
     /**
@@ -124,7 +125,7 @@ class Calculator
     {
         $this->store = $store;
 
-        if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
+        if ((bool)$request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
             return $this->priceResponse('0.00', '0.00');
         }
 
@@ -147,12 +148,12 @@ class Calculator
     private function getRatePrice($rateType, $request, $parcelType)
     {
         if (!$parcelType) {
-            $quote = null;
+            $quote        = null;
             $requestItems = $request->getAllItems();
 
             if ($requestItems) {
                 $requestItem = reset($requestItems);
-                $quote = $requestItem->getQuote();
+                $quote       = $requestItem->getQuote();
             }
 
             try {
@@ -162,7 +163,7 @@ class Calculator
             }
         }
 
-        if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
+        if ((bool)$request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
             $rateType = 'free';
         }
 
@@ -201,7 +202,7 @@ class Calculator
     {
         return [
             'price' => $price,
-            'cost' => $cost,
+            'cost'  => $cost,
         ];
     }
 
@@ -215,7 +216,7 @@ class Calculator
         $request->setConditionName($this->getConfigData('condition_name'));
 
         $includeVirtualPrice = $this->getConfigFlag('include_virtual_price');
-        $ratePrice = $this->tablerateShippingPrice->getTableratePrice($request, $includeVirtualPrice);
+        $ratePrice           = $this->tablerateShippingPrice->getTableratePrice($request, $includeVirtualPrice);
 
         if (!$ratePrice) {
             return false;
@@ -223,7 +224,7 @@ class Calculator
 
         return [
             'price' => $ratePrice['price'],
-            'cost' => $ratePrice['price'],
+            'cost'  => $ratePrice['price'],
         ];
     }
 

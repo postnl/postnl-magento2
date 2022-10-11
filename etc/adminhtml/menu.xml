@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="TIG_PostNL::menu" title="PostNL" module="TIG_PostNL" sortOrder="90" resource="TIG_PostNL::menu"/>
+        <add id="TIG_PostNL::configuration" title="Configuration" module="TIG_PostNL" sortOrder="1000" action="admin/system_config/edit/section/tig_postnl" parent="TIG_PostNL::menu" resource="TIG_PostNL::core_settings"/>
+        <add id="TIG_PostNL::carriers" title="Delivery Methods" module="TIG_PostNL" sortOrder="1000" action="admin/system_config/edit/section/carriers" parent="TIG_PostNL::menu" resource="TIG_PostNL::core_settings"/>
+        <add id="TIG_PostNL::matrixrates" title="Matrix Rates" module="TIG_PostNL" sortOrder="1000" action="postnl/matrix/index" parent="TIG_PostNL::menu" resource="TIG_PostNL::core_settings"/>
+    </menu>
+</config>
