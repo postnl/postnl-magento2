@@ -158,4 +158,23 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
 
         return $collection;
     }
+
+    /**
+     * @param $identifier
+     *
+     * @return MatrixrateInterface
+     * @throws NoSuchEntityException
+     */
+    public function getById($identifier)
+    {
+        $matrixRate = $this->matrixrateFactory->create();
+        $matrixRate->load($identifier);
+
+        if (!$matrixRate->getId()) {
+            // @codingStandardsIgnoreLine
+            throw new NoSuchEntityException(__('Matrixrate with entity id "%1" does not exist.', $identifier));
+        }
+
+        return $matrixRate;
+    }
 }
