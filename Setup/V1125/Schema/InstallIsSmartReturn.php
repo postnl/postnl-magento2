@@ -30,31 +30,30 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\PostNL\Setup\V1123\Schema;
+namespace TIG\PostNL\Setup\V1125\Schema;
 
 use TIG\PostNL\Setup\AbstractColumnsInstaller;
 
-class InstallSmartReturnBarcode extends AbstractColumnsInstaller
+class InstallIsSmartReturn extends AbstractColumnsInstaller
 {
     const TABLE_NAME = 'tig_postnl_shipment';
 
     // @codingStandardsIgnoreLine
     protected $columns = [
-        'smart_return_barcode'
+        'is_smart_return'
     ];
 
     /**
      * @return array
      */
-    public function installSmartReturnBarcodeColumn()
+    public function installIsSmartReturnColumn()
     {
         return [
             // @codingStandardsIgnoreLine
-            'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            'length'   => 32,
-            'nullable' => true,
-            'default'  => null,
-            'comment'  => 'Smart Return Barcode'
+            'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
+            'default'  => 0,
+            'nullable' => false,
+            'comment'  => 'Is Smart Return'
         ];
     }
 }
