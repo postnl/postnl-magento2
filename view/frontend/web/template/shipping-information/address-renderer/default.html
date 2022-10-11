@@ -6,16 +6,21 @@
 -->
 <if args="visible()">
     <text args="address().prefix"></text> <text args="address().firstname"></text> <text args="address().middlename"></text>
-    <text args="address().lastname"></text> <text args="address().suffix"></text><br/>
-    <text args="address().street.join(', ')" if="address().street"></text><br/>
-    <text args="address().city "></text>, <span text="address().region"></span> <text args="address().postcode"></text><br/>
-    <text args="getCountryName(address().countryId)"></text><br/>
-    <a if="address().telephone" attr="'href': 'tel:' + address().telephone" text="address().telephone"></a><br/>
-
+    <text args="address().lastname"></text> <text args="address().suffix"></text><br>
+    <if args="address().company">
+        <text args="address().company"></text><br>
+    </if>
+    <text args="address().street.join(', ')" if="address().street"></text><br>
+    <text args="address().city "></text>, <span text="address().region"></span> <text args="address().postcode"></text><br>
+    <text args="getCountryName(address().countryId)"></text><br>
+    <a if="address().telephone" attr="'href': 'tel:' + address().telephone" text="address().telephone"></a><br>
+    <if args="address().vatId">
+        VAT: <text args="address().vatId"></text><br>
+    </if>
     <each args="data: address().customAttributes, as: 'element'">
         <div if="element['attribute_code'] != 'tig_housenumber' && element['attribute_code'] != 'tig_housenumber_addition'">
             <text args="$parent.getCustomAttributeLabel(element)"></text>
-            <br/>
+            <br>
         </div>
     </each>
 </if>

@@ -4,23 +4,27 @@
  * See COPYING.txt for license details.
  */
 -->
-<div class="shipping-address-item" data-bind="css: isSelected() ? 'selected-item' : 'not-selected-item'">
+<div class="shipping-address-item" css="'selected-item' : isSelected() , 'not-selected-item':!isSelected()">
     <text args="address().prefix"></text> <text args="address().firstname"></text> <text args="address().middlename"></text>
-    <text args="address().lastname"></text> <text args="address().suffix"></text><br/>
+    <text args="address().lastname"></text> <text args="address().suffix"></text><br>
+    <if args="address().company">
+        <text args="address().company"></text><br>
+    </if>
     <text args="address().street.join(', ')" if="address().street"></text>
-  <br/>
-    <text args="address().city "></text>, <span text="address().region"></span> <text args="address().postcode"></text><br/>
-    <text args="getCountryName(address().countryId)"></text><br/>
-    <a if="address().telephone" attr="'href': 'tel:' + address().telephone" text="address().telephone"></a><br/>
-    <br/>
+    <br>
+    <text args="address().city "></text>, <span text="address().region"></span> <text args="address().postcode"></text><br>
+    <text args="getCountryName(address().countryId)"></text><br>
+    <a if="address().telephone" attr="'href': 'tel:' + address().telephone" text="address().telephone"></a><br>
+    <br>
 
-    <button visible="address().isEditable()"
-            type="button"
+    <button visible="address().isEditable()" type="button"
             class="action edit-address-link"
-            data-bind="click: editAddress, visible: address().isEditable()">
+            click="editAddress">
         <span translate="'Edit'"></span>
     </button>
-    <button type="button" data-bind="click: selectAddress" class="action action-select-shipping-item">
-        <span data-bind="i18n: 'Ship Here'"></span>
+    <!-- ko if: (!isSelected()) -->
+    <button type="button" click="selectAddress" class="action action-select-shipping-item">
+        <span translate="'Ship Here'"></span>
     </button>
+    <!-- /ko -->
 </div>
