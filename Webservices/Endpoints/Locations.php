@@ -113,13 +113,14 @@ class Locations extends AbstractEndpoint
 
     /**
      * @param $address
+     * @param $hidePackageMachines
      * @param $startDate
      */
-    public function updateParameters($address, $startDate = false)
+    public function updateParameters($address, $hidePackageMachines = false, $startDate = false)
     {
         $this->requestParams = [
             'Location'    => [
-                'DeliveryOptions'    => $this->postNLhelper->getAllowedDeliveryOptions($address['country']),
+                'DeliveryOptions'    => $this->postNLhelper->getAllowedDeliveryOptions($address['country'],$hidePackageMachines),
                 'DeliveryDate'       => $this->getDeliveryDate($startDate),
                 'Postalcode'         => str_replace(' ', '', $address['postcode']),
                 'Options'            => ['Daytime', 'Morning'],

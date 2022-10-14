@@ -550,3 +550,6 @@ Percent,Percent
 "Invalid quantity ""%1"" in row #%2.","Invalid quantity ""%1""."
 "Invalid parcel type ""%1"".","Invalid parcel type ""%1""."
 "Invalid shipping price ""%1"".","Invalid shipping price ""%1""."
+"Hide parcel and letter machines","Hide parcel and letter machines"
+"Activate parcel and letter machine filter","Activate parcel and letter machine filter"
+"Adds a filter to the checkout, to not show parcel and letter machines","Adds a filter to the checkout, to not show parcel and letter machines"

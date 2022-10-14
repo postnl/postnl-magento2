@@ -46,6 +46,7 @@
                 <item name="shippingoptions_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsShippingOptionsActive</item>
                 <item name="pakjegemak_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsPakjegemakActive</item>
                 <item name="pakjegemak_be_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsPakjegemakBeActive</item>
+                <item name="is_package_machine_filter_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsPackageMachineFilterActive</item>
                 <item name="stated_address_only_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsStatedAddressOnlyActive</item>
                 <item name="stated_address_only_fee" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\StatedAddressOnlyFee</item>
                 <item name="urls" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\Urls</item>
