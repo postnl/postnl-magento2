@@ -276,10 +276,9 @@ define([
 
         handlePackageMachineFilter: function (){
 
-            var address              = AddressFinder();
-            var packageMachineFilter = +$('#postnl_package_box_filter_checkbox').is(':checked');
-
+            var address = AddressFinder();
             this.getPickupAddresses(address);
+
             return true;
         },
 
@@ -287,7 +286,7 @@ define([
             var isActive = window.checkoutConfig.shipping.postnl.is_package_machine_filter_active;
 
             var address = AddressFinder();
-            var isNL = (address !== null && address !== false && address.country === 'NL');
+            var isNL = (address !== undefined && address !== null && address !== false && address.country === 'NL');
 
             return isActive === 1 && isNL;
         }),

@@ -584,6 +584,7 @@ Percent,Percentage
 "Invalid quantity ""%1"".","Ongeldige hoeveelheid ""%1""."
 "Invalid parcel type ""%1"".","Ongeldig parcel type ""%1""."
 "Invalid shipping price ""%1"".","Ongeldig prijs ""%1""."
+"Filter options","Filter opties"
 "Hide parcel and letter machines","Verberg pakket- en briefautomaat"
 "Activate parcel and letter machine filter","Activeer pakket- en briefautomaat filter"
 "Adds a filter to the checkout, to not show parcel and letter machines","Voegt een filter toe aan de checkout, om geen pakket- en briefautomaten te tonen"
