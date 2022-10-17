@@ -48,6 +48,7 @@ abstract class OptionsAbstract
             'isEvening'            => false,
             'isSunday'             => false,
             'isGuaranteedDelivery' => true,
+            'isToday'              => true,
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
         ],

@@ -75,6 +75,7 @@
             <argument name="optionsFilters" xsi:type="array">
                 <item name="evening" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Options\Evening</item>
                 <item name="sunday" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Options\Sunday</item>
+                <item name="today" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Options\Today</item>
             </argument>
         </arguments>
     </type>

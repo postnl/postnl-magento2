@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Service\Timeframe\Filters\Days;
 
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
 use TIG\PostNL\Helper\Data;
 
@@ -47,12 +48,20 @@ class SameDay implements DaysFilterInterface
     private $postNLhelper;
 
     /**
-     * @param Data $helper
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
+
+    /**
+     * @param Data            $helper
+     * @param ShippingOptions $shippingOptions
      */
     public function __construct(
-        Data $helper
+        Data $helper,
+        ShippingOptions $shippingOptions
     ) {
         $this->postNLhelper = $helper;
+        $this->shippingOptions = $shippingOptions;
     }
 
     /**
@@ -63,7 +72,14 @@ class SameDay implements DaysFilterInterface
     public function filter($days)
     {
         $filteredDays = array_filter($days, function ($value) {
-            return $this->postNLhelper->getDate() != $this->postNLhelper->getDate($value->Date);
+            $todayDate = $this->postNLhelper->getDate();
+            $timeframeDate = $this->postNLhelper->getDate($value->Date);
+
+            if ($this->shippingOptions->isTodayDeliveryActive() && $todayDate == $timeframeDate) {
+                return true;
+            }
+
+            return $todayDate != $timeframeDate;
         });
 
         return array_values($filteredDays);

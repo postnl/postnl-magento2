@@ -50,6 +50,8 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_EVENING_BE_FEE            = 'tig_postnl/evening_delivery_be/eveningdelivery_be_fee';
     const XPATH_SHIPPING_OPTION_SUNDAY_ACTIVE             = 'tig_postnl/sunday_delivery/sundaydelivery_active';
     const XPATH_SHIPPING_OPTION_SUNDAY_FEE                = 'tig_postnl/sunday_delivery/sundaydelivery_fee';
+    const XPATH_SHIPPING_OPTION_TODAY_ACTIVE              = 'tig_postnl/today_delivery/todaydelivery_active';
+    const XPATH_SHIPPING_OPTION_TODAY_FEE                 = 'tig_postnl/today_delivery/todaydelivery_fee';
     const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE        = 'tig_postnl/track_and_trace/send_track_and_trace_email';
     const XPATH_SHIPPING_OPTION_DELIVERY_DELAY            = 'tig_postnl/track_and_trace/delivery_delay';
     const XPATH_SHIPPING_OPTION_IDCHECK_ACTIVE            = 'tig_postnl/id_check/idcheck_active';
@@ -193,6 +195,26 @@ class ShippingOptions extends AbstractConfigProvider
         }
 
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_SUNDAY_FEE);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isTodayDeliveryActive()
+    {
+        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_TODAY_ACTIVE);
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getTodayDeliveryFee()
+    {
+        if (!$this->isTodayDeliveryActive()) {
+            return '0';
+        }
+
+        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_TODAY_FEE);
     }
 
     /**

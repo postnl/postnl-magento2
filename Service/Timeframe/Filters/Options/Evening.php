@@ -93,16 +93,21 @@ class Evening implements OptionsFilterInterface
             return false;
         }
 
-        if ($option->string[0] !== static::TIMEFRAME_OPTION_EVENING) {
-            return true;
+        $result = false;
+
+        foreach ($option->string as $string) {
+            if ($string !== static::TIMEFRAME_OPTION_EVENING) {
+                $result = true;
+            }
+
+            if ($string === static::TIMEFRAME_OPTION_EVENING
+                && $this->shippingOptions->isEveningDeliveryActive($this->getCountryId())) {
+                $option->validatedType = $string;
+                $result = true;
+            }
         }
 
-        if ($option->string[0] === static::TIMEFRAME_OPTION_EVENING
-            && $this->shippingOptions->isEveningDeliveryActive($this->getCountryId())) {
-            return true;
-        }
-
-        return false;
+        return $result;
     }
 
     /**
