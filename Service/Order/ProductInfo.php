@@ -61,6 +61,8 @@ class ProductInfo
 
     const OPTION_SUNDAY                   = 'sunday';
 
+    const OPTION_TODAY                    = 'today';
+
     const OPTION_DAYTIME                  = 'daytime';
 
     const OPTION_EVENING                  = 'evening';
@@ -78,6 +80,8 @@ class ProductInfo
     const SHIPMENT_TYPE_GP                = 'GP';
 
     const SHIPMENT_TYPE_SUNDAY            = 'Sunday';
+
+    const SHIPMENT_TYPE_TODAY            = 'Today';
 
     const SHIPMENT_TYPE_EVENING           = 'Evening';
 
@@ -326,6 +330,11 @@ class ProductInfo
             case static::OPTION_SUNDAY:
                 $this->code = $this->productOptionsConfiguration->getDefaultSundayProductOption();
                 $this->type = static::SHIPMENT_TYPE_SUNDAY;
+
+                break;
+            case static::OPTION_TODAY:
+                $this->code = $this->productOptionsConfiguration->getDefaultTodayProductOption();
+                $this->type = static::SHIPMENT_TYPE_TODAY;
 
                 break;
             case static::OPTION_EXTRAATHOME:

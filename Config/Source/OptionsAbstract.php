@@ -786,6 +786,7 @@ abstract class OptionsAbstract
         'ExtraAtHome'       => '',
         'Extra@Home'        => '',
         'Sunday'            => 'Sunday',
+        'Today'             => 'Today',
         'PG'                => '',
         'EPS'               => '',
         'GP'                => '',
