@@ -31,9 +31,11 @@
  */
 namespace TIG\PostNL\Service\Timeframe\Filters\Options;
 
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Service\Timeframe\Filters\OptionsFilterInterface;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Service\Timeframe\IsPastCutOff;
 
 class Today implements OptionsFilterInterface
 {
@@ -44,17 +46,31 @@ class Today implements OptionsFilterInterface
 
     /** @var ShippingOptions */
     private $shippingOptions;
+    /**
+     * @var TimezoneInterface
+     */
+    private $currentDate;
+    /**
+     * @var IsPastCutOff
+     */
+    private $isPastCutOff;
 
     /**
-     * @param Data            $postNLhelper
-     * @param ShippingOptions $shippingOptions
+     * @param Data              $postNLhelper
+     * @param TimezoneInterface $currentDate
+     * @param ShippingOptions   $shippingOptions
+     * @param IsPastCutOff      $isPastCutOff
      */
     public function __construct(
         Data $postNLhelper,
-        ShippingOptions $shippingOptions
+        TimezoneInterface $currentDate,
+        ShippingOptions $shippingOptions,
+        IsPastCutOff $isPastCutOff
     ) {
         $this->postNLhelper    = $postNLhelper;
         $this->shippingOptions = $shippingOptions;
+        $this->currentDate = $currentDate;
+        $this->isPastCutOff = $isPastCutOff;
     }
 
     /**
@@ -80,7 +96,13 @@ class Today implements OptionsFilterInterface
             return false;
         }
 
-        $todayDate = $this->postNLhelper->getDate();
+        $checkDay = 'today';
+        if ($this->isPastCutOff->calculate()) {
+            $checkDay = 'tomorrow';
+        }
+
+        $todayDate = $this->currentDate->date('today', null, false, false)->format('Y-m-d');
+        $cutoffDate = $this->currentDate->date($checkDay, null, false, false)->format('Y-m-d');
         $optionDate = $this->postNLhelper->getDate($timeframe->Date);
 
         $result = false;
@@ -92,7 +114,7 @@ class Today implements OptionsFilterInterface
 
             if ($string === static::TIMEFRAME_OPTION_TODAY
                 && $this->shippingOptions->isTodayDeliveryActive()
-                && $todayDate == $optionDate) {
+                && $cutoffDate == $optionDate) {
                 $option->validatedType = $string;
                 $result = true;
             }

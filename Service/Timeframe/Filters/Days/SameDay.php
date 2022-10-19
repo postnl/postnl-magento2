@@ -31,9 +31,11 @@
  */
 namespace TIG\PostNL\Service\Timeframe\Filters\Days;
 
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
 use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Service\Timeframe\IsPastCutOff;
 
 /**
  * Class SameDay
@@ -48,20 +50,36 @@ class SameDay implements DaysFilterInterface
     private $postNLhelper;
 
     /**
+     * @var TimezoneInterface
+     */
+    private $currentDate;
+
+    /**
      * @var ShippingOptions
      */
     private $shippingOptions;
 
     /**
-     * @param Data            $helper
-     * @param ShippingOptions $shippingOptions
+     * @var IsPastCutOff
+     */
+    private $isPastCutOff;
+
+    /**
+     * @param Data              $helper
+     * @param TimezoneInterface $currentDate
+     * @param ShippingOptions   $shippingOptions
+     * @param IsPastCutOff      $isPastCutOff
      */
     public function __construct(
         Data $helper,
-        ShippingOptions $shippingOptions
+        TimezoneInterface $currentDate,
+        ShippingOptions $shippingOptions,
+        IsPastCutOff $isPastCutOff
     ) {
         $this->postNLhelper = $helper;
+        $this->currentDate = $currentDate;
         $this->shippingOptions = $shippingOptions;
+        $this->isPastCutOff = $isPastCutOff;
     }
 
     /**
@@ -72,12 +90,19 @@ class SameDay implements DaysFilterInterface
     public function filter($days)
     {
         $filteredDays = array_filter($days, function ($value) {
-            $todayDate = $this->postNLhelper->getDate();
+            $checkDay = 'today';
+            if ($this->isPastCutOff->calculate()) {
+                $checkDay = 'tomorrow';
+            }
+
+            $cutoffDate = $this->currentDate->date($checkDay, null, false, false)->format('Y-m-d');
             $timeframeDate = $this->postNLhelper->getDate($value->Date);
 
-            if ($this->shippingOptions->isTodayDeliveryActive() && $todayDate == $timeframeDate) {
+            if ($this->shippingOptions->isTodayDeliveryActive() && $cutoffDate == $timeframeDate) {
                 return true;
             }
+
+            $todayDate = $this->currentDate->date('today', null, false, false)->format('Y-m-d');
 
             return $todayDate != $timeframeDate;
         });
