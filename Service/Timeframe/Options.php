@@ -40,7 +40,7 @@ class Options
     const DAYTIME_DELIVERY_OPTION = 'Daytime';
     const EVENING_DELIVERY_OPTION = 'Evening';
     const SUNDAY_DELIVERY_OPTION  = 'Sunday';
-    const TODAY_DELIVERY_OPTION   = 'Sameday';
+    const TODAY_DELIVERY_OPTION   = 'Today';
 
     /**
      * @var ShippingOptions

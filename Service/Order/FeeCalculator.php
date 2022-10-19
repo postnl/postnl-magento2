@@ -68,7 +68,7 @@ class FeeCalculator
             return (float)$this->shippingOptions->getSundayDeliveryFee();
         }
 
-        if ($this->shippingOptions->isTodayDeliveryActive() && $params['option'] == 'Sameday') {
+        if ($this->shippingOptions->isTodayDeliveryActive() && $params['option'] == 'Today') {
             return (float)$this->shippingOptions->getTodayDeliveryFee();
         }
 

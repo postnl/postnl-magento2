@@ -91,9 +91,9 @@ class ProductOptions
                 'Characteristic' => '002',
                 'Option'         => '014'
             ],
-            'sameday' => [
+            'today' => [
                 'Characteristic' => '118',
-                'Option'         => '004'
+                'Option'         => '044'
             ]
         ];
 

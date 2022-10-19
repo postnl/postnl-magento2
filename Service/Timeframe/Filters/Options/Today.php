@@ -39,7 +39,7 @@ use TIG\PostNL\Service\Timeframe\IsPastCutOff;
 
 class Today implements OptionsFilterInterface
 {
-    const TIMEFRAME_OPTION_TODAY = 'Sameday';
+    const TIMEFRAME_OPTION_TODAY = 'Today';
 
     /** @var Data */
     private $postNLhelper;
