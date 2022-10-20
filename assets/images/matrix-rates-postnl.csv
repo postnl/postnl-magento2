@@ -1,0 +1,8 @@
+Land,Provincie/staat,Postcode,Gewicht (en hoger),Bedrag (en hoger),Hoeveelheid (en hoger),pakkettype,prijs,Instructies
+NL,*,*,0.0000,50.0000,0,*,0.0000,
+NL,*,*,50.0000,0.0000,0,*,5.9500,
+NL,*,*,0.0000,0.0000,0,*,9.9500,
+NL,*,*,0.0000,30.0000,0,regular,20.0000,
+NL,*,*,0.0000,30.0000,0,pakjegemak,20.0000,
+NL,*,*,0.0000,30.0000,0,extra@home,25.0000,
+NL,*,*,0.0000,30.0000,0,letterbox_package,30.0000,

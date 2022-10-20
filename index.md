@@ -10,6 +10,6 @@ Op deze pagina vindt u de handleiding van de Magento 2 PostNL extensie. Voor mee
 {% include_relative _chapters/4_wereldwijd_verzenden.md %}
 {% include_relative _chapters/5_extra_instellingen.md %}
 {% include_relative _chapters/6_ontwikkelaarsinstellingen.md %}
-{% include_relative _chapters/7_verwerken_orders.md %}
+{% include_relative _chapters/7_zendingen_aanmaken.md %}
 {% include_relative _chapters/8_verzendmethode_instellen.md %}
 {% include_relative _chapters/9_productinstellingen.md %}
