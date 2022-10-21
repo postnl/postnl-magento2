@@ -95,16 +95,17 @@ class SameDay implements DaysFilterInterface
                 $checkDay = 'tomorrow';
             }
 
+            $todayDate = $this->currentDate->date('today', null, false, false);
             $cutoffDate = $this->currentDate->date($checkDay, null, false, false)->format('Y-m-d');
             $timeframeDate = $this->postNLhelper->getDate($value->Date);
 
-            if ($this->shippingOptions->isTodayDeliveryActive() && $cutoffDate == $timeframeDate) {
+            $weekday = $this->postNLhelper->getDayOrWeekNumber($todayDate->format('H:i:s'));
+
+            if ($this->shippingOptions->isTodayDeliveryActive() && $cutoffDate == $timeframeDate && !in_array($weekday, ['6', '7'])) {
                 return true;
             }
 
-            $todayDate = $this->currentDate->date('today', null, false, false)->format('Y-m-d');
-
-            return $todayDate != $timeframeDate;
+            return $todayDate->format('Y-m-d') != $timeframeDate;
         });
 
         return array_values($filteredDays);
