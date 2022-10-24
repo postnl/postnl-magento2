@@ -64,7 +64,7 @@
 
         <field id="default_today_option" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default today delivery</label>
-            <comment><![CDATA[Select the default product option for today shipments.]]></comment>
+            <comment><![CDATA[Select the default product option for today delivery shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsTodayOptions</source_model>
             <config_path>tig_postnl/today_delivery/default_today_option</config_path>
             <depends>
