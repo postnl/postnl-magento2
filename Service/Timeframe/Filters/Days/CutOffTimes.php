@@ -88,7 +88,6 @@ class CutOffTimes implements DaysFilterInterface
             return $days;
         }
 
-        // if today enabled
         $firstDayTimeframe = $days[0]->Timeframes->TimeframeTimeFrame;
         $firstDayTimeframe = array_filter($firstDayTimeframe, [$this, 'filterNextDeliveryDay']);
         $days[0]->Timeframes->TimeframeTimeFrame = $firstDayTimeframe;

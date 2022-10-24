@@ -101,7 +101,11 @@ class SameDay implements DaysFilterInterface
 
             $weekday = $this->postNLhelper->getDayOrWeekNumber($todayDate->format('H:i:s'));
 
-            if ($this->shippingOptions->isTodayDeliveryActive() && $cutoffDate == $timeframeDate && !in_array($weekday, ['6', '7'])) {
+            if ($this->shippingOptions->isTodayDeliveryActive()
+                && $cutoffDate == $timeframeDate
+                && !in_array($weekday, ['6', '7'])
+                && !$this->isPastCutOff->calculateToday()
+            ) {
                 return true;
             }
 

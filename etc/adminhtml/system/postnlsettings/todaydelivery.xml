@@ -62,12 +62,23 @@
             </depends>
         </field>
 
-<!--        @TODO: activate later to fill out with product options once PostNL has told wich ones to use -->
         <field id="default_today_option" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default Today delivery</label>
             <comment><![CDATA[Select the default product option for Today shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsTodayOptions</source_model>
             <config_path>tig_postnl/today_delivery/default_today_option</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+                <field id="todaydelivery_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+            </depends>
+        </field>
+
+        <field id="today_cutoff_time" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Today cutoff time</label>
+            <comment><![CDATA[When an order is placed after this time, another day will be added to the shipping duration.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Settings\CutOffSettings::getTodayOptions</source_model>
+            <config_path>tig_postnl/today_delivery/cutoff_time</config_path>
             <depends>
                 <field id="shippingoptions_active">1</field>
                 <field id="todaydelivery_active">1</field>
