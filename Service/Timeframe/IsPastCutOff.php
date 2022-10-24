@@ -92,7 +92,7 @@ class IsPastCutOff
      */
     public function calculateToday()
     {
-        $nowTime = strtotime($this->now()->format('H:i:s'));
+        $nowTime    = strtotime($this->now()->format('H:i:s'));
         $cutOffTime = strtotime($this->shippingOptions->getTodayCutoffTime());
 
         return $nowTime > $cutOffTime;

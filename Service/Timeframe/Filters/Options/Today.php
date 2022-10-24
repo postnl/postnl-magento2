@@ -69,12 +69,12 @@ class Today implements OptionsFilterInterface
     ) {
         $this->postNLhelper    = $postNLhelper;
         $this->shippingOptions = $shippingOptions;
-        $this->currentDate = $currentDate;
-        $this->isPastCutOff = $isPastCutOff;
+        $this->currentDate     = $currentDate;
+        $this->isPastCutOff    = $isPastCutOff;
     }
 
     /**
-     * @param array|object $options
+     * @param array|object $timeframes
      *
      * @return array|object
      */
@@ -85,7 +85,7 @@ class Today implements OptionsFilterInterface
     }
 
     /**
-     * @param $option
+     * @param $timeframe
      *
      * @return bool
      */
@@ -101,11 +101,10 @@ class Today implements OptionsFilterInterface
             $checkDay = 'tomorrow';
         }
 
-        $todayDate = $this->currentDate->date('today', null, false, false)->format('Y-m-d');
+        $todayDate  = $this->currentDate->date('today', null, false, false)->format('Y-m-d');
         $cutoffDate = $this->currentDate->date($checkDay, null, false, false)->format('Y-m-d');
         $optionDate = $this->postNLhelper->getDate($timeframe->Date);
-
-        $result = false;
+        $result     = false;
 
         foreach ($option->string as $string) {
             if ($string !== static::TIMEFRAME_OPTION_TODAY && $todayDate != $optionDate) {

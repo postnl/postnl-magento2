@@ -76,10 +76,10 @@ class SameDay implements DaysFilterInterface
         ShippingOptions $shippingOptions,
         IsPastCutOff $isPastCutOff
     ) {
-        $this->postNLhelper = $helper;
-        $this->currentDate = $currentDate;
+        $this->postNLhelper    = $helper;
+        $this->currentDate     = $currentDate;
         $this->shippingOptions = $shippingOptions;
-        $this->isPastCutOff = $isPastCutOff;
+        $this->isPastCutOff    = $isPastCutOff;
     }
 
     /**
@@ -95,11 +95,10 @@ class SameDay implements DaysFilterInterface
                 $checkDay = 'tomorrow';
             }
 
-            $todayDate = $this->currentDate->date('today', null, false, false);
-            $cutoffDate = $this->currentDate->date($checkDay, null, false, false)->format('Y-m-d');
+            $todayDate     = $this->currentDate->date('today', null, false, false);
+            $cutoffDate    = $this->currentDate->date($checkDay, null, false, false)->format('Y-m-d');
             $timeframeDate = $this->postNLhelper->getDate($value->Date);
-
-            $weekday = $this->postNLhelper->getDayOrWeekNumber($todayDate->format('H:i:s'));
+            $weekday       = $this->postNLhelper->getDayOrWeekNumber($todayDate->format('H:i:s'));
 
             if ($this->shippingOptions->isTodayDeliveryActive()
                 && $cutoffDate == $timeframeDate

@@ -71,10 +71,10 @@ class CutOffTimes implements DaysFilterInterface
         TimezoneInterface $today,
         ShippingOptions $shippingOptions
     ) {
-        $this->todayTimezone = $today;
-        $this->dateLoader = $dateLoader;
+        $this->todayTimezone    = $today;
+        $this->dateLoader       = $dateLoader;
         $this->isPastCutOffTime = $isPastCutOff;
-        $this->shippingOptions = $shippingOptions;
+        $this->shippingOptions  = $shippingOptions;
     }
 
     /**
@@ -88,8 +88,8 @@ class CutOffTimes implements DaysFilterInterface
             return $days;
         }
 
-        $firstDayTimeframe = $days[0]->Timeframes->TimeframeTimeFrame;
-        $firstDayTimeframe = array_filter($firstDayTimeframe, [$this, 'filterNextDeliveryDay']);
+        $firstDayTimeframe                       = $days[0]->Timeframes->TimeframeTimeFrame;
+        $firstDayTimeframe                       = array_filter($firstDayTimeframe, [$this, 'filterNextDeliveryDay']);
         $days[0]->Timeframes->TimeframeTimeFrame = $firstDayTimeframe;
 
         // If no timeframe options remain, the whole day can be removed.
