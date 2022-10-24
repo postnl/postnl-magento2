@@ -50,9 +50,9 @@
             </depends>
         </field>
 
-        <field id="todaydelivery_fee" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+        <field id="todaydelivery_fee" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Today delivery fee</label>
-            <comment><![CDATA[Additional costs for Today delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
+            <comment><![CDATA[Additional costs for today delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
             <config_path>tig_postnl/today_delivery/todaydelivery_fee</config_path>
             <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
             <depends>
@@ -63,8 +63,8 @@
         </field>
 
         <field id="default_today_option" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-            <label>Default Today delivery</label>
-            <comment><![CDATA[Select the default product option for Today shipments.]]></comment>
+            <label>Default today delivery</label>
+            <comment><![CDATA[Select the default product option for today shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsTodayOptions</source_model>
             <config_path>tig_postnl/today_delivery/default_today_option</config_path>
             <depends>
