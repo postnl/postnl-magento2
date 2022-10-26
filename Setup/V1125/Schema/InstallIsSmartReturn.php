@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,21 +28,32 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="1.12.5">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Directory"/>
-            <module name="Magento_Backend"/>
-            <module name="Magento_Catalog"/>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Quote"/>
-            <module name="Magento_Checkout"/>
-            <module name="Magento_Store"/>
-            <module name="Magento_Ui"/>
-            <module name="Magento_Config"/>
-        </sequence>
-    </module>
-</config>
+ */
+
+namespace TIG\PostNL\Setup\V1125\Schema;
+
+use TIG\PostNL\Setup\AbstractColumnsInstaller;
+
+class InstallIsSmartReturn extends AbstractColumnsInstaller
+{
+    const TABLE_NAME = 'tig_postnl_shipment';
+
+    // @codingStandardsIgnoreLine
+    protected $columns = [
+        'is_smart_return'
+    ];
+
+    /**
+     * @return array
+     */
+    public function installIsSmartReturnColumn()
+    {
+        return [
+            // @codingStandardsIgnoreLine
+            'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
+            'default'  => 0,
+            'nullable' => false,
+            'comment'  => 'Is Smart Return'
+        ];
+    }
+}

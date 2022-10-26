@@ -71,6 +71,15 @@
                     </item>
                 </argument>
             </action>
+            <action name="postnl_mass_send_smart_return_label">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">postnl_mass_send_smart_return_label</item>
+                        <item name="label" xsi:type="string" translate="true">PostNL - Send Smart Return label</item>
+                        <item name="url" xsi:type="url" path="postnl/shipment/MassGetSmartReturnLabel"/>
+                    </item>
+                </argument>
+            </action>
         </massaction>
     </listingToolbar>
     <columns name="sales_order_shipment_columns">

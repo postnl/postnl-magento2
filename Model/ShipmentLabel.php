@@ -42,10 +42,10 @@ use TIG\PostNL\Api\ShipmentRepositoryInterface;
 // @codingStandardsIgnoreFile
 class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface
 {
-    const FIELD_PARENT_ID = 'parent_id';
-    const FIELD_NUMBER = 'number';
-    const FIELD_LABEL = 'label';
-    const FIELD_TYPE = 'type';
+    const FIELD_PARENT_ID    = 'parent_id';
+    const FIELD_NUMBER       = 'number';
+    const FIELD_LABEL        = 'label';
+    const FIELD_TYPE         = 'type';
     const FIELD_PRODUCT_CODE = 'product_code';
     const FIELD_RETURN_LABEL = 'return_label';
 
@@ -55,17 +55,23 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface
     // @codingStandardsIgnoreLine
     protected $_eventPrefix = 'tig_postnl_shipment_label';
 
-    /**
-     * @var ShipmentRepositoryInterface
-     */
+    /** @var ShipmentRepositoryInterface  */
     private $shipmentRepository;
 
+    /**
+     * @param Context                     $context
+     * @param Registry                    $registry
+     * @param ShipmentRepositoryInterface $shipmentRepository
+     * @param AbstractResource|null       $resource
+     * @param AbstractDb|null             $resourceCollection
+     * @param array                       $data
+     */
     public function __construct(
-        Context $context,
-        Registry $registry,
+        Context                     $context,
+        Registry                    $registry,
         ShipmentRepositoryInterface $shipmentRepository,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        AbstractResource            $resource = null,
+        AbstractDb                  $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);

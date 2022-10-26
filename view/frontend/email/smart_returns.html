@@ -1,0 +1,25 @@
+{{template config_path="design/email/header_template"}}
+<tr>
+<td class="main-content">
+    <!-- Begin Content -->
+    <!--@subject {{trans "PostNL Smart Returns"}} @-->
+    <!--@vars {
+    "var store.frontend_name":"Store Name",
+    "var ordernumber":"Order Number",
+    "var shipmentnumber":"Shipment Number",
+    "var name":"Full name",
+    "var email":"E-mail"
+    } @-->
+
+    {{trans "Dear"}} {{var name}},<br><br>
+
+    {{trans "Your return request has been processed. Print the return label using the enclosed barcode."}}<br><br>
+
+    1. {{trans "Go to the nearest PostNL point."}}<br>
+    2. {{trans "Scan the barcode and receive a return label."}}<br>
+    3. {{trans "Stick the label on the package and hand in the package."}}<br>
+
+    <!-- End Content -->
+</td>
+</tr>
+{{template config_path="design/email/footer_template"}}

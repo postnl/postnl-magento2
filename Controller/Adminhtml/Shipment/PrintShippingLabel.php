@@ -124,7 +124,7 @@ class PrintShippingLabel extends LabelAbstract
         $shippingAddress = $shipment->getShippingAddress();
 
         try {
-            $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
+            $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId(),false);
         } catch (LocalizedException $exception) {
             $this->messageManager->addErrorMessage(
                 __('[POSTNL-0070] - Unable to generate barcode for shipment #%1', $shipment->getIncrementId())

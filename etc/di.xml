@@ -43,6 +43,7 @@
     <preference for="TIG\PostNL\Service\Wrapper\QuoteInterface" type="TIG\PostNL\Service\Wrapper\Quote" />
     <preference for="TIG\PostNL\Service\Wrapper\StoreInterface" type="TIG\PostNL\Service\Wrapper\Store" />
     <preference for="TIG\PostNL\Service\Wrapper\CheckoutSessionInterface" type="TIG\PostNL\Service\Wrapper\CheckoutSession" />
+    <preference for="\Magento\Framework\Mail\Template\TransportBuilder" type="TIG\PostNL\Model\Mail\Template\TransportBuilder" />
 
     <type name="\Magento\Sales\Model\Order">
         <plugin name="TIG_PostNL_Order_Shipment" type="TIG\PostNL\Plugin\Order\ShipmentPlugin" sortOrder="1"/>
@@ -156,6 +157,11 @@
                     <item name="SalesOrderGridColumns" xsi:type="object">TIG\PostNL\Setup\V120\Schema\SalesOrderGridColumns</item>
                     <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V120\Schema\UpgradeOrderTable</item>
                     <item name="InstallMatrixRateTable" xsi:type="object">TIG\PostNL\Setup\V120\Schema\InstallMatrixRateTable</item>
+                </item>
+                <item name="v1.12.5" xsi:type="array">
+                    <item name="InstallSmartReturnBarcode" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallSmartReturnBarcode</item>
+                    <item name="InstallSmartReturnLabel" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallSmartReturnLabel</item>
+                    <item name="InstallIsSmartReturn" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallIsSmartReturn</item>
                 </item>
             </argument>
         </arguments>
