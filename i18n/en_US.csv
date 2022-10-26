@@ -558,3 +558,7 @@ Percent,Percent
 "Activate Smart returns","Activate Smart returns"
 "PostNL - Send Smart Return","PostNL - Send Smart Return"
 "PostNL - Send Smart Return label","PostNL - Send Smart Return label"
+"Filter options","Filter options"
+"Hide parcel and letter machines","Hide parcel and letter machines"
+"Activate parcel and letter machine filter","Activate parcel and letter machine filter"
+"Adds a filter to the checkout, to not show parcel and letter machines","Adds a filter to the checkout, to not show parcel and letter machines"

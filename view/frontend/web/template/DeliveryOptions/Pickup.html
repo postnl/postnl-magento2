@@ -52,4 +52,15 @@
         </li>
     </ul>
 </div>
+<!-- ko if: canUsePackageMachineFilter() -->
+<div class="extra-service-container">
+    <div class="extra-service-header">
+        <span class="extra-service-label" data-bind="i18n:'Filter options'"></span>
+    </div>
 
+    <div class="no-package-box-filter">
+        <input type="checkbox" name="postnl_package_box_filter_checkbox" id="postnl_package_box_filter_checkbox" value="1" class="checkbox" data-bind="click: handlePackageMachineFilter">
+        <label for="postnl_package_box_filter_checkbox" data-bind="i18n:'Hide parcel and letter machines'"></label>
+    </div>
+</div>
+<!-- /ko -->

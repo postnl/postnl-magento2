@@ -426,6 +426,9 @@
   // Pickup List
 
   .pickup {
+      border: 0;
+      background: transparent;
+
       .tig-postnl-pickup-row {
           strong {
               font-size: 12px;
@@ -459,7 +462,7 @@
               }
 
               .tig-postnl-address-container {
-                  float:left;
+                  float: left;
                   width: 70%;
                   padding-left: 30px;
 
@@ -489,7 +492,7 @@
               }
 
               .tig-postnl-date-time-container {
-                  float:right;
+                  float: right;
                   text-align: right;
                   width: 30%;
 
@@ -511,7 +514,7 @@
               }
 
               .tig-postnl-pickup-hours-list {
-                  float:left;
+                  float: left;
                   width: calc(~'100% - 30px');
                   margin-left: 30px;
                   background: @postnl-hours-background;
@@ -521,18 +524,68 @@
                   box-sizing: border-box;
                   margin-top: 10px;
 
-                   li {
-                       float:left;
-                       line-height: 25px;
-                       width: 50%;
-                   }
+                  li {
+                      float: left;
+                      line-height: 25px;
+                      width: 50%;
+                  }
               }
 
           }
       }
-  }
 
-}
+      .extra-service-container {
+          border: 1px solid @postnl-border-color;
+          margin-top: 25px;
+          background: @postnl-list-background;
+
+          .extra-service-header {
+              padding: 6px 15px;
+              font-size: 12px;
+              background: @postnl-blue-dark;
+              color: @postnl-white;
+              text-transform: uppercase;
+
+              .extra-service-label {
+                  font-weight: 600;
+              }
+          }
+
+          .no-package-box-filter {
+              padding: 0;
+              position: relative;
+
+              input {
+                  position: absolute;
+                  left: 15px;
+                  transform: translateY(-50%);
+                  top: 49%;
+                  pointer-events: none;
+                  z-index: 2;
+
+                  &:not([disabled]) {
+                      &:focus {
+                          box-shadow: none;
+                      }
+                  }
+              }
+
+              label {
+                  position: relative;
+                  width: 100%;
+                  display: block;
+                  box-sizing: border-box;
+                  padding: 0 0 0 40px;
+                  line-height: 55px;
+                  cursor: pointer;
+
+                  &:hover {
+                      background: @postnl-list-hover;
+                  }
+              }
+          }
+      }
+  }
 
 /* Loading Image */
 .postnl-delivery-options {
