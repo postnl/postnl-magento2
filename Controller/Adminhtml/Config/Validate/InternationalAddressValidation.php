@@ -97,6 +97,16 @@ class InternationalAddressValidation extends Action
             ];
         }
 
+        $data = @json_decode($result);
+
+        if ($data !== false && isset($data->fault->faultstring)){
+            $result = [
+                'error' => true,
+                //@codingStandardsIgnoreLine
+                'message' => __($data->fault->faultstring)
+            ];
+        }
+
         if ($result === 'error') {
             $result = [
                 'error' => true,

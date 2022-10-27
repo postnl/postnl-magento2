@@ -101,7 +101,13 @@ define([
 
             self.isLoading(false);
 
-            if (!window.checkoutConfig.shipping.postnl.is_international_address_active || formData === false) {
+            if (!window.checkoutConfig.shipping.postnl.is_international_address_active) {
+                return;
+            }
+
+            self.addresses([]);
+            self.handleError('');
+            if ( formData === false) {
                 return;
             }
 
@@ -157,12 +163,17 @@ define([
 
             if (country !== 'NL'){
                 this.checkInternationalAddress();
+                return;
             }
+            // Clear for NL
+            this.isLoading(false);
+            this.addresses([]);
+            this.handleError('');
         },
 
         setAddress: function(data) {
             this.addresses([]);
-            this.handleError();
+            this.handleError('');
 
             var fields = [
                 this.parentName + '.street.0',

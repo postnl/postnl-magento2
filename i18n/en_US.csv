@@ -522,3 +522,6 @@ Percent,Percent
 "Enable International Address Validation","Enable International Address Validation"
 "Enable the international address validation. Do note that you need to pay extra for this","Enable the international address validation. Do note that you need to pay extra for this"
 "Please save your configuration before validating your International Address Check.","Please save your configuration before validating your International Address Check."
+"Invalid ApiKey for given resource","Invalid ApiKey for given resource"
+"Validating entered address...","Validating entered address..."
+"Your address does not match our records, please select one of the addresses below","Your address does not match our records, please select one of the addresses below"
