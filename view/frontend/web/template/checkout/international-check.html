@@ -1,8 +1,8 @@
 <div class="tig-postnl-international-addresses">
-    <div class="tig-postnl-header" data-bind="visible: message">
+    <div class="tig-postnl-header" data-bind="visible: (message() && message().length) || isLoading()">
         <span data-bind="i18n: 'Address Validation'"></span>
     </div>
-
+    <div class="tig-postnl-loading-message" data-bind="i18n: 'Validating entered address...', visible: isLoading"></div>
     <div class="tig-postnl-validation-message" data-bind="html: message, css: messageClasses"></div>
     <select class="tig-postnl-address" data-bind="foreach: addresses, visible: addresses().length" multiple>
         <option data-bind="html: formattedAddress.join(', '),  click: function() {$parent.setAddress($data);}"></option>

@@ -600,3 +600,6 @@ Percent,Percentage
 "Enable International Address Validation","Internationale Adresvalidatie Inschakelen"
 "Enable the international address validation. Do note that you need to pay extra for this","Schakel de internationale adresvalidatie in. Houd er rekening mee dat u hiervoor extra moet betalen"
 "Please save your configuration before validating your International Address Check.","Sla uw configuratie op voordat u uw internationale adrescontrole valideert."
+"Invalid ApiKey for given resource","Ongeldige API Key voor huidige aanvraag"
+"Validating entered address...","Bezig met ingevoerd adres valideren..."
+"Your address does not match our records, please select one of the addresses below","Het ingevoerde adres kan niet worden gevonden, selecteer hieronder een van de opties"
