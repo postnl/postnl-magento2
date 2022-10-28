@@ -134,7 +134,7 @@ class CutOffTimes implements DaysFilterInterface
      */
     private function isNextDay($day)
     {
-        $dayDateTime = $this->dateLoader->date($day->Date, null, false);
+        $dayDateTime = $this->dateLoader->date($day->Date, null, true);
         $diff = $dayDateTime->diff($this->today());
 
         if ($diff->days == 1) {
@@ -155,7 +155,7 @@ class CutOffTimes implements DaysFilterInterface
             return $today;
         }
 
-        return $today = $this->todayTimezone->date('today', null, false, false);
+        return $today = $this->todayTimezone->date('today', null, true, false);
     }
 
     /**

@@ -101,8 +101,8 @@ class Today implements OptionsFilterInterface
             $checkDay = 'tomorrow';
         }
 
-        $todayDate  = $this->currentDate->date('today', null, false, false)->format('Y-m-d');
-        $cutoffDate = $this->currentDate->date($checkDay, null, false, false)->format('Y-m-d');
+        $todayDate  = $this->currentDate->date('today', null, true, false)->format('Y-m-d');
+        $cutoffDate = $this->currentDate->date($checkDay, null, true, false)->format('Y-m-d');
         $optionDate = $this->postNLhelper->getDate($timeframe->Date);
         $result     = false;
 
