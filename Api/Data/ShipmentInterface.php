@@ -393,4 +393,15 @@ interface ShipmentInterface
      * @return string
      */
     public function getSmartReturnBarcode();
+
+    /**
+     * @param $value
+     * @return boolean
+     */
+    public function setSmartReturnEmailSent($value);
+
+    /**
+     * @return boolean
+     */
+    public function getSmartReturnEmailSent();
 }

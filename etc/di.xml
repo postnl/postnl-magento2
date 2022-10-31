@@ -162,6 +162,7 @@
                     <item name="InstallSmartReturnBarcode" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallSmartReturnBarcode</item>
                     <item name="InstallSmartReturnLabel" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallSmartReturnLabel</item>
                     <item name="InstallIsSmartReturn" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallIsSmartReturn</item>
+                    <item name="InstallSmartReturnEmailSent" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallSmartReturnEmailSent</item>
                 </item>
             </argument>
         </arguments>

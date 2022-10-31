@@ -55,28 +55,29 @@ use TIG\PostNL\Service\Shipment\Customs;
  */
 class Shipment extends AbstractModel implements ShipmentInterface
 {
-    const FIELD_SHIPMENT_ID          = 'shipment_id';
-    const FIELD_ORDER_ID             = 'order_id';
-    const FIELD_MAIN_BARCODE         = 'main_barcode';
-    const FIELD_PRODUCT_CODE         = 'product_code';
-    const FIELD_SHIPMENT_TYPE        = 'shipment_type';
-    const FIELD_SHIPMENT_COUNTRY     = 'shipment_country';
-    const FIELD_AC_CHARACTERISTIC    = 'ac_characteristic';
-    const FIELD_AC_OPTION            = 'ac_option';
-    const FIELD_DELIVERY_DATE        = 'delivery_date';
-    const FIELD_IS_PAKJEGEMAK        = 'is_pakjegemak';
-    const FIELD_PG_LOCATION_CODE     = 'pg_location_code';
-    const FIELD_PG_RETAIL_NETWORK_ID = 'pg_retail_network_id';
-    const FIELD_PARCEL_COUNT         = 'parcel_count';
-    const FIELD_SHIP_AT              = 'ship_at';
-    const FIELD_CONFIRMED_AT         = 'confirmed_at';
-    const FIELD_CONFIRMED            = 'confirmed';
-    const FIELD_DOWNPARTNER_ID       = 'downpartner_id';
-    const FIELD_DOWNPARTNER_LOCATION = 'downpartner_location';
-    const FIELD_DOWNPARTNER_BARCODE  = 'downpartner_barcode';
-    const FIELD_RETURN_BARCODE       = 'return_barcode';
-    const FIELD_IS_SMART_RETURN      = 'is_smart_return';
-    const FIELD_SMART_RETURN_BARCODE = 'smart_return_barcode';
+    const FIELD_SHIPMENT_ID             = 'shipment_id';
+    const FIELD_ORDER_ID                = 'order_id';
+    const FIELD_MAIN_BARCODE            = 'main_barcode';
+    const FIELD_PRODUCT_CODE            = 'product_code';
+    const FIELD_SHIPMENT_TYPE           = 'shipment_type';
+    const FIELD_SHIPMENT_COUNTRY        = 'shipment_country';
+    const FIELD_AC_CHARACTERISTIC       = 'ac_characteristic';
+    const FIELD_AC_OPTION               = 'ac_option';
+    const FIELD_DELIVERY_DATE           = 'delivery_date';
+    const FIELD_IS_PAKJEGEMAK           = 'is_pakjegemak';
+    const FIELD_PG_LOCATION_CODE        = 'pg_location_code';
+    const FIELD_PG_RETAIL_NETWORK_ID    = 'pg_retail_network_id';
+    const FIELD_PARCEL_COUNT            = 'parcel_count';
+    const FIELD_SHIP_AT                 = 'ship_at';
+    const FIELD_CONFIRMED_AT            = 'confirmed_at';
+    const FIELD_CONFIRMED               = 'confirmed';
+    const FIELD_DOWNPARTNER_ID          = 'downpartner_id';
+    const FIELD_DOWNPARTNER_LOCATION    = 'downpartner_location';
+    const FIELD_DOWNPARTNER_BARCODE     = 'downpartner_barcode';
+    const FIELD_RETURN_BARCODE          = 'return_barcode';
+    const FIELD_IS_SMART_RETURN         = 'is_smart_return';
+    const FIELD_SMART_RETURN_BARCODE    = 'smart_return_barcode';
+    const FIELD_SMART_RETURN_EMAIL_SENT = 'smart_return_email_sent';
 
     /**
      * @var string
@@ -978,5 +979,23 @@ class Shipment extends AbstractModel implements ShipmentInterface
     public function getSmartReturnBarcode()
     {
         return $this->getData(static::FIELD_SMART_RETURN_BARCODE);
+    }
+
+    /**
+     * @param boolean
+     *
+     * @return $this
+     */
+    public function setSmartReturnEmailSent($value)
+    {
+        return $this->setData(static::FIELD_SMART_RETURN_EMAIL_SENT, $value);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getSmartReturnEmailSent()
+    {
+        return $this->getData(static::FIELD_SMART_RETURN_EMAIL_SENT);
     }
 }
