@@ -63,7 +63,7 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
     }
 
     /**
-     * @param $body
+     * @param        $body
      * @param string $mimeType
      * @param string $disposition
      * @param string $encoding
@@ -76,7 +76,7 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
         string $mimeType    = Mime::TYPE_OCTETSTREAM,
         string $disposition = Mime::DISPOSITION_ATTACHMENT,
         string $encoding    = Mime::ENCODING_BASE64,
-        $filename    = null
+        $filename           = null
     ) {
         $this->parts = $this->createMimePart($body, $mimeType, $disposition, $encoding, $filename);
         return $this;
@@ -96,7 +96,7 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
         string $type        = Mime::TYPE_OCTETSTREAM,
         string $disposition = Mime::DISPOSITION_ATTACHMENT,
         string $encoding    = Mime::ENCODING_BASE64,
-        $filename    = null
+        $filename           = null
     ) {
         $mimePart = new Part($content);
         $mimePart->setType($type);

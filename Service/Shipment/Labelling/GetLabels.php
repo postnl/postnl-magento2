@@ -125,7 +125,7 @@ class GetLabels
     /**
      * @param ShipmentInterface $shipment
      * @param                   $confirm
-     *
+     * @param                   $smartReturn
      * @return \Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
