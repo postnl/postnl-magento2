@@ -45,20 +45,20 @@ class SmartReturnEmail extends AbstractGrid
     private $smartReturnEmail;
 
     /**
-     * DeepLink constructor.
+     * SmartReturnEmail constructor.
      *
-     * @param ContextInterface $context
+     * @param ContextInterface   $context
      * @param UiComponentFactory $uiComponentFactory
-     * @param Renderer $smartReturnEmail
-     * @param array $components
-     * @param array $data
+     * @param Renderer           $smartReturnEmail
+     * @param array              $components
+     * @param array              $data
      */
     public function __construct(
-        ContextInterface   $context,
+        ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
-        Renderer           $smartReturnEmail,
-        array              $components = [],
-        array              $data = []
+        Renderer $smartReturnEmail,
+        array $components = [],
+        array $data = []
     )
     {
         parent::__construct($context, $uiComponentFactory, $components, $data);
@@ -66,9 +66,8 @@ class SmartReturnEmail extends AbstractGrid
         $this->smartReturnEmail = $smartReturnEmail;
     }
 
-
     /**
-     * @param object $item
+     * @param array $item
      *
      * @return string
      */

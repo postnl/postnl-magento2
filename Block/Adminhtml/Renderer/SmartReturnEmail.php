@@ -31,10 +31,9 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Renderer;
 
+use Magento\Framework\Phrase;
 use TIG\PostNL\Model\ShipmentRepository;
 use TIG\PostNL\Api\Data\ShipmentInterface;
-use Magento\Sales\Api\Data\OrderAddressInterface;
-use TIG\PostNL\Config\Provider\Webshop;
 
 class SmartReturnEmail
 {
@@ -54,11 +53,10 @@ class SmartReturnEmail
         $this->shipmentRepository = $shipmentRepository;
     }
 
-
     /**
      * @param $shipmentId
      *
-     * @return null|string
+     * @return Phrase|string
      */
     public function render($shipmentId)
     {
@@ -68,19 +66,14 @@ class SmartReturnEmail
             return '';
         }
         // return a bool based on Smart return email sent
-
         $output = $shipment->getSmartReturnEmailSent();
         if (!isset($output)){
             return '';
         }
-
         if ($output) {
-
             return __('Email has been sent');
         }
 
         return __('Email has not been sent');
-
     }
-
 }
