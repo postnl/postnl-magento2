@@ -66,8 +66,8 @@
         </field>
 
         <field id="parcel_machine_filter_active" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Show parcel and letter machine filter option</label>
-            <comment><![CDATA[Adds a filter to the checkout, to not show parcel and letter machines]]></comment>
+            <label>Show parcel and letter machines</label>
+            <comment><![CDATA[Show parcel and letter machines in the checkout]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/post_offices/package_machine_filter_active</config_path>
             <depends>

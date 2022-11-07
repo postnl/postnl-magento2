@@ -193,7 +193,7 @@ define([
          * @param address
          */
         getPickupAddresses : function (address) {
-            var self                = this;
+            var self = this;
             // Avoid getting delivery days multiple times
             var addressAsString = JSON.stringify({'postcode': address.postcode, 'housenumber': address.housenumber});
             if (this.pickupAddresses() !== undefined && this.currentLocationAddress === addressAsString) {
