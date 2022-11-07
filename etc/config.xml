@@ -120,6 +120,7 @@
             <post_offices>
                 <pakjegemak_active>1</pakjegemak_active>
                 <default_pakjegemak_option>3533</default_pakjegemak_option>
+                <show_parcel_machines>1</show_parcel_machines>
                 <pakjegemak_be_active>1</pakjegemak_be_active>
                 <default_pakjegemak_be_option>4936</default_pakjegemak_be_option>
                 <default_pakjegemak_be_domestic_option>4880</default_pakjegemak_be_domestic_option>
