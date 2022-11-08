@@ -31,10 +31,10 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Renderer;
 
+use Magento\Framework\Phrase;
+use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Model\ShipmentRepository;
 use TIG\PostNL\Api\Data\ShipmentInterface;
-use Magento\Sales\Api\Data\OrderAddressInterface;
-use TIG\PostNL\Config\Provider\Webshop;
 
 class SmartReturnEmail
 {
@@ -54,33 +54,35 @@ class SmartReturnEmail
         $this->shipmentRepository = $shipmentRepository;
     }
 
-
     /**
-     * @param $shipmentId
+     * @param Shipment|string|int $shipment
      *
-     * @return null|string
+     * @return string
      */
-    public function render($shipmentId)
+    public function render($shipment)
     {
-        /** @var ShipmentInterface $shipment */
-        $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
         if (!$shipment) {
             return '';
         }
-        // return a bool based on Smart return email sent
 
-        $output = $shipment->getSmartReturnEmailSent();
+        if ($shipment instanceof Shipment ) {
+            $output = $shipment->getSmartReturnEmailSent();
+        }else {
+            /** @var ShipmentInterface $shipmentModel */
+            $shipmentModel = $this->shipmentRepository->getByShipmentId($shipment);
+            if (!$shipmentModel){
+                return '';
+            }
+            $output = $shipmentModel->getSmartReturnEmailSent();
+        }
+        // return a bool based on Smart return email sent
         if (!isset($output)){
             return '';
         }
-
         if ($output) {
-
-            return __('Email has been sent');
+            return '&check;';
         }
 
-        return __('Email has not been sent');
-
+        return '&#10539';
     }
-
 }
