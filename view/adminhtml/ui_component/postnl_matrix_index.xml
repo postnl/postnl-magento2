@@ -201,7 +201,7 @@
                 </item>
             </argument>
         </column>
-        <column name="parcel_type">
+        <column name="parcel_type" class="TIG\PostNL\Ui\Component\Matrix\Listing\Columns\ParcelType">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>
