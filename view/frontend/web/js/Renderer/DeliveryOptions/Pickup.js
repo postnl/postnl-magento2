@@ -59,8 +59,7 @@ define([
             street : null,
             hasAddress :false,
             pickupAddresses: ko.observableArray([]),
-            currentLocationAddress: null,
-            selectedParcelMachineFilter: null
+            currentLocationAddress: null
         },
 
         initObservable : function () {
@@ -194,16 +193,13 @@ define([
          * @param address
          */
         getPickupAddresses : function (address) {
-            var self                = this;
-            var parcelMachineFilter = +$('#postnl_package_box_filter_checkbox').is(':checked') ? true : false;
+            var self = this;
             // Avoid getting delivery days multiple times
-            var addressAsString     = JSON.stringify({'postcode': address.postcode, 'housenumber': address.housenumber});
-
-            if (this.pickupAddresses() !== undefined && this.currentLocationAddress === addressAsString && this.selectedParcelMachineFilter === parcelMachineFilter) {
+            var addressAsString = JSON.stringify({'postcode': address.postcode, 'housenumber': address.housenumber});
+            if (this.pickupAddresses() !== undefined && this.currentLocationAddress === addressAsString) {
                 return;
             }
 
-            this.selectedParcelMachineFilter = parcelMachineFilter;
             this.currentLocationAddress      = addressAsString;
             State.pickupOptionsAreLoading(true);
 
@@ -214,10 +210,7 @@ define([
             self.getLocationsRequest = $.ajax({
                 method: 'POST',
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_locations,
-                data : {
-                    package_machine_filter_checkbox: parcelMachineFilter,
-                    address:                         address
-                }
+                data : {address: address}
             }).done(function (data) {
                 if (data.error) {
                     Logger.error(data.error);
@@ -273,23 +266,6 @@ define([
             }
             return JSON.stringify(this.selectedOption().data) == JSON.stringify($data);
         },
-
-        handlePackageMachineFilter: function (){
-
-            var address = AddressFinder();
-            this.getPickupAddresses(address);
-
-            return true;
-        },
-
-        canUsePackageMachineFilter: ko.computed(function () {
-            var isActive = window.checkoutConfig.shipping.postnl.is_package_machine_filter_active;
-
-            var address = AddressFinder();
-            var isNL = (address !== undefined && address !== null && address !== false && address.country === 'NL');
-
-            return isActive === 1 && isNL;
-        }),
 
         selectFirstPickupOption: function () {
             // Only select the first option if there is none defined

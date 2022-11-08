@@ -96,11 +96,6 @@ class Locations extends AbstractDeliveryOptions
     public function execute()
     {
         $params              = $this->getRequest()->getParams();
-        $hidePackageMachines = false;
-
-        if (isset($params['package_machine_filter_checkbox']) && $params['package_machine_filter_checkbox'] === 'true') {
-            $hidePackageMachines = true;
-        }
 
         if (!isset($params['address']) || !is_array($params['address'])) {
             return $this->jsonResponse(__('No Address data found.'));
@@ -111,7 +106,7 @@ class Locations extends AbstractDeliveryOptions
         try {
             return $this->jsonResponse([
                 'price'       => $price['price'],
-                'locations'   => $this->getValidResponeType($hidePackageMachines),
+                'locations'   => $this->getValidResponeType(),
                 'pickup_date' => $this->getDeliveryDay($this->addressEnhancer->get())
             ]);
         } catch (\Exception $exception) {
@@ -123,12 +118,11 @@ class Locations extends AbstractDeliveryOptions
 
     /**
      * @param $address
-     * @param $hidePackageMachines
      *
      * @return mixed
      * @throws \Exception
      */
-    private function getLocations($address, $hidePackageMachines = false)
+    private function getLocations($address)
     {
         $deliveryDate = false;
         if ($this->getDeliveryDay($address)) {
@@ -138,7 +132,7 @@ class Locations extends AbstractDeliveryOptions
         $quote = $this->checkoutSession->getQuote();
         $storeId = $quote->getStoreId();
         $this->locationsEndpoint->changeAPIKeyByStoreId($storeId);
-        $this->locationsEndpoint->updateParameters($address, $hidePackageMachines ,$deliveryDate);
+        $this->locationsEndpoint->updateParameters($address ,$deliveryDate);
         $response = $this->locationsEndpoint->call();
         //@codingStandardsIgnoreLine
         if (!is_object($response) || !isset($response->GetLocationsResult->ResponseLocation)) {
@@ -154,7 +148,7 @@ class Locations extends AbstractDeliveryOptions
     /**
      * @return array|\Magento\Framework\Phrase
      */
-    private function getValidResponeType($hidePackageMachines)
+    private function getValidResponeType()
     {
         $address = $this->addressEnhancer->get();
 
@@ -163,6 +157,6 @@ class Locations extends AbstractDeliveryOptions
             return ['error' => __('%1 : %2', $address['error']['code'], $address['error']['message'])];
         }
 
-        return $this->getLocations($address, $hidePackageMachines);
+        return $this->getLocations($address);
     }
 }
