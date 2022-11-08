@@ -134,8 +134,8 @@ For questions related to your PostNL account and PostNL delivery options, please
 
 ### Extension support and advanced configuration
 For questions about installing and configuring the extension please consult the relevant documentation:
-- **Knowledge base:** [PostNL Magento 2 Knowledge base](https://docs.tig.nl/x/SgB3C)
-- **Frequently asked questions:** [FAQ](https://docs.tig.nl/x/XgBtAQ)
+- **Knowledge base:** [PostNL Magento 2 Knowledge base](https://tig-docs.atlassian.net/wiki/x/S4UH)
+- **Frequently asked questions:** [FAQ](https://tig-docs.atlassian.net/wiki/x/S4UH)
 - **Phone:** +31 (0)88-2255652
 - **Email:** [digitaleklantsupport@postnl.nl](mailto:digitaleklantsupport@postnl.nl)
 
