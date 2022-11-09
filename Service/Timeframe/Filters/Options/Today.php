@@ -107,7 +107,7 @@ class Today implements OptionsFilterInterface
         $result     = false;
 
         foreach ($option->string as $string) {
-            if ($string !== static::TIMEFRAME_OPTION_TODAY && $todayDate != $optionDate) {
+            if ($string !== static::TIMEFRAME_OPTION_TODAY && $todayDate != $optionDate && $cutoffDate != $optionDate) {
                 $result = true;
             }
 
