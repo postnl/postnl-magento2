@@ -69,7 +69,7 @@
             <label>Show parcel and letter machines</label>
             <comment><![CDATA[Show parcel and letter machines in the checkout]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>tig_postnl/post_offices/package_machine_filter_active</config_path>
+            <config_path>tig_postnl/post_offices/show_package_machines</config_path>
             <depends>
                 <field id="pakjegemak_active">1</field>
                 <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
