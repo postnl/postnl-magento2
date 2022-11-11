@@ -62,7 +62,7 @@ define([
                 break;
 
             case 'today':
-                this.optionLabel = $.mage.__('Today');
+                this.optionLabel = $.mage.__('Fast Delivery');
                 break;
         }
 
