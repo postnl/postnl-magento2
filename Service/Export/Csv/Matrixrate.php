@@ -116,6 +116,11 @@ class Matrixrate
         // @codingStandardsIgnoreEnd
     }
 
+    /**
+     * @param MatrixrateInterface $model
+     * @return void
+     * @throws \TIG\PostNL\Exception
+     */
     private function addRow(MatrixrateInterface $model)
     {
         $this->output([
