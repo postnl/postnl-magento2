@@ -124,6 +124,9 @@ class ReturnOptions extends AbstractConfigProvider
      */
     public function getEmailTemplate()
     {
+        if(!$this->getConfigFromXpath(self::XPATH_SMART_RETURN_EMAIL_TEMPLATE)){
+            return 'tig_postnl_postnl_settings_returns_template';
+        }
         return $this->getConfigFromXpath(self::XPATH_SMART_RETURN_EMAIL_TEMPLATE);
     }
 }
