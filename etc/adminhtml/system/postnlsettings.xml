@@ -86,7 +86,7 @@
             <label>Delivery</label>
             <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
-            <comment><![CDATA[If you are unsure which options to select, ask your PostNL accountmanager. Read more about <a href="https://confluence.tig.nl/x/WIC2" target="_blank" title="product options">PostNL product options</a>.]]></comment>
+            <comment><![CDATA[If you are unsure which options to select, ask your PostNL accountmanager. Read more about <a href="https://tig-docs.atlassian.net/wiki/x/foAH" target="_blank" title="product options">PostNL product options</a>.]]></comment>
 
 
             <field id="shippingoptions_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -213,6 +213,7 @@
 
             <include path="TIG_PostNL::system/postnlsettings/eveningdelivery.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/sundaydelivery.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/todaydelivery.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/deliverydays.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/postoffices.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/stock.xml"/>

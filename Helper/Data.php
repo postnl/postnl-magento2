@@ -47,7 +47,8 @@ use TIG\PostNL\Config\Provider\Webshop;
 // @codingStandardsIgnoreFile
 class Data extends AbstractHelper
 {
-    const PAKJEGEMAK_DELIVERY_OPTION         = 'PG';
+    const PACKAGEBOX_DELIVERY_OPTION         = 'PG';
+    const DISABLE_PACKAGEBOX_DELIVERY_OPTION = 'PG_EX';
 
     /**
      * @var TimezoneInterface
@@ -203,13 +204,19 @@ class Data extends AbstractHelper
 
     /**
      * @param string $country
+     *
      * @return array
      */
     public function getAllowedDeliveryOptions($country = 'NL')
     {
-        $deliveryOptions = [];
-        if ($this->shippingOptions->isPakjegemakActive($country)) {
-            $deliveryOptions [] = self::PAKJEGEMAK_DELIVERY_OPTION;
+        $showPackageMachines = $this->shippingOptions->isPackageMachineFilterActive();
+        $deliveryOptions     = [];
+
+        if ($this->shippingOptions->isPakjegemakActive($country) && $showPackageMachines) {
+            $deliveryOptions [] = self::PACKAGEBOX_DELIVERY_OPTION;
+        }
+        if ($country === 'NL' && $this->shippingOptions->isPakjegemakActive($country) && !$showPackageMachines) {
+            $deliveryOptions [] = self::DISABLE_PACKAGEBOX_DELIVERY_OPTION;
         }
 
         return $deliveryOptions;

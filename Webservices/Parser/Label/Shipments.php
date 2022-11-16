@@ -197,7 +197,7 @@ class Shipments
      */
     public function canReturn($countryId)
     {
-        return ($this->returnOptions->isReturnActive() && in_array($countryId, ['NL', 'BE']));
+        return ($this->returnOptions->isReturnActive() && !$this->returnOptions->isSmartReturnActive() && in_array($countryId, ['NL', 'BE']));
     }
 
     /**

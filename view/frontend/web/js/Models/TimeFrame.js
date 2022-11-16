@@ -60,6 +60,10 @@ define([
             case 'sunday':
                 this.optionLabel = $.mage.__('Sunday');
                 break;
+
+            case 'today':
+                this.optionLabel = $.mage.__('Fast Delivery');
+                break;
         }
 
         /**
@@ -82,6 +86,10 @@ define([
 
             if (option == 'sunday') {
                 return window.checkoutConfig.shipping.postnl.sundaydelivery_fee;
+            }
+
+            if (option == 'today') {
+                return window.checkoutConfig.shipping.postnl.todaydelivery_fee;
             }
 
             return 0;

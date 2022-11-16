@@ -96,11 +96,12 @@ class GetLabels
     /**
      * @param      $shipmentId
      * @param bool $confirm
+     * @param bool $smartReturn
      *
      * @return array|\Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function get($shipmentId, $confirm = true)
+    public function get($shipmentId, $confirm = true, $smartReturn = false)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
 
@@ -109,7 +110,7 @@ class GetLabels
         }
 
         $this->labelValidator->validateProduct($shipment);
-        $labels = $this->getLabels($shipment, $confirm);
+        $labels = $this->getLabels($shipment, $confirm, $smartReturn);
         $labels = $this->labelValidator->validate($labels);
 
         $errors  = $this->labelValidator->getErrors();
@@ -124,13 +125,18 @@ class GetLabels
     /**
      * @param ShipmentInterface $shipment
      * @param                   $confirm
-     *
+     * @param                   $smartReturn
      * @return \Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function getLabels(ShipmentInterface $shipment, $confirm)
+    private function getLabels(ShipmentInterface $shipment, $confirm, $smartReturn)
     {
         $labels = $this->shipmentLabelRepository->getByShipment($shipment);
+
+        if ($smartReturn) {
+            $labels = null;
+        }
+
         if ($labels && $confirm) {
             $this->confirmLabel->confirm($shipment);
 

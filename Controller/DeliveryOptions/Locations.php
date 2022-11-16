@@ -95,7 +95,8 @@ class Locations extends AbstractDeliveryOptions
      */
     public function execute()
     {
-        $params = $this->getRequest()->getParams();
+        $params              = $this->getRequest()->getParams();
+
         if (!isset($params['address']) || !is_array($params['address'])) {
             return $this->jsonResponse(__('No Address data found.'));
         }
@@ -131,7 +132,7 @@ class Locations extends AbstractDeliveryOptions
         $quote = $this->checkoutSession->getQuote();
         $storeId = $quote->getStoreId();
         $this->locationsEndpoint->changeAPIKeyByStoreId($storeId);
-        $this->locationsEndpoint->updateParameters($address, $deliveryDate);
+        $this->locationsEndpoint->updateParameters($address ,$deliveryDate);
         $response = $this->locationsEndpoint->call();
         //@codingStandardsIgnoreLine
         if (!is_object($response) || !isset($response->GetLocationsResult->ResponseLocation)) {

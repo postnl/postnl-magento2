@@ -66,7 +66,7 @@ define([
             }
 
             var tempAddress = {
-                street: shippingAddress.street[0],
+                street: shippingAddress.street,
                 postcode: shippingAddress.postcode,
                 housenumber: housenumber,
                 firstname: shippingAddress.firstname,

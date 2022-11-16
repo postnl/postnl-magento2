@@ -58,7 +58,7 @@
 
                  <field id="eveningdelivery_active" translate="label comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Activate evening delivery</label>
-                    <comment><![CDATA[Activate evening delivery for your customers. Read more about <a href="https://confluence.tig.nl/x/qYSC" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
+                    <comment><![CDATA[Activate evening delivery for your customers. Read more about <a href="https://tig-docs.atlassian.net/wiki/x/PoAH" target="_blank" title="evening delivery">evening delivery</a>.]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>tig_postnl/evening_delivery_nl/eveningdelivery_active</config_path>
                     <depends>

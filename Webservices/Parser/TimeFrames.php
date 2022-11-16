@@ -87,6 +87,11 @@ class TimeFrames
      */
     private function getTimeFrameOptions(&$filterdTimeFrames, $timeFrames, $date)
     {
+        //By adding the date to each timeframe option the filters are able to use the date associated with the timeframe
+        foreach ($timeFrames as $timeFrame) {
+            $timeFrame->Date = $date;
+        }
+
         $timeFrames = $this->filter->options($timeFrames);
 
         foreach ($timeFrames as $timeFrame) {
@@ -97,7 +102,7 @@ class TimeFrames
                 'from_friendly' => substr($timeFrame->From, 0, 5),
                 'to'            => $timeFrame->To,
                 'to_friendly'   => substr($timeFrame->To, 0, 5),
-                'option'        => $options->string[0],
+                'option'        => $options->validatedType ?? $options->string[0],
                 'date'          => $date,
             ];
         }
