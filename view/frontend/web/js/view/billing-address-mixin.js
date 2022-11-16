@@ -57,6 +57,10 @@ define([
                         }
                     });
 
+                    if (quote.billingAddress().countryId !== 'NL'){
+                        return houseNumber + (houseNumberAddition ? " "  + houseNumberAddition : "");
+                    }
+
                     if (quote.billingAddress().street[1] !== houseNumber && quote.shippingMethod() !== null && quote.shippingMethod().carrier_code === 'tig_postnl') {
                         quote.billingAddress().street.splice(1,1);
                     }
