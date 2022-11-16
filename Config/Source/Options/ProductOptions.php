@@ -118,6 +118,16 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     }
 
     /**
+     * Return options where Today is true
+     *
+     * @return array|array[]
+     */
+    public function getIsTodayOptions()
+    {
+        return $this->getProductOptions(['isToday' => true]);
+    }
+
+    /**
      * Returns options if group equals pakjegemak_options
      * @return array
      */

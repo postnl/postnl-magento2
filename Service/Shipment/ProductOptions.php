@@ -91,6 +91,10 @@ class ProductOptions
                 'Characteristic' => '002',
                 'Option'         => '014'
             ],
+            'today' => [
+                'Characteristic' => '118',
+                'Option'         => '044'
+            ]
         ];
 
     /**

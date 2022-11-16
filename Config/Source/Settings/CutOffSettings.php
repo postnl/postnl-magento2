@@ -36,6 +36,8 @@ use Magento\Framework\Option\ArrayInterface;
 class CutOffSettings implements ArrayInterface
 {
     /**
+     * Returns options for 0:00 till 23:45
+     *
      * @return array
      */
     public function toOptionArray()
@@ -46,6 +48,27 @@ class CutOffSettings implements ArrayInterface
             // @codingStandardsIgnoreLine
             $options = array_merge($options, $this->addHour($hour));
         }
+
+        return $options;
+    }
+
+    /**
+     * Returns options for 0:00 till 10:00
+     *
+     * @return array
+     */
+    public function getTodayOptions()
+    {
+        $options = [];
+
+        for ($hour = 0; $hour < 10; $hour++) {
+            // @codingStandardsIgnoreLine
+            $options = array_merge($options, $this->addHour($hour));
+        }
+
+        // addHour() adds till x:45, but we want to end at an x:00, so add 10:00 separately.
+        // @codingStandardsIgnoreLine
+        $options[] = ['value' => '10:00:00', 'label' => __('10:00')];
 
         return $options;
     }

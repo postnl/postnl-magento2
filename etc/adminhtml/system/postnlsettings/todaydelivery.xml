@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!--
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to support@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact support@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ -->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="today_delivery" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Today Delivery</label>
+        <comment><![CDATA[Please note: the today shipping option requires specific contractual agreements with PostNL. Please contact your PostNL account manager for more information about these products.]]></comment>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+        <depends>
+            <field id="shippingoptions_active">1</field>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+        </depends>
+
+        <field id="todaydelivery_active" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Activate today delivery</label>
+            <comment><![CDATA[Activate today delivery for your customers. Today delivery will be displayed as 'fast delivery' in the checkout]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/today_delivery/todaydelivery_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+            </depends>
+        </field>
+
+        <field id="todaydelivery_fee" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Today delivery fee</label>
+            <comment><![CDATA[Additional costs for today delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
+            <config_path>tig_postnl/today_delivery/todaydelivery_fee</config_path>
+            <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+                <field id="todaydelivery_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+            </depends>
+        </field>
+
+        <field id="default_today_option" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default today delivery</label>
+            <comment><![CDATA[Select the default product option for today delivery shipments.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getIsTodayOptions</source_model>
+            <config_path>tig_postnl/today_delivery/default_today_option</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+                <field id="todaydelivery_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+            </depends>
+        </field>
+
+        <field id="today_cutoff_time" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Today cutoff time</label>
+            <comment><![CDATA[When an order is placed after this time, another day will be added to the shipping duration.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Settings\CutOffSettings::getTodayOptions</source_model>
+            <config_path>tig_postnl/today_delivery/cutoff_time</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+                <field id="todaydelivery_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+            </depends>
+        </field>
+    </group>
+</include>
