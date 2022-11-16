@@ -71,6 +71,15 @@
                     </item>
                 </argument>
             </action>
+            <action name="postnl_mass_send_smart_return_label">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">postnl_mass_send_smart_return_label</item>
+                        <item name="label" xsi:type="string" translate="true">PostNL - Send Smart Return label</item>
+                        <item name="url" xsi:type="url" path="postnl/shipment/MassGetSmartReturnLabel"/>
+                    </item>
+                </argument>
+            </action>
         </massaction>
     </listingToolbar>
     <columns name="sales_order_shipment_columns">
@@ -115,5 +124,18 @@
                 </item>
             </argument>
         </column>
+        <column name="tig_postnl_smart_return_email" class="TIG\PostNL\Block\Adminhtml\Grid\Shipment\SmartReturnEmail">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Smart Return Email sent</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="fieldClass" xsi:type="string">tig_smart_return_email_column</item>
+                </item>
+            </argument>
+        </column>
+
+
+
     </columns>
 </listing>

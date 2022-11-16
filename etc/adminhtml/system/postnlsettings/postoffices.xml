@@ -65,6 +65,17 @@
             </depends>
         </field>
 
+        <field id="show_package_machines" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Show parcel and letter machines</label>
+            <comment><![CDATA[Show parcel and letter machines in the checkout]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/post_offices/show_package_machines</config_path>
+            <depends>
+                <field id="pakjegemak_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+            </depends>
+        </field>
+
         <field id="pakjegemak_be_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Activate post office locations Belgium</label>
             <comment><![CDATA[Whether or not customers may choose to have their order delivered to a nearby post office in Belgium.]]></comment>

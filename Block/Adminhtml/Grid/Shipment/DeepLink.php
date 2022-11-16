@@ -65,7 +65,7 @@ class DeepLink extends AbstractGrid
     }
 
     /**
-     * @param object $item
+     * @param array $item
      *
      * @return string
      */

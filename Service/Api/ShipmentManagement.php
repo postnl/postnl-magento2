@@ -133,10 +133,10 @@ class ShipmentManagement implements ShipmentManagementInterface
      * @api
      * @return string
      */
-    public function generateLabel($shipmentId)
+    public function generateLabel($shipmentId, $smartReturns)
     {
         try {
-            $result = $this->generateLabel->generate($shipmentId);
+            $result = $this->generateLabel->generate($shipmentId, $smartReturns);
         } catch (LocalizedException $exception) {
             // @codingStandardsIgnoreLine
             $this->logger->notice(__('Could not generate label for shipment #' . $shipmentId));

@@ -40,6 +40,7 @@ class Options
     const DAYTIME_DELIVERY_OPTION = 'Daytime';
     const EVENING_DELIVERY_OPTION = 'Evening';
     const SUNDAY_DELIVERY_OPTION  = 'Sunday';
+    const TODAY_DELIVERY_OPTION   = 'Today';
 
     /**
      * @var ShippingOptions
@@ -88,6 +89,10 @@ class Options
         if ($this->shippingOptions->isSundayDeliveryActive()
             && $this->hasSaturdayAsShippingDay() && $countryId == 'NL') {
             $deliveryTimeframesOptions[] = self::SUNDAY_DELIVERY_OPTION;
+        }
+
+        if ($this->shippingOptions->isTodayDeliveryActive() && $countryId == 'NL') {
+            $deliveryTimeframesOptions[] = self::TODAY_DELIVERY_OPTION;
         }
 
         return $deliveryTimeframesOptions;

@@ -75,15 +75,20 @@ class Sunday implements OptionsFilterInterface
             return false;
         }
 
-        if ($option->string[0] !== static::TIMEFRAME_OPTION_SUNDAY) {
-            return true;
+        $result = false;
+
+        foreach ($option->string as $string) {
+            if ($string !== static::TIMEFRAME_OPTION_SUNDAY) {
+                $result = true;
+            }
+
+            if ($string === static::TIMEFRAME_OPTION_SUNDAY
+                && $this->shippingOptions->isSundayDeliveryActive()) {
+                $option->validatedType = $string;
+                $result = true;
+            }
         }
 
-        if ($option->string[0] === static::TIMEFRAME_OPTION_SUNDAY
-            && $this->shippingOptions->isSundayDeliveryActive()) {
-            return true;
-        }
-
-        return false;
+        return $result;
     }
 }

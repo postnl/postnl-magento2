@@ -248,7 +248,7 @@
 .postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-time {
   padding-left: 30px;
   float: left;
-  width: 70%;
+  width: 50%;
 }
 .postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-fallback,
 .postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-fallback {
@@ -270,7 +270,7 @@
   .postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-option,
   .postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-option {
     padding-left: 0;
-    width: 30%;
+    width: 50%;
     text-align: right;
   }
 }

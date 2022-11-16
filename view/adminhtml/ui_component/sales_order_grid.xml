@@ -120,5 +120,15 @@
                 </item>
             </argument>
         </column>
+        <column name="tig_postnl_smart_return_email" class="TIG\PostNL\Block\Adminhtml\Grid\Order\SmartReturnEmail">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Smart Return Email sent</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="fieldClass" xsi:type="string">tig_smart_return_email_column</item>
+                </item>
+            </argument>
+        </column>
     </columns>
 </listing>

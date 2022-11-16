@@ -41,7 +41,7 @@ interface MatrixrateRepositoryInterface
     /**
      * Save a Matrixrate rule
      * @param MatrixrateInterface $matrixrate
-     * @return MatrixrateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      * @api
      *
      */
@@ -51,7 +51,7 @@ interface MatrixrateRepositoryInterface
      * Retrieve a list of Matrixrates.
      * @api
      * @param SearchCriteriaInterface $criteria
-     * @return SearchResultsInterface
+     * @return \Magento\Framework\Api\SearchResultsInterface
      */
     public function getList(SearchCriteriaInterface $criteria);
 
@@ -66,7 +66,7 @@ interface MatrixrateRepositoryInterface
 
     /**
      * Create a Matrixrate rule.
-     * @return MatrixrateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      * @api
      */
     public function create();

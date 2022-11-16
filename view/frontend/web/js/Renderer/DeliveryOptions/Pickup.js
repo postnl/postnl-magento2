@@ -194,14 +194,13 @@ define([
          */
         getPickupAddresses : function (address) {
             var self = this;
-
             // Avoid getting delivery days multiple times
             var addressAsString = JSON.stringify({'postcode': address.postcode, 'housenumber': address.housenumber});
             if (this.pickupAddresses() !== undefined && this.currentLocationAddress === addressAsString) {
                 return;
             }
 
-            this.currentLocationAddress = addressAsString;
+            this.currentLocationAddress      = addressAsString;
             State.pickupOptionsAreLoading(true);
 
             if (self.getLocationsRequest !== undefined) {

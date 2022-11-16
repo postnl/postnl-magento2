@@ -120,6 +120,7 @@
             <post_offices>
                 <pakjegemak_active>1</pakjegemak_active>
                 <default_pakjegemak_option>3533</default_pakjegemak_option>
+                <show_package_machines>1</show_package_machines>
                 <pakjegemak_be_active>1</pakjegemak_be_active>
                 <default_pakjegemak_be_option>4936</default_pakjegemak_be_option>
                 <default_pakjegemak_be_domestic_option>4880</default_pakjegemak_be_domestic_option>
@@ -135,6 +136,13 @@
                 <sundaydelivery_fee>2</sundaydelivery_fee>
                 <default_sunday_option>3385</default_sunday_option>
             </sunday_delivery>
+
+            <today_delivery>
+                <todaydelivery_active>0</todaydelivery_active>
+                <todaydelivery_fee>2</todaydelivery_fee>
+                <default_today_option>3085</default_today_option>
+                <cutoff_time>10:00:00</cutoff_time>
+            </today_delivery>
 
             <labelandpackingslipoptions>
                 <reference_type>shipment_increment_id</reference_type>
@@ -178,6 +186,9 @@
                 <barcode_range>NL</barcode_range>
             </peps>
 
+            <returns>
+                <template>tig_postnl_postnl_settings_returns_template</template>
+            </returns>
         </tig_postnl>
     </default>
 </config>

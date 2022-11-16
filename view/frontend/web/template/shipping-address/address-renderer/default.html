@@ -11,7 +11,12 @@
         <text args="address().company"></text><br>
     </if>
     <text args="address().street.join(', ')" if="address().street"></text>
-    <br>
+    <each args="data: address().customAttributes, as: 'element'">
+        <div if="element['attribute_code'] != 'tig_housenumber' && element['attribute_code'] != 'tig_housenumber_addition'">
+            <text args="$parent.getCustomAttributeLabel(element)"></text>
+            <br/>
+        </div>
+    </each>
     <text args="address().city "></text>, <span text="address().region"></span> <text args="address().postcode"></text><br>
     <text args="getCountryName(address().countryId)"></text><br>
     <a if="address().telephone" attr="'href': 'tel:' + address().telephone" text="address().telephone"></a><br>

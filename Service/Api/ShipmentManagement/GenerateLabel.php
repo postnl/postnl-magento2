@@ -69,7 +69,7 @@ class GenerateLabel
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    public function generate($shipmentId)
+    public function generate($shipmentId, $smartReturns = false)
     {
         $postnlShipment = $this->shipmentRepository->getByShipmentId($shipmentId);
 
@@ -77,8 +77,8 @@ class GenerateLabel
         $shipment = $postnlShipment->getShipment();
         $shippingAddress = $shipment->getShippingAddress();
 
-        $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId());
-        $labels = $this->getLabels->get($shipment->getId(), false);
+        $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId(), $smartReturns);
+        $labels = $this->getLabels->get($shipment->getId(), false, true);
 
         if (empty($labels)) {
             return false;

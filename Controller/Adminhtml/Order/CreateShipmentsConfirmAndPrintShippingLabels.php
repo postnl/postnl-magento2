@@ -182,7 +182,7 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
         $address = $this->canaryConverter->convert($shipment->getShippingAddress());
 
         try {
-            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId(), false);
             $this->setTracks($shipment);
             $this->setLabel($shipment->getId());
         } catch (LocalizedException $exception) {

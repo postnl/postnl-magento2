@@ -133,7 +133,7 @@ class MassPrintPackingslip extends LabelAbstract
         $address = $shipment->getShippingAddress();
 
         try {
-            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId());
+            $this->barcodeHandler->prepareShipment($shipment->getId(), $address->getCountryId(), false);
         } catch (LocalizedException $exception) {
             $this->messageManager->addErrorMessage(
                 __('[POSTNL-0070] - Unable to generate barcode for shipment #%1', $shipment->getIncrementId())

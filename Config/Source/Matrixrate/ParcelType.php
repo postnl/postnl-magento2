@@ -64,7 +64,7 @@ class ParcelType implements ArrayInterface
             ],
             [
                 'value' => self::PARCEL_TYPE_LETTERBOX_PACKAGE,
-                'label' => __('Letterbox package'),
+                'label' => __('Letterbox Package'),
             ],
         ];
         // @codingStandardsIgnoreEnd

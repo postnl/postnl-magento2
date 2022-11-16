@@ -56,7 +56,7 @@ define([
 
         initialize : function () {
             this._super()
-                ._setClasses();
+            ._setClasses();
 
             if (window.checkoutConfig.shipping.postnl.checkout_extension == 'mageplaza') {
                 this.setMageplazaPrefilter();
@@ -322,7 +322,7 @@ define([
                     housenumberElement.value('');
                     additionElement.value('');
                 }
-                
+
                 // Next line is for initial load, before field is found in jQuery
                 postcodeElement.additionalClasses['tig-postnl-full-width'] = (value !== 'NL');
 

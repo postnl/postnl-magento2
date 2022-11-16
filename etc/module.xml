@@ -32,7 +32,7 @@
  *
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:TIG_PostNL:etc/tig_module.xsd">
-    <module name="TIG_PostNL" setup_version="1.9.4">
+    <module name="TIG_PostNL" setup_version="1.12.5">
         <sequence>
             <module name="Magento_Shipping"/>
             <module name="Magento_Directory"/>
