@@ -554,7 +554,7 @@ Percent,Percent
 "Fast Delivery","Fast Delivery"
 "Today Delivery","Today Delivery"
 "Activate today delivery","Activate today delivery"
-"Activate today delivery for your customers.","Activate today delivery for your customers."
+"Activate today delivery for your customers. Today delivery will be displayed as 'fast delivery' in the checkout.","Activate today delivery for your customers. Today delivery will be displayed as 'fast delivery' in the checkout."
 "Today delivery fee","Today delivery fee"
 "Additional costs for today delivery in the store's base currency. This fee will be added to the shipping costs.","Additional costs for today delivery in the store's base currency. This fee will be added to the shipping costs."
 "Default today delivery","Default today delivery"
