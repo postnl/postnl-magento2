@@ -142,6 +142,7 @@ define([
             var self              = this;
             var message           = data.message;
 
+            this.isLoading(false);
             self.handleError(message);
             if ('addressMatchesFirst' in data && data.addressMatchesFirst === true) {
                 this.messageClasses({'tig-postnl-success': true});
