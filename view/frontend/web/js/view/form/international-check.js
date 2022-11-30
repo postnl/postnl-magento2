@@ -42,21 +42,21 @@ define([
     'use strict';
     return uiComponent.extend({
         defaults: {
-            template: 'TIG_Postcode/checkout/international-check',
-            isLoading: ko.observable(false),
-            message: ko.observable(null),
+            template:       'TIG_Postcode/checkout/international-check',
+            isLoading:      ko.observable(false),
+            message:        ko.observable(null),
             messageClasses: ko.observable({}),
-            addresses: ko.observable([]),
+            addresses:      ko.observable([]),
             imports: {
-                observePostcode: '${ $.parentName }.postcode-field-group.field-group.postcode:value',
-                observeHousenumber: '${ $.parentName }.postcode-field-group.field-group.housenumber:value',
-                observeCountry: '${ $.parentName }.country_id:value',
+                observePostcode:        '${ $.parentName }.postcode-field-group.field-group.postcode:value',
+                observeHousenumber:     '${ $.parentName }.postcode-field-group.field-group.housenumber:value',
+                observeCountry:         '${ $.parentName }.country_id:value',
                 observeMagentoPostcode: '${ $.parentName }.postcode:value',
-                observeMagentoCity: '${ $.parentName }.city:value',
-                observeMagentoStreet0: '${ $.parentName }.street.0:value',
-                observeMagentoStreet1: '${ $.parentName }.street.1:value',
-                observeMagentoStreet2: '${ $.parentName }.street.2:value',
-                observeMagentoStreet3: '${ $.parentName }.street.3:value'
+                observeMagentoCity:     '${ $.parentName }.city:value',
+                observeMagentoStreet0:  '${ $.parentName }.street.0:value',
+                observeMagentoStreet1:  '${ $.parentName }.street.1:value',
+                observeMagentoStreet2:  '${ $.parentName }.street.2:value',
+                observeMagentoStreet3:  '${ $.parentName }.street.3:value'
             },
         },
 
@@ -200,7 +200,7 @@ define([
                 }
 
                 for (const element of streetLines) {
-                    element.value(strippedAddress.length === 0 ? '' :strippedAddress.shift());
+                    element.value(strippedAddress.length === 0 ? '' : strippedAddress.shift());
                 }
             });
         },

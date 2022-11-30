@@ -44,8 +44,7 @@ class InternationalAddressHandler
      */
     public function __construct(
         Log $logger
-    )
-    {
+    ) {
         $this->logger = $logger;
     }
 
@@ -97,7 +96,8 @@ class InternationalAddressHandler
      * @param $address
      * @return mixed
      */
-    protected function stripFormattedAddress($address) {
+    protected function stripFormattedAddress($address)
+    {
         $strippedAddress = $address['formattedAddress'];
         for ($i = count($strippedAddress) - 1; $i > 0; $i--) {
             if (in_array($strippedAddress[$i], [
@@ -155,9 +155,9 @@ class InternationalAddressHandler
 
         return [
             'addressLine' => trim($params['street'], "\t\r\n\0\x0, "),
-            'postalCode'  => $params['postcode'],
-            'cityName'    => $params['city'],
-            'countryIso'  => $params['country'],
+            'postalCode' => $params['postcode'],
+            'cityName' => $params['city'],
+            'countryIso' => $params['country'],
         ];
     }
 
