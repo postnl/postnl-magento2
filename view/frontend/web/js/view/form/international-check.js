@@ -41,27 +41,27 @@ define([
 ) {
     'use strict';
     return uiComponent.extend({
-        defaults : {
-            template  : 'TIG_Postcode/checkout/international-check',
-            isLoading : ko.observable(false),
-            message   : ko.observable(null),
+        defaults: {
+            template: 'TIG_Postcode/checkout/international-check',
+            isLoading: ko.observable(false),
+            message: ko.observable(null),
             messageClasses: ko.observable({}),
-            addresses : ko.observable([]),
-            imports   : {
-                observePostcode        : '${ $.parentName }.postcode-field-group.field-group.postcode:value',
-                observeHousenumber     : '${ $.parentName }.postcode-field-group.field-group.housenumber:value',
-                observeCountry         : '${ $.parentName }.country_id:value',
-                observeMagentoPostcode : '${ $.parentName }.postcode:value',
-                observeMagentoCity     : '${ $.parentName }.city:value',
-                observeMagentoStreet0  : '${ $.parentName }.street.0:value',
-                observeMagentoStreet1  : '${ $.parentName }.street.1:value',
-                observeMagentoStreet2  : '${ $.parentName }.street.2:value',
-                observeMagentoStreet3  : '${ $.parentName }.street.3:value'
+            addresses: ko.observable([]),
+            imports: {
+                observePostcode: '${ $.parentName }.postcode-field-group.field-group.postcode:value',
+                observeHousenumber: '${ $.parentName }.postcode-field-group.field-group.housenumber:value',
+                observeCountry: '${ $.parentName }.country_id:value',
+                observeMagentoPostcode: '${ $.parentName }.postcode:value',
+                observeMagentoCity: '${ $.parentName }.city:value',
+                observeMagentoStreet0: '${ $.parentName }.street.0:value',
+                observeMagentoStreet1: '${ $.parentName }.street.1:value',
+                observeMagentoStreet2: '${ $.parentName }.street.2:value',
+                observeMagentoStreet3: '${ $.parentName }.street.3:value'
             },
         },
 
 
-        getInternationalFormData : function () {
+        getInternationalFormData: function () {
             var street;
             var postcode;
             var city;
@@ -75,15 +75,18 @@ define([
 
             Registry.get(fields, function (postcodeElement, cityElement, countryElement) {
                 postcode = postcodeElement.value();
-                city     = cityElement.value();
-                country  = countryElement.value();
+                city = cityElement.value();
+                country = countryElement.value();
             });
 
             var streetFieldBase = this.parentName + '.street.';
             street = '';
             for (var i = 0; i < 4; i++) {
                 Registry.get(streetFieldBase + i.toString(), function (streetElement) {
-                    street   += ' ' + streetElement.value()
+                    if (i !== 0) {
+                        street += ', ';
+                    }
+                    street += streetElement.value()
                 });
             }
             street = street.trim();
@@ -95,8 +98,8 @@ define([
             return [street, postcode, city, country];
         },
 
-        checkInternationalAddress : function () {
-            var self     = this;
+        checkInternationalAddress: function () {
+            var self = this;
             var formData = self.getInternationalFormData();
 
             self.isLoading(false);
@@ -107,7 +110,7 @@ define([
 
             self.addresses([]);
             self.handleError('');
-            if ( formData === false) {
+            if (formData === false) {
                 return;
             }
 
@@ -118,7 +121,7 @@ define([
             }
 
             self.request = $.ajax({
-                method:'GET',
+                method: 'GET',
                 url: window.checkoutConfig.shipping.postnl.urls.international_address,
                 data: {
                     street: formData[0],
@@ -138,9 +141,9 @@ define([
             });
         },
 
-        handleInternationalResponse : function (data) {
-            var self              = this;
-            var message           = data.message;
+        handleInternationalResponse: function (data) {
+            var self = this;
+            var message = data.message;
 
             this.isLoading(false);
             self.handleError(message);
@@ -162,7 +165,7 @@ define([
                 country = countryElement.value();
             });
 
-            if (country !== 'NL'){
+            if (country !== 'NL') {
                 this.checkInternationalAddress();
                 return;
             }
@@ -172,78 +175,89 @@ define([
             this.handleError('');
         },
 
-        setAddress: function(data) {
+        setAddress: function (data) {
             this.addresses([]);
             this.handleError('');
 
             var fields = [
-                this.parentName + '.street.0',
+                this.parentName + '.street',
                 this.parentName + '.postcode',
                 this.parentName + '.city',
                 this.parentName + '.country_id'
             ];
 
-            Registry.get(fields, function (streetElement, postcodeElement, cityElement, countryElement) {
-                streetElement.value(data.formattedAddress[0]);
+            Registry.get(fields, function (streetFields, postcodeElement, cityElement, countryElement) {
                 postcodeElement.value(data.postalCode);
                 cityElement.value(data.cityName);
                 countryElement.value(data.countryIso2);
+
+                const streetLines = streetFields.elems();
+                var strippedAddress = data.strippedAddress;
+                // Make sure the address fits the number of fields
+                while (strippedAddress.length > streetLines.length) {
+                    const input = strippedAddress.pop();
+                    strippedAddress[strippedAddress.length - 1] += ', ' + input;
+                }
+
+                for (const element of streetLines) {
+                    element.value(strippedAddress.length === 0 ? '' :strippedAddress.shift());
+                }
             });
         },
 
-        handleError: function(errorMessage) {
+        handleError: function (errorMessage) {
             this.message(errorMessage);
         },
 
-        observeHousenumber : function (value) {
+        observeHousenumber: function (value) {
             if (value) {
                 this.updateFieldData();
             }
         },
 
-        observePostcode : function (value) {
+        observePostcode: function (value) {
             if (value) {
                 this.updateFieldData();
             }
         },
 
-        observeMagentoPostcode : function (value) {
+        observeMagentoPostcode: function (value) {
             if (value) {
                 this.updateFieldData();
             }
         },
 
-        observeMagentoCity : function (value) {
+        observeMagentoCity: function (value) {
             if (value) {
                 this.updateFieldData();
             }
         },
 
-        observeCountry : function (value) {
+        observeCountry: function (value) {
             if (value) {
                 this.updateFieldData();
             }
         },
 
-        observeMagentoStreet0 : function (value) {
+        observeMagentoStreet0: function (value) {
             if (value) {
                 this.updateFieldData();
             }
         },
 
-        observeMagentoStreet1 : function (value) {
+        observeMagentoStreet1: function (value) {
             if (value) {
                 this.updateFieldData();
             }
         },
 
-        observeMagentoStreet2 : function (value) {
+        observeMagentoStreet2: function (value) {
             if (value) {
                 this.updateFieldData();
             }
         },
 
-        observeMagentoStreet3 : function (value) {
+        observeMagentoStreet3: function (value) {
             if (value) {
                 this.updateFieldData();
             }

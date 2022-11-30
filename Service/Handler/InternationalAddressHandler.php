@@ -29,6 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\PostNL\Service\Handler;
 
 use TIG\PostNL\Logging\Log;
@@ -43,7 +44,8 @@ class InternationalAddressHandler
      */
     public function __construct(
         Log $logger
-    ) {
+    )
+    {
         $this->logger = $logger;
     }
 
@@ -84,9 +86,33 @@ class InternationalAddressHandler
         return [200, [
             'addressCount' => count($params),
             'addressMatchesFirst' => $addressMatch,
-            'message' => $addressMatch ?  __('Your address is valid!') : __('Your address does not match our records, please select one of the addresses below'),
+            'message' => $addressMatch ? __('Your address is valid!') : __('Your address does not match our records, please select one of the addresses below'),
             'addresses' => $params
         ]];
+    }
+
+    /**
+     * Strips Magento Fields from formattedAddress
+     *
+     * @param $address
+     * @return mixed
+     */
+    protected function stripFormattedAddress($address) {
+        $strippedAddress = $address['formattedAddress'];
+        for ($i = count($strippedAddress) - 1; $i > 0; $i--) {
+            if (in_array($strippedAddress[$i], [
+                $address['cityName'],
+                $address['countryName'],
+                $address['postalCode'],
+                $address['postalCode'] . ' ' . $address['cityName'],
+                $address['cityName'] . ' ' . $address['postalCode']
+            ])) {
+                unset($strippedAddress[$i]);
+                continue;
+            }
+            break;
+        }
+        return $strippedAddress;
     }
 
 
@@ -105,6 +131,14 @@ class InternationalAddressHandler
             $params = [$params];
         }
 
+        foreach ($params as &$param) {
+            if (!isset($param['formattedAddress'])) {
+                continue;
+            }
+
+            $param['strippedAddress'] = $this->stripFormattedAddress($param);
+        }
+
         return $params;
     }
 
@@ -120,7 +154,7 @@ class InternationalAddressHandler
         }
 
         return [
-            'addressLine' => trim($params['street']),
+            'addressLine' => trim($params['street'], "\t\r\n\0\x0, "),
             'postalCode'  => $params['postcode'],
             'cityName'    => $params['city'],
             'countryIso'  => $params['country'],
@@ -169,17 +203,15 @@ class InternationalAddressHandler
         if ($data['cityName'] !== $input['cityName']) {
             return false;
         }
-        if ($data['postalCode'] !== $input['postalCode']){
+        if ($data['postalCode'] !== $input['postalCode']) {
             return false;
         }
-        if ($data['countryIso2'] !== $input['countryIso']){
+        if ($data['countryIso2'] !== $input['countryIso']) {
             return false;
         }
-        foreach ($data['formattedAddress'] as $addressLine) {
-            if (strtolower($addressLine) === strtolower($input['addressLine'])) {
-                return true;
-            }
+        if (strtolower(implode(', ', $data['strippedAddress'])) !== strtolower($input['addressLine'])) {
+            return false;
         }
-        return false;
+        return true;
     }
 }
