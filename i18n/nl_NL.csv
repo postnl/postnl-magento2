@@ -584,7 +584,7 @@ Percent,Percentage
 "Invalid parcel type ""%1"".","Ongeldig parcel type ""%1""."
 "Invalid shipping price ""%1"".","Ongeldig prijs ""%1""."
 "Dear","Beste"
-"Your return request has been processed. Print the return label using the enclosed barcode.","Jouw retouraanvraag is verwerkt. Print het retour-label met behulp van bijgevoegde barcode."
+"Your return request has been processed. Print the return label, at least 10 minutes after receiving this email, using the enclosed barcode.","Jouw retouraanvraag is verwerkt. Print het retour-label, minimaal 10 minuten na ontvangst van deze mail, met behulp van bijgevoegde barcode."
 "Go to the nearest PostNL point.","Ga naar het dichtsbijzijnde PostNL punt."
 "Scan the barcode and receive a return label.","Scan de barcode en ontvang een retourlabel."
 "Stick the label on the package and hand in the package.","Plak het label op het pakket en lever het pakket in."
