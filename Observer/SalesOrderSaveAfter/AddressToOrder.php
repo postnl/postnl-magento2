@@ -122,7 +122,7 @@ class AddressToOrder implements ObserverInterface
 
         if ($quotePgAddress->getTelephone() === null) {
             $billingAddress = $order->getBillingAddress();
-            $quotePgAddress->setTelephone($billingAddress->getTelephone());
+            $quotePgAddress->setTelephone($billingAddress->getTelephone() ?? '');
         }
 
         if ($quotePgAddress->getId() && $this->shouldAdd($order, $postnlOrder)) {
