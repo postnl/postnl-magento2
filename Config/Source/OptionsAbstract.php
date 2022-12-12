@@ -278,10 +278,30 @@ abstract class OptionsAbstract
             'group'                => 'pakjegemak_be_options',
         ],
         // EU Options
-        '4952' => [
-            'value'                => '4952',
-            'label'                => 'EU Pack Special Consumer',
+        '14907' => [
+            'value'                => '14907',
+            'label'                => 'Parcel EU to Consumer Track & Trace',
             'isDefault'            => 1,
+            'isEvening'            => false,
+            'isExtraCover'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'eu_options',
+        ],
+        '24907' => [
+            'value'                => '24907',
+            'label'                => 'Parcel EU to Consumer Track & Trace Insured',
+            'isEvening'            => false,
+            'isExtraCover'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'eu_options',
+        ],
+        '34907' => [
+            'value'                => '34907',
+            'label'                => 'Parcel EU to Consumer Track & Trace Insured Plus',
             'isEvening'            => false,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -669,9 +689,9 @@ abstract class OptionsAbstract
             'group'                => 'cargo_options',
         ],
         // Package EPS B2B
-        '4940' => [
-            'value'                => '4940',
-            'label'                => 'EU Pack Special to business',
+        '44907' => [
+            'value'                => '44907',
+            'label'                => 'Parcel EU to Business Track & Trace',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -679,9 +699,9 @@ abstract class OptionsAbstract
             'countryLimitation'    => false,
             'group'                => 'eps_package_options',
         ],
-        '4983' => [
-            'value'                => '4983',
-            'label'                => 'EPS Business delivery EU (Mon/Sat)',
+        '54907' => [
+            'value'                => '54907',
+            'label'                => 'Parcel EU to Business Track & Trace Insured',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -689,9 +709,9 @@ abstract class OptionsAbstract
             'countryLimitation'    => false,
             'group'                => 'eps_package_options',
         ],
-        '4985' => [
-            'value'                => '4985',
-            'label'                => 'EPS Business delivery EU (Mon/Fri)',
+        '64907' => [
+            'value'                => '64907',
+            'label'                => 'Parcel EU to Business Track & Trace Insured Plus',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,

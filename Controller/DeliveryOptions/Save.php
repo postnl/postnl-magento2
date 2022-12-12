@@ -179,6 +179,11 @@ class Save extends AbstractDeliveryOptions
             $postnlOrder->setProductCode($this->productOptions->getDefaultStatedAddressOnlyProductOption($country, $shopCountry));
         }
 
+        $postnlOrder->setAcInformation(null);
+        if (isset($params['ac_information']) && $params['ac_information']) {
+            $postnlOrder->setAcInformation($params['ac_information']);
+        }
+
         $this->orderRepository->save($postnlOrder);
     }
 

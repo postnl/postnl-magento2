@@ -72,28 +72,100 @@ class ProductOptions
      */
     private $availableProductOptions = [
             'pge'     => [
-                'Characteristic' => '118',
-                'Option'         => '002',
+                [
+                    'Characteristic' => '118',
+                    'Option'         => '002',
+                ]
             ],
             'evening' => [
-                'Characteristic' => '118',
-                'Option'         => '006',
+                [
+                    'Characteristic' => '118',
+                    'Option'         => '006',
+                ]
             ],
             'sunday'  => [
-                'Characteristic' => '101',
-                'Option'         => '008',
+                [
+                    'Characteristic' => '101',
+                    'Option'         => '008',
+                ]
             ],
             'idcheck' => [
-                'Characteristic' => '002',
-                'Option'         => '014'
+                [
+                    'Characteristic' => '002',
+                    'Option'         => '014'
+                ]
             ],
             'idcheck_pg' => [
-                'Characteristic' => '002',
-                'Option'         => '014'
+                [
+                    'Characteristic' => '002',
+                    'Option'         => '014'
+                ]
             ],
             'today' => [
-                'Characteristic' => '118',
-                'Option'         => '044'
+                [
+                    'Characteristic' => '118',
+                    'Option'         => '044'
+                ]
+            ],
+            'eps-1' => [
+                [
+                    'Characteristic' => '005',
+                    'Option'         => '025'
+                ],
+                [
+                    'Characteristic' => '101',
+                    'Option'         => '012'
+                ]
+            ],
+            'eps-2' => [
+                [
+                    'Characteristic' => '004',
+                    'Option'         => '015'
+                ],
+                [
+                    'Characteristic' => '101',
+                    'Option'         => '012'
+                ]
+            ],
+            'eps-3' => [
+                [
+                    'Characteristic' => '004',
+                    'Option'         => '016'
+                ],
+                [
+                    'Characteristic' => '101',
+                    'Option'         => '012'
+                ]
+            ],
+            'eps-4' => [
+                [
+                    'Characteristic' => '005',
+                    'Option'         => '025'
+                ],
+                [
+                    'Characteristic' => '101',
+                    'Option'         => '013'
+                ]
+            ],
+            'eps-5' => [
+                [
+                    'Characteristic' => '004',
+                    'Option'         => '015'
+                ],
+                [
+                    'Characteristic' => '101',
+                    'Option'         => '013'
+                ]
+            ],
+            'eps-6' => [
+                [
+                    'Characteristic' => '004',
+                    'Option'         => '016'
+                ],
+                [
+                    'Characteristic' => '101',
+                    'Option'         => '013'
+                ]
             ]
         ];
 
@@ -122,26 +194,21 @@ class ProductOptions
 
     /**
      * @param ShipmentInterface $shipment
-     * @param bool   $flat
      *
      * @return array|bool
      */
-    public function get($shipment, $flat = false)
+    public function get($shipment)
     {
-        if ($shipment->getAcCharacteristic() && $shipment->getAcCharacteristic() != '000') {
-            return $this->returnOptionsFromShipment($shipment, $flat);
+        if ($shipment->getAcInformation() && $shipment->getAcInformation()[0]['Characteristic'] != '000') {
+            return $shipment->getAcInformation();
         }
 
         $acOptions = $this->getAcOptionsByOrderWithShipment($shipment);
         if (!$acOptions) {
-            $acOptions = $this->getByShipment($shipment, $flat);
+            $acOptions = $this->getByShipment($shipment);
         }
 
-        if ($flat && $acOptions && $acOptions['Characteristic'] !== '000') {
-            return $acOptions;
-        }
-
-        if ($acOptions && $acOptions['ProductOption']['Characteristic'] !== '000') {
+        if ($acOptions && $acOptions[0]['Characteristic'] !== '000') {
             return $acOptions;
         }
 
@@ -150,66 +217,40 @@ class ProductOptions
 
     /**
      * @param ShipmentInterface $shipment
-     * @param                   $flat
      *
      * @return array|mixed|null
      */
-    public function getByShipment(ShipmentInterface $shipment, $flat)
+    public function getByShipment(ShipmentInterface $shipment)
     {
         $type = strtolower($shipment->getShipmentType());
+
+        if (strlen($shipment->getProductCode()) > 4) {
+            $type .= '-' . substr($shipment->getProductCode(), 0, 1);
+        }
+
         if ($shipment->isIDCheck()) {
             $type = 'idcheck';
         }
 
         if (!array_key_exists($type, $this->availableProductOptions)) {
-            return $this->checkGuaranteedOptions($shipment, $flat);
+            return $this->checkGuaranteedOptions($shipment);
         }
 
-        if ($flat) {
-            return $this->availableProductOptions[$type];
-        }
-
-        return ['ProductOption' => $this->availableProductOptions[$type]];
+        return $this->availableProductOptions[$type];
     }
 
     /**
-     * @param      $type
-     * @param bool $flat
+     * @param $type
      *
      * @return array|null
      */
-    public function getByType($type, $flat = false)
+    public function getByType($type)
     {
         if (!array_key_exists($type, $this->availableProductOptions)) {
-            return $this->guaranteedOptions->get($type, $flat);
+            return $this->guaranteedOptions->get($type);
         }
 
-        if ($flat) {
-            return $this->availableProductOptions[$type];
-        }
-
-        return ['ProductOption' => $this->availableProductOptions[$type]];
-    }
-
-    /**
-     * @param $shipment
-     * @param $flat
-     *
-     * @return array
-     */
-    private function returnOptionsFromShipment(ShipmentInterface $shipment, $flat)
-    {
-        if (!$flat) {
-            return ['ProductOption' => [
-                'Characteristic' => $shipment->getAcCharacteristic(),
-                'Option'         => $shipment->getAcOption()
-            ]];
-        }
-
-        return [
-            'Characteristic' => $shipment->getAcCharacteristic(),
-            'Option'         => $shipment->getAcOption()
-        ];
+        return $this->availableProductOptions[$type];
     }
 
     /**
@@ -224,23 +265,19 @@ class ProductOptions
             return false;
         }
 
-        if (!$order->getAcCharacteristic()) {
+        if (!$order->getAcInformation()) {
             return false;
         }
 
-        return ['ProductOption' => [
-            'Characteristic' => $order->getAcCharacteristic(),
-            'Option'         => $order->getAcOption()
-        ]];
+        return [$order->getAcInformation()];
     }
 
     /**
      * @param ShipmentInterface $shipment
-     * @param $flat
      *
      * @return null|array
      */
-    private function checkGuaranteedOptions($shipment, $flat)
+    private function checkGuaranteedOptions($shipment)
     {
         if (!$this->shippingOptions->isGuaranteedDeliveryActive()) {
             return null;
@@ -257,7 +294,7 @@ class ProductOptions
             $this->productOptionsConfig->getGuaranteedType($code)
         );
 
-        return $this->guaranteedOptions->get($guaranteedTime, $flat);
+        return $this->guaranteedOptions->get($guaranteedTime);
     }
 
     /**

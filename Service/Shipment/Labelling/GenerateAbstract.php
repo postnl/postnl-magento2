@@ -227,11 +227,13 @@ abstract class GenerateAbstract
             $this->shipmentLabelRepository->save($labelModel);
         }
 
+        $shipmentProductCode = ((int)$shipment->getProductCode()) % 10000;
+
         /**
          * If SAM returned different product code during generation, override
          * it in PostNL Shipment table.
          */
-        if ($labelItem->ProductCodeDelivery !== $shipment->getProductCode()) {
+        if ($labelItem->ProductCodeDelivery != $shipmentProductCode) {
             $shipment->setProductCode($labelItem->ProductCodeDelivery);
         }
 

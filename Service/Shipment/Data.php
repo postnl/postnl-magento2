@@ -161,7 +161,7 @@ class Data
             'DownPartnerID'            => $shipment->getDownpartnerId(),
             'DownPartnerLocation'      => $shipment->getDownpartnerLocation(),
             'DownPartnerBarcode'       => $shipment->getDownpartnerBarcode(),
-            'ProductCodeDelivery'      => $shipment->getProductCode(),
+            'ProductCodeDelivery'      => ((int)$shipment->getProductCode()) % 10000,
             'ReturnBarcode'            => $shipment->getReturnBarcodes($currentShipmentNumber),
             'Reference'                => $this->labelAndPackingslipOptions->getReference($shipment->getShipment())
         ];

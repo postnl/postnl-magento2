@@ -164,6 +164,10 @@
                     <item name="InstallIsSmartReturn" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallIsSmartReturn</item>
                     <item name="InstallSmartReturnEmailSent" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallSmartReturnEmailSent</item>
                 </item>
+                <item name="v1.13.0" xsi:type="array">
+                    <item name="InstallOrderAcInformation" xsi:type="object">TIG\PostNL\Setup\V1130\Schema\InstallOrderAcInformation</item>
+                    <item name="InstallShipmentAcInformation" xsi:type="object">TIG\PostNL\Setup\V1130\Schema\InstallShipmentAcInformation</item>
+                </item>
             </argument>
         </arguments>
     </type>

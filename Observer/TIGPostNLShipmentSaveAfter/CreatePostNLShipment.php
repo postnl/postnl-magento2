@@ -33,6 +33,7 @@ namespace TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
 use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Model\Order\Shipment;
@@ -84,24 +85,30 @@ class CreatePostNLShipment implements ObserverInterface
      */
     private $webshopConfig;
 
+    /** @var SerializerInterface */
+    private $serializer;
+
     /**
      * @param ShipmentRepositoryInterface $shipmentRepository
      * @param OrderRepository             $orderRepository
      * @param SentDateHandler             $sendDateHandler
      * @param RequestInterface            $requestInterface
      * @param Webshop                     $webshopConfig
+     * @param SerializerInterface         $serializer
      */
     public function __construct(
         ShipmentRepositoryInterface $shipmentRepository,
         OrderRepository $orderRepository,
         SentDateHandler $sendDateHandler,
         RequestInterface $requestInterface,
-        Webshop $webshopConfig
+        Webshop $webshopConfig,
+        SerializerInterface $serializer
     ) {
         $this->orderRepository = $orderRepository;
         $this->sentDateHandler = $sendDateHandler;
         $this->shipmentRepository = $shipmentRepository;
         $this->webshopConfig = $webshopConfig;
+        $this->serializer = $serializer;
 
         $this->shipParams = $requestInterface->getParam('shipment');
     }
@@ -176,6 +183,7 @@ class CreatePostNLShipment implements ObserverInterface
             'shipment_type'     => $shipmentType,
             'ac_characteristic' => $this->getAcCharacteristic(),
             'ac_option'         => $this->getAcOption(),
+            'ac_information'    => $this->getAcInformation(),
             'parcel_count'      => $colliAmount,
         ];
     }
@@ -220,6 +228,17 @@ class CreatePostNLShipment implements ObserverInterface
         $order = $this->getOrder();
 
         return $order->getAcOption();
+    }
+
+    /**
+     * @return null|string
+     */
+    private function getAcInformation()
+    {
+        $order = $this->getOrder();
+        $acInformation = $order->getAcInformation();
+
+        return $this->serializer->serialize($acInformation);
     }
 
     /**

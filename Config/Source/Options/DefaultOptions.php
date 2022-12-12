@@ -129,10 +129,19 @@ class DefaultOptions implements ArrayInterface
     public function getEpsProducts()
     {
         $epsProducts[] = $this->shippingOptions->canUsePriority() ? $this->productOptions->getPriorityOptions() : [];
-        $epsProducts[] = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
         $epsProducts[] = $this->productOptions->getEpsOptions();
 
         return call_user_func_array("array_merge", $epsProducts);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEpsBusinessProducts()
+    {
+        $epsBusinessProducts[] = $this->productOptions->getEpsBusinessOptions();
+
+        return call_user_func_array("array_merge", $epsBusinessProducts);
     }
 
     /**

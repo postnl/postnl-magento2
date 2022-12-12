@@ -115,6 +115,18 @@ interface OrderInterface
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
+    public function setAcInformation($value);
+
+    /**
+     * @return string|null
+     */
+    public function getAcInformation();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
     public function setDeliveryDate($value);
 
     /**
