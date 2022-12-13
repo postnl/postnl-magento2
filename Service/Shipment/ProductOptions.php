@@ -166,6 +166,24 @@ class ProductOptions
                     'Characteristic' => '101',
                     'Option'         => '013'
                 ]
+            ],
+            'gp-1' => [
+                [
+                    'Characteristic' => '005',
+                    'Option'         => '025'
+                ]
+            ],
+            'gp-2' => [
+                [
+                    'Characteristic' => '004',
+                    'Option'         => '015'
+                ]
+            ],
+            'gp-3' => [
+                [
+                    'Characteristic' => '004',
+                    'Option'         => '016'
+                ]
             ]
         ];
 

@@ -221,13 +221,14 @@ class ProductInfo
             return;
         }
 
-        if (in_array($country, PriorityCountries::GLOBALPACK)
-            && $this->isPriorityProduct($this->code)
-        ) {
-            return;
-        }
-
-        $this->code = $this->productOptionsFinder->getDefaultGPOption()['value'];
+        //@TODO: temp disable, reimplement with proper logic for new priority options, see POSTNLM2-1364
+//        if (in_array($country, PriorityCountries::GLOBALPACK)
+//            && $this->isPriorityProduct($this->code)
+//        ) {
+//            return;
+//        }
+//
+//        $this->code = $this->productOptionsFinder->getDefaultGPOption()['value'];
     }
 
     /**

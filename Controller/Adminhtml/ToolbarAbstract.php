@@ -165,6 +165,10 @@ abstract class ToolbarAbstract extends Action
             $type = strtolower(ProductInfo::SHIPMENT_TYPE_EPS);
         }
 
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'global_options')) {
+            $type = strtolower(ProductInfo::SHIPMENT_TYPE_GP);
+        }
+
         if ($type && strlen($productCode) > 4) {
             $type .= '-' . substr($productCode, 0, 1);
         }

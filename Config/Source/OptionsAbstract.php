@@ -360,10 +360,30 @@ abstract class OptionsAbstract
             'group'                => 'be_options',
         ],
         // GlobalPack
-        '4945' => [
-            'value'                => '4945',
-            'label'                => 'GlobalPack',
+        '14909' => [
+            'value'                => '14909',
+            'label'                => 'Parcel non-EU Track & Trace',
             'isDefault'            => 1,
+            'isEvening'            => false,
+            'isExtraCover'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'global_options',
+        ],
+        '24909' => [
+            'value'                => '24909',
+            'label'                => 'Parcel non-EU Track & Trace Insured',
+            'isEvening'            => false,
+            'isExtraCover'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'global_options',
+        ],
+        '34909' => [
+            'value'                => '34909',
+            'label'                => 'Parcel non-EU Track & Trace Insured Plus',
             'isEvening'            => false,
             'isExtraCover'         => false,
             'isSunday'             => false,

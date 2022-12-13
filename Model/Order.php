@@ -228,6 +228,11 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function setAcInformation($value)
     {
+        //empty arrays shouldn't be serialized or used, so set those to null
+        if (is_array($value) && empty($value)) {
+            $value = null;
+        }
+
         if (!empty($value)) {
             $value = $this->serializer->serialize($value);
         }
