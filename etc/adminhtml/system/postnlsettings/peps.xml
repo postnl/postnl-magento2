@@ -34,7 +34,7 @@
 
     <!-- Cargo products -->
     <group id="peps" translate="label comment" type="text" sortOrder="115" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Packets Tracked</label>
+        <label>International Packets and Boxable Packets</label>
         <comment><![CDATA[Please note: Some of the Packets Tracked products require specific contractual agreements with PostNL. Please contact your PostNL account manager for more information about these products.]]></comment>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
@@ -42,7 +42,7 @@
             <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
         </depends>
         <field id="active" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Use Packets Tracked products</label>
+            <label>Use Packets International</label>
             <comment>Packet Tracked is a small parcel with Track &amp; Trace. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.</comment>
             <tooltip><![CDATA[This allows you the use of the priority parcel products. After you enable this setting the products can be selected in the default EPS and Globalpack selection.]]></tooltip>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -52,6 +52,16 @@
             <label>Barcode Type</label>
             <comment>The current Packets Tracked barcode type as supplied by PostNL. Must contain 2 letters.</comment>
             <config_path>tig_postnl/peps/barcode_type</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+
+        <field id="default_peps_option" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default Packet delivery</label>
+            <comment><![CDATA[Select the default product option for Packet shipments.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getPepsProducts</source_model>
+            <config_path>tig_postnl/peps/default_peps_option</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>

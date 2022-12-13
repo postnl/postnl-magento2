@@ -212,7 +212,6 @@ class ProductInfo
     private function setGlobalPackOption($country = null)
     {
         $this->type = static::SHIPMENT_TYPE_GP;
-        $this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
 
         if ($this->makeExceptionForEUPriority($country)) {
             $this->type = static::SHIPMENT_TYPE_EPS;
@@ -221,14 +220,16 @@ class ProductInfo
             return;
         }
 
-        //@TODO: temp disable, reimplement with proper logic for new priority options, see POSTNLM2-1364
-//        if (in_array($country, PriorityCountries::GLOBALPACK)
-//            && $this->isPriorityProduct($this->code)
-//        ) {
-//            return;
-//        }
-//
-//        $this->code = $this->productOptionsFinder->getDefaultGPOption()['value'];
+        $pepsCode = $this->productOptionsConfiguration->getDefaultPepsProductOption();
+        if (in_array($country, PriorityCountries::GLOBALPACK)
+            && $this->shippingOptions->canUsePriority()
+            && $this->isPriorityProduct($pepsCode)
+        ) {
+            $this->code = $pepsCode;
+            return;
+        }
+
+        $this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
     }
 
     /**
@@ -271,10 +272,12 @@ class ProductInfo
             return;
         }
 
-        $this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
+        $pepsCode = $this->productOptionsConfiguration->getDefaultPepsProductOption();
         if (in_array($country, PriorityCountries::EPS)
-            && $this->isPriorityProduct($this->code)
+            && $this->shippingOptions->canUsePriority()
+            && $this->isPriorityProduct($pepsCode)
         ) {
+            $this->code = $pepsCode;
             return;
         }
 

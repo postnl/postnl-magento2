@@ -128,14 +128,13 @@ class DefaultOptions implements ArrayInterface
      */
     public function getEpsProducts()
     {
-        $epsProducts[] = $this->shippingOptions->canUsePriority() ? $this->productOptions->getPriorityOptions() : [];
         $epsProducts[] = $this->productOptions->getEpsOptions();
 
         return call_user_func_array("array_merge", $epsProducts);
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getEpsBusinessProducts()
     {
@@ -147,9 +146,18 @@ class DefaultOptions implements ArrayInterface
     /**
      * @return array
      */
+    public function getPepsProducts()
+    {
+        $pepsProducts[] = $this->productOptions->getPriorityOptions();
+
+        return call_user_func_array("array_merge", $pepsProducts);
+    }
+
+    /**
+     * @return array
+     */
     public function getGlobalProducts()
     {
-        $globalProducts[] = $this->shippingOptions->canUsePriority() ? $this->productOptions->getPriorityOptions() : [];
         $globalProducts[] = $this->productOptions->getGlobalPackOptions();
 
         return call_user_func_array("array_merge", $globalProducts);
