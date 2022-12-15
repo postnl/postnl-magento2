@@ -59,7 +59,17 @@ class Webshop extends AbstractConfigProvider
     const XPATH_ADDRESS_CHECK_ENABLED         = 'tig_postnl/addresscheck/enable_postcodecheck';
     const XPATH_ADDRESS_CHECK_COMPATIBLE      = 'tig_postnl/addresscheck/checkout_compatible';
 
+    const XPATH_INTERNATIONAL_ADDRESS_ENABLED = 'tig_postnl/internationaladdressoptions/enable';
+
     const XPATH_POSTCODE_ADDRESS_CHECK_ENABLED = 'tig_postcode/configuration/modus';
+
+    /**
+     * @return bool
+     */
+    public function getIsInternationalAddressEnabled()
+    {
+        return $this->getConfigFromXpath(self::XPATH_INTERNATIONAL_ADDRESS_ENABLED);
+    }
 
     /**
      * @return bool

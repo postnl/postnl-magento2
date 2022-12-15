@@ -36,7 +36,6 @@ use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
 use Magento\Framework\HTTP\ZendClient as ZendClient;
 use TIG\PostNL\Webservices\Endpoints\Address\RestInterface;
-use TIG\PostNL\Service\Handler\PostcodecheckHandler;
 
 class Rest
 {
@@ -61,28 +60,20 @@ class Rest
     private $defaultConfiguration;
 
     /**
-     * @var PostcodecheckHandler
-     */
-    private $handler;
-
-    /**
      * Rest constructor.
      *
      * @param ZendClient           $zendClient
      * @param AccountConfiguration $accountConfiguration
      * @param DefaultConfiguration $defaultConfiguration
-     * @param PostcodecheckHandler $postcodecheckHandler
      */
     public function __construct(
         ZendClient $zendClient,
         AccountConfiguration $accountConfiguration,
         DefaultConfiguration $defaultConfiguration,
-        PostcodecheckHandler $postcodecheckHandler
     ) {
         $this->zendClient           = $zendClient;
         $this->accountConfiguration = $accountConfiguration;
         $this->defaultConfiguration = $defaultConfiguration;
-        $this->handler              = $postcodecheckHandler;
     }
 
     /**
@@ -99,7 +90,7 @@ class Rest
 
         try {
             $response = $this->zendClient->request();
-            $response = $this->handler->convertResponse($response->getBody());
+            $response = $response->getBody();
         } catch (\Zend_Http_Client_Exception $exception) {
             $response = [
                 'status' => 'error',
@@ -160,8 +151,13 @@ class Rest
      */
     private function addUri(RestInterface $endpoint)
     {
-        $url = $this->defaultConfiguration->getModusAddressApiUrl() . $endpoint->getVersion() .'/';
-        $uri = $url . $endpoint->getEndpoint();
+        $url = $this->defaultConfiguration->getModusAddressApiUrl();
+
+        if (!$endpoint->useAddressUri()) {
+            $url = $this->defaultConfiguration->getModusApiUrl();
+        }
+
+        $uri = $url . $endpoint->getVersion() . '/' . $endpoint->getEndpoint();
         $this->zendClient->setUri($uri);
     }
 }

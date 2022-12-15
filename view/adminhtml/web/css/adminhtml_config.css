@@ -490,3 +490,7 @@ h4#carriers_tig_postnl_import_export_header {
     padding-bottom: 30px !important;
 }
 
+
+.international-address-validation-message .success, .international-address-validation-message .error {
+    display: none;
+}
