@@ -133,9 +133,9 @@
                     <item name="fieldClass" xsi:type="string">tig_smart_return_email_column</item>
                 </item>
             </argument>
+            <settings>
+                <sortable>false</sortable>
+            </settings>
         </column>
-
-
-
     </columns>
 </listing>
