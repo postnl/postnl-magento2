@@ -32,9 +32,7 @@
 
 namespace TIG\PostNL\Service\Order;
 
-use Magento\Framework\Stdlib\DateTime\DateTime;
 use TIG\PostNL\Api\Data\OrderInterface;
-use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Webservices\Endpoints\SentDate;
 
@@ -51,23 +49,15 @@ class ShipAt
     private $sentDate;
 
     /**
-     * @var DateTime
-     */
-    private $dateTime;
-
-    /**
      * @param QuoteInterface $quote
      * @param SentDate       $endpoint
-     * @param DateTime       $dateTime
      */
     public function __construct(
         QuoteInterface $quote,
-        SentDate $endpoint,
-        DateTime $dateTime
+        SentDate $endpoint
     ) {
         $this->quote    = $quote;
         $this->sentDate = $endpoint;
-        $this->dateTime = $dateTime;
     }
 
     /**
@@ -93,10 +83,6 @@ class ShipAt
             $sentDate = $this->sentDate->call();
         } catch (\Exception $exception) {
             $sentDate = null;
-        }
-
-        if ($order->getType() == Options::TODAY_DELIVERY_OPTION && $sentDate !== null) {
-            $sentDate = $this->dateTime->date('d-m-Y', $sentDate . ' +1 day');
         }
 
         $order->setShipAt($sentDate);
