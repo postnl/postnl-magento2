@@ -53,7 +53,8 @@ class Urls implements CheckoutConfigurationInterface
             'deliveryoptions_locations'  => $this->getUrl('postnl/deliveryoptions/locations'),
             'deliveryoptions_save'       => $this->getUrl('postnl/deliveryoptions/save'),
             'pakjegemak_address'         => $this->getUrl('postnl/pakjegemak/address'),
-            'address_postcode'           => $this->getUrl('postnl/address/postcode')
+            'address_postcode'           => $this->getUrl('postnl/address/postcode'),
+            'international_address'      => $this->getUrl('postnl/international/address')
         ];
     }
 
