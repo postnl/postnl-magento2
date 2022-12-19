@@ -123,7 +123,8 @@ class AsyncPlugin extends Grid
             ];
 
             $where = [$connection->quoteIdentifier('entity_id') . '=?' => $shipmentId];
-            $connection->update('sales_shipment_grid', $binds, $where);
+            $tableName = $connection->getTableName('sales_shipment_grid');
+            $connection->update($tableName, $binds, $where);
         }
     }
 }
