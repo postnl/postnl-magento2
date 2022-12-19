@@ -31,27 +31,27 @@
  */
 namespace TIG\PostNL\Block\Adminhtml\Matrix;
 
-use Magento\Backend\App\Action;
+use Magento\Backend\Model\UrlInterface;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Framework\View\Layout\Generic;
 
 class Back extends Generic implements ButtonProviderInterface
 {
-    /** @var Action  */
-    private $action;
+    /** @var UrlInterface  */
+    private $urlBuilder;
 
     /**
-     * @param UiComponentFactory    $uiComponentFactory
-     * @param Action                $action
-     * @param array                 $data
+     * @param UiComponentFactory $uiComponentFactory
+     * @param UrlInterface       $urlBuilder
+     * @param array              $data
      */
     public function __construct(
         UiComponentFactory $uiComponentFactory,
-        Action $action,
+        UrlInterface $urlBuilder,
         $data = []
     ) {
-        $this->action = $action;
+        $this->urlBuilder = $urlBuilder;
         parent::__construct($uiComponentFactory, $data);
     }
 
@@ -64,7 +64,7 @@ class Back extends Generic implements ButtonProviderInterface
     {
         return [
             'label' => __('Back'),
-            'on_click' => "setLocation('" . $this->action->getUrl('*/*/') . "' )",
+            'on_click' => "setLocation('" . $this->urlBuilder->getUrl('*/*/') . "' )",
             'class' => 'back',
             'sort_order' => 10,
         ];
