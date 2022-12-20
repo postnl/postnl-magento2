@@ -69,7 +69,7 @@ class Rest
     public function __construct(
         ZendClient $zendClient,
         AccountConfiguration $accountConfiguration,
-        DefaultConfiguration $defaultConfiguration,
+        DefaultConfiguration $defaultConfiguration
     ) {
         $this->zendClient           = $zendClient;
         $this->accountConfiguration = $accountConfiguration;
