@@ -33,7 +33,7 @@ namespace TIG\PostNL\Webservices\Endpoints\Address;
 
 use TIG\PostNL\Webservices\Rest;
 
-class Postalcode implements RestInterface
+class InternationalAddressCheck implements RestInterface
 {
     /**
      * @var Rest
@@ -43,22 +43,22 @@ class Postalcode implements RestInterface
     /**
      * @var bool
      */
-    private $useAddressUri = true;
+    private $useAddressUri = false;
 
     /**
      * @var string
      */
-    private $endpoint = 'postalcodecheck/';
+    private $endpoint = 'address/international/';
 
     /**
      * @var string
      */
-    private $method = 'POST';
+    private $method = 'GET';
 
     /**
      * @var string
      */
-    private $version = 'v1';
+    private $version = 'v4';
 
     /**
      * @var array
@@ -66,7 +66,7 @@ class Postalcode implements RestInterface
     private $data = [];
 
     /**
-     * Postalcode constructor.
+     * International Address Check constructor.
      *
      * @param Rest $rest
      */

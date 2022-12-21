@@ -18,55 +18,44 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
+ * to support@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
+ * needs please contact support@tig.nl for more information.
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Webservices\Endpoints\Address;
+namespace TIG\PostNL\Config\CheckoutConfiguration;
 
-interface RestInterface
+use TIG\PostNL\Config\Provider\Webshop;
+
+class IsInternationalAddressActive implements CheckoutConfigurationInterface
 {
     /**
-     * @return mixed
+     * @var Webshop
      */
-    public function call();
+    private $webshopConfig;
 
     /**
-     * @return string
-     */
-    public function getEndpoint();
-
-    /**
-     * @param array $data
+     * IsInternationalAddressActive constructor
      *
-     * @return void
+     * @param Webshop $webshop
      */
-    public function updateRequestData(array $data);
-
-    /**
-     * @return array
-     */
-    public function getRequestData();
-
-    /**
-     * @return string
-     */
-    public function getMethod();
-
-    /**
-     * @return string
-     */
-    public function getVersion();
+    public function __construct(
+        Webshop $webshop
+    ) {
+        $this->webshopConfig = $webshop;
+    }
 
     /**
      * @return bool
      */
-    public function useAddressUri();
+    public function getValue()
+    {
+        return (bool) $this->webshopConfig->getIsInternationalAddressEnabled() && $this->webshopConfig->getIsAddressCheckEnabled();
+    }
 }
