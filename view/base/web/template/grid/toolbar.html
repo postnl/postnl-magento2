@@ -45,6 +45,12 @@
                     </select>
                 </div>
                 <!-- /ko -->
+                <div class="sub-select-holder" data-bind="visible: $data.showInsuredTiers()">
+                    <select class="action-select admin__control-select insured_tier_toolbar" id="insured_tier"
+                            data-bind="options:$data.insuredTiers,
+                            optionsText: 'text', optionsValue: 'value', value:$data.defaultInsuredTier">
+                    </select>
+                </div>
                 <div class="select-holder" data-bind="visible: $data.currentSelected() == 'choose_print_start_position'">
                     <select class="action-select admin__control-select choose_print_start_position_toolbar"
                             id="choose_print_start_position" data-bind="options:$data.labelStartPositionOptions,

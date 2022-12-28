@@ -159,6 +159,10 @@
                 <barcode_numberinclude>1</barcode_numberinclude>
             </labelandpackingslipoptions>
 
+            <insured_delivery>
+                <insured_tier>default</insured_tier>
+            </insured_delivery>
+
             <endpoints>
                 <api_base_url>https://api.postnl.nl/shipment/</api_base_url>
                 <test_api_base_url>https://api-sandbox.postnl.nl/shipment/</test_api_base_url>

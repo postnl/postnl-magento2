@@ -36,6 +36,8 @@ define(['jquery', 'mage/url'], function ($, url) {
     var isGuaranteedActive = 0;
     var cargoOptions = '';
     var packageOptions = '';
+    var insuredTierOptions = '';
+    var defaultInsuredTier = '';
     var labelStartPositionOptions = '';
 
     return {
@@ -82,6 +84,26 @@ define(['jquery', 'mage/url'], function ($, url) {
             }
 
             return JSON.parse(packageOptions);
+        },
+
+        setInsuredTierOptions: function (options) {
+            insuredTierOptions = options;
+        },
+
+        getInsuredTierOptions: function () {
+            if (!insuredTierOptions) {
+                return null;
+            }
+
+            return JSON.parse(insuredTierOptions);
+        },
+
+        setDefaultInsuredTier: function (options) {
+            defaultInsuredTier = options;
+        },
+
+        getDefaultInsuredTier: function () {
+            return defaultInsuredTier;
         },
 
         setLabelStartPositionOptions: function (options) {
@@ -172,6 +194,11 @@ define(['jquery', 'mage/url'], function ($, url) {
 
         inPackagesProducts: function (code) {
             var array = ['3083','3084','3085','3087','3089','3090','3094','3096','3189','3385','3389','3390'];
+            return $.inArray(code, array) >= 0;
+        },
+
+        inExtraCover: function (code) {
+            var array = ['3087', '3094', '3443', '3446', '3544', '3534', '3581', '3584', '4878', '4914', '4965'];
             return $.inArray(code, array) >= 0;
         }
 

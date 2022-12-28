@@ -44,6 +44,8 @@
         DataProvider.setGuaranteedIsActive('<?= /* @escapeNotVerified */ $block->isGuaranteedDeliveryActive();?>');
         DataProvider.setCargoTimeOptions('<?= /* @escapeNotVerified */ $block->getCargoTimeOptions();?>');
         DataProvider.setPackagesTimeOptions('<?= /* @escapeNotVerified */ $block->getPackagesTimeOptions();?>');
+        DataProvider.setInsuredTierOptions('<?= /* @escapeNotVerified */ $block->getInsuredTierOptions();?>');
+        DataProvider.setDefaultInsuredTier('<?= /* @escapeNotVerified */ $block->getDefaultInsuredTier();?>');
         DataProvider.setLabelStartPositionOptions('<?= /* @escapeNotVerified */ $block->getLabelStartPositionOptions();?>');
         return url.setBaseUrl('<?= /* @escapeNotVerified */ $block->getAdminBaseUrl();?>');
         <?php /** @codingStandardsIgnoreEnd **/ ?>

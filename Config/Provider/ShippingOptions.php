@@ -66,6 +66,7 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_STATED_ADDRESS_FEE       = 'tig_postnl/delivery_settings/stated_address_only_fee';
     const XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_ACTIVE = 'tig_postnl/letterbox_package/letterbox_package_active';
     const XPATH_SHIPPING_OPTION_COUNTRY                  = 'tig_postnl/generalconfiguration_shipping_address/country';
+    const XPATH_SHIPPING_OPTION_INSURED_TIER             = 'tig_postnl/insured_delivery/insured_tier';
 
     private $defaultMaxDeliverydays = '5';
 
@@ -317,6 +318,14 @@ class ShippingOptions extends AbstractConfigProvider
     public function canUseBeProducts()
     {
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_COUNTRY) === 'BE';
+    }
+
+    /**
+     * @return string|int
+     */
+    public function getInsuredTier()
+    {
+        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_INSURED_TIER);
     }
 }
 /**

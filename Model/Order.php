@@ -68,6 +68,7 @@ class Order extends AbstractModel implements OrderInterface
     const FIELD_CONFIRMED = 'confirmed';
     const FIELD_PARCEL_COUNT = 'parcel_count';
     const FIELD_SHIPPING_DURATION = 'shipping_duration';
+    const FIELD_INSURED_TIER = 'insured_tier';
 
     /**
      * @var string
@@ -551,5 +552,23 @@ class Order extends AbstractModel implements OrderInterface
     public function getConfirmed()
     {
         return $this->getData(static::FIELD_CONFIRMED);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setInsuredTier($value)
+    {
+        return $this->setData(static::FIELD_INSURED_TIER, $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getInsuredTier()
+    {
+        return $this->getData(static::FIELD_INSURED_TIER);
     }
 }
