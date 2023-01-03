@@ -293,11 +293,6 @@ class Shipment extends AbstractModel implements ShipmentInterface
         foreach ($items as $item) {
             $itemWeight = $item->getWeight() * $item->getQty();
 
-            if ($itemWeight < 1) {
-                $weight += 1;
-                continue;
-            }
-
             $weight += $itemWeight;
         }
 
