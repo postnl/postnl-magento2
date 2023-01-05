@@ -104,6 +104,20 @@ class AccountConfiguration extends AbstractConfigProvider
     }
 
     /**
+     * Returns the API Key which is decrypted automaticly in the _afterload method
+     * Magento\Config\Model\Config\Backend\Encrypted R:74
+     * @param null|int $website
+     * @return string
+     */
+    public function getApiKeyForWebsiteScope($website = null)
+    {
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY, $website);
+        $value = $this->getWebsiteConfigFromXpath($modusXpath, $website);
+
+        return $this->crypt->decrypt($value);
+    }
+
+    /**
      * @param null|int $store
      * @return mixed
      */
