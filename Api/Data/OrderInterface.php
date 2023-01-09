@@ -316,4 +316,16 @@ interface OrderInterface
      * @return bool
      */
     public function getConfirmed();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setInsuredTier($value);
+
+    /**
+     * @return string
+     */
+    public function getInsuredTier();
 }
