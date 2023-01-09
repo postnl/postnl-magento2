@@ -51,7 +51,7 @@ class InternationalAddressValidation extends Field
         Context             $context,
         array               $data = []
     ) {
-        parent::__construct($context, $data, $secureRenderer);
+        parent::__construct($context, $data);
     }
 
     /**
