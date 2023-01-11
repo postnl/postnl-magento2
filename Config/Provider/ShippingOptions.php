@@ -65,6 +65,7 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_STATED_ADDRESS_ACTIVE    = 'tig_postnl/delivery_settings/stated_address_only_active';
     const XPATH_SHIPPING_OPTION_STATED_ADDRESS_FEE       = 'tig_postnl/delivery_settings/stated_address_only_fee';
     const XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_ACTIVE = 'tig_postnl/letterbox_package/letterbox_package_active';
+    const XPATH_SHIPPING_OPTION_BOXABLE_PACKETS_ACTIVE   = 'tig_postnl/peps/peps_boxable_packets_active';
     const XPATH_SHIPPING_OPTION_COUNTRY                  = 'tig_postnl/generalconfiguration_shipping_address/country';
 
     private $defaultMaxDeliverydays = '5';
@@ -309,6 +310,14 @@ class ShippingOptions extends AbstractConfigProvider
     public function isLetterboxPackageActive()
     {
         return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_ACTIVE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBoxablePacketsActive()
+    {
+        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_BOXABLE_PACKETS_ACTIVE);
     }
 
     /**

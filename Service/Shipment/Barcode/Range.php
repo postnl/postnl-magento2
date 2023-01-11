@@ -130,6 +130,7 @@ class Range
         }
 
         if ($this->options->doesProductMatchFlags($productCode, 'group', 'eu_options') ||
+            $this->options->doesProductMatchFlags($productCode, 'group', 'eps_package_options') ||
             $this->options->doesProductMatchFlags($productCode, 'group', 'be_options') ||
             $this->options->doesProductMatchFlags($productCode, 'group', 'pakjegemak_be_options')
         ) {

@@ -36,6 +36,7 @@ use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Sales\Model\Order\Address as SalesAddress;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipment\PriorityCountries;
@@ -94,6 +95,9 @@ class ProductInfo
     /** @var ProductOptionsConfiguration */
     private $productOptionsConfiguration;
 
+    /** @var ShippingOptions */
+    private $shippingOptions;
+
     /** @var ProductOptionsFinder */
     private $productOptionsFinder;
 
@@ -109,17 +113,20 @@ class ProductInfo
 
     /**
      * @param ProductOptionsConfiguration $productOptionsConfiguration
+     * @param ShippingOptions             $shippingOptions
      * @param ProductOptionsFinder        $productOptionsFinder
      * @param CountryShipping             $countryShipping
      * @param QuoteInterface              $quote
      */
     public function __construct(
         ProductOptionsConfiguration $productOptionsConfiguration,
+        ShippingOptions $shippingOptions,
         ProductOptionsFinder $productOptionsFinder,
         CountryShipping $countryShipping,
         QuoteInterface $quote
     ) {
         $this->productOptionsConfiguration = $productOptionsConfiguration;
+        $this->shippingOptions             = $shippingOptions;
         $this->productOptionsFinder        = $productOptionsFinder;
         $this->countryShipping             = $countryShipping;
         $this->quote                       = $quote;
@@ -205,7 +212,6 @@ class ProductInfo
     private function setGlobalPackOption($country = null)
     {
         $this->type = static::SHIPMENT_TYPE_GP;
-        $this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
 
         if ($this->makeExceptionForEUPriority($country)) {
             $this->type = static::SHIPMENT_TYPE_EPS;
@@ -214,13 +220,16 @@ class ProductInfo
             return;
         }
 
+        $pepsCode = $this->productOptionsConfiguration->getDefaultPepsProductOption();
         if (in_array($country, PriorityCountries::GLOBALPACK)
-            && $this->isPriorityProduct($this->code)
+            && $this->shippingOptions->canUsePriority()
+            && $this->isPriorityProduct($pepsCode)
         ) {
+            $this->code = $pepsCode;
             return;
         }
 
-        $this->code = $this->productOptionsFinder->getDefaultGPOption()['value'];
+        $this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
     }
 
     /**
@@ -263,14 +272,46 @@ class ProductInfo
             return;
         }
 
-        $this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
+        $pepsCode = $this->productOptionsConfiguration->getDefaultPepsProductOption();
         if (in_array($country, PriorityCountries::EPS)
-            && $this->isPriorityProduct($this->code)
+            && $this->shippingOptions->canUsePriority()
+            && $this->isPriorityProduct($pepsCode)
         ) {
+            $this->code = $pepsCode;
+            return;
+        }
+
+        if ($this->isEpsCountry($country) && !$this->shippingOptions->canUseEpsBusinessProducts()) {
+            $this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
+            return;
+        }
+
+        if ($this->isEpsCountry($country) && $this->shippingOptions->canUseEpsBusinessProducts()) {
+            $this->code = $this->productOptionsConfiguration->getDefaultEpsBusinessProductOption();
             return;
         }
 
         $this->code = $this->productOptionsFinder->getDefaultEUOption()['value'];
+    }
+
+
+    private function isEpsCountry($country)
+    {
+        if (!in_array($country, EpsCountries::ALL)) {
+            return false;
+        }
+
+        // NL to BE/NL shipments are not EPS shipments
+        if ($this->countryShipping->isShippingNLToEps($country)) {
+            return true;
+        }
+
+        // BE to BE shipments is not EPS, but BE to NL is
+        if ($this->countryShipping->isShippingBEToEps($country)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

@@ -40,7 +40,7 @@ use TIG\PostNL\Api\OrderRepositoryInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 use Magento\Sales\Model\Order\Shipment;
-use TIG\PostNL\Service\Shipment\GuaranteedOptions;
+use TIG\PostNL\Service\Shipment\ProductOptions as ShipmentProductOptions;
 use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 
 class MassChangeProduct extends ToolbarAbstract
@@ -56,7 +56,7 @@ class MassChangeProduct extends ToolbarAbstract
         ShipmentRepositoryInterface $shipmentRepository,
         OrderRepositoryInterface $orderRepository,
         ShipmentCollectionFactory $collectionFactory,
-        GuaranteedOptions $guaranteedOptions,
+        ShipmentProductOptions $productOptions,
         ResetPostNLShipment $resetPostNLShipment,
         ProductOptions $options
     ) {
@@ -65,7 +65,7 @@ class MassChangeProduct extends ToolbarAbstract
             $filter,
             $shipmentRepository,
             $orderRepository,
-            $guaranteedOptions,
+            $productOptions,
             $resetPostNLShipment,
             $options
         );

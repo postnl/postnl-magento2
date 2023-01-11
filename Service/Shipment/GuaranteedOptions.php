@@ -38,43 +38,48 @@ class GuaranteedOptions
 
     private $availableProductOptions = [
         '1000' => [
-            'Characteristic' => '118',
-            'Option'         => '007',
+            [
+                'Characteristic' => '118',
+                'Option'         => '007'
+            ]
         ],
         '1200' => [
-            'Characteristic' => '118',
-            'Option'         => '008',
+            [
+                'Characteristic' => '118',
+                'Option'         => '008',
+            ]
         ],
         '1400' => [
-            'Characteristic' => '118',
-            'Option'         => '013',
+            [
+                'Characteristic' => '118',
+                'Option'         => '013',
+            ]
         ],
         '1700' => [
-            'Characteristic' => '118',
-            'Option'         => '012',
+            [
+                'Characteristic' => '118',
+                'Option'         => '012',
+            ]
         ],
         'none' => [
-            'Characteristic' => '000',
-            'Option'         => '000',
+            [
+                'Characteristic' => '000',
+                'Option'         => '000',
+            ]
         ]
     ];
 
     /**
-     * @param      $time
-     * @param bool $flat
+     * @param $time
      *
      * @return array|null
      */
-    public function get($time, $flat = false)
+    public function get($time)
     {
         if (!array_key_exists($time, $this->availableProductOptions)) {
             return null;
         }
 
-        if ($flat) {
-            return $this->availableProductOptions[$time];
-        }
-
-        return ['ProductOption' => $this->availableProductOptions[$time]];
+        return $this->availableProductOptions[$time];
     }
 }
