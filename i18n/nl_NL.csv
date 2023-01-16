@@ -627,3 +627,7 @@ Percent,Percentage
 "Invalid ApiKey for given resource","Ongeldige API Key voor huidige aanvraag"
 "Validating entered address...","Bezig met ingevoerd adres valideren..."
 "Your address does not match our records, please select one of the addresses below","Het ingevoerde adres kan niet worden gevonden, selecteer hieronder een van de opties"
+"Insured Delivery","Verzekerd Verzenden"
+"Total order value","Totale bestelwaarde"
+"Insured Amount Tier","Staffel verzekerd bedrag"
+"Select the total order value or one of the tiers as insured amount.","Selecteer de Totale bestelwaarde of één van de staffels als verzekerd bedrag."
