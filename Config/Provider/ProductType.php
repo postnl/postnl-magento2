@@ -34,6 +34,7 @@ namespace TIG\PostNL\Config\Provider;
 
 use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
+use TIG\PostNL\Service\Shipping\BoxablePackets;
 
 class ProductType extends AbstractSource
 {
@@ -41,6 +42,7 @@ class ProductType extends AbstractSource
     const PRODUCT_TYPE_EXTRA_AT_HOME     = 'extra_at_home';
     const PRODUCT_TYPE_REGULAR           = 'regular';
     const PRODUCT_TYPE_LETTERBOX_PACKAGE = 'letterbox_package';
+    const PRODUCT_TYPE_BOXABLE_PACKET    = 'boxable_packets';
 
     /**
      * @var ShippingOptions
@@ -53,15 +55,23 @@ class ProductType extends AbstractSource
     private $letterboxPackage;
 
     /**
+     * @var BoxablePackets
+     */
+    private $boxablePackets;
+
+    /**
      * @param ShippingOptions  $shippingOptions
      * @param LetterboxPackage $letterboxPackage
+     * @param BoxablePackets $boxablePackets
      */
     public function __construct(
         ShippingOptions $shippingOptions,
-        LetterboxPackage $letterboxPackage
+        LetterboxPackage $letterboxPackage,
+        BoxablePackets $boxablePackets
     ) {
         $this->shippingOptions = $shippingOptions;
         $this->letterboxPackage = $letterboxPackage;
+        $this->boxablePackets = $boxablePackets;
     }
 
     /**
@@ -83,6 +93,10 @@ class ProductType extends AbstractSource
             $options[] = ['value' => self::PRODUCT_TYPE_LETTERBOX_PACKAGE, 'label' => __('Letterbox Package')];
         }
 
+        if ($this->shippingOptions->isLetterboxPackageActive()) {
+            $options[] = ['value' => self::PRODUCT_TYPE_BOXABLE_PACKET, 'label' => __('Boxable Packet')];
+        }
+
         return $options;
     }
 
@@ -100,6 +114,10 @@ class ProductType extends AbstractSource
 
         if ($this->letterboxPackage->isLetterboxPackage($items, false)) {
             $types[] = self::PRODUCT_TYPE_LETTERBOX_PACKAGE;
+        }
+
+        if ($this->boxablePackets->isBoxablePacket($items, false)) {
+            $types[] = self::PRODUCT_TYPE_BOXABLE_PACKET;
         }
 
         return $types;

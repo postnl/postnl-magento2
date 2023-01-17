@@ -64,6 +64,7 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_GP_PRODUCT_OPTION                     = 'tig_postnl/globalpack/default_gp_option';
     const XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS       = 'tig_postnl/delivery_settings/default_delivery_stated_address';
     const XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS_BE    = 'tig_postnl/delivery_settings/default_delivery_stated_address_be';
+    const XPATH_DEFAULT_PEPS_BOXABLE_PACKETS                  = 'tig_postnl/peps/default_peps_boxable_option';
 
     /**
      * Since 1.5.1 all product options are automaticly supported.
@@ -333,6 +334,14 @@ class ProductOptions extends AbstractConfigProvider
     {
         $result = array_column($this->productOptions->getProductOptions(['group' => 'buspakje_options']), 'value');
         return reset($result);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultBoxablePacketsProductOption()
+    {
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_PEPS_BOXABLE_PACKETS);
     }
 }
 /**

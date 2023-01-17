@@ -185,6 +185,10 @@ class OrderParams
             return $list;
         }
 
+        if ($type === 'Boxable Packet') {
+            return $list;
+        }
+
         foreach ($this->optionParams as $key => $value) {
             $list[$key] = $value[$type];
         }
@@ -246,6 +250,10 @@ class OrderParams
 
         if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] == 'NL') {
             $option = 'Daytime';
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'Boxable Packet' && $params['country'] !== 'NL' && in_array($params['country'], EpsCountries::ALL)) {
+            $option = 'boxable_packets';
         }
 
         if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] !== 'NL' && in_array($params['country'], EpsCountries::ALL)) {

@@ -72,6 +72,8 @@ class ProductInfo
 
     const OPTION_LETTERBOX_PACKAGE        = 'letterbox_package';
 
+    const OPTION_BOXABLE_PACKETS          = 'boxable_packets';
+
     const SHIPMENT_TYPE_PG                = 'PG';
 
     const SHIPMENT_TYPE_PGE               = 'PGE';
@@ -91,6 +93,8 @@ class ProductInfo
     const SHIPMENT_TYPE_EXTRAATHOME       = 'Extra@Home';
 
     const SHIPMENT_TYPE_LETTERBOX_PACKAGE = 'Letterbox Package';
+
+    const SHIPMENT_TYPE_BOXABLE_PACKETS   = 'Boxable Packet';
 
     /** @var ProductOptionsConfiguration */
     private $productOptionsConfiguration;
@@ -146,6 +150,14 @@ class ProductInfo
         $country = $this->getCountryCode($address);
         $type    = $type ? strtolower($type) : '';
         $option  = $option ? strtolower($option) : '';
+
+        // Check if the country is not an ESP country or BE/NL and if it is Global Pack
+        if (!in_array($country, EpsCountries::ALL)
+            && !in_array($country, ['NL']) || $type === strtolower(static::SHIPMENT_TYPE_BOXABLE_PACKETS)) {
+            $this->setProductCode($option, $country);
+
+            return $this->getInfo();
+        }
 
         // Check if the country is not an ESP country or BE/NL and if it is Global Pack
         if (!in_array($country, EpsCountries::ALL)
@@ -386,6 +398,11 @@ class ProductInfo
             case static::OPTION_LETTERBOX_PACKAGE:
                 $this->code = $this->productOptionsConfiguration->getDefaultLetterboxPackageProductOption();
                 $this->type = static::SHIPMENT_TYPE_LETTERBOX_PACKAGE;
+
+                break;
+            case static::OPTION_BOXABLE_PACKETS:
+                $this->code = $this->productOptionsConfiguration->getDefaultBoxablePacketsProductOption();
+                $this->type = static::SHIPMENT_TYPE_BOXABLE_PACKETS;
 
                 break;
             default: $this->setDefaultProductOption($country);
