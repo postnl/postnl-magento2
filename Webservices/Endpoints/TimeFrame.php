@@ -125,6 +125,7 @@ class TimeFrame extends AbstractEndpoint
         if ($parseTimeFrames) {
             $timeFrames = $this->getTimeFrames($response);
             $timeFrames = $this->timerFramesParser->handle($timeFrames);
+            //remove the null values from array
             $timeFrames = array_values(array_filter($timeFrames));
             return $timeFrames;
         }
