@@ -34,6 +34,7 @@ namespace TIG\PostNL\Service\Shipment;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Config\Provider\ReturnOptions;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Volume\Items\Calculate;
 use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
@@ -76,6 +77,9 @@ class Data
      */
     private $returnOptions;
 
+    /** @var ShippingOptions */
+    private $shippingOptions;
+
     /**
      * @param ProductOptions             $productOptions
      * @param ContentDescription         $contentDescription
@@ -84,6 +88,7 @@ class Data
      * @param Customs                    $customs
      * @param DeliveryDateFallback       $deliveryDateFallback
      * @param ReturnOptions              $returnOptions
+     * @param ShippingOptions            $shippingOptions
      */
     public function __construct(
         ProductOptions             $productOptions,
@@ -92,7 +97,8 @@ class Data
         LabelAndPackingslipOptions $labelAndPackingslipOptions,
         Customs                    $customs,
         DeliveryDateFallback       $deliveryDateFallback,
-        ReturnOptions              $returnOptions
+        ReturnOptions              $returnOptions,
+        ShippingOptions            $shippingOptions
     ) {
         $this->productOptions             = $productOptions;
         $this->contentDescription         = $contentDescription;
@@ -101,6 +107,7 @@ class Data
         $this->customsInfo                = $customs;
         $this->deliveryDateFallback       = $deliveryDateFallback;
         $this->returnOptions              = $returnOptions;
+        $this->shippingOptions            = $shippingOptions;
     }
 
     /**
@@ -236,7 +243,16 @@ class Data
     private function getAmount(ShipmentInterface $shipment)
     {
         $amounts = [];
-        $extraCoverAmount = $shipment->getExtraCoverAmount();
+
+        $extraCoverAmount = $shipment->getInsuredTier();
+
+        if (empty($extraCoverAmount)) {
+            $extraCoverAmount = $this->shippingOptions->getInsuredTier();
+        }
+
+        if ($extraCoverAmount == 'default') {
+            $extraCoverAmount = $shipment->getExtraCoverAmount();
+        }
 
         $amounts[] = [
             'AccountName'       => '',

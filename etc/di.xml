@@ -164,6 +164,10 @@
                     <item name="InstallIsSmartReturn" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallIsSmartReturn</item>
                     <item name="InstallSmartReturnEmailSent" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallSmartReturnEmailSent</item>
                 </item>
+                <item name="v1.12.7" xsi:type="array">
+                    <item name="InstallOrderInsuredTier" xsi:type="object">TIG\PostNL\Setup\V1127\Schema\InstallOrderInsuredTier</item>
+                    <item name="InstallShipmentInsuredTier" xsi:type="object">TIG\PostNL\Setup\V1127\Schema\InstallShipmentInsuredTier</item>
+                </item>
             </argument>
         </arguments>
     </type>

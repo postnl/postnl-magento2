@@ -78,6 +78,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
     const FIELD_IS_SMART_RETURN         = 'is_smart_return';
     const FIELD_SMART_RETURN_BARCODE    = 'smart_return_barcode';
     const FIELD_SMART_RETURN_EMAIL_SENT = 'smart_return_email_sent';
+    const FIELD_INSURED_TIER            = 'insured_tier';
 
     /**
      * @var string
@@ -292,11 +293,6 @@ class Shipment extends AbstractModel implements ShipmentInterface
         /** @var Item $item */
         foreach ($items as $item) {
             $itemWeight = $item->getWeight() * $item->getQty();
-
-            if ($itemWeight < 1) {
-                $weight += 1;
-                continue;
-            }
 
             $weight += $itemWeight;
         }
@@ -997,5 +993,23 @@ class Shipment extends AbstractModel implements ShipmentInterface
     public function getSmartReturnEmailSent()
     {
         return $this->getData(static::FIELD_SMART_RETURN_EMAIL_SENT);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function setInsuredTier($value)
+    {
+        return $this->setData(static::FIELD_INSURED_TIER, $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getInsuredTier()
+    {
+        return $this->getData(static::FIELD_INSURED_TIER);
     }
 }

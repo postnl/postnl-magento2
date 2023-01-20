@@ -81,8 +81,9 @@ class MassChangeProduct extends ToolbarAbstract
         $collection     = $this->uiFilter->getCollection($collection);
         $newProductCode = $this->getRequest()->getParam(self::PRODUCTCODE_PARAM_KEY);
         $timeOption     = $this->getRequest()->getParam(self::PRODUCT_TIMEOPTION);
+        $insuredTier    = $this->getRequest()->getParam(self::PRODUCT_INSUREDTIER);
 
-        $this->changeProductCode($collection, $newProductCode, $timeOption);
+        $this->changeProductCode($collection, $newProductCode, $timeOption, $insuredTier);
 
         $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setPath('sales/*/');
@@ -91,13 +92,14 @@ class MassChangeProduct extends ToolbarAbstract
 
     /**
      * @param AbstractDb $collection
-     * @param $productCode
-     * @param $timeOption
+     * @param            $productCode
+     * @param            $timeOption
+     * @param            $insuredTier
      */
-    private function changeProductCode($collection, $productCode, $timeOption)
+    private function changeProductCode($collection, $productCode, $timeOption, $insuredTier)
     {
         foreach ($collection as $order) {
-            $this->orderChangeProductCode($order, $productCode, $timeOption);
+            $this->orderChangeProductCode($order, $productCode, $timeOption, $insuredTier);
         }
 
         $this->handelErrors();
