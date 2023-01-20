@@ -36,7 +36,6 @@ use Magento\Backend\Block\Widget\Button;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\View\Helper\SecureHtmlRenderer;
 
 class InternationalAddressValidation extends Field
 {
@@ -47,14 +46,12 @@ class InternationalAddressValidation extends Field
     /**
      * @param Context                 $context
      * @param array                   $data
-     * @param SecureHtmlRenderer|null $secureRenderer
      */
     public function __construct(
         Context             $context,
-        array               $data = [],
-        ?SecureHtmlRenderer $secureRenderer = null
+        array               $data = []
     ) {
-        parent::__construct($context, $data, $secureRenderer);
+        parent::__construct($context, $data);
     }
 
     /**

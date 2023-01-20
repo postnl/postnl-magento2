@@ -49,6 +49,7 @@ abstract class ToolbarAbstract extends Action
     const PARCELCOUNT_PARAM_KEY = 'change_parcel';
     const PRODUCTCODE_PARAM_KEY = 'change_product';
     const PRODUCT_TIMEOPTION    = 'time';
+    const PRODUCT_INSUREDTIER   = 'insuredtier';
 
     /**
      * @var Filter
@@ -124,10 +125,11 @@ abstract class ToolbarAbstract extends Action
     /**
      * @param Order $order
      * @param       $productCode
-     * @param $timeOption
+     * @param       $timeOption
+     * @param       $insuredTier
      */
     //@codingStandardsIgnoreLine
-    protected function orderChangeProductCode(Order $order, $productCode, $timeOption = null)
+    protected function orderChangeProductCode(Order $order, $productCode, $timeOption = null, $insuredTier = null)
     {
         $postnlOrder = $this->getPostNLOrder($order->getId());
         if (!$postnlOrder) {
@@ -140,7 +142,7 @@ abstract class ToolbarAbstract extends Action
         $noError    = true;
 
         if ($shipments->getSize() > 0) {
-            $noError = $this->shipmentsChangeProductCode($shipments, $productCode, $acSettings);
+            $noError = $this->shipmentsChangeProductCode($shipments, $productCode, $acSettings, $insuredTier);
         }
 
         if ($noError) {
@@ -149,6 +151,7 @@ abstract class ToolbarAbstract extends Action
             $postnlOrder->setProductCode($productCode);
             $postnlOrder->setAcCharacteristic($acSettings['Characteristic']);
             $postnlOrder->setAcOption($acSettings['Option']);
+            $postnlOrder->setInsuredTier($insuredTier);
             $this->orderRepository->save($postnlOrder);
         }
     }
@@ -175,14 +178,15 @@ abstract class ToolbarAbstract extends Action
      * @param $shipments
      * @param $productCode
      * @param $acSettings
+     * @param $insuredTier
      *
      * @return bool
      */
-    private function shipmentsChangeProductCode($shipments, $productCode, $acSettings = null)
+    private function shipmentsChangeProductCode($shipments, $productCode, $acSettings = null, $insuredTier = null)
     {
         $error = false;
         foreach ($shipments as $shipment) {
-            $error = $this->shipmentChangeProductCode($shipment->getId(), $productCode, $acSettings);
+            $error = $this->shipmentChangeProductCode($shipment->getId(), $productCode, $acSettings, $insuredTier);
         }
 
         return $error;
@@ -192,10 +196,11 @@ abstract class ToolbarAbstract extends Action
      * @param $shipmentId
      * @param $productCode
      * @param $acSettings
+     * @param $insuredTier
      *
      * @return bool
      */
-    private function shipmentChangeProductCode($shipmentId, $productCode, $acSettings)
+    private function shipmentChangeProductCode($shipmentId, $productCode, $acSettings, $insuredTier)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
         if (!$shipment->getId()) {
@@ -211,6 +216,7 @@ abstract class ToolbarAbstract extends Action
         $shipment->setProductCode($productCode);
         $shipment->setAcCharacteristic($acSettings['Characteristic']);
         $shipment->setAcOption($acSettings['Option']);
+        $shipment->setInsuredTier($insuredTier);
         $this->shipmentRepository->save($shipment);
         return true;
     }

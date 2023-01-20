@@ -101,7 +101,7 @@ class QuoteToRateRequest
     private function getWeight()
     {
         $weight = array_map(function (Item $item) {
-            return $item->getWeight();
+            return $item->getRowWeight();
         }, $this->quote->getAllItems());
 
         return array_sum($weight);

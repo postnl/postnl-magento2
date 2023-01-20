@@ -404,4 +404,16 @@ interface ShipmentInterface
      * @return boolean
      */
     public function getSmartReturnEmailSent();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function setInsuredTier($value);
+
+    /**
+     * @return string
+     */
+    public function getInsuredTier();
 }

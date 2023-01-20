@@ -225,6 +225,7 @@
             <include path="TIG_PostNL::system/postnlsettings/trackandtrace.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/deliverystatedaddress.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/letterbox_package.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/insureddelivery.xml"/>
 
         </group>
 

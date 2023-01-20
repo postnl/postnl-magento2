@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Timeframe\Filters\Options;
 
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Service\Timeframe\Filters\OptionsFilterInterface;
 use TIG\PostNL\Config\Provider\ShippingOptions;
@@ -43,6 +44,11 @@ class Today implements OptionsFilterInterface
 
     /** @var Data */
     private $postNLhelper;
+
+    /**
+     * @var Webshop
+     */
+    private $webshopProvider;
 
     /** @var ShippingOptions */
     private $shippingOptions;
@@ -57,17 +63,20 @@ class Today implements OptionsFilterInterface
 
     /**
      * @param Data              $postNLhelper
+     * @param Webshop           $webshopProvider
      * @param TimezoneInterface $currentDate
      * @param ShippingOptions   $shippingOptions
      * @param IsPastCutOff      $isPastCutOff
      */
     public function __construct(
         Data $postNLhelper,
+        Webshop $webshopProvider,
         TimezoneInterface $currentDate,
         ShippingOptions $shippingOptions,
         IsPastCutOff $isPastCutOff
     ) {
         $this->postNLhelper    = $postNLhelper;
+        $this->webshopProvider = $webshopProvider;
         $this->shippingOptions = $shippingOptions;
         $this->currentDate     = $currentDate;
         $this->isPastCutOff    = $isPastCutOff;
@@ -98,7 +107,21 @@ class Today implements OptionsFilterInterface
 
         $checkDay = 'today';
         if ($this->isPastCutOff->calculate()) {
-            $checkDay = 'tomorrow';
+            $shipmentDays = explode(',', $this->webshopProvider->getShipmentDays());
+
+            $daysToCheck = 1;
+            while ($daysToCheck < 8) {
+                $nextDate = strtotime($checkDay . ' +' . $daysToCheck . ' day');
+                $dateToCheck = $this->currentDate->date($nextDate)->format('d-m-Y');
+
+                $weeknumber = $this->postNLhelper->getDayOrWeekNumber($dateToCheck);
+                if (in_array($weeknumber, $shipmentDays)) {
+                    $checkDay = $nextDate;
+                    break;
+                }
+
+                $daysToCheck++;
+            }
         }
 
         $todayDate  = $this->currentDate->date('today', null, true, false)->format('Y-m-d');

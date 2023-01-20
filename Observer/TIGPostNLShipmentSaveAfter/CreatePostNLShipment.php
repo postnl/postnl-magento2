@@ -177,6 +177,7 @@ class CreatePostNLShipment implements ObserverInterface
             'ac_characteristic' => $this->getAcCharacteristic(),
             'ac_option'         => $this->getAcOption(),
             'parcel_count'      => $colliAmount,
+            'insured_tier'      => $this->getInsuredTier()
         ];
     }
 
@@ -220,6 +221,16 @@ class CreatePostNLShipment implements ObserverInterface
         $order = $this->getOrder();
 
         return $order->getAcOption();
+    }
+
+    /**
+     * @return null|string
+     */
+    private function getInsuredTier()
+    {
+        $order = $this->getOrder();
+
+        return $order->getInsuredTier();
     }
 
     /**

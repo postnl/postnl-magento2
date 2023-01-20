@@ -68,7 +68,10 @@ define([
             isGuaranteedActive : ko.observable(DataProvider.getGuaranteedIsActive()),
             showTimeOptions : ko.observable(false),
             timeOptions : ko.observable(DataProvider.getPackagesTimeOptions()),
-            timeOptionSelected : ko.observable('1000')
+            timeOptionSelected : ko.observable('1000'),
+            showInsuredTiers: ko.observable(false),
+            insuredTiers: ko.observable(DataProvider.getInsuredTierOptions()),
+            defaultInsuredTier: ko.observable(DataProvider.getDefaultInsuredTier())
         },
 
         /**
@@ -79,23 +82,28 @@ define([
         initObservable : function () {
             this._super().observe([
                 'currentSelected',
-                'showTimeOptions'
+                'showTimeOptions',
+                'showInsuredTiers'
             ]);
 
             this.currentSelected.subscribe(function (value) {
                 if (value !== 'change_product') {
                     self.showTimeOptions(false);
+                    self.showInsuredTiers(false);
                     return;
                 }
 
                 self.toggleTimeOptions(self.defaultOption());
+                self.toggleInsuredTiers(self.defaultOption());
             });
 
             this.toggleTimeOptions(DataProvider.getDefaultOption());
+            this.toggleInsuredTiers(DataProvider.getDefaultOption());
 
             var self = this;
             this.defaultOption.subscribe(function (value) {
                 self.toggleTimeOptions(value);
+                self.toggleInsuredTiers(value);
             });
 
             return this;
@@ -120,6 +128,15 @@ define([
             }
 
             return this.showTimeOptions(false);
+        },
+
+        toggleInsuredTiers: function (value) {
+            if (DataProvider.inExtraCover(value)) {
+                this.showInsuredTiers(true);
+                return;
+            }
+
+            return this.showInsuredTiers(false);
         },
 
         /**
@@ -161,6 +178,14 @@ define([
                     data.time = $('.time_option_sticky')[0].value;
                 } else {
                     data.time = $('.time_option_toolbar')[0].value;
+                }
+            }
+
+            if (this.showInsuredTiers()) {
+                if (isSticky) {
+                    data.insuredtier = $('.insured_tier_sticky')[0].value;
+                } else {
+                    data.insuredtier = $('.insured_tier_toolbar')[0].value;
                 }
             }
 
