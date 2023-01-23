@@ -39,6 +39,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Config\Provider\LetterBoxPackageConfiguration;
+use TIG\PostNL\Config\Provider\PepsConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
 // @codingStandardsIgnoreFile
@@ -52,26 +53,31 @@ class LetterboxPackage
     /**
      * @var ScopeConfigInterface
      */
-    private $scopeConfig;
+    protected $scopeConfig;
 
     /**
      * @var LetterBoxPackageConfiguration
      */
-    private $letterBoxPackageConfiguration;
+    protected $letterBoxPackageConfiguration;
+
+    /**
+     * @var PepsConfiguration
+     */
+    protected $pepsConfiguration;
 
     /**
      * @var OrderRepositoryInterface
      */
-    private $orderRepository;
+    protected $orderRepository;
 
     /**
      * @var CollectionFactory
      */
-    private $productCollectionFactory;
+    protected $productCollectionFactory;
     /**
      * @var ShippingOptions
      */
-    private $shippingOptions;
+    protected $shippingOptions;
 
     /**
      * LetterboxPackage constructor.
@@ -81,19 +87,22 @@ class LetterboxPackage
      * @param OrderRepositoryInterface      $orderRepository
      * @param CollectionFactory             $productCollectionFactory
      * @param ShippingOptions               $shippingOptions
+     * @param PepsConfiguration             $pepsConfiguration
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         LetterBoxPackageConfiguration $letterBoxPackageConfiguration,
         OrderRepositoryInterface $orderRepository,
         CollectionFactory $productCollectionFactory,
-        ShippingOptions $shippingOptions
+        ShippingOptions $shippingOptions,
+        PepsConfiguration $pepsConfiguration
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->letterBoxPackageConfiguration = $letterBoxPackageConfiguration;
         $this->orderRepository = $orderRepository;
         $this->productCollectionFactory = $productCollectionFactory;
         $this->shippingOptions = $shippingOptions;
+        $this->pepsConfiguration = $pepsConfiguration;
     }
 
     /**

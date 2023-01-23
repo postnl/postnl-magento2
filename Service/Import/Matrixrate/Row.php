@@ -42,6 +42,7 @@ class Row
         'pakjegemak',
         'extra@home',
         'letterbox_package',
+        'boxable_packets',
     ];
 
     /**

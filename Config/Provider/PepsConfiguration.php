@@ -36,6 +36,8 @@ class PepsConfiguration extends AbstractConfigProvider
     const XPATH_BARCODE_TYPE  = 'tig_postnl/peps/barcode_type';
     const XPATH_BARCODE_RANGE = 'tig_postnl/peps/barcode_range';
 
+    const XPATH_CALCULATION_MODE = 'tig_postnl/peps/peps_boxable_packets_calculation_mode';
+
     /**
      * @param null $storeId
      *
@@ -54,5 +56,15 @@ class PepsConfiguration extends AbstractConfigProvider
     public function getBarcodeRange($storeId = null)
     {
         return $this->getConfigFromXpath(static::XPATH_BARCODE_RANGE, $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
+    public function getBoxablePacketCalculationMode($storeId = null)
+    {
+        return $this->getConfigFromXpath(static::XPATH_CALCULATION_MODE, $storeId);
     }
 }

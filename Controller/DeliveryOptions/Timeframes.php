@@ -42,6 +42,7 @@ use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Service\Quote\ShippingDuration;
 use TIG\PostNL\Service\Shipment\EpsCountries;
+use TIG\PostNL\Service\Shipping\BoxablePackets;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
 use TIG\PostNL\Service\Validation\CountryShipping;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
@@ -76,6 +77,11 @@ class Timeframes extends AbstractDeliveryOptions
     private $letterboxPackage;
 
     /**
+     * @var BoxablePackets
+     */
+    private $boxablePackets;
+
+    /**
      * @var CanaryIslandToIC
      */
     private $canaryConverter;
@@ -95,6 +101,7 @@ class Timeframes extends AbstractDeliveryOptions
      * @param IsDeliverDaysActive $isDeliverDaysActive
      * @param ShippingDuration    $shippingDuration
      * @param LetterboxPackage    $letterboxPackage
+     * @param BoxablePackets      $boxablePackets,
      * @param CanaryIslandToIC    $canaryConverter
      * @param CountryShipping     $countryShipping
      */
@@ -110,6 +117,7 @@ class Timeframes extends AbstractDeliveryOptions
         IsDeliverDaysActive $isDeliverDaysActive,
         ShippingDuration $shippingDuration,
         LetterboxPackage $letterboxPackage,
+        BoxablePackets $boxablePackets,
         CanaryIslandToIC $canaryConverter,
         CountryShipping $countryShipping
     ) {
@@ -118,6 +126,7 @@ class Timeframes extends AbstractDeliveryOptions
         $this->calculator                   = $calculator;
         $this->isDeliveryDaysActive         = $isDeliverDaysActive;
         $this->letterboxPackage             = $letterboxPackage;
+        $this->boxablePackets               = $boxablePackets;
         $this->canaryConverter              = $canaryConverter;
         $this->countryShipping              = $countryShipping;
 
@@ -156,6 +165,12 @@ class Timeframes extends AbstractDeliveryOptions
 
         if ($this->letterboxPackage->isLetterboxPackage($cartItems, false) && $params['address']['country'] == 'NL') {
             return $this->jsonResponse($this->getLetterboxPackageResponse($price['price']));
+        }
+
+        if ($this->boxablePackets->isBoxablePacket($cartItems, false) &&
+            in_array($params['address']['country'], EpsCountries::ALL)
+        ) {
+            return $this->jsonResponse($this->getBoxablePacketResponse($price['price']));
         }
 
         if (in_array($params['address']['country'], EpsCountries::ALL) && $params['address']['country'] === 'ES' && $this->canaryConverter->isCanaryIsland($params['address'])) {
@@ -303,6 +318,16 @@ class Timeframes extends AbstractDeliveryOptions
             'letterbox_package' => true,
             'timeframes'        => [[['letterbox_package' => __('Your order is a letterbox package and will be '
             . 'delivered from Tuesday to Saturday.')]]]
+        ];
+    }
+
+    private function getBoxablePacketResponse($price)
+    {
+        return [
+            'price'             => $price,
+            'boxable_packets'   => true,
+            'timeframes'        => [[['boxable_packets' => __('Your order is a boxable packet and will be '
+                . 'delivered from Tuesday to Saturday.')]]]
         ];
     }
 

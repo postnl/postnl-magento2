@@ -61,6 +61,9 @@ class ParcelType extends Column
                         case 'letterbox_package':
                             $item[$fieldName] = __('Letterbox Package');
                             break;
+                        case 'boxable_packets':
+                            $item[$fieldName] = __('Boxable Packet');
+                            break;
                         case '*':
                             $item[$fieldName] = __('All parcel types');
                             break;

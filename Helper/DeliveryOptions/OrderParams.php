@@ -185,6 +185,10 @@ class OrderParams
             return $list;
         }
 
+        if ($type === 'Boxable Packet') {
+            return $list;
+        }
+
         foreach ($this->optionParams as $key => $value) {
             $list[$key] = $value[$type];
         }
@@ -248,6 +252,10 @@ class OrderParams
             $option = 'Daytime';
         }
 
+        if (!isset($params['option']) && $params['type'] === 'Boxable Packet' && $params['country'] !== 'NL' && in_array($params['country'], EpsCountries::ALL)) {
+            $option = 'boxable_packets';
+        }
+
         if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] !== 'NL' && in_array($params['country'], EpsCountries::ALL)) {
             $option = 'EPS';
         }
@@ -274,14 +282,19 @@ class OrderParams
      */
     private function getAcInformation($params)
     {
-        $acOptions = $this->productOptions->getByType($params['type'], true);
+        $type = strtolower($params['type']);
+
+        if (isset($params['product_code']) && strlen($params['product_code']) > 4) {
+            $type .= '-' . substr($params['product_code'], 0, 1);
+        }
+
+        $acOptions = $this->productOptions->getByType($type);
         if (!$acOptions) {
             return [];
         }
 
         return [
-            'ac_characteristic' => $acOptions['Characteristic'],
-            'ac_option'         => $acOptions['Option']
+            'ac_information' => $acOptions
         ];
     }
 

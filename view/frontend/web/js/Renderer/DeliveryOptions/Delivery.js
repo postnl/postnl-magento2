@@ -120,7 +120,7 @@ define([
             State.currentSelectedShipmentType('delivery');
 
             var fee = null;
-            if (!value.fallback && !value.letterbox_package && !value.eps && !value.gp) {
+            if (!value.fallback && !value.letterbox_package && !value.boxable_packets && !value.eps && !value.gp) {
                 if (value.hasFee !== undefined && value.hasFee()) {
                     fee = value.getFee();
                 }
@@ -135,6 +135,9 @@ define([
             }
             if (typeof value.letterbox_package !== 'undefined') {
                 type = 'Letterbox Package';
+            }
+            if (typeof value.boxable_packets !== 'undefined') {
+                type = 'Boxable Packet';
             }
 
             if (typeof value.eps !== 'undefined') {
@@ -234,6 +237,15 @@ define([
                 if (data.letterbox_package === true) {
                     data  = ko.utils.arrayMap(data.timeframes, function (letterbox_package) {
                         return letterbox_package;
+                    });
+                    this.deliverydays(data);
+                    this.selectFirstDeliveryOption();
+                    return;
+                }
+
+                if (data.boxable_packets === true) {
+                    data  = ko.utils.arrayMap(data.timeframes, function (boxable_packets) {
+                        return boxable_packets;
                     });
                     this.deliverydays(data);
                     this.selectFirstDeliveryOption();
