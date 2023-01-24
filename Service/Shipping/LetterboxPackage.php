@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Shipping;
 
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Checkout\Controller\Cart\Add;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\ShipmentItemInterface;
@@ -41,6 +42,7 @@ use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Config\Provider\LetterBoxPackageConfiguration;
 use TIG\PostNL\Config\Provider\PepsConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 
 // @codingStandardsIgnoreFile
 class LetterboxPackage
@@ -66,6 +68,11 @@ class LetterboxPackage
     protected $pepsConfiguration;
 
     /**
+     * @var AddressConfiguration
+     */
+    protected $addressConfiguration;
+
+    /**
      * @var OrderRepositoryInterface
      */
     protected $orderRepository;
@@ -88,6 +95,7 @@ class LetterboxPackage
      * @param CollectionFactory             $productCollectionFactory
      * @param ShippingOptions               $shippingOptions
      * @param PepsConfiguration             $pepsConfiguration
+     * @param AddressConfiguration          $addressConfiguration
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -95,7 +103,8 @@ class LetterboxPackage
         OrderRepositoryInterface $orderRepository,
         CollectionFactory $productCollectionFactory,
         ShippingOptions $shippingOptions,
-        PepsConfiguration $pepsConfiguration
+        PepsConfiguration $pepsConfiguration,
+        AddressConfiguration $addressConfiguration
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->letterBoxPackageConfiguration = $letterBoxPackageConfiguration;
@@ -103,6 +112,7 @@ class LetterboxPackage
         $this->productCollectionFactory = $productCollectionFactory;
         $this->shippingOptions = $shippingOptions;
         $this->pepsConfiguration = $pepsConfiguration;
+        $this->addressConfiguration = $addressConfiguration;
     }
 
     /**

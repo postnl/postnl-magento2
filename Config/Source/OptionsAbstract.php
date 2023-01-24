@@ -827,7 +827,7 @@ abstract class OptionsAbstract
 		'cargo_options'               => 'Cargo',
 		'eps_package_options'         => 'Package',
 		'priority_options'            => 'Priority (EPS / Globalpack)',
-        'boxable_packets'             => 'Boxable Packets (EPS)',
+        'boxable_packets'             => 'Boxable Packets (Worldwide)',
         'only_stated_address_options' => 'Delivery to stated address only'
     ];
 
@@ -843,6 +843,8 @@ abstract class OptionsAbstract
         'GP'                => '',
         'Letterbox Package' => '',
         'letterbox_package' => '',
+        'Boxable Packets'   => '',
+        'boxable_packets'   => '',
     ];
 
     /**

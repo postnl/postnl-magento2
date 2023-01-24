@@ -163,13 +163,13 @@ class Timeframes extends AbstractDeliveryOptions
         $quote = $this->checkoutSession->getQuote();
         $cartItems = $quote->getAllItems();
 
+        //Letterbox NL
         if ($this->letterboxPackage->isLetterboxPackage($cartItems, false) && $params['address']['country'] == 'NL') {
             return $this->jsonResponse($this->getLetterboxPackageResponse($price['price']));
         }
 
-        if ($this->boxablePackets->isBoxablePacket($cartItems, false) &&
-            in_array($params['address']['country'], EpsCountries::ALL)
-        ) {
+        //Boxable Packet = Letterbox Worldwide
+        if ($this->boxablePackets->isBoxablePacket($cartItems, false) && $params['address']['country'] != 'NL') {
             return $this->jsonResponse($this->getBoxablePacketResponse($price['price']));
         }
 

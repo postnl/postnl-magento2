@@ -50,6 +50,12 @@ class BoxablePackets extends LetterboxPackage {
             return false;
         }
 
+        //only when send from NL
+        $senderAddressCountry = $this->addressConfiguration->getCountry();
+        if ($senderAddressCountry != 'NL') {
+            return false;
+        }
+
         $this->totalVolume                 = 0;
         $this->totalWeight                 = 0;
         $this->hasMaximumQty               = true;
