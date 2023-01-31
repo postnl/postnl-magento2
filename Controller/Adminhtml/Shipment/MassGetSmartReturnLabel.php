@@ -34,8 +34,6 @@ namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 use Magento\Ui\Component\MassAction\Filter;
-use TIG\PostNL\Api\Data\ShipmentInterface;
-use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
 use TIG\PostNL\Controller\Adminhtml\Order\Email;
