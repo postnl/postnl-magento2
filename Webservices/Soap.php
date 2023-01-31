@@ -96,7 +96,7 @@ class Soap
         $this->log = $log;
         $this->accountConfiguration = $accountConfiguration;
     }
-    
+
     /**
      * @param \TIG\PostNL\Webservices\AbstractEndpoint $endpoint
      * @param                                          $method
@@ -120,7 +120,7 @@ class Soap
             $this->log->request($soapClient);
         }
     }
-    
+
     /**
      * @return \Zend\Soap\Client
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -132,7 +132,7 @@ class Soap
 
         return $this->soapClient;
     }
-    
+
     /**
      * @return array
      * @throws \Exception
@@ -155,7 +155,7 @@ class Soap
             'stream_context' => $stream_context,
         ];
     }
-    
+
     /**
      * @throws \Magento\Framework\Webapi\Exception
      */
@@ -211,10 +211,14 @@ class Soap
     }
 
     /**
-     * @param null|int $storeId
+     * @param null|int $scopeId
      */
-    public function updateApiKey($storeId = null)
+    public function updateApiKey($scopeId = null, $websiteScope = false)
     {
-        $this->apiKey = $this->accountConfiguration->getApiKey($storeId);
+        if ($websiteScope) {
+            $this->apiKey = $this->accountConfiguration->getApiKeyForWebsiteScope($scopeId);
+        } else {
+            $this->apiKey = $this->accountConfiguration->getApiKey($scopeId);
+        }
     }
 }

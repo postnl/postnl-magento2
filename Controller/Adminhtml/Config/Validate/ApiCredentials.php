@@ -125,12 +125,15 @@ class ApiCredentials extends Action
         ];
 
         $storeId = $this->getRequest()->getParam('storeId');
+        $websiteId = $this->getRequest()->getParam('websiteId');
 
-        if ($storeId === '') {
-            $storeId = $this->storeManager->getStore()->getId();
+        $scopeId = $storeId === '' ? $websiteId : $storeId;
+
+        if ($scopeId === '') {
+            $scopeId = $this->storeManager->getStore()->getId();
         }
 
-        $this->soap->updateApiKey($storeId);
+        $this->soap->updateApiKey($scopeId, ($websiteId !== ''));
         $customerData = $this->getCustomerData($this->getRequest());
         $validatedApiCredentials = $this->validateApiCredentials($customerData);
 
