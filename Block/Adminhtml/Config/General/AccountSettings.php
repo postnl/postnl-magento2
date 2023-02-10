@@ -38,7 +38,7 @@ use TIG\PostNL\Config\Provider\AccountConfiguration;
 class AccountSettings extends Template implements RendererInterface
 {
     const EXT_URL_DELIVERYOPTIONS = 'https://www.postnl.nl/zakelijk/e-commerce/flexibele-bezorgopties';
-    const EXT_URL_TESTINFORMATION = 'https://postnl.github.io/magento2/#algemene-configuratie-en-accountinformatie';
+    const EXT_URL_TESTINFORMATION = 'https://postnl.github.io/magento2/?lang=nl#2';
 
     // @codingStandardsIgnoreLine
     protected $_template = 'TIG_PostNL::config/general/accountSettings.phtml';
