@@ -44,7 +44,7 @@
 
         <field id="letterbox_package_active" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Activate Letterbox Package</label>
-            <comment><![CDATA[Letterbox Package is used to ship small products. Please consult your PostNL account manager for more information about activating this <a href="https://postnl.github.io/magento2/#brievenbuspakje" target="_blank" title="letterbox package">service</a> for your account.]]></comment>
+            <comment><![CDATA[Letterbox Package is used to ship small products. Please consult your PostNL account manager for more information about activating this <a href="https://postnl.github.io/magento2/?lang=nl#3_2_13" target="_blank" title="letterbox package">service</a> for your account.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/letterbox_package/letterbox_package_active</config_path>
             <depends>

@@ -40,7 +40,7 @@
 
         <group id="logging" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Logging</label>
-            <comment><![CDATA[Log files will be created within the var/log/PostNL/ directory. You can find more information about the different kind of log files <a href="https://postnl.github.io/magento2/#logging" target="_blank" title="PostNL log files">here</a>.]]></comment>
+            <comment><![CDATA[Log files will be created within the var/log/PostNL/ directory. You can find more information about the different kind of log files <a href="https://postnl.github.io/magento2/?lang=nl#6_1" target="_blank" title="PostNL log files">here</a>.]]></comment>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
             <field id="types" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                 <label>Types of logging</label>

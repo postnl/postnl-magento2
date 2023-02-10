@@ -73,7 +73,7 @@
 
             <field id="shipment_days" translate="label comment" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Shipment days</label>
-                <comment><![CDATA[Select on which days of the week orders are shipped. You can read more about shipping and delivery days <a href="https://postnl.github.io/magento2/#bezorgdagen" target="_blank" title="PostNL shipping days">here</a>.]]></comment>
+                <comment><![CDATA[Select on which days of the week orders are shipped. You can read more about shipping and delivery days <a href="https://postnl.github.io/magento2/?lang=nl#3_2_3" target="_blank" title="PostNL shipping days">here</a>.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Settings\DaysOfWeek</source_model>
                 <config_path>tig_postnl/postnl_settings/shipment_days</config_path>
             </field>
@@ -86,7 +86,7 @@
             <label>Delivery</label>
             <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
-            <comment><![CDATA[If you are unsure which options to select, ask your PostNL accountmanager. Read more about <a href="https://postnl.github.io/magento2/#bezorg-instellingen" target="_blank" title="product options">PostNL product options</a>.]]></comment>
+            <comment><![CDATA[If you are unsure which options to select, ask your PostNL accountmanager. Read more about <a href="https://postnl.github.io/magento2/?lang=nl#3_2" target="_blank" title="product options">PostNL product options</a>.]]></comment>
 
 
             <field id="shippingoptions_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
