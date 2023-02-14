@@ -264,12 +264,12 @@ class Calculator
      *
      * @return mixed
      */
-    public function getPriceWithTax(RateRequest $request, $parcelType = null)
+    public function getPriceWithTax(RateRequest $request, $parcelType = null, $shippingAddress = null)
     {
         $price = $this->price($request, $parcelType);
 
         if (isset($price['price'])) {
-            $price['price'] = $this->taxHelper->getShippingPrice($price['price'], true);
+            $price['price'] = $this->taxHelper->getShippingPrice($price['price'], null, $shippingAddress);
         }
 
         return $price;
