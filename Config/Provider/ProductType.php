@@ -90,7 +90,7 @@ class ProductType extends AbstractSource
         }
 
         if ($this->shippingOptions->isLetterboxPackageActive() || $this->shippingOptions->isBoxablePacketsActive() ) {
-            $options[] = ['value' => self::PRODUCT_TYPE_LETTERBOX_PACKAGE, 'label' => __('Letterbox Package')];
+            $options[] = ['value' => self::PRODUCT_TYPE_LETTERBOX_PACKAGE, 'label' => __('Letterbox Package \ Boxable Packets')];
         }
 
         return $options;
