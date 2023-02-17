@@ -186,7 +186,8 @@ define([
             var addressAsString = JSON.stringify({
                 'postcode': address.postcode,
                 'street': address.street[0].replace(/\D/g,''),
-                'housenumber': address.housenumber
+                'housenumber': address.housenumber,
+                'country': address.country
             });
             if (this.deliverydays() !== undefined && this.currentDeliveryAddress() === addressAsString) {
                 return;
