@@ -89,12 +89,8 @@ class ProductType extends AbstractSource
             $options[] = ['value' => self::PRODUCT_TYPE_EXTRA_AT_HOME, 'label' => __('Extra@Home')];
         }
 
-        if ($this->shippingOptions->isLetterboxPackageActive()) {
-            $options[] = ['value' => self::PRODUCT_TYPE_LETTERBOX_PACKAGE, 'label' => __('Letterbox Package')];
-        }
-
-        if ($this->shippingOptions->isLetterboxPackageActive()) {
-            $options[] = ['value' => self::PRODUCT_TYPE_BOXABLE_PACKET, 'label' => __('Boxable Packet')];
+        if ($this->shippingOptions->isLetterboxPackageActive() || $this->shippingOptions->isBoxablePacketsActive() ) {
+            $options[] = ['value' => self::PRODUCT_TYPE_LETTERBOX_PACKAGE, 'label' => __('Letterbox Package \ Boxable Packets')];
         }
 
         return $options;
