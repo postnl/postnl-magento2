@@ -44,7 +44,8 @@ var config = {
                 'TIG_PostNL/js/action/set-billing-address-mixin': true
             },
             'Magento_Checkout/js/action/place-order': {
-                'TIG_PostNL/js/action/set-billing-address-mixin': true
+                'TIG_PostNL/js/action/set-billing-address-mixin': true,
+                'TIG_PostNL/js/action/reset-session-storage-mixin': true
             },
             'Magento_Checkout/js/action/create-billing-address': {
                 'TIG_PostNL/js/action/set-billing-address-mixin': true

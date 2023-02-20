@@ -248,6 +248,10 @@ class OrderParams
             $option = $params['type'];
         }
 
+        if(!array_key_exists('country', $params)) {
+            return $option;
+        }
+
         if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] == 'NL') {
             $option = 'Daytime';
         }
