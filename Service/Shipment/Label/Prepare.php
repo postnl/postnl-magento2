@@ -36,6 +36,7 @@ use TIG\PostNL\Exception as PostNLException;
 use TIG\PostNL\Service\Shipment\Label\Type\DomesticFactory;
 use TIG\PostNL\Service\Shipment\Label\Type\EPSFactory;
 use TIG\PostNL\Service\Shipment\Label\Type\GlobalPackFactory;
+use TIG\PostNL\Service\Shipment\Label\Type\BoxablePacketsFactory;
 use TIG\PostNL\Service\Shipment\Type;
 use TIG\PostNL\Service\Shipment\Label\Type\TypeInterface;
 use TIG\PostNL\Service\Shipment\Label\Type\TypeInterfaceFactory;
@@ -73,10 +74,16 @@ class Prepare
     private $globalPackFactory;
 
     /**
+     * @var BoxablePacketsFactory
+     */
+    private $boxablePacketsFactory;
+
+    /**
      * @param Type  $typeConverter
      * @param DomesticFactory $domesticFactory
      * @param EPSFactory $epsFactory
      * @param GlobalPackFactory $globalPackFactory
+     * @param BoxablePacketsFactory $boxablePacketsFactory
      * @param array $types
      *
      * @throws PostNLException
@@ -86,12 +93,14 @@ class Prepare
         DomesticFactory $domesticFactory,
         EPSFactory $epsFactory,
         GlobalPackFactory $globalPackFactory,
+        BoxablePacketsFactory $boxablePacketsFactory,
         $types = []
     ) {
         $this->typeConverter = $typeConverter;
         $this->domesticFactory = $domesticFactory;
         $this->epsFactory = $epsFactory;
         $this->globalPackFactory = $globalPackFactory;
+        $this->boxablePacketsFactory = $boxablePacketsFactory;
         $this->types = $types;
     }
 

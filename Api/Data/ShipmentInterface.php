@@ -325,6 +325,11 @@ interface ShipmentInterface
     /**
      * @return bool
      */
+    public function isBoxablePackets();
+
+    /**
+     * @return bool
+     */
     public function isExtraAtHome();
 
     /**

@@ -779,6 +779,14 @@ class Shipment extends AbstractModel implements ShipmentInterface
     /**
      * @return bool
      */
+    public function isBoxablePackets()
+    {
+        return $this->getShipmentType() == 'boxable_packets';
+    }
+
+    /**
+     * @return bool
+     */
     public function isExtraAtHome()
     {
         $productCodeOptions = $this->getProductCodeOptions();

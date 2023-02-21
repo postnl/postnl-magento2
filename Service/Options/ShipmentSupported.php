@@ -121,6 +121,10 @@ class ShipmentSupported
             $options[] = $this->productOptions->getGlobalPackOptions();
         }
 
+        if ($country != 'NL') {
+            $options[] = $this->productOptions->getBoxableOptions();
+        }
+
         $options = call_user_func_array("array_merge", $options);
 
         return $options;

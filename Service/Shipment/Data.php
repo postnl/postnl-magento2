@@ -212,6 +212,10 @@ class Data
             $shipmentData['Customs'] = $this->customsInfo->get($shipment);
         }
 
+        if ($shipment->isBoxablePackets()) {
+            $shipmentData['Customs'] = $this->customsInfo->get($shipment);
+        }
+
         if ($shipment->isExtraCover() && $currentShipmentNumber <= 1) {
             $shipmentData['Amounts'] = $this->getAmount($shipment);
         }

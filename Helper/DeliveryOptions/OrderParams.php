@@ -256,7 +256,7 @@ class OrderParams
             $option = 'Daytime';
         }
 
-        if (!isset($params['option']) && $params['type'] === 'Boxable Packet' && $params['country'] !== 'NL' && in_array($params['country'], EpsCountries::ALL)) {
+        if (!isset($params['option']) && $params['type'] === 'Boxable Packet' && $params['country'] !== 'NL') {
             $option = 'boxable_packets';
         }
 

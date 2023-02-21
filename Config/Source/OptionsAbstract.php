@@ -779,8 +779,8 @@ abstract class OptionsAbstract
             'countryLimitation'    => false,
             'group'                => 'boxable_packets',
         ],
-        '6472' => [
-            'value'                => '6472',
+        '6972' => [
+            'value'                => '6972',
             'label'                => 'Boxable Packet Track & Trace',
             'isExtraCover'         => false,
             'isSunday'             => false,
