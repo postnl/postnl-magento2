@@ -326,8 +326,7 @@ class Timeframes extends AbstractDeliveryOptions
         return [
             'price'             => $price,
             'boxable_packets'   => true,
-            'timeframes'        => [[['boxable_packets' => __('Your order is a boxable packet and will be '
-                . 'delivered from Tuesday to Saturday.')]]]
+            'timeframes'        => [[['boxable_packets' => __('Your order is a boxable packet.')]]]
         ];
     }
 

@@ -72,7 +72,7 @@
 
         <field id="peps_boxable_packets_active" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Use Boxable Packets</label>
-            <comment><![CDATA[Boxable Packets are used to ship small products. Please consult your PostNL account manager for more information about activating this <a href="https://docs.tig.nl/display/SDPOSTNL/PostNL+Magento+2+extensie+gebruikershandleiding#PostNLMagento2extensiegebruikershandleiding-3.1.5Brievenbuspakje" target="_blank" title="letterbox package">service</a> for your account.]]></comment>
+            <comment><![CDATA[Boxable Packets are used to ship small products. Please consult your PostNL account manager for more information about activating this service for your account.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/peps/peps_boxable_packets_active</config_path>
             <depends>

@@ -235,7 +235,7 @@ abstract class GenerateAbstract
          * POSTNLM2-1391 : Product code 2285 is an exception as that is the Smart Return product code.
          */
 
-        if ($labelItem->ProductCodeDelivery != $shipmentProductCode) {
+        if ($labelItem->ProductCodeDelivery != $shipmentProductCode && $labelItem->ProductCodeDelivery != '2285') {
             $shipment->setProductCode($labelItem->ProductCodeDelivery);
         }
 

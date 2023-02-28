@@ -93,27 +93,4 @@ class BoxablePackets extends LetterboxPackage {
 
         return false;
     }
-
-    /**
-     * @param \TIG\PostNL\Model\Order $order
-     *
-     * @return bool
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function isPossibleBoxablePacket($order)
-    {
-        $magentoOrder = $this->orderRepository->get($order->getQuoteId());
-        $products = $magentoOrder->getAllItems();
-        $shippingAddress = $order->getShippingAddress();
-
-        if ($order->getProductCode() == '3085' &&
-            $this->isBoxablePacket($products, true) &&
-            in_array($shippingAddress->getCountryId(), EpsCountries::ALL)
-        ) {
-            return true;
-        }
-
-        return false;
-    }
 }
