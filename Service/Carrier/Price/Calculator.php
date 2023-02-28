@@ -171,7 +171,11 @@ class Calculator
             case 'free':
                 return $this->priceResponse('0.00', '0.00');
             case RateType::CARRIER_RATE_TYPE_MATRIX:
-                $ratePrice = $this->matrixratePrice->getRate($request, $parcelType, $this->store);
+                $includeVat = $this->taxHelper->getShippingPriceDisplayType();
+                $includeVat = ($includeVat == 2 || $includeVat == 3);
+
+                $ratePrice = $this->matrixratePrice->getRate($request, $parcelType, $this->store, $includeVat);
+
                 if ($ratePrice !== false) {
                     return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
                 }
@@ -266,9 +270,12 @@ class Calculator
      */
     public function getPriceWithTax(RateRequest $request, $parcelType = null, $shippingAddress = null)
     {
+        $includeVat = $this->taxHelper->getShippingPriceDisplayType();
+        $includeVat = ($includeVat == 2 || $includeVat == 3);
+
         $price = $this->price($request, $parcelType);
 
-        if (isset($price['price'])) {
+        if ($includeVat && isset($price['price'])) {
             $price['price'] = $this->taxHelper->getShippingPrice($price['price'], null, $shippingAddress);
         }
 

@@ -145,15 +145,7 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getFallBackResponse(1));
         }
 
-        $quote = $this->checkoutSession->getQuote();
-        $shippingAddress = null;
-        if ($quote) {
-            $shippingAddress = $quote->getShippingAddress();
-            $shippingAddress->setCountryId($params['address']['country']);
-            $shippingAddress->setPostcode($params['address']['postcode']);
-        }
-
-        $price = $this->calculator->getPriceWithTax($this->getRateRequest(), null, $shippingAddress);
+        $price = $this->calculator->getPriceWithTax($this->getRateRequest());
 
         if (!isset($price['price'])) {
             return false;
