@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
+use Magento\Framework\Json\EncoderInterface;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
@@ -67,6 +68,7 @@ class Locations extends AbstractDeliveryOptions
      */
     public function __construct(
         Context $context,
+        EncoderInterface $encoder,
         OrderRepository $orderRepository,
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
@@ -82,6 +84,7 @@ class Locations extends AbstractDeliveryOptions
 
         parent::__construct(
             $context,
+            $encoder,
             $orderRepository,
             $checkoutSession,
             $quoteToRateRequest,

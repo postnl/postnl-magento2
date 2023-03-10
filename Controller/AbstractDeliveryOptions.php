@@ -107,7 +107,7 @@ abstract class AbstractDeliveryOptions extends Action
         ShippingDuration $shippingDuration,
         DeliveryDate $deliveryDate = null
     ) {
-        $this->encoder = $encoder;
+        $this->encoder            = $encoder;
         $this->orderRepository    = $orderRepository;
         $this->checkoutSession    = $checkoutSession;
         $this->deliveryEndpoint   = $deliveryDate;
