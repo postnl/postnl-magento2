@@ -34,7 +34,7 @@ namespace TIG\PostNL\Webservices;
 use Laminas\Http\Client\Exception\RuntimeException;
 use Laminas\Http\Request;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\HTTP\LaminasClient as HttpClient;
+use Laminas\Http\Client as HttpClient;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
 use TIG\PostNL\Webservices\Endpoints\Address\RestInterface;
@@ -109,7 +109,8 @@ class Rest
     private function addApiKeyToHeaders()
     {
         $this->httpClient->setHeaders([
-            'apikey' => $this->getApiKey()
+            'apikey: ' . $this->getApiKey(),
+            'Content-Type: application/json'
         ]);
     }
 
@@ -125,7 +126,6 @@ class Rest
 
         if ($endpoint->getMethod() == Request::METHOD_POST) {
             $this->httpClient->setRawBody(json_encode($params));
-            $this->httpClient->setEncType('application/json');
         }
 
         $this->httpClient->setMethod($endpoint->getMethod());
