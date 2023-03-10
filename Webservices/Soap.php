@@ -35,7 +35,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Webapi\Exception as WebapiException;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
-use Zend\Soap\Client as ZendSoapClient;
+use Laminas\Soap\Client as SoapClient;
 
 class Soap
 {
@@ -60,7 +60,7 @@ class Soap
     private $exceptionHandler;
 
     /**
-     * @var ZendSoapClient
+     * @var SoapClient
      */
     private $soapClient;
 
@@ -78,7 +78,7 @@ class Soap
      * @param AccountConfiguration $accountConfiguration
      * @param DefaultConfiguration $defaultConfiguration
      * @param ExceptionHandler     $exceptionHandler
-     * @param ZendSoapClient       $soapClient
+     * @param SoapClient           $soapClient
      * @param Api\Log              $log
      *
      * @throws WebapiException
@@ -87,7 +87,7 @@ class Soap
         AccountConfiguration $accountConfiguration,
         DefaultConfiguration $defaultConfiguration,
         ExceptionHandler $exceptionHandler,
-        ZendSoapClient $soapClient,
+        SoapClient $soapClient,
         Api\Log $log
     ) {
         $this->defaultConfiguration = $defaultConfiguration;
@@ -96,7 +96,7 @@ class Soap
         $this->log = $log;
         $this->accountConfiguration = $accountConfiguration;
     }
-    
+
     /**
      * @param \TIG\PostNL\Webservices\AbstractEndpoint $endpoint
      * @param                                          $method
@@ -120,9 +120,9 @@ class Soap
             $this->log->request($soapClient);
         }
     }
-    
+
     /**
-     * @return \Zend\Soap\Client
+     * @return SoapClient
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getClient()
@@ -132,7 +132,7 @@ class Soap
 
         return $this->soapClient;
     }
-    
+
     /**
      * @return array
      * @throws \Exception
@@ -155,7 +155,7 @@ class Soap
             'stream_context' => $stream_context,
         ];
     }
-    
+
     /**
      * @throws \Magento\Framework\Webapi\Exception
      */
