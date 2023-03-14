@@ -149,8 +149,6 @@ abstract class ToolbarAbstract extends Action
             $this->setType($postnlOrder, $productCode);
 
             $postnlOrder->setProductCode($productCode);
-            $postnlOrder->setAcCharacteristic($acSettings['Characteristic']);
-            $postnlOrder->setAcOption($acSettings['Option']);
             $postnlOrder->setInsuredTier($insuredTier);
             $postnlOrder->setAcInformation($acSettings);
             $this->orderRepository->save($postnlOrder);
@@ -226,8 +224,6 @@ abstract class ToolbarAbstract extends Action
         $this->setType($shipment, $productCode);
 
         $shipment->setProductCode($productCode);
-        $shipment->setAcCharacteristic($acSettings['Characteristic']);
-        $shipment->setAcOption($acSettings['Option']);
         $shipment->setInsuredTier($insuredTier);
         $shipment->setAcInformation($acSettings);
         $this->shipmentRepository->save($shipment);
