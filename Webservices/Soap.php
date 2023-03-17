@@ -215,10 +215,6 @@ class Soap
      */
     public function updateApiKey($scopeId = null, $websiteScope = false)
     {
-        if ($websiteScope) {
-            $this->apiKey = $this->accountConfiguration->getApiKeyForWebsiteScope($scopeId);
-        } else {
-            $this->apiKey = $this->accountConfiguration->getApiKey($scopeId);
-        }
+        $this->apiKey = $this->accountConfiguration->getApiKey($scopeId, $websiteScope);
     }
 }
