@@ -190,6 +190,11 @@ abstract class AbstractDeliveryOptions extends Action
         $request->setDestCountryId($address['country']);
         $request->setDestPostcode($address['postcode']);
 
+        $shippingAddress = $request->getShippingAddress();
+        $shippingAddress->setCountryId($address['country']);
+        $shippingAddress->setPostcode($address['postcode']);
+        $request->setShippingAddress($shippingAddress);
+
         return $request;
     }
 }
