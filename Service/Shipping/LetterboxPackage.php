@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Service\Shipping;
 
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Checkout\Controller\Cart\Add;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\ShipmentItemInterface;
@@ -39,7 +40,9 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Config\Provider\LetterBoxPackageConfiguration;
+use TIG\PostNL\Config\Provider\PepsConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 
 // @codingStandardsIgnoreFile
 class LetterboxPackage
@@ -52,26 +55,36 @@ class LetterboxPackage
     /**
      * @var ScopeConfigInterface
      */
-    private $scopeConfig;
+    protected $scopeConfig;
 
     /**
      * @var LetterBoxPackageConfiguration
      */
-    private $letterBoxPackageConfiguration;
+    protected $letterBoxPackageConfiguration;
+
+    /**
+     * @var PepsConfiguration
+     */
+    protected $pepsConfiguration;
+
+    /**
+     * @var AddressConfiguration
+     */
+    protected $addressConfiguration;
 
     /**
      * @var OrderRepositoryInterface
      */
-    private $orderRepository;
+    protected $orderRepository;
 
     /**
      * @var CollectionFactory
      */
-    private $productCollectionFactory;
+    protected $productCollectionFactory;
     /**
      * @var ShippingOptions
      */
-    private $shippingOptions;
+    protected $shippingOptions;
 
     /**
      * LetterboxPackage constructor.
@@ -81,19 +94,25 @@ class LetterboxPackage
      * @param OrderRepositoryInterface      $orderRepository
      * @param CollectionFactory             $productCollectionFactory
      * @param ShippingOptions               $shippingOptions
+     * @param PepsConfiguration             $pepsConfiguration
+     * @param AddressConfiguration          $addressConfiguration
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         LetterBoxPackageConfiguration $letterBoxPackageConfiguration,
         OrderRepositoryInterface $orderRepository,
         CollectionFactory $productCollectionFactory,
-        ShippingOptions $shippingOptions
+        ShippingOptions $shippingOptions,
+        PepsConfiguration $pepsConfiguration,
+        AddressConfiguration $addressConfiguration
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->letterBoxPackageConfiguration = $letterBoxPackageConfiguration;
         $this->orderRepository = $orderRepository;
         $this->productCollectionFactory = $productCollectionFactory;
         $this->shippingOptions = $shippingOptions;
+        $this->pepsConfiguration = $pepsConfiguration;
+        $this->addressConfiguration = $addressConfiguration;
     }
 
     /**

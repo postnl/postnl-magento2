@@ -143,6 +143,7 @@ class CreateShipment
             'shipment_type'     => $postNLOrder->getType(),
             'ac_characteristic' => $postNLOrder->getAcCharacteristic(),
             'ac_option'         => $postNLOrder->getAcOption(),
+            'ac_information'    => $postNLOrder->getData('ac_information'),
             'parcel_count'      => $colliAmount
         ];
     }

@@ -216,6 +216,10 @@ class MergeWithLabels
             $this->setEpsPosition();
         }
 
+        if ($type == strtolower(ProductInfo::OPTION_BOXABLE_PACKETS)) {
+            $this->setBoxablePacketsPosition();
+        }
+
         $pdf->Rotate($this->rotation);
         $pdf->addSinglePage(
             $labelFile,
@@ -233,6 +237,14 @@ class MergeWithLabels
     }
 
     private function setEpsPosition()
+    {
+        $this->rotation  = 0;
+        $this->xPosition = 400;
+        $this->yPosition = 560;
+        $this->width     = 390;
+    }
+
+    private function setBoxablePacketsPosition()
     {
         $this->rotation  = 0;
         $this->xPosition = 400;

@@ -37,6 +37,7 @@ use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Sales\Model\Order\Address;
@@ -63,6 +64,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
     const FIELD_SHIPMENT_COUNTRY        = 'shipment_country';
     const FIELD_AC_CHARACTERISTIC       = 'ac_characteristic';
     const FIELD_AC_OPTION               = 'ac_option';
+    const FIELD_AC_INFORMATION          = 'ac_information';
     const FIELD_DELIVERY_DATE           = 'delivery_date';
     const FIELD_IS_PAKJEGEMAK           = 'is_pakjegemak';
     const FIELD_PG_LOCATION_CODE        = 'pg_location_code';
@@ -130,6 +132,9 @@ class Shipment extends AbstractModel implements ShipmentInterface
      */
     private $customs;
 
+    /** @var SerializerInterface */
+    private $serializer;
+
     /**
      * @param Context                            $context
      * @param Registry                           $registry
@@ -142,8 +147,9 @@ class Shipment extends AbstractModel implements ShipmentInterface
      * @param ShipmentBarcodeRepositoryInterface $barcodeRepository
      * @param ProductRepositoryInterface         $productRepository
      * @param Customs                            $customs
-     * @param AbstractResource                   $resource
-     * @param AbstractDb                         $resourceCollection
+     * @param SerializerInterface                $serializer
+     * @param AbstractResource|null              $resource
+     * @param AbstractDb|null                    $resourceCollection
      * @param array                              $data
      */
     public function __construct(
@@ -158,6 +164,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
         ShipmentBarcodeRepositoryInterface $barcodeRepository,
         ProductRepositoryInterface         $productRepository,
         Customs                            $customs,
+        SerializerInterface                $serializer,
         AbstractResource                   $resource = null,
         AbstractDb                         $resourceCollection = null,
         array $data = []
@@ -172,6 +179,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
         $this->barcodeRepository       = $barcodeRepository;
         $this->productRepository       = $productRepository;
         $this->customs                 = $customs;
+        $this->serializer              = $serializer;
     }
 
     /**
@@ -512,6 +520,39 @@ class Shipment extends AbstractModel implements ShipmentInterface
     }
 
     /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setAcInformation($value)
+    {
+        //empty arrays shouldn't be serialized or used, so set those to null
+        if (is_array($value) && empty($value)) {
+            $value = null;
+        }
+
+        if (!empty($value)) {
+            $value = $this->serializer->serialize($value);
+        }
+
+        return $this->setData(static::FIELD_AC_INFORMATION, $value);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAcInformation()
+    {
+        $value = $this->getData(static::FIELD_AC_INFORMATION);
+
+        if (!empty($value)) {
+            $value = $this->serializer->unserialize($value);
+        }
+
+        return $value;
+    }
+
+    /**
      * @param string
      *
      * @return $this
@@ -733,6 +774,14 @@ class Shipment extends AbstractModel implements ShipmentInterface
     public function isGlobalPack()
     {
         return $this->getShipmentType() == 'GP';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBoxablePackets()
+    {
+        return $this->getShipmentType() == 'boxable_packets';
     }
 
     /**

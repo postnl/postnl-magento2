@@ -168,7 +168,7 @@ class Data
             'DownPartnerID'            => $shipment->getDownpartnerId(),
             'DownPartnerLocation'      => $shipment->getDownpartnerLocation(),
             'DownPartnerBarcode'       => $shipment->getDownpartnerBarcode(),
-            'ProductCodeDelivery'      => $shipment->getProductCode(),
+            'ProductCodeDelivery'      => ((int)$shipment->getProductCode()) % 10000,
             'ReturnBarcode'            => $shipment->getReturnBarcodes($currentShipmentNumber),
             'Reference'                => $this->labelAndPackingslipOptions->getReference($shipment->getShipment())
         ];
@@ -209,6 +209,10 @@ class Data
         }
 
         if ($shipment->isGlobalPack()) {
+            $shipmentData['Customs'] = $this->customsInfo->get($shipment);
+        }
+
+        if ($shipment->isBoxablePackets()) {
             $shipmentData['Customs'] = $this->customsInfo->get($shipment);
         }
 

@@ -66,6 +66,10 @@ class ParcelType implements ContractInterface
             return 'letterbox_package';
         }
 
+        if ($this->isBoxablePacket($line)) {
+            return 'boxable_packets';
+        }
+
         return false;
     }
     // @codingStandardsIgnoreEnd
@@ -120,5 +124,15 @@ class ParcelType implements ContractInterface
     private function isLetterboxPackage($line)
     {
         return in_array($line, ['letterbox_package']);
+    }
+
+    /**
+     * @param $line
+     *
+     * @return bool
+     */
+    private function isBoxablePacket($line)
+    {
+        return in_array($line, ['boxable_packets']);
     }
 }

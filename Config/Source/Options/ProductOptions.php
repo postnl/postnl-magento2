@@ -258,6 +258,16 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     /**
      * @return array
      */
+    public function getBoxableOptions()
+    {
+        $boxablePackets = $this->getProductOptions(['group' => 'boxable_packets']);
+
+        return $boxablePackets;
+    }
+
+    /**
+     * @return array
+     */
     public function getEpsBusinessOptions()
     {
         $epsBusinessOptions = $this->getProductOptions(

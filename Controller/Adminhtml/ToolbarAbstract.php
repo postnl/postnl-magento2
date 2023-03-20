@@ -39,7 +39,7 @@ use TIG\PostNL\Api\OrderRepositoryInterface;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Service\Order\ProductInfo;
-use TIG\PostNL\Service\Shipment\GuaranteedOptions;
+use TIG\PostNL\Service\Shipment\ProductOptions as ShipmentProductOptions;
 use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
 use Magento\Sales\Model\Order;
 
@@ -70,10 +70,10 @@ abstract class ToolbarAbstract extends Action
     protected $orderRepository;
 
     /**
-     * @var GuaranteedOptions
+     * @var ShipmentProductOptions
      */
     //@codingStandardsIgnoreLine
-    protected $guaranteedOptions;
+    protected $productOptions;
 
     /**
      * @var ResetPostNLShipment
@@ -99,25 +99,25 @@ abstract class ToolbarAbstract extends Action
      * @param Filter                      $filter
      * @param ShipmentRepositoryInterface $shipmentRepository
      * @param OrderRepositoryInterface    $orderRepository
-     * @param GuaranteedOptions           $guaranteedOptions
+     * @param ShipmentProductOptions      $productOptions
      * @param ResetPostNLShipment         $resetPostNLShipment
      * @param ProductOptions              $options
      */
     public function __construct(
-        Context $context,
-        Filter $filter,
+        Context                     $context,
+        Filter                      $filter,
         ShipmentRepositoryInterface $shipmentRepository,
-        OrderRepositoryInterface $orderRepository,
-        GuaranteedOptions $guaranteedOptions,
-        ResetPostNLShipment $resetPostNLShipment,
-        ProductOptions $options
+        OrderRepositoryInterface    $orderRepository,
+        ShipmentProductOptions      $productOptions,
+        ResetPostNLShipment         $resetPostNLShipment,
+        ProductOptions              $options
     ) {
         parent::__construct($context);
 
         $this->uiFilter = $filter;
         $this->shipmentRepository = $shipmentRepository;
         $this->orderRepository = $orderRepository;
-        $this->guaranteedOptions = $guaranteedOptions;
+        $this->productOptions = $productOptions;
         $this->resetService = $resetPostNLShipment;
         $this->options = $options;
     }
@@ -137,7 +137,7 @@ abstract class ToolbarAbstract extends Action
             return;
         }
 
-        $acSettings = $this->getAcSettings($timeOption);
+        $acSettings = $this->getAcSettings($timeOption, $productCode);
         $shipments  = $order->getShipmentsCollection();
         $noError    = true;
 
@@ -149,26 +149,36 @@ abstract class ToolbarAbstract extends Action
             $this->setType($postnlOrder, $productCode);
 
             $postnlOrder->setProductCode($productCode);
-            $postnlOrder->setAcCharacteristic($acSettings['Characteristic']);
-            $postnlOrder->setAcOption($acSettings['Option']);
             $postnlOrder->setInsuredTier($insuredTier);
+            $postnlOrder->setAcInformation($acSettings);
             $this->orderRepository->save($postnlOrder);
         }
     }
 
     /**
      * @param $time
+     * @param $productCode
      *
      * @return array
      */
-    private function getAcSettings($time)
+    private function getAcSettings($time, $productCode)
     {
-        $settings = $this->guaranteedOptions->get($time, true);
+        $type = $time;
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'eu_options')) {
+            $type = strtolower(ProductInfo::SHIPMENT_TYPE_EPS);
+        }
+
+        if ($this->options->doesProductMatchFlags($productCode, 'group', 'global_options')) {
+            $type = strtolower(ProductInfo::SHIPMENT_TYPE_GP);
+        }
+
+        if ($type && strlen($productCode) > 4) {
+            $type .= '-' . substr($productCode, 0, 1);
+        }
+
+        $settings = $this->productOptions->getByType($type);
         if (!$settings) {
-            $settings = [
-                'Characteristic' => null,
-                'Option'         => null
-            ];
+            return [];
         }
 
         return $settings;
@@ -214,9 +224,8 @@ abstract class ToolbarAbstract extends Action
         $this->setType($shipment, $productCode);
 
         $shipment->setProductCode($productCode);
-        $shipment->setAcCharacteristic($acSettings['Characteristic']);
-        $shipment->setAcOption($acSettings['Option']);
         $shipment->setInsuredTier($insuredTier);
+        $shipment->setAcInformation($acSettings);
         $this->shipmentRepository->save($shipment);
         return true;
     }
