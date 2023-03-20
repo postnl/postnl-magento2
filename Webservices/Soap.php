@@ -211,10 +211,10 @@ class Soap
     }
 
     /**
-     * @param null|int $storeId
+     * @param null|int $scopeId
      */
-    public function updateApiKey($storeId = null)
+    public function updateApiKey($scopeId = null, $websiteScope = false)
     {
-        $this->apiKey = $this->accountConfiguration->getApiKey($storeId);
+        $this->apiKey = $this->accountConfiguration->getApiKey($scopeId, $websiteScope);
     }
 }

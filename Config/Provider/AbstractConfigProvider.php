@@ -99,6 +99,24 @@ abstract class AbstractConfigProvider
     }
 
     /**
+     * Get Config value with xpath
+     *
+     * @param      $xpath
+     * @param null $website
+     *
+     * @return mixed
+     */
+    // @codingStandardsIgnoreLine
+    protected function getWebsiteConfigFromXpath($xpath, $website = null)
+    {
+        return $this->scopeConfig->getValue(
+            $xpath,
+            \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+            $website
+        );
+    }
+
+    /**
      * @return bool
      */
     // @codingStandardsIgnoreLine
