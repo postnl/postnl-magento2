@@ -33,6 +33,7 @@ namespace TIG\PostNL\Controller\DeliveryOptions;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Json\EncoderInterface;
 use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Helper\AddressEnhancer;
@@ -100,6 +101,7 @@ class Timeframes extends AbstractDeliveryOptions
      */
     public function __construct(
         Context $context,
+        EncoderInterface $encoder,
         OrderRepository $orderRepository,
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
@@ -123,6 +125,7 @@ class Timeframes extends AbstractDeliveryOptions
 
         parent::__construct(
             $context,
+            $encoder,
             $orderRepository,
             $checkoutSession,
             $quoteToRateRequest,

@@ -5,14 +5,14 @@
 # PostNL Magento 2
 [![Lastest Stable Version](https://img.shields.io/github/v/release/tig-nl/postnl-magento2?style=for-the-badge&color=3244b0)](https://github.com/tig-nl/postnl-magento2/releases/latest)
 ![TIG PostNL tested 2.3.7 versions](https://img.shields.io/badge/Tested%20with%20Magento-2.3.7-%2300cf00?style=for-the-badge)
-![TIG PostNL tested 2.4.5 versions](https://img.shields.io/badge/Tested%20with%20Magento-2.4.5-%2300cf00?style=for-the-badge)
+![TIG PostNL tested 2.4.6 versions](https://img.shields.io/badge/Tested%20with%20Magento-2.4.6-%2300cf00?style=for-the-badge)
 [![Total Extension downloads](https://img.shields.io/packagist/dt/tig/postnl-magento2?style=for-the-badge&color=ed7000)](https://packagist.org/packages/tig/postnl-magento2/stats)
 ![Build Status](https://img.shields.io/travis/tig-nl/postnl-magento2/master?style=for-the-badge)
 
 This is the official PostNL Magento 2 extension to connect your Magento 2 webshop with PostNL.
 
 ## Requirements
-- Magento version 2.3.6 - 2.3.7-p4, 2.4.3 - 2.4.5
+- Magento version 2.3.6 - 2.3.7-p4, 2.4.3 - 2.4.6
 - PHP 7.3+
 - In order to use this extension you need to be a contract customer of PostNL. If you are not a customer of PostNL, you can <a href="https://www.postnl.nl/zakelijk/e-commerce/flexibele-bezorgopties" target="_blank" title="register at PostNL">register yourself here</a>.
 
@@ -134,8 +134,7 @@ For questions related to your PostNL account and PostNL delivery options, please
 
 ### Extension support and advanced configuration
 For questions about installing and configuring the extension please consult the relevant documentation:
-- **Knowledge base:** [PostNL Magento 2 Knowledge base](https://tig-docs.atlassian.net/wiki/x/S4UH)
-- **Frequently asked questions:** [FAQ](https://tig-docs.atlassian.net/wiki/x/S4UH)
+- **Knowledge base:** [PostNL Magento 2 Knowledge base](https://postnl.github.io/magento2/)
 - **Phone:** +31 (0)88-2255652
 - **Email:** [digitaleklantsupport@postnl.nl](mailto:digitaleklantsupport@postnl.nl)
 

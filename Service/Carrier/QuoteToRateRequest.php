@@ -79,6 +79,7 @@ class QuoteToRateRequest
         $rateRequest->setOrderSubtotal($this->quote->getSubtotal());
         $rateRequest->setFreeShipping((bool)$address->getFreeShipping());
         $rateRequest->setPackageValueWithDiscount($address->getBaseSubtotalWithDiscount());
+        $rateRequest->setShippingAddress($address);
 
         return $rateRequest;
     }
