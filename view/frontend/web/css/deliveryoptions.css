@@ -243,6 +243,7 @@
 .postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-radio,
 .postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-radio {
   position: absolute;
+  left: 15px;
 }
 .postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-time,
 .postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-time {
