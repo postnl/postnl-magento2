@@ -45,7 +45,7 @@ abstract class OptionsAbstract
             'value'                => '3085',
             'label'                => 'Standard shipment',
             'isExtraCover'         => false,
-            'isEvening'            => false,
+            'isEvening'            => true,
             'isSunday'             => false,
             'isGuaranteedDelivery' => true,
             'isToday'              => true,
