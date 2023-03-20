@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Block\Adminhtml\Grid;
 
 use Magento\Backend\Block\Template;
+use Magento\Framework\Json\EncoderInterface;
 use Magento\Framework\View\Element\BlockInterface;
 use Magento\Framework\App\DeploymentConfig\Reader;
 use TIG\PostNL\Config\Provider\ShippingOptions;
@@ -53,6 +54,9 @@ class DataProvider extends Template implements BlockInterface
      */
     // @codingStandardsIgnoreLine
     protected $_template = 'TIG_PostNL::grid/DataProvider.phtml';
+
+    /** @var EncoderInterface */
+    private $encoder;
 
     /**
      * @var Reader
@@ -99,6 +103,7 @@ class DataProvider extends Template implements BlockInterface
      * DataProvider constructor.
      *
      * @param Template\Context   $context
+     * @param EncoderInterface   $encoder
      * @param Reader             $reader
      * @param ShippingOptions    $shippingOptions
      * @param ProductOptions     $productOptions
@@ -112,6 +117,7 @@ class DataProvider extends Template implements BlockInterface
      */
     public function __construct(
         Template\Context $context,
+        EncoderInterface $encoder,
         Reader $reader,
         ShippingOptions $shippingOptions,
         ProductOptions $productOptions,
@@ -123,6 +129,7 @@ class DataProvider extends Template implements BlockInterface
         InsuredTiers $insuredTiers,
         array $data = []
     ) {
+        $this->encoder = $encoder;
         $this->configReader = $reader;
         $this->shippingOptions = $shippingOptions;
         $this->productOptions = $productOptions;
@@ -151,7 +158,7 @@ class DataProvider extends Template implements BlockInterface
             ];
         }
 
-        return \Zend_Json::encode($options);
+        return $this->encoder->encode($options);
     }
 
     /**
@@ -236,7 +243,7 @@ class DataProvider extends Template implements BlockInterface
             ];
         }, $insuredTierOptions);
 
-        return \Zend_Json::encode($options);
+        return $this->encoder->encode($options);
     }
 
     /**
@@ -262,7 +269,7 @@ class DataProvider extends Template implements BlockInterface
             ];
         }
 
-        return \Zend_Json::encode($options);
+        return $this->encoder->encode($options);
     }
 
     /**
@@ -279,6 +286,6 @@ class DataProvider extends Template implements BlockInterface
         ];
 
         $options = array_merge([$noneValue], $options);
-        return \Zend_Json::encode($options);
+        return $this->encoder->encode($options);
     }
 }

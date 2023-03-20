@@ -31,6 +31,7 @@
  */
 namespace TIG\PostNL\Controller;
 
+use Magento\Framework\Json\EncoderInterface;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
@@ -42,6 +43,11 @@ use Magento\Checkout\Model\Session;
 
 abstract class AbstractDeliveryOptions extends Action
 {
+    /**
+     * @var EncoderInterface
+     */
+    private EncoderInterface $encoder;
+
     /**
      * @var OrderRepository
      */
@@ -85,20 +91,23 @@ abstract class AbstractDeliveryOptions extends Action
 
     /**
      * @param Context            $context
+     * @param EncoderInterface   $encoder
      * @param OrderRepository    $orderRepository
      * @param Session            $checkoutSession
      * @param QuoteToRateRequest $quoteToRateRequest
-     * @param DeliveryDate       $deliveryDate
      * @param ShippingDuration   $shippingDuration
+     * @param DeliveryDate|null  $deliveryDate
      */
     public function __construct(
         Context $context,
+        EncoderInterface $encoder,
         OrderRepository $orderRepository,
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
         ShippingDuration $shippingDuration,
         DeliveryDate $deliveryDate = null
     ) {
+        $this->encoder            = $encoder;
         $this->orderRepository    = $orderRepository;
         $this->checkoutSession    = $checkoutSession;
         $this->deliveryEndpoint   = $deliveryDate;
@@ -126,7 +135,7 @@ abstract class AbstractDeliveryOptions extends Action
         }
 
         return $response->representJson(
-            \Zend_Json::encode($data)
+            $this->encoder->encode($data)
         );
     }
 

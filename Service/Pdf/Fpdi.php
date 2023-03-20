@@ -38,6 +38,7 @@ use TIG\PostNL\Service\Shipment\Label\File;
  * Original:
  * http://www.fpdf.org/en/script/script2.php
  */
+#[\AllowDynamicProperties]
 class Fpdi extends \setasign\Fpdi\Fpdi
 {
     /**

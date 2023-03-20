@@ -33,7 +33,7 @@ namespace TIG\PostNL\Webservices;
 
 use TIG\PostNL\Helper\Data as Helper;
 use TIG\PostNL\Logging\Log;
-use Zend\Soap\Client;
+use Laminas\Soap\Client;
 
 class ExceptionHandler
 {
@@ -90,8 +90,8 @@ class ExceptionHandler
     }
 
     /**
-     * @param \SoapFault $soapFault
-     * @param Client     $client
+     * @param \SoapFault  $soapFault
+     * @param Client|null $client
      *
      * @throws Api\Exception
      */
