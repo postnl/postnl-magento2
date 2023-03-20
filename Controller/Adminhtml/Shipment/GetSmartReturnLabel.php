@@ -33,7 +33,6 @@ namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
 use Magento\Backend\App\Action\Context;
 use Magento\Sales\Model\Order\ShipmentRepository;
-use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
@@ -57,14 +56,8 @@ class GetSmartReturnLabel extends LabelAbstract
     /** @var ShipmentManagement  */
     private $shipmentManagement;
 
-    /** @var ShipmentLabel  */
-    private $shipmentLabel;
-
     /** @var ShipmentRepositoryInterface  */
     private $shipmentRepositoryInterface;
-
-    /** @var ShipmentInterface */
-    private $shipmentInterface;
 
     /**
      * GetSmartReturnLabel constructor.
@@ -91,9 +84,7 @@ class GetSmartReturnLabel extends LabelAbstract
         GetPackingslip                   $getPackingSlip,
         Email                            $email,
         ShipmentManagement               $shipmentManagement,
-        ShipmentLabelRepositoryInterface $shipmentLabel,
-        ShipmentRepositoryInterface      $shipmentRepositoryInterface,
-        ShipmentInterface                $shipmentInterface
+        ShipmentRepositoryInterface      $shipmentRepositoryInterface
     ) {
         parent::__construct(
             $context,
@@ -107,9 +98,7 @@ class GetSmartReturnLabel extends LabelAbstract
         $this->shipmentRepository          = $shipmentRepository;
         $this->email                       = $email;
         $this->shipmentManagement          = $shipmentManagement;
-        $this->shipmentLabel               = $shipmentLabel;
         $this->shipmentRepositoryInterface = $shipmentRepositoryInterface;
-        $this->shipmentInterface           = $shipmentInterface;
     }
 
     /**
@@ -151,7 +140,7 @@ class GetSmartReturnLabel extends LabelAbstract
             $postnlShipment->setSmartReturnEmailSent(true);
             $this->shipmentRepositoryInterface->save($postnlShipment);
 
-            $this->messageManager->addSuccessMessage(__('Succesfully send out all Smart Return labels'));
+            $this->messageManager->addSuccessMessage(__('Successfully send out all Smart Return labels'));
         } catch (Exception $e){
             $this->messageManager->addErrorMessage($e->getMessage());
         }

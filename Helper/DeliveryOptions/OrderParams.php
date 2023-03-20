@@ -33,6 +33,7 @@
 // @codingStandardsIgnoreFile
 namespace TIG\PostNL\Helper\DeliveryOptions;
 
+use Laminas\Stdlib\ArrayUtils;
 use TIG\PostNL\Exception as PostnlException;
 use TIG\PostNL\Service\Order\FeeCalculator;
 use TIG\PostNL\Service\Order\ProductInfo;
@@ -167,7 +168,7 @@ class OrderParams
             $paramValue = isset($params[$key]) && !empty($params[$key]) ? $params[$key] : false;
 
             return !$paramValue && true == $value;
-        }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
+        }, ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
         return array_keys($missing);
     }

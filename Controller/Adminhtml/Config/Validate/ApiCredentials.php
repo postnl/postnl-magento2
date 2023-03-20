@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Controller\Adminhtml\Config\Validate;
 
 use Magento\Backend\App\Action;
+use Magento\Framework\Json\EncoderInterface;
 use Magento\Framework\Webapi\Exception;
 use Magento\Store\Model\StoreManagerInterface;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
@@ -45,6 +46,11 @@ class ApiCredentials extends Action
 {
     const POSTNL_TYPE  = '3S';
     const POSTNL_SERIE = '000000000-999999999';
+
+    /**
+     * @var EncoderInterface
+     */
+    private $encoder;
 
     /**
      * @var Soap
@@ -83,6 +89,7 @@ class ApiCredentials extends Action
 
     /**
      * @param \Magento\Backend\App\Action\Context $context
+     * @param EncoderInterface                    $encoder
      * @param Soap                                $soap
      * @param Message                             $message
      * @param Customer                            $customer
@@ -93,6 +100,7 @@ class ApiCredentials extends Action
      */
     public function __construct(
         Action\Context $context,
+        EncoderInterface $encoder,
         Soap $soap,
         Message $message,
         Customer $customer,
@@ -102,6 +110,7 @@ class ApiCredentials extends Action
         Log $logger
     ) {
         parent::__construct($context);
+        $this->encoder = $encoder;
         $this->soap = $soap;
         $this->message = $message;
         $this->customer = $customer;
@@ -125,12 +134,15 @@ class ApiCredentials extends Action
         ];
 
         $storeId = $this->getRequest()->getParam('storeId');
+        $websiteId = $this->getRequest()->getParam('websiteId');
 
-        if ($storeId === '') {
-            $storeId = $this->storeManager->getStore()->getId();
+        $scopeId = $storeId === '' ? $websiteId : $storeId;
+
+        if ($scopeId === '') {
+            $scopeId = $this->storeManager->getStore()->getId();
         }
 
-        $this->soap->updateApiKey($storeId);
+        $this->soap->updateApiKey($scopeId, ($websiteId !== ''));
         $customerData = $this->getCustomerData($this->getRequest());
         $validatedApiCredentials = $this->validateApiCredentials($customerData);
 
@@ -139,8 +151,9 @@ class ApiCredentials extends Action
             $result['message'] = __('Successfully connected to account.');
         }
 
+        $json = $this->encoder->encode($result);
         $response = $this->getResponse();
-        return $response->representJson(\Zend_Json::encode($result));
+        return $response->representJson($json);
     }
 
     /**
