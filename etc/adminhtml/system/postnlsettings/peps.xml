@@ -81,7 +81,7 @@
         </field>
 
         <field id="default_peps_boxable_packets_option" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-            <label>Default Packet delivery</label>
+            <label>Default Boxable Packet delivery</label>
             <comment><![CDATA[Select the default product option for Boxable Packet shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getPepsBoxableProducts</source_model>
             <config_path>tig_postnl/peps/default_peps_boxable_packets_option</config_path>
