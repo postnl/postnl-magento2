@@ -32,6 +32,7 @@
 
 namespace TIG\PostNL\Config\Csv\Import;
 
+use Laminas\Stdlib\ParametersInterface;
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Value;
@@ -99,7 +100,7 @@ class Matrixrate extends Value
      */
     public function afterSave()
     {
-        /** @var \Zend\Stdlib\Parameters $requestFiles */
+        /** @var ParametersInterface $requestFiles */
         $requestFiles = $this->request->getFiles();
         $files        = $requestFiles->offsetGet('groups');
         if (!isset($files['tig_postnl']) || !isset($files['tig_postnl']['fields']['matrixrate_import'])) {

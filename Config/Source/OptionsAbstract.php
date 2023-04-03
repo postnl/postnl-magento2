@@ -32,6 +32,8 @@
 namespace TIG\PostNL\Config\Source;
 
 // @codingStandardsIgnoreFile
+use Laminas\Stdlib\ArrayUtils;
+
 abstract class OptionsAbstract
 {
     /**
@@ -45,7 +47,7 @@ abstract class OptionsAbstract
             'value'                => '3085',
             'label'                => 'Standard shipment',
             'isExtraCover'         => false,
-            'isEvening'            => false,
+            'isEvening'            => true,
             'isSunday'             => false,
             'isGuaranteedDelivery' => true,
             'isToday'              => true,
@@ -910,7 +912,7 @@ abstract class OptionsAbstract
     {
         $filterFlags = array_filter($flags, function ($value, $key) use ($option) {
             return isset($option[$key]) && $option[$key] == $value;
-        }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
+        }, ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
         if (count($filterFlags) == count($flags)) {
             $this->filteredOptions[$productCode] = $this->availableOptions[$productCode];
@@ -930,7 +932,7 @@ abstract class OptionsAbstract
         foreach ($flags['groups'] as $flag) {
             $filterFlags = array_filter($flag, function ($value, $key) use ($option) {
                 return isset($option[$key]) && $option[$key] == $value;
-            }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
+            }, ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
             if (count($filterFlags) == count($flags)) {
                 $this->filteredOptions[$productCode] = $this->availableOptions[$productCode];
@@ -968,7 +970,7 @@ abstract class OptionsAbstract
         $optionsSorted = $this->getOptionsArrayForGrouped($options);
         $optionsGroupChecked = array_filter($groups, function ($key) use ($optionsSorted) {
             return array_key_exists($key, $optionsSorted);
-        }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_KEY);
+        }, ArrayUtils::ARRAY_FILTER_USE_KEY);
 
         foreach ($optionsGroupChecked as $group => $label) {
             $this->groupedOptions[] = [

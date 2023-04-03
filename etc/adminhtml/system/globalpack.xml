@@ -63,7 +63,7 @@
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
             <field id="type" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Barcode Type</label>
-                <comment>The current global barcode type as supplied by PostNL. Must contain 2 letters.</comment>
+                <comment>The current global barcode type as supplied by PostNL. Must consist of 2 letters.</comment>
                 <config_path>tig_postnl/globalpack/barcode_type</config_path>
             </field>
             <field id="range" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">

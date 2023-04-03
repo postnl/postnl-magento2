@@ -33,7 +33,7 @@ namespace TIG\PostNL\Webservices\Api;
 
 use TIG\PostNL\Helper\Data as Helper;
 use TIG\PostNL\Logging\Log as Logger;
-use Zend\Soap\Client;
+use Laminas\Soap\Client;
 
 class Log
 {
