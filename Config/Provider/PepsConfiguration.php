@@ -39,13 +39,28 @@ class PepsConfiguration extends AbstractConfigProvider
     const XPATH_CALCULATION_MODE = 'tig_postnl/peps/peps_boxable_packets_calculation_mode';
 
     /**
-     * @param null $storeId
+     * @param null|int|string $productCode
      *
      * @return mixed
      */
-    public function getBarcodeType($storeId = null)
+    public function getBarcodeType($productCode = null)
     {
-        return $this->getConfigFromXpath(static::XPATH_BARCODE_TYPE, $storeId);
+        switch ($productCode) {
+            case '6440':
+            case '6405':
+                $type = 'UE';
+                break;
+            case '6906':
+                $type = 'RI';
+                break;
+            case '6972':
+            case '6350':
+            default:
+                $type = 'LA';
+                break;
+        }
+
+        return $type;
     }
 
     /**

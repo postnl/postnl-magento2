@@ -71,6 +71,11 @@ class Range
     private $storeId;
 
     /**
+     * @var int|string
+     */
+    private $productCode;
+
+    /**
      * @var array
      */
     private $response = [
@@ -124,6 +129,7 @@ class Range
     public function getByProductCode($productCode, $storeId = null)
     {
         $this->storeId = $storeId;
+        $this->productCode = $productCode;
 
         if ($this->options->doesProductMatchFlags($productCode, 'group', 'global_options')) {
             return $this->get('GLOBAL');
@@ -196,7 +202,7 @@ class Range
 
     private function updatePepsOptions()
     {
-        $this->response['type']  = $this->pepsConfiguration->getBarcodeType();
+        $this->response['type']  = $this->pepsConfiguration->getBarcodeType($this->productCode);
         $this->response['range'] = $this->pepsConfiguration->getBarcodeRange();
         $this->response['serie'] = static::EU_BARCODE_SERIE_LONG;
     }
