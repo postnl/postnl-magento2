@@ -114,6 +114,11 @@ define([
                 return;
             }
 
+            //We don't need to save a delivery option that's already been saved. Prevents unnecessary ajax calls.
+            if (sessionStorage.postnlDeliveryOption !== undefined && sessionStorage.postnlDeliveryOption === JSON.stringify(value)) {
+                return;
+            }
+
             sessionStorage.setItem("postnlDeliveryOption", JSON.stringify(value));
             sessionStorage.removeItem("postnlPickupOption");
 
@@ -148,8 +153,12 @@ define([
                 type = 'GP';
             }
 
+            if (this.saveDeliveryDayRequest !== undefined) {
+                this.saveDeliveryDayRequest.abort('avoidMulticall');
+            }
+
             $(document).trigger('compatible_postnl_deliveryoptions_save_before');
-            $.ajax({
+            this.saveDeliveryDayRequest = $.ajax({
                 method : 'POST',
                 url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
                 data   : {
