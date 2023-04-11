@@ -35,10 +35,10 @@ class DeliveryDateOff extends Value
      * @param Registry $registry
      * @param ScopeConfigInterface $config
      * @param TypeListInterface $cacheTypeList
-     * @param AbstractResource|null $resource
-     * @param AbstractDb|null $resourceCollection
      * @param SerializerInterface $serializerInterface
      * @param Random $mathRandom
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null $resourceCollection
      * @param array $data
      */
     public function __construct(
@@ -46,10 +46,10 @@ class DeliveryDateOff extends Value
         Registry             $registry,
         ScopeConfigInterface $config,
         TypeListInterface    $cacheTypeList,
-        AbstractResource     $resource = null,
-        AbstractDb           $resourceCollection = null,
         SerializerInterface  $serializerInterface,
         Random               $mathRandom,
+        AbstractResource     $resource = null,
+        AbstractDb           $resourceCollection = null,
         array                $data = []
     ) {
         $this->serializer = $serializerInterface;
