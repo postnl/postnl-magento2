@@ -33,7 +33,6 @@ namespace TIG\PostNL\Config\Provider;
 
 class PepsConfiguration extends AbstractConfigProvider
 {
-    const XPATH_BARCODE_TYPE  = 'tig_postnl/peps/barcode_type';
     const XPATH_BARCODE_RANGE = 'tig_postnl/peps/barcode_range';
 
     const XPATH_CALCULATION_MODE = 'tig_postnl/peps/peps_boxable_packets_calculation_mode';
