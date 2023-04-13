@@ -37,6 +37,7 @@ use Magento\Framework\App\Response\Http;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Json\EncoderInterface;
 use Magento\Framework\Phrase;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ProductOptions;
@@ -85,6 +86,7 @@ class Save extends AbstractDeliveryOptions
      */
     public function __construct(
         Context $context,
+        EncoderInterface $encoder,
         OrderRepository $orderRepository,
         QuoteToRateRequest $quoteToRateRequest,
         OrderParams $orderParams,
@@ -97,6 +99,7 @@ class Save extends AbstractDeliveryOptions
     ) {
         parent::__construct(
             $context,
+            $encoder,
             $orderRepository,
             $checkoutSession,
             $quoteToRateRequest,

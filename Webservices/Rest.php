@@ -31,10 +31,12 @@
  */
 namespace TIG\PostNL\Webservices;
 
+use Laminas\Http\Client\Exception\RuntimeException;
+use Laminas\Http\Request;
 use Magento\Framework\Exception\LocalizedException;
+use Laminas\Http\Client as HttpClient;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
-use Magento\Framework\HTTP\ZendClient as ZendClient;
 use TIG\PostNL\Webservices\Endpoints\Address\RestInterface;
 
 class Rest
@@ -45,9 +47,9 @@ class Rest
     private $apiKey = null;
 
     /**
-     * @var ZendClient
+     * @var HttpClient
      */
-    private $zendClient;
+    private $httpClient;
 
     /**
      * @var AccountConfiguration
@@ -62,16 +64,16 @@ class Rest
     /**
      * Rest constructor.
      *
-     * @param ZendClient           $zendClient
+     * @param HttpClient           $httpClient
      * @param AccountConfiguration $accountConfiguration
      * @param DefaultConfiguration $defaultConfiguration
      */
     public function __construct(
-        ZendClient $zendClient,
+        HttpClient $httpClient,
         AccountConfiguration $accountConfiguration,
         DefaultConfiguration $defaultConfiguration
     ) {
-        $this->zendClient           = $zendClient;
+        $this->httpClient           = $httpClient;
         $this->accountConfiguration = $accountConfiguration;
         $this->defaultConfiguration = $defaultConfiguration;
     }
@@ -79,19 +81,19 @@ class Rest
     /**
      * @param RestInterface $endpoint
      *
-     * @return array|\Zend_Http_Response
+     * @return array|string
      */
     public function getRequest(RestInterface $endpoint)
     {
-        $this->zendClient->resetParameters();
+        $this->httpClient->resetParameters();
         $this->addUri($endpoint);
         $this->addApiKeyToHeaders();
         $this->addParameters($endpoint);
 
         try {
-            $response = $this->zendClient->request();
+            $response = $this->httpClient->send();
             $response = $response->getBody();
-        } catch (\Zend_Http_Client_Exception $exception) {
+        } catch (RuntimeException $exception) {
             $response = [
                 'status' => 'error',
                 'error'  => __('Address API exception : %1', $exception->getCode())
@@ -106,8 +108,9 @@ class Rest
      */
     private function addApiKeyToHeaders()
     {
-        $this->zendClient->setHeaders([
-            'apikey' => $this->getApiKey()
+        $this->httpClient->setHeaders([
+            'apikey: ' . $this->getApiKey(),
+            'Content-Type: application/json'
         ]);
     }
 
@@ -117,15 +120,15 @@ class Rest
     private function addParameters(RestInterface $endpoint)
     {
         $params = $endpoint->getRequestData();
-        if ($endpoint->getMethod() == ZendClient::GET) {
-            $this->zendClient->setParameterGet($params);
+        if ($endpoint->getMethod() == Request::METHOD_GET) {
+            $this->httpClient->setParameterGet($params);
         }
 
-        if ($endpoint->getMethod() == ZendClient::POST) {
-            $this->zendClient->setRawData(json_encode($params), 'application/json');
+        if ($endpoint->getMethod() == Request::METHOD_POST) {
+            $this->httpClient->setRawBody(json_encode($params));
         }
 
-        $this->zendClient->setMethod($endpoint->getMethod());
+        $this->httpClient->setMethod($endpoint->getMethod());
     }
 
     /**
@@ -158,6 +161,6 @@ class Rest
         }
 
         $uri = $url . $endpoint->getVersion() . '/' . $endpoint->getEndpoint();
-        $this->zendClient->setUri($uri);
+        $this->httpClient->setUri($uri);
     }
 }

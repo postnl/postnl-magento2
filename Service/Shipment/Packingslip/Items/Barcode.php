@@ -42,7 +42,7 @@ use Magento\Sales\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Source\LabelAndPackingslip\BarcodeValue;
 use \Magento\Sales\Api\OrderRepositoryInterface;
 use TIG\PostNL\Logging\Log;
-use Zend\Barcode\Barcode as ZendBarcode;
+use Laminas\Barcode\Barcode as LaminasBarcode;
 
 class Barcode implements ItemsInterface
 {
@@ -216,7 +216,7 @@ class Barcode implements ItemsInterface
 
         $type = $this->barcodeSettings->getType($this->storeId);
         // @codingStandardsIgnoreLine
-        $imageResource = ZendBarcode::draw($type, 'image', $barcodeOptions, []);
+        $imageResource = LaminasBarcode::draw($type, 'image', $barcodeOptions, []);
         // @codingStandardsIgnoreLine
         imagejpeg($imageResource, $this->fileName, 100);
         // @codingStandardsIgnoreLine
