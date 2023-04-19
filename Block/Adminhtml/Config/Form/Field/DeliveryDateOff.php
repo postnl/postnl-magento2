@@ -6,20 +6,20 @@ namespace TIG\PostNL\Block\Adminhtml\Config\Form\Field;
 use Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
-/**
- * frontend_model for Delivery Date Off
- * class DeliveryDateOff
- */
 class DeliveryDateOff extends AbstractFieldArray
 {
     /**
      * @return void
      */
+    // @codingStandardsIgnoreLine
     protected function _prepareToRender(): void
     {
         $this->addColumn(
             'delivery_date_off',
-            ['label' => __('Date'), 'class' => 'delivery-date-off-picker validate-select admin__control-text input-text input-date']
+            [
+                'label' => __('Date'),
+                'class' => 'delivery-date-off-picker validate-select admin__control-text input-text input-date'
+            ]
         );
 
         $this->_addAfter = false;
@@ -29,6 +29,7 @@ class DeliveryDateOff extends AbstractFieldArray
      * @param AbstractElement $element
      * @return string
      */
+    // @codingStandardsIgnoreLine
     protected function _getElementHtml(AbstractElement $element): string
     {
         $html = parent::_getElementHtml($element);

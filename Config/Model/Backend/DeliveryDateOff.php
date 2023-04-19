@@ -14,10 +14,6 @@ use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Framework\Serialize\SerializerInterface;
 
-/**
- * backend_model for Delivery Date Off
- * class DeliveryDateOff
- */
 class DeliveryDateOff extends Value
 {
     /**
@@ -75,6 +71,7 @@ class DeliveryDateOff extends Value
     /**
      * @return void
      */
+    // @codingStandardsIgnoreLine
     protected function _afterLoad(): void
     {
         $value = $this->getValue();

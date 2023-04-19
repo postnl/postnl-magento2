@@ -64,6 +64,14 @@
             </depends>
         </field>
 
+        <field id="delivery_days_off" translate="label comment" type="multiselect" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Delivery Days Off</label>
+            <source_model>Magento\Config\Model\Config\Source\Locale\Weekdays</source_model>
+            <can_be_empty>1</can_be_empty>
+            <config_path>tig_postnl/delivery_days/delivery_days_off</config_path>
+            <comment>Allows admins to choose the day off in week. Customers can not select the days off for delivery</comment>
+        </field>
+
         <field id="delivery_date_off" translate="label comment" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Delivery Date Off</label>
             <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\DeliveryDateOff</frontend_model>

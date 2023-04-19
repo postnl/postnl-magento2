@@ -359,13 +359,18 @@ class ShippingOptions extends AbstractConfigProvider
     }
 
     /**
+     * @param string $configPath
      * @return array
      */
-    public function getDeliveryDateOff()
+    public function getDeliveryOff(string $configPath = self::XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF): array
     {
-        $result = (string)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF);
-
-        return $this->serializer->unserialize($result ?: '{}');
+        try {
+            return $configPath === self::XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF
+                ? $this->serializer->unserialize((string)$this->getConfigFromXpath($configPath))
+                : explode(',', (string)$this->getConfigFromXpath($configPath));
+        } catch (\Throwable $e) {
+            return [];
+        }
     }
 }
 /**
