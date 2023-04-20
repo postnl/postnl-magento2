@@ -59,7 +59,7 @@ class ParcelType extends Column
                             $item[$fieldName] = __('Regular');
                             break;
                         case 'letterbox_package':
-                            $item[$fieldName] = __('Letterbox Package');
+                            $item[$fieldName] = __('(International) Letterbox Package');
                             break;
                         case 'boxable_packets':
                             $item[$fieldName] = __('Boxable Packet');

@@ -35,6 +35,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Json\EncoderInterface;
 use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\OrderRepository;
@@ -73,6 +74,11 @@ class Timeframes extends AbstractDeliveryOptions
     private $isDeliveryDaysActive;
 
     /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
+
+    /**
      * @var LetterboxPackage
      */
     private $letterboxPackage;
@@ -101,8 +107,9 @@ class Timeframes extends AbstractDeliveryOptions
      * @param Calculator          $calculator
      * @param IsDeliverDaysActive $isDeliverDaysActive
      * @param ShippingDuration    $shippingDuration
+     * @param ShippingOptions     $shippingOptions
      * @param LetterboxPackage    $letterboxPackage
-     * @param BoxablePackets      $boxablePackets,
+     * @param BoxablePackets      $boxablePackets ,
      * @param CanaryIslandToIC    $canaryConverter
      * @param CountryShipping     $countryShipping
      */
@@ -118,6 +125,7 @@ class Timeframes extends AbstractDeliveryOptions
         Calculator $calculator,
         IsDeliverDaysActive $isDeliverDaysActive,
         ShippingDuration $shippingDuration,
+        ShippingOptions $shippingOptions,
         LetterboxPackage $letterboxPackage,
         BoxablePackets $boxablePackets,
         CanaryIslandToIC $canaryConverter,
@@ -127,6 +135,7 @@ class Timeframes extends AbstractDeliveryOptions
         $this->timeFrameEndpoint            = $timeFrame;
         $this->calculator                   = $calculator;
         $this->isDeliveryDaysActive         = $isDeliverDaysActive;
+        $this->shippingOptions              = $shippingOptions;
         $this->letterboxPackage             = $letterboxPackage;
         $this->boxablePackets               = $boxablePackets;
         $this->canaryConverter              = $canaryConverter;
@@ -214,6 +223,11 @@ class Timeframes extends AbstractDeliveryOptions
 
         // NL to BE/NL shipments are not EPS shipments
         if ($this->countryShipping->isShippingNLToEps($params['address']['country'])) {
+            return true;
+        }
+
+        //NL to BE shipments can be a PEPS shipment and should be considered as such when enabled
+        if ($this->countryShipping->isShippingNLtoBE($params['address']['country']) && $this->shippingOptions->canUsePriority()) {
             return true;
         }
 
