@@ -61,6 +61,14 @@ class Customs
         'Currency'               => 'EUR'
     ];
 
+    private $transactionData = [
+        'Commercial Goods' =>  ['code' => '11', 'description' => 'Sale of goods'],
+        'Returned Goods' =>    ['code' => '21', 'description' => 'Returned goods'],
+        'Gift' =>              ['code' => '31', 'description' => 'Gift'],
+        'Commercial Sample' => ['code' => '32', 'description' => 'Commercial sample'],
+        'Documents' =>         ['code' => '91', 'description' => 'Documents'],
+    ];
+
     /**
      * @var \Magento\Sales\Api\Data\ShipmentInterface
      */
@@ -139,6 +147,8 @@ class Customs
             $this->customs['ShipmentType'] = $type;
         }
 
+        $this->applyTransactionData($type);
+
         if (in_array($this->customs['ShipmentType'], $this->requiredInvoiceTypes)
             || $this->customs['License'] == 'false'
             || $this->customs['Certificate'] == 'false'
@@ -146,6 +156,21 @@ class Customs
             $this->customs['Invoice']   = 'true';
             $this->customs['InvoiceNr'] = $this->shipment->getIncrementId();
         }
+    }
+
+    /**
+     * @param string $type
+     */
+    private function applyTransactionData($type)
+    {
+        if (!array_key_exists($type, $this->transactionData)) {
+            return;
+        }
+
+        $transactionData = $this->transactionData[$type];
+
+        $this->customs['TransactionCode'] = $transactionData['code'];
+        $this->customs['TransactionDescription'] = $transactionData['description'];
     }
 
     private function insertContentInformation()
