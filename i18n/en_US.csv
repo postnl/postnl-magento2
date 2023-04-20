@@ -614,6 +614,7 @@ Percent,Percent
 "International Packets and Boxable Packets","International Packets and Boxable Packets"
 "Use Packets International","Use Packets International"
 "Default Packet delivery","Default Packet delivery"
+"Default Boxable Packet delivery","Default Boxable Packet delivery"
 "Select the default product option for Packet shipments.","Select the default product option for Packet shipments."
 "Use Boxable Packets","Use Boxable Packets"
 "Boxable Packets are used to ship small products. Please consult your PostNL account manager for more information about activating this service for your account.","Boxable Packets are used to ship small products. Please consult your PostNL account manager for more information about activating this service for your account."

@@ -173,20 +173,13 @@ class Validator
             return false;
         }
 
-        /** We want to show this notification for every Priority Shipment */
-        if ($isPriority && $this->priorityNotice == false) {
-            // @codingStandardsIgnoreLine
-            $this->messages['notices'][] = __('Packet Tracked is a small parcel with Track & Trace. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
-            $this->priorityNotice        = true;
-        }
-
         return true;
     }
 
     private function showLetterboxPackageNotice()
     {
         // @codingStandardsIgnoreStart
-        $this->messages['notices'][] = __('Please note, a letterbox package may not exceed 38 x 26.5 x 3.2 cm 
+        $this->messages['notices'][] = __('Please note, a letterbox package may not exceed 38 x 26.5 x 3.2 cm
         (14.96 x 10.43 x 1.25 in) in size and 2 kg (4.4 lbs) in weight.');
         // @codingStandardsIgnoreEnd
     }
