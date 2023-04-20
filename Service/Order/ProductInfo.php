@@ -414,17 +414,21 @@ class ProductInfo
      */
     private function setDefaultProductOption($country)
     {
+        $this->type = static::SHIPMENT_TYPE_DAYTIME;
         $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
 
         if ($this->countryShipping->isShippingNLtoBE($country)) {
             $this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
         }
 
+        if ($this->countryShipping->isShippingNLtoBE($country) && $this->shippingOptions->canUsePriority()) {
+            $this->type = static::SHIPMENT_TYPE_EPS;
+            $this->code = $this->productOptionsConfiguration->getDefaultPepsProductOption();
+        }
+
         if ($this->countryShipping->isShippingBEDomestic($country)) {
             $this->code = $this->productOptionsConfiguration->getDefaultBeDomesticProductOption();
         }
-
-        $this->type = static::SHIPMENT_TYPE_DAYTIME;
 
         if ($country !== 'NL' && $country !== 'BE') {
             return;
