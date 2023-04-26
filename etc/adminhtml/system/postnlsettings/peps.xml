@@ -35,7 +35,7 @@
     <!-- Cargo products -->
     <group id="peps" translate="label comment" type="text" sortOrder="115" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>International Packets and Boxable Packets</label>
-        <comment><![CDATA[Please note: Some of the Packets Tracked products require specific contractual agreements with PostNL. Please contact your PostNL account manager for more information about these products.]]></comment>
+        <comment><![CDATA[Please note: Some International Packets and Mailboxpackets require specific contractual agreements with PostNL. Please contact your PostNL account manager for more information about these products.]]></comment>
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
         <depends>
@@ -43,8 +43,8 @@
         </depends>
 
         <field id="active" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Use Packets International</label>
-            <comment>Packet Tracked is a small parcel with Track &amp; Trace. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.</comment>
+            <label>Use International (Mailbox) Packets</label>
+            <comment>Packets and Mailbox Packets are smaller parcels than a standard international parcel.</comment>
             <tooltip><![CDATA[This allows you the use of the priority parcel products. After you enable this setting the products can be selected in the default EPS and Globalpack selection.]]></tooltip>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/peps/active</config_path>
@@ -52,7 +52,7 @@
 
         <field id="default_peps_option" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default Packet delivery</label>
-            <comment><![CDATA[Select the default product option for Packet shipments.]]></comment>
+            <comment><![CDATA[Select the default product option for Packet shipments. A Packet is a smaller package than a normal package and is about the same size as a shoe box. Dimensions L + W + H = max 90 cm of which the longest side is 60 cm.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getPepsProducts</source_model>
             <config_path>tig_postnl/peps/default_peps_option</config_path>
             <depends>
