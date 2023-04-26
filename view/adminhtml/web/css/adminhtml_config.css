@@ -354,19 +354,6 @@
     padding: 2rem 1rem 2rem 1rem;
 }
 
-.postnl-section .admin__page-nav-link:after {
-    float:right;
-    width: 30px;
-    height: 30px;
-    margin-top:-7px;
-    margin-right: 3px;
-
-    background-image: url(../images/TIG_Logo.svg) !important;
-    background-size: 30px !important;
-    background-repeat:no-repeat;
-    content: ' ';
-}
-
 /* Identity - Toolbar =============================================================================================== */
 
 .postnl-config-page .page-main-actions .page-actions .page-actions-inner:before {
@@ -384,17 +371,6 @@
     margin-left: 80px;
 }
 
-.postnl-config-page .page-main-actions .page-actions .page-actions-inner:after {
-    background-image: url(../images/TIG_Logo.svg) !important;
-    background-repeat: no-repeat;
-    content: ' ';
-    width: 50px;
-    float: left;
-    height: 30px;
-    margin-top: 8px;
-    background-size: auto 29px;
-}
-
 /* Shipment Methods ================================================================================================= */
 
 #carriers_tig_postnl-head:after  {
@@ -408,14 +384,6 @@
     width: 50px;
     margin-top:-5px;
 }
-
-#carriers_tig_postnl-head {
-    background-image: url(../images/TIG_Logo.svg);
-    background-repeat: no-repeat;
-    background-size: 35px;
-    background-position: calc(100% - 50px) 15px;
-}
-
 
 h4#carriers_tig_postnl_import_export_header {
     margin-left: 33%;
