@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <field id="cron_settings" translate="label" type="select" sortOrder="10" showInDefault="1" canRestore="1">
+        <label>Clear Old Shipment Labels</label>
+        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        <config_path>tig_postnl/extra_settings_cron/clear_old_shipment_labels</config_path>
+    </field>
+</include>

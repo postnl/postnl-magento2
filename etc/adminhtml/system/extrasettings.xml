@@ -55,6 +55,12 @@
                 <source_model>TIG\PostNL\Config\Source\Settings\LabelResponse</source_model>
                 <config_path>tig_postnl/extra_settings_printer/label_response</config_path>
             </field>
+
+            <field id="enable_expired_label_cleanup" translate="label" type="select" sortOrder="20" showInDefault="1">
+                <label>Enable cronjob to cleanup expired labels</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <config_path>tig_postnl/extra_settings_printer/enable_expired_label_cleanup</config_path>
+            </field>
         </group>
 
         <group id="advanced" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
