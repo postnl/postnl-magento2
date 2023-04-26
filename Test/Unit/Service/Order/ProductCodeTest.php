@@ -32,8 +32,10 @@
 namespace TIG\PostNL\Test\Unit\Service\Order;
 
 use Magento\Quote\Model\Quote;
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Service\Order\ProductInfo;
+use TIG\PostNL\Service\Validation\CountryShipping;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Test\TestCase;
 
@@ -44,28 +46,30 @@ class ProductCodeTest extends TestCase
 {
     const PRODUCT_OPTION_DEFAULT = 'default_product_option';
     const PRODUCT_OPTION_BE_DEFAULT = 'default_be_product_option';
+    const PRODUCT_OPTION_BE_DOMESTIC = 'default_be_domestic_product_option';
     const PRODUCT_OPTION_EPS_DEFAULT = '4952';
     const PRODUCT_OPTION_ALTERNATIVE_DEFAULT = 'alternative_default_product_option';
     const PRODUCT_OPTION_EVENING = 'evening_product_option';
     const PRODUCT_OPTION_EXTRAATHOME = 'extraathome_product_option';
     const PRODUCT_OPTION_PAKJEGEMAK = 'pakjegemak_product_option';
     const PRODUCT_OPTION_PAKJEGEMAK_BE = 'pakjegemak_be_product_option';
+    const PRODUCT_OPTION_PAKJEGEMAK_BE_DOMESTIC = 'pakjegemak_be_domestic_product_option';
     const PRODUCT_OPTION_SUNDAY = 'sunday_product_option';
     const PRODUCT_OPTION_LETTERBOX_PACKAGE = '2928';
 
     /**
-     * @var ProductOptions|\PHPUnit_Framework_MockObject_MockObject
+     * @var ProductOptions|\PHPUnit\Framework\MockObject\MockObject
      */
     private $productOptionsMock;
 
     /**
-     * @var QuoteInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var QuoteInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $quoteInterfaceMock;
 
     public $instanceClass = ProductInfo::class;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -74,12 +78,14 @@ class ProductCodeTest extends TestCase
 
         $this->addProductOptionsMockFunction('getDefaultProductOption', static::PRODUCT_OPTION_DEFAULT);
         $this->addProductOptionsMockFunction('getDefaultBeProductOption', static::PRODUCT_OPTION_BE_DEFAULT);
+        $this->addProductOptionsMockFunction('getDefaultBeDomesticProductOption', static::PRODUCT_OPTION_BE_DOMESTIC);
         $this->addProductOptionsMockFunction('getDefaultEpsProductOption', static::PRODUCT_OPTION_EPS_DEFAULT);
         $this->addProductOptionsMockFunction('getDefaultEveningProductOption', static::PRODUCT_OPTION_EVENING);
         $this->addProductOptionsMockFunction('getDefaultExtraAtHomeProductOption', static::PRODUCT_OPTION_EXTRAATHOME);
         $this->addProductOptionsMockFunction('getDefaultPakjeGemakProductOption', static::PRODUCT_OPTION_PAKJEGEMAK);
         $this->addProductOptionsMockFunction('getDefaultLetterBoxPackageProductOption', static::PRODUCT_OPTION_LETTERBOX_PACKAGE);
         $this->addProductOptionsMockFunction('getDefaultPakjeGemakBeProductOption', static::PRODUCT_OPTION_PAKJEGEMAK_BE);
+        $this->addProductOptionsMockFunction('getDefaultPakjeGemakBeDomesticProductOption', static::PRODUCT_OPTION_PAKJEGEMAK_BE_DOMESTIC);
         $this->addProductOptionsMockFunction('getDefaultSundayProductOption', static::PRODUCT_OPTION_SUNDAY);
         $this->addProductOptionsMockFunction(
             'getAlternativeDefaultProductOption',
@@ -109,19 +115,21 @@ class ProductCodeTest extends TestCase
     public function getShippingOptionProvider()
     {
         return [
-            'default options' => ['', '', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
-            'default options BE' => ['', '', 'BE', static::PRODUCT_OPTION_BE_DEFAULT, 'Daytime'],
-            'default options DE' => ['', '', 'DE', static::PRODUCT_OPTION_EPS_DEFAULT, 'EPS'],
-            'default options ES' => ['', '', 'ES', static::PRODUCT_OPTION_EPS_DEFAULT, 'EPS'],
-            'no option' => ['delivery', '', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
-            'default' => ['delivery', 'default', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
-            'evening' => ['delivery', 'evening', 'NL', static::PRODUCT_OPTION_EVENING, 'Evening'],
-            'extra at home' => ['delivery', 'extra@home', 'NL', static::PRODUCT_OPTION_EXTRAATHOME, 'Extra@Home'],
-            'sunday' => ['delivery', 'sunday', 'NL', static::PRODUCT_OPTION_SUNDAY, 'Sunday'],
-            'default pg' => ['pickup', 'default', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
-            'pakjegemak' => ['pickup', '', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
-            'letterbox package' => ['delivery', 'letterbox_package', 'NL', static::PRODUCT_OPTION_LETTERBOX_PACKAGE, 'Letterbox Package'],
-            'pakjegemak_be' => ['pickup', '', 'BE', static::PRODUCT_OPTION_PAKJEGEMAK_BE, 'PG']
+            'default options' => ['', '', 'NL', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
+            'default options BE' => ['', '', 'BE', 'NL', static::PRODUCT_OPTION_BE_DEFAULT, 'Daytime'],
+            'default options BE Domestic' => ['', '', 'BE', 'BE', static::PRODUCT_OPTION_BE_DOMESTIC, 'Daytime'],
+            'default options DE' => ['', '', 'DE', 'NL', static::PRODUCT_OPTION_EPS_DEFAULT, 'EPS'],
+            'default options ES' => ['', '', 'ES', 'NL', static::PRODUCT_OPTION_EPS_DEFAULT, 'EPS'],
+            'no option' => ['delivery', '', 'NL', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
+            'default' => ['delivery', 'default', 'NL', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
+            'evening' => ['delivery', 'evening', 'NL', 'NL', static::PRODUCT_OPTION_EVENING, 'Evening'],
+            'extra at home' => ['delivery', 'extra@home', 'NL', 'NL', static::PRODUCT_OPTION_EXTRAATHOME, 'Extra@Home'],
+            'sunday' => ['delivery', 'sunday', 'NL', 'NL', static::PRODUCT_OPTION_SUNDAY, 'Sunday'],
+            'default pg' => ['pickup', 'default', 'NL', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
+            'pakjegemak' => ['pickup', '', 'NL', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
+            'letterbox package' => ['delivery', 'letterbox_package', 'NL', 'NL', static::PRODUCT_OPTION_LETTERBOX_PACKAGE, 'Letterbox Package'],
+            'pakjegemak_be' => ['pickup', '', 'BE', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK_BE, 'PG'],
+            'pakjegemak_be_domestic' => ['pickup', '', 'BE', 'BE', static::PRODUCT_OPTION_PAKJEGEMAK_BE_DOMESTIC, 'PG']
         ];
     }
 
@@ -129,13 +137,14 @@ class ProductCodeTest extends TestCase
      * @param $type
      * @param $option
      * @param $country
+     * @param $senderCountry
      * @param $expectedCode
      * @param $expectedType
      *
-     * @dataProvider getShippingOptionProvider
      * @throws \Exception
+     * @dataProvider getShippingOptionProvider
      */
-    public function testGetShippingOption($type, $option, $country, $expectedCode, $expectedType)
+    public function testGetShippingOption($type, $option, $country, $senderCountry, $expectedCode, $expectedType)
     {
         $productOptionsFinder = $this->getObject(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
         $address = $this->getObject(\Magento\Sales\Model\Order\Address::class);
@@ -144,7 +153,15 @@ class ProductCodeTest extends TestCase
         $quoteMock = $this->getFakeMock(Quote::class, true);
         $this->quoteInterfaceMock->method('getQuote')->willReturn($quoteMock);
 
-        $instance = $this->getInstance(['productOptionsFinder' => $productOptionsFinder]);
+        $addressConfigurationMock = $this->getFakeMock(AddressConfiguration::class, true);
+        $addressConfigurationMock->method('getCountry')->willReturn($senderCountry);
+
+        $countryShipping = $this->getObject(CountryShipping::class, ['addressConfiguration' => $addressConfigurationMock]);
+
+        $instance = $this->getInstance([
+            'productOptionsFinder' => $productOptionsFinder,
+            'countryShipping' => $countryShipping
+        ]);
 
         $result = $instance->get($type, $option, $address);
         $this->assertEquals($expectedCode, $result['code']);

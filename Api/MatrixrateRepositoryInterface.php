@@ -31,59 +31,62 @@
  */
 namespace TIG\PostNL\Api;
 
+use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Api\SearchResultsInterface;
+use TIG\PostNL\Api\Data\MatrixrateInterface;
+use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection;
+
 interface MatrixrateRepositoryInterface
 {
     /**
      * Save a Matrixrate rule
-     *
+     * @param MatrixrateInterface $matrixrate
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      * @api
      *
-     * @param \TIG\PostNL\Api\Data\MatrixrateInterface $matrixrate
-     *
-     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
-    public function save(\TIG\PostNL\Api\Data\MatrixrateInterface $matrixrate);
+    public function save(MatrixrateInterface $matrixrate);
 
     /**
      * Retrieve a list of Matrixrates.
-     *
      * @api
-     * @param \Magento\Framework\Api\SearchCriteriaInterface $criteria
+     * @param SearchCriteriaInterface $criteria
      * @return \Magento\Framework\Api\SearchResultsInterface
      */
-    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $criteria);
+    public function getList(SearchCriteriaInterface $criteria);
 
     /**
      * Delete a specific Matrixrate.
-     *
+     * @param MatrixrateInterface $matrixrate
+     * @return bool
      * @api
      *
-     * @param \TIG\PostNL\Api\Data\MatrixrateInterface $matrixrate
-     *
-     * @return bool
      */
-    public function delete(\TIG\PostNL\Api\Data\MatrixrateInterface $matrixrate);
+    public function delete(MatrixrateInterface $matrixrate);
 
     /**
      * Create a Matrixrate rule.
-     *
-     * @api
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
+     * @api
      */
     public function create();
 
     /**
      * @param string $field
      * @param string $value
-     *
-     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
+     * @return MatrixrateInterface
      */
     public function getByFieldWithValue($field, $value);
 
     /**
      * @param int $websiteId
-     *
-     * @return \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection
+     * @return Collection
      */
     public function getByWebsiteId($websiteId);
+
+    /**
+     * @param $entityId
+     * @return MatrixrateInterface
+     */
+    public function getById($entityId);
 }

@@ -77,6 +77,10 @@ class DomesticTest extends TestCase
         $productOptionsExpects->method('getBeProducts');
         $productOptionsExpects->willReturn([['value' => 4946]]);
 
+        $productDomesticOptionsExpects = $productOptionsMock->expects($this->once());
+        $productDomesticOptionsExpects->method('getBeDomesticProducts');
+        $productDomesticOptionsExpects->willReturn([]);
+
         $instance = $this->getInstance(['defaultOptions' => $productOptionsMock]);
         $result = $this->invokeArgs('rotateReturnProduct', [$labelMock], $instance);
         $this->assertEquals($expected, $result);

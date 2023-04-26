@@ -33,6 +33,9 @@ namespace TIG\PostNL\Service\Shipment;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
+use TIG\PostNL\Config\Provider\ReturnOptions;
+use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Volume\Items\Calculate;
 use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
 
@@ -70,27 +73,41 @@ class Data
     private $deliveryDateFallback;
 
     /**
+     * @var ReturnOptions
+     */
+    private $returnOptions;
+
+    /** @var ShippingOptions */
+    private $shippingOptions;
+
+    /**
      * @param ProductOptions             $productOptions
      * @param ContentDescription         $contentDescription
      * @param Calculate                  $calculate
      * @param LabelAndPackingslipOptions $labelAndPackingslipOptions
      * @param Customs                    $customs
      * @param DeliveryDateFallback       $deliveryDateFallback
+     * @param ReturnOptions              $returnOptions
+     * @param ShippingOptions            $shippingOptions
      */
     public function __construct(
-        ProductOptions $productOptions,
-        ContentDescription $contentDescription,
-        Calculate $calculate,
+        ProductOptions             $productOptions,
+        ContentDescription         $contentDescription,
+        Calculate                  $calculate,
         LabelAndPackingslipOptions $labelAndPackingslipOptions,
-        Customs $customs,
-        DeliveryDateFallback $deliveryDateFallback
+        Customs                    $customs,
+        DeliveryDateFallback       $deliveryDateFallback,
+        ReturnOptions              $returnOptions,
+        ShippingOptions            $shippingOptions
     ) {
-        $this->productOptions = $productOptions;
-        $this->contentDescription = $contentDescription;
-        $this->shipmentVolume = $calculate;
+        $this->productOptions             = $productOptions;
+        $this->contentDescription         = $contentDescription;
+        $this->shipmentVolume             = $calculate;
         $this->labelAndPackingslipOptions = $labelAndPackingslipOptions;
-        $this->customsInfo = $customs;
-        $this->deliveryDateFallback = $deliveryDateFallback;
+        $this->customsInfo                = $customs;
+        $this->deliveryDateFallback       = $deliveryDateFallback;
+        $this->returnOptions              = $returnOptions;
+        $this->shippingOptions            = $shippingOptions;
     }
 
     /**
@@ -120,12 +137,19 @@ class Data
     private function getDefaultShipmentData(ShipmentInterface $shipment, $address, $contact, $currentShipmentNumber)
     {
         $deliveryDate = $shipment->getDeliveryDate();
+        $postnlOrder  = $shipment->getPostNLOrder();
+        $shipmentType = $postnlOrder ? $postnlOrder->getType() : '';
+
         if (!$deliveryDate) {
             $deliveryDate = $this->getDeliveryDateFromPostNLOrder($shipment);
         }
 
         if (!$deliveryDate) {
             $deliveryDate = $this->deliveryDateFallback->get();
+        }
+
+        if ($shipmentType === ProductInfo::SHIPMENT_TYPE_GP || $shipmentType === ProductInfo::SHIPMENT_TYPE_EPS) {
+            $deliveryDate = '';
         }
 
         return [
@@ -201,6 +225,12 @@ class Data
             $shipmentData['ProductOptions'] = $productOptions;
         }
 
+        $smartReturnActive = $this->returnOptions->isSmartReturnActive();
+        if ($smartReturnActive && $shipment->getIsSmartReturn()) {
+            $shipmentData['ProductOptions']      = $this->getSmartReturnOptions();
+            $shipmentData['ProductCodeDelivery'] = '2285';
+        }
+
         return $shipmentData;
     }
     // @codingStandardsIgnoreEnd
@@ -213,7 +243,16 @@ class Data
     private function getAmount(ShipmentInterface $shipment)
     {
         $amounts = [];
-        $extraCoverAmount = $shipment->getExtraCoverAmount();
+
+        $extraCoverAmount = $shipment->getInsuredTier();
+
+        if (empty($extraCoverAmount)) {
+            $extraCoverAmount = $this->shippingOptions->getInsuredTier();
+        }
+
+        if ($extraCoverAmount == 'default') {
+            $extraCoverAmount = $shipment->getExtraCoverAmount();
+        }
 
         $amounts[] = [
             'AccountName'       => '',
@@ -272,6 +311,19 @@ class Data
                 'GroupSequence' => $currentShipmentNumber,
                 'GroupType'     => '03',
                 'MainBarcode'   => $shipment->getMainBarcode(),
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getSmartReturnOptions()
+    {
+        return [
+            'ProductOption' => [
+                'Characteristic' => '152',
+                'Option'         => '025'
             ]
         ];
     }

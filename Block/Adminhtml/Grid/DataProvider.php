@@ -32,12 +32,17 @@
 namespace TIG\PostNL\Block\Adminhtml\Grid;
 
 use Magento\Backend\Block\Template;
+use Magento\Framework\Json\EncoderInterface;
 use Magento\Framework\View\Element\BlockInterface;
 use Magento\Framework\App\DeploymentConfig\Reader;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Config\Source\Options\FirstLabelPosition;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\Webshop as WebshopConfig;
 use TIG\PostNL\Config\Provider\ProductOptions as OptionConfig;
+use TIG\PostNL\Config\Source\Settings\InsuredTiers;
+use TIG\PostNL\Service\Filter\DomesticOptions;
 use TIG\PostNL\Service\Options\GuaranteedOptions;
 
 class DataProvider extends Template implements BlockInterface
@@ -50,10 +55,16 @@ class DataProvider extends Template implements BlockInterface
     // @codingStandardsIgnoreLine
     protected $_template = 'TIG_PostNL::grid/DataProvider.phtml';
 
+    /** @var EncoderInterface */
+    private $encoder;
+
     /**
      * @var Reader
      */
     private $configReader;
+
+    /** @var ShippingOptions */
+    private $shippingOptions;
 
     /**
      * @var ProductOptions
@@ -81,33 +92,53 @@ class DataProvider extends Template implements BlockInterface
     private $firstLabelPosition;
 
     /**
+     * @var DomesticOptions
+     */
+    private $domesticOptionsFilter;
+
+    /** @var InsuredTiers */
+    private $insuredTiers;
+
+    /**
      * DataProvider constructor.
      *
      * @param Template\Context   $context
+     * @param EncoderInterface   $encoder
      * @param Reader             $reader
+     * @param ShippingOptions    $shippingOptions
      * @param ProductOptions     $productOptions
      * @param OptionConfig       $optionConfig
      * @param WebshopConfig      $webshopConfig
      * @param GuaranteedOptions  $guaranteedOptions
      * @param FirstLabelPosition $firstLabelPosition
+     * @param DomesticOptions    $domesticOptionsFilter
+     * @param InsuredTiers       $insuredTiers
      * @param array              $data
      */
     public function __construct(
         Template\Context $context,
+        EncoderInterface $encoder,
         Reader $reader,
+        ShippingOptions $shippingOptions,
         ProductOptions $productOptions,
         OptionConfig $optionConfig,
         WebshopConfig $webshopConfig,
         GuaranteedOptions $guaranteedOptions,
         FirstLabelPosition $firstLabelPosition,
+        DomesticOptions $domesticOptionsFilter,
+        InsuredTiers $insuredTiers,
         array $data = []
     ) {
+        $this->encoder = $encoder;
         $this->configReader = $reader;
+        $this->shippingOptions = $shippingOptions;
         $this->productOptions = $productOptions;
         $this->optionConfig = $optionConfig;
         $this->webshopConfig = $webshopConfig;
         $this->guaranteedOptions = $guaranteedOptions;
         $this->firstLabelPosition = $firstLabelPosition;
+        $this->domesticOptionsFilter = $domesticOptionsFilter;
+        $this->insuredTiers = $insuredTiers;
         parent::__construct($context, $data);
     }
 
@@ -117,6 +148,7 @@ class DataProvider extends Template implements BlockInterface
     public function getProductOptions()
     {
         $supportedTypes = $this->productOptions->get();
+        $supportedTypes = $this->domesticOptionsFilter->filter($supportedTypes);
 
         $options = [];
         foreach ($supportedTypes as $key => $option) {
@@ -126,7 +158,7 @@ class DataProvider extends Template implements BlockInterface
             ];
         }
 
-        return \Zend_Json::encode($options);
+        return $this->encoder->encode($options);
     }
 
     /**
@@ -200,6 +232,31 @@ class DataProvider extends Template implements BlockInterface
     /**
      * @return string
      */
+    public function getInsuredTierOptions()
+    {
+        $insuredTierOptions = $this->insuredTiers->toOptionArray();
+
+        $options = array_map(function ($option) {
+            return [
+                'value' => $option['value'],
+                'text'  => $option['label']
+            ];
+        }, $insuredTierOptions);
+
+        return $this->encoder->encode($options);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultInsuredTier()
+    {
+        return $this->shippingOptions->getInsuredTier();
+    }
+
+    /**
+     * @return string
+     */
     public function getLabelStartPositionOptions()
     {
         $startPositions = $this->firstLabelPosition->toOptionArray();
@@ -212,7 +269,7 @@ class DataProvider extends Template implements BlockInterface
             ];
         }
 
-        return \Zend_Json::encode($options);
+        return $this->encoder->encode($options);
     }
 
     /**
@@ -229,6 +286,6 @@ class DataProvider extends Template implements BlockInterface
         ];
 
         $options = array_merge([$noneValue], $options);
-        return \Zend_Json::encode($options);
+        return $this->encoder->encode($options);
     }
 }

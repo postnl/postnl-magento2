@@ -178,7 +178,11 @@ class Customs
             $this->attributeValues->get('price', $item);
         }
 
-        $orderItem       = $item->getOrderItem();
+        $orderItem = $item->getOrderItem();
+        if ($orderItem === null) {
+            $orderItem = $item;
+        }
+
         $discountPerItem = $orderItem->getDiscountAmount() / $orderItem->getQtyOrdered();
         $totalDiscount   = $discountPerItem * $item->getQty();
         $value           = $value - $totalDiscount;
@@ -205,7 +209,7 @@ class Customs
         $weight = $weight * 1000;
         $weight = (int)$weight;
 
-        return $weight <= 1000 ? 1000 : $weight;
+        return $weight;
     }
 
     public function getWeightUnit()

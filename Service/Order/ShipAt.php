@@ -33,7 +33,6 @@
 namespace TIG\PostNL\Service\Order;
 
 use TIG\PostNL\Api\Data\OrderInterface;
-use TIG\PostNL\Service\Import\Exception;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Webservices\Endpoints\SentDate;
 
@@ -49,11 +48,15 @@ class ShipAt
      */
     private $sentDate;
 
+    /**
+     * @param QuoteInterface $quote
+     * @param SentDate       $endpoint
+     */
     public function __construct(
         QuoteInterface $quote,
         SentDate $endpoint
     ) {
-        $this->quote = $quote;
+        $this->quote    = $quote;
         $this->sentDate = $endpoint;
     }
 

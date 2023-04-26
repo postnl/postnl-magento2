@@ -34,7 +34,7 @@ namespace TIG\PostNL\Test;
 use Magento\Framework\Filesystem;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 
-abstract class TestCase extends TestCaseFinder
+abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var null|string
@@ -64,16 +64,8 @@ abstract class TestCase extends TestCaseFinder
     /**
      * Basic setup
      */
-    public function setUp()
+    public function setUp() : void
     {
-        /** Require functions.php to be able to use the translate function */
-        $path = __DIR__ . '/../../../../app/functions.php';
-        if (strpos(__DIR__, 'vendor') === false) {
-            $path = __DIR__ . '/../../../../functions.php';
-        }
-
-        require_once($path);
-
         ini_set('error_reporting', E_ALL);
         ini_set('display_errors', '1');
         ini_set('display_startup_errors', '1');
@@ -173,7 +165,7 @@ abstract class TestCase extends TestCaseFinder
      * @param      $class
      * @param bool $return Immediate call getMock.
      *
-     * @return \PHPUnit_Framework_MockObject_MockBuilder|\PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockBuilder|\PHPUnit\Framework\MockObject\MockObject
      */
     protected function getFakeMock($class, $return = false)
     {
@@ -208,10 +200,10 @@ abstract class TestCase extends TestCaseFinder
      *
      * @param                                          $function
      * @param                                          $response
-     * @param \PHPUnit_Framework_MockObject_MockObject $instance
+     * @param \PHPUnit\Framework\MockObject\MockObject $instance
      */
     protected function mockFunction(
-        \PHPUnit_Framework_MockObject_MockObject $instance,
+        $instance,
         $function,
         $response,
         $with = []
@@ -251,5 +243,14 @@ abstract class TestCase extends TestCaseFinder
         $productMetaData = $this->getObject(\Magento\Framework\App\ProductMetadataInterface::class);
 
         return $productMetaData->getVersion();
+    }
+
+    /**
+     * @param $className
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject
+     */
+    protected function getMock($className){
+        return $this->getFakeMock($className, true);
     }
 }

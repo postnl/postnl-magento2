@@ -51,7 +51,7 @@ class QuoteToRateRequest
 
     public function __construct(
         RateRequestFactory $rateRequestFactory,
-        CheckoutSession $session
+        CheckoutSession    $session
     ) {
         $this->rateRequestFactory = $rateRequestFactory;
         $this->quote              = $session->getQuote();
@@ -62,7 +62,7 @@ class QuoteToRateRequest
      */
     public function get()
     {
-        $store = $this->quote->getStore();
+        $store   = $this->quote->getStore();
         $address = $this->quote->getShippingAddress();
 
         /** @var RateRequest $rateRequest */
@@ -79,6 +79,7 @@ class QuoteToRateRequest
         $rateRequest->setOrderSubtotal($this->quote->getSubtotal());
         $rateRequest->setFreeShipping((bool)$address->getFreeShipping());
         $rateRequest->setPackageValueWithDiscount($address->getBaseSubtotalWithDiscount());
+        $rateRequest->setShippingAddress($address);
 
         return $rateRequest;
     }
@@ -107,6 +108,9 @@ class QuoteToRateRequest
         return array_sum($weight);
     }
 
+    /**
+     * @return float|int
+     */
     private function getValue()
     {
         $price = array_map(function (Item $item) {

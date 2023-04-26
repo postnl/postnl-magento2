@@ -32,7 +32,9 @@
 namespace TIG\PostNL\Service\Timeframe\Filters\Days;
 
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
+use TIG\PostNL\Service\Timeframe\Filters\Options\Today;
 use TIG\PostNL\Service\Timeframe\IsPastCutOff;
 
 class CutOffTimes implements DaysFilterInterface
@@ -53,18 +55,26 @@ class CutOffTimes implements DaysFilterInterface
     private $todayTimezone;
 
     /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
+
+    /**
      * @param IsPastCutOff      $isPastCutOff
      * @param TimezoneInterface $dateLoader
      * @param TimezoneInterface $today
+     * @param ShippingOptions   $shippingOptions
      */
     public function __construct(
         IsPastCutOff $isPastCutOff,
         TimezoneInterface $dateLoader,
-        TimezoneInterface $today
+        TimezoneInterface $today,
+        ShippingOptions $shippingOptions
     ) {
-        $this->todayTimezone = $today;
-        $this->dateLoader = $dateLoader;
+        $this->todayTimezone    = $today;
+        $this->dateLoader       = $dateLoader;
         $this->isPastCutOffTime = $isPastCutOff;
+        $this->shippingOptions  = $shippingOptions;
     }
 
     /**
@@ -78,9 +88,43 @@ class CutOffTimes implements DaysFilterInterface
             return $days;
         }
 
-        array_shift($days);
+        $firstDayTimeframe                       = $days[0]->Timeframes->TimeframeTimeFrame;
+        $firstDayTimeframe                       = array_filter($firstDayTimeframe, [$this, 'filterNextDeliveryDay']);
+        $days[0]->Timeframes->TimeframeTimeFrame = $firstDayTimeframe;
+
+        // If no timeframe options remain, the whole day can be removed.
+        if (empty($firstDayTimeframe)) {
+            array_shift($days);
+        }
 
         return array_values($days);
+    }
+
+    /**
+     * Certain timeframe options (e.g. Today delivery) have their own cutoff rules and filters,
+     * so they have to be excluded from this cutoff filter.
+     * All other timeframe options are filtered from the next delivery day as expected from the standard cutoff rules.
+     *
+     * @param $option
+     *
+     * @return bool
+     */
+    private function filterNextDeliveryDay($option)
+    {
+        $option = $option->Options;
+        if (!isset($option->string[0])) {
+            return false;
+        }
+
+        $result = false;
+
+        foreach ($option->string as $string) {
+            if ($string === Today::TIMEFRAME_OPTION_TODAY && $this->shippingOptions->isTodayDeliveryActive()) {
+                $result = true;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -90,7 +134,7 @@ class CutOffTimes implements DaysFilterInterface
      */
     private function isNextDay($day)
     {
-        $dayDateTime = $this->dateLoader->date($day->Date, null, false);
+        $dayDateTime = $this->dateLoader->date($day->Date, null, true);
         $diff = $dayDateTime->diff($this->today());
 
         if ($diff->days == 1) {
@@ -111,7 +155,7 @@ class CutOffTimes implements DaysFilterInterface
             return $today;
         }
 
-        return $today = $this->todayTimezone->date('today', null, false, false);
+        return $today = $this->todayTimezone->date('today', null, true, false);
     }
 
     /**

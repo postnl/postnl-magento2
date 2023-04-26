@@ -75,6 +75,11 @@ class CreateShipments extends Action
     private $errors = [];
 
     /**
+     * @var OrderCollectionFactory
+     */
+    private $collectionFactory;
+
+    /**
      * @param Context                $context
      * @param Filter                 $filter
      * @param OrderCollectionFactory $collectionFactory

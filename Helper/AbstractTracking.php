@@ -34,6 +34,7 @@ namespace TIG\PostNL\Helper;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Store\Model\ScopeInterface;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
 use TIG\PostNL\Config\Provider\Webshop;
@@ -75,6 +76,10 @@ abstract class AbstractTracking extends AbstractHelper
      */
     //@codingStandardsIgnoreLine
     protected $shipmentBarcodeRepositoryInterface;
+    /**
+     * @var ReturnOptions
+     */
+    private $returnOptions;
 
     /**
      * @param Context                            $context
@@ -84,6 +89,7 @@ abstract class AbstractTracking extends AbstractHelper
      * @param Log                                $logging
      * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
      * @param ScopeConfigInterface               $scopeConfig
+     * @param ReturnOptions                      $returnOptions
      */
     public function __construct(
         Context $context,
@@ -92,7 +98,8 @@ abstract class AbstractTracking extends AbstractHelper
         Webshop $webshop,
         Log $logging,
         ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        ReturnOptions $returnOptions
     ) {
         $this->postNLShipmentRepository           = $postNLShipmentRepository;
         $this->searchCriteriaBuilder              = $searchCriteriaBuilder;
@@ -100,6 +107,7 @@ abstract class AbstractTracking extends AbstractHelper
         $this->logging                            = $logging;
         $this->shipmentBarcodeRepositoryInterface = $shipmentBarcodeRepositoryInterface;
         $this->scopeConfig                        = $scopeConfig;
+        $this->returnOptions                      = $returnOptions;
         parent::__construct($context);
     }
 
@@ -154,12 +162,22 @@ abstract class AbstractTracking extends AbstractHelper
     //@codingStandardsIgnoreLine
     protected function getTrackAndTraceUrl($trackingNumber, $type = 'C')
     {
+        $isReturn = false;
+        $returnCountry = 'NL';
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLshipmentByTracking($trackingNumber);
         /** @var \Magento\Sales\Api\Data\OrderAddressInterface $address */
         $address = $postNLShipment->getShippingAddress();
 
-        return $this->generateTrackAndTraceUrl($address, $trackingNumber, $type);
+        if ($postNLShipment->getReturnBarcode() === $trackingNumber) {
+            $isReturn = true;
+        }
+
+        if ($isReturn && $this->returnOptions->isReturnActive()) {
+            $returnCountry = 'BE';
+        }
+
+        return $this->generateTrackAndTraceUrl($address, $trackingNumber, $type, $isReturn, $returnCountry);
     }
 
     /**
@@ -172,7 +190,7 @@ abstract class AbstractTracking extends AbstractHelper
      * @return string
      */
     // @codingStandardsIgnoreLine
-    protected function generateTrackAndTraceUrl(OrderAddressInterface $address, $trackingNumber, $type)
+    protected function generateTrackAndTraceUrl(OrderAddressInterface $address, $trackingNumber, $type ,$isReturn, $returnCountry)
     {
         $order = $address->getOrder();
         $store = $order->getStore();
@@ -186,10 +204,15 @@ abstract class AbstractTracking extends AbstractHelper
         $params = [
             'B' => $trackingNumber,
             'D' => $address->getCountryId(),
-            'P' => str_replace(' ', '', $address->getPostcode()),
+            'P' => str_replace(' ', '', $address->getPostcode() ?? ''),
             'T' => $type,
             'L' => $language
         ];
+
+        if ($isReturn === true) {
+            $params['D'] = $returnCountry;
+            $params['P'] = $this->returnOptions->getZipcode();
+        }
 
         return $this->webshopConfig->getTrackAndTraceServiceUrl() . http_build_query($params);
     }

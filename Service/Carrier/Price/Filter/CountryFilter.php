@@ -93,12 +93,12 @@ class CountryFilter
     }
 
     /**
-     * @param $postcode
+     * @param string $postcode
      *
-     * @return mixed
+     * @return string
      */
     private function normalizeZipCode($postcode)
     {
-        return str_replace(' ', '', $postcode);
+        return str_replace(' ', '', (string)$postcode);
     }
 }

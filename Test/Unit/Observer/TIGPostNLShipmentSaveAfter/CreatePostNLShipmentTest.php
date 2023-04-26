@@ -31,13 +31,13 @@
  */
 namespace TIG\PostNL\Test\Unit\Observer\TIGPostNLShipmentSaveAfter;
 
+use PHPUnit\Framework\MockObject\Rule\InvokedAtMostCount;
 use TIG\PostNL\Model\Order;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\CreatePostNLShipment;
 use TIG\PostNL\Test\TestCase;
-use \PHPUnit\Framework\MockObject\Matcher\InvokedAtMostCount;
 
-class SendTrackAndTraceEmailTest extends TestCase
+class CreatePostNLShipmentTest extends TestCase
 {
     protected $instanceClass = CreatePostNLShipment::class;
 
@@ -79,12 +79,7 @@ class SendTrackAndTraceEmailTest extends TestCase
      */
     public function testGetOrder($orderId, $shipmentId, $expectedCalls)
     {
-        $class = InvokedAtMostCount::class;
-        if (class_exists('PHPUnit_Framework_MockObject_Matcher_InvokedAtMostCount')) {
-            $class = '\PHPUnit_Framework_MockObject_Matcher_InvokedAtMostCount';
-        }
-
-        $invokedAtMost = new $class(1);
+        $invokedAtMost = new InvokedAtMostCount(1);
 
         $orderMock = $this->getFakeMock(Order::class)->setMethods(['getOrderId'])->getMock();
         $orderMock->expects($invokedAtMost)->method('getOrderId')->willReturn($orderId);

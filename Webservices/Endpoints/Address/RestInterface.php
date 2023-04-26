@@ -46,7 +46,7 @@ interface RestInterface
     /**
      * @param array $data
      *
-     * @return array
+     * @return void
      */
     public function updateRequestData(array $data);
 
@@ -64,4 +64,9 @@ interface RestInterface
      * @return string
      */
     public function getVersion();
+
+    /**
+     * @return bool
+     */
+    public function useAddressUri();
 }

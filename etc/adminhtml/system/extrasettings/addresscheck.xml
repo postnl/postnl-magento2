@@ -35,6 +35,9 @@
         <label>Address check</label>
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
         <comment><![CDATA[If you use a different address validation service, only leave the one you want to use activated.]]></comment>
+        <depends>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+        </depends>
         <field id="enable_postcode_check" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
             <label>Use postcode check</label>
             <comment><![CDATA[Contact your PostNL account manager to activate adrescheck. Note: Adrescheck only works if the plugin is in live mode.]]></comment>
@@ -50,6 +53,24 @@
             <config_path>tig_postnl/addresscheck/checkout_compatible</config_path>
             <depends>
                 <field id="enable_postcode_check">1</field>
+            </depends>
+        </field>
+
+        <field id="international_address_enable" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Enable International Address Validation</label>
+            <comment><![CDATA[Enable the international address validation. Do note that you need to pay extra for this]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/internationaladdressoptions/enable</config_path>
+            <depends>
+                <field id="enable_postcode_check">1</field>
+            </depends>
+        </field>
+
+        <field id="validate_international_address_validation" translate="label comment" type="button" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+            <comment><![CDATA[Please save your configuration before validating your International Address Check.]]></comment>
+            <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Validate\InternationalAddressValidation</frontend_model>
+            <depends>
+                <field id="international_address_enable">1</field>
             </depends>
         </field>
 

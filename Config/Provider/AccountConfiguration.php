@@ -46,20 +46,20 @@ class AccountConfiguration extends AbstractConfigProvider
 
     /**
      * Returns an array with all the account information needed for CIF connection
-     * @param null|int $store
+     * @param null|int $scopeId
      * @return array
      */
-    public function getAccountInfo($store = null)
+    public function getAccountInfo($scopeId = null, $websiteScope = false)
     {
-        if ($this->isModusOff($store)) {
+        if ($this->isModusOff($scopeId, $websiteScope)) {
             return [];
         }
 
         $accountInfo = [
-            'customernumber' => $this->getCustomerNumber($store),
-            'customercode'   => $this->getCustomerCode($store),
-            'api_key'        => $this->getApiKey($store),
-            'bls_code'       => $this->getBlsCode($store)
+            'customernumber' => $this->getCustomerNumber($scopeId, $websiteScope),
+            'customercode'   => $this->getCustomerCode($scopeId, $websiteScope),
+            'api_key'        => $this->getApiKey($scopeId, $websiteScope),
+            'bls_code'       => $this->getBlsCode($scopeId, $websiteScope)
         ];
 
         return $accountInfo;
@@ -67,38 +67,52 @@ class AccountConfiguration extends AbstractConfigProvider
 
     /**
      * Returns the customerNumber for live or test.
-     * @param null|int $store
+     * @param null|int $scopeId
      * @return mixed
      */
-    public function getCustomerNumber($store = null)
+    public function getCustomerNumber($scopeId = null, $websiteScope = false)
     {
-        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERNUMBER, $store);
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERNUMBER, $scopeId, $websiteScope);
 
-        return $this->getConfigFromXpath($modusXpath, $store);
+        if ($websiteScope) {
+            return $this->getWebsiteConfigFromXpath($modusXpath, $scopeId);
+        }
+
+        return $this->getConfigFromXpath($modusXpath, $scopeId);
     }
 
     /**
      * Returns the customerCode for live or test.
-     * @param null|int $store
+     * @param null|int $scopeId
      * @return mixed
      */
-    public function getCustomerCode($store = null)
+    public function getCustomerCode($scopeId = null, $websiteScope = false)
     {
-        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERCODE, $store);
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_CUSTOMERCODE, $scopeId, $websiteScope);
 
-        return $this->getConfigFromXpath($modusXpath, $store);
+        if ($websiteScope) {
+            return $this->getWebsiteConfigFromXpath($modusXpath, $scopeId);
+        }
+
+        return $this->getConfigFromXpath($modusXpath, $scopeId);
     }
 
     /**
-     * Returns the API Key which is decrypted automaticly in the _afterload method
+     * Returns the API Key which is decrypted automatically in the _afterload method
      * Magento\Config\Model\Config\Backend\Encrypted R:74
-     * @param null|int $store
+     * @param null|int $scopeId
      * @return string
      */
-    public function getApiKey($store = null)
+    public function getApiKey($scopeId = null, $websiteScope = false)
     {
-        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY, $store);
-        $value = $this->getConfigFromXpath($modusXpath, $store);
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY, $scopeId, $websiteScope);
+
+        if ($websiteScope) {
+            $value = $this->getWebsiteConfigFromXpath($modusXpath, $scopeId);
+        }
+        else {
+            $value = $this->getConfigFromXpath($modusXpath, $scopeId);
+        }
 
         return $this->crypt->decrypt($value);
     }
@@ -107,15 +121,19 @@ class AccountConfiguration extends AbstractConfigProvider
      * @param null|int $store
      * @return mixed
      */
-    public function getBlsCode($store = null)
+    public function getBlsCode($scopeId = null, $websiteScope = false)
     {
-        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_BLSCODE, $store);
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_BLSCODE, $scopeId, $websiteScope);
 
-        return $this->getConfigFromXpath($modusXpath, $store);
+        if ($websiteScope) {
+            return $this->getWebsiteConfigFromXpath($modusXpath, $scopeId);
+        }
+
+        return $this->getConfigFromXpath($modusXpath, $scopeId);
     }
 
     /**
-     * @param null|int $store
+     * @param null|int $scopeId
      * Should return on of these values
      *  '1' => live ||
      *  '2' => test ||
@@ -123,23 +141,27 @@ class AccountConfiguration extends AbstractConfigProvider
      *
      * @return mixed
      */
-    public function getModus($store = null)
+    public function getModus($scopeId = null, $websiteScope = false)
     {
         if (!$this->isModuleOutputEnabled()) {
             return '0';
         }
 
-        return $this->getConfigFromXpath(self::XPATH_GENERAL_STATUS_MODUS, $store);
+        if ($websiteScope) {
+            return $this->getWebsiteConfigFromXpath(self::XPATH_GENERAL_STATUS_MODUS, $scopeId);
+        }
+
+        return $this->getConfigFromXpath(self::XPATH_GENERAL_STATUS_MODUS, $scopeId);
     }
 
     /**
      * Checks if the extension is on status live
-     * @param null|int $store
+     * @param null|int $scopeId
      * @return bool
      */
-    public function isModusLive($store = null)
+    public function isModusLive($scopeId = null, $websiteScope = false)
     {
-        if ($this->getModus($store) == '1') {
+        if ($this->getModus($scopeId, $websiteScope) == '1') {
             return true;
         }
 
@@ -148,12 +170,12 @@ class AccountConfiguration extends AbstractConfigProvider
 
     /**
      * Checks if the extension is on status test
-     * @param null|int $store
+     * @param null|int $scopeId
      * @return bool
      */
-    public function isModusTest($store = null)
+    public function isModusTest($scopeId = null, $websiteScope = false)
     {
-        if ($this->getModus($store) == '2') {
+        if ($this->getModus($scopeId, $websiteScope) == '2') {
             return true;
         }
 
@@ -162,12 +184,12 @@ class AccountConfiguration extends AbstractConfigProvider
 
     /**
      * Checks if the extension is on status off.
-     * @param null|int $store
+     * @param null|int $scopeId
      * @return bool
      */
-    public function isModusOff($store = null)
+    public function isModusOff($scopeId = null, $websiteScope = false)
     {
-        if ($this->getModus($store) == '0' || false == $this->getModus()) {
+        if ($this->getModus($scopeId, $websiteScope) == '0' || false == $this->getModus()) {
             return true;
         }
 
@@ -176,13 +198,13 @@ class AccountConfiguration extends AbstractConfigProvider
 
     /**
      * @param $xpath
-     * @param null|int $store
+     * @param null|int $scopeId
      *
      * @return string
      */
-    private function getModusXpath($xpath, $store = null)
+    private function getModusXpath($xpath, $scopeId = null, $websiteScope = false)
     {
-        if ($this->isModusTest($store)) {
+        if ($this->isModusTest($scopeId, $websiteScope)) {
             $xpath .= '_test';
         }
 

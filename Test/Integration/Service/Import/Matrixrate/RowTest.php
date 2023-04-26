@@ -49,7 +49,7 @@ class RowTest extends TestCase
      */
     private $validRow = [];
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

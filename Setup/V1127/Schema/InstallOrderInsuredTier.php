@@ -18,23 +18,41 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
+ * to support@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
+ * needs please contact support@tig.nl for more information.
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Service\Shipment\Label;
+namespace TIG\PostNL\Setup\V1127\Schema;
 
-use TIG\PostNL\Api\Data\ShipmentLabelInterface;
-use TIG\PostNL\Service\Shipment\Label\Fpdf;
+use TIG\PostNL\Setup\AbstractColumnsInstaller;
 
-interface SizeInterface
+class InstallOrderInsuredTier extends AbstractColumnsInstaller
 {
-    public function addLabel(Fpdf $pdf, ShipmentLabelInterface $label);
+    const TABLE_NAME = 'tig_postnl_order';
+
+    // @codingStandardsIgnoreLine
+    protected $columns = [
+        'insured_tier'
+    ];
+
+    /**
+     * @return array
+     */
+    public function installInsuredTierColumn()
+    {
+        return [
+            // @codingStandardsIgnoreLine
+            'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            'nullable' => true,
+            'default'  => null,
+            'comment'  => 'Extra Cover Insured Tier'
+        ];
+    }
 }

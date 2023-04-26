@@ -62,7 +62,7 @@ class InstallMaximumQuantityLetterboxPackage extends AbstractDataInstaller
      * @param ModuleContextInterface   $context
      *
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Zend_Validate_Exception
+     * @throws \Magento\Framework\Validator\ValidateException
      */
     // @codingStandardsIgnoreLine
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)

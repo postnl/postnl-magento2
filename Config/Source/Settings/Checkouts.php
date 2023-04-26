@@ -45,9 +45,6 @@ class Checkouts implements ArrayInterface
         $options = [
             ['value' => 'default', 'label' => __('Two Step Checkout Luma')],
             ['value' => 'blank', 'label' => __('Two Step Checkout Blank')],
-            ['value' => 'mageplaza', 'label' => __('Mageplaza One Step Checkout')],
-            ['value' => 'danslo', 'label' => __('Rubic Clean Checkout')],
-            ['value' => 'amasty', 'label' => __('Amasty One Step Checkout')]
         ];
         // @codingStandardsIgnoreEnd
 

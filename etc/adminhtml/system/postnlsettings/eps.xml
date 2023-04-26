@@ -44,6 +44,9 @@
             <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getBeProducts</source_model>
             <config_path>tig_postnl/delivery_settings/default_be_option</config_path>
             <tooltip>When shipping with extra cover is selected, the shipment will be insured up to a maximum of €5.000,-</tooltip>
+            <depends>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+            </depends>
         </field>
 
         <field id="default_eps_option" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">

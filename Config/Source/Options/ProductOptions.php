@@ -118,6 +118,16 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     }
 
     /**
+     * Return options where Today is true
+     *
+     * @return array|array[]
+     */
+    public function getIsTodayOptions()
+    {
+        return $this->getProductOptions(['isToday' => true]);
+    }
+
+    /**
      * Returns options if group equals pakjegemak_options
      * @return array
      */
@@ -137,6 +147,17 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     {
         $flags = [];
         $flags['groups'][] = ['group' => 'pakjegemak_be_options'];
+        return $this->getProductOptions($flags);
+    }
+
+    /**
+     * Returns options if group equals pakjegemak_be_domestic_options
+     * @return array
+     */
+    public function getPakjeGemakBeDomesticOptions()
+    {
+        $flags = [];
+        $flags['groups'][] = ['group' => 'pakjegemak_be_domestic_options'];
         return $this->getProductOptions($flags);
     }
 
@@ -201,6 +222,17 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
 
         return $beOptions;
     }
+
+    /**
+     * @return array
+     */
+    public function getBeDomesticOptions()
+    {
+        $beDomesticOptions = $this->getProductOptions(['group' => 'standard_be_options']);
+
+        return $beDomesticOptions;
+    }
+
 
     /**
      * @return array

@@ -32,6 +32,8 @@
 namespace TIG\PostNL\Config\Source;
 
 // @codingStandardsIgnoreFile
+use Laminas\Stdlib\ArrayUtils;
+
 abstract class OptionsAbstract
 {
     /**
@@ -45,9 +47,10 @@ abstract class OptionsAbstract
             'value'                => '3085',
             'label'                => 'Standard shipment',
             'isExtraCover'         => false,
-            'isEvening'            => false,
+            'isEvening'            => true,
             'isSunday'             => false,
             'isGuaranteedDelivery' => true,
+            'isToday'              => true,
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
         ],
@@ -57,6 +60,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => true,
             'isEvening'            => true,
             'isSunday'             => true,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
@@ -67,6 +71,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => true,
             'isEvening'            => true,
             'isSunday'             => true,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
@@ -77,6 +82,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
@@ -87,6 +93,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => false,
             'isEvening'            => true,
             'isSunday'             => true,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'isSameDay'            => true,
             'statedAddressOnly'    => true,
@@ -100,6 +107,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
@@ -110,6 +118,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => false,
             'isEvening'            => true,
             'isSunday'             => true,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'isSameDay'            => true,
             'statedAddressOnly'    => true,
@@ -123,6 +132,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => false,
             'isEvening'            => true,
             'isSunday'             => false,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
@@ -133,6 +143,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => false,
             'isEvening'            => true,
             'isSunday'             => true,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'isSameDay'            => true,
             'statedAddressOnly'    => true,
@@ -183,6 +194,78 @@ abstract class OptionsAbstract
             'countryLimitation'    => 'NL',
             'pge'                  => true,
             'group'                => 'pakjegemak_options',
+        ],
+        //Standard BE domestic options
+        '4960' => [
+            'value'                => '4960',
+            'label'                => 'Belgium Standard, deliver to stated address only',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'standard_be_options',
+        ],
+        '4961' => [
+            'value'                => '4961',
+            'label'                => 'Belgium standard',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'standard_be_options',
+        ],
+        '4962' => [
+            'value'                => '4962',
+            'label'                => 'Belgium standard + Deliver to stated address only + Signature on delivery',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'standard_be_options',
+        ],
+        '4963' => [
+            'value'                => '4963',
+            'label'                => 'Belgium standard + Signature on delivery',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'standard_be_options',
+        ],
+        '4965' => [
+            'value'                => '4965',
+            'label'                => 'Belgium standard + Extra Cover',
+            'isExtraCover'         => true,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'standard_be_options',
+        ],
+        // BE Domestic Pakjegemak Options
+        '4878' => [
+            'value'                => '4878',
+            'label'                => 'Belgium Post Office + Extra Cover',
+            'isExtraCover'         => true,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'pakjegemak_be_domestic_options',
+        ],
+        '4880' => [
+            'value'                => '4880',
+            'label'                => 'Belgium Post Office',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'pakjegemak_be_domestic_options',
         ],
         // BE Pakjegemak options
         '4936' => [
@@ -663,8 +746,10 @@ abstract class OptionsAbstract
 
     protected $groups = [
 	    'standard_options'            => 'Domestic options',
+	    'standard_be_options'         => 'Domestic BE options',
 	    'pakjegemak_options'          => 'Post Office options',
 	    'pakjegemak_be_options'       => 'Post Office BE options',
+	    'pakjegemak_be_domestic_options' => 'Post Office BE options',
 	    'eu_options'                  => 'EU options',
 	    'be_options'                  => 'BE options',
 	    'global_options'              => 'Global options',
@@ -680,8 +765,10 @@ abstract class OptionsAbstract
 
 	protected $groupToLabel = [
 		'standard_options'            => 'Domestic',
+		'standard_be_options'         => 'Domestic BE',
 		'pakjegemak_options'          => 'Post Office',
 		'pakjegemak_be_options'       => 'Post Office Belgium',
+		'pakjegemak_be_domestic_options' => 'Post Office Belgium',
 		'eu_options'                  => 'EPS',
 		'be_options'                  => 'EPS BE',
 		'global_options'              => 'Global Pack',
@@ -701,6 +788,7 @@ abstract class OptionsAbstract
         'ExtraAtHome'       => '',
         'Extra@Home'        => '',
         'Sunday'            => 'Sunday',
+        'Today'             => 'Today',
         'PG'                => '',
         'EPS'               => '',
         'GP'                => '',
@@ -771,7 +859,7 @@ abstract class OptionsAbstract
     {
         $filterFlags = array_filter($flags, function ($value, $key) use ($option) {
             return isset($option[$key]) && $option[$key] == $value;
-        }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
+        }, ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
         if (count($filterFlags) == count($flags)) {
             $this->filteredOptions[$productCode] = $this->availableOptions[$productCode];
@@ -791,7 +879,7 @@ abstract class OptionsAbstract
         foreach ($flags['groups'] as $flag) {
             $filterFlags = array_filter($flag, function ($value, $key) use ($option) {
                 return isset($option[$key]) && $option[$key] == $value;
-            }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
+            }, ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
             if (count($filterFlags) == count($flags)) {
                 $this->filteredOptions[$productCode] = $this->availableOptions[$productCode];
@@ -829,7 +917,7 @@ abstract class OptionsAbstract
         $optionsSorted = $this->getOptionsArrayForGrouped($options);
         $optionsGroupChecked = array_filter($groups, function ($key) use ($optionsSorted) {
             return array_key_exists($key, $optionsSorted);
-        }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_KEY);
+        }, ArrayUtils::ARRAY_FILTER_USE_KEY);
 
         foreach ($optionsGroupChecked as $group => $label) {
             $this->groupedOptions[] = [

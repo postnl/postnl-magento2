@@ -32,6 +32,7 @@
 namespace TIG\PostNL\Helper\Tracking;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Helper\AbstractTracking;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
@@ -86,6 +87,7 @@ class Track extends AbstractTracking
      * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
      * @param BarcodeHandler                     $barcodeHandler
      * @param ScopeConfigInterface               $scopeConfig
+     * @param ReturnOptions                      $returnOptions
      */
     public function __construct(
         Context $context,
@@ -99,7 +101,8 @@ class Track extends AbstractTracking
         Log $logging,
         ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface,
         BarcodeHandler $barcodeHandler,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        ReturnOptions $returnOptions
     ) {
         $this->trackFactory             = $trackFactory;
         $this->trackStatusFactory       = $statusFactory;
@@ -114,7 +117,8 @@ class Track extends AbstractTracking
             $webshop,
             $logging,
             $shipmentBarcodeRepositoryInterface,
-            $scopeConfig
+            $scopeConfig,
+            $returnOptions
         );
     }
 
@@ -186,7 +190,7 @@ class Track extends AbstractTracking
      */
     private function addTrackingNumbersToShipment($shipment, $trackingNumbers)
     {
-        $this->logging->addDebug('Adding trackingnumbers to shipment_id : '. $shipment->getId(), $trackingNumbers);
+        $this->logging->debug('Adding trackingnumbers to shipment_id : '. $shipment->getId(), $trackingNumbers);
 
         $shipment = $this->resetTrackingKey($shipment);
         foreach ($trackingNumbers as $number) {
@@ -213,7 +217,7 @@ class Track extends AbstractTracking
     private function addReturnTrackingNumbersToShipment($postNLShipment)
     {
         $shipment = $postNLShipment->getShipment();
-        $this->logging->addDebug('Adding return trackingnumbers to shipment_id : '. $shipment->getId());
+        $this->logging->debug('Adding return trackingnumbers to shipment_id : '. $shipment->getId());
         $returnItems = $this->getList($postNLShipment);
 
         foreach ($returnItems as $item) {

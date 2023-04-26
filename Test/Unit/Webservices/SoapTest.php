@@ -40,36 +40,36 @@ class SoapTest extends TestCase
     public $instanceClass = Soap::class;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\TIG\PostNL\Webservices\AbstractEndpoint
+     * @var \PHPUnit\Framework\MockObject\MockObject|\TIG\PostNL\Webservices\AbstractEndpoint
      */
     private $endpointMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $soapClient;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $accountConfiguration;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $defaultConfiguration;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $exceptionHandler;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $log;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->soapClient = $this->getMock(\Zend\Soap\Client::class);
         $this->endpointMock = $this->getFakeMock(\TIG\PostNL\Webservices\AbstractEndpoint::class, true);

@@ -70,7 +70,7 @@ class PostcodecheckHandler
             return 'error';
         }
 
-        if ($this->validateParams($params[0], ['streetName', 'city'])) {
+        if ($this->validateParams($params[0], ['streetName', 'city']) || $this->validateParams($params[0], ['streetName', 'cityName'])) {
             return $params[0];
         }
 

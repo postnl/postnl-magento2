@@ -36,9 +36,7 @@
         <p>
             <?php // @codingStandardsIgnoreStart ?>
             <?= __(
-    'If you want to test the extension, but do not have any test mode credentials ' .
-                'you can use the account credentials found <a href="%1" target="_blank">here</a>.',
-    [$block->getInfoUrlForTestAccount()]
+    'If you want to test the extension, but do not have any test mode credentials you can request an API key <a href="https://developer.postnl.nl/request-api-key/" target="_blank">here</a>.'
 ); ?>
             <?php // @codingStandardsIgnoreEnd ?>
         </p>
@@ -54,7 +52,7 @@
     [$block->getInfoUrlForDeliveryoptions()]
 ); ?>
             <?php // @codingStandardsIgnoreEnd ?>
-            <br /><br />
+            <br><br>
             <?= $block->escapeHtml(__(
                 'You will then receive all necessary information in order to configure the extension. If you ' .
                 'cannot find the email containing this information, please contact PostNL support at 088-2255651.'

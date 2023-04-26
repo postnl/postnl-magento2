@@ -1,76 +1,100 @@
-# Postnl Magento 2
+<p align="center">
+<img src="view/frontend/web/images/postnl-logo-large.png" alt="PostNL Logo" style="width:300px">
+</p>
 
-![TIG PostNL tested 2.2.x versions](https://img.shields.io/badge/Tested%20with-2.2.11-%23009f3e)
-![TIG PostNL tested 2.3.x versions](https://img.shields.io/badge/Tested%20with-2.3.5-%23009f3e)
-[![Build Status](https://travis-ci.org/tig-nl/postnl-magento2.svg?branch=master)](https://travis-ci.org/tig-nl/postnl-magento2) ![Coverage Status](https://coveralls.io/repos/github/tig-nl/tig-extension-tig-postnl-magento2/badge.svg?t=uuXzu3)
+# PostNL Magento 2
+[![Lastest Stable Version](https://img.shields.io/github/v/release/tig-nl/postnl-magento2?style=for-the-badge&color=3244b0)](https://github.com/tig-nl/postnl-magento2/releases/latest)
+![TIG PostNL tested 2.3.7 versions](https://img.shields.io/badge/Tested%20with%20Magento-2.3.7-%2300cf00?style=for-the-badge)
+![TIG PostNL tested 2.4.6 versions](https://img.shields.io/badge/Tested%20with%20Magento-2.4.6-%2300cf00?style=for-the-badge)
+[![Total Extension downloads](https://img.shields.io/packagist/dt/tig/postnl-magento2?style=for-the-badge&color=ed7000)](https://packagist.org/packages/tig/postnl-magento2/stats)
+![Build Status](https://img.shields.io/travis/tig-nl/postnl-magento2/master?style=for-the-badge)
 
-## Installation
+This is the official PostNL Magento 2 extension to connect your Magento 2 webshop with PostNL.
 
+## Requirements
+- Magento version 2.3.6 - 2.3.7-p4, 2.4.3 - 2.4.6
+- PHP 7.3+
+- In order to use this extension you need to be a contract customer of PostNL. If you are not a customer of PostNL, you can <a href="https://www.postnl.nl/zakelijk/e-commerce/flexibele-bezorgopties" target="_blank" title="register at PostNL">register yourself here</a>.
+
+## Installation 
 We strongly recommend that you use a Staging Environment for the installation, and to also make a backup of your environment.
 
-To install the extension login to your environment using SSH. Then navigate to the Magento 2 Roo Directory and run the following commands in the same order as described:
+### Installation using composer (recommended)
+To install the extension login to your environment using SSH. Then navigate to the Magento 2 root directory and run the following commands in the same order as described:
  
 Enable maintenance mode:
-~~~~
+~~~~shell
 php bin/magento maintenance:enable
 ~~~~
 
-Install the extension:
-~~~~
+1. Install the extension:
+~~~~shell
 composer require tig/postnl-magento2
 ~~~~
 
-Empty the following folders if they exist (Make sure to not delete the folders):
-- var/cache
-- var/di
-- var/generation
-- var/pagecache
-- var/view_preprocessed
-
-Flush the cache:
-~~~~
-php bin/magento cache:flush
+2. Enable the PostNL Magento 2 plugin
+~~~~shell
+php bin/magento module:enable TIG_PostNL
 ~~~~
 
-Update the Magento 2 environment:
-~~~~
+3. Update the Magento 2 environment:
+~~~~shell
 php bin/magento setup:upgrade
 ~~~~
 
-Compile DI:
-~~~~
+When your Magento environment is running in production mode, you also need to run the following comands:
+
+4. Compile DI:
+~~~~shell
 php bin/magento setup:di:compile
 ~~~~
 
-Deploy static content:
-~~~~
+5. Deploy static content:
+~~~~shell
 php bin/magento setup:static-content:deploy
 ~~~~
 
-Re-index the Magento 2 environment:
-~~~~
-php bin/magento indexer:reindex
-~~~~
-
-Disable maintenance mode:
-~~~~
+6. Disable maintenance mode:
+~~~~shell
 php bin/magento maintenance:disable
 ~~~~
 
-The installation on your Staging Environment is now finished.
+### Installation manually
+1. Download the extension directly from [github](https://github.com/tig-nl/postnl-magento2) by clicking on *Code* and then *Download ZIP*.
+2. Create the directory *app/code/TIG/PostNL* (Case-sensitive)
+3. Extract the zip and upload the code into *app/code/TIG/PostNL*
+4. Enable the PostNL Magento 2 plugin
+~~~~shell
+php bin/magento module:enable TIG_PostNL
+~~~~
 
-## User and Configuration Manual
-https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+extensie+gebruikershandleiding
+5. Update the Magento 2 environment:
+~~~~shell
+php bin/magento setup:upgrade
+~~~~
 
-## Full installation Manual
-https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+extensie+installatiehandleiding
+## Update 
+To update the PostNL Extension run the following commands:
+~~~~shell
+composer update tig/postnl-magento2
+php bin/magento setup:upgrade
+~~~~
 
-## Knowledge Base
-https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+extensie
+## Uninstalling the PostNL extension
+
+To remove the PostNL extension, simply make use of the uninstall command Magento provides: [https://devdocs.magento.com/guides/v2.4/install-gde/install/cli/install-cli-uninstall-mods.html#instgde-cli-uninst-mod-uninst](https://devdocs.magento.com/guides/v2.4/install-gde/install/cli/install-cli-uninstall-mods.html#instgde-cli-uninst-mod-uninst)
+
+PostNL uses uninstall scripts. Please make sure to add the --remove-data flag to your command.
+The uninstall script will ask if you would like to remove Order related PostNL data. Removing this data is optional.
+The recommended uninstall command is:
+
+~~~~shell
+php bin/magento module:uninstall TIG_PostNL --backup-db --remove-data --clear-static-content`
+~~~~
 
 ## Running tests (advanced)
 
-Place this code in a working Magento 2 installation in the folder app/code/TIG/PostNL (Case-sensitive). 
+Place this code in a working Magento 2 installation in the folder *app/code/TIG/PostNL* (Case-sensitive). 
 
 Install all the dependencies:
 - composer install
@@ -78,7 +102,7 @@ Install all the dependencies:
 - npm install -g grunt-cli
 - Setup the integration tests as [advised by Magento](http://devdocs.magento.com/guides/v2.0/test/integration/integration_test_setup.html).
 - Paste the following xml within the ``<testsuites>`` tag of **dev/tests/integration/phpunit.xml**:
-~~~~
+~~~~xml
 <testsuite name="TIG PostNL Integration Tests">
     <directory>../../../app/code/TIG/PostNL/Test/Integration</directory>
     <directory>../../../vendor/tig/postnl/Test/Integration</directory>
@@ -87,9 +111,9 @@ Install all the dependencies:
 ~~~~
 
 Run:
-
-`grunt test`
-
+~~~~shell
+grunt test
+~~~~
 This command will run the following tests:
 
 - Unit tests.
@@ -100,20 +124,17 @@ This command will run the following tests:
 
 The build status can be viewed on [Travis-ci.com](https://travis-ci.org/tig-nl/postnl-magento2)
 
-## Frontend: Changing Colors of the PostNL extension
+## Support
+This extension is developed by Total Internet Group ([TIG](https://tig.nl)) commissioned by PostNL.
 
-Open: **app/code/TIG/PostNL/view/frontend/web/css/source/deliveryoptions.less**
+### Extension basic configuration and account information
+For questions related to your PostNL account and PostNL delivery options, please contact PostNL.
+- **Phone:** +31 (0)88-2255651
+- **Website:** [www.postnl.com](https://www.postnl.com)
 
-Copy the variables to your own **theme.less** or extend them in your **extend.less**. More information:
-http://devdocs.magento.com/guides/v2.0/frontend-dev-guide/css-guide/css_quick_guide_approach.html#simple_override
+### Extension support and advanced configuration
+For questions about installing and configuring the extension please consult the relevant documentation:
+- **Knowledge base:** [PostNL Magento 2 Knowledge base](https://postnl.github.io/magento2/)
+- **Phone:** +31 (0)88-2255652
+- **Email:** [digitaleklantsupport@postnl.nl](mailto:digitaleklantsupport@postnl.nl)
 
-
-## Uninstalling the PostNL extension
-
-To remove the PostNL extension, simply make use of the uninstall command Magento provides: https://devdocs.magento.com/guides/v2.4/install-gde/install/cli/install-cli-uninstall-mods.html#instgde-cli-uninst-mod-uninst
-
-PostNL uses uninstall scripts. Please make sure to add the --remove-data flag to your command.
-The uninstall script will ask if you would like to remove Order related PostNL data. Removing this data is optional.
-The recommended uninstall command is:
-
-`bin/magento module:uninstall TIG_PostNL --backup-db --remove-data --clear-static-content`

@@ -174,7 +174,7 @@ abstract class GenerateAbstract
         }
 
         if (!is_object($response) || !isset($responseShipments->ResponseShipment)) {
-            throw new PostNLException(sprintf('Invalid generateLabel response: %1', var_export($response, true)));
+            throw new PostNLException(sprintf('Invalid generateLabel response: %s', var_export($response, true)));
         }
 
         return $responseShipments->ResponseShipment;
@@ -227,11 +227,14 @@ abstract class GenerateAbstract
             $this->shipmentLabelRepository->save($labelModel);
         }
 
+        $productCodeDelivery = $labelItem->ProductCodeDelivery;
+
         /**
-         * If SAM returned different product code during generation, override
-         * it in PostNL Shipment table.
+         * If SAM returned different product code during generation, override it in PostNL Shipment table.
+         *
+         * POSTNLM2-1391 : Product code 2285 is an exception as that is the Smart Return product code.
          */
-        if ($labelItem->ProductCodeDelivery !== $shipment->getProductCode()) {
+        if ($productCodeDelivery !== $shipment->getProductCode() && $productCodeDelivery != '2285') {
             $shipment->setProductCode($labelItem->ProductCodeDelivery);
         }
 

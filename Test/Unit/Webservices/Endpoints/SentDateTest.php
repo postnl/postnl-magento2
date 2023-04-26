@@ -109,7 +109,7 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function optionsMock()
     {
@@ -122,7 +122,7 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function deliveryDateFallbackMock()
     {

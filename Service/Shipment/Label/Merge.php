@@ -116,7 +116,7 @@ class Merge
          * therefore check if there are A6 labels to merge.
          */
         if (!empty($a6Labels)) {
-            $a6result = $this->a6Merger->files($a6Labels, $createNewPdf);
+            $a6result = $this->a6Merger->files($a6Labels, true);
             $a4result->concatPdf($a6result);
         }
 

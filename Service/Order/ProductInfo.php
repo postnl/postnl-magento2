@@ -39,6 +39,7 @@ use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipment\PriorityCountries;
+use TIG\PostNL\Service\Validation\CountryShipping;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 
 // @codingStandardsIgnoreFile
@@ -60,6 +61,8 @@ class ProductInfo
 
     const OPTION_SUNDAY                   = 'sunday';
 
+    const OPTION_TODAY                    = 'today';
+
     const OPTION_DAYTIME                  = 'daytime';
 
     const OPTION_EVENING                  = 'evening';
@@ -78,6 +81,8 @@ class ProductInfo
 
     const SHIPMENT_TYPE_SUNDAY            = 'Sunday';
 
+    const SHIPMENT_TYPE_TODAY            = 'Today';
+
     const SHIPMENT_TYPE_EVENING           = 'Evening';
 
     const SHIPMENT_TYPE_DAYTIME           = 'Daytime';
@@ -92,6 +97,9 @@ class ProductInfo
     /** @var ProductOptionsFinder */
     private $productOptionsFinder;
 
+    /** @var CountryShipping */
+    private $countryShipping;
+
     /** @var QuoteInterface */
     private $quote;
     /**
@@ -102,15 +110,18 @@ class ProductInfo
     /**
      * @param ProductOptionsConfiguration $productOptionsConfiguration
      * @param ProductOptionsFinder        $productOptionsFinder
+     * @param CountryShipping             $countryShipping
      * @param QuoteInterface              $quote
      */
     public function __construct(
         ProductOptionsConfiguration $productOptionsConfiguration,
         ProductOptionsFinder $productOptionsFinder,
+        CountryShipping $countryShipping,
         QuoteInterface $quote
     ) {
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->productOptionsFinder        = $productOptionsFinder;
+        $this->countryShipping             = $countryShipping;
         $this->quote                       = $quote;
     }
 
@@ -126,8 +137,8 @@ class ProductInfo
     public function get($type = '', $option = '', $address = null)
     {
         $country = $this->getCountryCode($address);
-        $type    = strtolower($type);
-        $option  = strtolower($option);
+        $type    = $type ? strtolower($type) : '';
+        $option  = $option ? strtolower($option) : '';
 
         // Check if the country is not an ESP country or BE/NL and if it is Global Pack
         if (!in_array($country, EpsCountries::ALL)
@@ -289,9 +300,13 @@ class ProductInfo
 
         $this->type = static::SHIPMENT_TYPE_PG;
 
-        if ($country === 'BE') {
+        if ($this->countryShipping->isShippingNLtoBE($country)) {
             $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakBeProductOption();
+            return;
+        }
 
+        if ($this->countryShipping->isShippingBEDomestic($country)) {
+            $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakBeDomesticProductOption();
             return;
         }
 
@@ -317,6 +332,11 @@ class ProductInfo
                 $this->type = static::SHIPMENT_TYPE_SUNDAY;
 
                 break;
+            case static::OPTION_TODAY:
+                $this->code = $this->productOptionsConfiguration->getDefaultTodayProductOption();
+                $this->type = static::SHIPMENT_TYPE_TODAY;
+
+                break;
             case static::OPTION_EXTRAATHOME:
                 $this->code = $this->productOptionsConfiguration->getDefaultExtraAtHomeProductOption();
                 $this->type = static::SHIPMENT_TYPE_EXTRAATHOME;
@@ -337,13 +357,18 @@ class ProductInfo
     private function setDefaultProductOption($country)
     {
         $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
-        if ($country == 'BE') {
+
+        if ($this->countryShipping->isShippingNLtoBE($country)) {
             $this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
+        }
+
+        if ($this->countryShipping->isShippingBEDomestic($country)) {
+            $this->code = $this->productOptionsConfiguration->getDefaultBeDomesticProductOption();
         }
 
         $this->type = static::SHIPMENT_TYPE_DAYTIME;
 
-        if ($country != 'NL') {
+        if ($country !== 'NL' && $country !== 'BE') {
             return;
         }
 
