@@ -319,7 +319,7 @@ Percent,Percentage
 "Are you planning to ship outside of the EU? Activate the non-EU shipping products with the details you have received from PostNL. You can ignore the GlobalPack settings for domestic shipping and shipping within the EU.","Gaat u buiten de EU verzenden? Activeer dan de non-EU verzendproducten met de gegevens die u van PostNL gekregen heeft. Verstuurt u alleen binnen Nederland en de EU? Dan kunt u deze instellingen negeren."
 "Use non-EU shipping products","Gebruik non-EU verzendproducten"
 "Barcode settings","Barcode instellingen"
-"If you do not use shipments outside the EU, then leave this option deactivated.","Als u geen gebruikt maakt van zendingen buiten de EU, dan kunt u deze optie uit laten staan."
+"If you do not use shipments outside the EU, then leave this option deactivated.","Als u geen gebruik maakt van zendingen buiten de EU, dan kunt u deze optie uit laten staan."
 "The current global barcode type as supplied by PostNL. Must consist of 2 letters.","De huidige barcodetype zoals aangeleverd door PostNL. Moet bestaan uit 2 letters."
 "Customs settings","Douane instellingen"
 "If you do not own a customs license, leave this field empty.","Als u geen douane licentie heeft, laat dit veld dan leeg."
