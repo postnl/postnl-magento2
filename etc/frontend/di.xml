@@ -43,6 +43,8 @@
             <!-- Order is important, cutoff times must be processed last -->
             <argument name="dayFilters" xsi:type="array">
                 <item name="sameday" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\SameDay</item>
+                <item name="dateoff" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\DateOff</item>
+                <item name="daysoff" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\DaysOff</item>
                 <item name="cutoff" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\CutOffTimes</item>
             </argument>
             <argument name="optionsFilters" xsi:type="array">

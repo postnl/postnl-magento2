@@ -2,6 +2,12 @@
 
 namespace TIG\PostNL\Config\Provider;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Encryption\Encryptor;
+use Magento\Framework\Module\Manager;
+use Magento\Framework\Serialize\SerializerInterface;
+use TIG\PostNL\Config\Source\Options\ProductOptions;
+
 /**
  * @codingStandardsIgnoreStart
  */
@@ -39,8 +45,32 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_BOXABLE_PACKETS_ACTIVE   = 'tig_postnl/peps/peps_boxable_packets_active';
     const XPATH_SHIPPING_OPTION_COUNTRY                  = 'tig_postnl/generalconfiguration_shipping_address/country';
     const XPATH_SHIPPING_OPTION_INSURED_TIER             = 'tig_postnl/insured_delivery/insured_tier';
+    const XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF        = 'tig_postnl/delivery_days/delivery_date_off';
 
     private $defaultMaxDeliverydays = '5';
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @param ScopeConfigInterface $scopeConfig
+     * @param Manager $moduleManager
+     * @param Encryptor $crypt
+     * @param ProductOptions $productOptions
+     * @param SerializerInterface $serializer
+     */
+    public function __construct(
+        ScopeConfigInterface $scopeConfig,
+        Manager $moduleManager,
+        Encryptor $crypt,
+        ProductOptions $productOptions,
+        SerializerInterface $serializer
+    ) {
+        parent::__construct($scopeConfig, $moduleManager, $crypt, $productOptions);
+        $this->serializer = $serializer;
+    }
 
     /**
      * @return bool
@@ -306,6 +336,21 @@ class ShippingOptions extends AbstractConfigProvider
     public function getInsuredTier()
     {
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_INSURED_TIER);
+    }
+
+    /**
+     * @param string $configPath
+     * @return array
+     */
+    public function getDeliveryOff(string $configPath = self::XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF): array
+    {
+        try {
+            return $configPath === self::XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF
+                ? $this->serializer->unserialize((string)$this->getConfigFromXpath($configPath))
+                : explode(',', (string)$this->getConfigFromXpath($configPath));
+        } catch (\Throwable $e) {
+            return [];
+        }
     }
 }
 /**
