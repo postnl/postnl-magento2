@@ -625,6 +625,7 @@ Percent,Percentage
 "Total order value","Totale bestelwaarde"
 "Insured Amount Tier","Staffel verzekerd bedrag"
 "Select the total order value or one of the tiers as insured amount.","Selecteer de Totale bestelwaarde of één van de staffels als verzekerd bedrag."
+"Automatic cleanup of expired labels","Automatisch opschonen van verlopen labels"
 "Please select an option.", "Selecteer een optie."
 "(International) Letterbox Package","(Internationaal) Brievenbuspakje"
 "Parcel EU to Consumer Track & Trace","Pakket EU naar Consument Track & Trace"

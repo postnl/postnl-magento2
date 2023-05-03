@@ -34,6 +34,8 @@ class Webshop extends AbstractConfigProvider
 
     const XPATH_POSTCODE_ADDRESS_CHECK_ENABLED = 'tig_postcode/configuration/modus';
 
+    const XPATH_CLEAR_OLD_SHIPMENT_LABELS = 'tig_postnl/extra_settings_printer/enable_expired_label_cleanup';
+
     /**
      * @return bool
      */
@@ -194,5 +196,15 @@ class Webshop extends AbstractConfigProvider
     public function getShowToolbar($storeId = null)
     {
         return $this->getConfigFromXpath(self::XPATH_SHOW_GRID_TOOLBAR, $storeId);
+    }
+
+    /**
+     * @param int|null $storeId
+     *
+     * @return bool
+     */
+    public function isExpiredLabelCleanupEnabled(int $storeId = null): bool
+    {
+        return (bool)$this->getConfigFromXpath(self::XPATH_CLEAR_OLD_SHIPMENT_LABELS, $storeId);
     }
 }
