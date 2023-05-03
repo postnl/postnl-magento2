@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Config\Source\Options;
 
 use Magento\Framework\Option\ArrayInterface;
@@ -128,8 +99,6 @@ class DefaultOptions implements ArrayInterface
      */
     public function getEpsProducts()
     {
-        $epsProducts[] = $this->shippingOptions->canUsePriority() ? $this->productOptions->getPriorityOptions() : [];
-        $epsProducts[] = $this->shippingOptions->canUseEpsBusinessProducts() ? $this->productOptions->getEpsBusinessOptions() : [];
         $epsProducts[] = $this->productOptions->getEpsOptions();
 
         return call_user_func_array("array_merge", $epsProducts);
@@ -138,9 +107,38 @@ class DefaultOptions implements ArrayInterface
     /**
      * @return array
      */
+    public function getEpsBusinessProducts()
+    {
+        $epsBusinessProducts[] = $this->productOptions->getEpsBusinessOptions();
+
+        return call_user_func_array("array_merge", $epsBusinessProducts);
+    }
+
+    /**
+     * @return array
+     */
+    public function getPepsProducts()
+    {
+        $pepsProducts[] = $this->productOptions->getPriorityOptions();
+
+        return call_user_func_array("array_merge", $pepsProducts);
+    }
+
+    /**
+     * @return array
+     */
+    public function getPepsBoxableProducts()
+    {
+        $pepsBoxProducts[] = $this->productOptions->getBoxableOptions();
+
+        return call_user_func_array("array_merge", $pepsBoxProducts);
+    }
+
+    /**
+     * @return array
+     */
     public function getGlobalProducts()
     {
-        $globalProducts[] = $this->shippingOptions->canUsePriority() ? $this->productOptions->getPriorityOptions() : [];
         $globalProducts[] = $this->productOptions->getGlobalPackOptions();
 
         return call_user_func_array("array_merge", $globalProducts);
