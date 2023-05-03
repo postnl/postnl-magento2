@@ -57,7 +57,7 @@
             </field>
 
             <field id="enable_expired_label_cleanup" translate="label" type="select" sortOrder="20" showInDefault="1">
-                <label>Enable cronjob to cleanup expired labels</label>
+                <label>Automatic cleanup of expired labels</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <config_path>tig_postnl/extra_settings_printer/enable_expired_label_cleanup</config_path>
             </field>
