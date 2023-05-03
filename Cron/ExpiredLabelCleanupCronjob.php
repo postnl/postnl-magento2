@@ -5,6 +5,7 @@ namespace TIG\PostNL\Cron;
 
 class ExpiredLabelCleanupCronjob
 {
+    public const LABEL_CLEANUP_INTERVAL = '4 months';
     /**
      * @var \TIG\PostNL\Model\ResourceModel\ShipmentLabel\CollectionFactory
      */
@@ -43,7 +44,7 @@ class ExpiredLabelCleanupCronjob
         if ($this->webshop->isExpiredLabelCleanupEnabled()) {
             $this->collectionFactory->create()
                 ->cleanupExpiredLabels(
-                    $this->timezone->date()->modify('-4 months')
+                    $this->timezone->date()->modify('-' . self::LABEL_CLEANUP_INTERVAL)
                 );
         }
     }
