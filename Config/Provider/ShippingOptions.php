@@ -1,35 +1,12 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Config\Provider;
+
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Encryption\Encryptor;
+use Magento\Framework\Module\Manager;
+use Magento\Framework\Serialize\SerializerInterface;
+use TIG\PostNL\Config\Source\Options\ProductOptions;
 
 /**
  * @codingStandardsIgnoreStart
@@ -65,10 +42,35 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_STATED_ADDRESS_ACTIVE    = 'tig_postnl/delivery_settings/stated_address_only_active';
     const XPATH_SHIPPING_OPTION_STATED_ADDRESS_FEE       = 'tig_postnl/delivery_settings/stated_address_only_fee';
     const XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_ACTIVE = 'tig_postnl/letterbox_package/letterbox_package_active';
+    const XPATH_SHIPPING_OPTION_BOXABLE_PACKETS_ACTIVE   = 'tig_postnl/peps/peps_boxable_packets_active';
     const XPATH_SHIPPING_OPTION_COUNTRY                  = 'tig_postnl/generalconfiguration_shipping_address/country';
     const XPATH_SHIPPING_OPTION_INSURED_TIER             = 'tig_postnl/insured_delivery/insured_tier';
+    const XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF        = 'tig_postnl/delivery_days/delivery_date_off';
 
     private $defaultMaxDeliverydays = '5';
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @param ScopeConfigInterface $scopeConfig
+     * @param Manager $moduleManager
+     * @param Encryptor $crypt
+     * @param ProductOptions $productOptions
+     * @param SerializerInterface $serializer
+     */
+    public function __construct(
+        ScopeConfigInterface $scopeConfig,
+        Manager $moduleManager,
+        Encryptor $crypt,
+        ProductOptions $productOptions,
+        SerializerInterface $serializer
+    ) {
+        parent::__construct($scopeConfig, $moduleManager, $crypt, $productOptions);
+        $this->serializer = $serializer;
+    }
 
     /**
      * @return bool
@@ -315,6 +317,14 @@ class ShippingOptions extends AbstractConfigProvider
     /**
      * @return bool
      */
+    public function isBoxablePacketsActive()
+    {
+        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_BOXABLE_PACKETS_ACTIVE);
+    }
+
+    /**
+     * @return bool
+     */
     public function canUseBeProducts()
     {
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_COUNTRY) === 'BE';
@@ -326,6 +336,21 @@ class ShippingOptions extends AbstractConfigProvider
     public function getInsuredTier()
     {
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_INSURED_TIER);
+    }
+
+    /**
+     * @param string $configPath
+     * @return array
+     */
+    public function getDeliveryOff(string $configPath = self::XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF): array
+    {
+        try {
+            return $configPath === self::XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF
+                ? $this->serializer->unserialize((string)$this->getConfigFromXpath($configPath))
+                : explode(',', (string)$this->getConfigFromXpath($configPath));
+        } catch (\Throwable $e) {
+            return [];
+        }
     }
 }
 /**

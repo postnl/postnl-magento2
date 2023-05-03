@@ -1,34 +1,4 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 
 // @codingStandardsIgnoreFile
 namespace TIG\PostNL\Helper\DeliveryOptions;
@@ -186,6 +156,10 @@ class OrderParams
             return $list;
         }
 
+        if ($type === 'Boxable Packet') {
+            return $list;
+        }
+
         foreach ($this->optionParams as $key => $value) {
             $list[$key] = $value[$type];
         }
@@ -245,8 +219,16 @@ class OrderParams
             $option = $params['type'];
         }
 
+        if(!array_key_exists('country', $params)) {
+            return $option;
+        }
+
         if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] == 'NL') {
             $option = 'Daytime';
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'Boxable Packet' && $params['country'] !== 'NL') {
+            $option = 'boxable_packets';
         }
 
         if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] !== 'NL' && in_array($params['country'], EpsCountries::ALL)) {
@@ -275,14 +257,19 @@ class OrderParams
      */
     private function getAcInformation($params)
     {
-        $acOptions = $this->productOptions->getByType($params['type'], true);
+        $type = strtolower($params['type']);
+
+        if (isset($params['product_code']) && strlen($params['product_code']) > 4) {
+            $type .= '-' . substr($params['product_code'], 0, 1);
+        }
+
+        $acOptions = $this->productOptions->getByType($type);
         if (!$acOptions) {
             return [];
         }
 
         return [
-            'ac_characteristic' => $acOptions['Characteristic'],
-            'ac_option'         => $acOptions['Option']
+            'ac_information' => $acOptions
         ];
     }
 

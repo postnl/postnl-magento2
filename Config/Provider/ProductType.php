@@ -1,39 +1,10 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 
 namespace TIG\PostNL\Config\Provider;
 
 use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
+use TIG\PostNL\Service\Shipping\BoxablePackets;
 
 class ProductType extends AbstractSource
 {
@@ -41,6 +12,7 @@ class ProductType extends AbstractSource
     const PRODUCT_TYPE_EXTRA_AT_HOME     = 'extra_at_home';
     const PRODUCT_TYPE_REGULAR           = 'regular';
     const PRODUCT_TYPE_LETTERBOX_PACKAGE = 'letterbox_package';
+    const PRODUCT_TYPE_BOXABLE_PACKET    = 'boxable_packets';
 
     /**
      * @var ShippingOptions
@@ -53,15 +25,23 @@ class ProductType extends AbstractSource
     private $letterboxPackage;
 
     /**
+     * @var BoxablePackets
+     */
+    private $boxablePackets;
+
+    /**
      * @param ShippingOptions  $shippingOptions
      * @param LetterboxPackage $letterboxPackage
+     * @param BoxablePackets $boxablePackets
      */
     public function __construct(
         ShippingOptions $shippingOptions,
-        LetterboxPackage $letterboxPackage
+        LetterboxPackage $letterboxPackage,
+        BoxablePackets $boxablePackets
     ) {
         $this->shippingOptions = $shippingOptions;
         $this->letterboxPackage = $letterboxPackage;
+        $this->boxablePackets = $boxablePackets;
     }
 
     /**
@@ -79,8 +59,8 @@ class ProductType extends AbstractSource
             $options[] = ['value' => self::PRODUCT_TYPE_EXTRA_AT_HOME, 'label' => __('Extra@Home')];
         }
 
-        if ($this->shippingOptions->isLetterboxPackageActive()) {
-            $options[] = ['value' => self::PRODUCT_TYPE_LETTERBOX_PACKAGE, 'label' => __('Letterbox Package')];
+        if ($this->shippingOptions->isLetterboxPackageActive() || $this->shippingOptions->isBoxablePacketsActive() ) {
+            $options[] = ['value' => self::PRODUCT_TYPE_LETTERBOX_PACKAGE, 'label' => __('(International) Letterbox Package')];
         }
 
         return $options;
@@ -100,6 +80,10 @@ class ProductType extends AbstractSource
 
         if ($this->letterboxPackage->isLetterboxPackage($items, false)) {
             $types[] = self::PRODUCT_TYPE_LETTERBOX_PACKAGE;
+        }
+
+        if ($this->boxablePackets->isBoxablePacket($items, false)) {
+            $types[] = self::PRODUCT_TYPE_BOXABLE_PACKET;
         }
 
         return $types;

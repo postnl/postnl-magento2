@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
 use Magento\Framework\Json\EncoderInterface;
@@ -37,6 +8,7 @@ use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Service\Carrier\Price\Calculator;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
+use TIG\PostNL\Service\Shipping\LetterboxPackage;
 use TIG\PostNL\Webservices\Endpoints\Locations as LocationsEndpoint;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use Magento\Framework\App\Action\Context;
@@ -56,6 +28,11 @@ class Locations extends AbstractDeliveryOptions
     private $priceCalculator;
 
     /**
+     * @var LetterboxPackage
+     */
+    private $letterboxPackage;
+
+    /**
      * @param Context            $context
      * @param OrderRepository    $orderRepository
      * @param Session            $checkoutSession
@@ -65,6 +42,7 @@ class Locations extends AbstractDeliveryOptions
      * @param DeliveryDate       $deliveryDate
      * @param Calculator         $priceCalculator
      * @param ShippingDuration   $shippingDuration
+     * @param LetterboxPackage   $letterboxPackage
      */
     public function __construct(
         Context $context,
@@ -76,11 +54,13 @@ class Locations extends AbstractDeliveryOptions
         LocationsEndpoint $locations,
         DeliveryDate $deliveryDate,
         Calculator $priceCalculator,
-        ShippingDuration $shippingDuration
+        ShippingDuration $shippingDuration,
+        LetterboxPackage $letterboxPackage
     ) {
         $this->addressEnhancer   = $addressEnhancer;
         $this->locationsEndpoint = $locations;
         $this->priceCalculator   = $priceCalculator;
+        $this->letterboxPackage = $letterboxPackage;
 
         parent::__construct(
             $context,
@@ -98,8 +78,14 @@ class Locations extends AbstractDeliveryOptions
      */
     public function execute()
     {
-        $params              = $this->getRequest()->getParams();
+        $products = $this->checkoutSession->getQuote()->getAllItems();
+        if ($this->letterboxPackage->isLetterboxPackage($products, false)) {
+            return $this->jsonResponse([
+                'error' => __('Pickup locations are disabled for Letterbox packages.')
+            ]);
+        }
 
+        $params = $this->getRequest()->getParams();
         if (!isset($params['address']) || !is_array($params['address'])) {
             return $this->jsonResponse(__('No Address data found.'));
         }
