@@ -6,6 +6,7 @@ namespace TIG\PostNL\Cron;
 class ExpiredLabelCleanupCronjob
 {
     public const LABEL_CLEANUP_INTERVAL = '4 months';
+
     /**
      * @var \TIG\PostNL\Model\ResourceModel\ShipmentLabel\CollectionFactory
      */
