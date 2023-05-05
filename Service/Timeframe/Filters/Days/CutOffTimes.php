@@ -155,7 +155,12 @@ class CutOffTimes implements DaysFilterInterface
             return $today;
         }
 
-        return $today = $this->todayTimezone->date('today', null, true, false);
+        return $today = $this->todayTimezone->date(
+            $this->todayTimezone->date()->format('d-m-Y'),
+            null,
+            true,
+            false
+        );
     }
 
     /**
