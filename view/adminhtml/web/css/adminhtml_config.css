@@ -367,6 +367,7 @@ h4#carriers_tig_postnl_import_export_header {
 
 #tig_postnl_productoptions_supported_options option { white-space: normal; }
 #tig_postnl_productoptions_supported_options option:before { content: ''; }
+#tig_postnl_postnl_settings_delivery_settings_delivery_days_delivery_days_off { height: 220px; }
 
 /* TIG Admin 2 Columns col-set ====================================================================================== */
 

@@ -653,3 +653,8 @@ Percent,Percentage
 "Use Boxable Packets","Gebruik Brievenbuspakjes"
 "Boxable Packets are used to ship small products. Please consult your PostNL account manager for more information about activating this service for your account.","Brievenbuspakjes kunnen worden gebruikt voor zendingen die door de brievenbus passen. Brievenbuspakjes wegen niet zwaarder dan 2kg en zijn niet groter dan 38 x 26,5 x 3,2 cm."
 "Select the default product option for Boxable Packet shipments.","Selecteer de standaard productoptie voor Brievenbuspakjes zendingen."
+"Days excluded from delivery","Dagen uitgesloten van bezorging"
+"Dates excluded from delivery","Data uitgesloten van bezorging"
+"Select the day(s) no delivery will take place. These days are not shown as a delivery option in the check-out.","Selecteer de dag(en) dat er geen bezorging plaats vindt. Deze dagen worden niet getoond als bezorgoptie in de check-out."
+"Select the dates no delivery will take place. These dates are not shown as a delivery option in the check-out.","Selecteer de datum dat er geen bezorging plaats vindt. Deze datum worden niet getoond als bezorgoptie in de check-out."
+"Add","Voeg toe"
