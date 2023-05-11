@@ -620,6 +620,7 @@ Percent,Percent
 "Use Boxable Packets","Use Boxable Packets"
 "Boxable Packets are used to ship small products. Please consult your PostNL account manager for more information about activating this service for your account.","Boxable Packets are used to ship small products. Please consult your PostNL account manager for more information about activating this service for your account."
 "Select the default product option for Boxable Packet shipments.","Select the default product option for Boxable Packet shipments."
+"If enabled, labels older than 4 months will be deleted from the database to make space for new ones. This will keep the size of the database under control.","If enabled, labels older than 4 months will be deleted from the database to make space for new ones. This will keep the size of the database under control."
 "Days excluded from delivery","Days excluded from delivery"
 "Dates excluded from delivery","Dates excluded from delivery"
 "Select the day(s) no delivery will take place. These days are not shown as a delivery option in the check-out.","Select the day(s) no delivery will take place. These days are not shown as a delivery option in the check-out."

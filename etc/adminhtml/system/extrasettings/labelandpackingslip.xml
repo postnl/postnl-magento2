@@ -56,7 +56,14 @@
             <config_path>tig_postnl/labelandpackingslipoptions/enable_barcode</config_path>
         </field>
 
-        <group id="barcode_settings" translate="label" type="text" sortOrder="55" showInDefault="1" showInStore="0" showInWebsite="1">
+        <field id="enable_expired_label_cleanup" translate="label comment" type="select" sortOrder="55" showInDefault="1">
+            <label>Automatic cleanup of expired labels</label>
+            <comment><![CDATA[If enabled, labels older than 4 months will be deleted from the database to make space for new ones. This will keep the size of the database under control.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/labelandpackingslipoptions/enable_expired_label_cleanup</config_path>
+        </field>
+
+        <group id="barcode_settings" translate="label" type="text" sortOrder="60" showInDefault="1" showInStore="0" showInWebsite="1">
             <label>Barcode settings</label>
             <fieldset_css>tig_postnl-sub-sub-sub-section barcode</fieldset_css>
             <field id="value" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInStore="0" showInWebsite="1">
