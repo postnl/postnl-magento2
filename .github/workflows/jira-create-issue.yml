@@ -21,7 +21,7 @@ jobs:
       id: create
       uses: atlassian/gajira-create@v3
       with:
-        project: DEVOPS
+        project: POSTNL
         issuetype: Bug
         summary: |
            [GH] report | ${{ github.event.issue.title }}
