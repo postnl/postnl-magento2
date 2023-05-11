@@ -308,8 +308,10 @@ define([
         canUseStatedAddressOnly: ko.computed(function () {
             var isActive = window.checkoutConfig.shipping.postnl.stated_address_only_active;
 
+            var postnlDeliveryOption = sessionStorage.postnlDeliveryOption ? JSON.parse(sessionStorage.postnlDeliveryOption) : '{}';
             var address = AddressFinder();
-            var isNL = (address !== null && address !== false && address.country === 'NL' || address.country === 'BE');
+            var isNL = (address !== null && address !== false &&
+                (address.country === 'NL' || (address.country === 'BE' && !postnlDeliveryOption.hasOwnProperty('boxable_packets'))));
 
             return isActive === 1 && isNL;
         }),
