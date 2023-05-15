@@ -307,11 +307,11 @@ define([
 
         canUseStatedAddressOnly: ko.computed(function () {
             var isActive = window.checkoutConfig.shipping.postnl.stated_address_only_active;
+            var isInternationalPacketsActive = window.checkoutConfig.shipping.postnl.is_international_packets_active;
 
-            var postnlDeliveryOption = sessionStorage.postnlDeliveryOption ? JSON.parse(sessionStorage.postnlDeliveryOption) : '{}';
             var address = AddressFinder();
             var isNL = (address !== null && address !== false &&
-                (address.country === 'NL' || (address.country === 'BE' && !postnlDeliveryOption.hasOwnProperty('boxable_packets'))));
+                (address.country === 'NL' || (address.country === 'BE' && !isInternationalPacketsActive)));
 
             return isActive === 1 && isNL;
         }),
