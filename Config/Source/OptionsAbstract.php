@@ -715,7 +715,7 @@ abstract class OptionsAbstract
         // Priority Products
         '6405' => [
             'value'                => '6405',
-            'label'                => 'Packet',
+            'label'                => 'International Packet',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -725,7 +725,7 @@ abstract class OptionsAbstract
         ],
         '6350' => [
             'value'                => '6350',
-            'label'                => 'Packet Track & Trace',
+            'label'                => 'International Packet Track & Trace',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -735,7 +735,7 @@ abstract class OptionsAbstract
         ],
         '6906' => [
             'value'                => '6906',
-            'label'                => 'Packet Track & Trace Insured',
+            'label'                => 'International Packet Track & Trace Insured',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -745,7 +745,7 @@ abstract class OptionsAbstract
         ],
         '6440' => [
             'value'                => '6440',
-            'label'                => 'Boxable Packet',
+            'label'                => 'International Boxable Packet',
             'isExtraCover'         => false,
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
@@ -754,7 +754,7 @@ abstract class OptionsAbstract
         ],
         '6972' => [
             'value'                => '6972',
-            'label'                => 'Boxable Packet Track & Trace',
+            'label'                => 'International Boxable Packet Track & Trace',
             'isExtraCover'         => false,
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
