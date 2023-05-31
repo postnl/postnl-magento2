@@ -1,6 +1,9 @@
 name: Jira issue management
 
 on:
+  issue_comment:
+    types:
+      - created
   issues:
     types:
       - opened
