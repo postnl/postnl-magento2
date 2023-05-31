@@ -33,6 +33,7 @@
                 <item name="is_delivery_days_disabled" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsDeliveryDaysDisabled</item>
                 <item name="onestepcheckout_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsOnestepcheckoutActive</item>
                 <item name="is_international_address_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsInternationalAddressActive</item>
+                <item name="is_international_packets_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsInternationalPacketsActive</item>
             </argument>
         </arguments>
     </type>
