@@ -43,14 +43,15 @@ class AttributeValues
     /**
      * @param string                $attributeCode
      * @param ShipmentItemInterface $item
+     * @param int $storeId
      *
      * @return mixed
      * @throws PostNLException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function get($attributeCode, $item)
+    public function get($attributeCode, $item, $storeId = null)
     {
-        $product = $this->productRepository->get($item->getSku());
+        $product = $this->productRepository->get($item->getSku(), false, $storeId);
         $attributeValue = $product->getDataUsingMethod($attributeCode);
 
         if (empty($attributeValue) && !in_array($attributeCode, $this->hasFallback)) {
@@ -83,7 +84,7 @@ class AttributeValues
      */
     public function getCustomsValue($item, $storeId)
     {
-        return $this->get($this->globalpackConfig->getProductValueAttributeCode($storeId), $item);
+        return $this->get($this->globalpackConfig->getProductValueAttributeCode($storeId), $item, $storeId);
     }
 
     /**
