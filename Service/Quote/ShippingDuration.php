@@ -3,6 +3,7 @@
 namespace TIG\PostNL\Service\Quote;
 
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use TIG\PostNL\Config\Provider\ShippingDuration as ShippingDurationProvider;
 use TIG\PostNL\Service\Wrapper\QuoteInterface as CheckoutSession;
 use Magento\Quote\Model\Quote as MagentoQuote;
 use TIG\PostNL\Config\Provider\Webshop;
@@ -70,10 +71,11 @@ class ShippingDuration
         $products = $this->getProductsFromQuote($quote);
 
         $shippingDurations = array_map(function (ProductInterface $product) {
-            if ($product->getData(static::ATTRIBUTE_CODE) === null) {
+            $attributeDelivery = $product->getData(static::ATTRIBUTE_CODE);
+            if ($attributeDelivery === null || $attributeDelivery === ShippingDurationProvider::CONFIGURATION_VALUE) {
                 return $this->webshopConfiguration->getShippingDuration();
             }
-            return $product->getData(static::ATTRIBUTE_CODE);
+            return $attributeDelivery;
         }, $products);
 
         $itemsDuration = $this->getItemsDuration($shippingDurations);
