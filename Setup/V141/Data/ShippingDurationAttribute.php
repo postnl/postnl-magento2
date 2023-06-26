@@ -78,7 +78,7 @@ class ShippingDurationAttribute extends AbstractDataInstaller
                 'visible'                 => true,
                 'required'                => false,
                 'user_defined'            => false,
-                'default'                 => '0',
+                'default'                 => ShippingDuration::CONFIGURATION_VALUE,
                 'searchable'              => false,
                 'filterable'              => false,
                 'comparable'              => false,
