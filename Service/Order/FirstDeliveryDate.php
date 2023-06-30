@@ -35,6 +35,7 @@ namespace TIG\PostNL\Service\Order;
 use Magento\Quote\Model\Quote\Address;
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Service\Quote\ShippingDuration;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 
@@ -49,21 +50,27 @@ class FirstDeliveryDate
     /** @var ShippingOptions $shippingConfig */
     private $shippingConfig;
 
+    /** @var ShippingDuration */
+    private  $shippingDuration;
+
     /**
      * FirstDeliveryDate constructor.
      *
-     * @param DeliveryDate   $endpoint
+     * @param DeliveryDate $endpoint
      * @param QuoteInterface $quote
      * @param ShippingOptions $shippingConfig
+     * @param ShippingDuration $shippingDuration
      */
     public function __construct(
         DeliveryDate $endpoint,
         QuoteInterface $quote,
-        ShippingOptions $shippingConfig
+        ShippingOptions $shippingConfig,
+        ShippingDuration $shippingDuration
     ) {
         $this->endpoint = $endpoint;
         $this->quote = $quote;
         $this->shippingConfig = $shippingConfig;
+        $this->shippingDuration = $shippingDuration;
     }
 
     /**
@@ -134,10 +141,11 @@ class FirstDeliveryDate
     {
         try {
             $this->endpoint->updateApiKey($this->quote->getStoreId());
+            $shippingDuration = $this->shippingDuration->get();
             $this->endpoint->updateParameters([
                 'country'  => $address->getCountryId(),
                 'postcode' => $address->getPostcode(),
-            ]);
+            ], $shippingDuration);
 
             $response = $this->endpoint->call();
         } catch (\Exception $exception) {
