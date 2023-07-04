@@ -31,7 +31,7 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
             ],
             'Random address DE' => [
                 ['country' => 'DE', 'postcode' => '10179', 'delivery_date' => null],
-                ['country' => 'NL', 'postcode' => '2132WT', 'delivery_date' => '19-11-2016'],
+                ['country' => 'NL', 'postcode' => '2521CA', 'delivery_date' => '19-11-2016'],
             ],
             'Reverse date'      => [
                 ['country' => 'NL', 'postcode' => '1014 BA', 'delivery_date' => '2016-11-19'],
