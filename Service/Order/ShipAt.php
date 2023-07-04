@@ -76,6 +76,10 @@ class ShipAt
             return null;
         }
 
+        if (!$order->getDeliveryDate()) {
+            return null;
+        }
+
         $storeId = $this->quote->getStoreId();
         $this->sentDate->updateParameters($address, $storeId, $order);
 

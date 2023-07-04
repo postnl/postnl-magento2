@@ -149,16 +149,6 @@ class SentDate extends AbstractEndpoint
     {
         $this->soap->updateApiKey($storeId);
 
-        $selectedDate = $postNLOrder->getDeliveryDate();
-        $deliveryDate = $this->getDeliveryDate($address, $postNLOrder);
-        // $selectedDate should already include ShippingDuration from previous requests, so we don't need to send it again here
-        $shippingDuration = '1'; // Request by PostNL not to use $postNLOrder->getShippingDuration()
-        if ($selectedDate === null) {
-            // but in case it was not yet saved/selected - request should contain duration for a correct offset
-            // otherwise it's possible that tomorrow will be selected for products where Duration > 1
-            $shippingDuration = (string)$postNLOrder->getShippingDuration();
-        }
-
         $this->requestParams = [
             $this->type => [
                 'CountryCode'        => $this->getCountryId($postNLOrder),
@@ -167,8 +157,8 @@ class SentDate extends AbstractEndpoint
                 'HouseNrExt'         => '',
                 'Street'             => '',
                 'City'               => $address->getCity(),
-                'DeliveryDate'       => $deliveryDate,
-                'ShippingDuration'   => $shippingDuration,
+                'DeliveryDate'       => $this->getDeliveryDate($address, $postNLOrder),
+                'ShippingDuration'   => '1', // Request by PostNL not to use $postNLOrder->getShippingDuration()
                 'AllowSundaySorting' => $this->timeframeOptions->isSundaySortingAllowed(),
                 'Options'            => [$this->getOption($postNLOrder)]
             ], 'Message'   => $this->message
