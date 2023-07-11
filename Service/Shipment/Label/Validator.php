@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Service\Shipment\Label;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
@@ -173,20 +144,13 @@ class Validator
             return false;
         }
 
-        /** We want to show this notification for every Priority Shipment */
-        if ($isPriority && $this->priorityNotice == false) {
-            // @codingStandardsIgnoreLine
-            $this->messages['notices'][] = __('Packet Tracked is a small parcel with Track & Trace. Hand over your Packet Tracked items in a domestic mailbag with a Packet Tracked baglabel attached.');
-            $this->priorityNotice        = true;
-        }
-
         return true;
     }
 
     private function showLetterboxPackageNotice()
     {
         // @codingStandardsIgnoreStart
-        $this->messages['notices'][] = __('Please note, a letterbox package may not exceed 38 x 26.5 x 3.2 cm 
+        $this->messages['notices'][] = __('Please note, a letterbox package may not exceed 38 x 26.5 x 3.2 cm
         (14.96 x 10.43 x 1.25 in) in size and 2 kg (4.4 lbs) in weight.');
         // @codingStandardsIgnoreEnd
     }
