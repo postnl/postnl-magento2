@@ -1,36 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
+
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
 
     <group id="labelandpackingslipoptions" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -87,7 +56,14 @@
             <config_path>tig_postnl/labelandpackingslipoptions/enable_barcode</config_path>
         </field>
 
-        <group id="barcode_settings" translate="label" type="text" sortOrder="55" showInDefault="1" showInStore="0" showInWebsite="1">
+        <field id="enable_expired_label_cleanup" translate="label comment" type="select" sortOrder="55" showInDefault="1">
+            <label>Automatic cleanup of expired labels</label>
+            <comment><![CDATA[If enabled, labels older than 4 months will be deleted from the database to make space for new ones. This will keep the size of the database under control.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/labelandpackingslipoptions/enable_expired_label_cleanup</config_path>
+        </field>
+
+        <group id="barcode_settings" translate="label" type="text" sortOrder="60" showInDefault="1" showInStore="0" showInWebsite="1">
             <label>Barcode settings</label>
             <fieldset_css>tig_postnl-sub-sub-sub-section barcode</fieldset_css>
             <field id="value" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInStore="0" showInWebsite="1">

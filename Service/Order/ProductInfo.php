@@ -1,34 +1,4 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 
 namespace TIG\PostNL\Service\Order;
 
@@ -36,6 +6,7 @@ use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Sales\Model\Order\Address as SalesAddress;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipment\PriorityCountries;
@@ -71,6 +42,8 @@ class ProductInfo
 
     const OPTION_LETTERBOX_PACKAGE        = 'letterbox_package';
 
+    const OPTION_BOXABLE_PACKETS          = 'boxable_packets';
+
     const SHIPMENT_TYPE_PG                = 'PG';
 
     const SHIPMENT_TYPE_PGE               = 'PGE';
@@ -91,8 +64,13 @@ class ProductInfo
 
     const SHIPMENT_TYPE_LETTERBOX_PACKAGE = 'Letterbox Package';
 
+    const SHIPMENT_TYPE_BOXABLE_PACKETS   = 'Boxable Packet';
+
     /** @var ProductOptionsConfiguration */
     private $productOptionsConfiguration;
+
+    /** @var ShippingOptions */
+    private $shippingOptions;
 
     /** @var ProductOptionsFinder */
     private $productOptionsFinder;
@@ -109,17 +87,20 @@ class ProductInfo
 
     /**
      * @param ProductOptionsConfiguration $productOptionsConfiguration
+     * @param ShippingOptions             $shippingOptions
      * @param ProductOptionsFinder        $productOptionsFinder
      * @param CountryShipping             $countryShipping
      * @param QuoteInterface              $quote
      */
     public function __construct(
         ProductOptionsConfiguration $productOptionsConfiguration,
+        ShippingOptions $shippingOptions,
         ProductOptionsFinder $productOptionsFinder,
         CountryShipping $countryShipping,
         QuoteInterface $quote
     ) {
         $this->productOptionsConfiguration = $productOptionsConfiguration;
+        $this->shippingOptions             = $shippingOptions;
         $this->productOptionsFinder        = $productOptionsFinder;
         $this->countryShipping             = $countryShipping;
         $this->quote                       = $quote;
@@ -142,15 +123,23 @@ class ProductInfo
 
         // Check if the country is not an ESP country or BE/NL and if it is Global Pack
         if (!in_array($country, EpsCountries::ALL)
-            && !in_array($country, ['BE', 'NL']) || $type === strtolower(static::SHIPMENT_TYPE_GP)) {
+            && !in_array($country, ['NL']) && $type === strtolower(static::SHIPMENT_TYPE_BOXABLE_PACKETS)) {
+            $this->setProductCode($option, $country);
+
+            return $this->getInfo();
+        }
+
+        // Check if the country is not an ESP country or BE/NL and if it is Global Pack
+        if (!in_array($country, EpsCountries::ALL)
+            && !in_array($country, ['BE', 'NL']) && $type === strtolower(static::SHIPMENT_TYPE_GP)) {
             $this->setGlobalPackOption($country);
 
             return $this->getInfo();
         }
 
         // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
-        if ((empty($type) || $option == static::OPTION_DAYTIME)
-            && !in_array($country, ['BE', 'NL']) || $type === strtolower(static::SHIPMENT_TYPE_EPS)) {
+        if ((empty($type) || $type === strtolower(static::SHIPMENT_TYPE_EPS) || $option == static::OPTION_DAYTIME)
+            && !in_array($country, ['BE', 'NL'])) {
             $this->setEpsOption($address, $country);
 
             return $this->getInfo();
@@ -205,7 +194,6 @@ class ProductInfo
     private function setGlobalPackOption($country = null)
     {
         $this->type = static::SHIPMENT_TYPE_GP;
-        $this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
 
         if ($this->makeExceptionForEUPriority($country)) {
             $this->type = static::SHIPMENT_TYPE_EPS;
@@ -214,13 +202,16 @@ class ProductInfo
             return;
         }
 
+        $pepsCode = $this->productOptionsConfiguration->getDefaultPepsProductOption();
         if (in_array($country, PriorityCountries::GLOBALPACK)
-            && $this->isPriorityProduct($this->code)
+            && $this->shippingOptions->canUsePriority()
+            && $this->isPriorityProduct($pepsCode)
         ) {
+            $this->code = $pepsCode;
             return;
         }
 
-        $this->code = $this->productOptionsFinder->getDefaultGPOption()['value'];
+        $this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
     }
 
     /**
@@ -263,14 +254,46 @@ class ProductInfo
             return;
         }
 
-        $this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
+        $pepsCode = $this->productOptionsConfiguration->getDefaultPepsProductOption();
         if (in_array($country, PriorityCountries::EPS)
-            && $this->isPriorityProduct($this->code)
+            && $this->shippingOptions->canUsePriority()
+            && $this->isPriorityProduct($pepsCode)
         ) {
+            $this->code = $pepsCode;
+            return;
+        }
+
+        if ($this->isEpsCountry($country) && !$this->shippingOptions->canUseEpsBusinessProducts()) {
+            $this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
+            return;
+        }
+
+        if ($this->isEpsCountry($country) && $this->shippingOptions->canUseEpsBusinessProducts()) {
+            $this->code = $this->productOptionsConfiguration->getDefaultEpsBusinessProductOption();
             return;
         }
 
         $this->code = $this->productOptionsFinder->getDefaultEUOption()['value'];
+    }
+
+
+    private function isEpsCountry($country)
+    {
+        if (!in_array($country, EpsCountries::ALL)) {
+            return false;
+        }
+
+        // NL to BE/NL shipments are not EPS shipments
+        if ($this->countryShipping->isShippingNLToEps($country)) {
+            return true;
+        }
+
+        // BE to BE shipments is not EPS, but BE to NL is
+        if ($this->countryShipping->isShippingBEToEps($country)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -347,6 +370,11 @@ class ProductInfo
                 $this->type = static::SHIPMENT_TYPE_LETTERBOX_PACKAGE;
 
                 break;
+            case static::OPTION_BOXABLE_PACKETS:
+                $this->code = $this->productOptionsConfiguration->getDefaultBoxablePacketsProductOption();
+                $this->type = static::SHIPMENT_TYPE_BOXABLE_PACKETS;
+
+                break;
             default: $this->setDefaultProductOption($country);
         }
     }
@@ -356,17 +384,21 @@ class ProductInfo
      */
     private function setDefaultProductOption($country)
     {
+        $this->type = static::SHIPMENT_TYPE_DAYTIME;
         $this->code = $this->productOptionsConfiguration->getDefaultProductOption();
 
         if ($this->countryShipping->isShippingNLtoBE($country)) {
             $this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
         }
 
+        if ($this->countryShipping->isShippingNLtoBE($country) && $this->shippingOptions->canUsePriority()) {
+            $this->type = static::SHIPMENT_TYPE_EPS;
+            $this->code = $this->productOptionsConfiguration->getDefaultPepsProductOption();
+        }
+
         if ($this->countryShipping->isShippingBEDomestic($country)) {
             $this->code = $this->productOptionsConfiguration->getDefaultBeDomesticProductOption();
         }
-
-        $this->type = static::SHIPMENT_TYPE_DAYTIME;
 
         if ($country !== 'NL' && $country !== 'BE') {
             return;

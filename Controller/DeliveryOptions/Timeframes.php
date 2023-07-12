@@ -1,40 +1,12 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Json\EncoderInterface;
 use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
+use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\OrderRepository;
@@ -43,6 +15,7 @@ use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Service\Quote\ShippingDuration;
 use TIG\PostNL\Service\Shipment\EpsCountries;
+use TIG\PostNL\Service\Shipping\BoxablePackets;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
 use TIG\PostNL\Service\Validation\CountryShipping;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
@@ -72,9 +45,19 @@ class Timeframes extends AbstractDeliveryOptions
     private $isDeliveryDaysActive;
 
     /**
+     * @var ShippingOptions
+     */
+    private $shippingOptions;
+
+    /**
      * @var LetterboxPackage
      */
     private $letterboxPackage;
+
+    /**
+     * @var BoxablePackets
+     */
+    private $boxablePackets;
 
     /**
      * @var CanaryIslandToIC
@@ -95,7 +78,9 @@ class Timeframes extends AbstractDeliveryOptions
      * @param Calculator          $calculator
      * @param IsDeliverDaysActive $isDeliverDaysActive
      * @param ShippingDuration    $shippingDuration
+     * @param ShippingOptions     $shippingOptions
      * @param LetterboxPackage    $letterboxPackage
+     * @param BoxablePackets      $boxablePackets ,
      * @param CanaryIslandToIC    $canaryConverter
      * @param CountryShipping     $countryShipping
      */
@@ -111,7 +96,9 @@ class Timeframes extends AbstractDeliveryOptions
         Calculator $calculator,
         IsDeliverDaysActive $isDeliverDaysActive,
         ShippingDuration $shippingDuration,
+        ShippingOptions $shippingOptions,
         LetterboxPackage $letterboxPackage,
+        BoxablePackets $boxablePackets,
         CanaryIslandToIC $canaryConverter,
         CountryShipping $countryShipping
     ) {
@@ -119,7 +106,9 @@ class Timeframes extends AbstractDeliveryOptions
         $this->timeFrameEndpoint            = $timeFrame;
         $this->calculator                   = $calculator;
         $this->isDeliveryDaysActive         = $isDeliverDaysActive;
+        $this->shippingOptions              = $shippingOptions;
         $this->letterboxPackage             = $letterboxPackage;
+        $this->boxablePackets               = $boxablePackets;
         $this->canaryConverter              = $canaryConverter;
         $this->countryShipping              = $countryShipping;
 
@@ -157,8 +146,14 @@ class Timeframes extends AbstractDeliveryOptions
         $quote = $this->checkoutSession->getQuote();
         $cartItems = $quote->getAllItems();
 
+        //Letterbox NL
         if ($this->letterboxPackage->isLetterboxPackage($cartItems, false) && $params['address']['country'] == 'NL') {
             return $this->jsonResponse($this->getLetterboxPackageResponse($price['price']));
+        }
+
+        //Boxable Packet = Letterbox Worldwide
+        if ($this->boxablePackets->isBoxablePacket($cartItems, false) && $params['address']['country'] != 'NL') {
+            return $this->jsonResponse($this->getBoxablePacketResponse($price['price']));
         }
 
         if (in_array($params['address']['country'], EpsCountries::ALL) && $params['address']['country'] === 'ES' && $this->canaryConverter->isCanaryIsland($params['address'])) {
@@ -199,6 +194,11 @@ class Timeframes extends AbstractDeliveryOptions
 
         // NL to BE/NL shipments are not EPS shipments
         if ($this->countryShipping->isShippingNLToEps($params['address']['country'])) {
+            return true;
+        }
+
+        //NL to BE shipments can be a PEPS shipment and should be considered as such when enabled
+        if ($this->countryShipping->isShippingNLtoBE($params['address']['country']) && $this->shippingOptions->canUsePriority()) {
             return true;
         }
 
@@ -306,6 +306,15 @@ class Timeframes extends AbstractDeliveryOptions
             'letterbox_package' => true,
             'timeframes'        => [[['letterbox_package' => __('Your order is a letterbox package and will be '
             . 'delivered from Tuesday to Saturday.')]]]
+        ];
+    }
+
+    private function getBoxablePacketResponse($price)
+    {
+        return [
+            'price'             => $price,
+            'boxable_packets'   => true,
+            'timeframes'        => [[['boxable_packets' => __('Your order is a boxable packet.')]]]
         ];
     }
 
