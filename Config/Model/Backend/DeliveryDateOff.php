@@ -85,7 +85,7 @@ class DeliveryDateOff extends Value
     /**
      * @return $this
      */
-    public function beforeSave(): static
+    public function beforeSave()
     {
         $value = $this->getValue();
         $date = [];
