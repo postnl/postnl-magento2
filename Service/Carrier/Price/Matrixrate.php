@@ -64,7 +64,11 @@ class Matrixrate
      */
     public function getRate(RateRequest $request, $parcelType, $store = null)
     {
-        $matrixrateCollection     = $this->matrixrateCollection->addOrder('subtotal', 'DESC')->addOrder('weight', 'DESC')->addOrder('destiny_country_id', 'DESC');
+        $matrixrateCollection     = $this->matrixrateCollection
+            ->addOrder('subtotal', 'DESC')
+            // Country filter should go before weight, so we filter specific countries before all (ID: 0)
+            ->addOrder('destiny_country_id', 'DESC')
+            ->addOrder('weight', 'DESC');
         $this->shippingVatEnabled = $this->taxHelper->shippingPriceIncludesTax($store);
         $parcelType               = $parcelType ?: 'regular';
         $collection               = $matrixrateCollection->toArray();
