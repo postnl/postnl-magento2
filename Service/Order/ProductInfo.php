@@ -400,7 +400,7 @@ class ProductInfo
             $this->code = $this->productOptionsConfiguration->getDefaultBeDomesticProductOption();
         }
 
-        if ($country !== 'NL' && $country !== 'BE') {
+        if ($country !== 'NL') {
             return;
         }
 
