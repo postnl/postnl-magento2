@@ -50,6 +50,16 @@ class CountryShipping
     }
 
     /**
+     * @param string $country
+     *
+     * @return bool
+     */
+    public function isShippingBEtoNL(string $country): bool
+    {
+        return ($country === 'NL' && $this->addressConfiguration->getCountry() == 'BE');
+    }
+
+    /**
      * @param $country
      *
      * @return bool

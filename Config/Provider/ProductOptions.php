@@ -13,6 +13,7 @@ class ProductOptions extends AbstractConfigProvider
 //    const XPATH_SUPPORTED_PRODUCT_OPTIONS               = 'tig_postnl/delivery_settings/supported_options';
     const XPATH_DEFAULT_PRODUCT_OPTION                        = 'tig_postnl/delivery_settings/default_option';
     const XPATH_DEFAULT_BE_DOMESTIC_OPTION                    = 'tig_postnl/delivery_settings/default_be_domestic_option';
+    const XPATH_DEFAULT_BE_NL_OPTION                          = 'tig_postnl/delivery_settings/default_be_nl_option';
     const XPATH_USE_ALTERNATIVE_DEFAULT_OPTION                = 'tig_postnl/delivery_settings/use_alternative_default';
     const XPATH_ALTERNATIVE_DEFAULT_MIN_AMOUNT                = 'tig_postnl/delivery_settings/alternative_default_min_amount';
     const XPATH_ALTERNATIVE_DEFAULT_PRODUCT_OPTION            = 'tig_postnl/delivery_settings/alternative_default_option';
@@ -122,6 +123,14 @@ class ProductOptions extends AbstractConfigProvider
     public function getDefaultBeDomesticProductOption()
     {
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_BE_DOMESTIC_OPTION);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultBeNlProductOption()
+    {
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_BE_NL_OPTION);
     }
 
     /**

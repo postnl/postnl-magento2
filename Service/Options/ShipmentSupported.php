@@ -127,6 +127,13 @@ class ShipmentSupported
             $options = array_filter($options, [$this, 'filterBeDomesticOption']);
         }
 
+        // BE to NL options
+        if ($this->countryShipping->isShippingBEtoNL($country)) {
+            $options[] = $this->productOptions->getBeNlOptions();
+            $options = call_user_func_array("array_merge", $options);
+            return $options;
+        }
+
         // To NL and other EU countries
         if ($country !== 'BE' && in_array($country, EpsCountries::ALL)) {
             $options = $this->productOptions->getEpsProductOptions();

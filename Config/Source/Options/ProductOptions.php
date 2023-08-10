@@ -204,6 +204,16 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         return $beDomesticOptions;
     }
 
+    /**
+     * @return array
+     */
+    public function getBeNlOptions()
+    {
+        $options = $this->getProductOptions(['group' => 'be_nl_options']);
+
+        return $options;
+    }
+
 
     /**
      * @return array

@@ -391,6 +391,10 @@ class ProductInfo
             $this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
         }
 
+        if ($this->countryShipping->isShippingBEtoNL($country)) {
+            $this->code = $this->productOptionsConfiguration->getDefaultBeNlProductOption();
+        }
+
         if ($this->countryShipping->isShippingNLtoBE($country) && $this->shippingOptions->canUsePriority()) {
             $this->type = static::SHIPMENT_TYPE_EPS;
             $this->code = $this->productOptionsConfiguration->getDefaultPepsProductOption();
