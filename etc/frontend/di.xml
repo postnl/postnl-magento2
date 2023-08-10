@@ -63,4 +63,11 @@
     <type name="Mageplaza\Osc\Helper\Address">
         <plugin name="postcodeFieldGroupMagePlazaPlugin" type="TIG\PostNL\Plugin\Postcodecheck\Mageplaza\AddressHelper" />
     </type>
+
+    <type name="TIG\PostNL\Block\Frontend\Customer\Address\Edit">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+            <argument name="currentCustomer" xsi:type="object">Magento\Customer\Helper\Session\CurrentCustomer\Proxy</argument>
+        </arguments>
+    </type>
 </config>
