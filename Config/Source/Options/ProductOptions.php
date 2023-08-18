@@ -133,6 +133,17 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     }
 
     /**
+     * Returns options if group equals pakjegemak_be_nl_options
+     * @return array
+     */
+    public function getPakjeGemakBeNlOptions()
+    {
+        $flags = [];
+        $flags['groups'][] = ['group' => 'pakjegemak_be_nl_options'];
+        return $this->getProductOptions($flags);
+    }
+
+    /**
      * Returns options if group equals standard_options
      * @return array
      */

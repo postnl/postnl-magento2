@@ -114,8 +114,8 @@ class Locations extends AbstractDeliveryOptions
     private function getLocations($address)
     {
         $deliveryDate = false;
-        if ($this->getDeliveryDay($address)) {
-            $deliveryDate = $this->getDeliveryDay($address);
+        if ($availableDelivery = $this->getDeliveryDay($address)) {
+            $deliveryDate = $availableDelivery;
         }
 
         $quote = $this->checkoutSession->getQuote();

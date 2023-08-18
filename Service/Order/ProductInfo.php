@@ -333,6 +333,11 @@ class ProductInfo
             return;
         }
 
+        if ($this->countryShipping->isShippingBEtoNL($country)) {
+            $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakBeNlProductOption();
+            return;
+        }
+
         $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
     }
 

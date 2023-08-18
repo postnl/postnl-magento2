@@ -331,7 +331,7 @@ abstract class OptionsAbstract
             'statedAddressOnly'    => false,
             'countryLimitation'    => 'NL',
             'pge'                  => false,
-            'group'                => 'be_nl_options',
+            'group'                => 'pakjegemak_be_nl_options',
         ],
         // EU Options
         '14907' => [
@@ -851,6 +851,7 @@ abstract class OptionsAbstract
 	    'standard_be_options'         => 'Domestic BE options',
 	    'be_nl_options'               => 'BE to NL options',
 	    'pakjegemak_options'          => 'Post Office options',
+	    'pakjegemak_be_nl_options'    => 'Post Office BE-NL options ',
 	    'pakjegemak_be_options'       => 'Post Office BE options',
 	    'pakjegemak_be_domestic_options' => 'Post Office BE options',
 	    'eu_options'                  => 'EU options',
@@ -873,6 +874,7 @@ abstract class OptionsAbstract
 		'standard_be_options'         => 'Domestic BE',
 		'be_nl_options'               => 'BE to NL',
 		'pakjegemak_options'          => 'Post Office',
+		'pakjegemak_be_nl_options'    => 'Post Office',
 		'pakjegemak_be_options'       => 'Post Office Belgium',
 		'pakjegemak_be_domestic_options' => 'Post Office Belgium',
 		'eu_options'                  => 'EU Parcel',
