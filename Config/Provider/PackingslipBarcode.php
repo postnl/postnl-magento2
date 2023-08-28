@@ -27,7 +27,7 @@ class PackingslipBarcode extends AbstractConfigProvider
      *
      * @return string
      */
-    public function getValue($storeId = null)
+    public function getValue($storeId = null): string
     {
         return $this->getConfigFromXpath(static::XPATH_BARCODE_VALUE, $storeId);
     }
@@ -39,7 +39,7 @@ class PackingslipBarcode extends AbstractConfigProvider
      */
     public function getPosition($storeId = null)
     {
-        $position = explode(',', $this->getConfigFromXpath(static::XPATH_BARCODE_POSITION, $storeId));
+        $position = explode(',', (string)$this->getConfigFromXpath(static::XPATH_BARCODE_POSITION, $storeId));
         if (count($position) !== 4) {
             // Invalid value given, fall back on default setting.
             $position = [360, 750, 550, 790];

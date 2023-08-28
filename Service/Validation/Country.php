@@ -108,11 +108,11 @@ class Country implements ContractInterface
     }
 
     /**
-     * @param $line
+     * @param string $line
      *
-     * @return bool|string
+     * @return string
      */
-    private function validateArray($line)
+    private function validateArray(string $line): string
     {
         $parts  = explode(',', $line);
         $pieces = array_map(function ($part) {
