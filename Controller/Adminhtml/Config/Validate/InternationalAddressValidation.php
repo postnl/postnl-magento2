@@ -16,6 +16,9 @@ class InternationalAddressValidation extends Action
     /** @var InternationalAddressCheck  */
     private $internationalAddressCheck;
 
+    /** @var PostcodecheckHandler  */
+    private $handler;
+
     /**
      * @param Context                   $context
      * @param JsonFactory               $jsonFactory

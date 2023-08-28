@@ -22,7 +22,7 @@ interface OrderInterface
     public function setEntityId($entityId);
 
     /**
-     * @param $value
+     * @param int $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -34,7 +34,7 @@ interface OrderInterface
     public function getOrderId();
 
     /**
-     * @param $value
+     * @param int $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -46,7 +46,7 @@ interface OrderInterface
     public function getQuoteId();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -58,7 +58,7 @@ interface OrderInterface
     public function getType();
 
     /**
-     * @param $value
+     * @param string|null $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -70,7 +70,7 @@ interface OrderInterface
     public function getAcCharacteristic();
 
     /**
-     * @param $value
+     * @param string|null $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -82,7 +82,7 @@ interface OrderInterface
     public function getAcOption();
 
     /**
-     * @param $value
+     * @param string|null $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -94,7 +94,7 @@ interface OrderInterface
     public function getAcInformation();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -106,7 +106,7 @@ interface OrderInterface
     public function getDeliveryDate();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -118,7 +118,7 @@ interface OrderInterface
     public function getExpectedDeliveryTimeStart();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -130,7 +130,7 @@ interface OrderInterface
     public function getExpectedDeliveryTimeEnd();
 
     /**
-     * @param $value
+     * @param bool $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -142,7 +142,7 @@ interface OrderInterface
     public function getIsPakjegemak();
 
     /**
-     * @param $value
+     * @param int $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -169,7 +169,7 @@ interface OrderInterface
     public function getPgOrderAddress();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -181,7 +181,7 @@ interface OrderInterface
     public function getPgLocationCode();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -193,7 +193,7 @@ interface OrderInterface
     public function getPgRetailNetworkId();
 
     /**
-     * @param $value
+     * @param int $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -205,7 +205,7 @@ interface OrderInterface
     public function getProductCode();
 
     /**
-     * @param $value
+     * @param float $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -217,7 +217,7 @@ interface OrderInterface
     public function getFee();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -234,14 +234,14 @@ interface OrderInterface
     public function getParcelCount();
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
     public function setParcelCount($value);
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -253,7 +253,7 @@ interface OrderInterface
     public function getConfirmedAt();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -265,7 +265,7 @@ interface OrderInterface
     public function getCreatedAt();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -282,14 +282,14 @@ interface OrderInterface
     public function getShippingDuration();
 
     /**
-     * @param $value
+     * @param int $value
      *
      * @return int
      */
     public function setShippingDuration($value);
 
     /**
-     * @param $value
+     * @param bool|int $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
@@ -301,7 +301,7 @@ interface OrderInterface
     public function getConfirmed();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */

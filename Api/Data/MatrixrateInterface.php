@@ -16,7 +16,7 @@ interface MatrixrateInterface
     public function getWebsiteId();
 
     /**
-     * @param $value
+     * @param int $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -40,7 +40,7 @@ interface MatrixrateInterface
     public function getDestinyRegionId();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -52,7 +52,7 @@ interface MatrixrateInterface
     public function getDestinyZipCode();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -64,7 +64,7 @@ interface MatrixrateInterface
     public function getWeight();
 
     /**
-     * @param $value
+     * @param float $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -76,7 +76,7 @@ interface MatrixrateInterface
     public function getSubtotal();
 
     /**
-     * @param $value
+     * @param float $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -88,7 +88,7 @@ interface MatrixrateInterface
     public function getQuantity();
 
     /**
-     * @param $value
+     * @param int $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -100,7 +100,7 @@ interface MatrixrateInterface
     public function getParcelType();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -112,7 +112,7 @@ interface MatrixrateInterface
     public function getPrice();
 
     /**
-     * @param $value
+     * @param float $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
