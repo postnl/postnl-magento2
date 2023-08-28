@@ -21,7 +21,7 @@ class LoggingConfiguration extends AbstractConfigProvider
      */
     public function canLog($level)
     {
-        $logTypes = explode(',', $this->getLoggingTypes());
+        $logTypes = explode(',', (string)$this->getLoggingTypes());
 
         return in_array($level, $logTypes);
     }

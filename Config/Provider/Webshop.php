@@ -133,7 +133,7 @@ class Webshop extends AbstractConfigProvider
     /**
      * @return mixed
      */
-    public function getShipmentDays()
+    public function getShipmentDays(): string
     {
         return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SHIPMENTDAYS);
     }
