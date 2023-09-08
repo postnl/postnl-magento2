@@ -125,7 +125,7 @@ class DataProvider extends Template implements BlockInterface
         foreach ($supportedTypes as $key => $option) {
             $options[] = [
                 'value' => (string) $key,
-                'text' => __($option['label'])
+                'text' => $key . ' - ' . __($option['label'])
             ];
         }
 
