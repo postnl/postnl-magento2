@@ -99,9 +99,12 @@ class AddressEnhancer
 
         if (is_array($address['street'])) {
             $street  = implode(' ', $address['street']);
+        } else {
+            $street = (string)$street;
         }
+        $street = trim($street);
 
-        $matched = preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER, trim($street), $result);
+        $matched = preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER, $street, $result);
         if (!$matched) {
             $result = $this->extractStreetFromNumber($street);
         }
@@ -123,7 +126,7 @@ class AddressEnhancer
     // @codingStandardsIgnoreLine
     protected function extractStreetFromNumber($street)
     {
-        $matched = preg_match(self::STREET_SPLIT_NUMBER_FROM_NAME, trim($street), $result);
+        $matched = preg_match(self::STREET_SPLIT_NUMBER_FROM_NAME, $street, $result);
         if (!$matched) {
             return [
                 'error' => [
