@@ -53,8 +53,10 @@ class DomesticOptions
     private function filterNlDomesticOption($productOption)
     {
         // countryLimitation is used for country destination.
-        // Since all BE > NL shipments are EPS, most NL domestic product codes can be filtered right away via this check
-        if ($productOption['countryLimitation'] == 'NL') {
+        // Since some BE > NL shipments are EPS, most NL domestic product codes can be filtered right away via this check
+        // Others are filtered by countryOrigin
+        if ($productOption['countryLimitation'] == 'NL'
+            && (empty($productOption['countryOrigin']) || $productOption['countryOrigin'] == 'NL')) {
             return false;
         }
 
@@ -78,6 +80,8 @@ class DomesticOptions
     {
         $beDomesticOptions[] = $this->productOptions->getBeDomesticOptions();
         $beDomesticOptions[] = $this->productOptions->getPakjeGemakBeDomesticOptions();
+        // It's not domestic, but it shouldn't be shown when source is NL
+        $beDomesticOptions[] = $this->productOptions->getBeNlOptions();
 
         // @codingStandardsIgnoreLine
         $beDomesticOptions = call_user_func_array("array_merge", $beDomesticOptions);
