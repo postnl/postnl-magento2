@@ -333,6 +333,11 @@ class ProductInfo
             return;
         }
 
+        if ($this->countryShipping->isShippingBEtoNL($country)) {
+            $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakBeNlProductOption();
+            return;
+        }
+
         $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
     }
 
@@ -389,6 +394,10 @@ class ProductInfo
 
         if ($this->countryShipping->isShippingNLtoBE($country)) {
             $this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
+        }
+
+        if ($this->countryShipping->isShippingBEtoNL($country)) {
+            $this->code = $this->productOptionsConfiguration->getDefaultBeNlProductOption();
         }
 
         if ($this->countryShipping->isShippingNLtoBE($country) && $this->shippingOptions->canUsePriority()) {

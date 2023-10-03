@@ -13,6 +13,7 @@ class ProductOptions extends AbstractConfigProvider
 //    const XPATH_SUPPORTED_PRODUCT_OPTIONS               = 'tig_postnl/delivery_settings/supported_options';
     const XPATH_DEFAULT_PRODUCT_OPTION                        = 'tig_postnl/delivery_settings/default_option';
     const XPATH_DEFAULT_BE_DOMESTIC_OPTION                    = 'tig_postnl/delivery_settings/default_be_domestic_option';
+    const XPATH_DEFAULT_BE_NL_OPTION                          = 'tig_postnl/delivery_settings/default_be_nl_option';
     const XPATH_USE_ALTERNATIVE_DEFAULT_OPTION                = 'tig_postnl/delivery_settings/use_alternative_default';
     const XPATH_ALTERNATIVE_DEFAULT_MIN_AMOUNT                = 'tig_postnl/delivery_settings/alternative_default_min_amount';
     const XPATH_ALTERNATIVE_DEFAULT_PRODUCT_OPTION            = 'tig_postnl/delivery_settings/alternative_default_option';
@@ -21,6 +22,7 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION             = 'tig_postnl/post_offices/default_pakjegemak_option';
     const XPATH_DEFAULT_PAKJEGEMAK_BE_PRODUCT_OPTION          = 'tig_postnl/post_offices/default_pakjegemak_be_option';
     const XPATH_DEFAULT_PAKJEGEMAK_BE_DOMESTIC_PRODUCT_OPTION = 'tig_postnl/post_offices/default_pakjegemak_be_domestic_option';
+    const XPATH_DEFAULT_PAKJEGEMAK_BE_NL_PRODUCT_OPTION       = 'tig_postnl/post_offices/default_pakjegemak_be_nl_option';
     const XPATH_DEFAULT_EVENING_BE_PRODUCT_OPTION             = 'tig_postnl/evening_delivery_be/default_evening_be_option';
     const XPATH_DEFAULT_BE_PRODUCT_OPTION                     = 'tig_postnl/delivery_settings/default_be_option';
     const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION                 = 'tig_postnl/sunday_delivery/default_sunday_option';
@@ -125,11 +127,27 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
+     * @return mixed
+     */
+    public function getDefaultBeNlProductOption()
+    {
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_BE_NL_OPTION);
+    }
+
+    /**
      * @return string|int
      */
     public function getDefaultPakjeGemakBeProductOption()
     {
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_PAKJEGEMAK_BE_PRODUCT_OPTION);
+    }
+
+    /**
+     * @return string|int
+     */
+    public function getDefaultPakjeGemakBeNlProductOption()
+    {
+        return $this->getConfigFromXpath(static::XPATH_DEFAULT_PAKJEGEMAK_BE_NL_PRODUCT_OPTION);
     }
 
     /**

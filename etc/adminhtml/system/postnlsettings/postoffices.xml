@@ -77,6 +77,16 @@
             </depends>
         </field>
 
+        <field id="default_pakjegemak_be_nl_option" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Post office delivery from Belgium to Netherlands</label>
+            <comment><![CDATA[Select the default product option for postoffice delivery shipments from Belgium to Netherlands.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getPakjeGemakBeNlOptions</source_model>
+            <config_path>tig_postnl/post_offices/default_pakjegemak_be_nl_option</config_path>
+            <depends>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">BE</field>
+            </depends>
+        </field>
+
     </group>
 
 </include>

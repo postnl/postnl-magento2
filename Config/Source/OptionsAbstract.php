@@ -250,6 +250,109 @@ abstract class OptionsAbstract
             'pge'                  => false,
             'group'                => 'pakjegemak_be_options',
         ],
+        // BENL options
+        '4890' => [
+            'value'                => '4890',
+            'label'                => 'Delivery to neighbour',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4891' => [
+            'value'                => '4891',
+            'label'                => 'Delivery to neighbour + Signature on delivery',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4893' => [
+            'value'                => '4893',
+            'label'                => 'Delivery to stated address',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'statedAddressOnly'    => true,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4894' => [
+            'value'                => '4894',
+            'label'                => 'Delivery to stated address + Signature on delivery',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'statedAddressOnly'    => true,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4895' => [
+            'value'                => '4895',
+            'label'                => 'Delivery to stated address + Signature on delivery + Age check 18+',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'statedAddressOnly'    => true,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4896' => [
+            'value'                => '4896',
+            'label'                => 'Delivery to stated address + Signature on deliver + Return when not home',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'statedAddressOnly'    => true,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4897' => [
+            'value'                => '4897',
+            'label'                => 'Delivery to stated address + Signature on delivery + Extra cover',
+            'isExtraCover'         => true,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'statedAddressOnly'    => true,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4898' => [
+            'value'                => '4898',
+            'label'                => 'Delivery to PostNL location + Signature on pickup',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'statedAddressOnly'    => false,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'pakjegemak_be_nl_options',
+        ],
         // EU Options
         '14907' => [
             'value'                => '14907',
@@ -766,7 +869,9 @@ abstract class OptionsAbstract
     protected $groups = [
 	    'standard_options'            => 'Domestic options',
 	    'standard_be_options'         => 'Domestic BE options',
+	    'be_nl_options'               => 'BE to NL options',
 	    'pakjegemak_options'          => 'Post Office options',
+	    'pakjegemak_be_nl_options'    => 'Post Office BE-NL options ',
 	    'pakjegemak_be_options'       => 'Post Office BE options',
 	    'pakjegemak_be_domestic_options' => 'Post Office BE options',
 	    'eu_options'                  => 'EU options',
@@ -787,7 +892,9 @@ abstract class OptionsAbstract
 	protected $groupToLabel = [
 		'standard_options'            => 'Domestic',
 		'standard_be_options'         => 'Domestic BE',
+		'be_nl_options'               => 'BE to NL',
 		'pakjegemak_options'          => 'Post Office',
+		'pakjegemak_be_nl_options'    => 'Post Office',
 		'pakjegemak_be_options'       => 'Post Office Belgium',
 		'pakjegemak_be_domestic_options' => 'Post Office Belgium',
 		'eu_options'                  => 'EU Parcel',
@@ -924,10 +1031,18 @@ abstract class OptionsAbstract
         $options = [];
         foreach ($this->filteredOptions as $key => $option) {
             // @codingStandardsIgnoreLine
-            $options[] = ['value' => $option['value'], 'label' => __($option['label'])];
+            $options[] = [
+                'value' => $option['value'],
+                'label' => '[' . $this->getBaseCodeFromKey($option['value']) . '] ' . __($option['label'])
+            ];
         }
 
         return $options;
+    }
+
+    public function getBaseCodeFromKey(string $key): string
+    {
+        return strlen($key) < 5 ? $key : substr($key, 1);
     }
 
     /**
