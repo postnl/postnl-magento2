@@ -12,8 +12,8 @@
 This is the official PostNL Magento 2 extension to connect your Magento 2 webshop with PostNL.
 
 ## Requirements
-- Magento version 2.3.6 - 2.3.7-p4, 2.4.3 - 2.4.6-p1
-- PHP 7.3+
+- Magento version 2.3.6 - 2.3.7-p4, 2.4.3 - 2.4.6-p2
+- PHP 7.3+, PHP 8.1+ for 2.4.4+
 - In order to use this extension you need to be a contract customer of PostNL. If you are not a customer of PostNL, you can <a href="https://www.postnl.nl/zakelijk/e-commerce/flexibele-bezorgopties" target="_blank" title="register at PostNL">register yourself here</a>.
 
 ## Installation 
