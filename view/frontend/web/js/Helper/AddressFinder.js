@@ -92,7 +92,12 @@ define([
             address.telephone = telephoneField.value();
         });
 
-        if (!address.country || !address.postcode || !address.street[0] || !address.housenumber) {
+        // Check filled in address
+        if (!address.country || !address.postcode || !address.street[0]) {
+            return false;
+        }
+        // Validate house number filled only for HL
+        if (!address.housenumber && address.country === 'NL') {
             return false;
         }
 

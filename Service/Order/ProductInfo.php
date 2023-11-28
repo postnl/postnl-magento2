@@ -52,6 +52,8 @@ class ProductInfo
 
     const SHIPMENT_TYPE_GP                = 'GP';
 
+    public const SHIPMENT_TYPE_AUTO       = 'auto';
+
     const SHIPMENT_TYPE_SUNDAY            = 'Sunday';
 
     const SHIPMENT_TYPE_TODAY            = 'Today';
@@ -121,7 +123,7 @@ class ProductInfo
         $type    = $type ? strtolower($type) : '';
         $option  = $option ? strtolower($option) : '';
 
-        // Check if the country is not an ESP country or BE/NL and if it is Global Pack
+        // Check if the country is not an ESP country or BE/NL and if it is Boxable Packets
         if (!in_array($country, EpsCountries::ALL)
             && !in_array($country, ['NL']) && $type === strtolower(static::SHIPMENT_TYPE_BOXABLE_PACKETS)) {
             $this->setProductCode($option, $country);
@@ -131,10 +133,16 @@ class ProductInfo
 
         // Check if the country is not an ESP country or BE/NL and if it is Global Pack
         if (!in_array($country, EpsCountries::ALL)
-            && !in_array($country, ['BE', 'NL']) && $type === strtolower(static::SHIPMENT_TYPE_GP)) {
+            && !in_array($country, ['BE', 'NL']) && (
+                $type === strtolower(static::SHIPMENT_TYPE_GP) || $type === static::SHIPMENT_TYPE_AUTO
+            )) {
             $this->setGlobalPackOption($country);
 
             return $this->getInfo();
+        }
+        // Disable auto mode
+        if ($type === static::SHIPMENT_TYPE_AUTO) {
+            $type = '';
         }
 
         // EPS also uses delivery options in some cases. For Daytime there is no default EPS option.
