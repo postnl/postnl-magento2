@@ -154,7 +154,7 @@ class CreatePostNLOrder implements ObserverInterface
         if (!$postnlOrder->getProductCode()) {
             $option          = $this->itemsToOption->get($magentoOrder->getItems());
             $shippingAddress = $magentoOrder->getShippingAddress();
-            $productInfo     = $this->productInfo->get('', $option, $shippingAddress);
+            $productInfo     = $this->productInfo->get(ProductInfo::SHIPMENT_TYPE_AUTO, $option, $shippingAddress);
             $postnlOrder->setProductCode($productInfo['code']);
             $postnlOrder->setType($productInfo['type']);
         }

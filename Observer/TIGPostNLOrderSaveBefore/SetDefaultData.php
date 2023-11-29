@@ -131,7 +131,12 @@ class SetDefaultData implements ObserverInterface
     {
         $option      = $this->getOptionFromQuote();
         $address     = $this->checkByAddressData($order);
-        $productInfo = $this->productInfo->get('', $option, $address);
+        $type = '';
+        // Check if code was already applied, if it wasn't - assume auto mode, so we can check for GP
+        if (!$order->getProductCode()) {
+            $type = ProductInfo::SHIPMENT_TYPE_AUTO;
+        }
+        $productInfo = $this->productInfo->get($type, $option, $address);
         $duration    = $this->shippingDuration->get();
 
         if (!$order->getProductCode() || $this->canUpdate($order->getProductCode(), $productInfo['code'], $option)) {
