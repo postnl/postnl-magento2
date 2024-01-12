@@ -31,9 +31,9 @@
  */
 namespace TIG\PostNL\Config\Source\Settings;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class Checkouts implements ArrayInterface
+class Checkouts implements OptionSourceInterface
 {
     /**
      * Return option array for compatiblity checkout modus.

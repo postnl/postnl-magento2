@@ -31,9 +31,9 @@
  */
 namespace TIG\PostNL\Config\Source\Matrixrate;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class ParcelType implements ArrayInterface
+class ParcelType implements OptionSourceInterface
 {
     private const PARCEL_TYPE_PAKJEGEMAK        = 'pakjegemak';
     private const PARCEL_TYPE_EXTRA_AT_HOME     = 'extra@home';

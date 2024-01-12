@@ -31,9 +31,9 @@
  */
 namespace TIG\PostNL\Config\Source\General;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class Logging implements ArrayInterface
+class Logging implements OptionSourceInterface
 {
 
     private $levels = [

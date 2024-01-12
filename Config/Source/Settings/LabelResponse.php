@@ -31,9 +31,9 @@
  */
 namespace TIG\PostNL\Config\Source\Settings;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class LabelResponse implements ArrayInterface
+class LabelResponse implements OptionSourceInterface
 {
     const DOWNLOAD_RESPONSE  = 'attachment';
     const INBROWSER_RESPONSE = 'inline';
@@ -45,8 +45,8 @@ class LabelResponse implements ArrayInterface
     {
         // @codingStandardsIgnoreStart
         return [
-            ['value' => static::DOWNLOAD_RESPONSE, 'label' => __('Download pdf directly')],
-            ['value' => static::INBROWSER_RESPONSE, 'label' => __('Open pdf in new browser window')],
+            ['value' => static::DOWNLOAD_RESPONSE, 'label' => __('Download labels directly')],
+            ['value' => static::INBROWSER_RESPONSE, 'label' => __('Open labels in new browser window')],
         ];
         // @codingStandardsIgnoreEnd
     }

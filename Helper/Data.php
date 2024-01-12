@@ -34,6 +34,7 @@ namespace TIG\PostNL\Helper;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Sales\Model\Order;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use TIG\PostNL\Config\Provider\PrintSettingsConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Config\Provider\Webshop;
 
@@ -69,20 +70,24 @@ class Data extends AbstractHelper
      * @var null
      */
     private $currentDate = null;
+    private PrintSettingsConfiguration $printSettings;
 
     /**
      * @param TimezoneInterface $timezoneInterface
      * @param ShippingOptions   $shippingOptions
      * @param Webshop           $webshop
+     * @param PrintSettingsConfiguration $printSettings
      */
     public function __construct(
         TimezoneInterface $timezoneInterface,
         ShippingOptions $shippingOptions,
-        Webshop $webshop
+        Webshop $webshop,
+        PrintSettingsConfiguration $printSettings
     ) {
         $this->dateTime  = $timezoneInterface;
         $this->shippingOptions = $shippingOptions;
         $this->webshop = $webshop;
+        $this->printSettings = $printSettings;
     }
 
     /**
@@ -252,4 +257,10 @@ class Data extends AbstractHelper
 
         return $this->currentDate;
     }
+
+    public function getLabelFileFormat(): string
+    {
+        return $this->printSettings->getLabelType();
+    }
+
 }

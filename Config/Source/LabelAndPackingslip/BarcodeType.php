@@ -31,9 +31,9 @@
  */
 namespace TIG\PostNL\Config\Source\LabelAndPackingslip;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class BarcodeType implements ArrayInterface
+class BarcodeType implements OptionSourceInterface
 {
     /**
      * These are the only Zend Barcode types

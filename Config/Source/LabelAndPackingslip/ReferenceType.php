@@ -31,9 +31,9 @@
  */
 namespace TIG\PostNL\Config\Source\LabelAndPackingslip;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class ReferenceType implements ArrayInterface
+class ReferenceType implements OptionSourceInterface
 {
     const REFEENCE_TYPE_NONE        = 'none';
     const REFEENCE_TYPE_SHIPMENT_ID = 'shipment_increment_id';

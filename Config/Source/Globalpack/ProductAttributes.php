@@ -31,12 +31,12 @@
  */
 namespace TIG\PostNL\Config\Source\Globalpack;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Eav\Api\AttributeRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Catalog\Api\Data\ProductAttributeInterface;
 
-class ProductAttributes implements ArrayInterface
+class ProductAttributes implements OptionSourceInterface
 {
     private $attributesRepository;
 

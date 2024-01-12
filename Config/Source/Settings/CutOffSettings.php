@@ -31,9 +31,9 @@
  */
 namespace TIG\PostNL\Config\Source\Settings;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class CutOffSettings implements ArrayInterface
+class CutOffSettings implements OptionSourceInterface
 {
     /**
      * Returns options for 0:00 till 23:45

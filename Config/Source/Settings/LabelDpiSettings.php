@@ -29,23 +29,26 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\General;
+namespace TIG\PostNL\Config\Source\Settings;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
-class Modus implements OptionSourceInterface
+class LabelDpiSettings implements OptionSourceInterface
 {
+    const DPI_200 = '200';
+    const DPI_300 = '300';
+    const DPI_600 = '600';
+
     /**
-     * Return modus option array
      * @return array
      */
     public function toOptionArray()
     {
         // @codingStandardsIgnoreStart
         $options = [
-            ['value' => '1', 'label' => __('Live')],
-            ['value' => '2', 'label' => __('Test')],
-            ['value' => '0', 'label' => __('Off')],
+            ['value' => static::DPI_200, 'label' => __('200')],
+            ['value' => static::DPI_300, 'label' => __('300')],
+            ['value' => static::DPI_600, 'label' => __('600')],
         ];
         // @codingStandardsIgnoreEnd
         return $options;

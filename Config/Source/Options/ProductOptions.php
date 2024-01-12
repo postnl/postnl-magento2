@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Config\Source\Options;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Sales\Model\Order\Address as SalesAddress;
 use TIG\PostNL\Config\Source\OptionsAbstract;
@@ -42,7 +42,7 @@ use TIG\PostNL\Service\Shipment\GuaranteedOptions;
  * As this class holds all the methods to retrieve correct product codes, it is too long for Code Sniffer to check.
  */
 // @codingStandardsIgnoreFile
-class ProductOptions extends OptionsAbstract implements ArrayInterface
+class ProductOptions extends OptionsAbstract implements OptionSourceInterface
 {
     /**
      * @var CanaryIslandToIC

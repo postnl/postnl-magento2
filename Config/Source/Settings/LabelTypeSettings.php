@@ -29,23 +29,28 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Config\Source\General;
+namespace TIG\PostNL\Config\Source\Settings;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
-class Modus implements OptionSourceInterface
+class LabelTypeSettings implements OptionSourceInterface
 {
+    const TYPE_PDF = 'PDF';
+    const TYPE_GIF = 'GIF';
+    const TYPE_JPG = 'JPG';
+    const TYPE_ZPL = 'ZPL';
+
     /**
-     * Return modus option array
      * @return array
      */
     public function toOptionArray()
     {
         // @codingStandardsIgnoreStart
         $options = [
-            ['value' => '1', 'label' => __('Live')],
-            ['value' => '2', 'label' => __('Test')],
-            ['value' => '0', 'label' => __('Off')],
+            ['value' => static::TYPE_PDF, 'label' => __('PDF')],
+            ['value' => static::TYPE_GIF, 'label' => __('GIF')],
+            ['value' => static::TYPE_JPG, 'label' => __('JPG')],
+            ['value' => static::TYPE_ZPL, 'label' => __('ZPL (Zebra)')],
         ];
         // @codingStandardsIgnoreEnd
         return $options;

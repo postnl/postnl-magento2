@@ -31,7 +31,7 @@
  */
 namespace TIG\PostNL\Config\Source\Options;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 use TIG\PostNL\Config\Provider\AbstractConfigProvider;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
@@ -40,7 +40,7 @@ use TIG\PostNL\Config\Provider\ShippingOptions;
  *      creating a circular dependency. For now we allow CS to ignore this file.
  */
 // @codingStandardsIgnoreFile
-class DefaultOptions implements ArrayInterface
+class DefaultOptions implements OptionSourceInterface
 {
     /**
      * @var ShippingOptions

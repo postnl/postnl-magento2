@@ -32,9 +32,9 @@
 namespace TIG\PostNL\Config\Source\Options;
 
 use TIG\PostNL\Config\Source\OptionsAbstract;
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class StockOptions extends OptionsAbstract implements ArrayInterface
+class StockOptions extends OptionsAbstract implements OptionSourceInterface
 {
     /**
      * Return option array

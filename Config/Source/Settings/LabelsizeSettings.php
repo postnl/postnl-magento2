@@ -31,9 +31,9 @@
  */
 namespace TIG\PostNL\Config\Source\Settings;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class LabelsizeSettings implements ArrayInterface
+class LabelsizeSettings implements OptionSourceInterface
 {
     const A4_LABELSIZE = 'A4';
     const A6_LABELSIZE = 'A6';

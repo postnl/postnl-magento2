@@ -31,10 +31,10 @@
  */
 namespace TIG\PostNL\Config\Source\Settings;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 use TIG\PostNL\Config\Provider\ShippingDuration as SourceProvider;
 
-class ShippingDuration implements ArrayInterface
+class ShippingDuration implements OptionSourceInterface
 {
     /**
      * @var SourceProvider

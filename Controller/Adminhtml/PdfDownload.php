@@ -31,10 +31,11 @@
  */
 namespace TIG\PostNL\Controller\Adminhtml;
 
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Message\ManagerInterface;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
-use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Config\Provider\PrintSettingsConfiguration;
 use TIG\PostNL\Config\Source\Settings\LabelsizeSettings;
 use TIG\PostNL\Service\Framework\FileFactory;
 use TIG\PostNL\Service\Order\ProductInfo;
@@ -56,9 +57,9 @@ class PdfDownload
     private $messageManager;
 
     /**
-     * @var Webshop
+     * @var PrintSettingsConfiguration
      */
-    private $webshopConfig;
+    private $printSettings;
 
     /**
      * @var LabelGenerate
@@ -88,7 +89,7 @@ class PdfDownload
      *
      * @param FileFactory         $fileFactory
      * @param ManagerInterface    $messageManager
-     * @param Webshop             $webshopConfig
+     * @param PrintSettingsConfiguration $printSettings
      * @param LabelGenerate       $labelGenerator
      * @param PackingslipGenerate $packingslipGenerator
      * @param Shipment            $shipment
@@ -96,14 +97,14 @@ class PdfDownload
     public function __construct(
         FileFactory $fileFactory,
         ManagerInterface $messageManager,
-        Webshop $webshopConfig,
+        PrintSettingsConfiguration $printSettings,
         LabelGenerate $labelGenerator,
         PackingslipGenerate $packingslipGenerator,
         Shipment $shipment
     ) {
         $this->fileFactory = $fileFactory;
         $this->messageManager = $messageManager;
-        $this->webshopConfig = $webshopConfig;
+        $this->printSettings = $printSettings;
         $this->labelGenerator = $labelGenerator;
         $this->packingslipGenerator = $packingslipGenerator;
         $this->shipment = $shipment;
@@ -120,7 +121,7 @@ class PdfDownload
     // @codingStandardsIgnoreLine
     public function get($labels, $filename = 'ShippingLabels')
     {
-        if ($this->webshopConfig->getLabelSize() == LabelsizeSettings::A6_LABELSIZE
+        if ($this->printSettings->getLabelSize() == LabelsizeSettings::A6_LABELSIZE
             && $filename !== 'PackingSlips'
         ) {
             $labels = $this->filterLabel($labels);
@@ -138,13 +139,16 @@ class PdfDownload
             $this->setSkippedLabelsResponse();
         }
 
-        $pdfLabel = $this->generateLabel($labels, $filename);
+        if ($this->isPdfLabel($labels)) {
+            $pdfLabel = $this->generateLabel($labels, $filename);
 
-        return $this->fileFactory->create(
-            $filename . '.pdf',
-            $pdfLabel,
-            $this->webshopConfig->getLabelResponse()
-        );
+            return $this->fileFactory->create(
+                $filename . '.pdf',
+                $pdfLabel,
+                $this->printSettings->getLabelResponse()
+            );
+        }
+        return $this->returnFile($labels[0], $filename);
     }
 
     /**
@@ -223,4 +227,36 @@ class PdfDownload
         }
     }
     // @codingStandardsIgnoreEnd
+
+    /**
+     * @param ShipmentLabelInterface[] $labels
+     * @return bool
+     */
+    private function isPdfLabel(array $labels): bool
+    {
+        foreach ($labels as $label) {
+            if ($label->getLabelFileFormat() === 'PDF') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function returnFile(ShipmentLabelInterface $label, string $filename)
+    {
+        $extension = strtolower($label->getLabelFileFormat());
+        $contentType = [
+            'jpg' => 'application/jpeg',
+            'gif' => 'application/gif',
+            'zpl' => 'application/text'
+        ];
+        $application = isset($contentType[$extension]) ? $contentType[$extension] : 'application/text';
+        return $this->fileFactory->create(
+            $filename . '.' . $extension,
+            base64_decode($label->getLabel()),
+            $this->printSettings->getLabelResponse(),
+            DirectoryList::VAR_DIR,
+            $application
+        );
+    }
 }

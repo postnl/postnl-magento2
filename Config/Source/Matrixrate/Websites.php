@@ -31,10 +31,10 @@
  */
 namespace TIG\PostNL\Config\Source\Matrixrate;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Store\Model\ResourceModel\Website\CollectionFactory;
 
-class Websites implements ArrayInterface
+class Websites implements OptionSourceInterface
 {
     /** @var mixed */
     protected $_options;

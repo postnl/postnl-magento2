@@ -31,15 +31,15 @@
  */
 namespace TIG\PostNL\Service\Shipment\Label;
 
-use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Config\Provider\PrintSettingsConfiguration;
 use TIG\PostNL\Service\Pdf\Fpdi;
 
 class Merge
 {
     /**
-     * @var Webshop
+     * @var PrintSettingsConfiguration
      */
-    private $webshop;
+    private $printSettings;
 
     /**
      * @var Merge\A4Merger
@@ -52,17 +52,16 @@ class Merge
     private $a6Merger;
 
     /**
-     * @param Webshop        $webshopConfiguration
+     * @param PrintSettingsConfiguration $printSettings
      * @param Merge\A4Merger $a4Merger
      * @param Merge\A6Merger $a6Merger
-     * @param File           $file
      */
     public function __construct(
-        Webshop $webshopConfiguration,
+        PrintSettingsConfiguration $printSettings,
         Merge\A4Merger $a4Merger,
         Merge\A6Merger $a6Merger
     ) {
-        $this->webshop = $webshopConfiguration;
+        $this->printSettings = $printSettings;
         $this->a4Merger = $a4Merger;
         $this->a6Merger = $a6Merger;
     }
@@ -83,13 +82,13 @@ class Merge
     public function files(array $labels, $createNewPdf = false)
     {
         $output = '';
-        if ($this->webshop->getLabelSize() == 'A4' || $createNewPdf) {
+        if ($this->printSettings->getLabelSize() == 'A4' || $createNewPdf) {
             $result = $this->a4Merger->files($labels, $createNewPdf);
             $output = $result->Output('s');
         }
 
         //  Create PDF is used for packingslips which are always A4.
-        if ($this->webshop->getLabelSize() == 'A6' && !$createNewPdf) {
+        if ($this->printSettings->getLabelSize() == 'A6' && !$createNewPdf) {
             $result = $this->mergeA6Labels($labels, $createNewPdf);
             $output = $result->Output('s');
         }
