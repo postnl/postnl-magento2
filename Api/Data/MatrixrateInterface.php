@@ -1,34 +1,4 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 
 namespace TIG\PostNL\Api\Data;
 
@@ -46,7 +16,7 @@ interface MatrixrateInterface
     public function getWebsiteId();
 
     /**
-     * @param $value
+     * @param int $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -70,7 +40,7 @@ interface MatrixrateInterface
     public function getDestinyRegionId();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -82,7 +52,7 @@ interface MatrixrateInterface
     public function getDestinyZipCode();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -94,7 +64,7 @@ interface MatrixrateInterface
     public function getWeight();
 
     /**
-     * @param $value
+     * @param float $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -106,7 +76,7 @@ interface MatrixrateInterface
     public function getSubtotal();
 
     /**
-     * @param $value
+     * @param float $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -118,7 +88,7 @@ interface MatrixrateInterface
     public function getQuantity();
 
     /**
-     * @param $value
+     * @param int $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -130,7 +100,7 @@ interface MatrixrateInterface
     public function getParcelType();
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
@@ -142,7 +112,7 @@ interface MatrixrateInterface
     public function getPrice();
 
     /**
-     * @param $value
+     * @param float $value
      *
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */

@@ -1,34 +1,9 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to support@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact support@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+/** @var \TIG\PostNL\Block\Frontend\Customer\Address\Edit $block */
+$address = $block->getAddress();
+// Fallback values in case address line can't be found
+$houseNumber = $block->getStreetLine(2);
+$addition = $block->getStreetLine(3);
 ?>
 <script type="text/javascript">
     require(['jquery', 'TIG_PostNL/js/Helper/Logger'], function($, Logger){
@@ -191,6 +166,15 @@
         postNLContainer.insertAfter('.field.country');
 
         $('.field.zip').appendTo(postNLContainer);
+        var streetLineId = 1;
+            houseNumberValue = $('.field.street').find('.control input:eq('+streetLineId+')').val(),
+            houseAdditionValue = $('.field.street').find('.control input:eq('+(streetLineId + 1)+')').val();
+        if (!houseAdditionValue) {
+            houseNumberValue = <?= $block->escapeJs($houseNumber); ?>;
+        }
+        if (!houseAdditionValue) {
+            houseAdditionValue = <?= $block->escapeJs($addition); ?>;
+        }
 
         var housenumberElement = $('.field.zip').clone();
         housenumberElement.removeClass('zip').addClass('tig-housenumber');
@@ -201,7 +185,7 @@
         housenumberInput.attr('title', '<?= $block->escapeHtml(__('House number')); ?>');
         housenumberInput.attr('name', 'tig-housenumber');
         housenumberInput.attr('id', 'tig-housenumber');
-        housenumberInput.val($('.field.street').find('.control input:eq(1)').val());
+        housenumberInput.val(houseNumberValue);
         housenumberInput.removeClass('validate-zip-international');
         housenumberInput.addClass('validate-number').addClass('required-entry');
 
@@ -219,7 +203,7 @@
         housenrAdditionInput.attr('title', '<?= $block->escapeHtml(__('House number addition')); ?>');
         housenrAdditionInput.attr('name', 'tig-housenumber-addition');
         housenrAdditionInput.attr('id', 'tig-housenumber-addition');
-        housenrAdditionInput.val($('.field.street').find('.control input:eq(2)').val());
+        housenrAdditionInput.val(houseAdditionValue);
         housenrAdditionInput.removeClass('validate-zip-international');
 
         housenrAdditionElement.appendTo(postNLContainer);

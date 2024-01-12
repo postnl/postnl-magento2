@@ -1,36 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
+
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
@@ -64,6 +33,7 @@
                 <item name="is_delivery_days_disabled" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsDeliveryDaysDisabled</item>
                 <item name="onestepcheckout_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsOnestepcheckoutActive</item>
                 <item name="is_international_address_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsInternationalAddressActive</item>
+                <item name="is_international_packets_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsInternationalPacketsActive</item>
             </argument>
         </arguments>
     </type>
@@ -74,6 +44,8 @@
             <!-- Order is important, cutoff times must be processed last -->
             <argument name="dayFilters" xsi:type="array">
                 <item name="sameday" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\SameDay</item>
+                <item name="dateoff" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\DateOff</item>
+                <item name="daysoff" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\DaysOff</item>
                 <item name="cutoff" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Days\CutOffTimes</item>
             </argument>
             <argument name="optionsFilters" xsi:type="array">
@@ -90,5 +62,12 @@
 
     <type name="Mageplaza\Osc\Helper\Address">
         <plugin name="postcodeFieldGroupMagePlazaPlugin" type="TIG\PostNL\Plugin\Postcodecheck\Mageplaza\AddressHelper" />
+    </type>
+
+    <type name="TIG\PostNL\Block\Frontend\Customer\Address\Edit">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+            <argument name="currentCustomer" xsi:type="object">Magento\Customer\Helper\Session\CurrentCustomer\Proxy</argument>
+        </arguments>
     </type>
 </config>

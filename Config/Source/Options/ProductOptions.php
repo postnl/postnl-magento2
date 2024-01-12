@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Config\Source\Options;
 
 use Magento\Framework\Data\OptionSourceInterface;
@@ -162,6 +133,17 @@ class ProductOptions extends OptionsAbstract implements OptionSourceInterface
     }
 
     /**
+     * Returns options if group equals pakjegemak_be_nl_options
+     * @return array
+     */
+    public function getPakjeGemakBeNlOptions()
+    {
+        $flags = [];
+        $flags['groups'][] = ['group' => 'pakjegemak_be_nl_options'];
+        return $this->getProductOptions($flags);
+    }
+
+    /**
      * Returns options if group equals standard_options
      * @return array
      */
@@ -233,6 +215,16 @@ class ProductOptions extends OptionsAbstract implements OptionSourceInterface
         return $beDomesticOptions;
     }
 
+    /**
+     * @return array
+     */
+    public function getBeNlOptions()
+    {
+        $options = $this->getProductOptions(['group' => 'be_nl_options']);
+
+        return $options;
+    }
+
 
     /**
      * @return array
@@ -253,6 +245,16 @@ class ProductOptions extends OptionsAbstract implements OptionSourceInterface
         $priorityOptions = $this->getProductOptions(['group' => 'priority_options']);
 
         return $priorityOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBoxableOptions()
+    {
+        $boxablePackets = $this->getProductOptions(['group' => 'boxable_packets']);
+
+        return $boxablePackets;
     }
 
     /**

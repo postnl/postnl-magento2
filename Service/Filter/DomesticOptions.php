@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to support@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact support@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Service\Filter;
 
 use TIG\PostNL\Config\Provider\AddressConfiguration;
@@ -82,8 +53,10 @@ class DomesticOptions
     private function filterNlDomesticOption($productOption)
     {
         // countryLimitation is used for country destination.
-        // Since all BE > NL shipments are EPS, most NL domestic product codes can be filtered right away via this check
-        if ($productOption['countryLimitation'] == 'NL') {
+        // Since some BE > NL shipments are EPS, most NL domestic product codes can be filtered right away via this check
+        // Others are filtered by countryOrigin
+        if ($productOption['countryLimitation'] == 'NL'
+            && (empty($productOption['countryOrigin']) || $productOption['countryOrigin'] == 'NL')) {
             return false;
         }
 
@@ -107,6 +80,8 @@ class DomesticOptions
     {
         $beDomesticOptions[] = $this->productOptions->getBeDomesticOptions();
         $beDomesticOptions[] = $this->productOptions->getPakjeGemakBeDomesticOptions();
+        // It's not domestic, but it shouldn't be shown when source is NL
+        $beDomesticOptions[] = $this->productOptions->getBeNlOptions();
 
         // @codingStandardsIgnoreLine
         $beDomesticOptions = call_user_func_array("array_merge", $beDomesticOptions);

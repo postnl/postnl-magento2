@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Service\Shipment\Label;
 
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
@@ -36,6 +7,7 @@ use TIG\PostNL\Exception as PostNLException;
 use TIG\PostNL\Service\Shipment\Label\Type\DomesticFactory;
 use TIG\PostNL\Service\Shipment\Label\Type\EPSFactory;
 use TIG\PostNL\Service\Shipment\Label\Type\GlobalPackFactory;
+use TIG\PostNL\Service\Shipment\Label\Type\BoxablePacketsFactory;
 use TIG\PostNL\Service\Shipment\Type;
 use TIG\PostNL\Service\Shipment\Label\Type\TypeInterface;
 use TIG\PostNL\Service\Shipment\Label\Type\TypeInterfaceFactory;
@@ -73,10 +45,16 @@ class Prepare
     private $globalPackFactory;
 
     /**
+     * @var BoxablePacketsFactory
+     */
+    private $boxablePacketsFactory;
+
+    /**
      * @param Type  $typeConverter
      * @param DomesticFactory $domesticFactory
      * @param EPSFactory $epsFactory
      * @param GlobalPackFactory $globalPackFactory
+     * @param BoxablePacketsFactory $boxablePacketsFactory
      * @param array $types
      *
      * @throws PostNLException
@@ -86,12 +64,14 @@ class Prepare
         DomesticFactory $domesticFactory,
         EPSFactory $epsFactory,
         GlobalPackFactory $globalPackFactory,
+        BoxablePacketsFactory $boxablePacketsFactory,
         $types = []
     ) {
         $this->typeConverter = $typeConverter;
         $this->domesticFactory = $domesticFactory;
         $this->epsFactory = $epsFactory;
         $this->globalPackFactory = $globalPackFactory;
+        $this->boxablePacketsFactory = $boxablePacketsFactory;
         $this->types = $types;
     }
 

@@ -1,34 +1,4 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 
 namespace TIG\PostNL\Service\Carrier\Price;
 
@@ -94,7 +64,11 @@ class Matrixrate
      */
     public function getRate(RateRequest $request, $parcelType, $store = null)
     {
-        $matrixrateCollection     = $this->matrixrateCollection->addOrder('subtotal', 'DESC')->addOrder('weight', 'DESC')->addOrder('destiny_country_id', 'DESC');
+        $matrixrateCollection     = $this->matrixrateCollection
+            ->addOrder('subtotal', 'DESC')
+            // Country filter should go before weight, so we filter specific countries before all (ID: 0)
+            ->addOrder('destiny_country_id', 'DESC')
+            ->addOrder('weight', 'DESC');
         $this->shippingVatEnabled = $this->taxHelper->shippingPriceIncludesTax($store);
         $parcelType               = $parcelType ?: 'regular';
         $collection               = $matrixrateCollection->toArray();
