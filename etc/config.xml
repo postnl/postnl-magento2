@@ -165,6 +165,7 @@
 
             <returns>
                 <template>tig_postnl_postnl_settings_returns_template</template>
+                <returns_to>1</returns_to>
             </returns>
         </tig_postnl>
     </default>
