@@ -180,7 +180,7 @@ class Shipments
         $returnType = $this->returnOptions->getReturnTo();
         $zip = strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode()));
 
-        if ($returnType === ReturnTypes::TYPE_FREE_POST) {
+        if ($returnType === ReturnTypes::TYPE_FREE_POST && $countryCode === 'NL') {
             $data = [
                 'AddressType' => '08',
                 'City' => $this->returnOptions->getCity(),
