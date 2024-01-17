@@ -6,6 +6,7 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\Order\Address;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
+use TIG\PostNL\Config\Source\Settings\ReturnTypes;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Service\Shipment\Data as ShipmentData;
@@ -176,17 +177,29 @@ class Shipments
     private function getReturnAddressData()
     {
         $countryCode = $this->addressConfiguration->getCountry();
-        $freePostNumber  = ($countryCode == 'BE' ? 'getHouseNumber' : 'getFreepostNumber');
+        $returnType = $this->returnOptions->getReturnTo();
+        $zip = strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode()));
 
-        $data = [
-            'AddressType'      => '08',
-            'City'             => $this->returnOptions->getCity(),
-            'CompanyName'      => $this->returnOptions->getCompany(),
-            'Countrycode'      => $countryCode,
-            'HouseNr'          => $this->returnOptions->$freePostNumber(),
-            'Street'           => ($countryCode == 'BE' ? $this->returnOptions->getStreetName() : 'Antwoordnummer:'),
-            'Zipcode'          => strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode())),
-        ];
+        if ($returnType === ReturnTypes::TYPE_FREE_POST && $countryCode === 'NL') {
+            $data = [
+                'AddressType' => '08',
+                'City' => $this->returnOptions->getCity(),
+                'Countrycode' => $countryCode,
+                'HouseNr' => $this->returnOptions->getFreepostNumber(),
+                'Street' => 'Antwoordnummer',
+                'Zipcode' => $zip
+            ];
+        } else {
+            $data = [
+                'AddressType' => '08',
+                'City' => $this->returnOptions->getCity(),
+                'CompanyName' => $this->returnOptions->getCompany(),
+                'Countrycode' => $countryCode,
+                'HouseNr' => trim($this->returnOptions->getHouseNumber() . ' ' . $this->returnOptions->getHouseNumberEx()),
+                'Street' => $this->returnOptions->getStreetName(),
+                'Zipcode' => $zip,
+            ];
+        }
 
         return $data;
     }
