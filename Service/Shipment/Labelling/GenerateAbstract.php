@@ -6,6 +6,7 @@ use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
+use TIG\PostNL\Config\Provider\PrintSettingsConfiguration;
 use TIG\PostNL\Exception as PostNLException;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Logging\Log;
@@ -38,6 +39,7 @@ abstract class GenerateAbstract
 
     /** @var string $date */
     private $date;
+    private Data $helper;
 
     /**
      * GenerateAbstract constructor.
@@ -63,6 +65,7 @@ abstract class GenerateAbstract
         $this->shipmentLabelRepository = $shipmentLabelRepository;
         $this->shipmentRepository      = $shipmentRepository;
         $this->date                    = $helper->getDate();
+        $this->helper = $helper;
     }
 
     /**
@@ -91,8 +94,10 @@ abstract class GenerateAbstract
             $shipment->setConfirmedAt($this->date);
             $shipment->setConfirmed(true);
         }
+        // Get used label type
+        $labelFormat = $this->helper->getLabelFileFormat();
 
-        $labelModels = $this->handleLabels($shipment, $responseShipments, $currentShipmentNumber);
+        $labelModels = $this->handleLabels($shipment, $responseShipments, $currentShipmentNumber, $labelFormat);
 
         $this->shipmentRepository->save($shipment);
 
@@ -162,16 +167,17 @@ abstract class GenerateAbstract
      * @param $shipment
      * @param $responseShipments
      * @param $currentShipmentNumber
+     * @param string $fileFormat
      *
      * @return ShipmentLabelInterface[]
      */
-    private function handleLabels($shipment, $responseShipments, $currentShipmentNumber)
+    private function handleLabels($shipment, $responseShipments, $currentShipmentNumber, string $fileFormat)
     {
         $labelModels = [];
         foreach ($responseShipments as $labelItem) {
             $labelModels = array_merge(
                 $labelModels,
-                $this->getLabelModels($labelItem, $shipment, $currentShipmentNumber)
+                $this->getLabelModels($labelItem, $shipment, $currentShipmentNumber, $fileFormat)
             );
             $currentShipmentNumber++;
         }
@@ -181,18 +187,27 @@ abstract class GenerateAbstract
 
     /**
      * @param $labelItem
-     * @param $shipment
+     * @param ShipmentInterface $shipment
      * @param $currentShipmentNumber
+     * @param string $fileFormat
      *
      * @return array
      */
-    private function getLabelModels($labelItem, ShipmentInterface $shipment, $currentShipmentNumber)
+    private function getLabelModels($labelItem, ShipmentInterface $shipment, $currentShipmentNumber, string $fileFormat)
     {
         $labelModels     = [];
         $labelItemHandle = $this->handler->handle($shipment, $labelItem->Labels->Label);
 
         foreach ($labelItemHandle['labels'] as $Label) {
-            $labelModel    = $this->save($shipment, $currentShipmentNumber, $this->getLabelContent($Label), $labelItemHandle['type'], $labelItem->ProductCodeDelivery, $this->getLabelType($Label, $labelItem->ProductCodeDelivery));
+            $labelModel    = $this->save(
+                $shipment,
+                $currentShipmentNumber,
+                $this->getLabelContent($Label),
+                $labelItemHandle['type'],
+                $labelItem->ProductCodeDelivery,
+                $this->getLabelType($Label, $labelItem->ProductCodeDelivery),
+                $fileFormat
+            );
             $labelModels[] = $labelModel;
             $this->shipmentLabelRepository->save($labelModel);
         }
@@ -248,10 +263,11 @@ abstract class GenerateAbstract
      * @param null|string                $type
      * @param int                        $productCode
      * @param                            $labelType
+     * @param string                     $fileFormat
      *
      * @return ShipmentLabelInterface
      */
-    public function save(ShipmentInterface $shipment, $number, $label, $type, $productCode, $labelType)
+    public function save(ShipmentInterface $shipment, $number, $label, $type, $productCode, $labelType, string $fileFormat = 'PDF')
     {
         /** @var ShipmentLabelInterface $labelModel */
         $labelModel = $this->shipmentLabelFactory->create();
@@ -260,6 +276,7 @@ abstract class GenerateAbstract
         $labelModel->setLabel(base64_encode($label));
         $labelModel->setType($type ?: ShipmentLabelInterface::BARCODE_TYPE_LABEL);
         $labelModel->setProductCode($productCode);
+        $labelModel->setLabelFileFormat($fileFormat);
 
         if ($labelType == 'Return Label') {
             $labelModel->isReturnLabel(true);

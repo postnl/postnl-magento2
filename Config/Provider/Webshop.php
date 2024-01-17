@@ -65,6 +65,8 @@ class Webshop extends AbstractConfigProvider
     }
 
     /**
+     * @deprecated Left for compatibility reasons
+     * @use PrintSettingsConfiguration
      * @return mixed
      */
     public function getLabelSize()
@@ -73,6 +75,8 @@ class Webshop extends AbstractConfigProvider
     }
 
     /**
+     * @deprecated Left for compatibility reasons
+     * @use PrintSettingsConfiguration
      * @return mixed
      */
     public function getLabelResponse()

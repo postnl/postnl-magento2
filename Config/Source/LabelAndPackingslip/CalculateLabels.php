@@ -2,9 +2,9 @@
 
 namespace TIG\PostNL\Config\Source\LabelAndPackingslip;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class CalculateLabels implements ArrayInterface
+class CalculateLabels implements OptionSourceInterface
 {
     const CALCULATE_LABELS_WEIGHT = 'weight';
     const CALCULATE_LABELS_PARCEL_COUNT = 'parcel_count';

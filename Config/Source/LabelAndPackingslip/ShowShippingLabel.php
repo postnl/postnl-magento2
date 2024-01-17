@@ -2,9 +2,9 @@
 
 namespace TIG\PostNL\Config\Source\LabelAndPackingslip;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class ShowShippingLabel implements ArrayInterface
+class ShowShippingLabel implements OptionSourceInterface
 {
     const SHOW_SHIPPING_LABEL_TOGETHER = 'together';
     const SHOW_SHIPPING_LABEL_SEPARATE = 'separate';

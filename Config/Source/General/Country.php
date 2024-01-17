@@ -2,9 +2,9 @@
 
 namespace TIG\PostNL\Config\Source\General;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class Country implements ArrayInterface
+class Country implements OptionSourceInterface
 {
     const COUNTRY_NL = 'NL';
     const COUNTRY_BE = 'BE';

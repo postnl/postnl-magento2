@@ -2,9 +2,9 @@
 
 namespace TIG\PostNL\Config\Source\Carrier;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class RateType implements ArrayInterface
+class RateType implements OptionSourceInterface
 {
     const CARRIER_RATE_TYPE_FLAT = 'flat';
     const CARRIER_RATE_TYPE_TABLE = 'table';
