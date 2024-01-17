@@ -61,6 +61,15 @@ class ReturnOptions extends AbstractConfigProvider
     }
 
     /**
+     * Fall back to Sender country
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->getConfigFromXpath(AddressConfiguration::XPATH_GENERAL_COUNTRY);
+    }
+
+    /**
      * @return mixed
      */
     public function getStreetName()
