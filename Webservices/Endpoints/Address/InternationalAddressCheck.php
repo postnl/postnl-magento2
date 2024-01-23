@@ -2,6 +2,7 @@
 
 namespace TIG\PostNL\Webservices\Endpoints\Address;
 
+use TIG\PostNL\Webservices\Endpoints\RestInterface;
 use TIG\PostNL\Webservices\Rest;
 
 class InternationalAddressCheck implements RestInterface
@@ -11,25 +12,10 @@ class InternationalAddressCheck implements RestInterface
      */
     private $restApi;
 
-    /**
-     * @var bool
-     */
-    private $useAddressUri = false;
-
-    /**
-     * @var string
-     */
-    private $endpoint = 'address/international/';
-
-    /**
-     * @var string
-     */
-    private $method = 'GET';
-
-    /**
-     * @var string
-     */
-    private $version = 'v4';
+    private string $method = 'GET';
+    private string $resource = 'shipment/checkout/';
+    private string $version = 'v4';
+    private string $endpoint = 'address/international/';
 
     /**
      * @var array
@@ -95,11 +81,8 @@ class InternationalAddressCheck implements RestInterface
         return $this->version;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function useAddressUri()
+    public function getResource(): string
     {
-        return $this->useAddressUri;
+        return $this->resource;
     }
 }

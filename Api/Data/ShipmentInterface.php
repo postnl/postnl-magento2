@@ -10,6 +10,10 @@ use TIG\PostNL\Model\Order;
  */
 interface ShipmentInterface
 {
+    public const RETURN_STATUS_DEFAULT = 0;
+    public const RETURN_STATUS_BLOCKED = 1;
+    public const RETURN_STATUS_RELEASED = 2;
+
     /**
      * @return int|null
      */
@@ -404,4 +408,18 @@ interface ShipmentInterface
      * @return string
      */
     public function getInsuredTier();
+
+    /**
+     * @param int $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentInterface
+     */
+    public function setReturnStatus(int $value): ShipmentInterface;
+
+    /**
+     * @return int
+     */
+    public function getReturnStatus(): int;
+
+
 }

@@ -29,27 +29,6 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
         $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_TEST_API_BASE_URL, $value);
         $this->assertEquals($value, $instance->getTestApiBaseUrl());
     }
-    /**
-     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
-     * @param $value
-     */
-    public function testGetAddressApiUrl($value)
-    {
-        $instance = $this->getInstance();
-        $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_API_ADDRESS_URL, $value);
-        $this->assertEquals($value, $instance->getAddressApiUrl());
-    }
-
-    /**
-     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
-     * @param $value
-     */
-    public function testGetAddressTestApiUrl($value)
-    {
-        $instance = $this->getInstance();
-        $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_TEST_API_ADDRESS_URL, $value);
-        $this->assertEquals($value, $instance->getAddressTestApiUrl());
-    }
 
     /**
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
@@ -90,35 +69,6 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
         }
 
         $result = $instance->getModusApiBaseUrl();
-        if ($modus == 'off') {
-            $this->assertEquals('staging', $result);
-        } else {
-            $this->assertEquals($modus, $result);
-        }
-    }
-
-    /**
-     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::liveStagingProvider
-     *
-     * @param $value
-     * @param $modus
-     */
-    public function testGetModusAddressApiUrl($value, $modus)
-    {
-        $accountConfigurationMock = $this->getFakeMock(AccountConfiguration::class)->getMock();
-
-        $isModusLiveExpects = $accountConfigurationMock->expects($this->once());
-        $isModusLiveExpects->method('isModusLive');
-        $isModusLiveExpects->willReturn($value == 1);
-
-        $instance = $this->getInstance(['accountConfiguration' => $accountConfigurationMock]);
-        if ($modus == 'live') {
-            $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_API_ADDRESS_URL, 'live');
-        } else {
-            $this->setXpath(DefaultConfiguration::XPATH_ENDPOINTS_TEST_API_ADDRESS_URL, 'staging');
-        }
-
-        $result = $instance->getModusAddressApiUrl();
         if ($modus == 'off') {
             $this->assertEquals('staging', $result);
         } else {

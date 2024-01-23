@@ -13,10 +13,6 @@ class DefaultConfiguration extends AbstractConfigProvider
     const XPATH_ENDPOINTS_API_BASE_URL      = 'tig_postnl/endpoints/api_base_url';
     const XPATH_ENDPOINTS_TEST_API_BASE_URL = 'tig_postnl/endpoints/test_api_base_url';
 
-    //Address API URLs are used for postcode check REST calls
-    const XPATH_ENDPOINTS_API_ADDRESS_URL      = 'tig_postnl/endpoints/address_api_url';
-    const XPATH_ENDPOINTS_TEST_API_ADDRESS_URL = 'tig_postnl/endpoints/address_test_api_url';
-
     //API URLs are used for other REST calls, such as the International Address Check
     const XPATH_ENDPOINTS_API_URL      = 'tig_postnl/endpoints/api_url';
     const XPATH_ENDPOINTS_TEST_API_URL = 'tig_postnl/endpoints/test_api_url';
@@ -66,22 +62,6 @@ class DefaultConfiguration extends AbstractConfigProvider
     /**
      * @return string
      */
-    public function getAddressApiUrl()
-    {
-        return $this->getConfigFromXpath(static::XPATH_ENDPOINTS_API_ADDRESS_URL);
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddressTestApiUrl()
-    {
-        return $this->getConfigFromXpath(static::XPATH_ENDPOINTS_TEST_API_ADDRESS_URL);
-    }
-
-    /**
-     * @return string
-     */
     public function getModusApiBaseUrl()
     {
         if ($this->accountConfiguration->isModusLive()) {
@@ -89,18 +69,6 @@ class DefaultConfiguration extends AbstractConfigProvider
         }
 
         return $this->getTestApiBaseUrl();
-    }
-
-    /**
-     * @return string
-     */
-    public function getModusAddressApiUrl()
-    {
-        if ($this->accountConfiguration->isModusLive()) {
-            return $this->getAddressApiUrl();
-        }
-
-        return $this->getAddressTestApiUrl();
     }
 
     /**

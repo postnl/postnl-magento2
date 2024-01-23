@@ -6,6 +6,8 @@ use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Config\Source\Settings\LabelReturnSettings;
+use TIG\PostNL\Config\Source\Settings\LabelSettings;
 use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Volume\Items\Calculate;
 use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
@@ -196,7 +198,30 @@ class Data
         }
 
         $productOptions = $this->productOptions->get($shipment);
-        if ($productOptions) {
+        if (!is_array($productOptions)) {
+            $productOptions = [];
+        }
+        $countryId = $shipmentData['Addresses']['Address'][0]['Countrycode'] ?? null;
+        if ($countryId === 'NL' &&
+            $this->returnOptions->getReturnLabel() === LabelSettings::LABEL_RETURN
+        ) {
+            $productOptions[] = [
+                'Characteristic' => '152',
+                'Option'         => '026'
+            ];
+            // Fill out ReturnBarcode with the same data as Barcode in this case
+            $shipmentData['ReturnBarcode'] = $shipmentData['Barcode'];
+        }
+        if ($this->returnOptions->getReturnLabelType() === LabelReturnSettings::LABEL_RETURN_ORDER) {
+            // Mark shipment as blocked.
+            $shipment->setReturnStatus($shipment::RETURN_STATUS_BLOCKED);
+            $productOptions[] = [
+                'Characteristic' => '191',
+                'Option'         => '004'
+            ];
+        }
+
+        if (!empty($productOptions)) {
             $shipmentData['ProductOptions'] = $productOptions;
         }
 
