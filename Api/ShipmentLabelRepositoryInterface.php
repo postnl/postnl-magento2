@@ -52,7 +52,7 @@ interface ShipmentLabelRepositoryInterface
      *
      * @api
      * @param \Magento\Framework\Api\SearchCriteriaInterface $criteria
-     * @return \Magento\Framework\Api\SearchResultsInterface
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelSearchResultInterface
      */
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $criteria);
 
