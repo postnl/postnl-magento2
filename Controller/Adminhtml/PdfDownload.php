@@ -2,14 +2,12 @@
 
 namespace TIG\PostNL\Controller\Adminhtml;
 
-use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Message\ManagerInterface;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Config\Provider\PrintSettingsConfiguration;
 use TIG\PostNL\Config\Source\Settings\LabelsizeSettings;
 use TIG\PostNL\Service\Framework\FileFactory;
-use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Shipment\Label\Generate as LabelGenerate;
 use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
 use TIG\PostNL\Service\Shipment\ShipmentService as Shipment;
@@ -46,6 +44,7 @@ class PdfDownload
      * @var Shipment
      */
     private $shipment;
+    private FileDownload $fileDownload;
 
     /**
      * @var array
@@ -58,12 +57,13 @@ class PdfDownload
     /**
      * PdfDownload constructor.
      *
-     * @param FileFactory         $fileFactory
-     * @param ManagerInterface    $messageManager
+     * @param FileFactory $fileFactory
+     * @param ManagerInterface $messageManager
      * @param PrintSettingsConfiguration $printSettings
-     * @param LabelGenerate       $labelGenerator
+     * @param LabelGenerate $labelGenerator
      * @param PackingslipGenerate $packingslipGenerator
-     * @param Shipment            $shipment
+     * @param Shipment $shipment
+     * @param FileDownload $fileDownload
      */
     public function __construct(
         FileFactory $fileFactory,
@@ -71,7 +71,8 @@ class PdfDownload
         PrintSettingsConfiguration $printSettings,
         LabelGenerate $labelGenerator,
         PackingslipGenerate $packingslipGenerator,
-        Shipment $shipment
+        Shipment $shipment,
+        FileDownload $fileDownload
     ) {
         $this->fileFactory = $fileFactory;
         $this->messageManager = $messageManager;
@@ -79,6 +80,7 @@ class PdfDownload
         $this->labelGenerator = $labelGenerator;
         $this->packingslipGenerator = $packingslipGenerator;
         $this->shipment = $shipment;
+        $this->fileDownload = $fileDownload;
     }
 
     /**
@@ -119,7 +121,7 @@ class PdfDownload
                 $this->printSettings->getLabelResponse()
             );
         }
-        return $this->returnFile($labels[0], $filename);
+        return $this->fileDownload->returnFiles($labels, $filename);
     }
 
     /**
@@ -211,23 +213,5 @@ class PdfDownload
             }
         }
         return false;
-    }
-
-    private function returnFile(ShipmentLabelInterface $label, string $filename)
-    {
-        $extension = strtolower($label->getLabelFileFormat());
-        $contentType = [
-            'jpg' => 'application/jpeg',
-            'gif' => 'application/gif',
-            'zpl' => 'application/text'
-        ];
-        $application = isset($contentType[$extension]) ? $contentType[$extension] : 'application/text';
-        return $this->fileFactory->create(
-            $filename . '.' . $extension,
-            base64_decode($label->getLabel()),
-            $this->printSettings->getLabelResponse(),
-            DirectoryList::VAR_DIR,
-            $application
-        );
     }
 }
