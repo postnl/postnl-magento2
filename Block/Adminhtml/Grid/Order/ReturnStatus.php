@@ -4,35 +4,27 @@ namespace TIG\PostNL\Block\Adminhtml\Grid\Order;
 
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Block\Adminhtml\Grid\AbstractGrid;
-use TIG\PostNL\Block\Adminhtml\Renderer\SmartReturnEmail as Renderer;
+use TIG\PostNL\Block\Adminhtml\Grid\Filter\ReturnStatus as ReturnStatusOptions;
 use TIG\PostNL\Service\Shipment\ShipmentLoader;
 
-class SmartReturnEmail extends AbstractGrid
+class ReturnStatus extends AbstractGrid
 {
-    private Renderer $smartReturnEmail;
-
     private ShipmentLoader $shipmentLoader;
+    private ReturnStatusOptions $returnStatus;
 
-    /**
-     * @param ContextInterface            $context
-     * @param UiComponentFactory          $uiComponentFactory
-     * @param Renderer                    $smartReturnEmail
-     * @param ShipmentLoader              $shipmentLoader
-     * @param array                       $components
-     * @param array                       $data
-     */
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
-        Renderer $smartReturnEmail,
         ShipmentLoader $shipmentLoader,
+        ReturnStatusOptions $returnStatus,
         array $components = [],
         array $data = []
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
-        $this->smartReturnEmail      = $smartReturnEmail;
-        $this->shipmentLoader        = $shipmentLoader;
+        $this->shipmentLoader = $shipmentLoader;
+        $this->returnStatus = $returnStatus;
     }
 
     /**
@@ -44,20 +36,22 @@ class SmartReturnEmail extends AbstractGrid
     }
 
     /**
-     * @param object $item
+     * @param array $item
      *
-     * @return null|string
+     * @return string
      */
-    protected function getCellContents($item)
+    protected function getCellContents($item): string
     {
         $entityId = $item['entity_id'];
         $output = '';
 
         $shipments = $this->shipmentLoader->getShipmentsByOrderId($entityId);
         if (!empty($shipments)) {
-            /** @var \TIG\PostNL\Model\Shipment $model */
+            $values = $this->returnStatus->getOptions();
+            /** @var ShipmentInterface $model */
             foreach ($shipments as $model) {
-                $output .= $this->smartReturnEmail->render($model) . '<br>';
+                $value = $model->getReturnStatus();
+                $output .= ($values[$value] ?? $values[$model::RETURN_STATUS_DEFAULT]) . '<br>';
             }
         }
         return $output;

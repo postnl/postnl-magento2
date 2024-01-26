@@ -50,29 +50,17 @@ class CreateShipmentsAndPrintPackingSlip extends LabelAbstract
      */
     private $errors = [];
 
-    /**
-     * @param Context                $context
-     * @param Filter                 $filter
-     * @param GetLabels              $getLabels
-     * @param GetPdf                 $getPdf
-     * @param OrderCollectionFactory $collectionFactory
-     * @param ConvertOrder           $convertOrder
-     * @param CreateShipment         $createShipment
-     * @param GetPackingslip         $getPackingSlip
-     * @param BarcodeHandler         $barcodeHandler
-     * @param Track                  $track
-     */
     public function __construct(
         Context $context,
         GetLabels $getLabels,
         GetPdf $getPdf,
+        GetPackingslip $getPackingSlip,
+        BarcodeHandler $barcodeHandler,
+        Track $track,
         Filter $filter,
         OrderCollectionFactory $collectionFactory,
         CreateShipment $createShipment,
-        ConvertOrder $convertOrder,
-        GetPackingslip $getPackingSlip,
-        BarcodeHandler $barcodeHandler,
-        Track $track
+        ConvertOrder $convertOrder
     ) {
         parent::__construct($context, $getLabels, $getPdf, $getPackingSlip, $barcodeHandler, $track);
         $this->filter = $filter;

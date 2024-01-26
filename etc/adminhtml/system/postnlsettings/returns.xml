@@ -7,10 +7,32 @@
         <config_path>tig_postnl/returns/returns_active</config_path>
     </field>
 
+    <field id="label" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+        <label>Labels</label>
+        <source_model>TIG\PostNL\Config\Source\Settings\LabelSettings</source_model>
+        <config_path>tig_postnl/returns/label</config_path>
+        <depends>
+            <field id="returns_active">1</field>
+        </depends>
+    </field>
+
     <field id="returns_to" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
         <label>Return to</label>
         <source_model>TIG\PostNL\Config\Source\Settings\ReturnTypes</source_model>
         <config_path>tig_postnl/returns/returns_to</config_path>
+        <depends>
+            <field id="returns_active">1</field>
+        </depends>
+    </field>
+
+    <field id="labels_type" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+        <label>Labels Type</label>
+        <source_model>TIG\PostNL\Config\Source\Settings\LabelReturnSettings</source_model>
+        <depends>
+            <field id="returns_active">1</field>
+            <field id="label">1</field>
+        </depends>
+        <config_path>tig_postnl/returns/labels_type</config_path>
     </field>
 
     <field id="company" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">

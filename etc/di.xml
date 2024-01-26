@@ -152,6 +152,9 @@
                     <item name="InstallOrderAcInformation" xsi:type="object">TIG\PostNL\Setup\V1130\Schema\InstallOrderAcInformation</item>
                     <item name="InstallShipmentAcInformation" xsi:type="object">TIG\PostNL\Setup\V1130\Schema\InstallShipmentAcInformation</item>
                 </item>
+                <item name="v1.14.0" xsi:type="array">
+                    <item name="InstallOrderAcInformation" xsi:type="object">TIG\PostNL\Setup\V1140\Schema\InstallReturnStatus</item>
+                </item>
             </argument>
         </arguments>
     </type>

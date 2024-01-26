@@ -2,13 +2,13 @@
 
 namespace TIG\PostNL\Webservices;
 
+use Laminas\Http\Client as HttpClient;
 use Laminas\Http\Client\Exception\RuntimeException;
 use Laminas\Http\Request;
 use Magento\Framework\Exception\LocalizedException;
-use Laminas\Http\Client as HttpClient;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
-use TIG\PostNL\Webservices\Endpoints\Address\RestInterface;
+use TIG\PostNL\Webservices\Endpoints\RestInterface;
 
 class Rest
 {
@@ -125,13 +125,9 @@ class Rest
      */
     private function addUri(RestInterface $endpoint)
     {
-        $url = $this->defaultConfiguration->getModusAddressApiUrl();
+        $url = $this->defaultConfiguration->getModusApiUrl();
 
-        if (!$endpoint->useAddressUri()) {
-            $url = $this->defaultConfiguration->getModusApiUrl();
-        }
-
-        $uri = $url . $endpoint->getVersion() . '/' . $endpoint->getEndpoint();
+        $uri = $url . $endpoint->getResource() . $endpoint->getVersion() . '/' . $endpoint->getEndpoint();
         $this->httpClient->setUri($uri);
     }
 }

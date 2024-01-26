@@ -43,28 +43,16 @@ class CreateShipmentsConfirmAndPrintShippingLabels extends LabelAbstract
      */
     private $canaryConverter;
 
-    /**
-     * @param Context                $context
-     * @param GetLabels              $getLabels
-     * @param GetPdf                 $getPdf
-     * @param Filter                 $filter
-     * @param OrderCollectionFactory $collectionFactory
-     * @param CreateShipment         $createShipment
-     * @param Track                  $track
-     * @param BarcodeHandler         $barcodeHandler
-     * @param GetPackingslip         $getPackingSlip
-     * @param CanaryIslandToIC       $canaryConverter
-     */
     public function __construct(
         Context $context,
         GetLabels $getLabels,
         GetPdf $getPdf,
+        GetPackingslip $getPackingSlip,
+        BarcodeHandler $barcodeHandler,
+        Track $track,
         Filter $filter,
         OrderCollectionFactory $collectionFactory,
         CreateShipment $createShipment,
-        Track $track,
-        BarcodeHandler $barcodeHandler,
-        GetPackingslip $getPackingSlip,
         CanaryIslandToIC $canaryConverter
     ) {
         parent::__construct($context, $getLabels, $getPdf, $getPackingSlip, $barcodeHandler, $track);
