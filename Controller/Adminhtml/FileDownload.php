@@ -72,11 +72,23 @@ class FileDownload
 
     private function returnInFrames(array $labels, string $filename)
     {
-        //$this->_actionFlag->set('', self::FLAG_NO_POST_DISPATCH, true);
         $result = $this->rawFactory->create();
         $content = '<html><body>
                 '. $this->generateLinks($labels, $filename) . '
                 <button type="button" onclick="window.close();">Close</button>
+            <script>
+                let timeout = 2000;
+                const links = document.getElementsByClassName(\'clickme\');
+                for(let i=0;i<links.length;i++) {
+                    setTimeoutWo(links[i], timeout);
+                    timeout += 2000;
+                }
+                function setTimeoutWo(target, timeout) {
+                    window.setTimeout(function () {
+                        target.click();
+                    }, timeout);
+                }
+            </script>
             </body>';
         $result->setContents($content);
 
@@ -92,16 +104,24 @@ class FileDownload
     private function generateLinks(array $labels, string $filename): string
     {
         $content = '';
+        $i = 0;
         foreach ($labels as $label) {
             $url = $this->urlBuilder->getUrl('postnl/shipment/downloadLabel', [
                 'id' => $label->getEntityId(),
                 'name' => $filename
             ]);
             $labelFilename = $this->getFileName($label, $filename);
+            $class = '';
+            if ($i === 0) {
+                $content .= '<iframe src="'.$url.'" width="10" height="10" style="visibility: hidden;"></iframe>';
+            } else {
+                $class = 'clickme';
+            }
             $content .= '<p><a
-                id="label_'.$label->getEntityId().'"
-                title="Label file" download="'.$labelFilename.'"
+                id="label_'.$label->getEntityId().'" class="link '.$class.'"
+                title="Label file" download="'.$labelFilename.'" target="_blank"
                 href="'.$url.'">'.$labelFilename.'</a></p>';
+            $i++;
         }
         return $content;
     }
