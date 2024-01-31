@@ -81,8 +81,12 @@ class ShipmentLoader
         return $list->getItems();
     }
 
-    public function getShipmentsByOrderId(int $entityId): ?array
+    /**
+     * @param int $entityId
+     * @return ShipmentInterface[]
+     */
+    public function getShipmentsByOrderId(int $entityId): array
     {
-        return $this->shipments[$entityId] ?? null;
+        return $this->shipments[$entityId] ?? [];
     }
 }

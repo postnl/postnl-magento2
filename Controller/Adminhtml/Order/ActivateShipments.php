@@ -59,7 +59,6 @@ class ActivateShipments extends Action
         /** @var Order $order */
         foreach ($collection as $order) {
             $shipments = $this->shipmentLoader->getShipmentsByOrderId($order->getId());
-            /** @var ShipmentInterface $shipment */
             foreach ($shipments as $shipment) {
                 $this->activateReturnAction->processsShipment($shipment);
             }
