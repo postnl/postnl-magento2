@@ -54,6 +54,15 @@
                     </item>
                 </argument>
             </action>
+            <action name="postnl_create_smartreturn_barcode">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">postnl_create_smartreturn_barcode</item>
+                        <item name="label" xsi:type="string" translate="true">PostNL - Send Smart Return Barcode</item>
+                        <item name="url" xsi:type="url" path="postnl/order/CreateSmartReturnBarcode"/>
+                    </item>
+                </argument>
+            </action>
         </massaction>
 
     </listingToolbar>
