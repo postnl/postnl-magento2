@@ -2,9 +2,9 @@
 
 namespace TIG\PostNL\Config\Source\Options;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class FirstLabelPosition implements ArrayInterface
+class FirstLabelPosition implements OptionSourceInterface
 {
     const BOTTOM_RIGHT  = '0';
     const BOTTOM_LEFT = '1';

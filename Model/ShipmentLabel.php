@@ -16,6 +16,7 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface
     const FIELD_PARENT_ID    = 'parent_id';
     const FIELD_NUMBER       = 'number';
     const FIELD_LABEL        = 'label';
+    const FIELD_LABEL_FILE   = 'label_file_type';
     const FIELD_TYPE         = 'type';
     const FIELD_PRODUCT_CODE = 'product_code';
     const FIELD_RETURN_LABEL = 'return_label';
@@ -111,6 +112,24 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface
     public function setLabel($value)
     {
         return $this->setData(static::FIELD_LABEL, $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelFileFormat()
+    {
+        return $this->getData(static::FIELD_LABEL_FILE);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setLabelFileFormat(string $value)
+    {
+        return $this->setData(static::FIELD_LABEL_FILE, $value);
     }
 
     /**

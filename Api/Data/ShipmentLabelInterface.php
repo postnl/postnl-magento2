@@ -51,6 +51,17 @@ interface ShipmentLabelInterface
     /**
      * @return string
      */
+    public function getLabelFileFormat();
+
+    /**
+     * @param string $value
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setLabelFileFormat(string $value);
+
+    /**
+     * @return string
+     */
     public function getType();
 
     /**

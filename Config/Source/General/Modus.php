@@ -2,9 +2,9 @@
 
 namespace TIG\PostNL\Config\Source\General;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class Modus implements ArrayInterface
+class Modus implements OptionSourceInterface
 {
     /**
      * Return modus option array

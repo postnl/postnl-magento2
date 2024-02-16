@@ -3,9 +3,9 @@
 namespace TIG\PostNL\Config\Source\LetterboxPackage;
 
 use TIG\PostNL\Config\Source\OptionsAbstract;
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class CalculationMode extends OptionsAbstract implements ArrayInterface
+class CalculationMode extends OptionsAbstract implements OptionSourceInterface
 {
 
     const CALCULATION_MODE_AUTOMATIC = 'automatic';

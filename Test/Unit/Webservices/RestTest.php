@@ -74,9 +74,6 @@ class RestTest extends TestCase
         $resetZendParams->method('resetParameters');
 
         $uri = 'https://api.postnl.nl/address/national/basic/';
-        $defaultConfig = $this->defaultConfiguration->expects($this->once());
-        $defaultConfig->method('getModusAddressApiUrl')->willReturn($uri);
-
         $endpointGetEndpoint = $this->endpoint->expects($this->once());
         $endpointGetEndpoint->method('getEndpoint')->willReturn('postalcode/');
 

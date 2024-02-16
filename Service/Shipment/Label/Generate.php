@@ -57,11 +57,16 @@ class Generate
 
         foreach ($this->orderLabels($labels) as $label) {
             $labelResult = $this->prepare->label($label);
-            $labelResult['label']->shipmentType = $labelResult['shipment']->getShipmentType();
+            if (is_object($labelResult['label'])) {
+                $labelResult['label']->shipmentType = $labelResult['shipment']->getShipmentType();
+            }
             $preparedLabels[] = $labelResult['label'];
         }
 
-        return $this->merge->files($preparedLabels, $createNewPdf);
+        if (is_object($preparedLabels[0])) {
+            return $this->merge->files($preparedLabels, $createNewPdf);
+        }
+        return $preparedLabels[0];
     }
 
     /**

@@ -8,10 +8,14 @@ namespace TIG\PostNL\Config\Provider;
 class ReturnOptions extends AbstractConfigProvider
 {
     const XPATH_RETURN_IS_ACTIVE            = 'tig_postnl/returns/returns_active';
+    const XPATH_RETURN_LABEL                = 'tig_postnl/returns/label';
+    const XPATH_RETURN_TO                   = 'tig_postnl/returns/returns_to';
+    const XPATH_RETURN_LABEL_TYPE           = 'tig_postnl/returns/labels_type';
     const XPATH_RETURN_CITY                 = 'tig_postnl/returns/city';
     const XPATH_RETURN_COMPANY              = 'tig_postnl/returns/company';
     const XPATH_RETURN_STREETNAME           = 'tig_postnl/returns/streetname';
     const XPATH_RETURN_HOUSENUMBER          = 'tig_postnl/returns/housenumber';
+    const XPATH_RETURN_HOUSENUMBER_EX       = 'tig_postnl/returns/housenumber_ex';
     const XPATH_RETURN_FREEPOST_NUMBER      = 'tig_postnl/returns/freepost_number';
     const XPATH_RETURN_ZIPCODE              = 'tig_postnl/returns/zipcode';
     const XPATH_RETURN_CUSTOMER_CODE        = 'tig_postnl/returns/customer_code';
@@ -35,6 +39,30 @@ class ReturnOptions extends AbstractConfigProvider
     }
 
     /**
+     * @return int
+     */
+    public function getReturnTo(): int
+    {
+        return (int)$this->getConfigFromXpath(self::XPATH_RETURN_TO);
+    }
+
+    /**
+     * @return int
+     */
+    public function getReturnLabel(): int
+    {
+        return (int)$this->getConfigFromXpath(self::XPATH_RETURN_LABEL);
+    }
+
+    /**
+     * @return int
+     */
+    public function getReturnLabelType(): int
+    {
+        return (int)$this->getConfigFromXpath(self::XPATH_RETURN_LABEL_TYPE);
+    }
+
+    /**
      * @return mixed
      */
     public function getCity()
@@ -51,6 +79,15 @@ class ReturnOptions extends AbstractConfigProvider
     }
 
     /**
+     * Fall back to Sender country
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->getConfigFromXpath(AddressConfiguration::XPATH_GENERAL_COUNTRY);
+    }
+
+    /**
      * @return mixed
      */
     public function getStreetName()
@@ -64,6 +101,14 @@ class ReturnOptions extends AbstractConfigProvider
     public function getHouseNumber()
     {
         return $this->getConfigFromXpath(self::XPATH_RETURN_HOUSENUMBER);
+    }
+
+    /**
+     * @return string
+     */
+    public function getHouseNumberEx(): string
+    {
+        return (string)$this->getConfigFromXpath(self::XPATH_RETURN_HOUSENUMBER_EX);
     }
 
     /**

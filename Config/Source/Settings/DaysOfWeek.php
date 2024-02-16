@@ -2,9 +2,9 @@
 
 namespace TIG\PostNL\Config\Source\Settings;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class DaysOfWeek implements ArrayInterface
+class DaysOfWeek implements OptionSourceInterface
 {
     public function toOptionArray()
     {

@@ -5,10 +5,9 @@ namespace TIG\PostNL\Controller\Adminhtml;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Message\ManagerInterface;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
-use TIG\PostNL\Config\Provider\Webshop;
+use TIG\PostNL\Config\Provider\PrintSettingsConfiguration;
 use TIG\PostNL\Config\Source\Settings\LabelsizeSettings;
 use TIG\PostNL\Service\Framework\FileFactory;
-use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Shipment\Label\Generate as LabelGenerate;
 use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
 use TIG\PostNL\Service\Shipment\ShipmentService as Shipment;
@@ -27,9 +26,9 @@ class PdfDownload
     private $messageManager;
 
     /**
-     * @var Webshop
+     * @var PrintSettingsConfiguration
      */
-    private $webshopConfig;
+    private $printSettings;
 
     /**
      * @var LabelGenerate
@@ -45,6 +44,7 @@ class PdfDownload
      * @var Shipment
      */
     private $shipment;
+    private FileDownload $fileDownload;
 
     /**
      * @var array
@@ -57,27 +57,30 @@ class PdfDownload
     /**
      * PdfDownload constructor.
      *
-     * @param FileFactory         $fileFactory
-     * @param ManagerInterface    $messageManager
-     * @param Webshop             $webshopConfig
-     * @param LabelGenerate       $labelGenerator
+     * @param FileFactory $fileFactory
+     * @param ManagerInterface $messageManager
+     * @param PrintSettingsConfiguration $printSettings
+     * @param LabelGenerate $labelGenerator
      * @param PackingslipGenerate $packingslipGenerator
-     * @param Shipment            $shipment
+     * @param Shipment $shipment
+     * @param FileDownload $fileDownload
      */
     public function __construct(
         FileFactory $fileFactory,
         ManagerInterface $messageManager,
-        Webshop $webshopConfig,
+        PrintSettingsConfiguration $printSettings,
         LabelGenerate $labelGenerator,
         PackingslipGenerate $packingslipGenerator,
-        Shipment $shipment
+        Shipment $shipment,
+        FileDownload $fileDownload
     ) {
         $this->fileFactory = $fileFactory;
         $this->messageManager = $messageManager;
-        $this->webshopConfig = $webshopConfig;
+        $this->printSettings = $printSettings;
         $this->labelGenerator = $labelGenerator;
         $this->packingslipGenerator = $packingslipGenerator;
         $this->shipment = $shipment;
+        $this->fileDownload = $fileDownload;
     }
 
     /**
@@ -91,7 +94,7 @@ class PdfDownload
     // @codingStandardsIgnoreLine
     public function get($labels, $filename = 'ShippingLabels')
     {
-        if ($this->webshopConfig->getLabelSize() == LabelsizeSettings::A6_LABELSIZE
+        if ($this->printSettings->getLabelSize() == LabelsizeSettings::A6_LABELSIZE
             && $filename !== 'PackingSlips'
         ) {
             $labels = $this->filterLabel($labels);
@@ -109,13 +112,16 @@ class PdfDownload
             $this->setSkippedLabelsResponse();
         }
 
-        $pdfLabel = $this->generateLabel($labels, $filename);
+        if ($this->isPdfLabel($labels)) {
+            $pdfLabel = $this->generateLabel($labels, $filename);
 
-        return $this->fileFactory->create(
-            $filename . '.pdf',
-            $pdfLabel,
-            $this->webshopConfig->getLabelResponse()
-        );
+            return $this->fileFactory->create(
+                $filename . '.pdf',
+                $pdfLabel,
+                $this->printSettings->getLabelResponse()
+            );
+        }
+        return $this->fileDownload->returnFiles($labels, $filename);
     }
 
     /**
@@ -194,4 +200,18 @@ class PdfDownload
         }
     }
     // @codingStandardsIgnoreEnd
+
+    /**
+     * @param ShipmentLabelInterface[] $labels
+     * @return bool
+     */
+    private function isPdfLabel(array $labels): bool
+    {
+        foreach ($labels as $label) {
+            if ($label->getLabelFileFormat() === 'PDF') {
+                return true;
+            }
+        }
+        return false;
+    }
 }

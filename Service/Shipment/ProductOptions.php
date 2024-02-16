@@ -201,7 +201,7 @@ class ProductOptions
             return $acOptions;
         }
 
-        return false;
+        return [];
     }
 
     /**

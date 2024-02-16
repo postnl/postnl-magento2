@@ -2,9 +2,9 @@
 
 namespace TIG\PostNL\Config\Source\LabelAndPackingslip;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class BarcodeValue implements ArrayInterface
+class BarcodeValue implements OptionSourceInterface
 {
     const REFEENCE_TYPE_SHIPMENT_ID = 'shipment_increment_id';
     const REFEENCE_TYPE_ORDER_ID    = 'order_increment_id';

@@ -2,9 +2,9 @@
 
 namespace TIG\PostNL\Config\Source\Globalpack;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class ShipmentType implements ArrayInterface
+class ShipmentType implements OptionSourceInterface
 {
     /**
      * @return array
