@@ -5,28 +5,21 @@ namespace TIG\PostNL\Webservices\Api;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
+use TIG\PostNL\Exception;
 
 class Customer
 {
+    const ADDRESS_TYPE_RECEIVER = '01';
     const ADDRESS_TYPE_SENDER = '02';
 
-    /**
-     * @var AccountConfiguration
-     */
-    private $accountConfiguration;
+    private AccountConfiguration $accountConfiguration;
 
-    /**
-     * @var AddressConfiguration
-     */
-    private $addressConfiguration;
+    private AddressConfiguration $addressConfiguration;
 
-    /**
-     * @var null|int
-     */
-    private $storeId = null;
+    private ReturnOptions $returnOptions;
 
-    /** @var ReturnOptions  */
-    private $returnOptions;
+    private ?int $storeId = null;
+
 
     /**
      * @param AccountConfiguration $accountConfiguration
@@ -44,12 +37,9 @@ class Customer
     }
 
     /**
-     * @param      $shipment
-     * @param bool $isReturnBarcode
-     *
-     * @return array
+     * @throws Exception
      */
-    public function get($shipment = false, $isReturnBarcode = false)
+    public function get(bool $shipment = false, bool $isReturnBarcode = false): array
     {
         $customer = [
             'CustomerCode'   => $isReturnBarcode ? $this->getReturnCustomerCode($shipment) :
@@ -68,10 +58,7 @@ class Customer
         return $this->accountConfiguration->getBlsCode($this->storeId);
     }
 
-    /**
-     * @return array
-     */
-    public function address()
+    public function address(): array
     {
         $addressArray = [
             'AddressType' => self::ADDRESS_TYPE_SENDER,
@@ -90,10 +77,7 @@ class Customer
         return $addressArray;
     }
 
-    /**
-     * @param $storeId
-     */
-    public function changeStoreId($storeId)
+    public function changeStoreId(int $storeId): void
     {
         $this->storeId = $storeId;
     }

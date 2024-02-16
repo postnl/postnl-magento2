@@ -9,6 +9,7 @@ use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Service\Shipment\Data as ShipmentData;
+use TIG\PostNL\Webservices\Api\Customer as CustomerApi;
 
 class Shipments
 {
@@ -60,7 +61,11 @@ class Shipments
         $shipment    = $postnlShipment->getShipment();
         $postnlOrder = $postnlShipment->getPostNLOrder();
         $contact   = $this->getContactData($shipment);
-        $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
+        $addressType = CustomerApi::ADDRESS_TYPE_RECEIVER;
+        if ($postnlShipment->getIsSmartReturn()) {
+            $addressType = CustomerApi::ADDRESS_TYPE_SENDER;
+        }
+        $address[] = $this->getAddressData($postnlShipment->getShippingAddress(), $addressType);
         if ($postnlOrder->getIsPakjegemak()) {
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
@@ -82,7 +87,7 @@ class Shipments
         $shippingAddress = $shipment->getShippingAddress();
         $order           = $shipment->getOrder();
         $contact = [
-            'ContactType' => '01', // Receiver
+            'ContactType' => CustomerApi::ADDRESS_TYPE_RECEIVER,
             'Email'       => $order->getCustomerEmail(),
             'TelNr'       => $shippingAddress->getTelephone(),
         ];
@@ -97,7 +102,7 @@ class Shipments
      * @return array
      * @throws \TIG\PostNL\Exception
      */
-    private function getAddressData($shippingAddress, $addressType = '01')
+    private function getAddressData($shippingAddress, string $addressType = CustomerApi::ADDRESS_TYPE_RECEIVER)
     {
         $streetData   = $this->getStreetData($shippingAddress);
         $houseNr = isset($streetData['housenumber']) ? $streetData['housenumber'] : $shippingAddress->getStreetLine(2);
