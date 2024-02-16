@@ -2,6 +2,7 @@
 
 namespace TIG\PostNL\Webservices\Api;
 
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
@@ -39,7 +40,7 @@ class Customer
     /**
      * @throws Exception
      */
-    public function get(bool $shipment = false, bool $isReturnBarcode = false): array
+    public function get(ShipmentInterface $shipment = null, bool $isReturnBarcode = false): array
     {
         $customer = [
             'CustomerCode'   => $isReturnBarcode ? $this->getReturnCustomerCode($shipment) :
@@ -83,12 +84,12 @@ class Customer
     }
 
     /**
-     * @param $shipment
+     * @param ShipmentInterface $shipment
      *
      * @return integer
      * @throws \TIG\PostNL\Exception
      */
-    public function getReturnCustomerCode($shipment)
+    public function getReturnCustomerCode(ShipmentInterface $shipment)
     {
         $shippingAddress = $shipment->getShippingAddress();
 

@@ -74,6 +74,10 @@ class ResetPostNLShipment
         $postNLShipment->setConfirmedAt(null);
         $postNLShipment->setConfirmed(false);
         $postNLShipment->setMainBarcode(null);
+        $postNLShipment->setShipmentCountry(null);
+        $postNLShipment->setIsSmartReturn(false)
+            ->setSmartReturnBarcode(null)
+            ->setSmartReturnEmailSent(false);
         $this->shipmentService->save($postNLShipment);
 
         $this->barcodeDeleteHandler->deleteAllByShipmentId($postNLShipment->getId());
