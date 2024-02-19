@@ -1,36 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
+
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
 
     <group id="postnl_settings" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -73,7 +42,7 @@
 
             <field id="shipment_days" translate="label comment" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                 <label>Shipment days</label>
-                <comment><![CDATA[Select on which days of the week orders are shipped. You can read more about shipping and delivery days <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+verzenddagen+instellen" target="_blank" title="PostNL shipping days">here</a>.]]></comment>
+                <comment><![CDATA[Select on which days of the week orders are shipped. You can read more about shipping and delivery days <a href="https://postnl.github.io/magento2/?lang=nl#3_2_3" target="_blank" title="PostNL shipping days">here</a>.]]></comment>
                 <source_model>TIG\PostNL\Config\Source\Settings\DaysOfWeek</source_model>
                 <config_path>tig_postnl/postnl_settings/shipment_days</config_path>
             </field>
@@ -86,7 +55,7 @@
             <label>Delivery</label>
             <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
-            <comment><![CDATA[If you are unsure which options to select, ask your PostNL accountmanager. Read more about <a href="https://confluence.tig.nl/x/WIC2" target="_blank" title="product options">PostNL product options</a>.]]></comment>
+            <comment><![CDATA[If you are unsure which options to select, ask your PostNL accountmanager. Read more about <a href="https://postnl.github.io/magento2/?lang=nl#3_2" target="_blank" title="product options">PostNL product options</a>.]]></comment>
 
 
             <field id="shippingoptions_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -117,6 +86,31 @@
                 <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions</source_model>
                 <config_path>tig_postnl/delivery_settings/default_option</config_path>
                 <tooltip>When shipping with extra cover is selected, the shipment will be insured up to a maximum of €5.000,-</tooltip>
+                <depends>
+                    <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+                </depends>
+            </field>
+
+            <field id="default_be_domestic_option" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                <label>Default delivery</label>
+                <comment><![CDATA[Select the default product option for domestic shipments.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getBeDomesticOptions</source_model>
+                <config_path>tig_postnl/delivery_settings/default_be_domestic_option</config_path>
+                <tooltip>When shipping with extra cover is selected, the shipment will be insured up to a maximum of €5.000,-</tooltip>
+                <depends>
+                    <field id="tig_postnl/generalconfiguration_shipping_address/country">BE</field>
+                </depends>
+            </field>
+
+            <field id="default_be_nl_option" translate="label comment" type="select" sortOrder="21" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                <label>BE to NL default delivery</label>
+                <comment><![CDATA[Select the default product option for NL shipments from BE.]]></comment>
+                <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getBeNlOptions</source_model>
+                <config_path>tig_postnl/delivery_settings/default_be_nl_option</config_path>
+                <tooltip>When shipping with extra cover is selected, the shipment will be insured up to a maximum of €5.000,-</tooltip>
+                <depends>
+                    <field id="tig_postnl/generalconfiguration_shipping_address/country">BE</field>
+                </depends>
             </field>
 
             <field id="default_cargo_type" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
@@ -164,7 +158,7 @@
             <field id="alternative_default_option" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Alternative delivery</label>
                 <comment><![CDATA[This option will be used as default from the given amount.]]></comment>
-                <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions</source_model>
+                <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getAlternativeDeliveryOptions</source_model>
                 <config_path>tig_postnl/delivery_settings/alternative_default_option</config_path>
                 <depends>
                     <field id="use_alternative_default">1</field>
@@ -199,6 +193,7 @@
 
             <include path="TIG_PostNL::system/postnlsettings/eveningdelivery.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/sundaydelivery.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/todaydelivery.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/deliverydays.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/postoffices.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/stock.xml"/>
@@ -210,6 +205,7 @@
             <include path="TIG_PostNL::system/postnlsettings/trackandtrace.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/deliverystatedaddress.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/letterbox_package.xml"/>
+            <include path="TIG_PostNL::system/postnlsettings/insureddelivery.xml"/>
 
         </group>
 
@@ -218,8 +214,7 @@
         <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
         <fieldset_css>tig_postnl-sub-section</fieldset_css>
 
-        <include path="TIG_PostNL::system/postnlsettings/returns-nl.xml"/>
-        <include path="TIG_PostNL::system/postnlsettings/returns-be.xml"/>
+        <include path="TIG_PostNL::system/postnlsettings/returns.xml"/>
 
     </group>
 

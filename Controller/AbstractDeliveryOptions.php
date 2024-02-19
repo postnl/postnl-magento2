@@ -1,36 +1,8 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Controller;
 
+use Magento\Framework\Json\EncoderInterface;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
@@ -42,6 +14,11 @@ use Magento\Checkout\Model\Session;
 
 abstract class AbstractDeliveryOptions extends Action
 {
+    /**
+     * @var EncoderInterface
+     */
+    private EncoderInterface $encoder;
+
     /**
      * @var OrderRepository
      */
@@ -85,20 +62,23 @@ abstract class AbstractDeliveryOptions extends Action
 
     /**
      * @param Context            $context
+     * @param EncoderInterface   $encoder
      * @param OrderRepository    $orderRepository
      * @param Session            $checkoutSession
      * @param QuoteToRateRequest $quoteToRateRequest
-     * @param DeliveryDate       $deliveryDate
      * @param ShippingDuration   $shippingDuration
+     * @param DeliveryDate|null  $deliveryDate
      */
     public function __construct(
         Context $context,
+        EncoderInterface $encoder,
         OrderRepository $orderRepository,
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
         ShippingDuration $shippingDuration,
         DeliveryDate $deliveryDate = null
     ) {
+        $this->encoder            = $encoder;
         $this->orderRepository    = $orderRepository;
         $this->checkoutSession    = $checkoutSession;
         $this->deliveryEndpoint   = $deliveryDate;
@@ -126,7 +106,7 @@ abstract class AbstractDeliveryOptions extends Action
         }
 
         return $response->representJson(
-            \Zend_Json::encode($data)
+            $this->encoder->encode($data)
         );
     }
 
@@ -189,6 +169,11 @@ abstract class AbstractDeliveryOptions extends Action
         $request = $this->quoteToRateRequest->get();
         $request->setDestCountryId($address['country']);
         $request->setDestPostcode($address['postcode']);
+
+        $shippingAddress = $request->getShippingAddress();
+        $shippingAddress->setCountryId($address['country']);
+        $shippingAddress->setPostcode($address['postcode']);
+        $request->setShippingAddress($shippingAddress);
 
         return $request;
     }

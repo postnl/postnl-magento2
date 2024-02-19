@@ -1,38 +1,12 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Service\Shipment;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
+use TIG\PostNL\Config\Provider\ReturnOptions;
+use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Volume\Items\Calculate;
 use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
 
@@ -70,27 +44,41 @@ class Data
     private $deliveryDateFallback;
 
     /**
+     * @var ReturnOptions
+     */
+    private $returnOptions;
+
+    /** @var ShippingOptions */
+    private $shippingOptions;
+
+    /**
      * @param ProductOptions             $productOptions
      * @param ContentDescription         $contentDescription
      * @param Calculate                  $calculate
      * @param LabelAndPackingslipOptions $labelAndPackingslipOptions
      * @param Customs                    $customs
      * @param DeliveryDateFallback       $deliveryDateFallback
+     * @param ReturnOptions              $returnOptions
+     * @param ShippingOptions            $shippingOptions
      */
     public function __construct(
-        ProductOptions $productOptions,
-        ContentDescription $contentDescription,
-        Calculate $calculate,
+        ProductOptions             $productOptions,
+        ContentDescription         $contentDescription,
+        Calculate                  $calculate,
         LabelAndPackingslipOptions $labelAndPackingslipOptions,
-        Customs $customs,
-        DeliveryDateFallback $deliveryDateFallback
+        Customs                    $customs,
+        DeliveryDateFallback       $deliveryDateFallback,
+        ReturnOptions              $returnOptions,
+        ShippingOptions            $shippingOptions
     ) {
-        $this->productOptions = $productOptions;
-        $this->contentDescription = $contentDescription;
-        $this->shipmentVolume = $calculate;
+        $this->productOptions             = $productOptions;
+        $this->contentDescription         = $contentDescription;
+        $this->shipmentVolume             = $calculate;
         $this->labelAndPackingslipOptions = $labelAndPackingslipOptions;
-        $this->customsInfo = $customs;
-        $this->deliveryDateFallback = $deliveryDateFallback;
+        $this->customsInfo                = $customs;
+        $this->deliveryDateFallback       = $deliveryDateFallback;
+        $this->returnOptions              = $returnOptions;
+        $this->shippingOptions            = $shippingOptions;
     }
 
     /**
@@ -120,12 +108,19 @@ class Data
     private function getDefaultShipmentData(ShipmentInterface $shipment, $address, $contact, $currentShipmentNumber)
     {
         $deliveryDate = $shipment->getDeliveryDate();
+        $postnlOrder  = $shipment->getPostNLOrder();
+        $shipmentType = $postnlOrder ? $postnlOrder->getType() : '';
+
         if (!$deliveryDate) {
             $deliveryDate = $this->getDeliveryDateFromPostNLOrder($shipment);
         }
 
         if (!$deliveryDate) {
             $deliveryDate = $this->deliveryDateFallback->get();
+        }
+
+        if ($shipmentType === ProductInfo::SHIPMENT_TYPE_GP || $shipmentType === ProductInfo::SHIPMENT_TYPE_EPS) {
+            $deliveryDate = '';
         }
 
         return [
@@ -144,7 +139,7 @@ class Data
             'DownPartnerID'            => $shipment->getDownpartnerId(),
             'DownPartnerLocation'      => $shipment->getDownpartnerLocation(),
             'DownPartnerBarcode'       => $shipment->getDownpartnerBarcode(),
-            'ProductCodeDelivery'      => $shipment->getProductCode(),
+            'ProductCodeDelivery'      => ((int)$shipment->getProductCode()) % 10000,
             'ReturnBarcode'            => $shipment->getReturnBarcodes($currentShipmentNumber),
             'Reference'                => $this->labelAndPackingslipOptions->getReference($shipment->getShipment())
         ];
@@ -188,6 +183,10 @@ class Data
             $shipmentData['Customs'] = $this->customsInfo->get($shipment);
         }
 
+        if ($shipment->isBoxablePackets()) {
+            $shipmentData['Customs'] = $this->customsInfo->get($shipment);
+        }
+
         if ($shipment->isExtraCover() && $currentShipmentNumber <= 1) {
             $shipmentData['Amounts'] = $this->getAmount($shipment);
         }
@@ -199,6 +198,12 @@ class Data
         $productOptions = $this->productOptions->get($shipment);
         if ($productOptions) {
             $shipmentData['ProductOptions'] = $productOptions;
+        }
+
+        $smartReturnActive = $this->returnOptions->isSmartReturnActive();
+        if ($smartReturnActive && $shipment->getIsSmartReturn()) {
+            $shipmentData['ProductOptions']      = $this->getSmartReturnOptions();
+            $shipmentData['ProductCodeDelivery'] = '2285';
         }
 
         return $shipmentData;
@@ -213,7 +218,16 @@ class Data
     private function getAmount(ShipmentInterface $shipment)
     {
         $amounts = [];
-        $extraCoverAmount = $shipment->getExtraCoverAmount();
+
+        $extraCoverAmount = $shipment->getInsuredTier();
+
+        if (empty($extraCoverAmount)) {
+            $extraCoverAmount = $this->shippingOptions->getInsuredTier();
+        }
+
+        if ($extraCoverAmount == 'default') {
+            $extraCoverAmount = $shipment->getExtraCoverAmount();
+        }
 
         $amounts[] = [
             'AccountName'       => '',
@@ -272,6 +286,19 @@ class Data
                 'GroupSequence' => $currentShipmentNumber,
                 'GroupType'     => '03',
                 'MainBarcode'   => $shipment->getMainBarcode(),
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getSmartReturnOptions()
+    {
+        return [
+            'ProductOption' => [
+                'Characteristic' => '152',
+                'Option'         => '025'
             ]
         ];
     }

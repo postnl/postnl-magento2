@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Model;
 
 use Magento\Framework\Data\Collection\AbstractDb;
@@ -36,6 +7,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 
 use Magento\Quote\Model\QuoteRepository;
@@ -53,6 +25,7 @@ class Order extends AbstractModel implements OrderInterface
     const FIELD_TYPE = 'type';
     const FIELD_AC_CHARACTERISTIC = 'ac_characteristic';
     const FIELD_AC_OPTION = 'ac_option';
+    const FIELD_AC_INFORMATION = 'ac_information';
     const FIELD_DELIVERY_DATE = 'delivery_date';
     const FIELD_EXPECTED_DELIVERY_TIME_START = 'expected_delivery_time_start';
     const FIELD_EXPECTED_DELIVERY_TIME_END = 'expected_delivery_time_end';
@@ -68,6 +41,7 @@ class Order extends AbstractModel implements OrderInterface
     const FIELD_CONFIRMED = 'confirmed';
     const FIELD_PARCEL_COUNT = 'parcel_count';
     const FIELD_SHIPPING_DURATION = 'shipping_duration';
+    const FIELD_INSURED_TIER = 'insured_tier';
 
     /**
      * @var string
@@ -85,9 +59,15 @@ class Order extends AbstractModel implements OrderInterface
      */
     private $quoteRepository;
 
+    /** @var SerializerInterface */
+    private $serializer;
+
     /**
      * Order constructor.
+     *
      * @param OrderRepository       $orderRepository
+     * @param QuoteRepository       $quoteRepository
+     * @param SerializerInterface   $serializer
      * @param Context               $context
      * @param Registry              $registry
      * @param DateTime              $dateTime
@@ -98,6 +78,7 @@ class Order extends AbstractModel implements OrderInterface
     public function __construct(
         OrderRepository $orderRepository,
         QuoteRepository $quoteRepository,
+        SerializerInterface $serializer,
         Context $context,
         Registry $registry,
         DateTime $dateTime,
@@ -108,6 +89,7 @@ class Order extends AbstractModel implements OrderInterface
     {
         $this->orderRepository = $orderRepository;
         $this->quoteRepository = $quoteRepository;
+        $this->serializer      = $serializer;
         parent::__construct($context, $registry, $dateTime, $resource, $resourceCollection, $data);
     }
 
@@ -209,6 +191,39 @@ class Order extends AbstractModel implements OrderInterface
     public function getAcOption()
     {
         return $this->getData(static::FIELD_AC_OPTION);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setAcInformation($value)
+    {
+        //empty arrays shouldn't be serialized or used, so set those to null
+        if (is_array($value) && empty($value)) {
+            $value = null;
+        }
+
+        if (!empty($value)) {
+            $value = $this->serializer->serialize($value);
+        }
+
+        return $this->setData(static::FIELD_AC_INFORMATION, $value);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAcInformation()
+    {
+        $value = $this->getData(static::FIELD_AC_INFORMATION);
+
+        if (!empty($value)) {
+            $value = $this->serializer->unserialize($value);
+        }
+
+        return $value;
     }
 
     /**
@@ -551,5 +566,23 @@ class Order extends AbstractModel implements OrderInterface
     public function getConfirmed()
     {
         return $this->getData(static::FIELD_CONFIRMED);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\PostNL\Api\Data\OrderInterface
+     */
+    public function setInsuredTier($value)
+    {
+        return $this->setData(static::FIELD_INSURED_TIER, $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getInsuredTier()
+    {
+        return $this->getData(static::FIELD_INSURED_TIER);
     }
 }

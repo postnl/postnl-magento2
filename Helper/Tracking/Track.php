@@ -1,37 +1,9 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Helper\Tracking;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Helper\AbstractTracking;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
@@ -86,6 +58,7 @@ class Track extends AbstractTracking
      * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
      * @param BarcodeHandler                     $barcodeHandler
      * @param ScopeConfigInterface               $scopeConfig
+     * @param ReturnOptions                      $returnOptions
      */
     public function __construct(
         Context $context,
@@ -99,7 +72,8 @@ class Track extends AbstractTracking
         Log $logging,
         ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface,
         BarcodeHandler $barcodeHandler,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        ReturnOptions $returnOptions
     ) {
         $this->trackFactory             = $trackFactory;
         $this->trackStatusFactory       = $statusFactory;
@@ -114,7 +88,8 @@ class Track extends AbstractTracking
             $webshop,
             $logging,
             $shipmentBarcodeRepositoryInterface,
-            $scopeConfig
+            $scopeConfig,
+            $returnOptions
         );
     }
 
@@ -186,7 +161,7 @@ class Track extends AbstractTracking
      */
     private function addTrackingNumbersToShipment($shipment, $trackingNumbers)
     {
-        $this->logging->addDebug('Adding trackingnumbers to shipment_id : '. $shipment->getId(), $trackingNumbers);
+        $this->logging->debug('Adding trackingnumbers to shipment_id : '. $shipment->getId(), $trackingNumbers);
 
         $shipment = $this->resetTrackingKey($shipment);
         foreach ($trackingNumbers as $number) {
@@ -213,7 +188,7 @@ class Track extends AbstractTracking
     private function addReturnTrackingNumbersToShipment($postNLShipment)
     {
         $shipment = $postNLShipment->getShipment();
-        $this->logging->addDebug('Adding return trackingnumbers to shipment_id : '. $shipment->getId());
+        $this->logging->debug('Adding return trackingnumbers to shipment_id : '. $shipment->getId());
         $returnItems = $this->getList($postNLShipment);
 
         foreach ($returnItems as $item) {

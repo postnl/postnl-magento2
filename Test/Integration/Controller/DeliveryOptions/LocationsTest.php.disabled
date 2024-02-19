@@ -1,0 +1,46 @@
+<?php
+
+namespace TIG\PostNL\Test\Integration\Controller\DeliveryOptions;
+
+use Magento\Quote\Model\Quote\Address\RateRequest;
+
+class LocationsTest extends TestBase
+{
+    public function testTheResultingArrayContainsThePriceKey()
+    {
+        $this->dispatch('postnl/deliveryoptions/locations');
+
+        $response = $this->getResponse()->getBody();
+
+        $this->assertEquals(200, $this->getResponse()->getStatusCode());
+        $this->assertJson($response);
+        $json = json_decode($response, true);
+        $this->assertArrayHasKey('locations', $json);
+        $this->assertArrayHasKey('price', $json);
+    }
+
+    public function testThatThePriceKeyContainsTheRightPrice()
+    {
+        $calculator = $this->getMockBuilder(\TIG\PostNL\Service\Carrier\Price\Calculator::class);
+        $calculator->disableOriginalConstructor();
+        $calculator = $calculator->getMock();
+
+        $this->_objectManager->configure([
+            'preferences' => [
+                \TIG\PostNL\Service\Carrier\Price\Calculator::class => get_class($calculator),
+            ],
+        ]);
+
+        $calculator = $this->_objectManager->get(\TIG\PostNL\Service\Carrier\Price\Calculator::class);
+        $price = $calculator->method('price');
+        $price->willReturn(['price' => 123, 'cost' => 0]);
+        $price->with($this->isInstanceOf(RateRequest::class), 'pakjegemak');
+
+        $this->dispatch('postnl/deliveryoptions/locations');
+
+        $response = $this->getResponse()->getBody();
+
+        $json = json_decode($response, true);
+        $this->assertEquals(123, $json['price']);
+    }
+}

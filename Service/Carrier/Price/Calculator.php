@@ -1,45 +1,16 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 
 namespace TIG\PostNL\Service\Carrier\Price;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Tax\Helper\Data;
+use TIG\PostNL\Config\Source\Carrier\RateType;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
-use TIG\PostNL\Config\Source\Carrier\RateType;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Quote\Model\Quote\Address\RateRequest;
 
 // @codingStandardsIgnoreFile
 class Calculator
@@ -80,6 +51,11 @@ class Calculator
     private $letterboxPackage;
 
     /**
+     * @var Data
+     */
+    private $taxHelper;
+
+    /**
      * Calculator constructor.
      *
      * @param ScopeConfigInterface $scopeConfig
@@ -87,15 +63,17 @@ class Calculator
      * @param Matrixrate           $matrixratePrice
      * @param Tablerate            $tablerateShippingPrice
      * @param ParcelTypeFinder     $parcelTypeFinder
-     * @param LetterboxPackage    $letterboxPackage
+     * @param LetterboxPackage     $letterboxPackage
+     * @param Data                 $taxHelper
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        GetFreeBoxes $getFreeBoxes,
-        Matrixrate $matrixratePrice,
-        Tablerate $tablerateShippingPrice,
-        ParcelTypeFinder $parcelTypeFinder,
-        LetterboxPackage $letterboxPackage
+        GetFreeBoxes         $getFreeBoxes,
+        Matrixrate           $matrixratePrice,
+        Tablerate            $tablerateShippingPrice,
+        ParcelTypeFinder     $parcelTypeFinder,
+        LetterboxPackage     $letterboxPackage,
+        Data                 $taxHelper
     ) {
         $this->scopeConfig            = $scopeConfig;
         $this->getFreeBoxes           = $getFreeBoxes;
@@ -103,69 +81,86 @@ class Calculator
         $this->tablerateShippingPrice = $tablerateShippingPrice;
         $this->parcelTypeFinder       = $parcelTypeFinder;
         $this->letterboxPackage       = $letterboxPackage;
+        $this->taxHelper              = $taxHelper;
     }
 
     /**
      * @param RateRequest $request
      * @param null        $parcelType
      * @param             $store
-     * @param bool        $includeVat
      *
-     * @return array
+     * @return array | bool
      */
-    public function price(RateRequest $request, $parcelType = null, $store = null, $includeVat = false)
+    public function price(RateRequest $request, $parcelType = null, $store = null)
     {
         $this->store = $store;
-        $price       = $this->getConfigData('price');
 
-        if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
+        if ((bool)$request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
             return $this->priceResponse('0.00', '0.00');
         }
 
-        $ratePrice = $this->getRatePrice($this->getConfigData('rate_type'), $request, $parcelType, $includeVat);
+        $ratePrice = $this->getRatePrice($this->getConfigData('rate_type'), $request, $parcelType);
 
         if ($ratePrice) {
             return $ratePrice;
         }
 
-        return $this->priceResponse($price, $price);
+        return false;
     }
 
     /**
      * @param $rateType
      * @param $request
      * @param $parcelType
-     * @param $includeVat
      *
      * @return array|bool
      */
-    private function getRatePrice($rateType, $request, $parcelType, $includeVat)
+    private function getRatePrice($rateType, $request, $parcelType)
     {
-        if ($rateType == RateType::CARRIER_RATE_TYPE_TABLE) {
-            $ratePrice = $this->getTableratePrice($request);
-
-            return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
-        }
-
         if (!$parcelType) {
+            $quote        = null;
+            $requestItems = $request->getAllItems();
+
+            if ($requestItems) {
+                $requestItem = reset($requestItems);
+                $quote       = $requestItem->getQuote();
+            }
+
             try {
-                $parcelType = $this->parcelTypeFinder->get();
+                $parcelType = $this->parcelTypeFinder->get($quote);
             } catch (LocalizedException $exception) {
                 $parcelType = ParcelTypeFinder::DEFAULT_TYPE;
             }
         }
 
-        $ratePrice = $this->matrixratePrice->getRate(
-            $request,
-            $parcelType,
-            $this->store,
-            $includeVat
-        );
-        if ($this->getConfigData('rate_type') == RateType::CARRIER_RATE_TYPE_MATRIX && $ratePrice !== false) {
-            return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
+        if ((bool)$request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes->get($request)) {
+            $rateType = 'free';
         }
 
-        return false;
+        switch ($rateType) {
+            case 'free':
+                return $this->priceResponse('0.00', '0.00');
+            case RateType::CARRIER_RATE_TYPE_MATRIX:
+                $ratePrice = $this->matrixratePrice->getRate($request, $parcelType, $this->store);
+
+                if ($ratePrice !== false) {
+                    return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
+                }
+
+                return false;
+            case RateType::CARRIER_RATE_TYPE_TABLE:
+                $ratePrice = $this->getTableratePrice($request);
+                if ($ratePrice !== false) {
+                    return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
+                }
+
+                return false;
+            case RateType::CARRIER_RATE_TYPE_FLAT:
+            default:
+                $price = $this->getConfigData('price');
+
+                return $this->priceResponse($price, $price);
+        }
     }
 
     /**
@@ -178,25 +173,29 @@ class Calculator
     {
         return [
             'price' => $price,
-            'cost' => $cost,
+            'cost'  => $cost,
         ];
     }
 
     /**
      * @param RateRequest $request
      *
-     * @return array
+     * @return array|bool
      */
     private function getTableratePrice(RateRequest $request)
     {
         $request->setConditionName($this->getConfigData('condition_name'));
 
         $includeVirtualPrice = $this->getConfigFlag('include_virtual_price');
-        $ratePrice = $this->tablerateShippingPrice->getTableratePrice($request, $includeVirtualPrice);
+        $ratePrice           = $this->tablerateShippingPrice->getTableratePrice($request, $includeVirtualPrice);
+
+        if (!$ratePrice) {
+            return false;
+        }
 
         return [
             'price' => $ratePrice['price'],
-            'cost' => $ratePrice['price'],
+            'cost'  => $ratePrice['price'],
         ];
     }
 
@@ -226,5 +225,28 @@ class Calculator
             ScopeInterface::SCOPE_STORE,
             $this->store
         );
+    }
+
+    /**
+     * Calculate the price including or excluding tax
+     *
+     * @param RateRequest $request
+     * @param             $parcelType
+     *
+     * @return mixed
+     */
+    public function getPriceWithTax(RateRequest $request, $parcelType = null)
+    {
+        $includeVat = $this->taxHelper->getShippingPriceDisplayType();
+        $includeVat = ($includeVat == 2 || $includeVat == 3);
+
+        $price = $this->price($request, $parcelType);
+        $shippingAddress = $request->getShippingAddress();
+
+        if (isset($price['price'])) {
+            $price['price'] = $this->taxHelper->getShippingPrice($price['price'], $includeVat, $shippingAddress);
+        }
+
+        return $price;
     }
 }

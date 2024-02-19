@@ -1,7 +1,7 @@
 <div class="days">
     <div data-bind="foreach: deliverydays">
         <div class="wrapper">
-            <!-- ko ifnot: $data[0].fallback || $data[0].letterbox_package || $data[0].eps || $data[0].gp -->
+            <!-- ko ifnot: $data[0].fallback || $data[0].letterbox_package || $data[0].boxable_packets || $data[0].eps || $data[0].gp -->
             <strong>
                 <span class="deliverydays-day" data-bind="text: $data[0].day"></span>
                 <span class="deliverydays-date" data-bind="text: $data[0].date"></span>
@@ -13,7 +13,7 @@
                         <input type="radio"
                                data-bind="value: date, checked: $parents[1].selectedOption, checkedValue: $data"
                                name="postnl_delivery_option"
-                               class="tig-postnl-delivery-radio" />
+                               class="tig-postnl-delivery-radio">
 
                         <div class="tig-postnl-delivery-time">
                             <span class="tig-postnl-delivery-from" data-bind="text: from_friendly"></span>
@@ -38,7 +38,7 @@
                         <input type="radio"
                                data-bind="checked: $parents[1].selectedOption, checkedValue: $data"
                                name="deliveryday"
-                               class="tig-postnl-delivery-radio" checked="checked"/>
+                               class="tig-postnl-delivery-radio" checked="checked">
 
                         <div class="tig-postnl-delivery-fallback">
                             <span data-bind="text: fallback"></span>
@@ -54,10 +54,26 @@
                         <input type="radio"
                                data-bind="checked: $parents[1].selectedOption, checkedValue: $data"
                                name="deliveryday"
-                               class="tig-postnl-delivery-radio" checked="checked"/>
+                               class="tig-postnl-delivery-radio" checked="checked">
 
                         <div class="tig-postnl-delivery-fallback">
                             <span data-bind="text: letterbox_package"></span>
+                        </div>
+                    </label>
+                </li>
+            </ul>
+            <!-- /ko -->
+            <!-- ko if: $data[0].boxable_packets -->
+            <ul data-bind="foreach: $data">
+                <li data-bind="css: { 'selected-row': $parents[1].isRowSelected($data), 'odd': $parents[1].isOdd() }">
+                    <label>
+                        <input type="radio"
+                               data-bind="checked: $parents[1].selectedOption, checkedValue: $data"
+                               name="deliveryday"
+                               class="tig-postnl-delivery-radio" checked="checked">
+
+                        <div class="tig-postnl-delivery-fallback">
+                            <span data-bind="text: boxable_packets"></span>
                         </div>
                     </label>
                 </li>
@@ -70,7 +86,7 @@
                         <input type="radio"
                                data-bind="checked: $parents[1].selectedOption, checkedValue: $data"
                                name="deliveryday"
-                               class="tig-postnl-delivery-radio" checked="checked"/>
+                               class="tig-postnl-delivery-radio" checked="checked">
 
                         <div class="tig-postnl-delivery-fallback">
                             <span data-bind="text: eps"></span>
@@ -86,7 +102,7 @@
                         <input type="radio"
                                data-bind="checked: $parents[1].selectedOption, checkedValue: $data"
                                name="deliveryday"
-                               class="tig-postnl-delivery-radio" checked="checked"/>
+                               class="tig-postnl-delivery-radio" checked="checked">
 
                         <div class="tig-postnl-delivery-fallback">
                             <span data-bind="text: gp"></span>
@@ -106,7 +122,7 @@
 
     <div class="only-stated-address">
         <input type="checkbox" name="postnl_stated_address_only_checkbox" id="postnl_stated_address_only_checkbox" value="1" class="checkbox" data-bind="click: handleStatedAddressOnlyFee">
-        <label for="postnl_stated_address_only_checkbox" data-bind="i18n: 'Do not deliver to neighbours'" />
+        <label for="postnl_stated_address_only_checkbox" data-bind="i18n: 'Do not deliver to neighbours'"></label>
         <!-- ko if: statedAddressOnlyFee() -->
         <span class="price" data-bind="text: statedAddressOnlyFee()"></span>
         <!-- /ko -->

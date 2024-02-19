@@ -1,34 +1,4 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 
 namespace TIG\PostNL\Service\Handler;
 
@@ -131,15 +101,20 @@ class BarcodeHandler
      *
      * @throws LocalizedException
      */
-    public function prepareShipment($magentoShipmentId, $countryId)
+    public function prepareShipment($magentoShipmentId, $countryId, $smartReturns)
     {
         $this->countryId = $countryId;
+        $shipment = $this->shipmentRepository->getByShipmentId($magentoShipmentId);
+
+        if ($smartReturns) {
+            $shipment->setIsSmartReturn(true);
+            $this->shipmentRepository->save($shipment);
+        }
 
         if (!$this->validateShipment($magentoShipmentId, $countryId)) {
             return;
         }
 
-        $shipment = $this->shipmentRepository->getByShipmentId($magentoShipmentId);
         $magentoShipment = $shipment->getShipment();
         $this->storeId = $magentoShipment->getStoreId();
 
@@ -194,6 +169,11 @@ class BarcodeHandler
         for ($count = 1; $count <= $parcelCount; $count++) {
             $returnBarcode = $this->generate($shipment, $isReturnBarcode);
             $this->createBarcode($shipment->getId(), $count, $returnBarcode, $isReturnBarcode);
+
+            if ($shipment->getIsSmartReturn()) {
+                $shipment->setSmartReturnBarcode($returnBarcode);
+            }
+
             $shipment->setReturnBarcode($returnBarcode);
             $this->shipmentRepository->save($shipment);
         }
@@ -262,8 +242,7 @@ class BarcodeHandler
     {
         if (
             (!in_array($countryId, ['NL', 'BE']) ||
-             ($countryId == 'NL' && !$this->labelParser->canReturnNl($countryId)) ||
-             ($countryId == 'BE' && !$this->labelParser->canReturnBe($countryId)) ||
+             !$this->labelParser->canReturn($countryId) ||
              ($shipment->isExtraAtHome()) ||
              ($shipment->isBuspakjeShipment()))
         ) {

@@ -1,36 +1,8 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Helper\Tracking;
 
+// @codingStandardsIgnoreFile
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Helper\Context;
@@ -40,6 +12,7 @@ use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Mail\TransportInterface;
 use Magento\Framework\View\Asset\Repository as AssetRepository;
 use Magento\Sales\Model\Order\Shipment;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Helper\AbstractTracking;
 use TIG\PostNL\Helper\Data as PostNLHelper;
@@ -80,6 +53,7 @@ class Mail extends AbstractTracking
      * @param AssetRepository                    $assetRepository
      * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
      * @param ScopeConfigInterface               $scopeConfig
+     * @param ReturnOptions                      $returnOptions
      */
     public function __construct(
         Context $context,
@@ -91,7 +65,8 @@ class Mail extends AbstractTracking
         Log $logging,
         AssetRepository $assetRepository,
         ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        ReturnOptions $returnOptions
     ) {
         $this->transportBuilder     = $transportBuilder;
         $this->postNLHelperData     = $data;
@@ -104,7 +79,8 @@ class Mail extends AbstractTracking
             $webshop,
             $logging,
             $shipmentBarcodeRepositoryInterface,
-            $scopeConfig
+            $scopeConfig,
+            $returnOptions
         );
     }
 
@@ -117,7 +93,7 @@ class Mail extends AbstractTracking
         try {
             $this->trackAndTraceEmail->sendMessage();
         } catch (MailException $exception) {
-            $this->logging->addCritical($exception->getLogMessage());
+            $this->logging->critical($exception->getLogMessage());
         }
     }
 
@@ -153,7 +129,7 @@ class Mail extends AbstractTracking
         $address = $shipment->getShippingAddress();
         $transport->addTo($address->getEmail(), $address->getFirstname() . ' ' . $address->getLastname());
         $transport = $this->addBccEmail($transport);
-        $this->logging->addInfo('Track And Trace email build for :' . $address->getEmail());
+        $this->logging->info('Track And Trace email build for :' . $address->getEmail());
         $this->trackAndTraceEmail = $transport->getTransport();
     }
     // @codingStandardsIgnoreEnd

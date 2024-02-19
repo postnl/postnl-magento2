@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -46,13 +17,13 @@ use \PHPUnit\Framework\MockObject\Stub\ConsecutiveCalls;
 abstract class AbstractConfigurationTest extends TestCase
 {
     /**
-     * @var ScopeConfigInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ScopeConfigInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $scopeConfigMock;
 
     protected function initScopeConfigMock()
     {
-        $this->scopeConfigMock = $this->getMock(ScopeConfigInterface::class);
+        $this->scopeConfigMock = $this->getFakeMock(ScopeConfigInterface::class)->getMock();
     }
 
     /**
@@ -97,17 +68,11 @@ abstract class AbstractConfigurationTest extends TestCase
      */
     protected function setXpathConsecutive($xpaths = [], $returns = [])
     {
+        $this->assertEquals(count($xpaths), count($returns), "setXPath needs returns and paths to be of equal length");
+
         $getValueExpects = $this->scopeConfigMock->expects($this->any());
         $getValueExpects->method('getValue');
-        $getValueExpects->withConsecutive($this->onConsecutiveCalls($xpaths));
-
-        $class = ConsecutiveCalls::class;
-        if (class_exists('PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls')) {
-            $class = '\PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls';
-        }
-
-        $getValueExpects->will(
-            new $class($returns)
-        );
+        $getValueExpects->withConsecutive(...$xpaths);
+        $getValueExpects->willReturnOnConsecutiveCalls(...$returns);
     }
 }

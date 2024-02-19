@@ -1,34 +1,4 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 
 namespace TIG\PostNL\Service\Export\Csv;
 
@@ -51,7 +21,7 @@ class MatrixrateTest extends TestCase
      */
     private $instance;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -77,15 +47,15 @@ class MatrixrateTest extends TestCase
         $lines  = explode("\n", $result);
         $header = array_shift($lines);
 
-        $this->assertContains('Country', $header);
-        $this->assertContains('Province/state', $header);
-        $this->assertContains('Zipcode', $header);
-        $this->assertContains('Weight (and higher)', $header);
-        $this->assertContains('Shipping price (and higher)', $header);
-        $this->assertContains('Amount (and higher)', $header);
-        $this->assertContains('Parcel type', $header);
-        $this->assertContains('price', $header);
-        $this->assertContains('Instructions', $header);
+        $this->assertStringContainsString('Country', $header);
+        $this->assertStringContainsString('Province/state', $header);
+        $this->assertStringContainsString('Zipcode', $header);
+        $this->assertStringContainsString('Weight (and higher)', $header);
+        $this->assertStringContainsString('Shipping price (and higher)', $header);
+        $this->assertStringContainsString('Amount (and higher)', $header);
+        $this->assertStringContainsString('Parcel type', $header);
+        $this->assertStringContainsString('price', $header);
+        $this->assertStringContainsString('Instructions', $header);
     }
 
     public function testHasTheCorrectSize()

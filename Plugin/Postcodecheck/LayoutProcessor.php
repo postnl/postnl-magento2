@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Plugin\Postcodecheck;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -98,6 +69,23 @@ class LayoutProcessor
         return $jsLayout;
     }
 
+    private function addInternationalAddressBlock($fieldset, $scope){
+        $fieldset['tig_postnl_address_validator_info'] = [
+            'component' => 'TIG_PostNL/js/view/form/international-check',
+            'type'      => 'none',
+            'provider'  => 'checkoutProvider',
+            'sortOrder' => '105',
+            'config'    => [
+                'customScope' => $scope,
+                'template'    => 'TIG_PostNL/checkout/international-check',
+                'additionalClasses' => $this->webshopConfig->getCheckoutCompatibleForAddressCheck()
+            ],
+            'dataScope' => '',
+            'visible'   => true
+        ];
+        return $fieldset;
+    }
+
     /**
      * @param $jsLayout
      *
@@ -109,6 +97,7 @@ class LayoutProcessor
                            ['children']['shippingAddress']['children']['shipping-address-fieldset']['children'];
 
         $shippingFields = $this->processAddress($shippingFields, 'shippingAddress', []);
+        $shippingFields = $this->addInternationalAddressBlock($shippingFields, 'shippingAddress');
 
         $this->setAdditionalClass($shippingFields, 'postcode', true);
         $this->setAdditionalClass($shippingFields, 'city');
@@ -142,6 +131,11 @@ class LayoutProcessor
                 []
             );
 
+            $billingForm['children']['form-fields']['children'] = $this->addInternationalAddressBlock(
+                $billingForm['children']['form-fields']['children'],
+                $billingForm['dataScopePrefix'] ?? ''
+            );
+
             $this->setAdditionalClass($billingForm['children']['form-fields']['children'], 'postcode', true);
             $this->setAdditionalClass($billingForm['children']['form-fields']['children'], 'city');
             $this->setAdditionalClass($billingForm['children']['form-fields']['children'], 'street');
@@ -168,6 +162,11 @@ class LayoutProcessor
             $billingFields['children']['form-fields']['children'],
             isset($billingFields['dataScopePrefix']) ? $billingFields['dataScopePrefix'] : '',
             []
+        );
+
+        $billingFields['children']['form-fields']['children'] = $this->addInternationalAddressBlock(
+            $billingFields['children']['form-fields']['children'],
+            $billingFields['dataScopePrefix'] ?? ''
         );
 
         $this->setAdditionalClass($billingFields['children']['form-fields']['children'], 'postcode', true);

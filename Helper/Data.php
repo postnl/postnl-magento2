@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
@@ -47,7 +18,8 @@ use TIG\PostNL\Config\Provider\Webshop;
 // @codingStandardsIgnoreFile
 class Data extends AbstractHelper
 {
-    const PAKJEGEMAK_DELIVERY_OPTION         = 'PG';
+    const PACKAGEBOX_DELIVERY_OPTION         = 'PG';
+    const DISABLE_PACKAGEBOX_DELIVERY_OPTION = 'PG_EX';
 
     /**
      * @var TimezoneInterface
@@ -203,13 +175,19 @@ class Data extends AbstractHelper
 
     /**
      * @param string $country
+     *
      * @return array
      */
     public function getAllowedDeliveryOptions($country = 'NL')
     {
-        $deliveryOptions = [];
-        if ($this->shippingOptions->isPakjegemakActive($country)) {
-            $deliveryOptions [] = self::PAKJEGEMAK_DELIVERY_OPTION;
+        $showPackageMachines = $this->shippingOptions->isPackageMachineFilterActive();
+        $deliveryOptions     = [];
+
+        if ($this->shippingOptions->isPakjegemakActive($country) && $showPackageMachines) {
+            $deliveryOptions [] = self::PACKAGEBOX_DELIVERY_OPTION;
+        }
+        if ($country === 'NL' && $this->shippingOptions->isPakjegemakActive($country) && !$showPackageMachines) {
+            $deliveryOptions [] = self::DISABLE_PACKAGEBOX_DELIVERY_OPTION;
         }
 
         return $deliveryOptions;

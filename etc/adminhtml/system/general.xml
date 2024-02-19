@@ -1,36 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
+
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <!--General configuration section-->
     <group id="generalconfiguration" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -84,10 +53,14 @@
                     <field id="modus">1</field>
                 </depends>
             </field>
+            <field id="validate_api_credentials" translate="label comment" type="button" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <comment><![CDATA[Please save your configuration before validating your API Credentials.]]></comment>
+                <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Validate\ApiCredentials</frontend_model>
+            </field>
             <!--Test Fields-->
             <field id="customer_number_test" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Customer number test mode</label>
-                <comment><![CDATA[You can use the test account credentials found <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+testgegevens" target="_blank" title="PostNL test account">here</a>.]]></comment>
+                <comment><![CDATA[Enter you PostNL customer number.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/customer_number_test</config_path>
                 <depends>
                     <field id="modus">2</field>
@@ -95,7 +68,7 @@
             </field>
             <field id="customer_code_test" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Customer code test mode</label>
-                <comment><![CDATA[You can use the test account credentials found <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+testgegevens" target="_blank" title="PostNL test account">here</a>.]]></comment>
+                <comment><![CDATA[Enter your PostNL customer code. It must contain between 3 and 4 letters.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/customer_code_test</config_path>
                 <depends>
                     <field id="modus">2</field>
@@ -103,7 +76,7 @@
             </field>
             <field id="api_key_test" translate="label comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Api Key test mode</label>
-                <comment><![CDATA[You can use the test account credentials found <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+testgegevens" target="_blank" title="PostNL test account">here</a>.]]></comment>
+                <comment><![CDATA[Enter your PostNL API key. If you haven't got an API key, please contact PostNL support.]]></comment>
                 <tooltip><![CDATA[This API key is used to send parcels with PostNL and to supplement and validate addresses. Keep this API key secret to prevent other parties from taking PostNL services on your account.]]></tooltip>
                 <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 <config_path>tig_postnl/generalconfiguration_extension_status/api_key_test</config_path>
@@ -113,7 +86,7 @@
             </field>
             <field id="bls_code_test" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>BLS location code test mode</label>
-                <comment><![CDATA[You can use the test account credentials found <a href="https://confluence.tig.nl/display/SDPOSTNL/PostNL+Magento+2+testgegevens" target="_blank" title="PostNL test account">here</a>.]]></comment>
+                <comment><![CDATA[Enter your PostNL BLS location code.]]></comment>
                 <config_path>tig_postnl/generalconfiguration_extension_status/bls_code_test</config_path>
                 <depends>
                     <field id="modus">2</field>
@@ -163,6 +136,12 @@
                 <label>City</label>
                 <validate>required-entry</validate>
                 <config_path>tig_postnl/generalconfiguration_shipping_address/city</config_path>
+            </field>
+            <field id="country" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Country</label>
+                <validate>required-entry</validate>
+                <source_model>TIG\PostNL\Config\Source\General\Country</source_model>
+                <config_path>tig_postnl/generalconfiguration_shipping_address/country</config_path>
             </field>
         </group>
 

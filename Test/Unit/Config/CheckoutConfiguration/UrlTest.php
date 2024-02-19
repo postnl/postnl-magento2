@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Test\Unit\Config\CheckoutConfiguration;
 
 use TIG\PostNL\Test\TestCase;
@@ -46,30 +17,21 @@ class UrlTest extends TestCase
         $urlBuilder = $this->getMock(UrlInterface::class);
         $builderExpects = $urlBuilder->expects($this->any());
         $builderExpects->method('getUrl');
-        $builderExpects->withConsecutive(
-            $this->onConsecutiveCalls([
-                'postnl/deliveryoptions/timeframes',
-                'postnl/deliveryoptions/locations',
-                'postnl/deliveryoptions/save',
-                'postnl/pakjegemak/address',
-                'postnl/address/postcode',
-            ])
-        );
+        $builderExpects->withConsecutive(...[
+            ['postnl/deliveryoptions/timeframes'],
+            ['postnl/deliveryoptions/locations'],
+            ['postnl/deliveryoptions/save'],
+            ['postnl/pakjegemak/address'],
+            ['postnl/address/postcode'],
+        ]);
 
-        $class = ConsecutiveCalls::class;
-        if (class_exists('PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls')) {
-            $class = '\PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls';
-        }
-
-        $builderExpects->will(
-            new $class([
-                'timeframesurl',
-                'locationsurl',
-                'saveurl',
-                'pakjegemakurl',
-                'postcodecheckurl'
-            ])
-        );
+        $builderExpects->willReturnOnConsecutiveCalls(...[
+            'timeframesurl',
+            'locationsurl',
+            'saveurl',
+            'pakjegemakurl',
+            'postcodecheckurl'
+        ]);
 
         $instance = $this->getInstance([
             'urlBuilder' => $urlBuilder

@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Test\Integration\Webservices\Parser\Label;
 
 use \TIG\PostNL\Webservices\Parser\Label\Shipments;
@@ -74,7 +45,7 @@ class ShipmentsTest extends TestCase
 
         $result = $instance->get($postNLShipment, 1);
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
 
         $contacts = $result['Contacts']['Contact'];
         $address  = $result['Addresses']['Address'][0];
@@ -117,7 +88,7 @@ class ShipmentsTest extends TestCase
     /**
      * @param \TIG\PostNL\Model\Shipment $shipment
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getProductOptionsMock($shipment)
     {
@@ -131,7 +102,7 @@ class ShipmentsTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getAddressEnhancerMock()
     {
@@ -145,7 +116,7 @@ class ShipmentsTest extends TestCase
 
         $enhancerMock = $this->getFakeMock(AddressEnhancer::class, true);
         $enhancerMockExpects = $enhancerMock->expects($this->any());
-        $enhancerMockExpects->method('set');
+        $enhancerMockExpects->method('get');
         $enhancerMockExpects->willReturn($return);
 
         return $enhancerMock;

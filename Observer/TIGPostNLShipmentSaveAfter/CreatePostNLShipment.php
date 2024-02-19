@@ -1,38 +1,10 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
 use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Model\Order\Shipment;
@@ -84,24 +56,30 @@ class CreatePostNLShipment implements ObserverInterface
      */
     private $webshopConfig;
 
+    /** @var SerializerInterface */
+    private $serializer;
+
     /**
      * @param ShipmentRepositoryInterface $shipmentRepository
      * @param OrderRepository             $orderRepository
      * @param SentDateHandler             $sendDateHandler
      * @param RequestInterface            $requestInterface
      * @param Webshop                     $webshopConfig
+     * @param SerializerInterface         $serializer
      */
     public function __construct(
         ShipmentRepositoryInterface $shipmentRepository,
         OrderRepository $orderRepository,
         SentDateHandler $sendDateHandler,
         RequestInterface $requestInterface,
-        Webshop $webshopConfig
+        Webshop $webshopConfig,
+        SerializerInterface $serializer
     ) {
         $this->orderRepository = $orderRepository;
         $this->sentDateHandler = $sendDateHandler;
         $this->shipmentRepository = $shipmentRepository;
         $this->webshopConfig = $webshopConfig;
+        $this->serializer = $serializer;
 
         $this->shipParams = $requestInterface->getParam('shipment');
     }
@@ -176,7 +154,9 @@ class CreatePostNLShipment implements ObserverInterface
             'shipment_type'     => $shipmentType,
             'ac_characteristic' => $this->getAcCharacteristic(),
             'ac_option'         => $this->getAcOption(),
+            'ac_information'    => $this->getAcInformation(),
             'parcel_count'      => $colliAmount,
+            'insured_tier'      => $this->getInsuredTier()
         ];
     }
 
@@ -220,6 +200,27 @@ class CreatePostNLShipment implements ObserverInterface
         $order = $this->getOrder();
 
         return $order->getAcOption();
+    }
+
+    /**
+     * @return null|string
+     */
+    private function getInsuredTier()
+    {
+        $order = $this->getOrder();
+
+        return $order->getInsuredTier();
+    }
+
+    /**
+     * @return null|string
+     */
+    private function getAcInformation()
+    {
+        $order = $this->getOrder();
+        $acInformation = $order->getAcInformation();
+
+        return $this->serializer->serialize($acInformation);
     }
 
     /**

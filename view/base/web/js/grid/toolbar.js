@@ -1,33 +1,3 @@
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 /* eslint-disable strict */
 define([
     'jquery',
@@ -54,18 +24,24 @@ define([
             },
             actionList : ko.observableArray([
                 {text: $.mage.__('Change productcode'), value: 'change_product'},
-                {text: $.mage.__('Change parcel count'), value: 'change_parcel'}
+                {text: $.mage.__('Change parcel count'), value: 'change_parcel'},
+                {text: $.mage.__('Choose printing start position'), value: 'choose_print_start_position'}
             ]),
             defaultOption : ko.observable(DataProvider.getDefaultOption()),
             optionList : ko.observableArray(
                 DataProvider.getProductOptions()
             ),
+            labelStartPositionOptions : ko.observable(DataProvider.getLabelStartPositionOptions()),
+            startPositionSelected : ko.observable('0'),
             showToolbar : ko.observable(DataProvider.getShowToolbar()),
             jsLoaded : true,
             isGuaranteedActive : ko.observable(DataProvider.getGuaranteedIsActive()),
             showTimeOptions : ko.observable(false),
             timeOptions : ko.observable(DataProvider.getPackagesTimeOptions()),
-            timeOptionSelected : ko.observable('1000')
+            timeOptionSelected : ko.observable('1000'),
+            showInsuredTiers: ko.observable(false),
+            insuredTiers: ko.observable(DataProvider.getInsuredTierOptions()),
+            defaultInsuredTier: ko.observable(DataProvider.getDefaultInsuredTier())
         },
 
         /**
@@ -76,23 +52,28 @@ define([
         initObservable : function () {
             this._super().observe([
                 'currentSelected',
-                'showTimeOptions'
+                'showTimeOptions',
+                'showInsuredTiers'
             ]);
 
             this.currentSelected.subscribe(function (value) {
-                if (value === 'change_parcel') {
+                if (value !== 'change_product') {
                     self.showTimeOptions(false);
+                    self.showInsuredTiers(false);
                     return;
                 }
 
                 self.toggleTimeOptions(self.defaultOption());
+                self.toggleInsuredTiers(self.defaultOption());
             });
 
             this.toggleTimeOptions(DataProvider.getDefaultOption());
+            this.toggleInsuredTiers(DataProvider.getDefaultOption());
 
             var self = this;
             this.defaultOption.subscribe(function (value) {
                 self.toggleTimeOptions(value);
+                self.toggleInsuredTiers(value);
             });
 
             return this;
@@ -117,6 +98,15 @@ define([
             }
 
             return this.showTimeOptions(false);
+        },
+
+        toggleInsuredTiers: function (value) {
+            if (DataProvider.inExtraCover(value)) {
+                this.showInsuredTiers(true);
+                return;
+            }
+
+            return this.showInsuredTiers(false);
         },
 
         /**
@@ -158,6 +148,14 @@ define([
                     data.time = $('.time_option_sticky')[0].value;
                 } else {
                     data.time = $('.time_option_toolbar')[0].value;
+                }
+            }
+
+            if (this.showInsuredTiers()) {
+                if (isSticky) {
+                    data.insuredtier = $('.insured_tier_sticky')[0].value;
+                } else {
+                    data.insuredtier = $('.insured_tier_toolbar')[0].value;
                 }
             }
 

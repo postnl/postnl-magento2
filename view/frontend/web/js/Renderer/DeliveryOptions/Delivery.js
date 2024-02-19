@@ -1,33 +1,3 @@
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 define([
     'uiComponent',
     'ko',
@@ -114,10 +84,18 @@ define([
                 return;
             }
 
+            //We don't need to save a delivery option that's already been saved. Prevents unnecessary ajax calls.
+            if (sessionStorage.postnlDeliveryOption !== undefined && sessionStorage.postnlDeliveryOption === JSON.stringify(value)) {
+                return;
+            }
+
+            sessionStorage.setItem("postnlDeliveryOption", JSON.stringify(value));
+            sessionStorage.removeItem("postnlPickupOption");
+
             State.currentSelectedShipmentType('delivery');
 
             var fee = null;
-            if (!value.fallback && !value.letterbox_package && !value.eps && !value.gp) {
+            if (!value.fallback && !value.letterbox_package && !value.boxable_packets && !value.eps && !value.gp) {
                 if (value.hasFee !== undefined && value.hasFee()) {
                     fee = value.getFee();
                 }
@@ -130,6 +108,12 @@ define([
             if (typeof value.fallback !== 'undefined') {
                 type = 'fallback';
             }
+            if (typeof value.letterbox_package !== 'undefined') {
+                type = 'Letterbox Package';
+            }
+            if (typeof value.boxable_packets !== 'undefined') {
+                type = 'Boxable Packet';
+            }
 
             if (typeof value.eps !== 'undefined') {
                 type = 'EPS';
@@ -139,8 +123,12 @@ define([
                 type = 'GP';
             }
 
+            if (this.saveDeliveryDayRequest !== undefined) {
+                this.saveDeliveryDayRequest.abort('avoidMulticall');
+            }
+
             $(document).trigger('compatible_postnl_deliveryoptions_save_before');
-            $.ajax({
+            this.saveDeliveryDayRequest = $.ajax({
                 method : 'POST',
                 url    : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_save,
                 data   : {
@@ -177,7 +165,8 @@ define([
             var addressAsString = JSON.stringify({
                 'postcode': address.postcode,
                 'street': address.street[0].replace(/\D/g,''),
-                'housenumber': address.housenumber
+                'housenumber': address.housenumber,
+                'country': address.country
             });
             if (this.deliverydays() !== undefined && this.currentDeliveryAddress() === addressAsString) {
                 return;
@@ -221,10 +210,22 @@ define([
                     this.selectFirstDeliveryOption();
                     return;
                 }
+                if (data === '') {
+                    return false;
+                }
 
                 if (data.letterbox_package === true) {
                     data  = ko.utils.arrayMap(data.timeframes, function (letterbox_package) {
                         return letterbox_package;
+                    });
+                    this.deliverydays(data);
+                    this.selectFirstDeliveryOption();
+                    return;
+                }
+
+                if (data.boxable_packets === true) {
+                    data  = ko.utils.arrayMap(data.timeframes, function (boxable_packets) {
+                        return boxable_packets;
                     });
                     this.deliverydays(data);
                     this.selectFirstDeliveryOption();
@@ -306,23 +307,52 @@ define([
 
         canUseStatedAddressOnly: ko.computed(function () {
             var isActive = window.checkoutConfig.shipping.postnl.stated_address_only_active;
+            var isInternationalPacketsActive = window.checkoutConfig.shipping.postnl.is_international_packets_active;
 
             var address = AddressFinder();
-            var isNL = (address !== null && address !== false && address.country === 'NL');
+            var isNL = (address !== null && address !== false &&
+                (address.country === 'NL' || (address.country === 'BE' && !isInternationalPacketsActive)));
 
             return isActive === 1 && isNL;
         }),
 
         selectFirstDeliveryOption: function () {
             // Only select the first option if there is none defined
-            if (this.selectedOption() !== undefined && this.selectedOption() != null) {
+            if (this.selectedOption() !== undefined && this.selectedOption() != null || sessionStorage.postnlPickupOption) {
                 return;
             }
-
             var deliveryDays = this.deliverydays();
-            if (deliveryDays !== undefined && deliveryDays[0] !== undefined && deliveryDays[0][0] !== undefined) {
+
+
+            if(sessionStorage.postnlDeliveryOption) {
+                var previousOption = JSON.parse(sessionStorage.postnlDeliveryOption);
+                this.selectedOption(previousOption)
+                var indexes = this.getPreviousDay(previousOption, deliveryDays);
+            }
+
+            if (indexes) {
+                this.selectedOption(deliveryDays[indexes[0]][indexes[1]]);
+            }
+
+            if (deliveryDays !== undefined && deliveryDays[0] !== undefined && deliveryDays[0][0] !== undefined && sessionStorage.postnlDeliveryOption === undefined) {
                 this.selectedOption(deliveryDays[0][0]);
             }
+        },
+
+        getPreviousDay: function (option, deliveryDays) {
+            var result;
+            $.each(deliveryDays, function (deliveryDaysindex, value) {
+                if (Array.isArray(value)) {
+                    $.each(value, function (index, value) {
+                        if (value.day === option.day && value.from === option.from && value.to === option.to) {
+                            result = [deliveryDaysindex, index];
+                            return false;
+                        }
+                    })
+                }
+            })
+
+            return result;
         }
     });
 });

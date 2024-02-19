@@ -1,0 +1,37 @@
+<?php /** @var $block \TIG\PostNL\Block\Adminhtml\Config\Validate\InternationalAddressValidation */ ?>
+
+<?= $block->getButtonHtml() ?>
+<span id="international_address_validation_message_span" class="message_span">
+    <span class="international-address-validation-message error"></span>
+    <span class="international-address-validation-message success"></span>
+</span>
+
+<script>
+    require([
+        'jquery',
+        'prototype'
+    ], function(jQuery){
+        jQuery('#validate_international_address_check').click(function () {
+            var params = {
+                form_key: "<?= $block->getFormKey(); ?>",
+                isAjax: true
+            };
+
+            jQuery.ajax({
+                showLoader: true,
+                url: "<?= $block->getAjaxUrl(); ?>",
+                data: params,
+                dataType: 'json'
+            }).done(function (response) {
+                if(response.error === true) {
+                    jQuery('#international_address_validation_message_span .success').hide();
+                    jQuery('#international_address_validation_message_span .error').text(response.message).fadeIn(200);
+                } else {
+                    jQuery('#international_address_validation_message_span .error').hide();
+                    jQuery('#international_address_validation_message_span .success').text('Succesfully validated International Address Check').fadeIn(200);
+                }
+            });
+        });
+
+    });
+</script>

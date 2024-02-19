@@ -32,6 +32,10 @@ aside .tig-postnl-field-group .field > .label {
     margin-bottom: 16px;
 }
 
+.tig-postnl-success {
+    color: green;
+}
+
 .tig-postnl-field-group {
     float: left;
     width: 100%;
@@ -107,34 +111,6 @@ aside .tig-postnl-field-group .field > .label {
     }
 }
 
-/* Rubic Clean checkout ============================================================================================= */
-.danslo.tig-postnl-field-group {
-    margin: 4px 0;
-}
-
-.danslo.tig-postnl-field-group .field {
-    max-width: 100%;
-    margin: 0 10px 4px 0;
-}
-
-.danslo.tig-postnl-field-group .field:last-child {
-    max-width: calc(100%);
-}
-
-/* Amasty Plaza checkout ============================================================================================ */
-.amasty.tig-postnl-field-group {
-    margin-left: 8px;
-}
-
-.amasty.tig-postnl-field-group .field:last-child {
-    max-width: calc(91%/3);
-}
-
-.amasty.tig-postnl-validation-message {
-    margin-left: 8px;
-    width: calc(97%);
-}
-
 .tig-postnl-field-group .field.tig-postnl-full-width {
     max-width: 100%;
 }
@@ -147,4 +123,15 @@ aside .tig-postnl-field-group .field > .label {
 .tig-postnl-field-group-account .field:last-child,
 .tig-postnl-field-group-account .field {
     margin-bottom: 0;
+}
+
+.tig-postnl-international-addresses .tig-postnl-header {
+    font-weight: 300;
+    font-size: 2rem;
+    border-bottom: 1px solid #cccccc;
+    margin-bottom: 15px;
+}
+
+.tig-postnl-international-addresses .tig-postnl-address li:hover {
+    font-weight: bolder;
 }

@@ -1,0 +1,41 @@
+<?php
+
+namespace TIG\PostNL\Test\Integration\Controller\DeliveryOptions;
+
+class TimeframesTest extends TestBase
+{
+    public function testResponseJsonContainsTheCorrectKeys()
+    {
+        $this->dispatch('postnl/deliveryoptions/timeframes');
+
+        $response = $this->getResponse()->getBody();
+        $this->assertEquals(200, $this->getResponse()->getStatusCode());
+        $this->assertJson($response);
+
+        $json = json_decode($response, true);
+        $this->assertArrayHasKey('timeframes', $json);
+        $this->assertArrayHasKey('price', $json);
+    }
+
+    public function testTheResponseContainsTheCorrectPrice()
+    {
+        $calculator = $this->getMockBuilder(\TIG\PostNL\Service\Carrier\Price\Calculator::class);
+        $calculator->disableOriginalConstructor();
+        $calculator = $calculator->getMock();
+
+        $this->_objectManager->configure([
+            'preferences' => [
+                \TIG\PostNL\Service\Carrier\Price\Calculator::class => get_class($calculator),
+            ],
+        ]);
+
+        $calculator = $this->_objectManager->get(\TIG\PostNL\Service\Carrier\Price\Calculator::class);
+        $calculator->method('price')->willReturn(['price' => 123, 'cost' => 0]);
+
+        $this->dispatch('postnl/deliveryoptions/timeframes');
+        $response = $this->getResponse()->getBody();
+        $json = json_decode($response, true);
+
+        $this->assertEquals(123, $json['price']);
+    }
+}

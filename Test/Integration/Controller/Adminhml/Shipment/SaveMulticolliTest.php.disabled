@@ -1,0 +1,65 @@
+<?php
+
+namespace Integration\Controller\Adminhml\Shipment;
+
+use Magento\TestFramework\TestCase\AbstractBackendController;
+
+class SaveMulticolliTest extends AbstractBackendController
+{
+    public function testSavesTheMulticolli()
+    {
+        if (getenv('TRAVIS') !== false) {
+            $this->markTestSkipped('Fails on Travis');
+        }
+        
+        $postnlShipment = require realpath(__DIR__ . '/../../../../Fixtures/Shipments/PostNLShipment.php');
+
+        $this->getRequest()->setPostValue([
+            'shipmentId' => $postnlShipment->getId(),
+            'parcelCount' => 99,
+        ]);
+
+        $this->_objectManager->get('Magento\Backend\Model\UrlInterface')->turnOffSecretKey();
+
+        $this->dispatch('backend/postnl/shipment/SaveMulticolli');
+
+        /** @var \TIG\PostNL\Model\Shipment $newPostnlShipment */
+        $newPostnlShipment = $this->_objectManager->get(\TIG\PostNL\Model\Shipment::class);
+        $newPostnlShipment->load($postnlShipment->getId());
+
+        $response = json_decode($this->getResponse()->getBody(), true);
+        $this->assertTrue($response['success']);
+
+        $this->assertEquals(99, $newPostnlShipment->getParcelCount());
+    }
+
+    public function testDoesNotSaveTheMulticolliWhenConfirmed()
+    {
+        if (getenv('TRAVIS') !== false) {
+            $this->markTestSkipped('Fails on Travis');
+        }
+
+        $postnlShipment = require realpath(__DIR__ . '/../../../../Fixtures/Shipments/PostNLShipment.php');
+        $postnlShipment->setConfirmedAt('2016-11-19 21:13:13');
+        $postnlShipment->setParcelCount(1);
+        $postnlShipment->save();
+
+        $this->getRequest()->setPostValue([
+            'shipmentId' => $postnlShipment->getId(),
+            'parcelCount' => 99,
+        ]);
+
+        $this->_objectManager->get('Magento\Backend\Model\UrlInterface')->turnOffSecretKey();
+
+        $this->dispatch('backend/postnl/shipment/SaveMulticolli');
+
+        /** @var \TIG\PostNL\Model\Shipment $newPostnlShipment */
+        $newPostnlShipment = $this->_objectManager->get(\TIG\PostNL\Model\Shipment::class);
+        $newPostnlShipment->load($postnlShipment->getId());
+
+        $response = json_decode($this->getResponse()->getBody(), true);
+        $this->assertFalse($response['success']);
+
+        $this->assertEquals(1, $newPostnlShipment->getParcelCount());
+    }
+}

@@ -1,34 +1,4 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 
 namespace TIG\PostNL\Service\Validation;
 
@@ -73,13 +43,14 @@ class Factory
      * @return bool|mixed
      * @throws PostNLException
      */
-    public function validate($type, $value)
+    public function validate($type, $value, $websiteId = null)
     {
         foreach ($this->validators as $validator) {
             $this->checkImplementation($validator);
         }
 
-        $result = $this->callValidator($type, $value);
+        $result = $this->callValidator($type, $value, $websiteId);
+
         if ($result !== null) {
             return $result;
         }
@@ -91,9 +62,9 @@ class Factory
      * @param $type
      * @param $value
      *
-     * @return bool
+     * @return bool|null
      */
-    private function callValidator($type, $value)
+    private function callValidator($type, $value, $websiteId)
     {
         switch ($type) {
             case 'price':
@@ -106,6 +77,7 @@ class Factory
                 return $this->validators['parcelType']->validate($value);
 
             case 'country':
+                $this->validators['country']->setWebsiteId($websiteId);
                 return $this->validators['country']->validate($value);
 
             case 'region':
@@ -114,6 +86,7 @@ class Factory
             case 'duplicate-import':
                 return $this->validators['duplicateImport']->validate($value);
         }
+        return null;
     }
 
     /**

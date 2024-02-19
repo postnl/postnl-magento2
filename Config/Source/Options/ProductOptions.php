@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Config\Source\Options;
 
 use Magento\Framework\Option\ArrayInterface;
@@ -118,6 +89,16 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     }
 
     /**
+     * Return options where Today is true
+     *
+     * @return array|array[]
+     */
+    public function getIsTodayOptions()
+    {
+        return $this->getProductOptions(['isToday' => true]);
+    }
+
+    /**
      * Returns options if group equals pakjegemak_options
      * @return array
      */
@@ -137,6 +118,28 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     {
         $flags = [];
         $flags['groups'][] = ['group' => 'pakjegemak_be_options'];
+        return $this->getProductOptions($flags);
+    }
+
+    /**
+     * Returns options if group equals pakjegemak_be_domestic_options
+     * @return array
+     */
+    public function getPakjeGemakBeDomesticOptions()
+    {
+        $flags = [];
+        $flags['groups'][] = ['group' => 'pakjegemak_be_domestic_options'];
+        return $this->getProductOptions($flags);
+    }
+
+    /**
+     * Returns options if group equals pakjegemak_be_nl_options
+     * @return array
+     */
+    public function getPakjeGemakBeNlOptions()
+    {
+        $flags = [];
+        $flags['groups'][] = ['group' => 'pakjegemak_be_nl_options'];
         return $this->getProductOptions($flags);
     }
 
@@ -205,6 +208,27 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
     /**
      * @return array
      */
+    public function getBeDomesticOptions()
+    {
+        $beDomesticOptions = $this->getProductOptions(['group' => 'standard_be_options']);
+
+        return $beDomesticOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBeNlOptions()
+    {
+        $options = $this->getProductOptions(['group' => 'be_nl_options']);
+
+        return $options;
+    }
+
+
+    /**
+     * @return array
+     */
     public function getEpsOptions()
     {
         $epsOptions = $this->getProductOptions(
@@ -221,6 +245,16 @@ class ProductOptions extends OptionsAbstract implements ArrayInterface
         $priorityOptions = $this->getProductOptions(['group' => 'priority_options']);
 
         return $priorityOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBoxableOptions()
+    {
+        $boxablePackets = $this->getProductOptions(['group' => 'boxable_packets']);
+
+        return $boxablePackets;
     }
 
     /**

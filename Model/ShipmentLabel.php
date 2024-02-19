@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Model;
 
 use Magento\Framework\Data\Collection\AbstractDb;
@@ -42,10 +13,10 @@ use TIG\PostNL\Api\ShipmentRepositoryInterface;
 // @codingStandardsIgnoreFile
 class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface
 {
-    const FIELD_PARENT_ID = 'parent_id';
-    const FIELD_NUMBER = 'number';
-    const FIELD_LABEL = 'label';
-    const FIELD_TYPE = 'type';
+    const FIELD_PARENT_ID    = 'parent_id';
+    const FIELD_NUMBER       = 'number';
+    const FIELD_LABEL        = 'label';
+    const FIELD_TYPE         = 'type';
     const FIELD_PRODUCT_CODE = 'product_code';
     const FIELD_RETURN_LABEL = 'return_label';
 
@@ -55,17 +26,23 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface
     // @codingStandardsIgnoreLine
     protected $_eventPrefix = 'tig_postnl_shipment_label';
 
-    /**
-     * @var ShipmentRepositoryInterface
-     */
+    /** @var ShipmentRepositoryInterface  */
     private $shipmentRepository;
 
+    /**
+     * @param Context                     $context
+     * @param Registry                    $registry
+     * @param ShipmentRepositoryInterface $shipmentRepository
+     * @param AbstractResource|null       $resource
+     * @param AbstractDb|null             $resourceCollection
+     * @param array                       $data
+     */
     public function __construct(
-        Context $context,
-        Registry $registry,
+        Context                     $context,
+        Registry                    $registry,
         ShipmentRepositoryInterface $shipmentRepository,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        AbstractResource            $resource = null,
+        AbstractDb                  $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);

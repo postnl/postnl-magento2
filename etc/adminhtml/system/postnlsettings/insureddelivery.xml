@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+
+    <!-- Insured delivery -->
+    <group id="insured_delivery" translate="label comment" type="text" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Insured Delivery</label>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+        <field id="insured_tier" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Insured Amount Tier</label>
+            <comment>Select the total order value or one of the tiers as insured amount.</comment>
+            <source_model>TIG\PostNL\Config\Source\Settings\InsuredTiers</source_model>
+            <config_path>tig_postnl/insured_delivery/insured_tier</config_path>
+        </field>
+    </group>
+</include>

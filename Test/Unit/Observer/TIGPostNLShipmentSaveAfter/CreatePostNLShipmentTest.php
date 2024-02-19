@@ -1,43 +1,14 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Test\Unit\Observer\TIGPostNLShipmentSaveAfter;
 
+use PHPUnit\Framework\MockObject\Rule\InvokedAtMostCount;
 use TIG\PostNL\Model\Order;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Observer\TIGPostNLShipmentSaveAfter\CreatePostNLShipment;
 use TIG\PostNL\Test\TestCase;
-use \PHPUnit\Framework\MockObject\Matcher\InvokedAtMostCount;
 
-class SendTrackAndTraceEmailTest extends TestCase
+class CreatePostNLShipmentTest extends TestCase
 {
     protected $instanceClass = CreatePostNLShipment::class;
 
@@ -79,12 +50,7 @@ class SendTrackAndTraceEmailTest extends TestCase
      */
     public function testGetOrder($orderId, $shipmentId, $expectedCalls)
     {
-        $class = InvokedAtMostCount::class;
-        if (class_exists('PHPUnit_Framework_MockObject_Matcher_InvokedAtMostCount')) {
-            $class = '\PHPUnit_Framework_MockObject_Matcher_InvokedAtMostCount';
-        }
-
-        $invokedAtMost = new $class(1);
+        $invokedAtMost = new InvokedAtMostCount(1);
 
         $orderMock = $this->getFakeMock(Order::class)->setMethods(['getOrderId'])->getMock();
         $orderMock->expects($invokedAtMost)->method('getOrderId')->willReturn($orderId);

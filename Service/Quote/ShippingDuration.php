@@ -1,37 +1,9 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Service\Quote;
 
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use TIG\PostNL\Config\Provider\ShippingDuration as ShippingDurationProvider;
 use TIG\PostNL\Service\Wrapper\QuoteInterface as CheckoutSession;
 use Magento\Quote\Model\Quote as MagentoQuote;
 use TIG\PostNL\Config\Provider\Webshop;
@@ -99,10 +71,11 @@ class ShippingDuration
         $products = $this->getProductsFromQuote($quote);
 
         $shippingDurations = array_map(function (ProductInterface $product) {
-            if ($product->getData(static::ATTRIBUTE_CODE) === null) {
+            $attributeDelivery = $product->getData(static::ATTRIBUTE_CODE);
+            if ($attributeDelivery === null || $attributeDelivery === ShippingDurationProvider::CONFIGURATION_VALUE) {
                 return $this->webshopConfiguration->getShippingDuration();
             }
-            return $product->getData(static::ATTRIBUTE_CODE);
+            return $attributeDelivery;
         }, $products);
 
         $itemsDuration = $this->getItemsDuration($shippingDurations);
@@ -126,7 +99,10 @@ class ShippingDuration
         }
 
         $productCollection = $this->productCollectionFactory->create();
-        $productCollection = $productCollection->addFieldToFilter('entity_id', ['in => ?', $productIds]);
+        // @codingStandardsIgnoreStart
+        $productCollection = $productCollection->addFieldToFilter('entity_id', ['in' => $productIds])
+                                               ->addAttributeToSelect('postnl_shipping_duration');
+        // @codingStandardsIgnoreEnd
 
         return $productCollection->getItems();
     }

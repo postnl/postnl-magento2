@@ -1,0 +1,49 @@
+<?php
+
+namespace TIG\PostNL\Controller\Unit\Integration\Adminhtml\Shipment;
+
+use Magento\TestFramework\TestCase\AbstractBackendController;
+use TIG\PostNL\Model\Shipment;
+use TIG\PostNL\Model\ShipmentFactory;
+use TIG\PostNL\Model\ShipmentRepository;
+
+class CancelConfirmationTest extends AbstractBackendController
+{
+    /**
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function testResetsTheMainBarcode()
+    {
+        if (getenv('TRAVIS') !== false) {
+            $this->markTestSkipped('Fails on Travis');
+        }
+
+        /** @var ShipmentRepository $repository */
+        $repository = $this->_objectManager->get(ShipmentRepository::class);
+
+        /** @var \Magento\Sales\Model\Order\Shipment $shipment */
+        $shipment = require __DIR__ . '/../../../../Fixtures/Shipments/Shipment.php';
+
+        /** @var Shipment $model */
+        $model = $this->_objectManager->get(ShipmentFactory::class)->create();
+        $model->setMainBarcode('ABCDEFGHI1234567890');
+        $repository->save($model);
+
+        $this->_objectManager->get('Magento\Backend\Model\UrlInterface')->turnOffSecretKey();
+
+        $this->dispatch(
+            'backend/postnl/shipment/CancelConfirmation/postnl_shipment_id/' . $model->getId() . '/shipment_id/'
+            . $shipment->getId()
+        );
+
+        /**
+         * Reload the model from the database
+         *
+         * @var Shipment
+         */
+        $model = $repository->getById($model->getId());
+
+        $this->assertNull($model->getMainBarcode());
+    }
+}

@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\Provider\ProductOptions;
@@ -288,5 +259,52 @@ class ProductOptionsTest extends AbstractConfigurationTest
         $instance = $this->getInstance();
         $this->setXpath(ProductOptions::XPATH_ALTERNATIVE_DEFAULT_PACKAGE_DELIVERY_TYPE, 1000);
         $this->assertEquals('1000', $instance->getDefaultAlternativeGuaranteedPackageDeliveryType());
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultBeDomesticProductOptionProvider()
+    {
+        return [
+            'BE Standard, stated address only' => ['4960'],
+            'BE Standard' => ['4961'],
+            'BE Standard, stated address only, signature' => ['4962'],
+            'BE Standard, signature' => ['4963'],
+            'BE Standard, extra cover' => ['4965'],
+        ];
+    }
+
+    /**
+     * @dataProvider getDefaultBeDomesticProductOptionProvider
+     *
+     * @param $value
+     */
+    public function testGetDefaultBeDomesticProductOption($value) {
+        $instance = $this->getInstance();
+        $this->setXpath(ProductOptions::XPATH_DEFAULT_BE_DOMESTIC_OPTION, $value);
+        $this->assertEquals($value, $instance->getDefaultBeDomesticProductOption());
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultPakjeGemakBeDomesticProductOptionProvider()
+    {
+        return [
+            'BE Post Offce + Extra Cover' => ['4878'],
+            'BE Post Office' => ['4880'],
+        ];
+    }
+
+    /**
+     * @dataProvider getDefaultPakjeGemakBeDomesticProductOptionProvider
+     *
+     * @param $value
+     */
+    public function testGetDefaultPakjeGemakBeDomesticProductOption($value) {
+        $instance = $this->getInstance();
+        $this->setXpath(ProductOptions::XPATH_DEFAULT_PAKJEGEMAK_BE_DOMESTIC_PRODUCT_OPTION, $value);
+        $this->assertEquals($value, $instance->getDefaultPakjeGemakBeDomesticProductOption());
     }
 }

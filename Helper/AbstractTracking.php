@@ -1,39 +1,11 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Helper;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Store\Model\ScopeInterface;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
 use TIG\PostNL\Config\Provider\Webshop;
@@ -75,6 +47,10 @@ abstract class AbstractTracking extends AbstractHelper
      */
     //@codingStandardsIgnoreLine
     protected $shipmentBarcodeRepositoryInterface;
+    /**
+     * @var ReturnOptions
+     */
+    private $returnOptions;
 
     /**
      * @param Context                            $context
@@ -84,6 +60,7 @@ abstract class AbstractTracking extends AbstractHelper
      * @param Log                                $logging
      * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface
      * @param ScopeConfigInterface               $scopeConfig
+     * @param ReturnOptions                      $returnOptions
      */
     public function __construct(
         Context $context,
@@ -92,7 +69,8 @@ abstract class AbstractTracking extends AbstractHelper
         Webshop $webshop,
         Log $logging,
         ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepositoryInterface,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        ReturnOptions $returnOptions
     ) {
         $this->postNLShipmentRepository           = $postNLShipmentRepository;
         $this->searchCriteriaBuilder              = $searchCriteriaBuilder;
@@ -100,6 +78,7 @@ abstract class AbstractTracking extends AbstractHelper
         $this->logging                            = $logging;
         $this->shipmentBarcodeRepositoryInterface = $shipmentBarcodeRepositoryInterface;
         $this->scopeConfig                        = $scopeConfig;
+        $this->returnOptions                      = $returnOptions;
         parent::__construct($context);
     }
 
@@ -154,12 +133,22 @@ abstract class AbstractTracking extends AbstractHelper
     //@codingStandardsIgnoreLine
     protected function getTrackAndTraceUrl($trackingNumber, $type = 'C')
     {
+        $isReturn = false;
+        $returnCountry = 'NL';
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLshipmentByTracking($trackingNumber);
         /** @var \Magento\Sales\Api\Data\OrderAddressInterface $address */
         $address = $postNLShipment->getShippingAddress();
 
-        return $this->generateTrackAndTraceUrl($address, $trackingNumber, $type);
+        if ($postNLShipment->getReturnBarcode() === $trackingNumber) {
+            $isReturn = true;
+        }
+
+        if ($isReturn && $this->returnOptions->isReturnActive()) {
+            $returnCountry = 'BE';
+        }
+
+        return $this->generateTrackAndTraceUrl($address, $trackingNumber, $type, $isReturn, $returnCountry);
     }
 
     /**
@@ -172,7 +161,7 @@ abstract class AbstractTracking extends AbstractHelper
      * @return string
      */
     // @codingStandardsIgnoreLine
-    protected function generateTrackAndTraceUrl(OrderAddressInterface $address, $trackingNumber, $type)
+    protected function generateTrackAndTraceUrl(OrderAddressInterface $address, $trackingNumber, $type ,$isReturn, $returnCountry)
     {
         $order = $address->getOrder();
         $store = $order->getStore();
@@ -186,10 +175,15 @@ abstract class AbstractTracking extends AbstractHelper
         $params = [
             'B' => $trackingNumber,
             'D' => $address->getCountryId(),
-            'P' => str_replace(' ', '', $address->getPostcode()),
+            'P' => str_replace(' ', '', $address->getPostcode() ?? ''),
             'T' => $type,
             'L' => $language
         ];
+
+        if ($isReturn === true) {
+            $params['D'] = $returnCountry;
+            $params['P'] = $this->returnOptions->getZipcode();
+        }
 
         return $this->webshopConfig->getTrackAndTraceServiceUrl() . http_build_query($params);
     }

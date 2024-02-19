@@ -1,33 +1,3 @@
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 define([
     'uiComponent',
     'ko',
@@ -78,7 +48,10 @@ define([
             AddressFinder.subscribe(function (address) {
                 State.deliveryOptionsAreAvailable(false);
                 if (!window.checkoutConfig.shipping.postnl.shippingoptions_active ||
-                    window.checkoutConfig.shipping.postnl.pakjegemak_active == "0" ||
+                    (
+                        window.checkoutConfig.shipping.postnl.pakjegemak_active == "0" &&
+                        window.checkoutConfig.shipping.postnl.pakjegemak_be_active == "0"
+                    ) ||
                     !address
                 ) {
                     return;
@@ -108,16 +81,31 @@ define([
                     return;
                 }
 
+                if (typeof value.data !== 'undefined') {
+                    sessionStorage.setItem("postnlPickupOption", JSON.stringify(value.data.Name));
+                    sessionStorage.removeItem("postnlDeliveryOption");
+                }
+
                 State.currentSelectedShipmentType('pickup');
 
-                var dataObject = value.data,
+                if (typeof value.data === 'undefined') {
+                    var dataObject = value,
                     selectedFrom = '15:00:00',
-                    option = 'PG';
+                        option = 'PG';
+                }
+
+                if (typeof value.data !== 'undefined') {
+                    var dataObject = value.data,
+                        selectedFrom = '15:00:00',
+                        option = 'PG';
+                }
 
                 var fee = 0;
-                if (dataObject.hasFee()) {
+                if (dataObject !== 'undefined' && dataObject.hasFee()) {
                     fee = dataObject.getFee();
                 }
+
+
                 State.fee(fee);
                 State.pickupFee(fee);
 
@@ -176,14 +164,13 @@ define([
          */
         getPickupAddresses : function (address) {
             var self = this;
-
             // Avoid getting delivery days multiple times
             var addressAsString = JSON.stringify({'postcode': address.postcode, 'housenumber': address.housenumber});
             if (this.pickupAddresses() !== undefined && this.currentLocationAddress === addressAsString) {
                 return;
             }
 
-            this.currentLocationAddress = addressAsString;
+            this.currentLocationAddress      = addressAsString;
             State.pickupOptionsAreLoading(true);
 
             if (self.getLocationsRequest !== undefined) {
@@ -199,6 +186,7 @@ define([
                     Logger.error(data.error);
                     State.pickupOptionsAreAvailable(false);
                     State.currentOpenPane('delivery');
+                    this.selectFirstPickupOption();
                     return false;
                 }
 
@@ -206,6 +194,7 @@ define([
                     Logger.error(data.locations.error);
                     State.pickupOptionsAreAvailable(false);
                     State.currentOpenPane('delivery');
+                    this.selectFirstPickupOption();
                     return false;
                 }
 
@@ -223,6 +212,7 @@ define([
                 });
 
                 this.setPickupAddresses(data);
+                this.selectFirstPickupOption();
             }.bind(this)).fail(function (data) {
                 if (data.statusText !== 'avoidMulticall') {
                     State.pickupOptionsAreAvailable(false);
@@ -245,7 +235,34 @@ define([
                 return false;
             }
             return JSON.stringify(this.selectedOption().data) == JSON.stringify($data);
-        }
+        },
+
+        selectFirstPickupOption: function () {
+            // Only select the first option if there is none defined
+            if (this.selectedOption() !== undefined && this.selectedOption() != null) {
+                return;
+            }
+
+            var optionIndex     = '';
+            var pickupAddresses = this.pickupAddresses();
+
+            if (sessionStorage.postnlPickupOption) {
+                State.currentOpenPane('pickup');
+                var previousOption = JSON.parse(sessionStorage.postnlPickupOption)
+
+               $.each(pickupAddresses, function (index,value) {
+                  if (value.Name === previousOption) {
+                      optionIndex = index;
+                  }
+               });
+            }
+
+            if (optionIndex !== '') {
+                var result = {data: pickupAddresses[optionIndex], type: "PG"};
+                this.selectedOption(result);
+                $('.tig-postnl-pickup-radio:eq(' + optionIndex + ')').prop('checked',true);
+            }
+        },
     });
 });
 

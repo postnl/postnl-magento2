@@ -1,34 +1,3 @@
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
-
 /* =================================================================================================================== *
 *
 * SupportTab - Default styling
@@ -354,19 +323,6 @@
     padding: 2rem 1rem 2rem 1rem;
 }
 
-.postnl-section .admin__page-nav-link:after {
-    float:right;
-    width: 30px;
-    height: 30px;
-    margin-top:-7px;
-    margin-right: 3px;
-
-    background-image: url(../images/logo_tig.png) !important;
-    background-size: 30px !important;
-    background-repeat:no-repeat;
-    content: ' ';
-}
-
 /* Identity - Toolbar =============================================================================================== */
 
 .postnl-config-page .page-main-actions .page-actions .page-actions-inner:before {
@@ -384,17 +340,6 @@
     margin-left: 80px;
 }
 
-.postnl-config-page .page-main-actions .page-actions .page-actions-inner:after {
-    background-image: url(../images/logo_tig.png) !important;
-    background-repeat: no-repeat;
-    content: ' ';
-    width: 50px;
-    float: left;
-    height: 30px;
-    margin-top: 8px;
-    background-size: auto 29px;
-}
-
 /* Shipment Methods ================================================================================================= */
 
 #carriers_tig_postnl-head:after  {
@@ -409,14 +354,6 @@
     margin-top:-5px;
 }
 
-#carriers_tig_postnl-head {
-    background-image: url(../images/logo_tig.png);
-    background-repeat: no-repeat;
-    background-size: 35px;
-    background-position: calc(100% - 50px) 15px;
-}
-
-
 h4#carriers_tig_postnl_import_export_header {
     margin-left: 33%;
     color: #303030;
@@ -430,6 +367,7 @@ h4#carriers_tig_postnl_import_export_header {
 
 #tig_postnl_productoptions_supported_options option { white-space: normal; }
 #tig_postnl_productoptions_supported_options option:before { content: ''; }
+#tig_postnl_postnl_settings_delivery_settings_delivery_days_delivery_days_off { height: 220px; }
 
 /* TIG Admin 2 Columns col-set ====================================================================================== */
 
@@ -490,3 +428,7 @@ h4#carriers_tig_postnl_import_export_header {
     padding-bottom: 30px !important;
 }
 
+
+.international-address-validation-message .success, .international-address-validation-message .error {
+    display: none;
+}

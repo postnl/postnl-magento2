@@ -1,34 +1,4 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 
 namespace TIG\PostNL\Test\Integration\Model\Carrier;
 
@@ -58,7 +28,7 @@ class PostNLTest extends TestCase
      */
     private $calculator;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -75,6 +45,8 @@ class PostNLTest extends TestCase
         $this->request->setWebsiteId(1);
         $this->request->setPackageWeight(100);
         $this->request->setPackageValue(100);
+
+        $this->loadMatrixrates();
     }
 
     public function getInstance(array $args = [])
@@ -163,8 +135,6 @@ class PostNLTest extends TestCase
                 'only introduced in 2.1.3. That\'s why we skip this test for lower versions.');
         }
 
-        $this->loadMatrixrates();
-
         $this->config->setValue(
             'carriers/tig_postnl/rate_type',
             RateType::CARRIER_RATE_TYPE_MATRIX,
@@ -187,6 +157,8 @@ class PostNLTest extends TestCase
 
         $result = $instance->collectRates($this->request);
 
+        $this->assertNotFalse($result);
+
         $rate = $result->getCheapestRate();
         $this->assertEquals($expected, $rate->getData('price'));
     }
@@ -207,6 +179,7 @@ class PostNLTest extends TestCase
 
         $rates = $result->getAllRates();
         $rate = array_shift($rates);
+
         $this->assertEquals(123123, $rate->getData('price'));
         $this->assertEquals(123123, $rate->getData('cost'));
     }

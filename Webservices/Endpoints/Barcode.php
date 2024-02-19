@@ -1,36 +1,9 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use TIG\PostNL\Config\Provider\AddressConfiguration;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Exception as PostNLException;
 use TIG\PostNL\Service\Shipment\Barcode\Range as BarcodeRange;
 use TIG\PostNL\Webservices\AbstractEndpoint;
@@ -82,9 +55,14 @@ class Barcode extends AbstractEndpoint
     private $productCode;
 
     /**
-     * @var string
+     * @var ReturnOptions
      */
-    private $type = '';
+    private $returnOptions;
+
+    /**
+     * @var AddressConfiguration
+     */
+    private $addressConfiguration;
 
     /**
      * @param \TIG\PostNL\Webservices\Soap                   $soap
@@ -92,18 +70,24 @@ class Barcode extends AbstractEndpoint
      * @param \TIG\PostNL\Webservices\Api\Customer           $customer
      * @param \TIG\PostNL\Webservices\Api\Message            $message
      * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
+     * @param ReturnOptions                                  $returnOptions
+     * @param AddressConfiguration                           $addressConfiguration
      */
     public function __construct(
         Soap $soap,
         BarcodeRange $barcodeRange,
         Customer $customer,
         Message $message,
-        ShipmentData $shipmentData
+        ShipmentData $shipmentData,
+        ReturnOptions $returnOptions,
+        AddressConfiguration $addressConfiguration
     ) {
-        $this->soap = $soap;
-        $this->barcodeRange = $barcodeRange;
-        $this->customer = $customer;
-        $this->message = $message;
+        $this->soap                 = $soap;
+        $this->barcodeRange         = $barcodeRange;
+        $this->customer             = $customer;
+        $this->message              = $message;
+        $this->returnOptions        = $returnOptions;
+        $this->addressConfiguration = $addressConfiguration;
 
         parent::__construct(
             $shipmentData
@@ -135,6 +119,8 @@ class Barcode extends AbstractEndpoint
             ],
         ];
 
+        $parameters = $this->updateReturnParameters($parameters, $isReturnBarcode);
+
         return $this->soap->call($this, 'GenerateBarcode', $parameters);
     }
 
@@ -154,6 +140,8 @@ class Barcode extends AbstractEndpoint
     public function changeProductCode($productCode)
     {
         $this->productCode = $productCode;
+
+        return $this;
     }
 
     /**
@@ -180,5 +168,21 @@ class Barcode extends AbstractEndpoint
             // @codingStandardsIgnoreLine
             throw new PostNLException(__('Please provide the store id first by calling setStoreId'));
         }
+    }
+
+    /**
+     * @param $parameters
+     * @param $isReturnBarcode
+     * @param $sendersCountry
+     *
+     * @return mixed
+     */
+    public function updateReturnParameters($parameters, $isReturnBarcode)
+    {
+        if ($isReturnBarcode) {
+            $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCode();
+        }
+
+        return $parameters;
     }
 }

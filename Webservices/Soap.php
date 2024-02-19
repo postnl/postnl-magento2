@@ -1,41 +1,12 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Webservices;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Webapi\Exception as WebapiException;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
-use Zend\Soap\Client as ZendSoapClient;
+use Laminas\Soap\Client as SoapClient;
 
 class Soap
 {
@@ -60,7 +31,7 @@ class Soap
     private $exceptionHandler;
 
     /**
-     * @var ZendSoapClient
+     * @var SoapClient
      */
     private $soapClient;
 
@@ -78,7 +49,7 @@ class Soap
      * @param AccountConfiguration $accountConfiguration
      * @param DefaultConfiguration $defaultConfiguration
      * @param ExceptionHandler     $exceptionHandler
-     * @param ZendSoapClient       $soapClient
+     * @param SoapClient           $soapClient
      * @param Api\Log              $log
      *
      * @throws WebapiException
@@ -87,7 +58,7 @@ class Soap
         AccountConfiguration $accountConfiguration,
         DefaultConfiguration $defaultConfiguration,
         ExceptionHandler $exceptionHandler,
-        ZendSoapClient $soapClient,
+        SoapClient $soapClient,
         Api\Log $log
     ) {
         $this->defaultConfiguration = $defaultConfiguration;
@@ -96,7 +67,7 @@ class Soap
         $this->log = $log;
         $this->accountConfiguration = $accountConfiguration;
     }
-    
+
     /**
      * @param \TIG\PostNL\Webservices\AbstractEndpoint $endpoint
      * @param                                          $method
@@ -120,9 +91,9 @@ class Soap
             $this->log->request($soapClient);
         }
     }
-    
+
     /**
-     * @return \Zend\Soap\Client
+     * @return SoapClient
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getClient()
@@ -132,7 +103,7 @@ class Soap
 
         return $this->soapClient;
     }
-    
+
     /**
      * @return array
      * @throws \Exception
@@ -155,7 +126,7 @@ class Soap
             'stream_context' => $stream_context,
         ];
     }
-    
+
     /**
      * @throws \Magento\Framework\Webapi\Exception
      */
@@ -211,10 +182,10 @@ class Soap
     }
 
     /**
-     * @param null|int $storeId
+     * @param null|int $scopeId
      */
-    public function updateApiKey($storeId = null)
+    public function updateApiKey($scopeId = null, $websiteScope = false)
     {
-        $this->apiKey = $this->accountConfiguration->getApiKey($storeId);
+        $this->apiKey = $this->accountConfiguration->getApiKey($scopeId, $websiteScope);
     }
 }

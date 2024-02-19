@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Controller\DeliveryOptions;
 
 use Magento\Checkout\Model\Session;
@@ -37,7 +8,9 @@ use Magento\Framework\App\Response\Http;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Json\EncoderInterface;
 use Magento\Framework\Phrase;
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Controller\AbstractDeliveryOptions;
 use TIG\PostNL\Exception;
@@ -66,18 +39,25 @@ class Save extends AbstractDeliveryOptions
     private $productOptions;
 
     /**
-     * @param Context            $context
-     * @param OrderRepository    $orderRepository
-     * @param QuoteToRateRequest $quoteToRateRequest
-     * @param OrderParams        $orderParams
-     * @param Session            $checkoutSession
-     * @param PickupAddress      $pickupAddress
-     * @param ShippingDuration   $shippingDuration
-     * @param ProductOptions     $productOptions
-     * @param DeliveryDate       $deliveryEndpoint
+     * @var AddressConfiguration
+     */
+    private $addressConfiguration;
+
+    /**
+     * @param Context              $context
+     * @param OrderRepository      $orderRepository
+     * @param QuoteToRateRequest   $quoteToRateRequest
+     * @param OrderParams          $orderParams
+     * @param Session              $checkoutSession
+     * @param PickupAddress        $pickupAddress
+     * @param ShippingDuration     $shippingDuration
+     * @param ProductOptions       $productOptions
+     * @param DeliveryDate         $deliveryEndpoint
+     * @param AddressConfiguration $addressConfiguration
      */
     public function __construct(
         Context $context,
+        EncoderInterface $encoder,
         OrderRepository $orderRepository,
         QuoteToRateRequest $quoteToRateRequest,
         OrderParams $orderParams,
@@ -85,10 +65,12 @@ class Save extends AbstractDeliveryOptions
         PickupAddress $pickupAddress,
         ShippingDuration $shippingDuration,
         ProductOptions $productOptions,
-        DeliveryDate $deliveryEndpoint
+        DeliveryDate $deliveryEndpoint,
+        AddressConfiguration $addressConfiguration
     ) {
         parent::__construct(
             $context,
+            $encoder,
             $orderRepository,
             $checkoutSession,
             $quoteToRateRequest,
@@ -96,9 +78,10 @@ class Save extends AbstractDeliveryOptions
             $deliveryEndpoint
         );
 
-        $this->orderParams     = $orderParams;
-        $this->pickupAddress   = $pickupAddress;
-        $this->productOptions = $productOptions;
+        $this->orderParams          = $orderParams;
+        $this->pickupAddress        = $pickupAddress;
+        $this->productOptions       = $productOptions;
+        $this->addressConfiguration = $addressConfiguration;
     }
 
     /**
@@ -162,10 +145,17 @@ class Save extends AbstractDeliveryOptions
             $postnlOrder->setData($key, $value);
         }
 
+        $country     = $params['country'];
+        $shopCountry = $this->addressConfiguration->getCountry();
         $postnlOrder->setIsStatedAddressOnly(false);
         if (isset($params['stated_address_only']) && $params['stated_address_only']) {
             $postnlOrder->setIsStatedAddressOnly(true);
-            $postnlOrder->setProductCode($this->productOptions->getDefaultStatedAddressOnlyProductOption());
+            $postnlOrder->setProductCode($this->productOptions->getDefaultStatedAddressOnlyProductOption($country, $shopCountry));
+        }
+
+        $postnlOrder->setAcInformation(null);
+        if (isset($params['ac_information']) && $params['ac_information']) {
+            $postnlOrder->setAcInformation($params['ac_information']);
         }
 
         $this->orderRepository->save($postnlOrder);
@@ -184,7 +174,8 @@ class Save extends AbstractDeliveryOptions
         //If no delivery date and the type is pickup, fallback, EPS or GP then retrieve the PostNL delivery date
         if (!isset($params['date']) &&
             ($params['type'] === 'pickup' || $params['type'] === 'fallback'
-             || $params['type'] === 'EPS' || $params['type'] === 'GP')
+             || $params['type'] === 'EPS' || $params['type'] === 'GP'
+             || $params['type'] === 'Letterbox Package' || $params['type'] === 'Boxable Packet')
         ) {
             $params['date'] = $this->checkoutSession->getPostNLDeliveryDate();
         }
@@ -192,7 +183,7 @@ class Save extends AbstractDeliveryOptions
         $params['quote_id'] = $this->checkoutSession->getQuoteId();
 
         // Recalculate the delivery date if it's unknown for pickup
-        if (!$params['date'] && $params['type'] == 'pickup') {
+        if (!isset($params['date']) && $params['type'] == 'pickup') {
             $params['address']['country'] = $params['address']['Countrycode'];
             $params['address']['postcode'] = $params['address']['Zipcode'];
             $params['date'] = $this->getDeliveryDay($params['address']);

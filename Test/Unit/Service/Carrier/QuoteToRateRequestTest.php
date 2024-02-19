@@ -1,37 +1,8 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Test\Unit\Service\Carrier;
 
-use Magento\Checkout\Model\Session\Proxy;
+use Magento\Checkout\Model\Session\Proxy as Session;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Address\RateRequest;
@@ -67,7 +38,7 @@ class QuoteToRateRequestTest extends TestCase
         $quoteMock->expects($this->exactly(3))->method('getAllItems')->willReturn([]);
         $quoteMock->expects($this->once())->method('getSubtotal')->willReturn(10);
 
-        $checkoutSessionMock = $this->getFakeMock(Proxy::class)->setMethods(['getQuote'])->getMock();
+        $checkoutSessionMock = $this->getFakeMock(Session::class)->setMethods(['getQuote'])->getMock();
         $checkoutSessionMock->expects($this->once())->method('getQuote')->willReturn($quoteMock);
 
         $rateRequestMock = $this->getFakeMock(RateRequest::class)->setMethods(null)->getMock();

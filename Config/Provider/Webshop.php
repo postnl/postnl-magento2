@@ -1,34 +1,5 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Config\Provider;
 
 /**
@@ -59,7 +30,19 @@ class Webshop extends AbstractConfigProvider
     const XPATH_ADDRESS_CHECK_ENABLED         = 'tig_postnl/addresscheck/enable_postcodecheck';
     const XPATH_ADDRESS_CHECK_COMPATIBLE      = 'tig_postnl/addresscheck/checkout_compatible';
 
+    const XPATH_INTERNATIONAL_ADDRESS_ENABLED = 'tig_postnl/internationaladdressoptions/enable';
+
     const XPATH_POSTCODE_ADDRESS_CHECK_ENABLED = 'tig_postcode/configuration/modus';
+
+    const XPATH_CLEAR_OLD_SHIPMENT_LABELS = 'tig_postnl/labelandpackingslipoptions/enable_expired_label_cleanup';
+
+    /**
+     * @return bool
+     */
+    public function getIsInternationalAddressEnabled()
+    {
+        return $this->getConfigFromXpath(self::XPATH_INTERNATIONAL_ADDRESS_ENABLED);
+    }
 
     /**
      * @return bool
@@ -150,7 +133,7 @@ class Webshop extends AbstractConfigProvider
     /**
      * @return mixed
      */
-    public function getShipmentDays()
+    public function getShipmentDays(): string
     {
         return $this->getConfigFromXpath(self::XPATH_WEBSHOP_SHIPMENTDAYS);
     }
@@ -213,5 +196,15 @@ class Webshop extends AbstractConfigProvider
     public function getShowToolbar($storeId = null)
     {
         return $this->getConfigFromXpath(self::XPATH_SHOW_GRID_TOOLBAR, $storeId);
+    }
+
+    /**
+     * @param int|null $storeId
+     *
+     * @return bool
+     */
+    public function isExpiredLabelCleanupEnabled(int $storeId = null): bool
+    {
+        return (bool)$this->getConfigFromXpath(self::XPATH_CLEAR_OLD_SHIPMENT_LABELS, $storeId);
     }
 }

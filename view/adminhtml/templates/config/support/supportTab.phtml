@@ -1,35 +1,4 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
-
 /** @var \TIG\PostNL\Block\Adminhtml\Config\Support\SupportTab $block */
 ?>
 <div id="supporttab" class="tig-postnl-supporttab" data-mage-init='{"postnlConfig": true}'>
@@ -65,7 +34,8 @@
                     <li>
                         <a class="pdf"
                            target="_blank"
-                           href="https://docs.tig.nl/x/3oSC"
+                           rel="noopener"
+                           href="https://postnl.github.io/magento2/"
                            title="<?= $block->escapeHtml(
                                __('View the user manual. Currently the manual is only available in Dutch.')
 );?>">
@@ -77,13 +47,14 @@
                                 ); ?>"
                                 alt="<?= $block->escapeHtml(__('User manual'));?>"
                                 width="16"
-                                height="16"/>
+                                height="16">
                         </a>
                     </li>
                     <li>
                         <a
                             target="_blank"
-                            href="https://docs.tig.nl/x/3YSC"
+                            rel="noopener"
+                            href="https://github.com/tig-nl/postnl-magento2/releases"
                             title="<?= $block->escapeHtml(
                                 __('View the complete release notes of the extension. ' .
                                    'Currently the release notes is only available in Dutch.')
@@ -96,7 +67,7 @@
                                 ); ?>"
                                 alt="<?= $block->escapeHtml(__('Full Release Notes'));?>"
                                 width="16"
-                                height="16"/>
+                                height="16">
                         </a>
                     </li>
                 </ul>
@@ -150,11 +121,6 @@
         </div>
         <div class="collapse-content support-postnl-tig" data-role="content" style="display:none;">
             <ul>
-                <?php // @codingStandardsIgnoreStart ?>
-                <p><?= __('This extension is developed by Total Internet Group ' .
-                          '(<a href="https://tig.nl" target="_blank">TIG</a>) commissioned by PostNL.'); ?>
-                    <?php // @codingStandardsIgnoreEnd ?>
-
                 <h4><?= $block->escapeHtml(__('Extension basic configuration and account information'));?></h4>
                 <p><?= $block->escapeHtml(__('For questions related to your PostNL account and ' .
                                              'PostNL delivery options, please contact PostNL.'));?></p>
@@ -173,8 +139,7 @@
                         <span><?= $block->escapeHtml(__('Website:'));?></span>
                     </li>
                     <li class="last">
-                        <a href="<?= $block->escapeHtml($block->getForBusinessUrl());?>"
-                           target="_blank"><?= $block->escapeHtml(__('www.postnl.com'));?></a>
+                        <a href="https://www.postnl.com" target="_blank" rel="noopener"><?= $block->escapeHtml(__('www.postnl.com'));?></a>
                     </li>
                 </ul>
             </div>
@@ -187,12 +152,6 @@
                 </li>
             </ul>
             <div class="block_support">
-                <ul>
-                    <li class="first"><?= $block->escapeHtml(__('Frequently asked questions:'));?></li>
-                    <li class="last">
-                        <a target="_blank" href="https://confluence.tig.nl/"><?= $block->escapeHtml(__('FAQ'));?></a>
-                    </li>
-                </ul>
                 <ul>
                     <li class="first"><?= $block->escapeHtml(__('Support by email:'));?></li>
                     <li class="last">

@@ -1,33 +1,3 @@
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 define([
     'ko',
     'Magento_Checkout/js/model/quote',
@@ -65,8 +35,8 @@ define([
                 housenumber = shippingAddress.street[0].replace(/\D/g,'');
             }
 
-            address = {
-                street: shippingAddress.street[0],
+            var tempAddress = {
+                street: shippingAddress.street,
                 postcode: shippingAddress.postcode,
                 housenumber: housenumber,
                 firstname: shippingAddress.firstname,
@@ -75,8 +45,8 @@ define([
                 country: shippingAddress.countryId
             };
 
-            if (address.country && address.postcode && address.street !== undefined && address.street[0] && address.housenumber) {
-                return address;
+            if (tempAddress.country && tempAddress.postcode && tempAddress.street !== undefined && tempAddress.street[0] && tempAddress.housenumber) {
+                return tempAddress;
             }
         }
 
@@ -124,7 +94,12 @@ define([
             address.telephone = telephoneField.value();
         });
 
-        if (!address.country || !address.postcode || !address.street[0] || !address.housenumber) {
+        // Check filled in address
+        if (!address.country || !address.postcode || !address.street[0]) {
+            return false;
+        }
+        // Validate house number filled only for HL
+        if (!address.housenumber && address.country === 'NL') {
             return false;
         }
 

@@ -1,33 +1,3 @@
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 /* =================================================================================================================== *
 /*
 /* Do you want to customize the colors of the PostNL extension?
@@ -243,12 +213,13 @@
 .postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-radio,
 .postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-radio {
   position: absolute;
+  left: 15px;
 }
 .postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-time,
 .postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-time {
   padding-left: 30px;
   float: left;
-  width: 70%;
+  width: 50%;
 }
 .postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-fallback,
 .postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-fallback {
@@ -270,7 +241,7 @@
   .postnl-delivery-options .delivery .days .wrapper ul li .tig-postnl-delivery-option,
   .postnl-delivery-options .delivery .days .wrapper ol li .tig-postnl-delivery-option {
     padding-left: 0;
-    width: 30%;
+    width: 50%;
     text-align: right;
   }
 }

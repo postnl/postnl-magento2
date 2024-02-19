@@ -1,37 +1,10 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Config\Source;
 
 // @codingStandardsIgnoreFile
+use Laminas\Stdlib\ArrayUtils;
+
 abstract class OptionsAbstract
 {
     /**
@@ -45,9 +18,10 @@ abstract class OptionsAbstract
             'value'                => '3085',
             'label'                => 'Standard shipment',
             'isExtraCover'         => false,
-            'isEvening'            => false,
+            'isEvening'            => true,
             'isSunday'             => false,
             'isGuaranteedDelivery' => true,
+            'isToday'              => true,
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
         ],
@@ -57,6 +31,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => true,
             'isEvening'            => true,
             'isSunday'             => true,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
@@ -67,6 +42,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => true,
             'isEvening'            => true,
             'isSunday'             => true,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
@@ -77,6 +53,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
@@ -87,6 +64,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => false,
             'isEvening'            => true,
             'isSunday'             => true,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'isSameDay'            => true,
             'statedAddressOnly'    => true,
@@ -100,6 +78,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
@@ -110,6 +89,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => false,
             'isEvening'            => true,
             'isSunday'             => true,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'isSameDay'            => true,
             'statedAddressOnly'    => true,
@@ -123,6 +103,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => false,
             'isEvening'            => true,
             'isSunday'             => false,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
@@ -133,6 +114,7 @@ abstract class OptionsAbstract
             'isExtraCover'         => false,
             'isEvening'            => true,
             'isSunday'             => true,
+            'isToday'              => true,
             'isGuaranteedDelivery' => true,
             'isSameDay'            => true,
             'statedAddressOnly'    => true,
@@ -184,6 +166,78 @@ abstract class OptionsAbstract
             'pge'                  => true,
             'group'                => 'pakjegemak_options',
         ],
+        //Standard BE domestic options
+        '4960' => [
+            'value'                => '4960',
+            'label'                => 'Belgium Standard, deliver to stated address only',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'standard_be_options',
+        ],
+        '4961' => [
+            'value'                => '4961',
+            'label'                => 'Belgium standard',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'standard_be_options',
+        ],
+        '4962' => [
+            'value'                => '4962',
+            'label'                => 'Belgium standard + Deliver to stated address only + Signature on delivery',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'standard_be_options',
+        ],
+        '4963' => [
+            'value'                => '4963',
+            'label'                => 'Belgium standard + Signature on delivery',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'standard_be_options',
+        ],
+        '4965' => [
+            'value'                => '4965',
+            'label'                => 'Belgium standard + Extra Cover',
+            'isExtraCover'         => true,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'standard_be_options',
+        ],
+        // BE Domestic Pakjegemak Options
+        '4878' => [
+            'value'                => '4878',
+            'label'                => 'Belgium Post Office + Extra Cover',
+            'isExtraCover'         => true,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'pakjegemak_be_domestic_options',
+        ],
+        '4880' => [
+            'value'                => '4880',
+            'label'                => 'Belgium Post Office',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'BE',
+            'group'                => 'pakjegemak_be_domestic_options',
+        ],
         // BE Pakjegemak options
         '4936' => [
             'value'                => '4936',
@@ -196,11 +250,134 @@ abstract class OptionsAbstract
             'pge'                  => false,
             'group'                => 'pakjegemak_be_options',
         ],
+        // BENL options
+        '4890' => [
+            'value'                => '4890',
+            'label'                => 'Delivery to neighbour',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4891' => [
+            'value'                => '4891',
+            'label'                => 'Delivery to neighbour + Signature on delivery',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4893' => [
+            'value'                => '4893',
+            'label'                => 'Delivery to stated address',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'statedAddressOnly'    => true,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4894' => [
+            'value'                => '4894',
+            'label'                => 'Delivery to stated address + Signature on delivery',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'statedAddressOnly'    => true,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4895' => [
+            'value'                => '4895',
+            'label'                => 'Delivery to stated address + Signature on delivery + Age check 18+',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'statedAddressOnly'    => true,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4896' => [
+            'value'                => '4896',
+            'label'                => 'Delivery to stated address + Signature on deliver + Return when not home',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'statedAddressOnly'    => true,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4897' => [
+            'value'                => '4897',
+            'label'                => 'Delivery to stated address + Signature on delivery + Extra cover',
+            'isExtraCover'         => true,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'statedAddressOnly'    => true,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'be_nl_options',
+        ],
+        '4898' => [
+            'value'                => '4898',
+            'label'                => 'Delivery to PostNL location + Signature on pickup',
+            'isExtraCover'         => false,
+            'isExtraEarly'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'statedAddressOnly'    => false,
+            'countryLimitation'    => 'NL',
+            'countryOrigin'        => 'BE',
+            'pge'                  => false,
+            'group'                => 'pakjegemak_be_nl_options',
+        ],
         // EU Options
-        '4952' => [
-            'value'                => '4952',
-            'label'                => 'EU Pack Special Consumer',
+        '14907' => [
+            'value'                => '14907',
+            'label'                => 'Parcel EU to Consumer Track & Trace',
             'isDefault'            => 1,
+            'isEvening'            => false,
+            'isExtraCover'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'eu_options',
+        ],
+        '24907' => [
+            'value'                => '24907',
+            'label'                => 'Parcel EU to Consumer Track & Trace Insured',
+            'isEvening'            => false,
+            'isExtraCover'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'eu_options',
+        ],
+        '34907' => [
+            'value'                => '34907',
+            'label'                => 'Parcel EU to Consumer Track & Trace Insured Plus',
             'isEvening'            => false,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -259,10 +436,30 @@ abstract class OptionsAbstract
             'group'                => 'be_options',
         ],
         // GlobalPack
-        '4945' => [
-            'value'                => '4945',
-            'label'                => 'GlobalPack',
+        '14909' => [
+            'value'                => '14909',
+            'label'                => 'Parcel non-EU Track & Trace',
             'isDefault'            => 1,
+            'isEvening'            => false,
+            'isExtraCover'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'global_options',
+        ],
+        '24909' => [
+            'value'                => '24909',
+            'label'                => 'Parcel non-EU Track & Trace Insured',
+            'isEvening'            => false,
+            'isExtraCover'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'global_options',
+        ],
+        '34909' => [
+            'value'                => '34909',
+            'label'                => 'Parcel non-EU Track & Trace Insured Plus',
             'isEvening'            => false,
             'isExtraCover'         => false,
             'isSunday'             => false,
@@ -588,9 +785,9 @@ abstract class OptionsAbstract
             'group'                => 'cargo_options',
         ],
         // Package EPS B2B
-        '4940' => [
-            'value'                => '4940',
-            'label'                => 'EU Pack Special to business',
+        '44907' => [
+            'value'                => '44907',
+            'label'                => 'Parcel EU to Business Track & Trace',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -598,9 +795,9 @@ abstract class OptionsAbstract
             'countryLimitation'    => false,
             'group'                => 'eps_package_options',
         ],
-        '4983' => [
-            'value'                => '4983',
-            'label'                => 'EPS Business delivery EU (Mon/Sat)',
+        '54907' => [
+            'value'                => '54907',
+            'label'                => 'Parcel EU to Business Track & Trace Insured',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -608,9 +805,9 @@ abstract class OptionsAbstract
             'countryLimitation'    => false,
             'group'                => 'eps_package_options',
         ],
-        '4985' => [
-            'value'                => '4985',
-            'label'                => 'EPS Business delivery EU (Mon/Fri)',
+        '64907' => [
+            'value'                => '64907',
+            'label'                => 'Parcel EU to Business Track & Trace Insured Plus',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -619,9 +816,19 @@ abstract class OptionsAbstract
             'group'                => 'eps_package_options',
         ],
         // Priority Products
+        '6405' => [
+            'value'                => '6405',
+            'label'                => 'International Packet',
+            'isExtraCover'         => false,
+            'isEvening'            => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => false,
+            'group'                => 'priority_options',
+        ],
         '6350' => [
             'value'                => '6350',
-            'label'                => 'Priority Packet Tracked',
+            'label'                => 'International Packet Track & Trace',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -629,9 +836,9 @@ abstract class OptionsAbstract
             'countryLimitation'    => false,
             'group'                => 'priority_options',
         ],
-        '6550' => [
-            'value'                => '6550',
-            'label'                => 'Priority Packet Tracked Bulk',
+        '6906' => [
+            'value'                => '6906',
+            'label'                => 'International Packet Track & Trace Insured',
             'isExtraCover'         => false,
             'isEvening'            => false,
             'isSunday'             => false,
@@ -639,59 +846,68 @@ abstract class OptionsAbstract
             'countryLimitation'    => false,
             'group'                => 'priority_options',
         ],
-        '6940' => [
-            'value'                => '6940',
-            'label'                => 'Priority Packet Tracked Sorted',
+        '6440' => [
+            'value'                => '6440',
+            'label'                => 'International Boxable Packet',
             'isExtraCover'         => false,
-            'isEvening'            => false,
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => false,
-            'group'                => 'priority_options',
+            'group'                => 'boxable_packets',
         ],
-        '6942' => [
-            'value'                => '6942',
-            'label'                => 'Priority Packet Tracked Boxable Sorted',
+        '6972' => [
+            'value'                => '6972',
+            'label'                => 'International Boxable Packet Track & Trace',
             'isExtraCover'         => false,
-            'isEvening'            => false,
             'isSunday'             => false,
             'isGuaranteedDelivery' => false,
             'countryLimitation'    => false,
-            'group'                => 'priority_options',
+            'group'                => 'boxable_packets',
         ]
     ];
 
     protected $groups = [
 	    'standard_options'            => 'Domestic options',
+	    'standard_be_options'         => 'Domestic BE options',
+	    'be_nl_options'               => 'BE to NL options',
 	    'pakjegemak_options'          => 'Post Office options',
+	    'pakjegemak_be_nl_options'    => 'Post Office BE-NL options ',
 	    'pakjegemak_be_options'       => 'Post Office BE options',
+	    'pakjegemak_be_domestic_options' => 'Post Office BE options',
 	    'eu_options'                  => 'EU options',
 	    'be_options'                  => 'BE options',
-	    'global_options'              => 'Global options',
+	    'global_options'              => 'Non-EU options',
 	    'buspakje_options'            => 'Letter Box Parcel options',
 	    'extra_at_home_options'       => 'Extra@Home options',
 	    'id_check_options'            => 'ID Check options',
 	    'id_check_pakjegemak_options' => 'ID Check Post Office options',
 	    'cargo_options'               => 'Cargo options',
 	    'eps_package_options'         => 'Package options',
-	    'priority_options'            => 'Priority EPS',
-        'only_stated_address_options' => 'Only Stated Address options'
+	    'priority_options'            => 'International Packet',
+        'boxable_packets'             => 'International Boxable Packets',
+        'only_stated_address_options' => 'Only Stated Address options',
+
     ];
 
 	protected $groupToLabel = [
 		'standard_options'            => 'Domestic',
+		'standard_be_options'         => 'Domestic BE',
+		'be_nl_options'               => 'BE to NL',
 		'pakjegemak_options'          => 'Post Office',
+		'pakjegemak_be_nl_options'    => 'Post Office',
 		'pakjegemak_be_options'       => 'Post Office Belgium',
-		'eu_options'                  => 'EPS',
+		'pakjegemak_be_domestic_options' => 'Post Office Belgium',
+		'eu_options'                  => 'EU Parcel',
 		'be_options'                  => 'EPS BE',
-		'global_options'              => 'Global Pack',
+		'global_options'              => 'Non-EU Parcel',
 		'buspakje_options'            => 'Letter Box',
 		'extra_at_home_options'       => 'Extra@Home',
 		'id_check_options'            => 'ID Check',
 		'id_check_pakjegemak_options' => 'ID Check Post Office',
 		'cargo_options'               => 'Cargo',
 		'eps_package_options'         => 'Package',
-		'priority_options'            => 'Priority (EPS / Globalpack)',
+		'priority_options'            => 'International Packet',
+        'boxable_packets'             => 'International Boxable Packets',
         'only_stated_address_options' => 'Delivery to stated address only'
     ];
 
@@ -701,10 +917,14 @@ abstract class OptionsAbstract
         'ExtraAtHome'       => '',
         'Extra@Home'        => '',
         'Sunday'            => 'Sunday',
+        'Today'             => 'Today',
         'PG'                => '',
         'EPS'               => '',
         'GP'                => '',
         'Letterbox Package' => '',
+        'letterbox_package' => '',
+        'Boxable Packets'   => '',
+        'boxable_packets'   => '',
     ];
 
     /**
@@ -770,7 +990,7 @@ abstract class OptionsAbstract
     {
         $filterFlags = array_filter($flags, function ($value, $key) use ($option) {
             return isset($option[$key]) && $option[$key] == $value;
-        }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
+        }, ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
         if (count($filterFlags) == count($flags)) {
             $this->filteredOptions[$productCode] = $this->availableOptions[$productCode];
@@ -790,7 +1010,7 @@ abstract class OptionsAbstract
         foreach ($flags['groups'] as $flag) {
             $filterFlags = array_filter($flag, function ($value, $key) use ($option) {
                 return isset($option[$key]) && $option[$key] == $value;
-            }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_BOTH);
+            }, ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
             if (count($filterFlags) == count($flags)) {
                 $this->filteredOptions[$productCode] = $this->availableOptions[$productCode];
@@ -811,10 +1031,18 @@ abstract class OptionsAbstract
         $options = [];
         foreach ($this->filteredOptions as $key => $option) {
             // @codingStandardsIgnoreLine
-            $options[] = ['value' => $option['value'], 'label' => __($option['label'])];
+            $options[] = [
+                'value' => $option['value'],
+                'label' => '[' . $this->getBaseCodeFromKey($option['value']) . '] ' . __($option['label'])
+            ];
         }
 
         return $options;
+    }
+
+    public function getBaseCodeFromKey(string $key): string
+    {
+        return strlen($key) < 5 ? $key : substr($key, 1);
     }
 
     /**
@@ -828,7 +1056,7 @@ abstract class OptionsAbstract
         $optionsSorted = $this->getOptionsArrayForGrouped($options);
         $optionsGroupChecked = array_filter($groups, function ($key) use ($optionsSorted) {
             return array_key_exists($key, $optionsSorted);
-        }, \Zend\Stdlib\ArrayUtils::ARRAY_FILTER_USE_KEY);
+        }, ArrayUtils::ARRAY_FILTER_USE_KEY);
 
         foreach ($optionsGroupChecked as $group => $label) {
             $this->groupedOptions[] = [

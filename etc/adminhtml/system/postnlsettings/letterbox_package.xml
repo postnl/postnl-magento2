@@ -1,35 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
- *
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
+<?xml version="1.0" encoding="UTF-8"?>
+
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
 
     <!-- Letterbox Package -->
@@ -39,11 +9,12 @@
         <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
         <depends>
             <field id="shippingoptions_active">1</field>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
         </depends>
 
         <field id="letterbox_package_active" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Activate Letterbox Package</label>
-            <comment><![CDATA[Letterbox Package is used to ship small products. Please consult your PostNL account manager for more information about activating this <a href="https://docs.tig.nl/display/SDPOSTNL/PostNL+Magento+2+extensie+gebruikershandleiding#PostNLMagento2extensiegebruikershandleiding-3.1.5Brievenbuspakje" target="_blank" title="letterbox package">service</a> for your account.]]></comment>
+            <comment><![CDATA[Letterbox Package is used to ship small products. Please consult your PostNL account manager for more information about activating this <a href="https://postnl.github.io/magento2/?lang=nl#3_2_13" target="_blank" title="letterbox package">service</a> for your account.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>tig_postnl/letterbox_package/letterbox_package_active</config_path>
             <depends>

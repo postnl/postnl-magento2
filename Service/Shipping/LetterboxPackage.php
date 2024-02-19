@@ -1,37 +1,9 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
+
 namespace TIG\PostNL\Service\Shipping;
 
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Checkout\Controller\Cart\Add;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\ShipmentItemInterface;
@@ -39,34 +11,51 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Config\Provider\LetterBoxPackageConfiguration;
+use TIG\PostNL\Config\Provider\PepsConfiguration;
+use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Config\Provider\AddressConfiguration;
 
 // @codingStandardsIgnoreFile
 class LetterboxPackage
 {
-    public $totalVolume    = 0;
-    public $totalWeight    = 0;
-    public $hasMaximumQty  = true;
-    public $maximumWeight  = 2;
+    public $totalVolume                 = 0;
+    public $totalWeight                 = 0;
+    public $hasMaximumQty               = true;
+    public $maximumWeight               = 2;
 
     /**
      * @var ScopeConfigInterface
      */
-    private $scopeConfig;
+    protected $scopeConfig;
 
     /**
      * @var LetterBoxPackageConfiguration
      */
-    private $letterBoxPackageConfiguration;
+    protected $letterBoxPackageConfiguration;
+
+    /**
+     * @var PepsConfiguration
+     */
+    protected $pepsConfiguration;
+
+    /**
+     * @var AddressConfiguration
+     */
+    protected $addressConfiguration;
 
     /**
      * @var OrderRepositoryInterface
      */
-    private $orderRepository;
+    protected $orderRepository;
 
     /**
      * @var CollectionFactory
      */
-    private $productCollectionFactory;
+    protected $productCollectionFactory;
+    /**
+     * @var ShippingOptions
+     */
+    protected $shippingOptions;
 
     /**
      * LetterboxPackage constructor.
@@ -75,17 +64,26 @@ class LetterboxPackage
      * @param LetterBoxPackageConfiguration $letterBoxPackageConfiguration
      * @param OrderRepositoryInterface      $orderRepository
      * @param CollectionFactory             $productCollectionFactory
+     * @param ShippingOptions               $shippingOptions
+     * @param PepsConfiguration             $pepsConfiguration
+     * @param AddressConfiguration          $addressConfiguration
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         LetterBoxPackageConfiguration $letterBoxPackageConfiguration,
         OrderRepositoryInterface $orderRepository,
-        CollectionFactory $productCollectionFactory
+        CollectionFactory $productCollectionFactory,
+        ShippingOptions $shippingOptions,
+        PepsConfiguration $pepsConfiguration,
+        AddressConfiguration $addressConfiguration
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->letterBoxPackageConfiguration = $letterBoxPackageConfiguration;
         $this->orderRepository = $orderRepository;
         $this->productCollectionFactory = $productCollectionFactory;
+        $this->shippingOptions = $shippingOptions;
+        $this->pepsConfiguration = $pepsConfiguration;
+        $this->addressConfiguration = $addressConfiguration;
     }
 
     /**
@@ -96,9 +94,13 @@ class LetterboxPackage
      */
     public function isLetterboxPackage($products, $isPossibleLetterboxPackage)
     {
-        $this->totalVolume    = 0;
-        $this->totalWeight    = 0;
-        $this->hasMaximumQty  = true;
+        if ($this->shippingOptions->isLetterboxPackageActive() === false) {
+            return false;
+        }
+
+        $this->totalVolume                 = 0;
+        $this->totalWeight                 = 0;
+        $this->hasMaximumQty               = true;
 
         $calculationMode = $this->letterBoxPackageConfiguration->getLetterBoxPackageCalculationMode();
 
@@ -107,13 +109,17 @@ class LetterboxPackage
             return false;
         }
 
+        // When a configurable product is added Magento adds both the configurable and the simple product so we need to
+        // filter the configurable product out for the calculation.
+        $products = $this->filterOutConfigurableProducts($products);
+
         $productIds = [];
         foreach ($products as $product) {
-            $productIds[$product->getProductId()] = $product->getQty();
+            $productIds[$product->getProductId()] = $product->getTotalQty();
         }
 
         $productCollection = $this->productCollectionFactory->create();
-        $productCollection->addFieldToFilter('entity_id', ['in => ?', array_keys($productIds)]);
+        $productCollection->addFieldToFilter('entity_id', ['in' => array_keys($productIds)]);
         $productCollection->addAttributeToSelect('postnl_max_qty_letterbox');
 
         foreach ($productCollection->getItems() as $product) {
@@ -191,5 +197,21 @@ class LetterboxPackage
         }
 
         return false;
+    }
+
+    /**
+     * @param $products
+     *
+     * @return mixed
+     */
+    public function filterOutConfigurableProducts($products)
+    {
+        foreach($products as $key => $product) {
+            if ($product->getProductType() === 'configurable') {
+                unset($products[$key]);
+            }
+        }
+
+        return $products;
     }
 }

@@ -1,34 +1,4 @@
 <?php
-/**
- *
- *          ..::..
- *     ..::::::::::::..
- *   ::'''''':''::'''''::
- *   ::..  ..:  :  ....::
- *   ::::  :::  :  :   ::
- *   ::::  :::  :  ''' ::
- *   ::::..:::..::.....::
- *     ''::::::::::::''
- *          ''::''
- *
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Creative Commons License.
- * It is available through the world-wide-web at this URL:
- * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
- *
- * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
 
 namespace TIG\PostNL\Service\Import\Matrixrate;
 
@@ -42,6 +12,7 @@ class Row
         'pakjegemak',
         'extra@home',
         'letterbox_package',
+        'boxable_packets',
     ];
 
     /**
@@ -70,10 +41,10 @@ class Row
      */
     public function __construct(
         StoreInterface $store,
-        Factory $validation
+        Factory        $validation
     ) {
         $this->validation = $validation;
-        $this->store = $store;
+        $this->store      = $store;
     }
 
     /**
@@ -97,7 +68,7 @@ class Row
             return false;
         }
 
-        if (($country = $this->validation->validate('country', $line[0])) === false) {
+        if (($country = $this->validation->validate('country', $line[0], $website)) === false) {
             $this->errors[] = __('Invalid country "%1" in row #%2.', $line[0], $row);
             return false;
         }
@@ -138,7 +109,8 @@ class Row
         }
 
         if ($this->validation->validate('duplicate-import', $line) === false) {
-            $this->errors[] = __('Duplicate row #%1 (country "%2", region/state "%3", zip "%4", weight "%5", ' .
+            $this->errors[] = __(
+                'Duplicate row #%1 (country "%2", region/state "%3", zip "%4", weight "%5", ' .
                 'subtotal "%6", quantity "%7" and parcel type "%8").',
                 $row,
                 $line[0],
@@ -154,15 +126,15 @@ class Row
         }
 
         return [
-            'website_id' => $website,
+            'website_id'         => $website,
             'destiny_country_id' => $country,
-            'destiny_region_id' => $region,
-            'destiny_zip_code' => $line[2],
-            'weight' => $weight,
-            'subtotal' => $subtotal,
-            'quantity' => $quantity,
-            'parcel_type' => $parcelType,
-            'price' => $price,
+            'destiny_region_id'  => $region,
+            'destiny_zip_code'   => $line[2],
+            'weight'             => $weight,
+            'subtotal'           => $subtotal,
+            'quantity'           => $quantity,
+            'parcel_type'        => $parcelType,
+            'price'              => $price,
         ];
     }
     // @codingStandardsIgnoreEnd
