@@ -20,10 +20,7 @@ class Customer
         $this->customer = $customer;
     }
 
-    /**
-     * @return array
-     */
-    public function get()
+    public function get(): array
     {
         $customer                       = $this->customer->get();
         $customer['Address']            = $this->customer->address();
@@ -32,10 +29,7 @@ class Customer
         return $customer;
     }
 
-    /**
-     * @param $storeId
-     */
-    public function changeCustomerStoreId($storeId)
+    public function changeCustomerStoreId(int $storeId)
     {
         $this->customer->changeStoreId($storeId);
     }

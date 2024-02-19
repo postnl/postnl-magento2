@@ -3,34 +3,26 @@
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory as ShipmentCollectionFactory;
 use Magento\Ui\Component\MassAction\Filter;
-use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
-use TIG\PostNL\Controller\Adminhtml\Order\Email;
 use TIG\PostNL\Controller\Adminhtml\PdfDownload as GetPdf;
 use TIG\PostNL\Helper\Tracking\Track;
-use TIG\PostNL\Service\Api\ShipmentManagement;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 use TIG\PostNL\Service\Shipment\Packingslip\GetPackingslip;
+use TIG\PostNL\Service\Shipment\SmartReturnShipmentManager;
 
 class MassGetSmartReturnLabel extends LabelAbstract
 {
-    /** @var Email  */
-    private $email;
-
-    /** @var ShipmentManagement  */
-    private $shipmentManagement;
-
     /** @var ShipmentCollectionFactory  */
     private $collectionFactory;
 
     /** @var Filter  */
     private $filter;
 
-    /** @var ShipmentRepositoryInterface  */
-    private $shipmentRepository;
+    private SmartReturnShipmentManager $smartReturnShipmentManager;
 
     /**
      * GetSmartReturnLabel constructor.
@@ -41,11 +33,9 @@ class MassGetSmartReturnLabel extends LabelAbstract
      * @param Track                            $track
      * @param BarcodeHandler                   $barcodeHandler
      * @param GetPackingslip                   $getPackingSlip
-     * @param Email                            $email
-     * @param ShipmentManagement               $shipmentManagement
      * @param ShipmentCollectionFactory        $collectionFactory
      * @param Filter                           $filter
-     * @param ShipmentRepositoryInterface      $shipmentRepository
+     * @param SmartReturnShipmentManager $smartReturnShipmentManager
      */
     public function __construct(
         Context                          $context,
@@ -54,11 +44,9 @@ class MassGetSmartReturnLabel extends LabelAbstract
         Track                            $track,
         BarcodeHandler                   $barcodeHandler,
         GetPackingslip                   $getPackingSlip,
-        Email                            $email,
-        ShipmentManagement               $shipmentManagement,
         ShipmentCollectionFactory        $collectionFactory,
         Filter                           $filter,
-        ShipmentRepositoryInterface      $shipmentRepository
+        SmartReturnShipmentManager       $smartReturnShipmentManager
     ) {
         parent::__construct(
             $context,
@@ -69,11 +57,9 @@ class MassGetSmartReturnLabel extends LabelAbstract
             $track
         );
 
-        $this->email              = $email;
-        $this->shipmentManagement = $shipmentManagement;
         $this->collectionFactory  = $collectionFactory;
         $this->filter             = $filter;
-        $this->shipmentRepository = $shipmentRepository;
+        $this->smartReturnShipmentManager = $smartReturnShipmentManager;
     }
 
     /**
@@ -100,24 +86,14 @@ class MassGetSmartReturnLabel extends LabelAbstract
         }
 
         foreach ($magentoShipments as $magentoShipment) {
-            $this->shipmentManagement->generateLabel($magentoShipment->getId(), true);
-            $labels = $this->getLabels->get($magentoShipment->getId(), false);
-
-            if (empty($labels)) {
+            try {
+                $this->smartReturnShipmentManager->processShipmentLabel($magentoShipment);
+            } catch (LocalizedException $e) {
                 $this->messageManager->addErrorMessage(
-                // @codingStandardsIgnoreLine
-                    __('[POSTNL-0252] - There are no valid labels generated. Please check the logs for more information')
+                    $e->getMessage()
                 );
-
                 return $this->_redirect($this->_redirect->getRefererUrl());
             }
-
-            $this->email->sendEmail($magentoShipment, $labels);
-
-			// set smart return email sent true
-			$postnlShipment = $this->shipmentRepository->getByShipmentId($magentoShipment->getId());
-			$postnlShipment->setSmartReturnEmailSent(true);
-			$this->shipmentRepository->save($postnlShipment);
         }
 
         $this->messageManager->addSuccessMessage(__('Successfully send out all Smart Return labels'));
