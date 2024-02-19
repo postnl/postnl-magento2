@@ -5,6 +5,7 @@ namespace TIG\PostNL\Controller\Adminhtml\Order;
 use Laminas\Mime\Mime;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Translate\Inline\StateInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -111,13 +112,18 @@ class Email
      * @param $labels
      *
      * @return mixed
+     * @throws LocalizedException
      */
     public function getLabel($labels)
     {
+        $returnLabels = [];
         foreach ($labels as $key => $label) {
             if ($label->getProductCode() === '2285' && $label->getReturnLabel() !== '1') {
                 $returnLabels[$key] = $label->getEntityId();
             }
+        }
+        if (empty($returnLabels)) {
+            throw new LocalizedException(__('No return labels were generated.'));
         }
         $key = array_keys($returnLabels, max($returnLabels))[0];
 
