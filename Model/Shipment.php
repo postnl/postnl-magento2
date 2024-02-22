@@ -364,6 +364,9 @@ class Shipment extends AbstractModel implements ShipmentInterface
     public function getBarcode($currentShipmentNumber = 1)
     {
         if ($currentShipmentNumber == 1) {
+            if ($this->getIsSmartReturn()) {
+                return $this->getSmartReturnBarcode();
+            }
             return $this->getMainBarcode();
         }
 

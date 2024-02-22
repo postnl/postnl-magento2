@@ -70,7 +70,11 @@ class BarcodeHandler
         $this->storeId = $magentoShipment->getStoreId();
 
         $mainBarcode = $this->generate($shipment, $isReturn);
-        $shipment->setMainBarcode($mainBarcode);
+        if ($shipment->getIsSmartReturn()) {
+            $shipment->setSmartReturnBarcode($mainBarcode);
+        } else {
+            $shipment->setMainBarcode($mainBarcode);
+        }
         $this->shipmentRepository->save($shipment);
 
         if ($shipment->getParcelCount() > 1) {
@@ -202,6 +206,10 @@ class BarcodeHandler
 
         if ($isPrepared && $this->canAddReturnBarcodes($countryId, $shipment) && !$shipment->getReturnBarcodes()) {
             $this->resetPostNLShipment->resetShipment($magentoShipmentId);
+            return true;
+        }
+
+        if ($isPrepared && $shipment->getIsSmartReturn() && $shipment->getSmartReturnBarcode() === null) {
             return true;
         }
 
