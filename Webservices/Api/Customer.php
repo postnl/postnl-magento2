@@ -78,6 +78,23 @@ class Customer
         return $addressArray;
     }
 
+    public function returnAddress(): array
+    {
+        return [
+            'AddressType' => self::ADDRESS_TYPE_RECEIVER,
+            'FirstName'   => $this->addressConfiguration->getFirstname($this->storeId),
+            'Name'        => $this->addressConfiguration->getLastname($this->storeId),
+            'CompanyName' => $this->returnOptions->getCompany(),
+            'Street'      => $this->returnOptions->getStreetname(),
+            'HouseNr'     => $this->returnOptions->getHousenumber(),
+            'HouseNrExt'  => '',
+            'Zipcode'     => strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode())),
+            'City'        => $this->returnOptions->getCity(),
+            'Countrycode' => $this->addressConfiguration->getCountry(),
+            'Department'  => '',
+        ];
+    }
+
     public function changeStoreId(int $storeId): void
     {
         $this->storeId = $storeId;

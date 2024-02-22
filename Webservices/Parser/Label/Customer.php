@@ -33,4 +33,9 @@ class Customer
     {
         $this->customer->changeStoreId($storeId);
     }
+
+    public function getReturnAddress(): array
+    {
+        return $this->customer->returnAddress();
+    }
 }
