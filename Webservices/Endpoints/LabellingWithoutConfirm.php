@@ -82,7 +82,11 @@ class LabellingWithoutConfirm extends AbstractEndpoint
      */
     public function setParameters($shipment, $currentShipmentNumber = 1)
     {
+        $isSmartReturn = $shipment->getIsSmartReturn();
         $barcode = $shipment->getMainBarcode();
+        if ($isSmartReturn) {
+            $barcode = $shipment->getSmartReturnBarcode();
+        }
         $printerType = ['Printertype' => 'GraphicFile|PDF'];
         $message = $this->message->get($barcode, $printerType);
 
@@ -91,9 +95,9 @@ class LabellingWithoutConfirm extends AbstractEndpoint
             'Customer'  => $this->customer->get(),
             'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
-        if ($shipment->getIsSmartReturn()) {
+        if ($isSmartReturn) {
             // Reverse original address to be the receiver type
-            $this->requestParams['Customer']['Address']['AddressType'] = \TIG\PostNL\Webservices\Api\Customer::ADDRESS_TYPE_RECEIVER;
+            $this->requestParams['Customer']['Address'] = $this->customer->getReturnAddress();
         }
     }
 

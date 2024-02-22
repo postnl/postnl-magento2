@@ -30,6 +30,12 @@ class SmartReturnShipmentManager
     }
     public function processShipmentLabel(ShipmentInterface $magentoShipment): void
     {
+        $postnlShipment = $this->shipmentRepository->getByShipmentId($magentoShipment->getId());
+        // Check if smart returns could be created for this shipping
+        if (!$postnlShipment->getConfirmed() && !$postnlShipment->getMainBarcode()) {
+            throw new LocalizedException(__('Smart Returns are only active after main barcode is generated.'));
+        }
+
         $this->shipmentManagement->generateLabel($magentoShipment->getId(), true);
         $labels = $this->getLabels->get($magentoShipment->getId(), false);
 
@@ -40,6 +46,7 @@ class SmartReturnShipmentManager
         $this->email->sendEmail($magentoShipment, $labels);
 
         // set smart return email sent true
+        // Reload object, as current repository doesn't use caches
         $postnlShipment = $this->shipmentRepository->getByShipmentId($magentoShipment->getId());
         $postnlShipment->setSmartReturnEmailSent(true);
         $this->shipmentRepository->save($postnlShipment);
