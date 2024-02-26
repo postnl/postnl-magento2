@@ -261,8 +261,11 @@ abstract class GenerateAbstract
         $labelModel->setType($type ?: ShipmentLabelInterface::BARCODE_TYPE_LABEL);
         $labelModel->setProductCode($productCode);
 
-        if ($labelType == 'Return Label') {
+        if ($labelType === 'Return Label') {
             $labelModel->isReturnLabel(true);
+        }
+        if ($shipment->getIsSmartReturn()) {
+            $labelModel->isSmartReturnLabel(true);
         }
 
         return $labelModel;
