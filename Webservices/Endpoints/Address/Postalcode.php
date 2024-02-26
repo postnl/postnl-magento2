@@ -2,6 +2,7 @@
 
 namespace TIG\PostNL\Webservices\Endpoints\Address;
 
+use TIG\PostNL\Webservices\Endpoints\RestInterface;
 use TIG\PostNL\Webservices\Rest;
 
 class Postalcode implements RestInterface
@@ -11,25 +12,10 @@ class Postalcode implements RestInterface
      */
     private $restApi;
 
-    /**
-     * @var bool
-     */
-    private $useAddressUri = true;
-
-    /**
-     * @var string
-     */
-    private $endpoint = 'postalcodecheck/';
-
-    /**
-     * @var string
-     */
-    private $method = 'POST';
-
-    /**
-     * @var string
-     */
-    private $version = 'v1';
+    private string $method = 'POST';
+    private string $resource = 'shipment/checkout/';
+    private string $version = 'v1';
+    private string $endpoint = 'postalcodecheck/';
 
     /**
      * @var array
@@ -95,11 +81,8 @@ class Postalcode implements RestInterface
         return $this->version;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function useAddressUri()
+    public function getResource(): string
     {
-        return $this->useAddressUri;
+        return $this->resource;
     }
 }

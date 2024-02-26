@@ -83,7 +83,11 @@ class LabellingWithoutConfirm extends AbstractEndpoint
 
     public function setParameters(ShipmentInterface $shipment, int $currentShipmentNumber = 1): void
     {
+        $isSmartReturn = $shipment->getIsSmartReturn();
         $barcode = $shipment->getMainBarcode();
+        if ($isSmartReturn) {
+            $barcode = $shipment->getSmartReturnBarcode();
+        }
         $printerType = ['Printertype' => $this->printConfiguration->getPrinterType($shipment)];
         $message = $this->message->get($barcode, $printerType);
 
@@ -92,6 +96,10 @@ class LabellingWithoutConfirm extends AbstractEndpoint
             'Customer'  => $this->customer->get(),
             'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
+        if ($isSmartReturn) {
+            // Reverse original address to be the receiver type
+            $this->requestParams['Customer']['Address'] = $this->customer->getReturnAddress();
+        }
     }
 
     /**

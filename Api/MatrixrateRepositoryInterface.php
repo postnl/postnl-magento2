@@ -3,15 +3,13 @@
 namespace TIG\PostNL\Api;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Framework\Api\SearchResultsInterface;
 use TIG\PostNL\Api\Data\MatrixrateInterface;
-use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection;
 
 interface MatrixrateRepositoryInterface
 {
     /**
      * Save a Matrixrate rule
-     * @param MatrixrateInterface $matrixrate
+     * @param \TIG\PostNL\Api\Data\MatrixrateInterface $matrixrate
      * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      * @api
      *
@@ -21,14 +19,14 @@ interface MatrixrateRepositoryInterface
     /**
      * Retrieve a list of Matrixrates.
      * @api
-     * @param SearchCriteriaInterface $criteria
-     * @return \Magento\Framework\Api\SearchResultsInterface
+     * @param \Magento\Framework\Api\SearchCriteriaInterface $criteria
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterfaceSearchResultInterface
      */
     public function getList(SearchCriteriaInterface $criteria);
 
     /**
      * Delete a specific Matrixrate.
-     * @param MatrixrateInterface $matrixrate
+     * @param \TIG\PostNL\Api\Data\MatrixrateInterface $matrixrate
      * @return bool
      * @api
      *
@@ -45,19 +43,19 @@ interface MatrixrateRepositoryInterface
     /**
      * @param string $field
      * @param string $value
-     * @return MatrixrateInterface
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function getByFieldWithValue($field, $value);
 
     /**
      * @param int $websiteId
-     * @return Collection
+     * @return \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\Collection
      */
     public function getByWebsiteId($websiteId);
 
     /**
-     * @param $entityId
-     * @return MatrixrateInterface
+     * @param int $entityId
+     * @return \TIG\PostNL\Api\Data\MatrixrateInterface
      */
     public function getById($entityId);
 }

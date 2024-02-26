@@ -2,6 +2,7 @@
 
 namespace TIG\PostNL\Webservices\Endpoints;
 
+use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Exception as PostNLException;
@@ -95,7 +96,7 @@ class Barcode extends AbstractEndpoint
     }
 
     /**
-     * @param bool $shipment
+     * @param ShipmentInterface|null $shipment
      * @param bool $isReturnBarcode
      *
      * @return mixed|\stdClass
@@ -103,7 +104,7 @@ class Barcode extends AbstractEndpoint
      * @throws \Magento\Framework\Webapi\Exception
      * @throws \TIG\PostNL\Webservices\Api\Exception
      */
-    public function call($shipment = false, $isReturnBarcode = false)
+    public function call(ShipmentInterface $shipment = null, bool $isReturnBarcode = false)
     {
         $this->validateRequiredValues();
 

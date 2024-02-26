@@ -145,7 +145,7 @@ abstract class AbstractTracking extends AbstractHelper
         }
 
         if ($isReturn && $this->returnOptions->isReturnActive()) {
-            $returnCountry = 'BE';
+            $returnCountry = $this->returnOptions->getCountry();
         }
 
         return $this->generateTrackAndTraceUrl($address, $trackingNumber, $type, $isReturn, $returnCountry);

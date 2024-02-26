@@ -6,9 +6,11 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\Order\Address;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
+use TIG\PostNL\Config\Source\Settings\ReturnTypes;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Service\Shipment\Data as ShipmentData;
+use TIG\PostNL\Webservices\Api\Customer as CustomerApi;
 
 class Shipments
 {
@@ -60,7 +62,11 @@ class Shipments
         $shipment    = $postnlShipment->getShipment();
         $postnlOrder = $postnlShipment->getPostNLOrder();
         $contact   = $this->getContactData($shipment);
-        $address[] = $this->getAddressData($postnlShipment->getShippingAddress());
+        $addressType = CustomerApi::ADDRESS_TYPE_RECEIVER;
+        if ($postnlShipment->getIsSmartReturn()) {
+            $addressType = CustomerApi::ADDRESS_TYPE_SENDER;
+        }
+        $address[] = $this->getAddressData($postnlShipment->getShippingAddress(), $addressType);
         if ($postnlOrder->getIsPakjegemak()) {
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
@@ -82,7 +88,7 @@ class Shipments
         $shippingAddress = $shipment->getShippingAddress();
         $order           = $shipment->getOrder();
         $contact = [
-            'ContactType' => '01', // Receiver
+            'ContactType' => CustomerApi::ADDRESS_TYPE_RECEIVER,
             'Email'       => $order->getCustomerEmail(),
             'TelNr'       => $shippingAddress->getTelephone(),
         ];
@@ -97,7 +103,7 @@ class Shipments
      * @return array
      * @throws \TIG\PostNL\Exception
      */
-    private function getAddressData($shippingAddress, $addressType = '01')
+    private function getAddressData($shippingAddress, string $addressType = CustomerApi::ADDRESS_TYPE_RECEIVER)
     {
         $streetData   = $this->getStreetData($shippingAddress);
         $houseNr = isset($streetData['housenumber']) ? $streetData['housenumber'] : $shippingAddress->getStreetLine(2);
@@ -176,17 +182,29 @@ class Shipments
     private function getReturnAddressData()
     {
         $countryCode = $this->addressConfiguration->getCountry();
-        $freePostNumber  = ($countryCode == 'BE' ? 'getHouseNumber' : 'getFreepostNumber');
+        $returnType = $this->returnOptions->getReturnTo();
+        $zip = strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode()));
 
-        $data = [
-            'AddressType'      => '08',
-            'City'             => $this->returnOptions->getCity(),
-            'CompanyName'      => $this->returnOptions->getCompany(),
-            'Countrycode'      => $countryCode,
-            'HouseNr'          => $this->returnOptions->$freePostNumber(),
-            'Street'           => ($countryCode == 'BE' ? $this->returnOptions->getStreetName() : 'Antwoordnummer:'),
-            'Zipcode'          => strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode())),
-        ];
+        if ($returnType === ReturnTypes::TYPE_FREE_POST && $countryCode === 'NL') {
+            $data = [
+                'AddressType' => '08',
+                'City' => $this->returnOptions->getCity(),
+                'Countrycode' => $countryCode,
+                'HouseNr' => $this->returnOptions->getFreepostNumber(),
+                'Street' => 'Antwoordnummer',
+                'Zipcode' => $zip
+            ];
+        } else {
+            $data = [
+                'AddressType' => '08',
+                'City' => $this->returnOptions->getCity(),
+                'CompanyName' => $this->returnOptions->getCompany(),
+                'Countrycode' => $countryCode,
+                'HouseNr' => trim($this->returnOptions->getHouseNumber() . ' ' . $this->returnOptions->getHouseNumberEx()),
+                'Street' => $this->returnOptions->getStreetName(),
+                'Zipcode' => $zip,
+            ];
+        }
 
         return $data;
     }

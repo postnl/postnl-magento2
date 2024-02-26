@@ -59,14 +59,10 @@ class ResetPostNLShipment
     /**
      * Resets the confirmation date to null.
      *
-     * @param $shipmentId
-     *
      * @throws \Magento\Framework\Exception\CouldNotDeleteException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
-     *
-     * @return PostNLShipment
      */
-    public function resetShipment($shipmentId)
+    public function resetShipment(int $shipmentId, bool $fullReset = false): PostNLShipment
     {
         $postNLShipment = $this->shipmentRepository->getByShipmentId($shipmentId);
 
@@ -74,6 +70,15 @@ class ResetPostNLShipment
         $postNLShipment->setConfirmedAt(null);
         $postNLShipment->setConfirmed(false);
         $postNLShipment->setMainBarcode(null);
+        // If we need full flush of all data.
+        if ($fullReset) {
+            $postNLShipment->setShipmentCountry(null);
+            $postNLShipment->setReturnBarcode(null);
+            $postNLShipment->setIsSmartReturn(false)
+                ->setReturnBarcode(null)
+                ->setSmartReturnBarcode(null)
+                ->setSmartReturnEmailSent(false);
+        }
         $this->shipmentService->save($postNLShipment);
 
         $this->barcodeDeleteHandler->deleteAllByShipmentId($postNLShipment->getId());
