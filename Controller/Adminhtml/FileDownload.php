@@ -5,9 +5,11 @@ namespace TIG\PostNL\Controller\Adminhtml;
 use Magento\Backend\Model\UrlInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Raw;
 use Magento\Framework\Controller\Result\RawFactory;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Config\Provider\PrintSettingsConfiguration;
+use TIG\PostNL\Config\Source\Settings\LabelTypeSettings;
 use TIG\PostNL\Service\Framework\FileFactory;
 
 class FileDownload
@@ -70,7 +72,13 @@ class FileDownload
         );
     }
 
-    private function returnInFrames(array $labels, string $filename)
+    /**
+     * @param ShipmentLabelInterface[] $labels
+     * @param string $filename
+     *
+     * @return Raw
+     */
+    private function returnInFrames(array $labels, string $filename): Raw
     {
         $result = $this->rawFactory->create();
         $content = '<html><body>
@@ -105,23 +113,28 @@ class FileDownload
     {
         $content = '';
         $i = 0;
+        $pdfs = [];
+        $ids = [];
         foreach ($labels as $label) {
+            // Combine PDF Labels into one block
+            if ($label->getLabelFileFormat() === LabelTypeSettings::TYPE_PDF) {
+                $pdfs[] = $label;
+                $ids[] = $label->getEntityId();
+                continue;
+            }
             $url = $this->urlBuilder->getUrl('postnl/shipment/downloadLabel', [
                 'id' => $label->getEntityId(),
                 'name' => $filename
             ]);
-            $labelFilename = $this->getFileName($label, $filename);
-            $class = '';
-            if ($i === 0) {
-                $content .= '<iframe src="'.$url.'" width="10" height="10" style="visibility: hidden;"></iframe>';
-            } else {
-                $class = 'clickme';
-            }
-            $content .= '<p><a
-                id="label_'.$label->getEntityId().'" class="link '.$class.'"
-                title="Label file" download="'.$labelFilename.'" target="_blank"
-                href="'.$url.'">'.$labelFilename.'</a></p>';
-            $i++;
+            $content .= $this->generateLinkHtml($url, $label, $filename);
+        }
+        if (!empty($pdfs)) {
+            // Add PDFs to the list
+            $url = $this->urlBuilder->getUrl('postnl/shipment/downloadPdfLabels', [
+                'ids' => implode(',', $ids),
+                'name' => $filename
+            ]);
+            $content .= $this->generateLinkHtml($url, $pdfs[0], $filename);
         }
         return $content;
     }
@@ -129,11 +142,33 @@ class FileDownload
     private function getFileName(ShipmentLabelInterface $label, string $filename): string
     {
         $extension = strtolower($label->getLabelFileFormat());
-        $filename = $filename . '_';
+        $filename .= '_';
         if ($label->getReturnLabel() > 0) {
             $filename .= 'Return_';
         }
+        if ($label->getSmartReturnLabel()) {
+            $filename .= '_SR';
+        }
         $filename .= $label->getEntityId() . '.' . $extension;
         return $filename;
+    }
+
+    private function generateLinkHtml(string $url, ShipmentLabelInterface $label, string $filename): string
+    {
+        static $i = 0;
+        $labelFilename = $this->getFileName($label, $filename);
+        $content = '';
+        $class = '';
+        if ($i === 0) {
+            $content .= '<iframe src="'.$url.'" width="10" height="10" style="visibility: hidden;"></iframe>';
+        } else {
+            $class = 'clickme';
+        }
+        $content .= '<p><a
+                id="label_'.$label->getEntityId().'" class="link '.$class.'"
+                title="Label file" download="'.$labelFilename.'" target="_blank"
+                href="'.$url.'">'.$labelFilename.'</a></p>';
+        $i++;
+        return $content;
     }
 }

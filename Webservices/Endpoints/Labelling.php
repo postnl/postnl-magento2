@@ -92,7 +92,7 @@ class Labelling extends AbstractEndpoint
         $this->customer->changeCustomerStoreId($storeId);
 
         $barcode     = $shipment->getMainBarcode();
-        $printerType = ['Printertype' => $this->printConfiguration->getPrinterType()];
+        $printerType = ['Printertype' => $this->printConfiguration->getPrinterType($shipment)];
         $message     = $this->message->get($barcode, $printerType);
 
         $this->requestParams = [

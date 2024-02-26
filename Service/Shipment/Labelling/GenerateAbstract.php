@@ -7,6 +7,7 @@ use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Config\Provider\PrintSettingsConfiguration;
+use TIG\PostNL\Config\Source\Settings\LabelTypeSettings;
 use TIG\PostNL\Exception as PostNLException;
 use TIG\PostNL\Helper\Data;
 use TIG\PostNL\Logging\Log;
@@ -96,6 +97,9 @@ abstract class GenerateAbstract
         }
         // Get used label type
         $labelFormat = $this->helper->getLabelFileFormat();
+        if ($shipment->getIsSmartReturn()) {
+            $labelFormat = LabelTypeSettings::TYPE_PDF;
+        }
 
         $labelModels = $this->handleLabels($shipment, $responseShipments, $currentShipmentNumber, $labelFormat);
 
@@ -257,7 +261,7 @@ abstract class GenerateAbstract
     }
 
     /**
-     * @param ShipmentInterface|Shipment $shipment
+     * @param ShipmentInterface          $shipment
      * @param int                        $number
      * @param string                     $label
      * @param null|string                $type
@@ -267,8 +271,15 @@ abstract class GenerateAbstract
      *
      * @return ShipmentLabelInterface
      */
-    public function save(ShipmentInterface $shipment, $number, $label, $type, $productCode, $labelType, string $fileFormat = 'PDF')
-    {
+    public function save(
+        ShipmentInterface $shipment,
+        $number,
+        $label,
+        $type,
+        $productCode,
+        $labelType,
+        string $fileFormat = LabelTypeSettings::TYPE_PDF
+    ): ShipmentLabelInterface {
         /** @var ShipmentLabelInterface $labelModel */
         $labelModel = $this->shipmentLabelFactory->create();
         $labelModel->setParentId($shipment->getId());
