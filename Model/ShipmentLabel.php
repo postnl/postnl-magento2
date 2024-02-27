@@ -21,6 +21,8 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface
     const FIELD_PRODUCT_CODE = 'product_code';
     const FIELD_RETURN_LABEL = 'return_label';
 
+    const FIELD_SMART_RETURN = 'smart_return_label';
+
     /**
      * @var string
      */
@@ -192,5 +194,15 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface
     public function isReturnLabel($value)
     {
         return $this->setData(static::FIELD_RETURN_LABEL, $value);
+    }
+
+    public function isSmartReturnLabel(bool $value): ShipmentLabelInterface
+    {
+        return $this->setData(static::FIELD_SMART_RETURN, $value);
+    }
+
+    public function getSmartReturnLabel(): bool
+    {
+        return (bool)$this->getData(static::FIELD_SMART_RETURN);
     }
 }

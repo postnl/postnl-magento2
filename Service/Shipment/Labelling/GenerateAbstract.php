@@ -289,8 +289,11 @@ abstract class GenerateAbstract
         $labelModel->setProductCode($productCode);
         $labelModel->setLabelFileFormat($fileFormat);
 
-        if ($labelType == 'Return Label') {
+        if ($labelType === 'Return Label') {
             $labelModel->isReturnLabel(true);
+        }
+        if ($shipment->getIsSmartReturn()) {
+            $labelModel->isSmartReturnLabel(true);
         }
 
         return $labelModel;
