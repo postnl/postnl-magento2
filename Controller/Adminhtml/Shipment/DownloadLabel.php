@@ -16,7 +16,7 @@ class DownloadLabel extends Action
     public function __construct(
         Context $context,
         ShipmentLabelRepositoryInterface $shipmentLabelRepository,
-        FileDownload $fileDownload,
+        FileDownload $fileDownload
     ) {
         parent::__construct($context);
         $this->shipmentLabelRepository = $shipmentLabelRepository;

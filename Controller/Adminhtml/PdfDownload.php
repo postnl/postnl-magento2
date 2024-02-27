@@ -7,6 +7,7 @@ use Magento\Framework\Message\ManagerInterface;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Config\Provider\PrintSettingsConfiguration;
 use TIG\PostNL\Config\Source\Settings\LabelsizeSettings;
+use TIG\PostNL\Config\Source\Settings\LabelTypeSettings;
 use TIG\PostNL\Service\Framework\FileFactory;
 use TIG\PostNL\Service\Shipment\Label\Generate as LabelGenerate;
 use TIG\PostNL\Service\Shipment\Packingslip\Generate as PackingslipGenerate;
@@ -112,7 +113,7 @@ class PdfDownload
             $this->setSkippedLabelsResponse();
         }
 
-        if ($this->isPdfLabel($labels)) {
+        if ($this->isAllPdfLabels($labels)) {
             $pdfLabel = $this->generateLabel($labels, $filename);
 
             return $this->fileFactory->create(
@@ -205,13 +206,20 @@ class PdfDownload
      * @param ShipmentLabelInterface[] $labels
      * @return bool
      */
-    private function isPdfLabel(array $labels): bool
+    private function isAllPdfLabels(array $labels): bool
     {
+        $result = true;
         foreach ($labels as $label) {
-            if ($label->getLabelFileFormat() === 'PDF') {
-                return true;
+            if ($label->getLabelFileFormat() !== LabelTypeSettings::TYPE_PDF) {
+                $result = false;
+                break;
             }
         }
-        return false;
+        return $result;
+    }
+
+    public function emptyResponse()
+    {
+        return $this->fileDownload->emptyResponse();
     }
 }

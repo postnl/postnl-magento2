@@ -81,18 +81,14 @@ class LabellingWithoutConfirm extends AbstractEndpoint
         return $this->soap->call($this, 'GenerateLabelWithoutConfirm', $this->requestParams);
     }
 
-    /**
-     * @param Shipment|ShipmentInterface $shipment
-     * @param int                        $currentShipmentNumber
-     */
-    public function setParameters($shipment, $currentShipmentNumber = 1)
+    public function setParameters(ShipmentInterface $shipment, int $currentShipmentNumber = 1): void
     {
         $isSmartReturn = $shipment->getIsSmartReturn();
         $barcode = $shipment->getMainBarcode();
         if ($isSmartReturn) {
             $barcode = $shipment->getSmartReturnBarcode();
         }
-        $printerType = ['Printertype' => $this->printConfiguration->getPrinterType()];
+        $printerType = ['Printertype' => $this->printConfiguration->getPrinterType($shipment)];
         $message = $this->message->get($barcode, $printerType);
 
         $this->requestParams = [
