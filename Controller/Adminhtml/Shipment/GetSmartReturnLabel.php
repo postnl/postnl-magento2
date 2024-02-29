@@ -65,8 +65,8 @@ class GetSmartReturnLabel extends LabelAbstract
         }
 
         try {
-            $this->smartReturnShipmentManager->processShipmentLabel($magentoShipment, true);
-            $this->messageManager->addSuccessMessage(__('Successfully send out all Smart Return labels'));
+            $this->smartReturnShipmentManager->processShipmentLabel($magentoShipment);
+            $this->messageManager->addSuccessMessage(__('Successfully sent out all Smart Return labels'));
         } catch (Exception $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         }

@@ -96,7 +96,7 @@ class MassGetSmartReturnLabel extends LabelAbstract
             }
         }
 
-        $this->messageManager->addSuccessMessage(__('Successfully send out all Smart Return labels'));
+        $this->messageManager->addSuccessMessage(__('Successfully sent out all Smart Return labels'));
 
         return $this->_redirect($this->_redirect->getRefererUrl());
     }
