@@ -22,6 +22,7 @@
         <config_path>tig_postnl/returns/returns_to</config_path>
         <depends>
             <field id="returns_active">1</field>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
         </depends>
     </field>
 
@@ -31,6 +32,7 @@
         <depends>
             <field id="returns_active">1</field>
             <field id="label">1</field>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
         </depends>
         <config_path>tig_postnl/returns/labels_type</config_path>
     </field>
@@ -70,7 +72,6 @@
         <config_path>tig_postnl/returns/streetname</config_path>
         <depends>
             <field id="returns_active">1</field>
-            <field id="tig_postnl/generalconfiguration_shipping_address/country">BE</field>
         </depends>
         <validate>required-entry</validate>
     </field>
@@ -89,6 +90,7 @@
         <config_path>tig_postnl/returns/housenumber_ex</config_path>
         <depends>
             <field id="returns_active">1</field>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
         </depends>
     </field>
 
@@ -117,6 +119,7 @@
         <config_path>tig_postnl/returns/smart_returns_active</config_path>
         <depends>
             <field id="returns_active">1</field>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
         </depends>
     </field>
 
@@ -126,6 +129,7 @@
         <config_path>tig_postnl/returns/smart_returns_template</config_path>
         <depends>
             <field id="smart_returns_active">1</field>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
         </depends>
     </field>
 </include>
