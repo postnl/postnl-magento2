@@ -14,22 +14,22 @@ class CancelConfirmation extends Action
      * @var ShipmentService
      */
     private $shipmentService;
-    
+
     /**
      * @var ResetPostNLShipment
      */
     private $resetService;
-    
+
     /**
      * @var int
      */
     private $postNLShipmentId;
-    
+
     /**
      * @var int
      */
     private $shipmentId;
-    
+
     /**
      * @param Context         $context
      * @param ShipmentService $shipmentService
@@ -40,11 +40,11 @@ class CancelConfirmation extends Action
         ResetPostNLShipment $resetService
     ) {
         parent::__construct($context);
-        
+
         $this->shipmentService = $shipmentService;
         $this->resetService    = $resetService;
     }
-    
+
     /**
      * When you change the consignment confirmation,
      * all the associated elements in question will be removed from the shipment.
@@ -58,11 +58,11 @@ class CancelConfirmation extends Action
     {
         $this->postNLShipmentId = $this->getRequest()->getParam('postnl_shipment_id');
         $this->shipmentId       = $this->getRequest()->getParam('shipment_id');
-        
-        $this->resetService->resetShipment($this->shipmentId);
-        
+
+        $this->resetService->resetShipment($this->shipmentId, true);
+
         $resultDirect = $this->resultRedirectFactory->create();
-        
+
         return $resultDirect->setPath(
             'sales/shipment/view',
             ['shipment_id' => $this->shipmentId]

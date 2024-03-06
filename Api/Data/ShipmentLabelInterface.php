@@ -51,6 +51,17 @@ interface ShipmentLabelInterface
     /**
      * @return string
      */
+    public function getLabelFileFormat();
+
+    /**
+     * @param string $value
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function setLabelFileFormat(string $value);
+
+    /**
+     * @return string
+     */
     public function getType();
 
     /**
@@ -85,4 +96,15 @@ interface ShipmentLabelInterface
      * @return string
      */
     public function getReturnLabel();
+
+    /**
+     * @param boolean $value
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
+    public function isSmartReturnLabel(bool $value): self;
+
+    /**
+     * @return bool
+     */
+    public function getSmartReturnLabel(): bool;
 }

@@ -13,14 +13,11 @@ use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
 
 class GenerateLabel
 {
-    /** @var ShipmentRepositoryInterface */
-    private $shipmentRepository;
+    private ShipmentRepositoryInterface $shipmentRepository;
 
-    /** @var BarcodeHandler */
-    private $barcodeHandler;
+    private BarcodeHandler $barcodeHandler;
 
-    /** @var GetLabels */
-    private $getLabels;
+    private GetLabels $getLabels;
 
     public function __construct(
         ShipmentRepositoryInterface $shipmentRepository,
@@ -33,16 +30,19 @@ class GenerateLabel
     }
 
     /**
-     * @param $shipmentId
-     *
-     * @return bool
      * @throws InputException
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    public function generate($shipmentId, $smartReturns = false)
+    public function generate(int $shipmentId, $smartReturns = false): bool
     {
         $postnlShipment = $this->shipmentRepository->getByShipmentId($shipmentId);
+        // Check if smart returns could be created for this shipping
+        if ($smartReturns) {
+            if (!$postnlShipment->getConfirmed() && !$postnlShipment->getMainBarcode()) {
+                throw new LocalizedException(__('Smart Returns are only active after main barcode is generated.'));
+            }
+        }
 
         /** @var Shipment|ShipmentInterface $shipment */
         $shipment = $postnlShipment->getShipment();

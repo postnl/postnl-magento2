@@ -31,6 +31,8 @@
 
             <extra_settings_printer>
                 <label_size>A6</label_size>
+                <label_type>PDF</label_type>
+                <label_dpi>300</label_dpi>
                 <label_response>inline</label_response>
             </extra_settings_printer>
 
@@ -137,8 +139,6 @@
             <endpoints>
                 <api_base_url>https://api.postnl.nl/shipment/</api_base_url>
                 <test_api_base_url>https://api-sandbox.postnl.nl/shipment/</test_api_base_url>
-                <address_api_url>https://api.postnl.nl/shipment/checkout/</address_api_url>
-                <address_test_api_url>https://api-sandbox.postnl.nl/shipment/checkout/</address_test_api_url>
                 <api_url>https://api.postnl.nl/</api_url>
                 <test_api_url>https://api-sandbox.postnl.nl/</test_api_url>
             </endpoints>
@@ -166,6 +166,8 @@
             <returns>
                 <template>tig_postnl_postnl_settings_returns_template</template>
                 <returns_to>1</returns_to>
+                <label>1</label>
+                <labels_type>1</labels_type>
             </returns>
         </tig_postnl>
     </default>

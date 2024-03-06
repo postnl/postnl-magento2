@@ -2,9 +2,9 @@
 
 namespace TIG\PostNL\Config\Source\Globalpack;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class Direction implements ArrayInterface
+class Direction implements OptionSourceInterface
 {
     /**
      * @return array

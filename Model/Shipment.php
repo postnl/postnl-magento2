@@ -51,6 +51,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
     const FIELD_SMART_RETURN_BARCODE    = 'smart_return_barcode';
     const FIELD_SMART_RETURN_EMAIL_SENT = 'smart_return_email_sent';
     const FIELD_INSURED_TIER            = 'insured_tier';
+    const FIELD_RETURN_STATUS           = 'return_status';
 
     /**
      * @var string
@@ -363,6 +364,9 @@ class Shipment extends AbstractModel implements ShipmentInterface
     public function getBarcode($currentShipmentNumber = 1)
     {
         if ($currentShipmentNumber == 1) {
+            if ($this->getIsSmartReturn()) {
+                return $this->getSmartReturnBarcode();
+            }
             return $this->getMainBarcode();
         }
 
@@ -1030,5 +1034,15 @@ class Shipment extends AbstractModel implements ShipmentInterface
     public function getInsuredTier()
     {
         return $this->getData(static::FIELD_INSURED_TIER);
+    }
+
+    public function setReturnStatus(int $value): ShipmentInterface
+    {
+        return $this->setData(static::FIELD_RETURN_STATUS, $value);
+    }
+
+    public function getReturnStatus(): int
+    {
+        return (int)$this->getData(static::FIELD_RETURN_STATUS);
     }
 }

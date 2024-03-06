@@ -3,9 +3,9 @@
 namespace TIG\PostNL\Config\Source\Options;
 
 use TIG\PostNL\Config\Source\OptionsAbstract;
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class DeliverydaysOptions extends OptionsAbstract implements ArrayInterface
+class DeliverydaysOptions extends OptionsAbstract implements OptionSourceInterface
 {
     const MAXIMUM_DELIVERY_DAYS = 14;
 

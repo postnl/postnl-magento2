@@ -3,6 +3,7 @@
 namespace TIG\PostNL\Webservices\Endpoints;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Config\Provider\PrintSettingsConfiguration;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Message;
@@ -27,6 +28,7 @@ class LabellingWithoutConfirm extends AbstractEndpoint
      * @var Message
      */
     private $message;
+    private PrintSettingsConfiguration $printConfiguration;
 
     /**
      * @var string
@@ -50,16 +52,19 @@ class LabellingWithoutConfirm extends AbstractEndpoint
      * @param \TIG\PostNL\Webservices\Parser\Label\Customer  $customer
      * @param \TIG\PostNL\Webservices\Api\Message            $message
      * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
+     * @param PrintSettingsConfiguration                     $printConfiguration
      */
     public function __construct(
         Soap $soap,
         Customer $customer,
         Message $message,
-        ShipmentData $shipmentData
+        ShipmentData $shipmentData,
+        PrintSettingsConfiguration $printConfiguration
     ) {
         $this->soap = $soap;
         $this->customer = $customer;
         $this->message = $message;
+        $this->printConfiguration = $printConfiguration;
 
         parent::__construct(
             $shipmentData
@@ -76,14 +81,14 @@ class LabellingWithoutConfirm extends AbstractEndpoint
         return $this->soap->call($this, 'GenerateLabelWithoutConfirm', $this->requestParams);
     }
 
-    /**
-     * @param Shipment|ShipmentInterface $shipment
-     * @param int                        $currentShipmentNumber
-     */
-    public function setParameters($shipment, $currentShipmentNumber = 1)
+    public function setParameters(ShipmentInterface $shipment, int $currentShipmentNumber = 1): void
     {
+        $isSmartReturn = $shipment->getIsSmartReturn();
         $barcode = $shipment->getMainBarcode();
-        $printerType = ['Printertype' => 'GraphicFile|PDF'];
+        if ($isSmartReturn) {
+            $barcode = $shipment->getSmartReturnBarcode();
+        }
+        $printerType = ['Printertype' => $this->printConfiguration->getPrinterType($shipment)];
         $message = $this->message->get($barcode, $printerType);
 
         $this->requestParams = [
@@ -91,6 +96,10 @@ class LabellingWithoutConfirm extends AbstractEndpoint
             'Customer'  => $this->customer->get(),
             'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
+        if ($isSmartReturn) {
+            // Reverse original address to be the receiver type
+            $this->requestParams['Customer']['Address'] = $this->customer->getReturnAddress();
+        }
     }
 
     /**

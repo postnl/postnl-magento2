@@ -1,6 +1,6 @@
 <?php
 
-namespace TIG\PostNL\Webservices\Endpoints\Address;
+namespace TIG\PostNL\Webservices\Endpoints;
 
 interface RestInterface
 {
@@ -36,8 +36,5 @@ interface RestInterface
      */
     public function getVersion();
 
-    /**
-     * @return bool
-     */
-    public function useAddressUri();
+    public function getResource(): string;
 }

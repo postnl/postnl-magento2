@@ -25,10 +25,10 @@ class MassChangeMulticolli extends ToolbarAbstract
         Filter $filter,
         ShipmentRepositoryInterface $shipmentRepository,
         OrderRepositoryInterface $orderRepository,
-        OrderCollectionFactory $collectionFactory,
         ShipmentProductOptions $productOptions,
         ResetPostNLShipment $resetPostNLShipment,
-        ProductOptions $options
+        ProductOptions $options,
+        OrderCollectionFactory $collectionFactory,
     ) {
         parent::__construct(
             $context,

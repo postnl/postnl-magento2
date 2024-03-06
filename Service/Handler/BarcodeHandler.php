@@ -9,7 +9,6 @@ use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
-use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Model\ShipmentBarcode;
 use TIG\PostNL\Model\ShipmentBarcodeFactory;
 use TIG\PostNL\Service\Shipment\ResetPostNLShipment;
@@ -19,69 +18,23 @@ use TIG\PostNL\Webservices\Parser\Label\Shipments as LabelParser;
 // @codingStandardsIgnoreFile
 class BarcodeHandler
 {
-    /**
-     * @var BarcodeEndpoint
-     */
-    private $barcodeEndpoint;
+    private BarcodeEndpoint $barcodeEndpoint;
+    private ShipmentBarcodeFactory $shipmentBarcodeFactory;
+    private ShipmentRepositoryInterface $shipmentRepository;
+    private ProductOptionsConfiguration $productOptionsConfiguration;
+    private LabelParser $labelParser;
+    private ResetPostNLShipment $resetPostNLShipment;
+    private ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepository;
 
-    /**
-     * @var ShipmentBarcodeFactory
-     */
-    private $shipmentBarcodeFactory;
+    private string $countryId;
+    private ?int $storeId;
 
-    /**
-     * @var ShipmentRepositoryInterface
-     */
-    private $shipmentRepository;
-
-    /**
-     * @var ProductOptionsConfiguration
-     */
-    private $productOptionsConfiguration;
-
-    /**
-     * @var string
-     */
-    private $countryId;
-
-    /**
-     * $var null|int
-     */
-    private $storeId;
-
-    /** @var LabelParser  */
-    private $labelParser;
-
-    /** @var Shipment  */
-    private $shipment;
-
-    /**
-     * @var ResetPostNLShipment
-     */
-    private $resetPostNLShipment;
-
-    /**
-     * @var ShipmentBarcodeRepositoryInterface
-     */
-    private $shipmentBarcodeRepository;
-
-    /**
-     * @param BarcodeEndpoint                    $barcodeEndpoint
-     * @param ShipmentRepositoryInterface        $shipmentRepository
-     * @param ShipmentBarcodeFactory             $shipmentBarcodeFactory
-     * @param ProductOptionsConfiguration        $productOptionsConfiguration
-     * @param LabelParser                        $labelParser
-     * @param Shipment                           $shipment
-     * @param ResetPostNLShipment                $resetPostNLShipment
-     * @param ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepository
-     */
     public function __construct(
         BarcodeEndpoint $barcodeEndpoint,
         ShipmentRepositoryInterface $shipmentRepository,
         ShipmentBarcodeFactory $shipmentBarcodeFactory,
         ProductOptionsConfiguration $productOptionsConfiguration,
         LabelParser $labelParser,
-        Shipment $shipment,
         ResetPostNLShipment $resetPostNLShipment,
         ShipmentBarcodeRepositoryInterface $shipmentBarcodeRepository
     ) {
@@ -90,25 +43,23 @@ class BarcodeHandler
         $this->shipmentRepository = $shipmentRepository;
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->labelParser = $labelParser;
-        $this->shipment = $shipment;
         $this->resetPostNLShipment = $resetPostNLShipment;
         $this->shipmentBarcodeRepository = $shipmentBarcodeRepository;
     }
 
     /**
-     * @param $magentoShipmentId
-     * @param $countryId
-     *
      * @throws LocalizedException
      */
-    public function prepareShipment($magentoShipmentId, $countryId, $smartReturns)
+    public function prepareShipment(int $magentoShipmentId, string $countryId, bool $smartReturns)
     {
         $this->countryId = $countryId;
         $shipment = $this->shipmentRepository->getByShipmentId($magentoShipmentId);
+        $isReturn = false;
 
         if ($smartReturns) {
             $shipment->setIsSmartReturn(true);
             $this->shipmentRepository->save($shipment);
+            $isReturn = true;
         }
 
         if (!$this->validateShipment($magentoShipmentId, $countryId)) {
@@ -118,8 +69,12 @@ class BarcodeHandler
         $magentoShipment = $shipment->getShipment();
         $this->storeId = $magentoShipment->getStoreId();
 
-        $mainBarcode = $this->generate($shipment);
-        $shipment->setMainBarcode($mainBarcode);
+        $mainBarcode = $this->generate($shipment, $isReturn);
+        if ($shipment->getIsSmartReturn()) {
+            $shipment->setSmartReturnBarcode($mainBarcode);
+        } else {
+            $shipment->setMainBarcode($mainBarcode);
+        }
         $this->shipmentRepository->save($shipment);
 
         if ($shipment->getParcelCount() > 1) {
@@ -140,7 +95,7 @@ class BarcodeHandler
      * @throws \TIG\PostNL\Exception
      * @throws \TIG\PostNL\Webservices\Api\Exception
      */
-    public function addBarcodes(ShipmentInterface $shipment, $mainBarcode)
+    public function addBarcodes(ShipmentInterface $shipment, $mainBarcode): void
     {
         /**
          * The first item is the main barcode
@@ -154,14 +109,12 @@ class BarcodeHandler
     }
 
     /**
-     * @param ShipmentInterface $shipment
-     *
      * @throws LocalizedException
      * @throws \Magento\Framework\Webapi\Exception
      * @throws \TIG\PostNL\Exception
      * @throws \TIG\PostNL\Webservices\Api\Exception
      */
-    public function addReturnBarcodes(ShipmentInterface $shipment)
+    public function addReturnBarcodes(ShipmentInterface $shipment): void
     {
         $isReturnBarcode = true;
         $parcelCount = $shipment->getParcelCount();
@@ -182,16 +135,12 @@ class BarcodeHandler
     /**
      * CIF call to generate a new barcode
      *
-     * @param ShipmentInterface $shipment
-     * @param bool              $isReturnBarcode
-     *
-     * @return string
      * @throws LocalizedException
      * @throws \Magento\Framework\Webapi\Exception
      * @throws \TIG\PostNL\Exception
      * @throws \TIG\PostNL\Webservices\Api\Exception
      */
-    private function generate(ShipmentInterface $shipment, $isReturnBarcode = false)
+    private function generate(ShipmentInterface $shipment, bool $isReturnBarcode = false): string
     {
         $magentoShipment = $shipment->getShipment();
 
@@ -215,7 +164,7 @@ class BarcodeHandler
      * @param      $barcode
      * @param bool $isReturnBarcode
      */
-    private function createBarcode($shipmentId, $count, $barcode, $isReturnBarcode = false)
+    private function createBarcode($shipmentId, $count, $barcode, bool $isReturnBarcode = false)
     {
         /** @var \TIG\PostNL\Model\ShipmentBarcode $barcodeModel */
         $barcodeModel = $this->shipmentBarcodeFactory->create();
@@ -232,13 +181,7 @@ class BarcodeHandler
         $this->shipmentBarcodeRepository->save($barcodeModel);
     }
 
-    /**
-     * @param                   $countryId
-     * @param ShipmentInterface $shipment
-     *
-     * @return bool
-     */
-    public function canAddReturnBarcodes($countryId, ShipmentInterface $shipment)
+    public function canAddReturnBarcodes(string $countryId, ShipmentInterface $shipment): bool
     {
         if (
             (!in_array($countryId, ['NL', 'BE']) ||
@@ -253,20 +196,20 @@ class BarcodeHandler
     }
 
     /**
-     * @param $magentoShipmentId
-     * @param $countryId
-     *
-     * @return bool
      * @throws CouldNotDeleteException
      * @throws CouldNotSaveException
      */
-    private function validateShipment($magentoShipmentId, $countryId)
+    private function validateShipment(int $magentoShipmentId, string $countryId): bool
     {
         $shipment = $this->shipmentRepository->getByShipmentId($magentoShipmentId);
         $isPrepared = (!$shipment || $shipment->getMainBarcode() !== null || $shipment->getConfirmedAt() !== null);
 
         if ($isPrepared && $this->canAddReturnBarcodes($countryId, $shipment) && !$shipment->getReturnBarcodes()) {
             $this->resetPostNLShipment->resetShipment($magentoShipmentId);
+            return true;
+        }
+
+        if ($isPrepared && $shipment->getIsSmartReturn() && $shipment->getSmartReturnBarcode() === null) {
             return true;
         }
 

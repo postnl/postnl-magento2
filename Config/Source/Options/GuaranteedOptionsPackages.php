@@ -2,9 +2,9 @@
 
 namespace TIG\PostNL\Config\Source\Options;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class GuaranteedOptionsPackages implements ArrayInterface
+class GuaranteedOptionsPackages implements OptionSourceInterface
 {
     /**
      * @see \TIG\PostNL\Service\Shipment\GuaranteedOptions
