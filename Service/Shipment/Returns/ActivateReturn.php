@@ -42,6 +42,8 @@ class ActivateReturn
         if ($response && $response['successFulBarcodes']) {
             $shipment->setReturnStatus($shipment::RETURN_STATUS_RELEASED);
             $this->shipmentRepository->save($shipment);
+            return true;
         }
+        return false;
     }
 }

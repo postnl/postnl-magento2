@@ -58,7 +58,7 @@ class Rest
     {
         $this->httpClient->resetParameters();
         $this->addUri($endpoint);
-        $this->addApiKeyToHeaders();
+        $this->addHeaders();
         $this->addParameters($endpoint);
 
         try {
@@ -77,10 +77,11 @@ class Rest
     /**
      * Includes the API key into the headers.
      */
-    private function addApiKeyToHeaders()
+    private function addHeaders()
     {
         $this->httpClient->setHeaders([
             'apikey: ' . $this->getApiKey(),
+            'SourceSystem: 66',
             'Content-Type: application/json'
         ]);
     }
