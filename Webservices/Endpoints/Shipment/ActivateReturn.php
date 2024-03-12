@@ -23,7 +23,7 @@ class ActivateReturn implements RestInterface
 
     public function call()
     {
-        $this->restApi->getRequest($this);
+        return $this->restApi->callRequest($this);
     }
 
     public function getEndpoint(): string
