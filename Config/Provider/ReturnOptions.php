@@ -2,6 +2,8 @@
 
 namespace TIG\PostNL\Config\Provider;
 
+use TIG\PostNL\Config\Source\General\Country;
+
 /**
  * @codingStandardsIgnoreFile
  */
@@ -9,6 +11,7 @@ class ReturnOptions extends AbstractConfigProvider
 {
     const XPATH_RETURN_IS_ACTIVE            = 'tig_postnl/returns/returns_active';
     const XPATH_RETURN_LABEL                = 'tig_postnl/returns/label';
+    const XPATH_RETURN_LABEL_BE             = 'tig_postnl/returns/label_be';
     const XPATH_RETURN_TO                   = 'tig_postnl/returns/returns_to';
     const XPATH_RETURN_LABEL_TYPE           = 'tig_postnl/returns/labels_type';
     const XPATH_RETURN_CITY                 = 'tig_postnl/returns/city';
@@ -35,7 +38,8 @@ class ReturnOptions extends AbstractConfigProvider
      */
     public function isSmartReturnActive()
     {
-        return (bool)$this->getConfigFromXpath(self::XPATH_SMART_RETURN_IS_ACTIVE);
+        return (bool)$this->getConfigFromXpath(self::XPATH_SMART_RETURN_IS_ACTIVE)
+            && $this->getGeneralCountry() === Country::COUNTRY_NL;
     }
 
     /**
@@ -51,7 +55,11 @@ class ReturnOptions extends AbstractConfigProvider
      */
     public function getReturnLabel(): int
     {
-        return (int)$this->getConfigFromXpath(self::XPATH_RETURN_LABEL);
+        if ($this->getGeneralCountry() === Country::COUNTRY_NL) {
+            return (int)$this->getConfigFromXpath(self::XPATH_RETURN_LABEL);
+        }
+        // BE has less options available right now, so uses separate configuration
+        return (int)$this->getConfigFromXpath(self::XPATH_RETURN_LABEL_BE);
     }
 
     /**
@@ -144,5 +152,10 @@ class ReturnOptions extends AbstractConfigProvider
             return 'tig_postnl_postnl_settings_returns_template';
         }
         return $this->getConfigFromXpath(self::XPATH_SMART_RETURN_EMAIL_TEMPLATE);
+    }
+
+    public function getGeneralCountry(): string
+    {
+        return $this->getConfigFromXpath(AddressConfiguration::XPATH_GENERAL_COUNTRY);
     }
 }

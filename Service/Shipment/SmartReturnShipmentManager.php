@@ -6,6 +6,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
+use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Controller\Adminhtml\Order\Email;
 use TIG\PostNL\Service\Api\ShipmentManagement;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
@@ -17,22 +18,28 @@ class SmartReturnShipmentManager
     private ShipmentRepositoryInterface $shipmentRepository;
     private Email $email;
     private ShipmentLabelRepositoryInterface $shipmentLabelRepository;
+    private ReturnOptions $returnOptions;
 
     public function __construct(
         ShipmentManagement $shipmentManagement,
         GetLabels $getLabels,
         ShipmentRepositoryInterface $shipmentRepository,
         ShipmentLabelRepositoryInterface $shipmentLabelRepository,
-        Email $email
+        Email $email,
+        ReturnOptions $returnOptions
     ) {
         $this->shipmentManagement = $shipmentManagement;
         $this->getLabels = $getLabels;
         $this->shipmentRepository = $shipmentRepository;
         $this->email = $email;
         $this->shipmentLabelRepository = $shipmentLabelRepository;
+        $this->returnOptions = $returnOptions;
     }
     public function processShipmentLabel(ShipmentInterface $magentoShipment): void
     {
+        if (!$this->returnOptions->isSmartReturnActive()) {
+            throw new LocalizedException(__('Smart Returns are disabled.'));
+        }
         $postnlShipment = $this->shipmentRepository->getByShipmentId($magentoShipment->getId());
         // Check if smart returns could be created for this shipping
         if (!$postnlShipment->getConfirmed() && !$postnlShipment->getMainBarcode()) {

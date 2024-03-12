@@ -221,8 +221,9 @@ class Data
                 'Characteristic' => '191',
                 'Option'         => '001'
             ];
+            $shipmentData['ReturnBarcode'] = $shipmentData['Barcode'];
         }
-        if ($this->returnOptions->getReturnLabelType() === LabelReturnSettings::LABEL_RETURN_ORDER) {
+        if ($countryId === 'NL' && $this->returnOptions->getReturnLabelType() === LabelReturnSettings::LABEL_RETURN_ORDER) {
             // Mark shipment as blocked.
             $shipment->setReturnStatus($shipment::RETURN_STATUS_BLOCKED);
             $productOptions[] = [
