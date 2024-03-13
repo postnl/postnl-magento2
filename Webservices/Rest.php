@@ -8,6 +8,7 @@ use Laminas\Http\Request;
 use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
+use TIG\PostNL\Webservices\Api\RestLog;
 use TIG\PostNL\Webservices\Endpoints\RestInterface;
 
 class Rest
@@ -31,6 +32,7 @@ class Rest
      * @var DefaultConfiguration
      */
     private $defaultConfiguration;
+    private RestLog $log;
 
     /**
      * Rest constructor.
@@ -42,11 +44,13 @@ class Rest
     public function __construct(
         HttpClient $httpClient,
         AccountConfiguration $accountConfiguration,
-        DefaultConfiguration $defaultConfiguration
+        DefaultConfiguration $defaultConfiguration,
+        RestLog $log
     ) {
         $this->httpClient           = $httpClient;
         $this->accountConfiguration = $accountConfiguration;
         $this->defaultConfiguration = $defaultConfiguration;
+        $this->log = $log;
     }
 
     /**
@@ -58,29 +62,48 @@ class Rest
     {
         $this->httpClient->resetParameters();
         $this->addUri($endpoint);
-        $this->addApiKeyToHeaders();
+        $this->addHeaders();
         $this->addParameters($endpoint);
 
         try {
-            $response = $this->httpClient->send();
-            $response = $response->getBody();
+            $responseBody = $this->httpClient->send();
+            $response = $responseBody->getBody();
         } catch (RuntimeException $exception) {
             $response = [
                 'status' => 'error',
                 'error'  => __('Address API exception : %1', $exception->getCode())
             ];
+        } finally {
+            $this->log->request($endpoint, $responseBody);
         }
 
         return $response;
     }
 
+    public function callRequest(RestInterface $endpoint): array
+    {
+        $result = $this->getRequest($endpoint);
+        if (is_string($result)) {
+            try {
+                $result = \json_decode($result, true, 50, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $result = [
+                    'status' => 'error',
+                    'error'  => __('Unable to extract API response.')
+                ];
+            }
+        }
+        return $result;
+    }
+
     /**
      * Includes the API key into the headers.
      */
-    private function addApiKeyToHeaders()
+    private function addHeaders()
     {
         $this->httpClient->setHeaders([
             'apikey: ' . $this->getApiKey(),
+            'SourceSystem: 66',
             'Content-Type: application/json'
         ]);
     }
