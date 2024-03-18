@@ -60,12 +60,12 @@ class Confirming extends AbstractEndpoint
         $this->soap = $soap;
         $this->customer = $customer;
         $this->message = $message;
-        
+
         parent::__construct(
             $shipmentData
         );
     }
-    
+
     /**
      * @return mixed
      * @throws \Magento\Framework\Webapi\Exception
@@ -84,11 +84,11 @@ class Confirming extends AbstractEndpoint
     {
         $this->requestParams = [
             'Message'   => $this->message->get($shipment->getMainBarcode()),
-            'Customer'  => $this->customer->get(),
+            'Customer'  => $this->customer->get($shipment),
             'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
     }
-    
+
     /**
      * @return string
      */

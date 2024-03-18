@@ -2,40 +2,48 @@
 
 namespace TIG\PostNL\Webservices\Parser\Label;
 
+use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Config\Provider\ReturnOptions;
+use TIG\PostNL\Config\Source\Settings\ReturnTypes;
 use TIG\PostNL\Webservices\Api\Customer as CustomerApi;
 
 class Customer
 {
-    /**
-     * @var CustomerApi
-     */
-    private $customer;
+    private CustomerApi $customer;
+    private ReturnOptions $returnOptions;
 
-    /**
-     * @param CustomerApi $customer
-     */
     public function __construct(
-        CustomerApi $customer
+        CustomerApi $customer,
+        ReturnOptions $returnOptions
     ) {
         $this->customer = $customer;
+        $this->returnOptions = $returnOptions;
     }
 
-    public function get(): array
+    /**
+     * @throws \TIG\PostNL\Exception
+     */
+    public function get(ShipmentInterface $shipment): array
     {
         $customer                       = $this->customer->get();
         $customer['Address']            = $this->customer->address();
+        if ($shipment->getIsSmartReturn()) {
+            $returnType = $this->returnOptions->getReturnTo();
+            $countryCode = $this->returnOptions->getGeneralCountry();
+            // For Freepost we have another address that should be set
+            if ($returnType === ReturnTypes::TYPE_FREE_POST && $countryCode === 'NL') {
+                $customer['Address'] = $this->customer->getFreepostAddress();
+            }
+            // Replace Type as return address
+            $customer['Address']['AddressType'] = CustomerApi::ADDRESS_TYPE_RECEIVER;
+        }
         $customer['CollectionLocation'] = $this->customer->blsCode();
 
         return $customer;
     }
 
-    public function changeCustomerStoreId(int $storeId)
+    public function changeCustomerStoreId(int $storeId): void
     {
         $this->customer->changeStoreId($storeId);
-    }
-
-    public function getReturnAddress(): array
-    {
-        return $this->customer->returnAddress();
     }
 }

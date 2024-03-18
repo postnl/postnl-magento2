@@ -8,6 +8,7 @@ use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Config\Source\Settings\LabelReturnSettings;
 use TIG\PostNL\Config\Source\Settings\LabelSettings;
+use TIG\PostNL\Config\Source\Settings\ReturnTypes;
 use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Volume\Items\Calculate;
 use TIG\PostNL\Webservices\Api\DeliveryDateFallback;
@@ -223,7 +224,9 @@ class Data
             ];
             $shipmentData['ReturnBarcode'] = $shipmentData['Barcode'];
         }
-        if ($countryId === 'NL' && $this->returnOptions->getReturnLabelType() === LabelReturnSettings::LABEL_RETURN_ORDER) {
+        if ($countryId === 'NL'
+            && $this->returnOptions->getReturnLabel() !== LabelSettings::LABEL_BOX
+            && $this->returnOptions->getReturnLabelType() === LabelReturnSettings::LABEL_RETURN_ORDER) {
             // Mark shipment as blocked.
             $shipment->setReturnStatus($shipment::RETURN_STATUS_BLOCKED);
             $productOptions[] = [
@@ -239,7 +242,8 @@ class Data
         $smartReturnActive = $this->returnOptions->isSmartReturnActive();
         if ($smartReturnActive && $shipment->getIsSmartReturn()) {
             $shipmentData['ProductOptions']      = $this->getSmartReturnOptions();
-            $shipmentData['ProductCodeDelivery'] = '2285';
+            $shipmentData['ProductCodeDelivery'] =
+                $this->returnOptions->getReturnTo() === ReturnTypes::TYPE_FREE_POST ? '2285' : '3285';
         }
 
         return $shipmentData;
