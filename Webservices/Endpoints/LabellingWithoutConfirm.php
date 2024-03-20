@@ -93,13 +93,9 @@ class LabellingWithoutConfirm extends AbstractEndpoint
 
         $this->requestParams = [
             'Message'   => $message,
-            'Customer'  => $this->customer->get(),
+            'Customer'  => $this->customer->get($shipment),
             'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
-        if ($isSmartReturn) {
-            // Reverse original address to be the receiver type
-            $this->requestParams['Customer']['Address'] = $this->customer->getReturnAddress();
-        }
     }
 
     /**

@@ -88,16 +88,34 @@ class Customer
             'Street'      => $this->returnOptions->getStreetname(),
             'HouseNr'     => $this->returnOptions->getHousenumber(),
             'HouseNrExt'  => '',
-            'Zipcode'     => strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode())),
+            'Zipcode'     => $this->getFormattedReturnZipCode(),
             'City'        => $this->returnOptions->getCity(),
             'Countrycode' => $this->addressConfiguration->getCountry(),
             'Department'  => '',
         ];
     }
 
+    public function getFreepostAddress(): array
+    {
+        return [
+            'AddressType' => '08',
+            'City' => $this->returnOptions->getCity(),
+            'Countrycode' => $this->addressConfiguration->getCountry(),
+            'HouseNr' => $this->returnOptions->getFreepostNumber(),
+            'Street' => 'Antwoordnummer',
+            'Zipcode' => $this->getFormattedReturnZipCode(),
+            'CompanyName' => $this->returnOptions->getCompany(),
+        ];
+    }
+
     public function changeStoreId(int $storeId): void
     {
         $this->storeId = $storeId;
+    }
+
+    public function getFormattedReturnZipCode(): string
+    {
+        return strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode()));
     }
 
     /**

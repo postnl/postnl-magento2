@@ -106,9 +106,9 @@ class ReturnOptions extends AbstractConfigProvider
     /**
      * @return mixed
      */
-    public function getHouseNumber()
+    public function getHouseNumber(): string
     {
-        return $this->getConfigFromXpath(self::XPATH_RETURN_HOUSENUMBER);
+        return (string)$this->getConfigFromXpath(self::XPATH_RETURN_HOUSENUMBER);
     }
 
     /**

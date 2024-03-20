@@ -65,6 +65,8 @@ class Shipments
         $addressType = CustomerApi::ADDRESS_TYPE_RECEIVER;
         if ($postnlShipment->getIsSmartReturn()) {
             $addressType = CustomerApi::ADDRESS_TYPE_SENDER;
+            // And change customer to sender instead of receiver
+            $contact['ContactType'] = CustomerApi::ADDRESS_TYPE_SENDER;
         }
         $address[] = $this->getAddressData($postnlShipment->getShippingAddress(), $addressType);
         if ($postnlOrder->getIsPakjegemak()) {
@@ -192,7 +194,8 @@ class Shipments
                 'Countrycode' => $countryCode,
                 'HouseNr' => $this->returnOptions->getFreepostNumber(),
                 'Street' => 'Antwoordnummer',
-                'Zipcode' => $zip
+                'Zipcode' => $zip,
+                'CompanyName' => $this->returnOptions->getCompany(),
             ];
         } else {
             $data = [
@@ -200,7 +203,8 @@ class Shipments
                 'City' => $this->returnOptions->getCity(),
                 'CompanyName' => $this->returnOptions->getCompany(),
                 'Countrycode' => $countryCode,
-                'HouseNr' => trim($this->returnOptions->getHouseNumber() . ' ' . $this->returnOptions->getHouseNumberEx()),
+                'HouseNr' => trim($this->returnOptions->getHouseNumber()),
+                'HouseNrExt' => trim($this->returnOptions->getHouseNumberEx()),
                 'Street' => $this->returnOptions->getStreetName(),
                 'Zipcode' => $zip,
             ];

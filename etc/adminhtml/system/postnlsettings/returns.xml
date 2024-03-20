@@ -83,6 +83,7 @@
         <config_path>tig_postnl/returns/streetname</config_path>
         <depends>
             <field id="returns_active">1</field>
+            <field id="returns_to" negative="1">1</field>
         </depends>
         <validate>required-entry</validate>
     </field>
@@ -92,6 +93,7 @@
         <config_path>tig_postnl/returns/housenumber</config_path>
         <depends>
             <field id="returns_active">1</field>
+            <field id="returns_to" negative="1">1</field>
         </depends>
         <validate>required-entry</validate>
     </field>
@@ -102,6 +104,7 @@
         <depends>
             <field id="returns_active">1</field>
             <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+            <field id="returns_to" negative="1">1</field>
         </depends>
     </field>
 

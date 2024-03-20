@@ -97,13 +97,9 @@ class Labelling extends AbstractEndpoint
 
         $this->requestParams = [
             'Message'   => $message,
-            'Customer'  => $this->customer->get(),
+            'Customer'  => $this->customer->get($shipment),
             'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
-        if ($shipment->getIsSmartReturn()) {
-            // Reverse original address to be the receiver type
-            $this->requestParams['Customer']['Address']['AddressType'] = \TIG\PostNL\Webservices\Api\Customer::ADDRESS_TYPE_RECEIVER;
-        }
     }
 
     /**
