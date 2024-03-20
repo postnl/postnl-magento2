@@ -122,7 +122,6 @@
         <config_path>tig_postnl/returns/customer_code</config_path>
         <depends>
             <field id="returns_active">1</field>
-            <field id="returns_to">1</field>
         </depends>
         <validate>required-entry</validate>
     </field>

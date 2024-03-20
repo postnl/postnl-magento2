@@ -42,7 +42,7 @@ class Confirming extends AbstractEndpoint
      * @var array
      */
     private $requestParams;
-    
+
     /**
      * Confirming constructor.
      *

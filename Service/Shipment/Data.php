@@ -222,7 +222,7 @@ class Data
                 'Characteristic' => '191',
                 'Option'         => '001'
             ];
-            $shipmentData['ReturnBarcode'] = $shipmentData['Barcode'];
+            //$shipmentData['ReturnBarcode'] = $shipmentData['Barcode'];
         }
         if ($countryId === 'NL'
             && $this->returnOptions->getReturnLabel() !== LabelSettings::LABEL_BOX
