@@ -33,6 +33,8 @@ class Customer
             // For Freepost we have another address that should be set
             if ($returnType === ReturnTypes::TYPE_FREE_POST && $countryCode === 'NL') {
                 $customer['Address'] = $this->customer->getFreepostAddress();
+            } else {
+                $customer['Address'] = $this->customer->returnAddress();
             }
             // Replace Type as return address
             $customer['Address']['AddressType'] = CustomerApi::ADDRESS_TYPE_RECEIVER;
