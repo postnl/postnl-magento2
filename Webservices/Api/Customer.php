@@ -87,7 +87,7 @@ class Customer
             'CompanyName' => $this->returnOptions->getCompany(),
             'Street'      => $this->returnOptions->getStreetname(),
             'HouseNr'     => $this->returnOptions->getHousenumber(),
-            'HouseNrExt'  => '',
+            'HouseNrExt'  => $this->returnOptions->getHouseNumberEx(),
             'Zipcode'     => $this->getFormattedReturnZipCode(),
             'City'        => $this->returnOptions->getCity(),
             'Countrycode' => $this->addressConfiguration->getCountry(),
