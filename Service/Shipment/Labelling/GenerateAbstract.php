@@ -216,15 +216,16 @@ abstract class GenerateAbstract
             $this->shipmentLabelRepository->save($labelModel);
         }
 
-        $shipmentProductCode = ((int)$shipment->getProductCode()) % 10000;
+        $shipmentProductCode = (string)(((int)$shipment->getProductCode()) % 10000);
 
         /**
          * If SAM returned different product code during generation, override it in PostNL Shipment table.
          *
-         * POSTNLM2-1391 : Product code 2285 is an exception as that is the Smart Return product code.
+         * POSTNLM2-1391 : Product code 2285|3285 is an exception as that is the Smart Return product code.
          */
 
-        if ($labelItem->ProductCodeDelivery != $shipmentProductCode && $labelItem->ProductCodeDelivery != '2285') {
+        if ($labelItem->ProductCodeDelivery !== $shipmentProductCode && $labelItem->ProductCodeDelivery !== '2285' &&
+            $labelItem->ProductCodeDelivery !== '3285') {
             $shipment->setProductCode($labelItem->ProductCodeDelivery);
         }
 
