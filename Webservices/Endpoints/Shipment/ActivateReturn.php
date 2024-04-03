@@ -10,7 +10,7 @@ class ActivateReturn implements RestInterface
     private string $method = 'POST';
     private string $resource = 'parcels/';
     private string $version = 'v1';
-    private string $endpoint = 'shipment/activatereturn/';
+    private string $endpoint = 'shipment/activatereturn';
 
     private Rest $restApi;
     private array $data = [];
