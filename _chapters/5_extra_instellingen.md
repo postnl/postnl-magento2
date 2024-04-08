@@ -1,8 +1,11 @@
 ## Extra instellingen
 
 ### Printerinstellingen
-Onder de printerinstellingen kan het formaat van de labels ingesteld worden, waarbij er gekozen kan worden tussen A4 en A6. 
-Daarnaast kan er gekozen worden om de pdf direct te downloaden of om deze in een nieuw venster te openen.
+Onder de printerinstellingen kan het formaat van de labels ingesteld worden, waarbij er gekozen kan worden tussen A4 (normale printer) en A6 (labelprinter). Ook kan er gekozen worden om de pdf direct te downloaden of om deze in een nieuw venster te openen. Daarnaast kan er in het menu “Labeltype” aangegeven worden met welk bestandstype de labels aangemaakt worden. 
+Voor een hoge printkwaliteit is het belangrijk om het bestandstype te selecteren wat overeenkomt met het standaard bestandstype van de printer waar de labels mee afgedrukt worden.
+
+![image](https://github.com/postnl/postnl-magento2/assets/31507888/d16219f8-5e8a-4538-9c91-2886f7005e17)
+
 ![Printerinstellingen]({{ site.baseurl }}/assets/images/5_extra_printer.png "PostNL Magento 2 printerinstellingen")
 
 ### Label- en packingslip opties
