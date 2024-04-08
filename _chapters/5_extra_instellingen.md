@@ -6,7 +6,6 @@ Voor een hoge printkwaliteit is het belangrijk om het bestandstype te selecteren
 
 ![Printerinstellingen]({{ site.baseurl }}/assets/images/5. Extra_Printerinstellingen.png "PostNL Magento 2 printerinstellingen")
 
-
 ### Label- en packingslip opties
 Binnen de PostNL extensie is er de opties om labels te printen of of pakbonnen te printen. Voor beide opties zijn er configuraties beschikbaar.
 
