@@ -147,4 +147,6 @@ Er zijn verschillende retouropties beschikbaar, die ingesteld kunnen worden in h
 
 ![Retour instellingen]({{ site.baseurl }}/assets/images/3_Retouren_instellingen.png "Magento 2 Admin - PostNL Retouren")
 
-#### Track and Trace
+#### Labels
+Selecteer Heen & Terug of Retourlabels in de Doos. Deze opties zijn niet tegelijkertijd te gebruiken. De optie Heen & Terug is niet voor Belgische verkopers beschikbaar.
+
