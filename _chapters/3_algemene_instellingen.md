@@ -143,10 +143,7 @@ Bij de handmatige optie kan een bestelling op twee plaatsen aangemerkt worden al
 
 
 ### Retour instellingen
-Retouren zijn beschikbaar voor Nederland en België. Na activatie dient het retouradres ingevuld te worden, waarbij het land afhankelijk is van het gekozen verzendland.
-De extensie voegt na de activatie automatisch retourlabels toe bij het printen van de labels voor Nederland / België.
-
-> Om retourlabels te kunnen laten generen is een antwoordnummer en een apart klantnummer nodig. Hiervoor kan contact opgenomen met uw accountmanager of het kan [hier](https://www.postnl.nl/zakelijke-oplossingen/ontvangen/antwoordnummer/) aangevraagd worden.
+Er zijn verschillende retouropties beschikbaar, die ingesteld kunnen worden in het kader Retouren:
 
 ![Retour instellingen]({{ site.baseurl }}/assets/images/3_retour_instellingen.png "Magento 2 Admin - PostNL Retouren")
 
