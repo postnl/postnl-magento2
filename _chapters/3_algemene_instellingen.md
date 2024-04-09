@@ -150,3 +150,14 @@ Er zijn verschillende retouropties beschikbaar, die ingesteld kunnen worden in h
 #### Labels
 Selecteer Heen & Terug of Retourlabels in de Doos. Deze opties zijn niet tegelijkertijd te gebruiken. De optie Heen & Terug is niet voor Belgische verkopers beschikbaar.
 
+#### Retour Naar
+Met deze optie kan er gekozen worden voor retourneren naar een antwoordnummer of naar een huisadres.
+
+#### Labels Type
+Wanneer Heen & Terug geactiveerd wordt verschijnt de optie “Labels Type”. Met deze optie moet worden aangegeven of alle labels meteen geschikt zijn om als retourlabel te gebruiken, of dat hier nog een handmatige activatie voor moet worden uitgevoerd door de verkoper. Deze handmatige activatie-actie is te vinden in het actiemenu op het Orderoverzicht. Om orders te activeren selecteer je deze in het Orderoverzicht, waarna je kiest voor de actie “PostNL  - Activeer Heen & Terug label” in het actiemenu.
+
+#### Klantcode
+Vul hier de retourklantcode in die gekoppeld staat aan het account. Indien er nog geen retourklantcode aan het account gekoppeld staat kan deze aangevraagd worden bij de accountmanager van het account.
+
+#### Activeer Smart Returns
+Geef hier aan of je gebruik wil maken van Smart Returns. Dit betreft een retourproduct waarmee ad hoc een retourbarcode naar de klant wordt opgestuurd per e-mail, welke zij vervolgens bij een PostNL punt kunnen laten scannen om de retourzending te versturen. Het product Smart Returns is altijd te gebruiken, ongeacht welke andere retouropties er gebruikt worden.
