@@ -145,5 +145,4 @@ Bij de handmatige optie kan een bestelling op twee plaatsen aangemerkt worden al
 ### Retour instellingen
 Er zijn verschillende retouropties beschikbaar, die ingesteld kunnen worden in het kader Retouren:
 
-![Retour instellingen]({{ site.baseurl }}/assets/images/3_retour_instellingen.png "Magento 2 Admin - PostNL Retouren")
-
+![Retour instellingen]({{ site.baseurl }}/assets/images/3_Retouren_instellingen.png "Magento 2 Admin - PostNL Retouren")
