@@ -4,6 +4,7 @@ namespace TIG\PostNL\Service\Shipment\Packingslip;
 
 use Magento\Framework\Message\Manager as MessageManager;
 use TIG\PostNL\Api\Data\ShipmentLabelInterface;
+use TIG\PostNL\Config\Source\Settings\LabelTypeSettings;
 use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Pdf\Fpdi;
 use TIG\PostNL\Service\Pdf\FpdiFactory;
@@ -94,6 +95,9 @@ class MergeWithLabels
     public function merge($shipmentId, $packingslip, $mergeFirstLabel = false, $confirm = true)
     {
         $labels = $this->getLabels->get($shipmentId, $confirm);
+        $labels = array_filter($labels, function($label) {
+            return $label->getLabelFileFormat() === LabelTypeSettings::TYPE_PDF;
+        });
         if (empty($labels)) {
             return $packingslip;
         }
