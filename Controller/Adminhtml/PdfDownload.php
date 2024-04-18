@@ -85,8 +85,8 @@ class PdfDownload
     }
 
     /**
-     * @param $labels
-     * @param $filename
+     * @param ShipmentLabelInterface[]|string[] $labels
+     * @param string $filename
      *
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Message\ManagerInterface
      * @throws \Exception
@@ -203,13 +203,17 @@ class PdfDownload
     // @codingStandardsIgnoreEnd
 
     /**
-     * @param ShipmentLabelInterface[] $labels
+     * @param ShipmentLabelInterface[]|string[] $labels
      * @return bool
      */
     private function isAllPdfLabels(array $labels): bool
     {
         $result = true;
         foreach ($labels as $label) {
+            if (is_string($label)) {
+                // Package Slips - legacy - instead of object it pass string and this sting is always PDF.
+                continue;
+            }
             if ($label->getLabelFileFormat() !== LabelTypeSettings::TYPE_PDF) {
                 $result = false;
                 break;
