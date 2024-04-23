@@ -113,7 +113,7 @@ class MergeWithLabels
             unset($labels['notices']);
         }
 
-        if ($mergeFirstLabel && $this->canMergeFirstLabel($labels[0])) {
+        if ($mergeFirstLabel && $this->canMergeFirstLabel(reset($labels))) {
             $firstLabel = array_shift($labels);
             $label = base64_decode($firstLabel->getLabel());
             $packingslip = $this->mergeFirstLabel($label, $packingslip, $firstLabel->getType());
