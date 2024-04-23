@@ -7,6 +7,7 @@
     <preference for="TIG\PostNL\Api\Data\OrderInterface" type="TIG\PostNL\Model\Order" />
     <preference for="TIG\PostNL\Api\Data\OrderSearchResultInterface" type="Magento\Framework\Api\SearchResults" />
     <preference for="TIG\PostNL\Api\ShipmentRepositoryInterface" type="TIG\PostNL\Model\ShipmentRepository" />
+    <preference for="TIG\PostNL\Api\Data\ShipmentAttributeInterface" type="TIG\PostNL\Model\ShipmentAttribute" />
     <preference for="TIG\PostNL\Api\Data\ShipmentInterface" type="TIG\PostNL\Model\Shipment" />
     <preference for="TIG\PostNL\Api\Data\ShipmentSearchResultInterface" type="Magento\Framework\Api\SearchResults" />
     <preference for="TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface" type="TIG\PostNL\Model\ShipmentBarcodeRepository" />
@@ -62,6 +63,10 @@
 
     <type name="Magento\Customer\Model\Attribute">
         <plugin name="PostNL_customer_addtibute_extender" type="TIG\PostNL\Plugin\Customer\Attribute" />
+    </type>
+
+    <type name="Magento\Sales\Model\Order\ShippingBuilder">
+        <plugin name="PostNL_shipping_extension_attribute" type="TIG\PostNL\Plugin\Shipment\ShippingBuilder" />
     </type>
 
 
