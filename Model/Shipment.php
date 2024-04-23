@@ -921,6 +921,10 @@ class Shipment extends AbstractModel implements ShipmentInterface
         if ($this->getConfirmedAt()) {
             return false;
         }
+        // Only domestic shipping allowed for multiple parcels
+        if ($this->getShipmentCountry() !== 'NL' && $this->getShipmentCountry() !== 'BE') {
+            return false;
+        }
 
         return true;
     }
