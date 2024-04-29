@@ -5,4 +5,8 @@
         <attribute code="tig_housenumber" type="string" />
         <attribute code="tig_housenumber_addition" type="string" />
     </extension_attributes>
+
+    <extension_attributes for="Magento\Sales\Api\Data\ShippingInterface">
+        <attribute code="postnl" type="TIG\PostNL\Api\Data\ShipmentAttributeInterface" />
+    </extension_attributes>
 </config>
