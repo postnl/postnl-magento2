@@ -10,6 +10,7 @@ class AddressEnhancer
     // @codingStandardsIgnoreLine
     const STREET_SPLIT_NAME_FROM_NUMBER = '/^(?P<street>\d*[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\‘\`\-\.]+)[,\s]+(?P<number>\d+)\s*(?P<addition>[\wäöüß\d\-\/]*)$/i';
     // @codingStandardsIgnoreLine
+    const STREET_SPLIT_NAME_FROM_NUMBER_BE = '/^(?P<street>\d*[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\‘\`\-\.]+)[,\s]+(?P<number>bus\s?\d+)\s*(?P<addition>[\wäöüß\d\-\/]*)$/i';
     const STREET_SPLIT_NUMBER_FROM_NAME = '/^(?P<number>\d+)\s*(?P<street>[\wäöüßÀ-ÖØ-öø-ÿĀ-Ž\d \'\‘\`\-\.]*)$/i';
 
     /** @var Config $config */
@@ -96,6 +97,7 @@ class AddressEnhancer
     protected function extractHousenumber($address)
     {
         $street = $address['street'];
+        $isBe = isset($address['country']) ?? $address['country'] === 'BE';
 
         if (is_array($address['street'])) {
             $street  = implode(' ', $address['street']);
@@ -103,8 +105,17 @@ class AddressEnhancer
             $street = (string)$street;
         }
         $street = trim($street);
+        $matched = false;
+        // Check specific BE case for buses
+        if ($isBe) {
+            $matched = preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER_BE, $street, $result);
+        }
 
-        $matched = preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER, $street, $result);
+        // Default approach of extracting house number
+        if (!$matched) {
+            $matched = preg_match(self::STREET_SPLIT_NAME_FROM_NUMBER, $street, $result);
+        }
+
         if (!$matched) {
             $result = $this->extractStreetFromNumber($street);
         }
