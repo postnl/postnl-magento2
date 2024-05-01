@@ -144,6 +144,7 @@
             </endpoints>
 
             <globalpack>
+                <default_gp_option>14909</default_gp_option>
                 <product_settings_value_attribute>price</product_settings_value_attribute>
                 <product_settings_country_of_origin>country_of_manufacture</product_settings_country_of_origin>
                 <product_settings_description>name</product_settings_description>
