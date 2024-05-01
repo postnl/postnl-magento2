@@ -36,7 +36,7 @@
             </depends>
         </field>
 
-        <field id="default_eps_business_option" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+        <field id="default_eps_business_option" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Default EU Business delivery</label>
             <comment><![CDATA[Select the default product option for EU Business shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getEpsBusinessProducts</source_model>

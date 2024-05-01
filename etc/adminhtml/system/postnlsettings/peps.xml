@@ -20,7 +20,7 @@
             <config_path>tig_postnl/peps/active</config_path>
         </field>
 
-        <field id="default_peps_option" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+        <field id="default_peps_option" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Default Packet delivery</label>
             <comment><![CDATA[Select the default product option for Packet shipments. A Packet is a smaller package than a normal package and is about the same size as a shoe box. Dimensions L + W + H = max 90 cm of which the longest side is 60 cm.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getPepsProducts</source_model>
@@ -42,7 +42,7 @@
             </depends>
         </field>
 
-        <field id="default_peps_boxable_packets_option" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+        <field id="default_peps_boxable_packets_option" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Default Boxable Packet delivery</label>
             <comment><![CDATA[Select the default product option for Boxable Packet shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getPepsBoxableProducts</source_model>
