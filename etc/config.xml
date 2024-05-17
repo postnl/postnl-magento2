@@ -62,6 +62,7 @@
                 <default_be_nl_option>4890</default_be_nl_option>
                 <default_be_option>4946</default_be_option>
                 <default_eps_option>14907</default_eps_option>
+                <default_eps_business_option>44907</default_eps_business_option>
                 <default_delivery_stated_address>3385</default_delivery_stated_address>
                 <default_delivery_stated_address_be>4960</default_delivery_stated_address_be>
                 <use_alternative_default>0</use_alternative_default>
@@ -160,6 +161,8 @@
 
             <peps>
                 <active>0</active>
+                <default_peps_option>6350</default_peps_option>
+                <default_peps_boxable_packets_option>6972</default_peps_boxable_packets_option>
                 <barcode_type>LA</barcode_type>
                 <barcode_range>NL</barcode_range>
             </peps>
@@ -170,6 +173,7 @@
                 <label>1</label>
                 <label_be>2</label_be>
                 <labels_type>1</labels_type>
+                <smart_returns_template>tig_postnl_postnl_settings_returns_template</smart_returns_template>
             </returns>
         </tig_postnl>
     </default>
