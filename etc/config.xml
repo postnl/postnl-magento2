@@ -16,7 +16,7 @@
         </carriers>
         <tig_postnl>
             <stability/>
-            <tested_magento_version>2.3.6 - 2.3.7-p4, 2.4.3 - 2.4.6-p3</tested_magento_version>
+            <tested_magento_version>2.3.6 - 2.3.7-p4, 2.4.3 - 2.4.7</tested_magento_version>
             <generalconfiguration_extension_status>
                 <modus>0</modus>
             </generalconfiguration_extension_status>
