@@ -170,10 +170,10 @@ $addition = $block->getStreetLine(3);
             houseNumberValue = $('.field.street').find('.control input:eq('+streetLineId+')').val(),
             houseAdditionValue = $('.field.street').find('.control input:eq('+(streetLineId + 1)+')').val();
         if (!houseAdditionValue) {
-            houseNumberValue = <?= $block->escapeJs($houseNumber); ?>;
+            houseNumberValue = '<?= $block->escapeJs($houseNumber); ?>';
         }
         if (!houseAdditionValue) {
-            houseAdditionValue = <?= $block->escapeJs($addition); ?>;
+            houseAdditionValue = '<?= $block->escapeJs($addition); ?>';
         }
 
         var housenumberElement = $('.field.zip').clone();
