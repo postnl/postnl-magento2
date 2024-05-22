@@ -141,6 +141,7 @@
         <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
         <config_path>tig_postnl/returns/smart_returns_template</config_path>
         <depends>
+            <field id="returns_active">1</field>
             <field id="smart_returns_active">1</field>
             <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
         </depends>

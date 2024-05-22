@@ -28,7 +28,7 @@ class ReturnOptions extends AbstractConfigProvider
     /**
      * @return bool
      */
-    public function isReturnActive()
+    public function isReturnActive(): bool
     {
         return (bool)$this->getConfigFromXpath(self::XPATH_RETURN_IS_ACTIVE);
     }
@@ -36,9 +36,10 @@ class ReturnOptions extends AbstractConfigProvider
     /**
      * @return bool
      */
-    public function isSmartReturnActive()
+    public function isSmartReturnActive(): bool
     {
-        return (bool)$this->getConfigFromXpath(self::XPATH_SMART_RETURN_IS_ACTIVE)
+        return $this->isReturnActive()
+            && (bool)$this->getConfigFromXpath(self::XPATH_SMART_RETURN_IS_ACTIVE)
             && $this->getGeneralCountry() === Country::COUNTRY_NL;
     }
 
