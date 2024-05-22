@@ -62,10 +62,11 @@ class GetPackingslip
      * @param int $shipmentId
      * @param bool $withLabels
      * @param bool $confirm
+     * @param bool $forceMagento
      *
      * @return string|array
      */
-    public function get($shipmentId, $withLabels = true, $confirm = true)
+    public function get($shipmentId, $withLabels = true, $confirm = true, $forceMagento = false)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
 
@@ -74,7 +75,7 @@ class GetPackingslip
         }
 
         $magentoShipment = $shipment->getShipment();
-        $packingSlip = $this->pdfShipment->create($magentoShipment);
+        $packingSlip = $this->pdfShipment->create($magentoShipment, $forceMagento);
         $packingSlip = $this->barcodeMerger->add($packingSlip, $magentoShipment);
 
         $pdfShipment = $this->pdfShipment;
