@@ -203,7 +203,8 @@ class Data
             $productOptions = [];
         }
         $countryId = $shipmentData['Addresses']['Address'][0]['Countrycode'] ?? null;
-        if ($countryId === 'NL' &&
+        $returnActive = $this->returnOptions->isReturnActive();
+        if ($returnActive && $countryId === 'NL' &&
             $this->returnOptions->getReturnLabel() === LabelSettings::LABEL_RETURN
         ) {
             $productOptions[] = [
@@ -213,7 +214,7 @@ class Data
             // Fill out ReturnBarcode with the same data as Barcode in this case
             $shipmentData['ReturnBarcode'] = $shipmentData['Barcode'];
         }
-        if ($this->returnOptions->getReturnLabel() === LabelSettings::LABEL_BOX) {
+        if ($returnActive && $this->returnOptions->getReturnLabel() === LabelSettings::LABEL_BOX) {
             $productOptions[] = [
                 'Characteristic' => '152',
                 'Option'         => '028'
@@ -224,7 +225,7 @@ class Data
             ];
             //$shipmentData['ReturnBarcode'] = $shipmentData['Barcode'];
         }
-        if ($countryId === 'NL'
+        if ($returnActive && $countryId === 'NL'
             && $this->returnOptions->getReturnLabel() !== LabelSettings::LABEL_BOX
             && $this->returnOptions->getReturnLabelType() === LabelReturnSettings::LABEL_RETURN_ORDER) {
             // Mark shipment as blocked.
