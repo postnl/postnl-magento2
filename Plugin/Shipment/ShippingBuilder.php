@@ -65,4 +65,15 @@ class ShippingBuilder
         $this->orderId = (int)$orderId;
         return $result;
     }
+
+    public function afterSetOrder(
+        SubjectClass $subject,
+        $result,
+        $order
+    ) {
+        if ($order) {
+            $this->orderId = $order->getId();
+        }
+        return $result;
+    }
 }
