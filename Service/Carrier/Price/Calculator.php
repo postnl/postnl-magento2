@@ -158,6 +158,9 @@ class Calculator
             case RateType::CARRIER_RATE_TYPE_FLAT:
             default:
                 $price = $this->getConfigData('price');
+                if ($parcelType === 'pakjegemak' && $this->getConfigData('is_other_price_for_pickup')) {
+                    $price = $this->getConfigData('pickup_price');
+                }
 
                 return $this->priceResponse($price, $price);
         }
