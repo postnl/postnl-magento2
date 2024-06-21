@@ -182,7 +182,7 @@ define([
 
             // About to receive new delivery days. Deselect the current one.
             this.selectedOption(null);
-            const allowToOpenDelivery = State.defaultTab === 'delivery';
+            const allowToOpenDelivery = this.canSelectFirstDelivery(address.country);
 
             self.getDeliveryDayRequest = $.ajax({
                 method: 'POST',
@@ -317,14 +317,31 @@ define([
             return isActive === 1 && isNL;
         }),
 
+        canSelectFirstDelivery: function(country) {
+            if (State.defaultTab === 'pickup') {
+                if (!country) {
+                    const address = AddressFinder();
+                    country = (address !== null && address !== false && address.country !== undefined) ?
+                        address.country : '';
+                }
+                // Check if pickup enabled for specific country
+                if (
+                    (country === 'NL' && window.checkoutConfig.shipping.postnl.pakjegemak_active) ||
+                    (country === 'BE' && window.checkoutConfig.shipping.postnl.pakjegemak_be_active)
+                ) {
+                    return false;
+                }
+            }
+            return true;
+        },
+
         selectFirstDeliveryOption: function () {
             // Only select the first option if there is none defined
             if (this.selectedOption() !== undefined && this.selectedOption() != null || sessionStorage.postnlPickupOption) {
                 return;
             }
             var deliveryDays = this.deliverydays();
-            const allowToOpenDelivery = State.defaultTab === 'delivery';
-            if (!allowToOpenDelivery) {
+            if (!this.canSelectFirstDelivery()) {
                 return;
             }
 
