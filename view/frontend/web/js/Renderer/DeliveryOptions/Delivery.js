@@ -182,6 +182,7 @@ define([
 
             // About to receive new delivery days. Deselect the current one.
             this.selectedOption(null);
+            const allowToOpenDelivery = State.defaultTab === 'delivery';
 
             self.getDeliveryDayRequest = $.ajax({
                 method: 'POST',
@@ -190,7 +191,7 @@ define([
             }).done(function (data) {
                 // If the deliverydays are reloaded, the first one is automatically selected.
                 // Show this by switching to the delivery pane.
-                State.currentOpenPane('delivery');
+                if (allowToOpenDelivery) State.currentOpenPane('delivery');
 
                 State.deliveryOptionsAreAvailable(true);
                 State.deliveryPrice(data.price);
@@ -238,7 +239,7 @@ define([
                         return eps;
                     });
                     this.deliverydays(data);
-                    State.currentOpenPane('delivery');
+                    if (allowToOpenDelivery) State.currentOpenPane('delivery');
                     this.selectFirstDeliveryOption();
                     return;
                 }
@@ -249,7 +250,7 @@ define([
                         return gp;
                     });
                     this.deliverydays(data);
-                    State.currentOpenPane('delivery');
+                    if (allowToOpenDelivery) State.currentOpenPane('delivery');
                     this.selectFirstDeliveryOption();
                     return;
                 }
@@ -322,7 +323,10 @@ define([
                 return;
             }
             var deliveryDays = this.deliverydays();
-
+            const allowToOpenDelivery = State.defaultTab === 'delivery';
+            if (!allowToOpenDelivery) {
+                return;
+            }
 
             if(sessionStorage.postnlDeliveryOption) {
                 var previousOption = JSON.parse(sessionStorage.postnlDeliveryOption);
