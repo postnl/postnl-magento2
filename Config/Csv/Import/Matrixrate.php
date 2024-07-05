@@ -74,7 +74,7 @@ class Matrixrate extends Value
         $requestFiles = $this->request->getFiles();
         $files        = $requestFiles->offsetGet('groups');
         if (!isset($files['tig_postnl']) || !isset($files['tig_postnl']['fields']['matrixrate_import'])) {
-            return parent::beforeSave();
+            return parent::afterSave();
         }
 
         $websiteId = $this->request->getParam('website', 0);
