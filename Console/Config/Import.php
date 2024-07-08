@@ -91,7 +91,7 @@ class Import extends Command
             $output->writeln(print_r($newConfig, true), OutputInterface::VERBOSITY_DEBUG);
 
             $output->writeln('');
-            $output->writeln('<info>Just in case here us current configurations:</info>');
+            $output->writeln('<info>Just in case here is current configurations:</info>');
             $oldConfigs = $this->exporter->retrieveConfigs();
             if (isset($newConfig[ConfigExporter::MATRIX_RATE])) {
                 $oldConfigs[ConfigExporter::MATRIX_RATE] = $this->exporter->dumpMatrixRate();
