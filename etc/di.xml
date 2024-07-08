@@ -217,6 +217,8 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="postnlSyncGrids" xsi:type="object">TIG\PostNL\Console\Sync\Grids</item>
+                <item name="postnl:config:dump" xsi:type="object">TIG\PostNL\Console\Config\Dump</item>
+                <item name="postnl:config:import" xsi:type="object">TIG\PostNL\Console\Config\Import</item>
             </argument>
         </arguments>
     </type>

@@ -148,7 +148,7 @@ class EPS extends Domestic
         $pageId = $this->pdf->importPage(1);
         $sizes = $this->pdf->getTemplateSize($pageId);
 
-        if (isset($sizes['width']) && isset($sizes['height']) && $sizes['width'] > $sizes['height']) {
+        if (isset($sizes['width'], $sizes['height']) && $sizes['width'] > $sizes['height']) {
             return true;
         }
 

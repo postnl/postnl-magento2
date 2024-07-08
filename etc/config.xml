@@ -153,12 +153,6 @@
                 <product_settings_sorting_direction>desc</product_settings_sorting_direction>
             </globalpack>
 
-            <idcheck_active>0</idcheck_active>
-
-            <address_validation>
-
-            </address_validation>
-
             <peps>
                 <active>0</active>
                 <default_peps_option>6350</default_peps_option>
