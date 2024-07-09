@@ -20,7 +20,7 @@
 
         <group id="config_dump" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Config Dump</label>
-            <comment><![CDATA[Allows to export and import full PostNL configurations, excluding sensitive data. Additionally available as a console command. Used as it is and mostly for debug reasons.]]></comment>
+            <comment><![CDATA[Allows to export and import full PostNL configurations for debugging purposes, excluding sensitive data. Also available as a console command.]]></comment>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
 
             <field id="add_matrix" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="0">

@@ -11,6 +11,7 @@ use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\DirectoryList;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
@@ -28,6 +29,11 @@ class Import extends Value
      */
     private $importer;
 
+    /**
+     * @var ManagerInterface
+     */
+    private $messageManager;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -35,6 +41,7 @@ class Import extends Value
         TypeListInterface $cacheTypeList,
         RequestInterface $request,
         ConfigImporter $importer,
+        ManagerInterface $messageManager,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -42,6 +49,7 @@ class Import extends Value
         parent::__construct($context, $registry, $config, $cacheTypeList, $resource, $resourceCollection, $data);
         $this->importer = $importer;
         $this->request = $request;
+        $this->messageManager = $messageManager;
     }
 
     /**
@@ -49,6 +57,9 @@ class Import extends Value
      */
     public function beforeSave()
     {
+        // Do not save anything about this config value
+        $this->setValue(null);
+
         $requestFiles = $this->request->getFiles();
         $files = $requestFiles->offsetGet('groups');
         if (!isset($files['developer_settings']['groups']['config_dump']['fields']['config_import'])) {
@@ -65,9 +76,8 @@ class Import extends Value
             throw new LocalizedException(__('Invalid configuration file provided.'));
         }
         $this->importer->updateConfigs($newConfig);
+        $this->messageManager->addSuccessMessage('Config file has been processed.');
 
-        // We do not save anything
-        $this->setValue(null);
         return parent::beforeSave();
     }
 }
