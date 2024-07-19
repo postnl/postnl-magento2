@@ -2,6 +2,11 @@
 
 namespace TIG\PostNL\Config\Provider;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Encryption\Encryptor;
+use Magento\Framework\Module\Manager;
+use Magento\Framework\Serialize\Serializer\Json;
+
 /**
  * This class contains all configuration options related to the product options.
  * This will cause that it is too long for Code Sniffer to check.
@@ -15,16 +20,21 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_BE_DOMESTIC_OPTION                    = 'tig_postnl/delivery_settings/default_be_domestic_option';
     const XPATH_DEFAULT_BE_NL_OPTION                          = 'tig_postnl/delivery_settings/default_be_nl_option';
     const XPATH_USE_ALTERNATIVE_DEFAULT_OPTION                = 'tig_postnl/delivery_settings/use_alternative_default';
-    const XPATH_ALTERNATIVE_DEFAULT_MIN_AMOUNT                = 'tig_postnl/delivery_settings/alternative_default_min_amount';
-    const XPATH_ALTERNATIVE_DEFAULT_PRODUCT_OPTION            = 'tig_postnl/delivery_settings/alternative_default_option';
+    const XPATH_ALTERNATIVE_DELIVERY_MAP                      = 'tig_postnl/delivery_settings/alternative_delivery_map';
     const XPATH_DEFAULT_EVENING_PRODUCT_OPTION                = 'tig_postnl/evening_delivery_nl/default_evening_option';
     const XPATH_DEFAULT_EXTRAATHOME_PRODUCT_OPTION            = 'tig_postnl/extra_at_home/default_extraathome_option';
     const XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION             = 'tig_postnl/post_offices/default_pakjegemak_option';
+    const XPATH_DEFAULT_PAKJEGEMAK_USE_ALTERNATIVE            = 'tig_postnl/post_offices/use_alternative_pakjegemak';
+    const XPATH_DEFAULT_PAKJEGEMAK_ALTERNATIVE_MAP            = 'tig_postnl/post_offices/alternative_pakjegemak_map';
     const XPATH_DEFAULT_PAKJEGEMAK_BE_PRODUCT_OPTION          = 'tig_postnl/post_offices/default_pakjegemak_be_option';
     const XPATH_DEFAULT_PAKJEGEMAK_BE_DOMESTIC_PRODUCT_OPTION = 'tig_postnl/post_offices/default_pakjegemak_be_domestic_option';
+    const XPATH_DEFAULT_PAKJEGEMAK_BE_DOMESTIC_USE_ALTERNATIVE = 'tig_postnl/post_offices/use_alternative_pakjegemak_be_domestic';
+    const XPATH_DEFAULT_PAKJEGEMAK_BE_DOMESTIC_ALTERNATIVE_MAP = 'tig_postnl/post_offices/alternative_pakjegemak_be_domestic_map';
     const XPATH_DEFAULT_PAKJEGEMAK_BE_NL_PRODUCT_OPTION       = 'tig_postnl/post_offices/default_pakjegemak_be_nl_option';
     const XPATH_DEFAULT_EVENING_BE_PRODUCT_OPTION             = 'tig_postnl/evening_delivery_be/default_evening_be_option';
     const XPATH_DEFAULT_BE_PRODUCT_OPTION                     = 'tig_postnl/delivery_settings/default_be_option';
+    const XPATH_DEFAULT_BE_USE_ALTERNATIVE                    = 'tig_postnl/delivery_settings/use_alternative_be';
+    const XPATH_DEFAULT_BE_ALTERNATIVE_MAP                    = 'tig_postnl/delivery_settings/alternative_be_map';
     const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION                 = 'tig_postnl/sunday_delivery/default_sunday_option';
     const XPATH_DEFAULT_TODAY_PRODUCT_OPTION                  = 'tig_postnl/today_delivery/default_today_option';
     const XPATH_DEFAULT_CARGO_DELIVERY_TYPE                   = 'tig_postnl/delivery_settings/default_cargo_type';
@@ -32,12 +42,29 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_PACKAGE_DELIVERY_TYPE                 = 'tig_postnl/delivery_settings/default_package_type';
     const XPATH_ALTERNATIVE_DEFAULT_PACKAGE_DELIVERY_TYPE     = 'tig_postnl/delivery_settings/alternative_package_type';
     const XPATH_DEFAULT_EPS_PRODUCT_OPTION                    = 'tig_postnl/delivery_settings/default_eps_option';
+    const XPATH_DEFAULT_EPS_USE_ALTERNATIVE                   = 'tig_postnl/delivery_settings/use_alternative_eps';
+    const XPATH_DEFAULT_EPS_ALTERNATIVE_MAP                   = 'tig_postnl/delivery_settings/alternative_eps_map';
     const XPATH_DEFAULT_EPS_BUSINESS_PRODUCT_OPTION           = 'tig_postnl/delivery_settings/default_eps_business_option';
     const XPATH_DEFAULT_PEPS_PRODUCT_OPTION                   = 'tig_postnl/peps/default_peps_option';
     const XPATH_DEFAULT_GP_PRODUCT_OPTION                     = 'tig_postnl/globalpack/default_gp_option';
+    const XPATH_DEFAULT_GP_USE_ALTERNATIVE                    = 'tig_postnl/globalpack/use_alternative_gp';
+    const XPATH_DEFAULT_GP_ALTERNATIVE_MAP                    = 'tig_postnl/globalpack/alternative_gp_map';
     const XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS       = 'tig_postnl/delivery_settings/default_delivery_stated_address';
     const XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS_BE    = 'tig_postnl/delivery_settings/default_delivery_stated_address_be';
     const XPATH_DEFAULT_PEPS_BOXABLE_PACKETS                  = 'tig_postnl/peps/default_peps_boxable_packets_option';
+
+    private Json $serializer;
+
+    public function __construct(
+        ScopeConfigInterface $scopeConfig,
+        Manager $moduleManager,
+        Encryptor $crypt,
+        \TIG\PostNL\Config\Source\Options\ProductOptions $productOptions,
+        Json $serializer
+    ) {
+        parent::__construct($scopeConfig, $moduleManager, $crypt, $productOptions);
+        $this->serializer = $serializer;
+    }
 
     /**
      * Since 1.5.1 all product options are automaticly supported.
@@ -56,36 +83,31 @@ class ProductOptions extends AbstractConfigProvider
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_PRODUCT_OPTION);
     }
 
-    /**
-     * @return string|int
-     */
-    public function getUseAlternativeDefault()
+    public function getUseAlternativeDefault(): bool
     {
-        return $this->getConfigFromXpath(static::XPATH_USE_ALTERNATIVE_DEFAULT_OPTION);
+        return (bool)$this->getConfigFromXpath(static::XPATH_USE_ALTERNATIVE_DEFAULT_OPTION);
     }
 
-    /**
-     * @return string|int
-     */
-    public function getAlternativeDefaultMinAmount()
+    public function getAlternativeMap(string $config): array
     {
-        if (!$this->getUseAlternativeDefault()) {
-            return '0';
+        $value = $this->getConfigFromXpath($config);
+        try {
+            if ($value) {
+                $value = $this->serializer->unserialize($value);
+            }
+        } catch (\Exception $e) {
+            $value = [];
         }
-
-        return $this->getConfigFromXpath(static::XPATH_ALTERNATIVE_DEFAULT_MIN_AMOUNT);
+        return is_array($value) ? $value : [];
     }
 
-    /**
-     * @return string|int|bool
-     */
-    public function getAlternativeDefaultProductOption()
+    public function getAlternativeDeliveryMap(): array
     {
         if (!$this->getUseAlternativeDefault()) {
-            return false;
+            return [];
         }
 
-        return $this->getConfigFromXpath(static::XPATH_ALTERNATIVE_DEFAULT_PRODUCT_OPTION);
+        return $this->getAlternativeMap(static::XPATH_ALTERNATIVE_DELIVERY_MAP);
     }
 
     /**
@@ -158,6 +180,19 @@ class ProductOptions extends AbstractConfigProvider
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_PAKJEGEMAK_BE_DOMESTIC_PRODUCT_OPTION);
     }
 
+    public function getUseAlternativePakjeGemakBeDomestic(): bool
+    {
+        return (bool)$this->getConfigFromXpath(static::XPATH_DEFAULT_PAKJEGEMAK_BE_DOMESTIC_USE_ALTERNATIVE);
+    }
+
+    public function getAlternativePakjeGemakBeDomesticMap(): array
+    {
+        if (!$this->getUseAlternativePakjeGemakBeDomestic()) {
+            return [];
+        }
+        return $this->getAlternativeMap(static::XPATH_DEFAULT_PAKJEGEMAK_BE_DOMESTIC_ALTERNATIVE_MAP);
+    }
+
     /**
      * @return mixed
      */
@@ -166,12 +201,38 @@ class ProductOptions extends AbstractConfigProvider
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_BE_PRODUCT_OPTION);
     }
 
+    public function getUseAlternativeBe(): bool
+    {
+        return (bool)$this->getConfigFromXpath(static::XPATH_DEFAULT_BE_USE_ALTERNATIVE);
+    }
+
+    public function getAlternativeBeMap(): array
+    {
+        if (!$this->getUseAlternativeBe()) {
+            return [];
+        }
+        return $this->getAlternativeMap(static::XPATH_DEFAULT_BE_ALTERNATIVE_MAP);
+    }
+
     /**
      * @return mixed
      */
     public function getDefaultEpsProductOption()
     {
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_EPS_PRODUCT_OPTION);
+    }
+
+    public function getUseAlternativeEps(): bool
+    {
+        return (bool)$this->getConfigFromXpath(static::XPATH_DEFAULT_EPS_USE_ALTERNATIVE);
+    }
+
+    public function getAlternativeEpsMap(): array
+    {
+        if (!$this->getUseAlternativeEps()) {
+            return [];
+        }
+        return $this->getAlternativeMap(static::XPATH_DEFAULT_EPS_ALTERNATIVE_MAP);
     }
 
     /**
@@ -198,13 +259,38 @@ class ProductOptions extends AbstractConfigProvider
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_GP_PRODUCT_OPTION);
     }
 
+    public function getUseAlternativeGlobalpack(): bool
+    {
+        return (bool)$this->getConfigFromXpath(static::XPATH_DEFAULT_GP_USE_ALTERNATIVE);
+    }
+
+    public function getAlternativeGlobalpackMap(): array
+    {
+        if (!$this->getUseAlternativeGlobalpack()) {
+            return [];
+        }
+        return $this->getAlternativeMap(static::XPATH_DEFAULT_GP_ALTERNATIVE_MAP);
+    }
+
     /**
-     * @param string $country
      * @return mixed
      */
     public function getDefaultPakjeGemakProductOption()
     {
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_PAKJEGEMAK_PRODUCT_OPTION);
+    }
+
+    public function getUseAlternativePakjegemak(): bool
+    {
+        return (bool)$this->getConfigFromXpath(static::XPATH_DEFAULT_PAKJEGEMAK_USE_ALTERNATIVE);
+    }
+
+    public function getAlternativePakjegemakMap(): array
+    {
+        if (!$this->getUseAlternativePakjegemak()) {
+            return [];
+        }
+        return $this->getAlternativeMap(static::XPATH_DEFAULT_PAKJEGEMAK_ALTERNATIVE_MAP);
     }
 
     /**
