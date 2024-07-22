@@ -4,7 +4,7 @@
 ![TIG PostNL tested 2.3.7 versions](https://img.shields.io/badge/Tested%20with%20Magento-2.3.7-%2300cf00?style=for-the-badge)
 ![TIG PostNL tested 2.4.7 versions](https://img.shields.io/badge/Tested%20with%20Magento-2.4.7-%2300cf00?style=for-the-badge)
 [![Total Extension downloads](https://img.shields.io/packagist/dt/tig/postnl-magento2?style=for-the-badge&color=ed7000)](https://packagist.org/packages/tig/postnl-magento2/stats)
-![Build Status](https://img.shields.io/travis/tig-nl/postnl-magento2/master?style=for-the-badge)
+
 
 This is the official PostNL Magento 2 extension to connect your Magento 2 webshop with PostNL.
 
