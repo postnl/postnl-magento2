@@ -9,7 +9,7 @@
 This is the official PostNL Magento 2 extension to connect your Magento 2 webshop with PostNL.
 - 
 ## Support
-For questions related to your PostNL account and PostNL delivery options, please contact PostNL.
+For questions related to your PostNL account and PostNL delivery options and products, please contact with PostNL or your PostNL accountmanager.
 
 For questions about installing and configuring the extension please consult the relevant documentation:
 - **Email:** [digitaleklantsupport@postnl.nl](mailto:digitaleklantsupport@postnl.nl)
