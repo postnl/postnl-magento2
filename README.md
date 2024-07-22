@@ -9,8 +9,8 @@
 This is the official PostNL Magento 2 extension to connect your Magento 2 webshop with PostNL.
 - 
 ## Documentation 
-The location of the Documwentation Pages is as follows:postnl/magento2 => [https://postnl.github.io/postnl-magento2/)
-- 
+**The Documentation Pages => [https://postnl.github.io/postnl-magento2/)
+- **
 ## Support
 For questions related to your PostNL account and PostNL delivery options and products, please contact with PostNL or your PostNL accountmanager.
 
