@@ -6,7 +6,7 @@ Om gebruik te kunnen maken van de extensie dient u eerst de Accountinstellingen 
 
 ![Algemene configuratie]({{ site.baseurl }}/assets/images/2_algemene_configuratie.png "Magento 2 Admin")
 
-De PostNL Magento 2 extensie kan in zowel de live modus als in de test modus draaien. De benodigde gegevens (Klantnummer, Klantcode, Api Key en BLS locatiecode) zijn terug te vinden in uw PostNL account. Indien u nog geen klant bent van PostNL dan kunt u zich [hier aanmelden](https://www.postnl.nl/zakelijk/e-commerce/flexibele-bezorgopties).
+De PostNL Magento 2 extensie kan in zowel de live modus als in de test modus draaien. De benodigde gegevens (Klantnummer, Klantcode, Api Key en BLS locatiecode) zijn terug te vinden in uw PostNL account. Indien u nog geen klant bent van PostNL dan kunt u zich [hier aanmelden](https://www.postnl.nl/zakelijk/zakelijk-klant-worden/).
 Het aanvragen van een API key kan gedaan worden via MijnPostNL, doorloop hiervoor [deze stappenkaart](https://www.postnl.nl/Images/aanvragen-api-key-stappenkaart_tcm10-200445.pdf).
 
 Nadat de gegevens ingevuld zijn, sla dan de configuratie op en klik op *Valideer API Gegevens*. Wanneer de gegevens correct zijn, dan verschijnt er een succes bericht.
