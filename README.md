@@ -1,6 +1,3 @@
-<p align="center">
-<img src="view/frontend/web/images/postnl-logo-large.png" alt="PostNL Logo" style="width:300px">
-</p>
 
 # PostNL Magento 2
 [![Lastest Stable Version](https://img.shields.io/github/v/release/tig-nl/postnl-magento2?style=for-the-badge&color=3244b0)](https://github.com/tig-nl/postnl-magento2/releases/latest)
