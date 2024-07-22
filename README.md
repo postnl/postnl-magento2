@@ -9,9 +9,6 @@
 This is the official PostNL Magento 2 extension to connect your Magento 2 webshop with PostNL.
 - 
 ## Support
-This extension is developed by Total Internet Group ([TIG](https://tig.nl)) commissioned by PostNL.
-
-### Extension basic configuration and account information
 For questions related to your PostNL account and PostNL delivery options, please contact PostNL.
 
 For questions about installing and configuring the extension please consult the relevant documentation:
