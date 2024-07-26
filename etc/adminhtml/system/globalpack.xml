@@ -28,6 +28,24 @@
             </depends>
         </field>
 
+        <field id="use_alternative_gp" translate="label comment" type="select" sortOrder="26" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Activate alternative option</label>
+            <comment><![CDATA[Enable this to use an alternative option when a shipment's total value reaches a certain amount.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/globalpack/use_alternative_gp</config_path>
+        </field>
+
+        <field id="alternative_gp_map" translate="label" sortOrder="27" showInDefault="1" showInStore="1" showInWebsite="1">
+            <label>Alternative Options</label>
+            <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryGlobalPack</frontend_model>
+            <backend_model>TIG\PostNL\Model\Config\Backend\SerializedDeliveryForCountry</backend_model>
+            <config_path>tig_postnl/globalpack/alternative_gp_map</config_path>
+            <depends>
+                <field id="use_alternative_gp">1</field>
+            </depends>
+            <comment>Use country code as "FR" to set specific country. * for any country. You can add countries via comma "FR,ES".</comment>
+        </field>
+
         <group id="barcode_settings" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Barcode settings</label>
             <fieldset_css>tig_postnl-sub-section</fieldset_css>

@@ -145,21 +145,11 @@
                 <tooltip>When shipping with extra cover is selected, the shipment will be insured up to a maximum of €5.000,-</tooltip>
             </field>
 
-            <field id="alternative_default_min_amount" translate="label comment" type="text" sortOrder="45" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Minimum amount</label>
-                <comment><![CDATA[The alternative default option will be used from this value.]]></comment>
-                <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
-                <config_path>tig_postnl/delivery_settings/alternative_default_min_amount</config_path>
-                <depends>
-                    <field id="use_alternative_default">1</field>
-                </depends>
-            </field>
-
-            <field id="alternative_default_option" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Alternative delivery</label>
-                <comment><![CDATA[This option will be used as default from the given amount.]]></comment>
-                <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getAlternativeDeliveryOptions</source_model>
-                <config_path>tig_postnl/delivery_settings/alternative_default_option</config_path>
+            <field id="alternative_delivery_map" translate="label" sortOrder="45" showInDefault="1" showInStore="0" showInWebsite="0">
+                <label>Alternative Options</label>
+                <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryMap</frontend_model>
+                <backend_model>TIG\PostNL\Model\Config\Backend\SerializedDelivery</backend_model>
+                <config_path>tig_postnl/delivery_settings/alternative_delivery_map</config_path>
                 <depends>
                     <field id="use_alternative_default">1</field>
                 </depends>

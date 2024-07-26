@@ -19,11 +19,46 @@
             </depends>
         </field>
 
+        <field id="use_alternative_be" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Activate alternative BE delivery</label>
+            <comment><![CDATA[Enable this to use an alternative default option when a shipment's total value reaches a certain amount.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/delivery_settings/use_alternative_be</config_path>
+        </field>
+
+        <field id="alternative_be_map" translate="label" sortOrder="16" showInDefault="1" showInStore="0" showInWebsite="0">
+            <label>Alternative Options</label>
+            <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeBeDelivery</frontend_model>
+            <backend_model>TIG\PostNL\Model\Config\Backend\SerializedDelivery</backend_model>
+            <config_path>tig_postnl/delivery_settings/alternative_be_map</config_path>
+            <depends>
+                <field id="use_alternative_be">1</field>
+            </depends>
+        </field>
+
         <field id="default_eps_option" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Default EU delivery</label>
             <comment><![CDATA[Select the default product option for EU shipments.]]></comment>
             <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getEpsProducts</source_model>
             <config_path>tig_postnl/delivery_settings/default_eps_option</config_path>
+        </field>
+
+        <field id="use_alternative_eps" translate="label comment" type="select" sortOrder="25" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Activate alternative EU option</label>
+            <comment><![CDATA[Enable this to use an alternative option when a shipment's total value reaches a certain amount.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/delivery_settings/use_alternative_eps</config_path>
+        </field>
+
+        <field id="alternative_eps_map" translate="label" sortOrder="26" showInDefault="1" showInStore="1" showInWebsite="1">
+            <label>Alternative Options</label>
+            <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeEpsDelivery</frontend_model>
+            <backend_model>TIG\PostNL\Model\Config\Backend\SerializedDeliveryForCountry</backend_model>
+            <config_path>tig_postnl/delivery_settings/alternative_eps_map</config_path>
+            <depends>
+                <field id="use_alternative_eps">1</field>
+            </depends>
+            <comment>Use country code as "FR" to set specific country. * for any country. You can add countries via comma "FR,ES".</comment>
         </field>
 
         <field id="business_active" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">

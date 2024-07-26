@@ -10,6 +10,7 @@ use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipment\PriorityCountries;
+use TIG\PostNL\Service\Validation\AlternativeDelivery;
 use TIG\PostNL\Service\Validation\CountryShipping;
 use TIG\PostNL\Service\Wrapper\QuoteInterface;
 
@@ -68,24 +69,17 @@ class ProductInfo
 
     const SHIPMENT_TYPE_BOXABLE_PACKETS   = 'Boxable Packet';
 
-    /** @var ProductOptionsConfiguration */
-    private $productOptionsConfiguration;
+    private ProductOptionsConfiguration $productOptionsConfiguration;
 
-    /** @var ShippingOptions */
-    private $shippingOptions;
+    private ShippingOptions $shippingOptions;
 
-    /** @var ProductOptionsFinder */
-    private $productOptionsFinder;
+    private ProductOptionsFinder $productOptionsFinder;
 
-    /** @var CountryShipping */
-    private $countryShipping;
+    private CountryShipping $countryShipping;
 
-    /** @var QuoteInterface */
-    private $quote;
-    /**
-     * @var ProductOptionsFinder
-     */
-    private $productOptions;
+    private QuoteInterface $quote;
+
+    private AlternativeDelivery $alternativeDelivery;
 
     /**
      * @param ProductOptionsConfiguration $productOptionsConfiguration
@@ -99,13 +93,15 @@ class ProductInfo
         ShippingOptions $shippingOptions,
         ProductOptionsFinder $productOptionsFinder,
         CountryShipping $countryShipping,
-        QuoteInterface $quote
+        QuoteInterface $quote,
+        AlternativeDelivery $alternativeDelivery
     ) {
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->shippingOptions             = $shippingOptions;
         $this->productOptionsFinder        = $productOptionsFinder;
         $this->countryShipping             = $countryShipping;
         $this->quote                       = $quote;
+        $this->alternativeDelivery = $alternativeDelivery;
     }
 
     /**
@@ -220,6 +216,7 @@ class ProductInfo
         }
 
         $this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
+        $this->validateAlternativeMap(AlternativeDelivery::CONFIG_GLOBALPACK, $country);
     }
 
     /**
@@ -273,6 +270,7 @@ class ProductInfo
 
         if ($this->isEpsCountry($country) && !$this->shippingOptions->canUseEpsBusinessProducts()) {
             $this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
+            $this->validateAlternativeMap(AlternativeDelivery::CONFIG_EPS);
             return;
         }
 
@@ -338,6 +336,7 @@ class ProductInfo
 
         if ($this->countryShipping->isShippingBEDomestic($country)) {
             $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakBeDomesticProductOption();
+            $this->validateAlternativeMap(AlternativeDelivery::CONFIG_PAKGEGEMAK_BE_DOMESTIC);
             return;
         }
 
@@ -347,6 +346,7 @@ class ProductInfo
         }
 
         $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
+        $this->validateAlternativeMap(AlternativeDelivery::CONFIG_PAKGEGEMAK);
     }
 
     /**
@@ -402,6 +402,7 @@ class ProductInfo
 
         if ($this->countryShipping->isShippingNLtoBE($country)) {
             $this->code = $this->productOptionsConfiguration->getDefaultBeProductOption();
+            $this->validateAlternativeMap(AlternativeDelivery::CONFIG_BE);
         }
 
         if ($this->countryShipping->isShippingBEtoNL($country)) {
@@ -421,15 +422,7 @@ class ProductInfo
             return;
         }
 
-        /** @var Quote $magentoQuote */
-        $magentoQuote         = $this->quote->getQuote();
-        $quoteTotal           = $magentoQuote->getBaseGrandTotal();
-        $alternativeActive    = $this->productOptionsConfiguration->getUseAlternativeDefault();
-        $alternativeMinAmount = $this->productOptionsConfiguration->getAlternativeDefaultMinAmount();
-
-        if ($alternativeActive && $quoteTotal >= $alternativeMinAmount) {
-            $this->code = $this->productOptionsConfiguration->getAlternativeDefaultProductOption();
-        }
+        $this->validateAlternativeMap(AlternativeDelivery::CONFIG_DELIVERY);
     }
 
     /**
@@ -438,5 +431,17 @@ class ProductInfo
     private function getInfo()
     {
         return ['code' => $this->code, 'type' => $this->type];
+    }
+
+    private function validateAlternativeMap(string $configKey, $country = null): void
+    {
+        $quoteTotal = $this->quote->getQuote()->getBaseGrandTotal();
+
+        if ($quoteTotal > 0 && $this->alternativeDelivery->isEnabled($configKey)) {
+            $code = $this->alternativeDelivery->getMappedCode($configKey, $quoteTotal, $country);
+            if ($code) {
+                $this->code = $code;
+            }
+        }
     }
 }
