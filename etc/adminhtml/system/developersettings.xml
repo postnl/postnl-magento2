@@ -18,5 +18,27 @@
             </field>
         </group>
 
+        <group id="config_dump" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Config Dump</label>
+            <comment><![CDATA[Allows to export and import full PostNL configurations for debugging purposes, excluding sensitive data. Also available as a console command.]]></comment>
+            <fieldset_css>tig_postnl-sub-section</fieldset_css>
+
+            <field id="add_matrix" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="0">
+                <label>Add Matrix Table to the export</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <comment><![CDATA[Do not forget to save after changing and before exporting.]]></comment>
+            </field>
+
+            <field id="config_export" translate="label" type="TIG\PostNL\Block\Adminhtml\Config\Debug\Export" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Export configurations</label>
+            </field>
+
+            <field id="config_import" translate="label" type="file" sortOrder="150" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="0">
+                <label>Import Configurations</label>
+                <backend_model>TIG\PostNL\Config\Debug\Import</backend_model>
+                <comment><![CDATA[When updating matrix rates from another magento store please note that you might need to adjust store ids to the current website store id or code. Ex: matrixrate":{"1" - this number is what should be changed.]]></comment>
+            </field>
+        </group>
+
     </group>
 </include>

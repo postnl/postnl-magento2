@@ -27,13 +27,14 @@ class ShippingBuilder
         $this->shipmentAttributeFactory = $shipmentAttributeFactory;
         $this->orderRepository = $orderRepository;
     }
+
     public function afterCreate(
         SubjectClass       $subject,
         ?ShippingInterface $shipping
     ): ?ShippingInterface {
         if ($shipping) {
-            $method = $shipping->getMethod();
-            if ($this->orderId &&
+            $method = (string)$shipping->getMethod();
+            if ($method && $this->orderId &&
                 strpos($method, 'tig_postnl') !== false &&
                 $extensionAttributes = $shipping->getExtensionAttributes()
             ) {
