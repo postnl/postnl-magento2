@@ -39,6 +39,6 @@ Describe the temporarily workaround or if none exists write "None"
 If applicable, add screenshots to help explain your problem.
 
 ** Please complete the following information**
-- Magento version: [e.g. Magento 2.3.1]
-- PHP version: [e.g. 7.2.0]
-- TIG PostNL version: [e.g. 1.8.1]
+- Magento version: [e.g. Magento 2.4.6]
+- PHP version: [e.g. 8.1.0]
+- TIG PostNL version: [e.g. 1.15.1]

@@ -29,7 +29,7 @@ class GetSmartReturnLabel extends LabelAbstract
         Track                       $track,
         BarcodeHandler              $barcodeHandler,
         GetPackingslip              $getPackingSlip,
-        SmartReturnShipmentManager  $smartReturnShipmentManager,
+        SmartReturnShipmentManager  $smartReturnShipmentManager
     )
     {
         parent::__construct(
