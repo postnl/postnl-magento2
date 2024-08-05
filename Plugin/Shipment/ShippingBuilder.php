@@ -34,6 +34,7 @@ class ShippingBuilder
         if ($shipping) {
             $method = $shipping->getMethod();
             if ($this->orderId &&
+                is_string($method) &&
                 strpos($method, 'tig_postnl') !== false &&
                 $extensionAttributes = $shipping->getExtensionAttributes()
             ) {
