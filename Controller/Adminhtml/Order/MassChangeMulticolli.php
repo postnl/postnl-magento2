@@ -28,7 +28,7 @@ class MassChangeMulticolli extends ToolbarAbstract
         ShipmentProductOptions $productOptions,
         ResetPostNLShipment $resetPostNLShipment,
         ProductOptions $options,
-        OrderCollectionFactory $collectionFactory,
+        OrderCollectionFactory $collectionFactory
     ) {
         parent::__construct(
             $context,

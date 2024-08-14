@@ -28,7 +28,7 @@ class ShipmentLoader
 
     public function __construct(
         ShipmentRepositoryInterface $shipmentRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->shipmentRepository    = $shipmentRepository;
