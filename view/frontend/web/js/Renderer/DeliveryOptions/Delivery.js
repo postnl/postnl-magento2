@@ -182,6 +182,7 @@ define([
 
             // About to receive new delivery days. Deselect the current one.
             this.selectedOption(null);
+            const allowToOpenDelivery = this.canSelectFirstDelivery(address.country);
 
             self.getDeliveryDayRequest = $.ajax({
                 method: 'POST',
@@ -190,7 +191,7 @@ define([
             }).done(function (data) {
                 // If the deliverydays are reloaded, the first one is automatically selected.
                 // Show this by switching to the delivery pane.
-                State.currentOpenPane('delivery');
+                if (allowToOpenDelivery) State.currentOpenPane('delivery');
 
                 State.deliveryOptionsAreAvailable(true);
                 State.deliveryPrice(data.price);
@@ -238,7 +239,7 @@ define([
                         return eps;
                     });
                     this.deliverydays(data);
-                    State.currentOpenPane('delivery');
+                    if (allowToOpenDelivery) State.currentOpenPane('delivery');
                     this.selectFirstDeliveryOption();
                     return;
                 }
@@ -249,7 +250,7 @@ define([
                         return gp;
                     });
                     this.deliverydays(data);
-                    State.currentOpenPane('delivery');
+                    if (allowToOpenDelivery) State.currentOpenPane('delivery');
                     this.selectFirstDeliveryOption();
                     return;
                 }
@@ -316,13 +317,33 @@ define([
             return isActive === 1 && isNL;
         }),
 
+        canSelectFirstDelivery: function(country) {
+            if (State.defaultTab === 'pickup') {
+                if (!country) {
+                    const address = AddressFinder();
+                    country = (address !== null && address !== false && address.country !== undefined) ?
+                        address.country : '';
+                }
+                // Check if pickup enabled for specific country
+                if (
+                    (country === 'NL' && window.checkoutConfig.shipping.postnl.pakjegemak_active) ||
+                    (country === 'BE' && window.checkoutConfig.shipping.postnl.pakjegemak_be_active)
+                ) {
+                    return false;
+                }
+            }
+            return true;
+        },
+
         selectFirstDeliveryOption: function () {
             // Only select the first option if there is none defined
             if (this.selectedOption() !== undefined && this.selectedOption() != null || sessionStorage.postnlPickupOption) {
                 return;
             }
             var deliveryDays = this.deliverydays();
-
+            if (!this.canSelectFirstDelivery()) {
+                return;
+            }
 
             if(sessionStorage.postnlDeliveryOption) {
                 var previousOption = JSON.parse(sessionStorage.postnlDeliveryOption);
