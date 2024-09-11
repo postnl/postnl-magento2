@@ -3,14 +3,14 @@
 namespace TIG\PostNL\Controller;
 
 use Magento\Framework\Json\EncoderInterface;
-use TIG\PostNL\Model\OrderRepository;
-use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
-use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 use Magento\Quote\Model\Quote\Address\RateRequest;
-use TIG\PostNL\Service\Quote\ShippingDuration;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\Action;
 use Magento\Checkout\Model\Session;
+use TIG\PostNL\Model\OrderRepository;
+use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
+use TIG\PostNL\Service\Quote\ShippingDuration;
+use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
 
 abstract class AbstractDeliveryOptions extends Action
 {
@@ -32,12 +32,6 @@ abstract class AbstractDeliveryOptions extends Action
     protected $checkoutSession;
 
     /**
-     * @var DeliveryDate
-     */
-    //@codingStandardsIgnoreLine
-    protected $deliveryEndpoint;
-
-    /**
      * @var ShippingDuration
      */
     //@codingStandardsIgnoreLine
@@ -49,25 +43,12 @@ abstract class AbstractDeliveryOptions extends Action
     private $quoteToRateRequest;
 
     /**
-     * @var array
-     */
-    //@codingStandardsIgnoreLine
-    protected $returnErrors = [
-        0 => 'Could not load from soap data',
-        1 => 'No Address data found.',
-        2 => 'Deliverydays options are disabled.',
-        3 => 'Invalid timeframes response, more information can be found in the PostNL log files.',
-        4 => 'Invalid locations response, more information can be found in the PostNL log files.',
-    ];
-
-    /**
      * @param Context            $context
      * @param EncoderInterface   $encoder
      * @param OrderRepository    $orderRepository
      * @param Session            $checkoutSession
      * @param QuoteToRateRequest $quoteToRateRequest
      * @param ShippingDuration   $shippingDuration
-     * @param DeliveryDate|null  $deliveryDate
      */
     public function __construct(
         Context $context,
@@ -76,12 +57,10 @@ abstract class AbstractDeliveryOptions extends Action
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
         ShippingDuration $shippingDuration,
-        DeliveryDate $deliveryDate = null
     ) {
         $this->encoder            = $encoder;
         $this->orderRepository    = $orderRepository;
         $this->checkoutSession    = $checkoutSession;
-        $this->deliveryEndpoint   = $deliveryDate;
         $this->quoteToRateRequest = $quoteToRateRequest;
         $this->shippingDuration   = $shippingDuration;
 
@@ -133,30 +112,6 @@ abstract class AbstractDeliveryOptions extends Action
     }
 
     /**
-     * CIF call to get the delivery day needed for the StartDate param in TimeFrames Call.
-     * @param array $address
-     *
-     * @return array
-     */
-    //@codingStandardsIgnoreLine
-    protected function getDeliveryDay($address)
-    {
-        $quote   = $this->checkoutSession->getQuote();
-        $storeId = $quote->getStoreId();
-        $shippingDuration = $this->shippingDuration->get();
-        $this->deliveryEndpoint->updateApiKey($storeId);
-        $this->deliveryEndpoint->updateParameters($address, $shippingDuration);
-        $response = $this->deliveryEndpoint->call();
-
-        if (!is_object($response) || !isset($response->DeliveryDate)) {
-            return __('Invalid GetDeliveryDate response: %1', var_export($response, true));
-        }
-
-        $this->checkoutSession->setPostNLDeliveryDate($response->DeliveryDate);
-        return $response->DeliveryDate;
-    }
-
-    /**
      * @return RateRequest
      */
     // @codingStandardsIgnoreLine
@@ -166,15 +121,9 @@ abstract class AbstractDeliveryOptions extends Action
         $address = $request->getParam('address');
 
         /** @var RateRequest $request */
-        $request = $this->quoteToRateRequest->get();
-        $request->setDestCountryId($address['country']);
-        $request->setDestPostcode($address['postcode']);
-
-        $shippingAddress = $request->getShippingAddress();
-        $shippingAddress->setCountryId($address['country']);
-        $shippingAddress->setPostcode($address['postcode']);
-        $request->setShippingAddress($shippingAddress);
-
-        return $request;
+        return $this->quoteToRateRequest->getByUpdatedAddress(
+            $address['country'] ?? '',
+            $address['postcode'] ?? ''
+        );
     }
 }

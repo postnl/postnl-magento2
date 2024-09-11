@@ -64,7 +64,9 @@ class FeeCalculator
      */
     public function statedAddressOnlyFee($params)
     {
-        if ($this->shippingOptions->isStatedAddressOnlyActive() && $params['stated_address_only']) {
+        if (isset($params['stated_address_only'])
+            && $params['stated_address_only']
+            && $this->shippingOptions->isStatedAddressOnlyActive()) {
             return (float)$this->shippingOptions->getStatedAddressOnlyFee();
         }
 

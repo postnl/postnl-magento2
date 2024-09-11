@@ -358,6 +358,15 @@
         </arguments>
     </virtualType>
 
-
+    <type name="TIG\PostNL\Service\Timeframe\Resolver">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="TIG\PostNL\Service\Shipping\DeliveryDate">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
 
 </config>
