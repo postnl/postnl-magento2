@@ -7,7 +7,8 @@ use TIG\PostNL\Webservices\Endpoints\Locations as LocationsEndpoint;
 
 class PickupLocations
 {
-    private $deliveryDateRequest = null;
+    private ?string $deliveryDateRequest = null;
+    private $cache = [];
     private DeliveryDate $deliveryDate;
     private LocationsEndpoint $locationsEndpoint;
 
@@ -26,13 +27,17 @@ class PickupLocations
 
     /**
      * @param array $address
-     * @return stdClass[]
+     * @return \stdClass[]
      * @throws LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Webapi\Exception
      */
     public function get(array $address): array
     {
+        $cacheKey = $address['country'] . $address['postcode'] . implode('', $address['street']);
+        if (isset($this->cache[$cacheKey])) {
+            return $this->cache[$cacheKey];
+        }
         $deliveryDate = false;
         if ($availableDelivery = $this->deliveryDate->get($address)) {
             // Reduce requests
@@ -47,6 +52,7 @@ class PickupLocations
             throw new LocalizedException(__('Invalid GetLocationsResult response: %1', var_export($response, true)));
         }
 
+        $this->cache[$cacheKey] = $response->GetLocationsResult->ResponseLocation;
         return $response->GetLocationsResult->ResponseLocation;
     }
 }
