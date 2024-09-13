@@ -2,6 +2,7 @@
 namespace TIG\PostNL\Service\Timeframe;
 
 use Magento\Checkout\Model\Session;
+use Magento\Framework\App\CacheInterface;
 use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Helper\AddressEnhancer;
@@ -34,6 +35,7 @@ class Resolver
     private TimeFrame $timeFrameEndpoint;
     private ShippingOptions $shippingOptions;
     private DeliveryDate $deliveryDate;
+    private CacheInterface $cache;
 
     public function __construct(
         Session $checkoutSession,
@@ -44,7 +46,8 @@ class Resolver
         LetterboxPackage $letterboxPackage,
         BoxablePackets $boxablePackets,
         CountryShipping $countryShipping,
-        DeliveryDate $deliveryDate
+        DeliveryDate $deliveryDate,
+        CacheInterface $cache
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->letterboxPackage = $letterboxPackage;
@@ -55,6 +58,7 @@ class Resolver
         $this->timeFrameEndpoint = $timeFrame;
         $this->shippingOptions = $shippingOptions;
         $this->deliveryDate = $deliveryDate;
+        $this->cache = $cache;
     }
 
     public function processTimeframes(array $address): array
@@ -159,6 +163,15 @@ class Resolver
             ];
         }
 
+        $cacheId = $this->getIdentifier($address);
+        $content = $this->cache->load($cacheId);
+        if ($content) {
+            try {
+                return ['timeframes' => \json_decode($content, true, 32, JSON_THROW_ON_ERROR)];
+            } catch (\Exception $e) {
+                // retrieve data from api
+            }
+        }
         $timeframes = $this->getPossibleDeliveryDays($address);
         if (empty($timeframes)) {
             return [
@@ -166,6 +179,8 @@ class Resolver
                 'timeframes' => [[['fallback' => __('At the first opportunity')]]]
             ];
         }
+
+        $this->cache->save(\json_encode($timeframes), $cacheId, ['POSTNL_REQUESTS'], 60 * 5);
 
         return [
             'timeframes' => $timeframes
@@ -233,5 +248,10 @@ class Resolver
         return [
             'timeframes' => [[['gp' => __('Ship internationally')]]]
         ];
+    }
+
+    private function getIdentifier(array $address): string
+    {
+        return 'POSTNL_TIMFRAME_' . $address['country'] . '_' . $address['housenumber'] . $address['postcode'];
     }
 }
