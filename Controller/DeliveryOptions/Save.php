@@ -183,7 +183,7 @@ class Save extends AbstractDeliveryOptions
         $params['quote_id'] = $this->checkoutSession->getQuoteId();
 
         // Recalculate the delivery date if it's unknown for pickup
-        if (!isset($params['date']) && $params['type'] == 'pickup') {
+        if ((!isset($params['date']) || !$params['date']) && $params['type'] == 'pickup') {
             $params['address']['country'] = $params['address']['Countrycode'];
             $params['address']['postcode'] = $params['address']['Zipcode'];
             $params['date'] = $this->getDeliveryDay($params['address']);
