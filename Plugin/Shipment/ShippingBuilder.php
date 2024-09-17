@@ -43,7 +43,7 @@ class ShippingBuilder
                     /** @var ShipmentAttributeInterface $model */
                     $model = $this->shipmentAttributeFactory->create();
 
-                    $model->setProductCode($postnlOrder->getProductCode())
+                    $model->setProductCode($postnlOrder->getProductCode() ?? '')
                         ->setType((string)$postnlOrder->getType())
                         ->setShipAt((string)$postnlOrder->getShipAt())
                         ->setDeliveryDate($postnlOrder->getDeliveryDate())
