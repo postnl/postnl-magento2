@@ -81,7 +81,7 @@ class InternationalAddressValidation extends Action
             ];
         }
 
-        if ($result === 'error') {
+        if ($result === 'error' || $data === null) {
             $result = [
                 'error' => true,
                 //@codingStandardsIgnoreLine
