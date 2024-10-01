@@ -47,7 +47,7 @@ class ProductType extends AbstractSource
     /**
      * @return array
      */
-    public function getAllOptions()
+    public function getAllOptions(): array
     {
         $options = [
             // @codingStandardsIgnoreLine
@@ -67,11 +67,11 @@ class ProductType extends AbstractSource
     }
 
     /**
-     * @param $items
+     * @param array $items
      *
      * @return array
      */
-    public function getAllTypes($items)
+    public function getAllTypes($items): array
     {
         $types = [
             self::PRODUCT_TYPE_EXTRA_AT_HOME,

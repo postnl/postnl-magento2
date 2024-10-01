@@ -3,7 +3,6 @@
 namespace TIG\PostNL\Service\Shipping;
 
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
-use Magento\Checkout\Controller\Cart\Add;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Sales\Api\Data\ShipmentItemInterface;

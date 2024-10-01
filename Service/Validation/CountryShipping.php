@@ -6,10 +6,7 @@ use TIG\PostNL\Config\Provider\AddressConfiguration;
 
 class CountryShipping
 {
-    /**
-     * @var AddressConfiguration
-     */
-    private $addressConfiguration;
+    private AddressConfiguration $addressConfiguration;
 
     /**
      * @param AddressConfiguration $addressConfiguration
@@ -20,33 +17,33 @@ class CountryShipping
     }
 
     /**
-     * @param $country
+     * @param string $country
      *
      * @return bool
      */
-    public function isShippingNLDomestic($country)
+    public function isShippingNLDomestic(string $country): bool
     {
-        return ($country == 'NL' && $this->addressConfiguration->getCountry() == 'NL');
+        return ($country === 'NL' && $this->addressConfiguration->getCountry() === 'NL');
     }
 
     /**
-     * @param $country
+     * @param string $country
      *
      * @return bool
      */
-    public function isShippingBEDomestic($country)
+    public function isShippingBEDomestic(string $country): bool
     {
-        return ($country === 'BE' && $this->addressConfiguration->getCountry() == 'BE');
+        return ($country === 'BE' && $this->addressConfiguration->getCountry() === 'BE');
     }
 
     /**
-     * @param $country
+     * @param string $country
      *
      * @return bool
      */
-    public function isShippingNLtoBE($country)
+    public function isShippingNLtoBE(string $country): bool
     {
-        return ($country === 'BE' && $this->addressConfiguration->getCountry() == 'NL');
+        return ($country === 'BE' && $this->addressConfiguration->getCountry() === 'NL');
     }
 
     /**
@@ -56,26 +53,26 @@ class CountryShipping
      */
     public function isShippingBEtoNL(string $country): bool
     {
-        return ($country === 'NL' && $this->addressConfiguration->getCountry() == 'BE');
+        return ($country === 'NL' && $this->addressConfiguration->getCountry() === 'BE');
     }
 
     /**
-     * @param $country
+     * @param string $country
      *
      * @return bool
      */
-    public function isShippingNLToEps($country)
+    public function isShippingNLToEps(string $country): bool
     {
-        return (!in_array($country, ['BE', 'NL']) && $this->addressConfiguration->getCountry() == 'NL');
+        return (!in_array($country, ['BE', 'NL'], true) && $this->addressConfiguration->getCountry() === 'NL');
     }
 
     /**
-     * @param $country
+     * @param string $country
      *
      * @return bool
      */
-    public function isShippingBEToEps($country)
+    public function isShippingBEToEps(string $country): bool
     {
-        return ($country !== 'BE' && $this->addressConfiguration->getCountry() == 'BE');
+        return ($country !== 'BE' && $this->addressConfiguration->getCountry() === 'BE');
     }
 }
