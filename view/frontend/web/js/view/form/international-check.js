@@ -17,6 +17,8 @@ define([
             message:        ko.observable(null),
             messageClasses: ko.observable({}),
             addresses:      ko.observable([]),
+            timeoutDelay:   800,
+            timeout:        ko.observable(null),
             imports: {
                 observePostcode:        '${ $.parentName }.postcode-field-group.field-group.postcode:value',
                 observeHousenumber:     '${ $.parentName }.postcode-field-group.field-group.housenumber:value',
@@ -128,6 +130,14 @@ define([
         },
 
         updateFieldData() {
+            if (this.timeout() !== null) {
+                window.clearTimeout(this.timeout());
+            }
+            this.timeout(window.setTimeout(this.processUpdatedAddress.bind(this), this.timeoutDelay));
+        },
+
+        processUpdatedAddress: function() {
+            this.timeout(null);
             var country;
 
             // Only apply the postcode check for NL
