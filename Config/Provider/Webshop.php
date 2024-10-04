@@ -32,8 +32,6 @@ class Webshop extends AbstractConfigProvider
 
     const XPATH_INTERNATIONAL_ADDRESS_ENABLED = 'tig_postnl/internationaladdressoptions/enable';
 
-    const XPATH_POSTCODE_ADDRESS_CHECK_ENABLED = 'tig_postcode/configuration/modus';
-
     const XPATH_CLEAR_OLD_SHIPMENT_LABELS = 'tig_postnl/labelandpackingslipoptions/enable_expired_label_cleanup';
 
     /**
@@ -49,10 +47,6 @@ class Webshop extends AbstractConfigProvider
      */
     public function getIsAddressCheckEnabled()
     {
-        if ($this->getConfigFromXpath(self::XPATH_POSTCODE_ADDRESS_CHECK_ENABLED)) {
-            return false;
-        }
-
         return $this->getConfigFromXpath(self::XPATH_ADDRESS_CHECK_ENABLED);
     }
 
