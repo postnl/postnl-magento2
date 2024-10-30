@@ -76,6 +76,9 @@ class DefaultOptions implements OptionSourceInterface
         if ($this->shippingOptions->isPakjegemakActive('BE')) {
             $beProducts[] = $this->productOptions->getPakjeGemakBeOptions();
         }
+        // Add package options as available for those deliveries for selection
+        $beProducts[] = $this->productOptions->getPriorityOptions();
+        $beProducts[] = $this->productOptions->getBoxableOptions();
 
         return call_user_func_array("array_merge", $beProducts);
     }
@@ -100,6 +103,9 @@ class DefaultOptions implements OptionSourceInterface
     public function getEpsProducts()
     {
         $epsProducts[] = $this->productOptions->getEpsOptions();
+        // Add package options as available for those deliveries for selection
+        $epsProducts[] = $this->productOptions->getPriorityOptions();
+        $epsProducts[] = $this->productOptions->getBoxableOptions();
 
         return call_user_func_array("array_merge", $epsProducts);
     }
@@ -140,6 +146,9 @@ class DefaultOptions implements OptionSourceInterface
     public function getGlobalProducts()
     {
         $globalProducts[] = $this->productOptions->getGlobalPackOptions();
+        // Add package options as available for those deliveries for selection
+        $globalProducts[] = $this->productOptions->getPriorityOptions();
+        $globalProducts[] = $this->productOptions->getBoxableOptions();
 
         return call_user_func_array("array_merge", $globalProducts);
     }
