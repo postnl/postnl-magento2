@@ -1,6 +1,6 @@
 <?php
 
-namespace TIG\PostNL\Setup\V1170\Data;
+namespace TIG\PostNL\Setup\V1180\Data;
 
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute as EavAttribute;
@@ -40,7 +40,7 @@ class InstallLetterboxPackages extends AbstractDataInstaller
                 'type'                    => 'int',
                 'backend'                 => '',
                 'frontend'                => '',
-                'label'                   => 'Maximum quantity International Package',
+                'label'                   => 'Maximum quantity International Packet',
                 'input'                   => 'text',
                 'class'                   => '',
                 'source'                  => '',
@@ -56,7 +56,6 @@ class InstallLetterboxPackages extends AbstractDataInstaller
                 'used_in_product_listing' => true,
                 'unique'                  => false,
                 'apply_to'                => 'simple,grouped,bundle',
-                'note'                    => '[INT_1] Maximum quantity for International Package.'
             ]
         );
 
@@ -84,7 +83,6 @@ class InstallLetterboxPackages extends AbstractDataInstaller
                 'used_in_product_listing' => true,
                 'unique'                  => false,
                 'apply_to'                => 'simple,grouped,bundle',
-                'note'                    => '[INT_2] Maximum quantity for International Letterbox Package.'
             ]
         );
     }

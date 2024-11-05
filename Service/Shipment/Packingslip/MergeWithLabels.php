@@ -191,7 +191,7 @@ class MergeWithLabels
             $this->setEpsPosition();
         }
 
-        if ($type == strtolower(ProductInfo::OPTION_BOXABLE_PACKETS)) {
+        if ($type === ProductInfo::OPTION_BOXABLE_PACKETS || $type === ProductInfo::OPTION_INTENATIONAL_PACKET) {
             $this->setBoxablePacketsPosition();
         }
 

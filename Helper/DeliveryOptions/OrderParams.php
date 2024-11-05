@@ -156,7 +156,7 @@ class OrderParams
             return $list;
         }
 
-        if ($type === 'Boxable Packet') {
+        if ($type === 'Boxable Packet' || $type === 'International Packet') {
             return $list;
         }
 
@@ -230,6 +230,10 @@ class OrderParams
 
         if (!isset($params['option']) && $params['type'] === 'Boxable Packet' && $country !== 'NL') {
             $option = 'boxable_packets';
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'International Packet' && $country !== 'NL') {
+            $option = 'priority_options';
         }
 
         if (!isset($params['option']) && $params['type'] === 'fallback' && $country !== 'NL' && in_array($params['country'], EpsCountries::ALL, true)) {

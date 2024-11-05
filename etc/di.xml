@@ -209,8 +209,8 @@
                 <item name="v1.9.4" xsi:type="array">
                     <item name="InstallMaximumQuantityLetterboxPackage" xsi:type="object">TIG\PostNL\Setup\V194\Data\InstallMaximumQuantityLetterboxPackage</item>
                 </item>
-                <item name="v1.17.0" xsi:type="array">
-                    <item name="InstallAdditionalLetterboxOptions" xsi:type="object">TIG\PostNL\Setup\V1170\Data\InstallLetterboxPackages</item>
+                <item name="v1.18.0" xsi:type="array">
+                    <item name="InstallAdditionalLetterboxOptions" xsi:type="object">TIG\PostNL\Setup\V1180\Data\InstallLetterboxPackages</item>
                 </item>
             </argument>
         </arguments>

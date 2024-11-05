@@ -925,6 +925,8 @@ abstract class OptionsAbstract
         'letterbox_package' => '',
         'Boxable Packets'   => '',
         'boxable_packets'   => '',
+        'International Packet' => '',
+        'priority_options'   => '',
     ];
 
     /**

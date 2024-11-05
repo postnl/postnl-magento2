@@ -38,12 +38,11 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_ITEM_OPTIONS_MANAGE_STOCK                = 'cataloginventory/item_options/manage_stock';
     const XPATH_SHIPPING_OPTION_CARGO_ACTIVE             = 'tig_postnl/cargo/cargo_active';
     const XPATH_SHIPPING_OPTION_EPS_BUSINESS_ACTIVE      = 'tig_postnl/eps/business_active';
-    const XPATH_SHIPPING_OPTIONS_PEPS_ACTIVE             = 'tig_postnl/peps/active';
     const XPATH_SHIPPING_OPTIONS_GLOBALPACK_ACTIVE       = 'tig_postnl/globalpack/enabled';
     const XPATH_SHIPPING_OPTION_STATED_ADDRESS_ACTIVE    = 'tig_postnl/delivery_settings/stated_address_only_active';
     const XPATH_SHIPPING_OPTION_STATED_ADDRESS_FEE       = 'tig_postnl/delivery_settings/stated_address_only_fee';
-    const XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_ACTIVE = 'tig_postnl/letterbox_package/letterbox_package_active';
-    const XPATH_SHIPPING_OPTION_BOXABLE_PACKETS_ACTIVE   = 'tig_postnl/peps/peps_boxable_packets_active';
+    const XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_MODE   = 'tig_postnl/letterbox_package/letterbox_package_calculation_mode';
+    const XPATH_SHIPPING_OPTION_BOXABLE_PACKETS_MODE     = 'tig_postnl/peps/peps_boxable_packets_calculation_mode';
     const XPATH_SHIPPING_OPTION_COUNTRY                  = 'tig_postnl/generalconfiguration_shipping_address/country';
     const XPATH_SHIPPING_OPTION_INSURED_TIER             = 'tig_postnl/insured_delivery/insured_tier';
     const XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF        = 'tig_postnl/delivery_days/delivery_date_off';
@@ -276,11 +275,13 @@ class ShippingOptions extends AbstractConfigProvider
     }
 
     /**
+     * @deprecated
+     * Validated vs product attribute now, not a config
      * @return bool
      */
     public function canUsePriority()
     {
-        return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTIONS_PEPS_ACTIVE);
+        return true;
     }
 
     /**
@@ -319,20 +320,26 @@ class ShippingOptions extends AbstractConfigProvider
         return (float) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_STATED_ADDRESS_FEE);
     }
 
-    /**
-     * @return bool
-     */
-    public function isLetterboxPackageActive()
+    public function isLetterboxPackageActive(): bool
     {
-        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_ACTIVE);
+        return $this->getLetterBoxPackageCalculationMode()
+            === \TIG\PostNL\Config\Source\LetterboxPackage\CalculationMode::CALCULATION_MODE_AUTOMATIC;
     }
 
-    /**
-     * @return bool
-     */
-    public function isBoxablePacketsActive()
+    public function getLetterBoxPackageCalculationMode($storeId = null): string
     {
-        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_BOXABLE_PACKETS_ACTIVE);
+        return (string)$this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_MODE, $storeId);
+    }
+
+    public function isBoxablePacketsActive(): bool
+    {
+        return $this->getBoxablePacketsCalculationMode()
+            === \TIG\PostNL\Config\Source\LetterboxPackage\CalculationMode::CALCULATION_MODE_AUTOMATIC;
+    }
+
+    public function getBoxablePacketsCalculationMode($storeId = null): string
+    {
+        return (string)$this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_BOXABLE_PACKETS_MODE, $storeId);
     }
 
     /**

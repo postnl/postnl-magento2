@@ -4,11 +4,12 @@ namespace TIG\PostNL\Service\Timeframe;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\CacheInterface;
 use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
-use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Helper\AddressEnhancer;
+use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipping\BoxablePackets;
 use TIG\PostNL\Service\Shipping\DeliveryDate;
+use TIG\PostNL\Service\Shipping\InternationalPacket;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
 use TIG\PostNL\Service\Validation\CountryShipping;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
@@ -29,12 +30,13 @@ class Resolver
     private Session $checkoutSession;
     private LetterboxPackage $letterboxPackage;
     private BoxablePackets $boxablePackets;
+    private InternationalPacket $internationalPacket;
     private IsDeliverDaysActive $isDeliveryDaysActive;
     private AddressEnhancer $addressEnhancer;
     private CountryShipping $countryShipping;
     private TimeFrame $timeFrameEndpoint;
-    private ShippingOptions $shippingOptions;
     private DeliveryDate $deliveryDate;
+    private CanaryIslandToIC $canaryConverter;
     private CacheInterface $cache;
 
     public function __construct(
@@ -42,22 +44,24 @@ class Resolver
         AddressEnhancer $addressEnhancer,
         TimeFrame $timeFrame,
         IsDeliverDaysActive $isDeliverDaysActive,
-        ShippingOptions $shippingOptions,
         LetterboxPackage $letterboxPackage,
         BoxablePackets $boxablePackets,
+        InternationalPacket $internationalPacket,
         CountryShipping $countryShipping,
         DeliveryDate $deliveryDate,
+        CanaryIslandToIC $canaryConverter,
         CacheInterface $cache
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->letterboxPackage = $letterboxPackage;
         $this->boxablePackets = $boxablePackets;
+        $this->internationalPacket = $internationalPacket;
         $this->isDeliveryDaysActive = $isDeliverDaysActive;
         $this->addressEnhancer = $addressEnhancer;
         $this->countryShipping = $countryShipping;
         $this->timeFrameEndpoint = $timeFrame;
-        $this->shippingOptions = $shippingOptions;
         $this->deliveryDate = $deliveryDate;
+        $this->canaryConverter = $canaryConverter;
         $this->cache = $cache;
     }
 
@@ -80,11 +84,18 @@ class Resolver
         }
 
         //Boxable Packet = Letterbox Worldwide
-        if ($address['country'] !== 'NL' && $this->boxablePackets->isBoxablePacket($cartItems, false)) {
+        if ($address['country'] !== 'NL' && $this->boxablePackets->canFixInTheBox($cartItems)) {
             return $this->getBoxablePacketResponse();
         }
 
-        if ($address['country'] === 'ES' && in_array($address['country'], EpsCountries::ALL, true) && $this->canaryConverter->isCanaryIsland($address)) {
+        //International Packet
+        if ($address['country'] !== 'NL' && $this->internationalPacket->canFixInTheBox($cartItems)) {
+            return $this->getInternationalCountryResponse();
+        }
+
+        if ($address['country'] === 'ES' && in_array($address['country'], EpsCountries::ALL, true)
+            && $this->canaryConverter->isCanaryIsland($address)
+        ) {
             return $this->getGlobalPackResponse();
         }
 
@@ -120,12 +131,7 @@ class Resolver
             return true;
         }
 
-        //NL to BE shipments can be a PEPS shipment and should be considered as such when enabled
-        if ($this->countryShipping->isShippingNLtoBE($address['country']) && $this->shippingOptions->canUsePriority()) {
-            return true;
-        }
-
-        // BE to BE shipments is not EPS, but BE to NL is
+        // BE to BE shipments is not EPS, but BE to EU is
         if ($this->countryShipping->isShippingBEToEps($address['country'])) {
             return true;
         }
@@ -233,6 +239,14 @@ class Resolver
         return [
             'boxable_packets'   => true,
             'timeframes'        => [[['boxable_packets' => __('Your order is a boxable packet.')]]]
+        ];
+    }
+
+    private function getInternationalCountryResponse(): array
+    {
+        return [
+            'boxable_packets'   => true,
+            'timeframes'        => [[['international_packet' => __('Ship internationally')]]]
         ];
     }
 

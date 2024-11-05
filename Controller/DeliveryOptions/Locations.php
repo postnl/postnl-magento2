@@ -61,7 +61,7 @@ class Locations extends AbstractDeliveryOptions
     public function execute()
     {
         $products = $this->checkoutSession->getQuote()->getAllItems();
-        if ($this->letterboxPackage->isLetterboxPackage($products, false)) {
+        if ($this->letterboxPackage->isLetterboxPackage($products)) {
             return $this->jsonResponse([
                 'error' => __('Pickup locations are disabled for Letterbox packages.')
             ]);

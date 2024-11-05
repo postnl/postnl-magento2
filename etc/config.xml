@@ -159,7 +159,12 @@
                 <default_peps_boxable_packets_option>6972</default_peps_boxable_packets_option>
                 <barcode_type>LA</barcode_type>
                 <barcode_range>NL</barcode_range>
+                <peps_boxable_packets_calculation_mode>manually</peps_boxable_packets_calculation_mode>
             </peps>
+
+            <letterbox_package>
+                <letterbox_package_calculation_mode>manually</letterbox_package_calculation_mode>
+            </letterbox_package>
 
             <returns>
                 <template>tig_postnl_postnl_settings_returns_template</template>

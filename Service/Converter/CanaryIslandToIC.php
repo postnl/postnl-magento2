@@ -25,11 +25,11 @@ class CanaryIslandToIC
      * POSTNLM2-504 - Canary islands, Melilla and Ceuta should be considered Globalpack
      * https://developer.postnl.nl/browse-apis/send-and-track/products/#destination-EU
      *
-     * @param SalesAddress|QuoteAddress $address
+     * @param SalesAddress|QuoteAddress|array $address
      *
      * @return bool
      */
-    public function isCanaryIsland($address)
+    public function isCanaryIsland($address): bool
     {
         $canaryIslands = [35, 38, 51, 52];
 
