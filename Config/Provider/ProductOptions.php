@@ -412,7 +412,6 @@ class ProductOptions extends AbstractConfigProvider
     }
 
     /**
-     * International Packets and Boxable Packets > Default Boxable Packet delivery
      * @return string
      */
     public function getDefaultBoxablePacketsProductOption()

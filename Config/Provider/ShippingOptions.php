@@ -276,7 +276,6 @@ class ShippingOptions extends AbstractConfigProvider
     }
 
     /**
-     * Points to: International Packets and Boxable Packets > Use International (Mailbox) Packets
      * @return bool
      */
     public function canUsePriority()
