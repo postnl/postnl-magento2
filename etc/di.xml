@@ -372,4 +372,44 @@
         </arguments>
     </type>
 
+    <virtualType name="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryGlobalPack" type="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryForCountryMap">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="method" xsi:type="string">getGlobalProducts</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeBeDelivery" type="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryMap">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="method" xsi:type="string">getBeProducts</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativePakjegemakDelivery" type="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryMap">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="method" xsi:type="string">getPakjeGemakOptions</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativePakjegemakBeDomesticDelivery" type="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryMap">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="method" xsi:type="string">getPakjeGemakBeDomesticOptions</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeEpsDelivery" type="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryForCountryMap">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="method" xsi:type="string">getEpsProducts</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
 </config>

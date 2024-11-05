@@ -20,11 +20,6 @@ class EPS extends Domestic
     private $priority = [6350, 6550, 6940, 6942];
 
     /**
-     * These are return labels that should be rotated, separate from their normal shipping labels
-     */
-    private $returnProducts = [4946];
-
-    /**
      * @var bool
      */
     private $templateInserted = false;
@@ -81,10 +76,6 @@ class EPS extends Domestic
             return true;
         }
 
-        if ($this->rotateReturnProduct($label)) {
-            return true;
-        }
-
         return false;
     }
 
@@ -96,16 +87,6 @@ class EPS extends Domestic
     public function isRotatedProduct($code)
     {
         return in_array($code, $this->rotated);
-    }
-
-    /**
-     * @param ShipmentLabelInterface $label
-     *
-     * @return bool
-     */
-    private function rotateReturnProduct($label)
-    {
-        return (in_array($label->getProductCode(), $this->returnProducts) && $label->getReturnLabel());
     }
 
     /**
