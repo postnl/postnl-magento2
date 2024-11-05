@@ -239,7 +239,7 @@ class OrderParams
             $option = 'GP';
         }
 
-        if (!isset($params['option']) && $params['type'] === 'Letterbox Package' && $params['country'] === 'NL') {
+        if (!isset($params['option']) && $params['type'] === 'Letterbox Package' && $params['country'] == 'NL') {
             $option = 'letterbox_package';
         }
 

@@ -649,4 +649,3 @@ Percent,Percent
 "When updating matrix rates from another Magento store please note that you might need to adjust store ids to the current website store id or code. Ex: matrixrate"":{""1"" - this number is what should be changed.","When updating matrix rates from another Magento store please note that you might need to adjust store ids to the current website store id or code. Ex: matrixrate"":{""1"" - this number is what should be changed."
 "Invalid configuration file provided.","Invalid configuration file provided."
 "Config file has been processed.","Config file has been processed."
-"Pickup locations are disabled for Letterbox packages.","Pickup locations are disabled for Letterbox packages."

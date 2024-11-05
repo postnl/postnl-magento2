@@ -151,13 +151,6 @@ class Timeframes extends AbstractDeliveryOptions
             return $this->jsonResponse($this->getLetterboxPackageResponse($price['price']));
         }
 
-        // Boxable Packets for BE specifically BE
-        if ($this->countryShipping->isShippingNLtoBE($params['address']['country'])
-            && $this->boxablePackets->isLetterboxPackageProducts($cartItems)
-            && $this->boxablePackets->isBoxablePacket($cartItems, true)) {
-            return $this->jsonResponse($this->getBoxablePacketResponse($price['price']));
-        }
-
         //Boxable Packet = Letterbox Worldwide
         if ($this->boxablePackets->isBoxablePacket($cartItems, false) && $params['address']['country'] != 'NL') {
             return $this->jsonResponse($this->getBoxablePacketResponse($price['price']));
