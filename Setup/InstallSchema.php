@@ -9,17 +9,28 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 class InstallSchema implements InstallSchemaInterface
 {
     /**
-     * @var array
+     * @var InstallSchemaInterface[]
      */
-    private $installSchemaObjects;
+    private array $installSchemaObjects;
 
-    /**
-     * @param array $installSchemaObjects
-     */
     public function __construct(
-        $installSchemaObjects = []
+        \TIG\PostNL\Setup\V110\Schema\InstallShipmentTable $installShipmentTable,
+        \TIG\PostNL\Setup\V110\Schema\InstallOrderTable $installOrderTable,
+        \TIG\PostNL\Setup\V110\Schema\InstallShipmentLabelTable $installShipmentLabelTable,
+        \TIG\PostNL\Setup\V110\Schema\InstallShipmentBarcodeTable $installShipmentBarcodeTable,
+        \TIG\PostNL\Setup\V110\Schema\InstallTablerateTable $installTablerateTable,
+        \TIG\PostNL\Setup\V110\Schema\SalesShipmentGridColumns $salesShipmentGridColumns,
+        \TIG\PostNL\Setup\V110\Schema\SalesOrderGridColumns $salesOrderGridColumns
     ) {
-        $this->installSchemaObjects = $installSchemaObjects;
+        $this->installSchemaObjects = [
+            $installShipmentTable,
+            $installOrderTable,
+            $installShipmentLabelTable,
+            $installShipmentBarcodeTable,
+            $installTablerateTable,
+            $salesShipmentGridColumns,
+            $salesOrderGridColumns
+        ];
     }
 
     /**
@@ -35,18 +46,20 @@ class InstallSchema implements InstallSchemaInterface
         $setup->startSetup();
 
         if (version_compare($context->getVersion(), '1.1.0', '<')) {
-            $this->installSchemas($this->installSchemaObjects['v1.1.0'], $setup, $context);
+            $this->installSchemas($this->installSchemaObjects, $setup, $context);
         }
 
         $setup->endSetup();
     }
 
     /**
-     * @param $schemaObjects
-     * @param $setup
-     * @param $context
+     * @param InstallSchemaInterface[] $schemaObjects
+     * @param SchemaSetupInterface $setup
+     * @param ModuleContextInterface $context
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function installSchemas($schemaObjects, $setup, $context)
+    private function installSchemas(array $schemaObjects, SchemaSetupInterface $setup, ModuleContextInterface $context): void
     {
         /** @var AbstractTableInstaller|AbstractColumnsInstaller $schema */
         foreach ($schemaObjects as $schema) {
