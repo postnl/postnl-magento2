@@ -9,18 +9,28 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 // @codingStandardsIgnoreFile
 class UpgradeData implements UpgradeDataInterface
 {
-    /**
-     * @var array
-     */
-    private $upgradeDataObjects;
+    private array $upgradeDataObjects;
 
-    /**
-     * @param array $upgradeDataObjects
-     */
     public function __construct(
-        $upgradeDataObjects = []
+        \TIG\PostNL\Setup\V120\Data\CustomProductAttributes $customProductAttributes,
+        \TIG\PostNL\Setup\V141\Data\ShippingDurationAttribute $shippingDurationAttribute,
+        \TIG\PostNL\Setup\V160\Data\ConfigurationData $configurationData,
+        \TIG\PostNL\Setup\V172\Data\UpdateCustomProductAttributes $updateCustomProductAttributes,
+        \TIG\PostNL\Setup\V181\Data\UpdateConfigData $updateConfigData,
+        \TIG\PostNL\Setup\V191\Data\InstallDisableDeliveryDaysAttribute $installDisableDeliveryDaysAttribute,
+        \TIG\PostNL\Setup\V194\Data\InstallMaximumQuantityLetterboxPackage $installMaximumQuantityLetterboxPackage,
+        \TIG\PostNL\Setup\V1180\Data\InstallLetterboxPackages $installLetterboxPackages
     ) {
-        $this->upgradeDataObjects = $upgradeDataObjects;
+        $this->upgradeDataObjects = [
+            'v1.2.0' => [$customProductAttributes],
+            'v1.4.1' => [$shippingDurationAttribute],
+            'v1.6.0' => [$configurationData],
+            'v1.7.2' => [$updateCustomProductAttributes],
+            'v1.8.1' => [$updateConfigData],
+            'v1.9.1' => [$installDisableDeliveryDaysAttribute],
+            'v1.9.4' => [$installMaximumQuantityLetterboxPackage],
+            'v1.18.0' => [$installLetterboxPackages]
+        ];
     }
 
     public function upgrade(ModuleDataSetupInterface $setup, ModuleContextInterface $context)

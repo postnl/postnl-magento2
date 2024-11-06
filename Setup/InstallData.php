@@ -8,18 +8,18 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 class InstallData implements InstallDataInterface
 {
-    /**
-     * @var array
-     */
-    private $installDataObjects;
+    private array $installDataObjects;
 
-    /**
-     * @param array $installDataObjects
-     */
     public function __construct(
-        $installDataObjects = []
+        \TIG\PostNL\Setup\V120\Data\CustomProductAttributes $customProductAttributes,
+        \TIG\PostNL\Setup\V141\Data\ShippingDurationAttribute $shippingDurationAttribute,
+        \TIG\PostNL\Setup\V160\Data\ConfigurationData $configurationData
     ) {
-        $this->installDataObjects = $installDataObjects;
+        $this->installDataObjects = [
+            $customProductAttributes,
+            $shippingDurationAttribute,
+            $configurationData
+        ];
     }
 
     /**
@@ -34,25 +34,10 @@ class InstallData implements InstallDataInterface
     {
         $setup->startSetup();
 
-        foreach ($this->installDataObjects as $version) {
-            $this->installData($version, $setup, $context);
+        foreach ($this->installDataObjects as $installer) {
+            $installer->install($setup, $context);
         }
 
         $setup->endSetup();
-    }
-
-    /**
-     * @param \TIG\PostNL\Setup\AbstractDataInstaller[] $installSchemaObjects
-     * @param ModuleDataSetupInterface                  $setup
-     * @param ModuleContextInterface                    $context
-     */
-    private function installData(
-        array $installSchemaObjects,
-        ModuleDataSetupInterface $setup,
-        ModuleContextInterface $context
-    ) {
-        foreach ($installSchemaObjects as $installer) {
-            $installer->install($setup, $context);
-        }
     }
 }
