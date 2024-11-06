@@ -142,6 +142,18 @@ interface OrderInterface
     public function getIsPakjegemak();
 
     /**
+     * @return bool|int
+     */
+    public function getIsStatedAddressOnly();
+
+    /**
+     * @param int|bool $value
+     *
+     * @return OrderInterface
+     */
+    public function setIsStatedAddressOnly($value): self;
+
+    /**
      * @param int $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface

@@ -299,11 +299,11 @@ class Order extends AbstractModel implements OrderInterface
     }
 
     /**
-     * @param $value
+     * @param int|bool $value
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
-    public function setIsStatedAddressOnly($value)
+    public function setIsStatedAddressOnly($value): self
     {
         return $this->setData(static::FIELD_IS_STATED_ADDRESS_ONLY, $value);
     }

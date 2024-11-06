@@ -54,6 +54,19 @@ class QuoteToRateRequest
         return $rateRequest;
     }
 
+    public function getByUpdatedAddress(string $country, string $postcode): RateRequest
+    {
+        $request = $this->get();
+        $request->setDestCountryId($country);
+        $request->setDestPostcode($postcode);
+
+        $shippingAddress = $request->getShippingAddress();
+        $shippingAddress->setCountryId($country);
+        $shippingAddress->setPostcode($postcode);
+        $request->setShippingAddress($shippingAddress);
+        return $request;
+    }
+
     /**
      * @return int
      */

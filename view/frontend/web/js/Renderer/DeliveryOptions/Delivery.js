@@ -95,7 +95,7 @@ define([
             State.currentSelectedShipmentType('delivery');
 
             var fee = null;
-            if (!value.fallback && !value.letterbox_package && !value.boxable_packets && !value.eps && !value.gp) {
+            if (!value.fallback && !value.letterbox_package && !value.boxable_packets && !value.international_packet && !value.eps && !value.gp) {
                 if (value.hasFee !== undefined && value.hasFee()) {
                     fee = value.getFee();
                 }
@@ -113,6 +113,9 @@ define([
             }
             if (typeof value.boxable_packets !== 'undefined') {
                 type = 'Boxable Packet';
+            }
+            if (typeof value.international_packet !== 'undefined') {
+                type = 'International Packet';
             }
 
             if (typeof value.eps !== 'undefined') {
@@ -224,7 +227,7 @@ define([
                     return;
                 }
 
-                if (data.boxable_packets === true) {
+                if (data.boxable_packets === true || data.international_packet === true) {
                     data  = ko.utils.arrayMap(data.timeframes, function (boxable_packets) {
                         return boxable_packets;
                     });

@@ -43,6 +43,8 @@ class ProductInfo
 
     const OPTION_LETTERBOX_PACKAGE        = 'letterbox_package';
 
+    const OPTION_INTENATIONAL_PACKET      = 'priority_options';
+
     const OPTION_BOXABLE_PACKETS          = 'boxable_packets';
 
     const SHIPMENT_TYPE_PG                = 'PG';
@@ -67,6 +69,7 @@ class ProductInfo
 
     const SHIPMENT_TYPE_LETTERBOX_PACKAGE = 'Letterbox Package';
 
+    const SHIPMENT_TYPE_INTERNATIONAL_PACKET = 'International Packet';
     const SHIPMENT_TYPE_BOXABLE_PACKETS   = 'Boxable Packet';
 
     private ProductOptionsConfiguration $productOptionsConfiguration;
@@ -119,9 +122,10 @@ class ProductInfo
         $type    = $type ? strtolower($type) : '';
         $option  = $option ? strtolower($option) : '';
 
-        // Check if the country is not an ESP country or BE/NL and if it is Boxable Packets
-        if (!in_array($country, EpsCountries::ALL)
-            && !in_array($country, ['NL']) && $type === strtolower(static::SHIPMENT_TYPE_BOXABLE_PACKETS)) {
+        if ($country !== 'NL'
+            && ($type === strtolower(static::SHIPMENT_TYPE_BOXABLE_PACKETS)
+                || $type === strtolower(static::SHIPMENT_TYPE_INTERNATIONAL_PACKET))
+        ) {
             $this->setProductCode($option, $country);
 
             return $this->getInfo();
@@ -149,7 +153,7 @@ class ProductInfo
             return $this->getInfo();
         }
 
-        if ($type == static::TYPE_PICKUP) {
+        if ($type === static::TYPE_PICKUP) {
             $this->setPakjegemakProductOption($option, $country);
 
             return $this->getInfo();
@@ -206,15 +210,6 @@ class ProductInfo
             return;
         }
 
-        $pepsCode = $this->productOptionsConfiguration->getDefaultPepsProductOption();
-        if (in_array($country, PriorityCountries::GLOBALPACK)
-            && $this->shippingOptions->canUsePriority()
-            && $this->isPriorityProduct($pepsCode)
-        ) {
-            $this->code = $pepsCode;
-            return;
-        }
-
         $this->code = $this->productOptionsConfiguration->getDefaultGlobalpackOption();
         $this->validateAlternativeMap(AlternativeDelivery::CONFIG_GLOBALPACK, $country);
     }
@@ -256,15 +251,6 @@ class ProductInfo
         if (in_array($globalPackOption, $firstOption)) {
             $this->setGlobalPackOption();
 
-            return;
-        }
-
-        $pepsCode = $this->productOptionsConfiguration->getDefaultPepsProductOption();
-        if (in_array($country, PriorityCountries::EPS)
-            && $this->shippingOptions->canUsePriority()
-            && $this->isPriorityProduct($pepsCode)
-        ) {
-            $this->code = $pepsCode;
             return;
         }
 
@@ -383,6 +369,11 @@ class ProductInfo
                 $this->type = static::SHIPMENT_TYPE_LETTERBOX_PACKAGE;
 
                 break;
+            case static::OPTION_INTENATIONAL_PACKET:
+                $this->code = $this->productOptionsConfiguration->getDefaultPepsProductOption();
+                $this->type = static::SHIPMENT_TYPE_INTERNATIONAL_PACKET;
+
+                break;
             case static::OPTION_BOXABLE_PACKETS:
                 $this->code = $this->productOptionsConfiguration->getDefaultBoxablePacketsProductOption();
                 $this->type = static::SHIPMENT_TYPE_BOXABLE_PACKETS;
@@ -407,11 +398,6 @@ class ProductInfo
 
         if ($this->countryShipping->isShippingBEtoNL($country)) {
             $this->code = $this->productOptionsConfiguration->getDefaultBeNlProductOption();
-        }
-
-        if ($this->countryShipping->isShippingNLtoBE($country) && $this->shippingOptions->canUsePriority()) {
-            $this->type = static::SHIPMENT_TYPE_EPS;
-            $this->code = $this->productOptionsConfiguration->getDefaultPepsProductOption();
         }
 
         if ($this->countryShipping->isShippingBEDomestic($country)) {

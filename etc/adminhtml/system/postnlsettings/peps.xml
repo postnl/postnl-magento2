@@ -12,57 +12,32 @@
             <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
         </depends>
 
-        <field id="active" translate="label comment tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Use International (Mailbox) Packets</label>
-            <comment>Packets and Mailbox Packets are smaller parcels than a standard international parcel.</comment>
-            <tooltip><![CDATA[This allows you the use of the priority parcel products. After you enable this setting the products can be selected in the default EPS and Globalpack selection.]]></tooltip>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>tig_postnl/peps/active</config_path>
-        </field>
-
-        <field id="default_peps_option" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-            <label>Default Packet delivery</label>
-            <comment><![CDATA[Select the default product option for Packet shipments. A Packet is a smaller package than a normal package and is about the same size as a shoe box. Dimensions L + W + H = max 90 cm of which the longest side is 60 cm.]]></comment>
-            <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getPepsProducts</source_model>
-            <config_path>tig_postnl/peps/default_peps_option</config_path>
-            <depends>
-                <field id="active">1</field>
-            </depends>
-        </field>
-
-        <!-- P-EPS - Letterbox = Boxable Packet -->
-
-        <field id="peps_boxable_packets_active" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Use Boxable Packets</label>
-            <comment><![CDATA[Boxable Packets are used to ship small products. Please consult your PostNL account manager for more information about activating this service for your account.]]></comment>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>tig_postnl/peps/peps_boxable_packets_active</config_path>
-            <depends>
-                <field id="active">1</field>
-            </depends>
-        </field>
-
-        <field id="default_peps_boxable_packets_option" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-            <label>Default Boxable Packet delivery</label>
-            <comment><![CDATA[Select the default product option for Boxable Packet shipments.]]></comment>
-            <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getPepsBoxableProducts</source_model>
-            <config_path>tig_postnl/peps/default_peps_boxable_packets_option</config_path>
-            <depends>
-                <field id="peps_boxable_packets_active">1</field>
-            </depends>
-        </field>
-
-        <field id="peps_boxable_packets_calculation_mode" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+        <field id="peps_boxable_packets_calculation_mode" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Calculation mode</label>
             <comment><![CDATA[The PostNL extension automatically determines whether a shipment fits through a letterbox when calculation mode is set to Automatic. This can also be specified when creating shipments. When Calculation Mode is set to Automatic, PostNL will use Weight and Maximum Quantity for Letterbox Package to determine whether a shipment fits through the letterbox. This choice can be overridden when creating a shipment manually.]]></comment>
             <source_model>TIG\PostNL\Config\Source\LetterboxPackage\CalculationMode</source_model>
             <config_path>tig_postnl/peps/peps_boxable_packets_calculation_mode</config_path>
+        </field>
+
+        <field id="default_peps_option" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default International Packet delivery</label>
+            <comment><![CDATA[Select the default product option for Packet shipments. A Packet is a smaller package than a normal package and is about the same size as a shoe box. Dimensions L + W + H = max 90 cm of which the longest side is 60 cm.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getPepsProducts</source_model>
+            <config_path>tig_postnl/peps/default_peps_option</config_path>
             <depends>
-                <field id="peps_boxable_packets_active">1</field>
+                <field id="peps_boxable_packets_calculation_mode">automatic</field>
             </depends>
         </field>
 
-
-
+        <!-- P-EPS - Letterbox = Boxable Packet -->
+        <field id="default_peps_boxable_packets_option" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default International Letterbox Package</label>
+            <comment><![CDATA[Select the default product option for Boxable Packet shipments.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getPepsBoxableProducts</source_model>
+            <config_path>tig_postnl/peps/default_peps_boxable_packets_option</config_path>
+            <depends>
+                <field id="peps_boxable_packets_calculation_mode">automatic</field>
+            </depends>
+        </field>
     </group>
 </include>

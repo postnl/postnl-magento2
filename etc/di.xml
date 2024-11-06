@@ -209,6 +209,9 @@
                 <item name="v1.9.4" xsi:type="array">
                     <item name="InstallMaximumQuantityLetterboxPackage" xsi:type="object">TIG\PostNL\Setup\V194\Data\InstallMaximumQuantityLetterboxPackage</item>
                 </item>
+                <item name="v1.18.0" xsi:type="array">
+                    <item name="InstallAdditionalLetterboxOptions" xsi:type="object">TIG\PostNL\Setup\V1180\Data\InstallLetterboxPackages</item>
+                </item>
             </argument>
         </arguments>
     </type>
@@ -357,6 +360,17 @@
             <argument name="resourceModel" xsi:type="string">TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate</argument>
         </arguments>
     </virtualType>
+
+    <type name="TIG\PostNL\Service\Timeframe\Resolver">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="TIG\PostNL\Service\Shipping\DeliveryDate">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
 
     <virtualType name="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryGlobalPack" type="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryForCountryMap">
         <arguments>

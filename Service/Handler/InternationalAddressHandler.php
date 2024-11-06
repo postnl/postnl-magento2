@@ -51,7 +51,13 @@ class InternationalAddressHandler
             ]];
         }
 
-        $addressMatch = $this->doAdressesMatch($params[0], $input);
+        $addressMatch = false;
+        foreach ($params as $address) {
+            $addressMatch = $this->doAdressesMatch($address, $input);
+            if ($addressMatch) {
+                break;
+            }
+        }
         return [200, [
             'addressCount' => count($params),
             'addressMatchesFirst' => $addressMatch,
@@ -168,7 +174,7 @@ class InternationalAddressHandler
      *
      * @return bool
      */
-    private function doAdressesMatch($data, $input)
+    private function doAdressesMatch($data, $input): bool
     {
         if ($data['cityName'] !== $input['cityName']) {
             return false;
