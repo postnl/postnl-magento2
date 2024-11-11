@@ -300,7 +300,12 @@ interface ShipmentInterface
     /**
      * @return bool
      */
-    public function isBoxablePackets();
+    public function isBoxablePackets(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isInternationalPacket(): bool;
 
     /**
      * @return bool

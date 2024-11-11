@@ -750,12 +750,14 @@ class Shipment extends AbstractModel implements ShipmentInterface
         return $this->getShipmentType() == 'GP';
     }
 
-    /**
-     * @return bool
-     */
-    public function isBoxablePackets()
+    public function isBoxablePackets(): bool
     {
-        return $this->getShipmentType() == 'boxable_packets';
+        return $this->getShipmentType() === 'boxable_packets';
+    }
+
+    public function isInternationalPacket(): bool
+    {
+        return $this->getShipmentType() === 'international_packet';
     }
 
     /**
