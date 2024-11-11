@@ -184,10 +184,12 @@ class BarcodeHandler
     public function canAddReturnBarcodes(string $countryId, ShipmentInterface $shipment): bool
     {
         if (
-            (!in_array($countryId, ['NL', 'BE']) ||
-             !$this->labelParser->canReturn($countryId) ||
-             ($shipment->isExtraAtHome()) ||
-             ($shipment->isBuspakjeShipment()))
+            !in_array($countryId, ['NL', 'BE']) ||
+            !$this->labelParser->canReturn($countryId) ||
+            $shipment->isExtraAtHome() ||
+            $shipment->isBuspakjeShipment() ||
+            $shipment->isBoxablePackets() ||
+            $shipment->isInternationalPacket()
         ) {
             return false;
         }
