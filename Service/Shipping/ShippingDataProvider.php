@@ -24,6 +24,7 @@ class ShippingDataProvider
             $collection = $this->productCollectionFactory->create();
             $collection->addFieldToFilter('entity_id', ['in' => $productIds]);
             $collection->addAttributeToSelect([
+                'weight',
                 'postnl_max_qty_letterbox',
                 'postnl_max_qty_international',
                 'postnl_max_qty_international_letterbox',
