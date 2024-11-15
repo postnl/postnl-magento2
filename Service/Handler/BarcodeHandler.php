@@ -185,7 +185,7 @@ class BarcodeHandler
     {
         if (
             !in_array($countryId, ['NL', 'BE']) ||
-            !$this->labelParser->canReturn($countryId) ||
+            !$this->labelParser->canReturn($countryId, $shipment) ||
             $shipment->isExtraAtHome() ||
             $shipment->isBuspakjeShipment() ||
             $shipment->isBoxablePackets() ||

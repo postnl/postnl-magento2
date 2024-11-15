@@ -757,7 +757,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
 
     public function isInternationalPacket(): bool
     {
-        return $this->getShipmentType() === 'international_packet';
+        return $this->getShipmentType() === 'international_packet' || $this->getShipmentType() === 'priority_options';
     }
 
     /**

@@ -93,6 +93,7 @@ class ShipmentSupported
 
         if ($country != 'NL') {
             $options[] = $this->productOptions->getBoxableOptions();
+            $options[] = $this->productOptions->getPriorityOptions();
         }
 
         $options = call_user_func_array("array_merge", $options);

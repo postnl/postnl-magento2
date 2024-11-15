@@ -73,7 +73,7 @@ class Shipments
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
 
-        if ($this->canReturn($address[0]['Countrycode'])) {
+        if ($this->canReturn($address[0]['Countrycode'], $postnlShipment)) {
             $address[] = $this->getReturnAddressData();
         }
 
@@ -173,8 +173,11 @@ class Shipments
      *
      * @return bool
      */
-    public function canReturn($countryId)
+    public function canReturn($countryId, Shipment $postnlShipment): bool
     {
+        if ($postnlShipment->isBoxablePackets() || $postnlShipment->isInternationalPacket()) {
+            return false;
+        }
         return ($this->returnOptions->isReturnActive() && in_array($countryId, ['NL', 'BE']));
     }
 

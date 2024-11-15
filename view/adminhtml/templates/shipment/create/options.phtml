@@ -19,7 +19,7 @@
     </div>
     <?php endif; ?>
 
-    <?php if ($block->getProductOptions()):?>
+    <?php if ($options = $block->getProductOptions()):?>
     <div class="field admin__field admin__field-option field-postnl-products">
         <label for="tig_postnl_product"
                class="admin__field-label" style="display:inline-block; min-width: 170px;">
@@ -28,7 +28,7 @@
         <select id="tig_postnl_product"
                 name="shipment[tig_postnl_product_code]"
                 class="admin__control-select" style="max-width:300px !important;">
-            <?php foreach ($block->getProductOptions() as $code => $option):?>
+            <?php foreach ($options as $code => $option):?>
                 <?php $selected = $block->getProductCode() == $code ? ' selected="selected"' : ''; ?>
                 <option
                     value="<?= $block->escapeHtml($code); ?>"

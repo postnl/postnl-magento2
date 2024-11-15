@@ -200,6 +200,10 @@ class Data
             $productOptions = [];
         }
         $returnActive = $this->returnOptions->isReturnActive();
+        // Disable return codes for packets
+        if ($shipment->isInternationalPacket() || $shipment->isBoxablePackets()) {
+            $returnActive = false;
+        }
         if ($returnActive && $countryId === 'NL' &&
             $this->returnOptions->getReturnLabel() === LabelSettings::LABEL_RETURN
         ) {
