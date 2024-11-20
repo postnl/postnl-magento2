@@ -17,7 +17,7 @@ class EPS extends Domestic
      *
      * @var array
      */
-    private $priority = [6350, 6550, 6940, 6942];
+    private $priority = [6350, 6405, 6440, 6550, 6906, 6940, 6942, 6972];
 
     /**
      * @var bool
