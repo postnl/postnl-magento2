@@ -236,6 +236,13 @@ class Data
             ];
         }
 
+        if ($shipment->isExtraCover() && $shipment->getProductCode() === '13085') {
+            $productOptions[] = [
+                'Characteristic' => '004',
+                'Option'         => '020'
+            ];
+        }
+
         if (!empty($productOptions)) {
             $shipmentData['ProductOptions'] = $productOptions;
         }

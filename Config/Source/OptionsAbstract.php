@@ -25,6 +25,17 @@ abstract class OptionsAbstract
             'countryLimitation'    => 'NL',
             'group'                => 'standard_options',
         ],
+        '13085' => [
+            'value'                => '13085',
+            'label'                => 'Code at the door',
+            'isExtraCover'         => true,
+            'isEvening'            => true,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => true,
+            'isToday'              => true,
+            'countryLimitation'    => 'NL',
+            'group'                => 'standard_options',
+        ],
         '3087' => [
             'value'                => '3087',
             'label'                => 'Extra Cover',
