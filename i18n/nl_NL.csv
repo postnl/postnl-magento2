@@ -682,3 +682,4 @@ Percent,Percentage
 "When updating matrix rates from another Magento store please note that you might need to adjust store ids to the current website store id or code. Ex: matrixrate"":{""1"" - this number is what should be changed.","Wanneer je de matrixrates uit een andere Magento-winkel importeert is het mogelijk noodzakelijk om de Store ID in het bestand gelijk te maken met de Store ID van de winkel waar het bestand in geïmporteerd wordt. Bijvoorbeeld: matrixrate"": {""1"" - Het getal ""1"" is wat aangepast moet worden."
 "Invalid configuration file provided.","Er is een ongeldig configuratiebestand verstrekt."
 "Config file has been processed","Configuratiebestand is verwerkt."
+"Code at the door","Ontvangstcode aan de deur"
