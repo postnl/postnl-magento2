@@ -60,17 +60,19 @@ class Locations extends AbstractDeliveryOptions
      */
     public function execute()
     {
+        $params = $this->getRequest()->getParams();
+        if (!isset($params['address']['country']) || !is_array($params['address'])) {
+            return $this->jsonResponse(__('No Address data found.'));
+        }
+
         $products = $this->checkoutSession->getQuote()->getAllItems();
-        if ($this->letterboxPackage->isLetterboxPackage($products)) {
+        $country = $params['address']['country'];
+        if ($country === 'NL' && $this->letterboxPackage->isLetterboxPackage($products)) {
             return $this->jsonResponse([
                 'error' => __('Pickup locations are disabled for Letterbox packages.')
             ]);
         }
 
-        $params = $this->getRequest()->getParams();
-        if (!isset($params['address']) || !is_array($params['address'])) {
-            return $this->jsonResponse(__('No Address data found.'));
-        }
         $this->addressEnhancer->set($params['address']);
         $price = $this->priceCalculator->getPriceWithTax($this->getRateRequest(), 'pakjegemak');
 
