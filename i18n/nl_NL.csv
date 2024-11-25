@@ -18,6 +18,7 @@ label,label
 "A4 Format","A4 Formaat"
 "A6 Format","A6 Formaat"
 "No Address data found.","Geen adres data gevonden."
+"Pickup locations are disabled for Letterbox packages.","Afhaalpunten zijn niet beschikbaar voor brievenbuspakjes."
 "Invalid GetDeliveryDate response: %1","Ongeldig GetDeliveryDate response: %1"
 "Invalid GetTimeframes response: %1","Ongeldig GetTimeframes response: %1"
 "Invalid GetLocationsResult response: %1","Ongeldig GetLocationsResult response: %1"

@@ -14,6 +14,7 @@ label,label
 "A4 Format","A4 Format"
 "A6 Format","A6 Format"
 "No Address data found.","No Address data found."
+"Pickup locations are disabled for Letterbox packages.","Pickup locations are disabled for Letterbox packages."
 "Invalid GetDeliveryDate response: %1","Invalid GetDeliveryDate response: %1"
 "Invalid GetTimeframes response: %1","Invalid GetTimeframes response: %1"
 "Invalid GetLocationsResult response: %1","Invalid GetLocationsResult response: %1"
