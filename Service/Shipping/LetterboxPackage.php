@@ -148,12 +148,11 @@ class LetterboxPackage
     public function isPossibleLetterboxPackage(OrderInterface $order): bool
     {
         $magentoOrder = $this->orderRepository->get($order->getQuoteId());
-        $products = $magentoOrder->getAllItems();
         $shippingAddress = $order->getShippingAddress();
 
         if ($order->getProductCode() == '3085' &&
             $shippingAddress->getCountryId() === 'NL' &&
-            $this->isLetterboxPackage($products, true)
+            $this->isLetterboxPackage($magentoOrder->getAllItems(), true)
         ) {
             return true;
         }
