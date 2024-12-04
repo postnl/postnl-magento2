@@ -9,6 +9,8 @@ use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Service\Carrier\Price\Calculator;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
 use TIG\PostNL\Service\Quote\ShippingDuration;
+use TIG\PostNL\Service\Shipping\BoxablePackets;
+use TIG\PostNL\Service\Shipping\InternationalPacket;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
 use TIG\PostNL\Service\Shipping\PickupLocations;
 use Magento\Framework\App\Action\Context;
@@ -27,6 +29,8 @@ class Locations extends AbstractDeliveryOptions
      */
     private $letterboxPackage;
     private PickupLocations $pickupLocations;
+    private BoxablePackets $boxablePackets;
+    private InternationalPacket $internationalPacket;
 
     public function __construct(
         Context $context,
@@ -38,7 +42,9 @@ class Locations extends AbstractDeliveryOptions
         Calculator $priceCalculator,
         ShippingDuration $shippingDuration,
         LetterboxPackage $letterboxPackage,
-        PickupLocations $pickupLocations
+        PickupLocations $pickupLocations,
+        BoxablePackets $boxablePackets,
+        InternationalPacket $internationalPacket
     ) {
         $this->addressEnhancer   = $addressEnhancer;
         $this->priceCalculator   = $priceCalculator;
@@ -53,6 +59,8 @@ class Locations extends AbstractDeliveryOptions
             $shippingDuration,
         );
         $this->pickupLocations = $pickupLocations;
+        $this->boxablePackets = $boxablePackets;
+        $this->internationalPacket = $internationalPacket;
     }
 
     /**
@@ -70,6 +78,15 @@ class Locations extends AbstractDeliveryOptions
         if ($country === 'NL' && $this->letterboxPackage->isLetterboxPackage($products)) {
             return $this->jsonResponse([
                 'error' => __('Pickup locations are disabled for Letterbox packages.')
+            ]);
+        }
+        if ($country === 'BE' && (
+                $this->boxablePackets->canFixInTheBox($products) ||
+                $this->internationalPacket->canFixInTheBox($products)
+            )
+        ) {
+            return $this->jsonResponse([
+                'error' => __('Pickup locations are disabled for packets.')
             ]);
         }
 
