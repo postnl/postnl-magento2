@@ -35,6 +35,7 @@ class SmartReturnShipmentManager
         $this->shipmentLabelRepository = $shipmentLabelRepository;
         $this->returnOptions = $returnOptions;
     }
+
     public function processShipmentLabel(ShipmentInterface $magentoShipment): void
     {
         if (!$this->returnOptions->isSmartReturnActive()) {
