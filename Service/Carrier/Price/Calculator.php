@@ -7,6 +7,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Tax\Helper\Data;
+use Magento\Tax\Model\Config;
 use TIG\PostNL\Config\Source\Carrier\RateType;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
@@ -241,7 +242,7 @@ class Calculator
     public function getPriceWithTax(RateRequest $request, $parcelType = null)
     {
         $includeVat = $this->taxHelper->getShippingPriceDisplayType();
-        $includeVat = ($includeVat == 2 || $includeVat == 3);
+        $includeVat = ($includeVat === Config::DISPLAY_TYPE_INCLUDING_TAX || $includeVat === Config::DISPLAY_TYPE_BOTH);
 
         $price = $this->price($request, $parcelType);
         $shippingAddress = $request->getShippingAddress();
