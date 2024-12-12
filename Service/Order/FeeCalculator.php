@@ -31,16 +31,20 @@ class FeeCalculator
             return (float)0.0;
         }
 
-        if ($this->shippingOptions->isEveningDeliveryActive() && $params['option'] == 'Evening') {
+        if ($this->shippingOptions->isEveningDeliveryActive() && $params['option'] === 'Evening') {
             return (float)$this->getEveningDeliveryFee($params);
         }
 
-        if ($this->shippingOptions->isSundayDeliveryActive() && $params['option'] == 'Sunday') {
+        if ($this->shippingOptions->isSundayDeliveryActive() && $params['option'] === 'Sunday') {
             return (float)$this->shippingOptions->getSundayDeliveryFee();
         }
 
-        if ($this->shippingOptions->isTodayDeliveryActive() && $params['option'] == 'Today') {
+        if ($this->shippingOptions->isTodayDeliveryActive() && $params['option'] === 'Today') {
             return (float)$this->shippingOptions->getTodayDeliveryFee();
+        }
+
+        if ($this->shippingOptions->isTodayDeliveryActive() && $params['option'] === 'Noon') {
+            return (float)$this->shippingOptions->getNoonDeliveryFee();
         }
 
         return (float)0.0;

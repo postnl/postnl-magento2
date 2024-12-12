@@ -147,11 +147,11 @@ class SentDate extends AbstractEndpoint
         $availableOptions = $this->timeframeOptions->get($this->getCountryId($postNLOrder));
         $currentType      = $postNLOrder->getType();
 
-        if (in_array($currentType, $availableOptions)) {
+        if (in_array($currentType, $availableOptions, true)) {
             return $currentType;
         }
 
-        if ($currentType == ProductInfo::SHIPMENT_TYPE_PG) {
+        if ($currentType === ProductInfo::SHIPMENT_TYPE_PG) {
             return ucfirst(ProductInfo::TYPE_PICKUP);
         }
 

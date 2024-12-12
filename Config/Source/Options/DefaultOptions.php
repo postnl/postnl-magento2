@@ -196,6 +196,13 @@ class DefaultOptions implements OptionSourceInterface
         return $options;
     }
 
+    public function getGuaranteedDeliveryOptions(): array
+    {
+        return $this->productOptions->getProductOptions(
+            ['isGuaranteedDelivery' => true]
+        );
+    }
+
     /**
      * @return array
      */
