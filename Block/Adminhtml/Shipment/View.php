@@ -3,7 +3,6 @@
 namespace TIG\PostNL\Block\Adminhtml\Shipment;
 
 use Magento\Backend\Block\Widget\Context;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Registry;
 use Magento\Shipping\Block\Adminhtml\View as MagentoView;
 use TIG\PostNL\Config\Provider\ReturnOptions;
@@ -14,38 +13,19 @@ use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
 // @codingStandardsIgnoreFile
 class View extends MagentoView
 {
-    /** @var \TIG\PostNL\Model\ShipmentRepository $postNLShipmentRepository */
-    private $postNLShipmentRepository;
+    private PostNLShipmentRepository $postNLShipmentRepository;
+    private ValidAddress $validAddress;
+    private ReturnOptions $returnOptions;
 
-    /** @var \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder */
-    private $searchCriteriaBuilder;
-
-    /** @var \TIG\PostNL\Config\Validator\ValidAddress $validAddress */
-    private $validAddress;
-
-    /** @var ReturnOptions  */
-    private $returnOptions;
-
-    /**
-     * @param Context                  $context
-     * @param Registry                 $registry
-     * @param PostNLShipmentRepository $shipmentRepository
-     * @param SearchCriteriaBuilder    $searchCriteriaBuilder
-     * @param ValidAddress             $validAddress
-     * @param ReturnOptions            $returnOptions
-     * @param array                    $data
-     */
     public function __construct(
         Context $context,
         Registry $registry,
         PostNLShipmentRepository $shipmentRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
         ValidAddress $validAddress,
         ReturnOptions $returnOptions,
         array $data = []
     ) {
         $this->postNLShipmentRepository = $shipmentRepository;
-        $this->searchCriteriaBuilder    = $searchCriteriaBuilder;
         $this->validAddress             = $validAddress;
         $this->returnOptions            = $returnOptions;
 
@@ -86,8 +66,13 @@ class View extends MagentoView
         $this->setPostNLPrintLabelWithoutConfirmButton();
         $this->setPostNLPrintPackingslipButton();
 
-        if ($this->returnOptions->isSmartReturnActive()) {
+        $countryId = $this->getShipment()->getShippingAddress()->getCountryId();
+
+        if ($countryId === 'NL' && $this->returnOptions->isSmartReturnActive()) {
             $this->setPostNLSendSmartReturnButton();
+        }
+        if ($countryId === 'BE') {
+            $this->setPostNLSingleLabelReturnButton();
         }
     }
 
@@ -177,6 +162,18 @@ class View extends MagentoView
         );
     }
 
+    private function setPostNLSingleLabelReturnButton(): void
+    {
+        $this->buttonList->add(
+            'postnl_send_single_label_return',
+            [
+                'label' => __('PostNL - Generate return label'),
+                'class' => 'save primary',
+                'onclick' => 'setLocation(\'' . $this->getBothShipmentUrl('GetSingleBeReturnLabel') . '\')',
+            ]
+        );
+    }
+
     /**
      * Set the correct text.
      */
@@ -244,25 +241,21 @@ class View extends MagentoView
      */
     private function getCancelConfirmationUrl()
     {
-        /** @var PostNLShipment $postNLShipment */
-        $postNLShipment = $this->getPostNLShipment();
-
-        return $this->getUrl(
-            'postnl/shipment/CancelConfirmation',
-            [
-                'postnl_shipment_id' => $postNLShipment->getId(),
-                'shipment_id'        => $this->getShipment()->getId(),
-            ]
-        );
+        return $this->getBothShipmentUrl('CancelConfirmation');
     }
 
     private function getSendSmartReturnUrl()
+    {
+        return $this->getBothShipmentUrl('GetSmartReturnLabel');
+    }
+
+    private function getBothShipmentUrl(string $urlKey): string
     {
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLShipment();
 
         return $this->getUrl(
-            'postnl/shipment/GetSmartReturnLabel',
+            'postnl/shipment/' . $urlKey,
             [
                 'postnl_shipment_id' => $postNLShipment->getId(),
                 'shipment_id'        => $this->getShipment()->getId(),

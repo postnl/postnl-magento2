@@ -54,6 +54,7 @@ class PdfDownload
 
     const FILETYPE_PACKINGSLIP   = 'PackingSlips';
     const FILETYPE_SHIPPINGLABEL = 'ShippingLabels';
+    const FILETYPE_RETURNLABEL = 'ReturnLabel';
 
     /**
      * PdfDownload constructor.
@@ -193,6 +194,7 @@ class PdfDownload
     {
         switch ($filename) {
             case static::FILETYPE_SHIPPINGLABEL:
+            case static::FILETYPE_RETURNLABEL:
                 return $this->labelGenerator->run($labels);
             case static::FILETYPE_PACKINGSLIP:
                 return $this->packingslipGenerator->run($labels);

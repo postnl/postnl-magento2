@@ -2,8 +2,11 @@
 
 namespace TIG\PostNL\Webservices\Parser\Label;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\Order\Address;
+use Magento\Sales\Model\Order\Shipment as MagentoShipment;
+use Magento\Store\Model\ScopeInterface;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Config\Source\Settings\ReturnTypes;
@@ -12,23 +15,26 @@ use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Service\Shipment\Data as ShipmentData;
 use TIG\PostNL\Webservices\Api\Customer as CustomerApi;
 
-class Shipments extends AbstractShipmentLabel
+class ReturnShipment extends AbstractShipmentLabel
 {
     private AddressConfiguration $addressConfiguration;
     private ShipmentData $shipmentData;
     private ReturnOptions $returnOptions;
+    private ScopeConfigInterface $scopeConfig;
 
     public function __construct(
         AddressEnhancer $addressEnhancer,
         ManagerInterface $messageManager,
         AddressConfiguration $addressConfiguration,
         ShipmentData $shipmentData,
-        ReturnOptions $returnOptions
+        ReturnOptions $returnOptions,
+        ScopeConfigInterface $scopeConfig
     ) {
         parent::__construct($addressEnhancer, $messageManager);
         $this->addressConfiguration = $addressConfiguration;
         $this->shipmentData = $shipmentData;
         $this->returnOptions = $returnOptions;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -40,56 +46,64 @@ class Shipments extends AbstractShipmentLabel
      */
     public function get(Shipment $postnlShipment, $shipmentNumber)
     {
+        $postnlShipment->getProductCode();
         $shipment    = $postnlShipment->getShipment();
-        $postnlOrder = $postnlShipment->getPostNLOrder();
-        $contact   = $this->getContactData($shipment);
-        $addressType = CustomerApi::ADDRESS_TYPE_RECEIVER;
-        if ($postnlShipment->getIsSmartReturn()) {
-            $addressType = CustomerApi::ADDRESS_TYPE_SENDER;
-            // And change customer to sender instead of receiver
-            $contact['ContactType'] = CustomerApi::ADDRESS_TYPE_SENDER;
-        }
-        $address[] = $this->getAddressData($postnlShipment->getShippingAddress(), $addressType);
-        if ($postnlOrder->getIsPakjegemak()) {
-            $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
-        }
+        $contact   = $this->getStoreContactData($shipment);
+        $address[] = $this->getReturnAddressAsReceiver();
 
-        if ($this->canReturn($address[0]['Countrycode'], $postnlShipment)) {
-            $address[] = $this->getReturnAddressData();
-        }
+        $data = $this->shipmentData->get($postnlShipment, $address, $contact, $shipmentNumber);
 
-        return $this->shipmentData->get($postnlShipment, $address, $contact, $shipmentNumber);
+        // Update product code to be sent to the API
+        $senderCountry = $this->returnOptions->getCountry();
+        $data['ProductCodeDelivery'] = $senderCountry === 'NL' ? '3250' : '4882';
+
+        $contact = $data['Contacts']['Contact'];
+        $data['Contacts'] = [
+            $contact,
+            $this->getCustomerContactData($shipment)
+        ];
+        return $data;
     }
 
-    /**
-     * @param \Magento\Sales\Model\Order\Shipment $shipment
-     *
-     * @return mixed
-     */
-    private function getContactData($shipment)
+    protected function getCustomerContactData(MagentoShipment $shipment): array
     {
         $shippingAddress = $shipment->getShippingAddress();
         $order           = $shipment->getOrder();
-        $contact = [
-            'ContactType' => CustomerApi::ADDRESS_TYPE_RECEIVER,
+        return [
+            'ContactType' => CustomerApi::ADDRESS_TYPE_SENDER,
             'Email'       => $order->getCustomerEmail(),
             'TelNr'       => $shippingAddress->getTelephone(),
         ];
-
-        return $contact;
     }
 
-    /**
-     * @param $countryId
-     *
-     * @return bool
-     */
-    public function canReturn($countryId, Shipment $postnlShipment): bool
+    protected function getStoreContactData(MagentoShipment $shipment): array
     {
-        if ($postnlShipment->isBoxablePackets() || $postnlShipment->isInternationalPacket()) {
-            return false;
-        }
-        return ($this->returnOptions->isReturnActive() && in_array($countryId, ['NL', 'BE']));
+        $storeId = $shipment->getStoreId();
+        return [
+            'ContactType' => CustomerApi::ADDRESS_TYPE_RECEIVER,
+            'Email'       => $this->scopeConfig->getValue(
+                'trans_email/ident_general/email',
+                ScopeInterface::SCOPE_STORE,
+                $storeId
+            ),
+            'TelNr'       => $this->scopeConfig->getValue(
+                'general/store_information/phone',
+                ScopeInterface::SCOPE_STORE,
+                $storeId
+            ),
+        ];
+    }
+
+    public function getAddressDataAsSenderAddress(Address $address): array
+    {
+        return $this->getAddressData($address, CustomerApi::ADDRESS_TYPE_SENDER);
+    }
+
+    public function getReturnAddressAsReceiver(): array
+    {
+        $address = $this->getReturnAddressData();
+        $address['AddressType'] = CustomerApi::ADDRESS_TYPE_RECEIVER;
+        return $address;
     }
 
     private function getReturnAddressData(): array
@@ -100,7 +114,7 @@ class Shipments extends AbstractShipmentLabel
 
         if ($returnType === ReturnTypes::TYPE_FREE_POST && $countryCode === 'NL') {
             $data = [
-                'AddressType' => CustomerApi::ADDRESS_TYPE_RETURN,
+                'AddressType' => '08',
                 'City' => $this->returnOptions->getCity(),
                 'Countrycode' => $countryCode,
                 'HouseNr' => $this->returnOptions->getFreepostNumber(),
@@ -110,7 +124,7 @@ class Shipments extends AbstractShipmentLabel
             ];
         } else {
             $data = [
-                'AddressType' => CustomerApi::ADDRESS_TYPE_RETURN,
+                'AddressType' => '08',
                 'City' => $this->returnOptions->getCity(),
                 'CompanyName' => $this->returnOptions->getCompany(),
                 'Countrycode' => $countryCode,
