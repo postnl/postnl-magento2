@@ -67,6 +67,8 @@
                 <default_delivery_stated_address_be>4960</default_delivery_stated_address_be>
                 <use_alternative_default>0</use_alternative_default>
                 <stated_address_only_fee>2</stated_address_only_fee>
+                <noondelivery_fee>0</noondelivery_fee>
+                <default_noon_option>3085</default_noon_option>
             </delivery_settings>
 
             <delivery_days>

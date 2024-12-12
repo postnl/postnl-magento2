@@ -15,6 +15,8 @@ class ShippingOptions extends AbstractConfigProvider
 {
     const XPATH_SHIPPING_OPTION_ACITVE                   = 'tig_postnl/delivery_settings/shippingoptions_active';
     const XPATH_GUARANTEED_DELIVERY_ACTIVE               = 'tig_postnl/delivery_settings/guaranteed_delivery';
+    const XPATH_SHIPPING_OPTION_NOON_FEE                 = 'tig_postnl/delivery_settings/noondelivery_fee';
+    const XPATH_SHIPPING_OPTION_NOON_OPTION              = 'tig_postnl/delivery_settings/default_noon_option';
     const XPATH_SHIPPING_OPTION_STOCK                    = 'tig_postnl/stock_settings/stockoptions';
     const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE      = 'tig_postnl/delivery_days/deliverydays_active';
     const XPATH_SHIPPING_OPTION_MAX_DELIVERYDAYS         = 'tig_postnl/delivery_days/max_deliverydays';
@@ -233,6 +235,20 @@ class ShippingOptions extends AbstractConfigProvider
         }
 
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_TODAY_FEE);
+    }
+
+    public function getNoonDeliveryFee(): float
+    {
+        if (!$this->isGuaranteedDeliveryActive()) {
+            return 0.0;
+        }
+
+        return (float)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_NOON_FEE);
+    }
+
+    public function getNoonDeliveryOption(): int
+    {
+        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_NOON_OPTION);
     }
 
     /**

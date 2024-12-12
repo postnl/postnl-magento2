@@ -38,6 +38,8 @@ class ProductInfo
 
     const OPTION_EVENING                  = 'evening';
 
+    const OPTION_NOON                     = 'noon';
+
     const OPTION_EXTRAATHOME              = 'extra@home';
 
     const OPTION_LETTERBOX_PACKAGE        = 'letterbox_package';
@@ -56,9 +58,11 @@ class ProductInfo
 
     const SHIPMENT_TYPE_SUNDAY            = 'Sunday';
 
-    const SHIPMENT_TYPE_TODAY            = 'Today';
+    const SHIPMENT_TYPE_TODAY             = 'Today';
 
     const SHIPMENT_TYPE_EVENING           = 'Evening';
+
+    const SHIPMENT_TYPE_NOON              = 'Noon';
 
     const SHIPMENT_TYPE_DAYTIME           = 'Daytime';
 
@@ -361,6 +365,11 @@ class ProductInfo
             case static::OPTION_EVENING:
                 $this->code = $this->productOptionsConfiguration->getDefaultEveningProductOption($country);
                 $this->type = static::SHIPMENT_TYPE_EVENING;
+
+                break;
+            case static::OPTION_NOON:
+                $this->code = $this->shippingOptions->getNoonDeliveryOption();
+                $this->type = static::SHIPMENT_TYPE_NOON;
 
                 break;
             case static::OPTION_SUNDAY:

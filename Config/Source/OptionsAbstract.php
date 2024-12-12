@@ -918,6 +918,7 @@ abstract class OptionsAbstract
         'Extra@Home'        => '',
         'Sunday'            => 'Sunday',
         'Today'             => 'Today',
+        'Noon'              => 'Guaranteed',
         'PG'                => '',
         'EPS'               => '',
         'GP'                => '',
