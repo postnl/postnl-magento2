@@ -50,10 +50,6 @@ class DefaultOptions implements OptionSourceInterface
             $flags['groups'][] = ['group' => 'id_check_options'];
         }
 
-        if ($this->shippingOptions->canUseCargoProducts()) {
-            $flags['groups'][] = ['group' => 'cargo_options'];
-        }
-
         if ($this->shippingOptions->canUseEpsBusinessProducts()) {
             $flags['groups'][] = ['group' => 'eps_package_options'];
         }
@@ -70,7 +66,6 @@ class DefaultOptions implements OptionSourceInterface
      */
     public function getBeProducts()
     {
-        $beProducts[] = $this->shippingOptions->canUseCargoProducts() ? $this->productOptions->getCargoOptions() : [];
         $beProducts[] = $this->productOptions->getBeOptions();
 
         if ($this->shippingOptions->isPakjegemakActive('BE')) {
@@ -232,10 +227,6 @@ class DefaultOptions implements OptionSourceInterface
             $flags['groups'][] = ['group' => 'only_stated_address_options'];
             if ($this->shippingOptions->isIDCheckActive()) {
                 $flags['groups'][] = ['group' => 'id_check_options'];
-            }
-
-            if ($this->shippingOptions->canUseCargoProducts()) {
-                $flags['groups'][] = ['group' => 'cargo_options'];
             }
 
             if ($this->shippingOptions->canUseEpsBusinessProducts()) {

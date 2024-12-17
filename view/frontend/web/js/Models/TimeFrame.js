@@ -32,7 +32,7 @@ define([
                 break;
 
             case 'noon':
-                this.optionLabel = $.mage.__('Guaranteed');
+                this.optionLabel = $.mage.__('Morning');
                 break;
 
             case 'today':
