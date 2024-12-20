@@ -137,6 +137,7 @@ Friday,Friday
 Saturday,Saturday
 Sunday,Sunday
 Guaranteed,Guaranteed
+Morning,Morning
 Domestic,Domestic
 "Extra@Home","Extra@Home"
 "Post office","Post office"
@@ -390,13 +391,15 @@ Percent,Percent
 "Delivery before 12:00","Delivery before 12:00"
 "Delivery before 14:00","Delivery before 14:00"
 "Delivery before 17:00","Delivery before 17:00"
-"Activate guaranteed delivery","Activate guaranteed delivery"
-"Guaranteed delivery default type","Guaranteed delivery default type"
+"Morning Delivery","Morning Delivery"
+"Activate morning delivery","Activate morning delivery"
+"Morning delivery fee","Morning delivery fee"
+"Morning delivery Netherlands","Morning delivery Netherlands"
+"Morning Delivery","Morning Delivery"
 "Guaranteed delivery is only allowed for shipments in the Netherlands.","Guaranteed delivery is only allowed for shipments in the Netherlands."
 "This service is available for the whole Netherlands, excluding the Wadden Islands. There is no guaranteed distribution on Saturday and Sunday. To be able to use guaranteed delivery, please contact your PostNL Pakketten account manager for more information.","This service is available for the whole Netherlands, excluding the Wadden Islands. There is no guaranteed distribution on Saturday and Sunday. To be able to use guaranteed delivery, please contact your PostNL Pakketten account manager for more information."
 "Select the default guaranteed delivery type for the current <strong>cargo</strong> product you use as default delivery.","Select the default guaranteed delivery type for the current <strong>cargo</strong> product you use as default delivery."
 "Select the default guaranteed delivery type for the current product you use as default delivery.","Select the default guaranteed delivery type for the current product you use as default delivery."
-"Alternative guaranteed delivery default type","Alternative guaranteed delivery default type"
 "Please enter a valid zipcode and housenumber.","Please enter a valid zipcode and housenumber combination."
 "Contact your PostNL account manager to activate adrescheck. Note: Adrescheck only works if the plugin is in live mode.","Contact your PostNL account manager to activate adrescheck. Note: Adrescheck only works if the plugin is in live mode."
 "Not guaranteed","Not guaranteed"
