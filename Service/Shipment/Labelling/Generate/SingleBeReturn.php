@@ -49,4 +49,33 @@ class SingleBeReturn extends GenerateAbstract
 
         return $this->getLabel($shipment, $currentNumber, false);
     }
+
+    /**
+     * @param $labelItem
+     * @param ShipmentInterface $shipment
+     * @param $currentShipmentNumber
+     * @param string $fileFormat
+     *
+     * @return array
+     */
+    protected function getLabelModels($labelItem, ShipmentInterface $shipment, $currentShipmentNumber, string $fileFormat)
+    {
+        $labelModels = [];
+        $labelItemHandle = $this->handler->handle($shipment, $labelItem->Labels->Label);
+
+        foreach ($labelItemHandle['labels'] as $Label) {
+            $labelModel    = $this->save(
+                $shipment,
+                $currentShipmentNumber,
+                $this->getLabelContent($Label),
+                $labelItemHandle['type'],
+                $labelItem->ProductCodeDelivery,
+                $this->getLabelType($Label, $labelItem->ProductCodeDelivery),
+                $fileFormat
+            );
+            $labelModels[] = $labelModel;
+        }
+
+        return $labelModels;
+    }
 }
