@@ -87,6 +87,7 @@ class Prepare
 
         $shipment = $label->getShipment();
         $normalizedShipment = strtolower($this->typeConverter->get($shipment));
+        $normalizedShipment = $this->adjustCountryOptions($shipment, $label, $normalizedShipment);
 
         $instanceFactory = $this->types['domestic'];
         if (array_key_exists($normalizedShipment, $this->types)) {
@@ -134,5 +135,13 @@ class Prepare
         foreach ($this->types as $name => $instanceFactory) {
             $this->validateType($name, $instanceFactory);
         }
+    }
+
+    private function adjustCountryOptions(\TIG\PostNL\Api\Data\ShipmentInterface $shipment, ShipmentLabelInterface $label, string $normalizedShipment)
+    {
+        if ($shipment->getShipmentCountry() === 'BE' && $normalizedShipment === 'daytime' && $label->getReturnLabel()) {
+            return 'eps';
+        }
+        return $normalizedShipment;
     }
 }

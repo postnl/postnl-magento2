@@ -169,7 +169,7 @@ class View extends MagentoView
             [
                 'label' => __('PostNL - Generate return label'),
                 'class' => 'save primary',
-                'onclick' => 'setLocation(\'' . $this->getBothShipmentUrl('GetSingleBeReturnLabel') . '\')',
+                'onclick' => 'download(\'' . $this->getBothShipmentUrl('GetSingleBeReturnLabel') . '\')',
             ]
         );
     }

@@ -24,7 +24,7 @@ abstract class GenerateAbstract
     private $labelling;
 
     /** @var \TIG\PostNL\Service\Shipment\Labelling\Handler $handler */
-    private $handler;
+    protected $handler;
 
     /** @var \TIG\PostNL\Logging\Log $logger */
     private $logger;
@@ -175,7 +175,7 @@ abstract class GenerateAbstract
      *
      * @return ShipmentLabelInterface[]
      */
-    private function handleLabels($shipment, $responseShipments, $currentShipmentNumber, string $fileFormat)
+    protected function handleLabels($shipment, $responseShipments, $currentShipmentNumber, string $fileFormat)
     {
         $labelModels = [];
         foreach ($responseShipments as $labelItem) {
@@ -197,7 +197,7 @@ abstract class GenerateAbstract
      *
      * @return array
      */
-    private function getLabelModels($labelItem, ShipmentInterface $shipment, $currentShipmentNumber, string $fileFormat)
+    protected function getLabelModels($labelItem, ShipmentInterface $shipment, $currentShipmentNumber, string $fileFormat)
     {
         $labelModels     = [];
         $labelItemHandle = $this->handler->handle($shipment, $labelItem->Labels->Label);
@@ -237,7 +237,7 @@ abstract class GenerateAbstract
      *
      * @return string
      */
-    private function getLabelContent($Label)
+    protected function getLabelContent($Label): string
     {
         if (is_array($Label)) {
             return $Label['Content'];
@@ -252,7 +252,7 @@ abstract class GenerateAbstract
      *
      * @return string
      */
-    private function getLabelType($Label, $productCodeDelivery)
+    protected function getLabelType($Label, $productCodeDelivery): string
     {
         if (is_array($Label)) {
             return $Label['Type'];
