@@ -238,7 +238,7 @@ class Resolver
     {
         return [
             'boxable_packets'   => true,
-            'timeframes'        => [[['boxable_packets' => __('Your order is a boxable packet.')]]]
+            'timeframes'        => [[['boxable_packets' => __('Ship internationally')]]]
         ];
     }
 
