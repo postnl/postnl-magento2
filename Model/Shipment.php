@@ -742,28 +742,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
         return $productCodeOptions['isExtraCover'];
     }
 
-    /**
-     * @return bool
-     */
-    public function isGlobalPack()
-    {
-        return $this->getShipmentType() == 'GP';
-    }
-
-    public function isBoxablePackets(): bool
-    {
-        return $this->getShipmentType() === 'boxable_packets';
-    }
-
-    public function isInternationalPacket(): bool
-    {
-        return $this->getShipmentType() === 'international_packet' || $this->getShipmentType() === 'priority_options';
-    }
-
-    /**
-     * @return bool
-     */
-    public function isExtraAtHome()
+    protected function compareProductCodeToGroup(string $group): bool
     {
         $productCodeOptions = $this->getProductCodeOptions();
 
@@ -771,7 +750,30 @@ class Shipment extends AbstractModel implements ShipmentInterface
             return false;
         }
 
-        return $productCodeOptions['group'] == 'extra_at_home_options';
+        return $productCodeOptions['group'] === $group;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGlobalPack()
+    {
+        return $this->compareProductCodeToGroup('global_options');
+    }
+
+    public function isBoxablePackets(): bool
+    {
+        return $this->compareProductCodeToGroup('boxable_packets');
+    }
+
+    public function isInternationalPacket(): bool
+    {
+        return $this->compareProductCodeToGroup('priority_options');
+    }
+
+    public function isExtraAtHome(): bool
+    {
+        return $this->compareProductCodeToGroup('extra_at_home_options');
     }
 
     /**
@@ -779,13 +781,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
      */
     public function isBuspakjeShipment()
     {
-        $productCodeOptions = $this->getProductCodeOptions();
-
-        if ($productCodeOptions == null) {
-            return false;
-        }
-
-        return $productCodeOptions['group'] == 'buspakje_options';
+        return $this->compareProductCodeToGroup('buspakje_options');
     }
 
     /**
@@ -793,13 +789,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
      */
     public function isDomesticShipment()
     {
-        $productCodeOptions = $this->getProductCodeOptions();
-
-        if ($productCodeOptions == null) {
-            return false;
-        }
-
-        return $productCodeOptions['group'] == 'standard_options';
+        return $this->compareProductCodeToGroup('standard_options');
     }
 
     /**
@@ -807,13 +797,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
      */
     public function isIDCheck()
     {
-        $productCodeOptions = $this->getProductCodeOptions();
-
-        if ($productCodeOptions === null) {
-            return false;
-        }
-
-        return $productCodeOptions['group'] == 'id_check_options';
+        return $this->compareProductCodeToGroup('id_check_options');
     }
 
     /**
