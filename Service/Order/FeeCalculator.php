@@ -43,7 +43,7 @@ class FeeCalculator
             return (float)$this->shippingOptions->getTodayDeliveryFee();
         }
 
-        if ($this->shippingOptions->isTodayDeliveryActive() && $params['option'] === 'Noon') {
+        if ($this->shippingOptions->isNoonDeliveryActive() && $params['option'] === 'Noon') {
             return (float)$this->shippingOptions->getNoonDeliveryFee();
         }
 
