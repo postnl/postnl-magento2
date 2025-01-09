@@ -91,6 +91,14 @@ class ShippingOptions extends AbstractConfigProvider
     }
 
     /**
+     * New alias for function above
+     */
+    public function isNoonDeliveryActive(): bool
+    {
+        return $this->isGuaranteedDeliveryActive();
+    }
+
+    /**
      * @return string
      */
     public function getShippingStockoptions()
