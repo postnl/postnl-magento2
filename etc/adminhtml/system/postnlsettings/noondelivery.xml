@@ -34,7 +34,7 @@
 
          <field id="default_noon_option" translate="label comment" type="select" sortOrder="95" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
              <label>Morning delivery Netherlands</label>
-             <comment><![CDATA[Select the default product option for noon/guaranteed delivery shipments.]]></comment>
+             <comment><![CDATA[Select the default product option for morning delivery.]]></comment>
              <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getGuaranteedDeliveryOptions</source_model>
              <config_path>tig_postnl/delivery_settings/default_noon_option</config_path>
              <depends>
