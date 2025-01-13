@@ -22,7 +22,7 @@ class AlternativeDeliveryMap extends AbstractFieldArray
             ['label' => __('Price Scale'), 'class' => 'required-entry validate-number validate-greater-than-zero']
         );
         $this->addColumn(AlternativeDelivery::DELIVERY_MAP_CODE, [
-            'label' => __('Delivery Code'),
+            'label' => __('Delivery Option'),
             'renderer' => $this->getOptionField(),
         ]);
         $this->_addAfter = false;

@@ -43,7 +43,7 @@
             <depends>
                 <field id="use_alternative_gp">1</field>
             </depends>
-            <comment>Use country code as "FR" to set specific country. * for any country. You can add countries via comma "FR,ES".</comment>
+            <comment>Use country codes (for example "FR") to apply the rule to a specific country. Use an asterisk (*) to apply the rule to any country. To apply the same rule to multiple countries you can use a comma (for example: "FR,ES").</comment>
         </field>
 
         <group id="barcode_settings" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
