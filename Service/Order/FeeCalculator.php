@@ -31,16 +31,20 @@ class FeeCalculator
             return (float)0.0;
         }
 
-        if ($this->shippingOptions->isEveningDeliveryActive() && $params['option'] == 'Evening') {
+        if ($this->shippingOptions->isEveningDeliveryActive() && $params['option'] === 'Evening') {
             return (float)$this->getEveningDeliveryFee($params);
         }
 
-        if ($this->shippingOptions->isSundayDeliveryActive() && $params['option'] == 'Sunday') {
+        if ($this->shippingOptions->isSundayDeliveryActive() && $params['option'] === 'Sunday') {
             return (float)$this->shippingOptions->getSundayDeliveryFee();
         }
 
-        if ($this->shippingOptions->isTodayDeliveryActive() && $params['option'] == 'Today') {
+        if ($this->shippingOptions->isTodayDeliveryActive() && $params['option'] === 'Today') {
             return (float)$this->shippingOptions->getTodayDeliveryFee();
+        }
+
+        if ($this->shippingOptions->isNoonDeliveryActive() && $params['option'] === 'Noon') {
+            return (float)$this->shippingOptions->getNoonDeliveryFee();
         }
 
         return (float)0.0;
@@ -64,7 +68,9 @@ class FeeCalculator
      */
     public function statedAddressOnlyFee($params)
     {
-        if ($this->shippingOptions->isStatedAddressOnlyActive() && $params['stated_address_only']) {
+        if (isset($params['stated_address_only'])
+            && $params['stated_address_only']
+            && $this->shippingOptions->isStatedAddressOnlyActive()) {
             return (float)$this->shippingOptions->getStatedAddressOnlyFee();
         }
 

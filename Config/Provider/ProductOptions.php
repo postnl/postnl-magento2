@@ -37,10 +37,6 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_BE_ALTERNATIVE_MAP                    = 'tig_postnl/delivery_settings/alternative_be_map';
     const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION                 = 'tig_postnl/sunday_delivery/default_sunday_option';
     const XPATH_DEFAULT_TODAY_PRODUCT_OPTION                  = 'tig_postnl/today_delivery/default_today_option';
-    const XPATH_DEFAULT_CARGO_DELIVERY_TYPE                   = 'tig_postnl/delivery_settings/default_cargo_type';
-    const XPATH_ALTERNATIVE_DEFAULT_CARGO_DELIVERY_TYPE       = 'tig_postnl/delivery_settings/alternative_cargo_type';
-    const XPATH_DEFAULT_PACKAGE_DELIVERY_TYPE                 = 'tig_postnl/delivery_settings/default_package_type';
-    const XPATH_ALTERNATIVE_DEFAULT_PACKAGE_DELIVERY_TYPE     = 'tig_postnl/delivery_settings/alternative_package_type';
     const XPATH_DEFAULT_EPS_PRODUCT_OPTION                    = 'tig_postnl/delivery_settings/default_eps_option';
     const XPATH_DEFAULT_EPS_USE_ALTERNATIVE                   = 'tig_postnl/delivery_settings/use_alternative_eps';
     const XPATH_DEFAULT_EPS_ALTERNATIVE_MAP                   = 'tig_postnl/delivery_settings/alternative_eps_map';
@@ -307,61 +303,6 @@ class ProductOptions extends AbstractConfigProvider
     public function getDefaultTodayProductOption()
     {
         return $this->getConfigFromXpath(static::XPATH_DEFAULT_TODAY_PRODUCT_OPTION);
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultGuaranteedPackageDeliveryType()
-    {
-        return (string) $this->getConfigFromXpath(static::XPATH_DEFAULT_PACKAGE_DELIVERY_TYPE);
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultGuaranteedCargoDeliveryType()
-    {
-        return (string) $this->getConfigFromXpath(static::XPATH_DEFAULT_CARGO_DELIVERY_TYPE);
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultAlternativeGuaranteedPackageDeliveryType()
-    {
-        return (string) $this->getConfigFromXpath(static::XPATH_ALTERNATIVE_DEFAULT_PACKAGE_DELIVERY_TYPE);
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultAlternativeGuaranteedCargoDeliveryType()
-    {
-        return (string) $this->getConfigFromXpath(static::XPATH_ALTERNATIVE_DEFAULT_CARGO_DELIVERY_TYPE);
-    }
-
-    /**
-     * @param bool   $alternative
-     * @param string $type
-     *
-     * @return string
-     */
-    public function getGuaranteedDeliveryType($alternative = false, $type = 'package')
-    {
-        if ($alternative && $type == 'package') {
-            return $this->getDefaultAlternativeGuaranteedPackageDeliveryType();
-        }
-
-        if ($alternative) {
-            return $this->getDefaultAlternativeGuaranteedCargoDeliveryType();
-        }
-
-        if (!$alternative && $type == 'package') {
-            return $this->getDefaultGuaranteedPackageDeliveryType();
-        }
-
-        return $this->getDefaultGuaranteedCargoDeliveryType();
     }
 
     /**

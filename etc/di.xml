@@ -80,143 +80,13 @@
         </arguments>
     </type>
 
-    <type name="TIG\PostNL\Setup\InstallSchema">
-        <arguments>
-            <argument name="installSchemaObjects" xsi:type="array">
-                <item name="v1.1.0" xsi:type="array">
-                    <item name="InstallShipmentTable" xsi:type="object">TIG\PostNL\Setup\V110\Schema\InstallShipmentTable</item>
-                    <item name="InstallOrderTable" xsi:type="object">TIG\PostNL\Setup\V110\Schema\InstallOrderTable</item>
-                    <item name="InstallShipmentLabelTable" xsi:type="object">TIG\PostNL\Setup\V110\Schema\InstallShipmentLabelTable</item>
-                    <item name="InstallShipmentBarcodeTable" xsi:type="object">TIG\PostNL\Setup\V110\Schema\InstallShipmentBarcodeTable</item>
-                    <item name="InstallTablerateTable" xsi:type="object">TIG\PostNL\Setup\V110\Schema\InstallTablerateTable</item>
-                    <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V110\Schema\SalesShipmentGridColumns</item>
-                    <item name="SalesOrderGridColumns" xsi:type="object">TIG\PostNL\Setup\V110\Schema\SalesOrderGridColumns</item>
-                </item>
-            </argument>
-        </arguments>
-    </type>
-
-    <type name="TIG\PostNL\Setup\UpgradeSchema">
-        <arguments>
-            <argument name="upgradeSchemaObjects" xsi:type="array">
-                <item name="v1.9.1" xsi:type="array">
-                    <item name="InstallStatedAddressOnly" xsi:type="object">TIG\PostNL\Setup\V191\Schema\InstallStatedAddressOnly</item>
-                </item>
-                <item name="v1.9.0" xsi:type="array">
-                    <item name="InstallReturnBarcode" xsi:type="object">TIG\PostNL\Setup\V190\Schema\InstallReturnBarcode</item>
-                    <item name="InstallReturnLabel" xsi:type="object">TIG\PostNL\Setup\V190\Schema\InstallReturnLabel</item>
-                </item>
-                <item name="v1.8.2" xsi:type="array">
-                    <item name="ModifyConditionNameColumn" xsi:type="object">TIG\PostNL\Setup\V182\Schema\ModifyConditionNameColumn</item>
-                </item>
-                <item name="v1.8.0" xsi:type="array">
-                    <item name="InstallPriorityAttribute" xsi:type="object">TIG\PostNL\Setup\V180\Schema\InstallPriorityAttribute</item>
-                </item>
-                <item name="v1.7.4" xsi:type="array">
-                    <item name="InstallDownpartnerAttributes" xsi:type="object">TIG\PostNL\Setup\V174\Schema\InstallDownpartnerAttributes</item>
-                </item>
-                <item name="v1.6.1" xsi:type="array">
-                    <item name="UpgradeShipmentLabelTable" xsi:type="object">TIG\PostNL\Setup\V161\Schema\UpgradeShipmentLabelTable</item>
-                </item>
-                <item name="v1.5.3" xsi:type="array">
-                    <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V153\Schema\SalesShipmentGridColumns</item>
-                </item>
-                <item name="v1.5.2" xsi:type="array">
-                    <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V152\Schema\SalesShipmentGridColumns</item>
-                    <item name="SalesOrderGridColumns" xsi:type="object">TIG\PostNL\Setup\V152\Schema\SalesOrderGridColumns</item>
-                    <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V152\Schema\UpgradeOrderTable</item>
-                    <item name="UpgradeShipmentTable" xsi:type="object">TIG\PostNL\Setup\V152\Schema\UpgradeShipmentTable</item>
-                </item>
-                <item name="v1.4.1" xsi:type="array">
-                    <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V141\Schema\UpgradeOrderTable</item>
-                </item>
-                <item name="v1.4.0" xsi:type="array">
-                    <item name="UpgradeShippingLabelType" xsi:type="object">TIG\PostNL\Setup\V140\Schema\UpgradeShippingLabelType</item>
-                </item>
-                <item name="v1.3.1" xsi:type="array">
-                    <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V131\Schema\UpgradeOrderTable</item>
-                    <item name="UpgradeShipmentTable" xsi:type="object">TIG\PostNL\Setup\V131\Schema\UpgradeShipmentTable</item>
-                </item>
-                <item name="v1.3.0" xsi:type="array">
-                    <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V130\Schema\UpgradeForeignKeysOrderTable</item>
-                </item>
-                <item name="v1.2.0" xsi:type="array">
-                    <item name="SalesShipmentGridColumns" xsi:type="object">TIG\PostNL\Setup\V120\Schema\SalesShipmentGridColumns</item>
-                    <item name="SalesOrderGridColumns" xsi:type="object">TIG\PostNL\Setup\V120\Schema\SalesOrderGridColumns</item>
-                    <item name="UpgradeOrderTable" xsi:type="object">TIG\PostNL\Setup\V120\Schema\UpgradeOrderTable</item>
-                    <item name="InstallMatrixRateTable" xsi:type="object">TIG\PostNL\Setup\V120\Schema\InstallMatrixRateTable</item>
-                </item>
-                <item name="v1.12.5" xsi:type="array">
-                    <item name="InstallSmartReturnBarcode" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallSmartReturnBarcode</item>
-                    <item name="InstallSmartReturnLabel" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallSmartReturnLabel</item>
-                    <item name="InstallIsSmartReturn" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallIsSmartReturn</item>
-                    <item name="InstallSmartReturnEmailSent" xsi:type="object">TIG\PostNL\Setup\V1125\Schema\InstallSmartReturnEmailSent</item>
-                </item>
-
-                <item name="v1.12.7" xsi:type="array">
-                    <item name="InstallOrderInsuredTier" xsi:type="object">TIG\PostNL\Setup\V1127\Schema\InstallOrderInsuredTier</item>
-                    <item name="InstallShipmentInsuredTier" xsi:type="object">TIG\PostNL\Setup\V1127\Schema\InstallShipmentInsuredTier</item>
-                </item>
-
-                <item name="v1.13.0" xsi:type="array">
-                    <item name="InstallOrderAcInformation" xsi:type="object">TIG\PostNL\Setup\V1130\Schema\InstallOrderAcInformation</item>
-                    <item name="InstallShipmentAcInformation" xsi:type="object">TIG\PostNL\Setup\V1130\Schema\InstallShipmentAcInformation</item>
-                </item>
-                <item name="v1.14.0" xsi:type="array">
-                    <item name="InstallOrderAcInformation" xsi:type="object">TIG\PostNL\Setup\V1140\Schema\InstallReturnStatus</item>
-                </item>
-            </argument>
-        </arguments>
-    </type>
-
-    <type name="TIG\PostNL\Setup\InstallData">
-        <arguments>
-            <argument name="installDataObjects" xsi:type="array">
-                <item name="v1.2.0" xsi:type="array">
-                    <item name="InstallCustomProductAttributes" xsi:type="object">TIG\PostNL\Setup\V120\Data\CustomProductAttributes</item>
-                </item>
-                <item name="v1.4.1" xsi:type="array">
-                    <item name="InstallShippingDurationAttribute" xsi:type="object">TIG\PostNL\Setup\V141\Data\ShippingDurationAttribute</item>
-                </item>
-                <item name="v1.6.0" xsi:type="array">
-                    <item name="ConfigurationData" xsi:type="object">TIG\PostNL\Setup\V160\Data\ConfigurationData</item>
-                </item>
-            </argument>
-        </arguments>
-    </type>
-
-    <type name="TIG\PostNL\Setup\UpgradeData">
-        <arguments>
-            <argument name="upgradeDataObjects" xsi:type="array">
-                <item name="v1.2.0" xsi:type="array">
-                    <item name="InstallCustomProductAttributes" xsi:type="object">TIG\PostNL\Setup\V120\Data\CustomProductAttributes</item>
-                </item>
-                <item name="v1.4.1" xsi:type="array">
-                    <item name="InstallShippingDurationAttribute" xsi:type="object">TIG\PostNL\Setup\V141\Data\ShippingDurationAttribute</item>
-                </item>
-                <item name="v1.6.0" xsi:type="array">
-                    <item name="ConfigurationData" xsi:type="object">TIG\PostNL\Setup\V160\Data\ConfigurationData</item>
-                </item>
-                <item name="v1.7.2" xsi:type="array">
-                    <item name="UpdateCustomProductAttributes" xsi:type="object">TIG\PostNL\Setup\V172\Data\UpdateCustomProductAttributes</item>
-                </item>
-                <item name="v1.8.1" xsi:type="array">
-                    <item name="UpdateConfigData" xsi:type="object">TIG\PostNL\Setup\V181\Data\UpdateConfigData</item>
-                </item>
-                <item name="v1.9.1" xsi:type="array">
-                    <item name="InstallDisableDeliveryDaysAttribute" xsi:type="object">TIG\PostNL\Setup\V191\Data\InstallDisableDeliveryDaysAttribute</item>
-                </item>
-                <item name="v1.9.4" xsi:type="array">
-                    <item name="InstallMaximumQuantityLetterboxPackage" xsi:type="object">TIG\PostNL\Setup\V194\Data\InstallMaximumQuantityLetterboxPackage</item>
-                </item>
-            </argument>
-        </arguments>
-    </type>
 
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="postnlSyncGrids" xsi:type="object">TIG\PostNL\Console\Sync\Grids</item>
+                <item name="postnl:config:dump" xsi:type="object">TIG\PostNL\Console\Config\Dump</item>
+                <item name="postnl:config:import" xsi:type="object">TIG\PostNL\Console\Config\Import</item>
             </argument>
         </arguments>
     </type>
@@ -355,6 +225,17 @@
             <argument name="resourceModel" xsi:type="string">TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate</argument>
         </arguments>
     </virtualType>
+
+    <type name="TIG\PostNL\Service\Timeframe\Resolver">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="TIG\PostNL\Service\Shipping\DeliveryDate">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
 
     <virtualType name="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryGlobalPack" type="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryForCountryMap">
         <arguments>

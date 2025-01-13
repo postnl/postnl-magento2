@@ -67,6 +67,8 @@
                 <default_delivery_stated_address_be>4960</default_delivery_stated_address_be>
                 <use_alternative_default>0</use_alternative_default>
                 <stated_address_only_fee>2</stated_address_only_fee>
+                <noondelivery_fee>0</noondelivery_fee>
+                <default_noon_option>3085</default_noon_option>
             </delivery_settings>
 
             <delivery_days>
@@ -153,19 +155,18 @@
                 <product_settings_sorting_direction>desc</product_settings_sorting_direction>
             </globalpack>
 
-            <idcheck_active>0</idcheck_active>
-
-            <address_validation>
-
-            </address_validation>
-
             <peps>
                 <active>0</active>
                 <default_peps_option>6350</default_peps_option>
                 <default_peps_boxable_packets_option>6972</default_peps_boxable_packets_option>
                 <barcode_type>LA</barcode_type>
                 <barcode_range>NL</barcode_range>
+                <peps_boxable_packets_calculation_mode>manually</peps_boxable_packets_calculation_mode>
             </peps>
+
+            <letterbox_package>
+                <letterbox_package_calculation_mode>manually</letterbox_package_calculation_mode>
+            </letterbox_package>
 
             <returns>
                 <template>tig_postnl_postnl_settings_returns_template</template>

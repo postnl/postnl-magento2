@@ -3,6 +3,7 @@
 namespace TIG\PostNL\Controller\Adminhtml\Shipment;
 
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Model\Order\ShipmentRepository;
 use TIG\PostNL\Controller\Adminhtml\LabelAbstract;
@@ -28,7 +29,7 @@ class GetSmartReturnLabel extends LabelAbstract
         Track                       $track,
         BarcodeHandler              $barcodeHandler,
         GetPackingslip              $getPackingSlip,
-        SmartReturnShipmentManager  $smartReturnShipmentManager,
+        SmartReturnShipmentManager  $smartReturnShipmentManager
     )
     {
         parent::__construct(
@@ -67,7 +68,7 @@ class GetSmartReturnLabel extends LabelAbstract
         try {
             $this->smartReturnShipmentManager->processShipmentLabel($magentoShipment);
             $this->messageManager->addSuccessMessage(__('Successfully sent out all Smart Return labels'));
-        } catch (Exception $e) {
+        } catch (Exception|LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         }
 

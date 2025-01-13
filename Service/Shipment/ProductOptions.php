@@ -268,18 +268,13 @@ class ProductOptions
             return null;
         }
 
-        $code = $shipment->getProductCode();
-        if (!$this->productOptionsConfig->checkProductByFlags($code, 'isGuaranteedDelivery', true)) {
+        $type = $shipment->getShipmentType();
+        if ($type !== 'Noon') {
             return null;
         }
 
-        $order = $this->orderRepository->get($shipment->getOrderId());
-        $guaranteedTime = $this->productOptionsConfig->getGuaranteedDeliveryType(
-            $this->isAlternative($order->getBaseGrandTotal()),
-            $this->productOptionsConfig->getGuaranteedType($code)
-        );
-
-        return $this->guaranteedOptions->get($guaranteedTime);
+        // Right now we have only fixed Noon time.
+        return $this->guaranteedOptions->get('1200');
     }
 
     private function isAlternative(float $totalAmount): bool

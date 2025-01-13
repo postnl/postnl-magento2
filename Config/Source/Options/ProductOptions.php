@@ -152,7 +152,6 @@ class ProductOptions extends OptionsAbstract implements OptionSourceInterface
         $flags = [];
         $flags['groups'][] = ['group' => 'standard_options'];
         $flags['groups'][] = ['group' => 'id_check_options'];
-        $flags['groups'][] = ['group' => 'cargo_options'];
 
         return $this->getProductOptions($flags);
     }
@@ -328,10 +327,6 @@ class ProductOptions extends OptionsAbstract implements OptionSourceInterface
         $productOption = $this->getOptionsByCode($code);
         if (!$productOption) {
             return null;
-        }
-
-        if ($productOption['group'] == 'cargo_options') {
-            return GuaranteedOptions::GUARANTEED_TYPE_CARGO;
         }
 
         return GuaranteedOptions::GUARANTEED_TYPE_PACKAGE;

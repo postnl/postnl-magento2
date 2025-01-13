@@ -50,10 +50,6 @@ class DefaultOptions implements OptionSourceInterface
             $flags['groups'][] = ['group' => 'id_check_options'];
         }
 
-        if ($this->shippingOptions->canUseCargoProducts()) {
-            $flags['groups'][] = ['group' => 'cargo_options'];
-        }
-
         if ($this->shippingOptions->canUseEpsBusinessProducts()) {
             $flags['groups'][] = ['group' => 'eps_package_options'];
         }
@@ -70,12 +66,14 @@ class DefaultOptions implements OptionSourceInterface
      */
     public function getBeProducts()
     {
-        $beProducts[] = $this->shippingOptions->canUseCargoProducts() ? $this->productOptions->getCargoOptions() : [];
         $beProducts[] = $this->productOptions->getBeOptions();
 
         if ($this->shippingOptions->isPakjegemakActive('BE')) {
             $beProducts[] = $this->productOptions->getPakjeGemakBeOptions();
         }
+        // Add package options as available for those deliveries for selection
+        $beProducts[] = $this->productOptions->getPriorityOptions();
+        $beProducts[] = $this->productOptions->getBoxableOptions();
 
         return call_user_func_array("array_merge", $beProducts);
     }
@@ -100,6 +98,9 @@ class DefaultOptions implements OptionSourceInterface
     public function getEpsProducts()
     {
         $epsProducts[] = $this->productOptions->getEpsOptions();
+        // Add package options as available for those deliveries for selection
+        $epsProducts[] = $this->productOptions->getPriorityOptions();
+        $epsProducts[] = $this->productOptions->getBoxableOptions();
 
         return call_user_func_array("array_merge", $epsProducts);
     }
@@ -140,6 +141,9 @@ class DefaultOptions implements OptionSourceInterface
     public function getGlobalProducts()
     {
         $globalProducts[] = $this->productOptions->getGlobalPackOptions();
+        // Add package options as available for those deliveries for selection
+        $globalProducts[] = $this->productOptions->getPriorityOptions();
+        $globalProducts[] = $this->productOptions->getBoxableOptions();
 
         return call_user_func_array("array_merge", $globalProducts);
     }
@@ -187,6 +191,13 @@ class DefaultOptions implements OptionSourceInterface
         return $options;
     }
 
+    public function getGuaranteedDeliveryOptions(): array
+    {
+        return $this->productOptions->getProductOptions(
+            ['isGuaranteedDelivery' => true]
+        );
+    }
+
     /**
      * @return array
      */
@@ -225,10 +236,6 @@ class DefaultOptions implements OptionSourceInterface
             $flags['groups'][] = ['group' => 'only_stated_address_options'];
             if ($this->shippingOptions->isIDCheckActive()) {
                 $flags['groups'][] = ['group' => 'id_check_options'];
-            }
-
-            if ($this->shippingOptions->canUseCargoProducts()) {
-                $flags['groups'][] = ['group' => 'cargo_options'];
             }
 
             if ($this->shippingOptions->canUseEpsBusinessProducts()) {

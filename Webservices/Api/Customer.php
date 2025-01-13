@@ -12,6 +12,7 @@ class Customer
 {
     const ADDRESS_TYPE_RECEIVER = '01';
     const ADDRESS_TYPE_SENDER = '02';
+    const ADDRESS_TYPE_RETURN = '08';
 
     private AccountConfiguration $accountConfiguration;
 
@@ -98,7 +99,7 @@ class Customer
     public function getFreepostAddress(): array
     {
         return [
-            'AddressType' => '08',
+            'AddressType' => self::ADDRESS_TYPE_RETURN,
             'City' => $this->returnOptions->getCity(),
             'Countrycode' => $this->addressConfiguration->getCountry(),
             'HouseNr' => $this->returnOptions->getFreepostNumber(),

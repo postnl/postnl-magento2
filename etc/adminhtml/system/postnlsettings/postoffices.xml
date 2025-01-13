@@ -133,6 +133,18 @@
             </depends>
         </field>
 
+        <field id="pakjegemak_default" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Select "Pickup" tab first on the checkout</label>
+            <comment><![CDATA[If it's available for the current delivery country..]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/post_offices/pakjegemak_default</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+                <field id="pakjegemak_active">1</field>
+                <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+            </depends>
+        </field>
+
     </group>
 
 </include>

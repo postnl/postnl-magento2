@@ -95,7 +95,7 @@ define([
             State.currentSelectedShipmentType('delivery');
 
             var fee = null;
-            if (!value.fallback && !value.letterbox_package && !value.boxable_packets && !value.eps && !value.gp) {
+            if (!value.fallback && !value.letterbox_package && !value.boxable_packets && !value.international_packet && !value.eps && !value.gp) {
                 if (value.hasFee !== undefined && value.hasFee()) {
                     fee = value.getFee();
                 }
@@ -113,6 +113,9 @@ define([
             }
             if (typeof value.boxable_packets !== 'undefined') {
                 type = 'Boxable Packet';
+            }
+            if (typeof value.international_packet !== 'undefined') {
+                type = 'International Packet';
             }
 
             if (typeof value.eps !== 'undefined') {
@@ -182,6 +185,7 @@ define([
 
             // About to receive new delivery days. Deselect the current one.
             this.selectedOption(null);
+            const allowToOpenDelivery = this.canSelectFirstDelivery(address.country);
 
             self.getDeliveryDayRequest = $.ajax({
                 method: 'POST',
@@ -190,7 +194,7 @@ define([
             }).done(function (data) {
                 // If the deliverydays are reloaded, the first one is automatically selected.
                 // Show this by switching to the delivery pane.
-                State.currentOpenPane('delivery');
+                if (allowToOpenDelivery) State.currentOpenPane('delivery');
 
                 State.deliveryOptionsAreAvailable(true);
                 State.deliveryPrice(data.price);
@@ -223,7 +227,7 @@ define([
                     return;
                 }
 
-                if (data.boxable_packets === true) {
+                if (data.boxable_packets === true || data.international_packet === true) {
                     data  = ko.utils.arrayMap(data.timeframes, function (boxable_packets) {
                         return boxable_packets;
                     });
@@ -238,7 +242,7 @@ define([
                         return eps;
                     });
                     this.deliverydays(data);
-                    State.currentOpenPane('delivery');
+                    if (allowToOpenDelivery) State.currentOpenPane('delivery');
                     this.selectFirstDeliveryOption();
                     return;
                 }
@@ -249,7 +253,7 @@ define([
                         return gp;
                     });
                     this.deliverydays(data);
-                    State.currentOpenPane('delivery');
+                    if (allowToOpenDelivery) State.currentOpenPane('delivery');
                     this.selectFirstDeliveryOption();
                     return;
                 }
@@ -316,13 +320,33 @@ define([
             return isActive === 1 && isNL;
         }),
 
+        canSelectFirstDelivery: function(country) {
+            if (State.defaultTab === 'pickup') {
+                if (!country) {
+                    const address = AddressFinder();
+                    country = (address !== null && address !== false && address.country !== undefined) ?
+                        address.country : '';
+                }
+                // Check if pickup enabled for specific country
+                if (
+                    (country === 'NL' && window.checkoutConfig.shipping.postnl.pakjegemak_active) ||
+                    (country === 'BE' && window.checkoutConfig.shipping.postnl.pakjegemak_be_active)
+                ) {
+                    return false;
+                }
+            }
+            return true;
+        },
+
         selectFirstDeliveryOption: function () {
             // Only select the first option if there is none defined
             if (this.selectedOption() !== undefined && this.selectedOption() != null || sessionStorage.postnlPickupOption) {
                 return;
             }
             var deliveryDays = this.deliverydays();
-
+            if (!this.canSelectFirstDelivery()) {
+                return;
+            }
 
             if(sessionStorage.postnlDeliveryOption) {
                 var previousOption = JSON.parse(sessionStorage.postnlDeliveryOption);

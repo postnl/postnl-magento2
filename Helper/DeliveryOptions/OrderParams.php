@@ -156,7 +156,7 @@ class OrderParams
             return $list;
         }
 
-        if ($type === 'Boxable Packet') {
+        if ($type === 'Boxable Packet' || $type === 'International Packet') {
             return $list;
         }
 
@@ -222,24 +222,29 @@ class OrderParams
         if(!array_key_exists('country', $params)) {
             return $option;
         }
+        $country = (string)$params['country'];
 
-        if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] == 'NL') {
+        if (!isset($params['option']) && $params['type'] === 'fallback' && $country === 'NL') {
             $option = 'Daytime';
         }
 
-        if (!isset($params['option']) && $params['type'] === 'Boxable Packet' && $params['country'] !== 'NL') {
+        if (!isset($params['option']) && $params['type'] === 'Boxable Packet' && $country !== 'NL') {
             $option = 'boxable_packets';
         }
 
-        if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] !== 'NL' && in_array($params['country'], EpsCountries::ALL)) {
+        if (!isset($params['option']) && $params['type'] === 'International Packet' && $country !== 'NL') {
+            $option = 'priority_options';
+        }
+
+        if (!isset($params['option']) && $params['type'] === 'fallback' && $country !== 'NL' && in_array($params['country'], EpsCountries::ALL, true)) {
             $option = 'EPS';
         }
 
-        if (!isset($params['option']) && $params['type'] === 'fallback' && $params['country'] !== 'NL' && !in_array($params['country'], EpsCountries::ALL)) {
+        if (!isset($params['option']) && $params['type'] === 'fallback' && $country !== 'NL' && !in_array($params['country'], EpsCountries::ALL, true)) {
             $option = 'GP';
         }
 
-        if (!isset($params['option']) && $params['type'] === 'Letterbox Package' && $params['country'] == 'NL') {
+        if (!isset($params['option']) && $params['type'] === 'Letterbox Package' && $country === 'NL') {
             $option = 'letterbox_package';
         }
 

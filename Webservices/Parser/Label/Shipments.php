@@ -12,42 +12,23 @@ use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Service\Shipment\Data as ShipmentData;
 use TIG\PostNL\Webservices\Api\Customer as CustomerApi;
 
-class Shipments
+class Shipments extends AbstractShipmentLabel
 {
-    /** @var AddressConfiguration */
-    private $addressConfiguration;
+    private AddressConfiguration $addressConfiguration;
+    private ShipmentData $shipmentData;
+    private ReturnOptions $returnOptions;
 
-    /** @var ShipmentData */
-    private $shipmentData;
-
-    /** @var AddressEnhancer */
-    private $addressEnhancer;
-
-    /** @var ManagerInterface */
-    private $messageManager;
-
-    /** @var ReturnOptions */
-    private $returnOptions;
-
-    /**
-     * @param AddressConfiguration $addressConfiguration
-     * @param ShipmentData         $shipmentData
-     * @param AddressEnhancer      $addressEnhancer
-     * @param ManagerInterface     $messageManager
-     * @param ReturnOptions        $returnOptions
-     */
     public function __construct(
-        AddressConfiguration $addressConfiguration,
-        ShipmentData $shipmentData,
         AddressEnhancer $addressEnhancer,
         ManagerInterface $messageManager,
+        AddressConfiguration $addressConfiguration,
+        ShipmentData $shipmentData,
         ReturnOptions $returnOptions
     ) {
+        parent::__construct($addressEnhancer, $messageManager);
         $this->addressConfiguration = $addressConfiguration;
-        $this->shipmentData    = $shipmentData;
-        $this->addressEnhancer = $addressEnhancer;
-        $this->messageManager  = $messageManager;
-        $this->returnOptions   = $returnOptions;
+        $this->shipmentData = $shipmentData;
+        $this->returnOptions = $returnOptions;
     }
 
     /**
@@ -73,7 +54,7 @@ class Shipments
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
 
-        if ($this->canReturn($address[0]['Countrycode'])) {
+        if ($this->canReturn($address[0]['Countrycode'], $postnlShipment)) {
             $address[] = $this->getReturnAddressData();
         }
 
@@ -99,89 +80,19 @@ class Shipments
     }
 
     /**
-     * @param Address $shippingAddress
-     * @param string  $addressType
-     *
-     * @return array
-     * @throws \TIG\PostNL\Exception
-     */
-    private function getAddressData($shippingAddress, string $addressType = CustomerApi::ADDRESS_TYPE_RECEIVER)
-    {
-        $streetData   = $this->getStreetData($shippingAddress);
-        $houseNr = isset($streetData['housenumber']) ? $streetData['housenumber'] : $shippingAddress->getStreetLine(2);
-        $houseNrExt = $shippingAddress->getStreetLine(3);
-        $houseNrExt = (isset($streetData['housenumberExtension']) ? $streetData['housenumberExtension'] : $houseNrExt);
-        $addressArray = [
-            'AddressType' => $addressType,
-            'FirstName'   => $this->getFirstName($shippingAddress),
-            'Name'        => $shippingAddress->getLastname(),
-            'CompanyName' => $shippingAddress->getCompany(),
-            'Street'      => $streetData['street'][0],
-            'HouseNr'     => $houseNr,
-            'HouseNrExt'  => $houseNrExt,
-            'Zipcode'     => strtoupper(str_replace(' ', '', $shippingAddress->getPostcode() ?? '')),
-            'City'        => $shippingAddress->getCity(),
-            'Region'      => $shippingAddress->getRegion(),
-            'Countrycode' => $shippingAddress->getCountryId(),
-        ];
-
-        return $addressArray;
-    }
-
-    /**
-     * @param Address $shippingAddress
-     *
-     * @return array
-     * @throws \TIG\PostNL\Exception
-     */
-    private function getStreetData($shippingAddress)
-    {
-        $this->addressEnhancer->set([
-            'street' => $shippingAddress->getStreet(),
-            'country' => $shippingAddress->getCountryId()
-        ]);
-        $streetData = $this->addressEnhancer->get();
-        if (isset($streetData['error']) && $shippingAddress->getCountryId() !== 'NL'
-            && $shippingAddress->getCountryId() !== 'BE') {
-            return ['street' => $shippingAddress->getStreet()];
-        }
-
-        if (isset($streetData['error'])) {
-            $message = $streetData['error']['code'] . ' - ' . $streetData['error']['message'];
-            $this->messageManager->addErrorMessage($message);
-            return ['street' => $shippingAddress->getStreet()];
-        }
-
-        return $streetData;
-    }
-
-    /**
-     * @param Address $shippingAddress
-     *
-     * @return string
-     */
-    private function getFirstName($shippingAddress)
-    {
-        $name = $shippingAddress->getFirstname();
-        $name .= ($shippingAddress->getMiddlename() ? ' ' . $shippingAddress->getMiddlename() : '');
-
-        return $name;
-    }
-
-    /**
      * @param $countryId
      *
      * @return bool
      */
-    public function canReturn($countryId)
+    public function canReturn($countryId, Shipment $postnlShipment): bool
     {
+        if ($postnlShipment->isBoxablePackets() || $postnlShipment->isInternationalPacket()) {
+            return false;
+        }
         return ($this->returnOptions->isReturnActive() && in_array($countryId, ['NL', 'BE']));
     }
 
-    /**
-     * @return array
-     */
-    private function getReturnAddressData()
+    private function getReturnAddressData(): array
     {
         $countryCode = $this->addressConfiguration->getCountry();
         $returnType = $this->returnOptions->getReturnTo();
@@ -189,7 +100,7 @@ class Shipments
 
         if ($returnType === ReturnTypes::TYPE_FREE_POST && $countryCode === 'NL') {
             $data = [
-                'AddressType' => '08',
+                'AddressType' => CustomerApi::ADDRESS_TYPE_RETURN,
                 'City' => $this->returnOptions->getCity(),
                 'Countrycode' => $countryCode,
                 'HouseNr' => $this->returnOptions->getFreepostNumber(),
@@ -199,7 +110,7 @@ class Shipments
             ];
         } else {
             $data = [
-                'AddressType' => '08',
+                'AddressType' => CustomerApi::ADDRESS_TYPE_RETURN,
                 'City' => $this->returnOptions->getCity(),
                 'CompanyName' => $this->returnOptions->getCompany(),
                 'Countrycode' => $countryCode,

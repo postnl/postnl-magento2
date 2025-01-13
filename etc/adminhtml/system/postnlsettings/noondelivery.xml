@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+
+    <!-- Noon/Guaranteed Delivery -->
+
+     <group id="noon_delivery" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Morning Delivery</label>
+        <frontend_model>TIG\PostNL\Block\Adminhtml\Config\Form\Field\Fieldset</frontend_model>
+        <fieldset_css>tig_postnl-sub-sub-section</fieldset_css>
+         <depends>
+            <field id="shippingoptions_active">1</field>
+            <field id="deliverydays_active">1</field>
+            <field id="tig_postnl/generalconfiguration_shipping_address/country">NL</field>
+         </depends>
+
+         <field id="guaranteed_delivery" translate="label comment tooltip" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+             <label>Activate morning delivery</label>
+             <comment><![CDATA[Guaranteed delivery is only allowed for shipments in the Netherlands.]]></comment>
+             <tooltip><![CDATA[This service is available for the whole Netherlands, excluding the Wadden Islands. There is no guaranteed distribution on Saturday and Sunday. To be able to use guaranteed delivery, please contact your PostNL Pakketten account manager for more information.]]></tooltip>
+             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+             <config_path>tig_postnl/delivery_settings/guaranteed_delivery</config_path>
+         </field>
+
+         <field id="noondelivery_fee" translate="label comment" type="text" sortOrder="16" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+             <label>Morning delivery fee</label>
+             <comment><![CDATA[Additional costs for guaranteed delivery in the store's base currency. This fee will be added to the shipping costs.]]></comment>
+             <config_path>tig_postnl/delivery_settings/noondelivery_fee</config_path>
+             <backend_model>TIG\PostNL\Config\Validator\Fee</backend_model>
+             <depends>
+                 <field id="guaranteed_delivery">1</field>
+             </depends>
+         </field>
+
+         <field id="default_noon_option" translate="label comment" type="select" sortOrder="95" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+             <label>Morning delivery Netherlands</label>
+             <comment><![CDATA[Select the default product option for noon/guaranteed delivery shipments.]]></comment>
+             <source_model>TIG\PostNL\Config\Source\Options\DefaultOptions::getGuaranteedDeliveryOptions</source_model>
+             <config_path>tig_postnl/delivery_settings/default_noon_option</config_path>
+             <depends>
+                 <field id="guaranteed_delivery">1</field>
+             </depends>
+         </field>
+
+      </group>
+</include>
