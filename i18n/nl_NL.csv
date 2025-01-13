@@ -429,6 +429,8 @@ Percent,Percentage
 "Morning delivery fee","Toeslag ochtendlevering"
 "Morning delivery Netherlands","Ochtendlevering Nederland"
 "Morning Delivery","Ochtendlevering"
+"Additional costs for guaranteed delivery in the store's base currency. This fee will be added to the shipping costs.","Een toeslag voor gegarandeerde levering in de geconfigureerde winkelvaluta. Deze toeslag wordt toegevoegd aan de verzendkosten."
+"Select the default product option for morning delivery.","Selecteer de standaard verzendoptie voor ochtendlevering."
 "Guaranteed delivery is only allowed for shipments in the Netherlands.","Gegarandeerde levering is alleen toegestaan voor zendingen binnen Nederland."
 "This service is available for the whole Netherlands, excluding the Wadden Islands. There is no guaranteed distribution on Saturday and Sunday. To be able to use guaranteed delivery, please contact your PostNL Pakketten account manager for more information.","Deze dienst is beschikbaar voor heel Nederland, met uitzondering van de Waddeneilanden. Er is geen gegarandeerde bezorging op zaterdag en zondag. Als u gegarandeerde bezorging wilt kunnen gebruiken, neemt u voor meer informatie contact op met uw PostNL Pakketten-accountbeheerder."
 "Select the default guaranteed delivery type for the current <strong>cargo</strong> product you use for default delivery.","Selecteer het standaard gegarandeerd bezorgtype voor het huidige <strong>cargo</strong> product dat u gebruikt voor standaard bezorging."
