@@ -365,7 +365,7 @@ define([
             $.each(deliveryDays, function (deliveryDaysindex, value) {
                 if (Array.isArray(value)) {
                     $.each(value, function (index, value) {
-                        if (value.day === option.day && value.from === option.from && value.to === option.to) {
+                        if (value.date === option.date && value.day === option.day && value.from === option.from && value.to === option.to) {
                             result = [deliveryDaysindex, index];
                             return false;
                         }
