@@ -16,7 +16,7 @@ class AlternativeDeliveryMap extends AbstractFieldArray
     protected function _prepareToRender()
     {
         // Uniq id for current config
-        $this->uniqId = uniqid();
+        $this->uniqId = 'f' . uniqid();
         $this->rowId = 0;
         $this->addColumn(AlternativeDelivery::DELIVERY_MAP_SCALE,
             ['label' => __('Price Scale'), 'class' => 'required-entry validate-number validate-greater-than-zero']

@@ -260,7 +260,7 @@ class ProductInfo
 
         if ($this->isEpsCountry($country) && !$this->shippingOptions->canUseEpsBusinessProducts()) {
             $this->code = $this->productOptionsConfiguration->getDefaultEpsProductOption();
-            $this->validateAlternativeMap(AlternativeDelivery::CONFIG_EPS);
+            $this->validateAlternativeMap(AlternativeDelivery::CONFIG_EPS, $country);
             return;
         }
 

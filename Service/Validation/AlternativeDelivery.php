@@ -42,7 +42,7 @@ class AlternativeDelivery
         return $usedCode;
     }
 
-    protected function retrieveAlternativeCodeForCountry(string $configKey, float $quoteTotal, string $countryId): ?string
+    protected function retrieveAlternativeCodeForCountry(string $configKey, float $quoteTotal, string $countryId = null): ?string
     {
         $deliveryMap = $this->getConfig($configKey);
         if (empty($deliveryMap)) {
