@@ -13,7 +13,7 @@ class InternationalAddressCheck implements RestInterface
     private $restApi;
 
     private string $method = 'GET';
-    private string $resource = '';
+    private string $resource = 'shipment/checkout/';
     private string $version = 'v4';
     private string $endpoint = 'address/international/';
 
