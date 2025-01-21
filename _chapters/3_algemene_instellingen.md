@@ -7,6 +7,11 @@ De *overkomstduur* is het aantal dagen dat de bestelling nodig heeft om bezorgd 
 
 ### Bezorg instellingen
 
+#### Alternatieve bezorging
+Het is mogelijk om op basis van de orderwaarde regels in te stellen waarmee automatisch ingestelde bezorgopties aan die order gekoppeld worden
+
+![Alternatieve_bezorging]({{ site.baseurl }}/assets/images/03_alternatieve_bezorgopties.png "PostNL Alternatieve Bezorging")
+
 #### Avondbezorging
 Activeer avondbezorging om klanten de optie te bieden om hun pakket 's avonds bezorgd te krijgen. De extensie toont deze optie automatisch voor afleveradressen
 waar avondbezorging beschikbaar is.
@@ -74,11 +79,12 @@ Met PostNL Cargo is het mogelijk om palletzendingen te versturen naar verschille
 ![PostNL Cargo]({{ site.baseurl }}/assets/images/3_bezorging_cargo.png "PostNL Cargo")
 
 #### Pakjes Tracked
-Met PostNL Pakjes Tracked kunnen kleine pakketten tot 2 kilo naar het buitenland verstuurd en gevolgd worden. 
-Nadat u deze instelling heeft ingeschakeld kan de productoptie geselecteerd worden bij de standaard EPS bezorging en de standaard wereldwijde bezorging.
+Met PostNL Pakjes Tracked kunnen kleine pakketten tot 2 kilo naar het buitenland verstuurd en gevolgd worden. Deze producten kunnen als standaard verzendproduct ingesteld worden binnen de zones België, EU en Wereldwijd, maar kunnen ook automatisch toegewezen worden opvia de PostNL instellingen op productniveau in de catalogus.
+Wanneer er gebruik gemaakt wordt van automatische toewijzing wordt het product toegepast wat in de instellingen van  Internationale Pakjes ingesteld staat als standaardproduct.
 
 >**Let op:** sommige Pakjes Tracked producten vereisen specifieke contractuele afspraken met PostNL. Neem contact op met uw PostNL accountmanager voor meer informatie over deze producten.
 
+![PostNL Pakjes Tracked Productinstellingen]({{ site.baseurl }}/assets/images/3_pakjes_tracked_productinstellingen.png "PostNL Pakjes Tracked Productinstellingen")
 ![PostNL Pakjes Tracked]({{ site.baseurl }}/assets/images/3_bezorging_pakjes_tracked.png "PostNL Pakjes Tracked")
 
 #### EU en België
