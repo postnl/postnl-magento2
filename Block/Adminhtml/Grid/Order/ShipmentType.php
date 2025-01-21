@@ -2,7 +2,6 @@
 
 namespace TIG\PostNL\Block\Adminhtml\Grid\Order;
 
-use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Block\Adminhtml\Grid\AbstractGrid;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;

@@ -12,6 +12,7 @@ class Options
     const EVENING_DELIVERY_OPTION = 'Evening';
     const SUNDAY_DELIVERY_OPTION  = 'Sunday';
     const TODAY_DELIVERY_OPTION   = 'Today';
+    const NOON_DELIVERY_OPTION   = 'Noon';
 
     /**
      * @var ShippingOptions
@@ -48,7 +49,7 @@ class Options
      *
      * @return array
      */
-    public function get($countryId = 'NL')
+    public function get(string $countryId = 'NL')
     {
         $deliveryTimeframesOptions = [self::DAYTIME_DELIVERY_OPTION];
 
@@ -57,13 +58,17 @@ class Options
         }
 
         // Sunday Delivery is only available for the Netherlands
-        if ($this->shippingOptions->isSundayDeliveryActive()
-            && $this->hasSaturdayAsShippingDay() && $countryId == 'NL') {
+        if ($countryId === 'NL' && $this->shippingOptions->isSundayDeliveryActive()
+            && $this->hasSaturdayAsShippingDay()) {
             $deliveryTimeframesOptions[] = self::SUNDAY_DELIVERY_OPTION;
         }
 
-        if ($this->shippingOptions->isTodayDeliveryActive() && $countryId == 'NL') {
+        if ($countryId === 'NL' && $this->shippingOptions->isTodayDeliveryActive()) {
             $deliveryTimeframesOptions[] = self::TODAY_DELIVERY_OPTION;
+        }
+
+        if ($countryId === 'NL' && $this->shippingOptions->isGuaranteedDeliveryActive()) {
+            $deliveryTimeframesOptions[] = self::NOON_DELIVERY_OPTION;
         }
 
         return $deliveryTimeframesOptions;

@@ -11,7 +11,8 @@ class ExceptionHandler
     /**
      * CIF error namespace.
      */
-    const ERROR_NAMESPACE = 'https://postnl.nl/cif/services/common/';
+    const ERROR_NAMESPACE = 'http://postnl.nl/cif/services/common/';
+    const ERROR_NAMESPACE_SECURE = 'https://postnl.nl/cif/services/common/';
 
     /**
      * The error number CIF uses for the 'shipment not found' error.
@@ -153,6 +154,10 @@ class ExceptionHandler
         }
 
         $errors = $this->responseXml->getElementsByTagNameNS(static::ERROR_NAMESPACE, 'ExceptionData');
+        if (!$errors->length) {
+            // Try secure namepsace.
+            $errors = $this->responseXml->getElementsByTagNameNS(static::ERROR_NAMESPACE_SECURE, 'ExceptionData');
+        }
 
         /** @var \DOMElement $error */
         foreach ($errors as $error) {

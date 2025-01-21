@@ -40,10 +40,7 @@ class Labelling extends AbstractEndpoint
      */
     private $endpoint = 'label';
 
-    /**
-     * @var array
-     */
-    private $requestParams;
+    protected array $requestParams;
 
     /**
      * Labelling constructor.

@@ -31,6 +31,10 @@ define([
                 this.optionLabel = $.mage.__('Sunday');
                 break;
 
+            case 'noon':
+                this.optionLabel = $.mage.__('Morning');
+                break;
+
             case 'today':
                 this.optionLabel = $.mage.__('Fast Delivery');
                 break;
@@ -60,6 +64,10 @@ define([
 
             if (option == 'today') {
                 return window.checkoutConfig.shipping.postnl.todaydelivery_fee;
+            }
+
+            if (option == 'noon') {
+                return window.checkoutConfig.shipping.postnl.noon_delivery_fee;
             }
 
             return 0;

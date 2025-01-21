@@ -8,21 +8,18 @@ use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Service\Carrier\Price\Calculator;
 use TIG\PostNL\Service\Carrier\QuoteToRateRequest;
+use TIG\PostNL\Service\Quote\ShippingDuration;
+use TIG\PostNL\Service\Shipping\BoxablePackets;
+use TIG\PostNL\Service\Shipping\InternationalPacket;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
-use TIG\PostNL\Webservices\Endpoints\Locations as LocationsEndpoint;
-use TIG\PostNL\Webservices\Endpoints\DeliveryDate;
+use TIG\PostNL\Service\Shipping\PickupLocations;
 use Magento\Framework\App\Action\Context;
 use Magento\Checkout\Model\Session;
-use Magento\Framework\Exception\LocalizedException;
-use TIG\PostNL\Service\Quote\ShippingDuration;
 
 class Locations extends AbstractDeliveryOptions
 {
     /** @var AddressEnhancer */
     private $addressEnhancer;
-
-    /** @var  LocationsEndpoint */
-    private $locationsEndpoint;
 
     /** @var Calculator */
     private $priceCalculator;
@@ -31,19 +28,10 @@ class Locations extends AbstractDeliveryOptions
      * @var LetterboxPackage
      */
     private $letterboxPackage;
+    private PickupLocations $pickupLocations;
+    private BoxablePackets $boxablePackets;
+    private InternationalPacket $internationalPacket;
 
-    /**
-     * @param Context            $context
-     * @param OrderRepository    $orderRepository
-     * @param Session            $checkoutSession
-     * @param QuoteToRateRequest $quoteToRateRequest
-     * @param AddressEnhancer    $addressEnhancer
-     * @param LocationsEndpoint  $locations
-     * @param DeliveryDate       $deliveryDate
-     * @param Calculator         $priceCalculator
-     * @param ShippingDuration   $shippingDuration
-     * @param LetterboxPackage   $letterboxPackage
-     */
     public function __construct(
         Context $context,
         EncoderInterface $encoder,
@@ -51,14 +39,14 @@ class Locations extends AbstractDeliveryOptions
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
         AddressEnhancer $addressEnhancer,
-        LocationsEndpoint $locations,
-        DeliveryDate $deliveryDate,
         Calculator $priceCalculator,
         ShippingDuration $shippingDuration,
-        LetterboxPackage $letterboxPackage
+        LetterboxPackage $letterboxPackage,
+        PickupLocations $pickupLocations,
+        BoxablePackets $boxablePackets,
+        InternationalPacket $internationalPacket
     ) {
         $this->addressEnhancer   = $addressEnhancer;
-        $this->locationsEndpoint = $locations;
         $this->priceCalculator   = $priceCalculator;
         $this->letterboxPackage = $letterboxPackage;
 
@@ -69,8 +57,10 @@ class Locations extends AbstractDeliveryOptions
             $checkoutSession,
             $quoteToRateRequest,
             $shippingDuration,
-            $deliveryDate
         );
+        $this->pickupLocations = $pickupLocations;
+        $this->boxablePackets = $boxablePackets;
+        $this->internationalPacket = $internationalPacket;
     }
 
     /**
@@ -78,17 +68,28 @@ class Locations extends AbstractDeliveryOptions
      */
     public function execute()
     {
+        $params = $this->getRequest()->getParams();
+        if (!isset($params['address']['country']) || !is_array($params['address'])) {
+            return $this->jsonResponse(__('No Address data found.'));
+        }
+
         $products = $this->checkoutSession->getQuote()->getAllItems();
-        if ($this->letterboxPackage->isLetterboxPackage($products, false)) {
+        $country = $params['address']['country'];
+        if ($country === 'NL' && $this->letterboxPackage->isLetterboxPackage($products)) {
             return $this->jsonResponse([
                 'error' => __('Pickup locations are disabled for Letterbox packages.')
             ]);
         }
-
-        $params = $this->getRequest()->getParams();
-        if (!isset($params['address']) || !is_array($params['address'])) {
-            return $this->jsonResponse(__('No Address data found.'));
+        if ($country === 'BE' && (
+                $this->boxablePackets->canFixInTheBox($products) ||
+                $this->internationalPacket->canFixInTheBox($products)
+            )
+        ) {
+            return $this->jsonResponse([
+                'error' => __('Pickup locations are disabled for packets.')
+            ]);
         }
+
         $this->addressEnhancer->set($params['address']);
         $price = $this->priceCalculator->getPriceWithTax($this->getRateRequest(), 'pakjegemak');
 
@@ -96,42 +97,13 @@ class Locations extends AbstractDeliveryOptions
             return $this->jsonResponse([
                 'price'       => $price['price'],
                 'locations'   => $this->getValidResponeType(),
-                'pickup_date' => $this->getDeliveryDay($this->addressEnhancer->get())
+                'pickup_date' => $this->pickupLocations->getLastDeliveryDate()
             ]);
         } catch (\Exception $exception) {
             return $this->jsonResponse([
                 'error' => __('Invalid locations response, more information can be found in the PostNL log files.')
             ]);
         }
-    }
-
-    /**
-     * @param $address
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    private function getLocations($address)
-    {
-        $deliveryDate = false;
-        if ($availableDelivery = $this->getDeliveryDay($address)) {
-            $deliveryDate = $availableDelivery;
-        }
-
-        $quote = $this->checkoutSession->getQuote();
-        $storeId = $quote->getStoreId();
-        $this->locationsEndpoint->changeAPIKeyByStoreId($storeId);
-        $this->locationsEndpoint->updateParameters($address ,$deliveryDate);
-        $response = $this->locationsEndpoint->call();
-        //@codingStandardsIgnoreLine
-        if (!is_object($response) || !isset($response->GetLocationsResult->ResponseLocation)) {
-            throw new LocalizedException(
-                __('Invalid GetLocationsResult response: %1', var_export($response, true))
-            );
-        }
-
-        //@codingStandardsIgnoreLine
-        return $response->GetLocationsResult->ResponseLocation;
     }
 
     /**
@@ -146,6 +118,6 @@ class Locations extends AbstractDeliveryOptions
             return ['error' => __('%1 : %2', $address['error']['code'], $address['error']['message'])];
         }
 
-        return $this->getLocations($address);
+        return $this->pickupLocations->get($address);
     }
 }

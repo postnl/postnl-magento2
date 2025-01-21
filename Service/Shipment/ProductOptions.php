@@ -7,6 +7,7 @@ use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface as PostNLOrderRepository;
+use TIG\PostNL\Service\Validation\AlternativeDelivery;
 
 // @codingStandardsIgnoreFile
 class ProductOptions
@@ -35,6 +36,8 @@ class ProductOptions
      * @var PostNLOrderRepository
      */
     private $postNLOrderRepository;
+
+    private AlternativeDelivery $alternativeDelivery;
 
     /**
      * These shipment types need specific product options.
@@ -158,27 +161,20 @@ class ProductOptions
             ]
         ];
 
-    /**
-     * ProductOptions constructor.
-     *
-     * @param ShippingOptions              $shippingOptions
-     * @param GuaranteedOptions            $guaranteedOptions
-     * @param ProductOptionsConfiguration  $productOptions
-     * @param OrderRepositoryInterface     $orderRepository
-     * @param PostNLOrderRepository        $postNLOrderRepository
-     */
     public function __construct(
         ShippingOptions $shippingOptions,
         GuaranteedOptions $guaranteedOptions,
         ProductOptionsConfiguration $productOptions,
         OrderRepositoryInterface $orderRepository,
-        PostNLOrderRepository $postNLOrderRepository
+        PostNLOrderRepository $postNLOrderRepository,
+        AlternativeDelivery $alternativeDelivery
     ) {
         $this->shippingOptions       = $shippingOptions;
         $this->guaranteedOptions     = $guaranteedOptions;
         $this->productOptionsConfig  = $productOptions;
         $this->orderRepository       = $orderRepository;
         $this->postNLOrderRepository = $postNLOrderRepository;
+        $this->alternativeDelivery = $alternativeDelivery;
     }
 
     /**
@@ -272,37 +268,26 @@ class ProductOptions
             return null;
         }
 
-        $code = $shipment->getProductCode();
-        if (!$this->productOptionsConfig->checkProductByFlags($code, 'isGuaranteedDelivery', true)) {
+        $type = $shipment->getShipmentType();
+        if ($type !== 'Noon') {
             return null;
         }
 
-        $order = $this->orderRepository->get($shipment->getOrderId());
-        $guaranteedTime = $this->productOptionsConfig->getGuaranteedDeliveryType(
-            $this->isAlternative($order->getBaseGrandTotal()),
-            $this->productOptionsConfig->getGuaranteedType($code)
-        );
-
-        return $this->guaranteedOptions->get($guaranteedTime);
+        // Right now we have only fixed Noon time.
+        return $this->guaranteedOptions->get('1200');
     }
 
-    /**
-     * @param $totalAmount
-     *
-     * @return bool
-     */
-    private function isAlternative($totalAmount)
+    private function isAlternative(float $totalAmount): bool
     {
         $alternativeActive = $this->productOptionsConfig->getUseAlternativeDefault();
         if (!$alternativeActive) {
             return false;
         }
 
-        $alternativeMinAmount = $this->productOptionsConfig->getAlternativeDefaultMinAmount();
-        if ($totalAmount >= $alternativeMinAmount) {
-            return false;
-        }
-
-        return true;
+        $alternativeCode = $this->alternativeDelivery->getMappedCode(
+            AlternativeDelivery::CONFIG_DELIVERY,
+            $totalAmount
+        );
+        return $alternativeCode !== null;
     }
 }

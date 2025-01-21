@@ -11,98 +11,41 @@ class ParcelType implements ContractInterface
      *
      * @return bool|mixed
      */
-    // @codingStandardsIgnoreStart
     public function validate($line)
     {
-        $line = strtolower($line);
+        $line = strtolower((string)$line);
+        switch ($line) {
+            case '':
+            case '0':
+            case '*':
+                return '*';
 
-        if ($this->isWildcard($line)) {
-            return '*';
-        }
+            case 'pakket':
+            case 'regular':
+                return 'regular';
 
-        if ($this->isRegular($line)) {
-            return 'regular';
-        }
+            case 'extra@home':
+            case 'extra @ home':
+            case 'extra_@_home':
+            case 'extraathome':
+            case 'extra_at_home':
+                return 'extra@home';
 
-        if ($this->isExtraAtHome($line)) {
-            return 'extra@home';
-        }
+            case 'pakjegemak':
+            case 'pakje_gemak':
+            case 'pakje gemak':
+            case 'PakjeGemak':
+            case 'postkantoor':
+            case 'post office':
+                return 'pakjegemak';
 
-        if ($this->isPakjegemak($line)) {
-            return 'pakjegemak';
-        }
+            case 'letterbox_package':
+                return 'letterbox_package';
 
-        if ($this->isLetterboxPackage($line)) {
-            return 'letterbox_package';
-        }
-
-        if ($this->isBoxablePacket($line)) {
-            return 'boxable_packets';
+            case 'boxable_packets':
+                return 'boxable_packets';
         }
 
         return false;
-    }
-    // @codingStandardsIgnoreEnd
-
-    /**
-     * @param $line
-     *
-     * @return bool
-     */
-    private function isWildcard($line)
-    {
-        return in_array($line, ['', '0', '*']);
-    }
-
-    /**
-     * @param $line
-     *
-     * @return bool
-     */
-    private function isRegular($line)
-    {
-        return in_array($line, ['pakket', 'regular']);
-    }
-
-    /**
-     * @param $line
-     *
-     * @return bool
-     */
-    private function isExtraAtHome($line)
-    {
-        return in_array($line, ['extra@home', 'extra @ home', 'extra_@_home', 'extraathome', 'extra_at_home']);
-    }
-
-    /**
-     * @param $line
-     *
-     * @return bool
-     */
-    private function isPakjegemak($line)
-    {
-        $options = ['pakjegemak', 'pakje_gemak', 'pakje gemak', 'PakjeGemak', 'postkantoor', 'post office'];
-
-        return in_array($line, $options);
-    }
-
-    /**
-     * @param $line
-     *
-     * @return bool
-     */
-    private function isLetterboxPackage($line)
-    {
-        return in_array($line, ['letterbox_package']);
-    }
-
-    /**
-     * @param $line
-     *
-     * @return bool
-     */
-    private function isBoxablePacket($line)
-    {
-        return in_array($line, ['boxable_packets']);
     }
 }

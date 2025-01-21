@@ -174,6 +174,7 @@ class Data
     private function setMandatoryShipmentData(ShipmentInterface $shipment, $currentShipmentNumber, array $shipmentData)
     {
         $magentoShipment = $shipment->getShipment();
+        $countryId = $shipmentData['Addresses']['Address'][0]['Countrycode'] ?? null;
         if ($shipment->isExtraAtHome()) {
             $shipmentData['Content'] = $this->contentDescription->get($shipment);
             $shipmentData['Dimension']['Volume'] = $this->getVolumeByParcelCount(
@@ -182,11 +183,7 @@ class Data
             $shipmentData['Reference'] = $this->labelAndPackingslipOptions->getReference($magentoShipment);
         }
 
-        if ($shipment->isGlobalPack()) {
-            $shipmentData['Customs'] = $this->customsInfo->get($shipment);
-        }
-
-        if ($shipment->isBoxablePackets()) {
+        if ($this->isCustomsAllowed($shipment, $countryId)) {
             $shipmentData['Customs'] = $this->customsInfo->get($shipment);
         }
 
@@ -202,8 +199,11 @@ class Data
         if (!is_array($productOptions)) {
             $productOptions = [];
         }
-        $countryId = $shipmentData['Addresses']['Address'][0]['Countrycode'] ?? null;
         $returnActive = $this->returnOptions->isReturnActive();
+        // Disable return codes for packets
+        if ($shipment->isInternationalPacket() || $shipment->isBoxablePackets()) {
+            $returnActive = false;
+        }
         if ($returnActive && $countryId === 'NL' &&
             $this->returnOptions->getReturnLabel() === LabelSettings::LABEL_RETURN
         ) {
@@ -233,6 +233,13 @@ class Data
             $productOptions[] = [
                 'Characteristic' => '191',
                 'Option'         => '004'
+            ];
+        }
+
+        if ($shipment->isExtraCover() && $shipment->getProductCode() === '13085') {
+            $productOptions[] = [
+                'Characteristic' => '004',
+                'Option'         => '020'
             ];
         }
 
@@ -342,5 +349,13 @@ class Data
                 'Option'         => '025'
             ]
         ];
+    }
+
+    private function isCustomsAllowed(ShipmentInterface $shipment, ?string $countryId): bool
+    {
+        return $shipment->isGlobalPack() || // Some legacy stuff first
+            $shipment->isBoxablePackets() ||
+            // And add customers on all non-NL/non-BE countries.
+            ($countryId !== null && $countryId !== 'NL' && $countryId !== 'BE');
     }
 }

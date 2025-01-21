@@ -7,14 +7,12 @@ use Magento\Sales\Model\Order\Shipment as MagentoShipment;
 
 class Type
 {
-    /**
-     * @param ShipmentInterface $postNLShipment
-     *
-     * @return null|string
-     */
-    public function get(ShipmentInterface $postNLShipment)
+
+    public function get(ShipmentInterface $postNLShipment): string
     {
-        $shipmentType = $postNLShipment->getShipmentType();
+        // Try to get Shipment type
+        $shipmentType = $this->getShipmentTypeByCode($postNLShipment);
+        if (!$shipmentType) $shipmentType = $postNLShipment->getShipmentType();
         if ($shipmentType !== null) {
             return $shipmentType;
         }
@@ -27,21 +25,29 @@ class Type
         return $this->getTypeForCountry($countryId);
     }
 
-    /**
-     * @param string $countryId
-     *
-     * @return string
-     */
-    private function getTypeForCountry($countryId)
+    protected function getTypeForCountry(string $countryId): string
     {
-        if ($countryId == 'NL') {
+        if ($countryId === 'NL') {
             return 'Daytime';
         }
 
-        if (in_array($countryId, EpsCountries::ALL)) {
+        if (in_array($countryId, EpsCountries::ALL, true)) {
             return 'EPS';
         }
 
         return 'GLOBALPACK';
+    }
+
+    protected function getShipmentTypeByCode(ShipmentInterface $postNLShipment): ?string
+    {
+        switch (true) {
+            case $postNLShipment->isBoxablePackets():
+                return 'boxable_packets';
+            case $postNLShipment->isInternationalPacket():
+                return 'priority_options';
+            case $postNLShipment->isGlobalPack():
+                return 'gp';
+        }
+        return null;
     }
 }

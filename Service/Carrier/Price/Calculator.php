@@ -7,10 +7,10 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Tax\Helper\Data;
+use Magento\Tax\Model\Config;
 use TIG\PostNL\Config\Source\Carrier\RateType;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
-use TIG\PostNL\Service\Shipping\LetterboxPackage;
 
 // @codingStandardsIgnoreFile
 class Calculator
@@ -46,11 +46,6 @@ class Calculator
     private $parcelTypeFinder;
 
     /**
-     * @var LetterboxPackage
-     */
-    private $letterboxPackage;
-
-    /**
      * @var Data
      */
     private $taxHelper;
@@ -63,7 +58,6 @@ class Calculator
      * @param Matrixrate           $matrixratePrice
      * @param Tablerate            $tablerateShippingPrice
      * @param ParcelTypeFinder     $parcelTypeFinder
-     * @param LetterboxPackage     $letterboxPackage
      * @param Data                 $taxHelper
      */
     public function __construct(
@@ -72,7 +66,6 @@ class Calculator
         Matrixrate           $matrixratePrice,
         Tablerate            $tablerateShippingPrice,
         ParcelTypeFinder     $parcelTypeFinder,
-        LetterboxPackage     $letterboxPackage,
         Data                 $taxHelper
     ) {
         $this->scopeConfig            = $scopeConfig;
@@ -80,7 +73,6 @@ class Calculator
         $this->matrixratePrice        = $matrixratePrice;
         $this->tablerateShippingPrice = $tablerateShippingPrice;
         $this->parcelTypeFinder       = $parcelTypeFinder;
-        $this->letterboxPackage       = $letterboxPackage;
         $this->taxHelper              = $taxHelper;
     }
 
@@ -241,7 +233,7 @@ class Calculator
     public function getPriceWithTax(RateRequest $request, $parcelType = null)
     {
         $includeVat = $this->taxHelper->getShippingPriceDisplayType();
-        $includeVat = ($includeVat == 2 || $includeVat == 3);
+        $includeVat = ($includeVat === Config::DISPLAY_TYPE_INCLUDING_TAX || $includeVat === Config::DISPLAY_TYPE_BOTH);
 
         $price = $this->price($request, $parcelType);
         $shippingAddress = $request->getShippingAddress();

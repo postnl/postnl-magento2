@@ -107,7 +107,7 @@ class Validator
             $this->showLetterboxPackageNotice();
         }
 
-        return $this->validatePeps($shipment);
+        return true;
     }
 
     /**
@@ -121,26 +121,6 @@ class Validator
             $magentoShipment = $shipment->getShipment();
             // @codingStandardsIgnoreLine
             $this->messages['errors'][] = __('Could not print labels for shipment %1. Worldwide (Globalpack) Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
-            return false;
-        }
-
-        return $this->validatePeps($shipment);
-    }
-
-    /**
-     * @param ShipmentInterface $shipment
-     *
-     * @return bool
-     */
-    private function validatePeps(ShipmentInterface $shipment)
-    {
-        $code = $shipment->getProductCode();
-        $isPriority = $this->productOptions->checkProductByFlags($code, 'group', 'priority_options');
-
-        if ($isPriority && !$this->shippingOptions->canUsePriority()) {
-            $magentoShipment = $shipment->getShipment();
-            // @codingStandardsIgnoreLine
-            $this->messages['errors'][] = __('Could not print labels for shipment %1. Priority Delivery is disabled. Please contact your PostNL account manager before you enable this method.', $magentoShipment->getIncrementId());
             return false;
         }
 

@@ -58,10 +58,6 @@ class ProductCodeTest extends TestCase
         $this->addProductOptionsMockFunction('getDefaultPakjeGemakBeProductOption', static::PRODUCT_OPTION_PAKJEGEMAK_BE);
         $this->addProductOptionsMockFunction('getDefaultPakjeGemakBeDomesticProductOption', static::PRODUCT_OPTION_PAKJEGEMAK_BE_DOMESTIC);
         $this->addProductOptionsMockFunction('getDefaultSundayProductOption', static::PRODUCT_OPTION_SUNDAY);
-        $this->addProductOptionsMockFunction(
-            'getAlternativeDefaultProductOption',
-            static::PRODUCT_OPTION_ALTERNATIVE_DEFAULT
-        );
     }
 
     /**
@@ -187,7 +183,6 @@ class ProductCodeTest extends TestCase
 
         $this->quoteInterfaceMock->method('getQuote')->willReturn($quoteMock);
         $this->productOptionsMock->method('getUseAlternativeDefault')->willReturn($useAlternative);
-        $this->productOptionsMock->method('getAlternativeDefaultMinAmount')->willReturn($alternativeMinAmount);
 
         $instance = $this->getInstance();
         $this->invokeArgs('setDefaultProductOption', ['country' => 'NL'], $instance);
