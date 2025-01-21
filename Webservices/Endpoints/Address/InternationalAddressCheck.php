@@ -2,8 +2,6 @@
 
 namespace TIG\PostNL\Webservices\Endpoints\Address;
 
-use Magento\Framework\App\CacheInterface;
-use Symfony\Component\HttpFoundation\Exception\JsonException;
 use TIG\PostNL\Webservices\Endpoints\RestInterface;
 use TIG\PostNL\Webservices\Rest;
 
@@ -15,7 +13,7 @@ class InternationalAddressCheck implements RestInterface
     private $restApi;
 
     private string $method = 'GET';
-    private string $resource = '';
+    private string $resource = 'shipment/checkout/';
     private string $version = 'v4';
     private string $endpoint = 'address/international/';
 
@@ -23,20 +21,16 @@ class InternationalAddressCheck implements RestInterface
      * @var array
      */
     private $data = [];
-    private CacheInterface $cache;
 
     /**
      * International Address Check constructor.
      *
      * @param Rest $rest
-     * @param CacheInterface $cache
      */
     public function __construct(
-        Rest $rest,
-        CacheInterface $cache
+        Rest $rest
     ) {
         $this->restApi = $rest;
-        $this->cache = $cache;
     }
 
     /**
@@ -44,17 +38,7 @@ class InternationalAddressCheck implements RestInterface
      */
     public function call()
     {
-        $cacheKey = $this->getIdentifier();
-        if ($cacheKey && $content = $this->cache->load($cacheKey)) {
-            return $content;
-        }
-
-        $response = $this->restApi->getRequest($this);
-
-        if ($cacheKey && $response) {
-            $this->cache->save($response, $cacheKey, ['POSTNL_REQUESTS'], 60 * 5);
-        }
-        return $response;
+        return $this->restApi->getRequest($this);
     }
 
     /**
@@ -101,14 +85,4 @@ class InternationalAddressCheck implements RestInterface
     {
         return $this->resource;
     }
-
-    private function getIdentifier(): ?string
-    {
-        try {
-            return 'POSTNL_INT_ADDRESS_' . json_encode($this->data, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            return null;
-        }
-    }
-
 }
