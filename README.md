@@ -9,8 +9,8 @@
 This is the official PostNL Magento 2 extension to connect your Magento 2 webshop with PostNL.
 - 
 ## Documentation 
-Manual => [https://postnl.github.io/postnl-magento2/)
-<br>PostNL Hyvä Checkout extension: [https://github.com/postnl/postnl-magento2-hyva-checkout/)
+Manual => https://postnl.github.io/postnl-magento2/
+<br>PostNL Hyvä Checkout extension: https://github.com/postnl/postnl-magento2-hyva-checkout/
 
 ## Support
 For questions related to your PostNL account and PostNL delivery options and products, please contact with PostNL or your PostNL accountmanager.
