@@ -145,6 +145,26 @@
             </depends>
         </field>
 
+        <field id="pakjegemak_global_active" translate="label" type="select" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Activate additional locations</label>
+            <comment><![CDATA[Add additional pickup locations in other countries.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/post_offices/pakjegemak_global_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+        </field>
+
+        <field id="pakjegemak_global_countries" translate="label" type="multiselect" sortOrder="310" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Post office delivery</label>
+            <comment><![CDATA[Select countries where pickup points should be added.]]></comment>
+            <source_model>TIG\PostNL\Model\Config\Source\PickupCountries</source_model>
+            <config_path>tig_postnl/post_offices/pakjegemak_global_countries</config_path>
+            <depends>
+                <field id="pakjegemak_active">1</field>
+            </depends>
+        </field>
+
     </group>
 
 </include>
