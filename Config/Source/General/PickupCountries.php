@@ -1,6 +1,6 @@
 <?php
 
-namespace TIG\PostNL\Model\Config\Source;
+namespace TIG\PostNL\Config\Source\General;
 
 class PickupCountries implements \Magento\Framework\Data\OptionSourceInterface
 {

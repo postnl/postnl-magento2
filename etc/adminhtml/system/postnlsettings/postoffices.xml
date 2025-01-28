@@ -156,12 +156,22 @@
         </field>
 
         <field id="pakjegemak_global_countries" translate="label" type="multiselect" sortOrder="310" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-            <label>Post office delivery</label>
+            <label>Additional location countries</label>
             <comment><![CDATA[Select countries where pickup points should be added.]]></comment>
-            <source_model>TIG\PostNL\Model\Config\Source\PickupCountries</source_model>
+            <source_model>TIG\PostNL\Config\Source\General\PickupCountries</source_model>
             <config_path>tig_postnl/post_offices/pakjegemak_global_countries</config_path>
             <depends>
-                <field id="pakjegemak_active">1</field>
+                <field id="pakjegemak_global_active">1</field>
+            </depends>
+        </field>
+
+        <field id="default_pakjegemak_global_option" translate="label" type="select" sortOrder="320" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Additional location post office delivery</label>
+            <comment><![CDATA[Select the default product option for postoffice delivery shipments.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getEuOptions</source_model>
+            <config_path>tig_postnl/post_offices/default_pakjegemak_global_option</config_path>
+            <depends>
+                <field id="pakjegemak_global_active">1</field>
             </depends>
         </field>
 

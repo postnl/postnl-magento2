@@ -5,7 +5,6 @@ namespace TIG\PostNL\Service\Shipment;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
-use Magento\Sales\Api\OrderRepositoryInterface;
 use TIG\PostNL\Api\OrderRepositoryInterface as PostNLOrderRepository;
 use TIG\PostNL\Service\Validation\AlternativeDelivery;
 
@@ -26,11 +25,6 @@ class ProductOptions
      * @var ProductOptionsConfiguration
      */
     private $productOptionsConfig;
-
-    /**
-     * @var OrderRepositoryInterface
-     */
-    private $orderRepository;
 
     /**
      * @var PostNLOrderRepository
@@ -161,18 +155,25 @@ class ProductOptions
             ]
         ];
 
+    private array $additionalOptions = [
+        'pg' => [
+            [
+                'Characteristic' => '118',
+                'Option'         => '045'
+            ]
+        ]
+    ];
+
     public function __construct(
         ShippingOptions $shippingOptions,
         GuaranteedOptions $guaranteedOptions,
         ProductOptionsConfiguration $productOptions,
-        OrderRepositoryInterface $orderRepository,
         PostNLOrderRepository $postNLOrderRepository,
         AlternativeDelivery $alternativeDelivery
     ) {
         $this->shippingOptions       = $shippingOptions;
         $this->guaranteedOptions     = $guaranteedOptions;
         $this->productOptionsConfig  = $productOptions;
-        $this->orderRepository       = $orderRepository;
         $this->postNLOrderRepository = $postNLOrderRepository;
         $this->alternativeDelivery = $alternativeDelivery;
     }
@@ -275,6 +276,14 @@ class ProductOptions
 
         // Right now we have only fixed Noon time.
         return $this->guaranteedOptions->get('1200');
+    }
+
+    public function addAdditionalTypes(string $originalType, array $acOptions): array
+    {
+        if (array_key_exists($originalType, $this->additionalOptions)) {
+            $acOptions = array_merge($acOptions, $this->additionalOptions[$originalType]);
+        }
+        return $acOptions;
     }
 
     private function isAlternative(float $totalAmount): bool

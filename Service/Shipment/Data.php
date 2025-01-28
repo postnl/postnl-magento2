@@ -96,6 +96,7 @@ class Data
     {
         $shipmentData = $this->getDefaultShipmentData($shipment, $address, $contact, $currentShipmentNumber);
         $shipmentData = $this->setMandatoryShipmentData($shipment, $currentShipmentNumber, $shipmentData);
+        $shipmentData = $this->addCustomShipmentData($shipment, $currentShipmentNumber, $shipmentData);
 
         return $shipmentData;
     }
@@ -357,5 +358,19 @@ class Data
             $shipment->isBoxablePackets() ||
             // And add customers on all non-NL/non-BE countries.
             ($countryId !== null && $countryId !== 'NL' && $countryId !== 'BE');
+    }
+
+    private function addCustomShipmentData(ShipmentInterface $shipment, int $currentShipmentNumber, array $shipmentData)
+    {
+        $postnlOrder  = $shipment->getPostNLOrder();
+        $productCode = $shipment->getProductCode();
+        if (strlen($productCode) > 4) {
+            $productCode = substr($productCode, 1);
+        }
+        if ($shipment->getShipmentType() === 'PG' && $productCode === '4907') {
+            $shipmentData['DownPartnerID'] = $postnlOrder->getPgRetailNetworkId();
+            $shipmentData['DownPartnerLocation'] = $postnlOrder->getPgLocationCode();
+        }
+        return $shipmentData;
     }
 }

@@ -35,8 +35,11 @@ class DeliveryDate
      * @throws LocalizedException
      * @throws Exception
      */
-    public function get(array $address): string
+    public function get(array $address): ?string
     {
+        if ($address['country'] !== 'NL' && $address['country'] !== 'BE') {
+            return null;
+        }
         $shippingDuration = $this->shippingDuration->get();
         $this->deliveryEndpoint->updateApiKey($this->getStoreId());
         $this->deliveryEndpoint->updateParameters($address, $shippingDuration);
