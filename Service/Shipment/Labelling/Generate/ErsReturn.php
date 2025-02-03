@@ -7,10 +7,10 @@ use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Model\ShipmentLabelFactory;
-use TIG\PostNL\Webservices\Endpoints\SingleReturnLabel;
+use TIG\PostNL\Webservices\Endpoints\ErsLabel;
 use TIG\PostNL\Service\Shipment\Labelling\Handler;
 
-class SingleBeReturn extends ReturnLabel
+class ErsReturn extends ReturnLabel
 {
     public function __construct(
         Data $helper,
@@ -19,7 +19,7 @@ class SingleBeReturn extends ReturnLabel
         ShipmentLabelFactory $shipmentLabelFactory,
         ShipmentLabelRepositoryInterface $shipmentLabelRepository,
         ShipmentRepositoryInterface $shipmentRepository,
-        SingleReturnLabel $labelling
+        ErsLabel $labelling
     ) {
         parent::__construct(
             $helper,

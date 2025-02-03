@@ -4,6 +4,7 @@ namespace TIG\PostNL\Service\Shipment\Labelling;
 
 use Magento\Framework\Message\Manager as MessageManager;
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Service\Shipment\Label\Validator;
@@ -66,12 +67,12 @@ class GetLabels
     /**
      * @param      $shipmentId
      * @param bool $confirm
-     * @param bool $smartReturn
+     * @param int $returnTypeFlag
      *
      * @return array|\Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function get($shipmentId, $confirm = true, $smartReturn = false)
+    public function get($shipmentId, $confirm = true, $returnTypeFlag = 0)
     {
         $shipment = $this->shipmentRepository->getByShipmentId($shipmentId);
 
@@ -80,7 +81,7 @@ class GetLabels
         }
 
         $this->labelValidator->validateProduct($shipment);
-        $labels = $this->getLabels($shipment, $confirm, $smartReturn);
+        $labels = $this->getLabels($shipment, $confirm, $returnTypeFlag);
         $labels = $this->labelValidator->validate($labels);
 
         $errors  = $this->labelValidator->getErrors();
@@ -94,16 +95,16 @@ class GetLabels
 
     /**
      * @param ShipmentInterface $shipment
-     * @param                   $confirm
-     * @param                   $smartReturn
+     * @param bool $confirm
+     * @param int $returnTypeFlag
      * @return \Magento\Framework\Phrase|string|\TIG\PostNL\Api\Data\ShipmentLabelInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function getLabels(ShipmentInterface $shipment, $confirm, $smartReturn)
+    private function getLabels(ShipmentInterface $shipment, $confirm, $returnTypeFlag)
     {
         $labels = $this->shipmentLabelRepository->getByShipment($shipment);
 
-        if ($smartReturn) {
+        if ($returnTypeFlag) {
             $labels = null;
         }
 

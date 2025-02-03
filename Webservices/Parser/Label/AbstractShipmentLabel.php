@@ -6,9 +6,10 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\Order\Address;
 use TIG\PostNL\Exception;
 use TIG\PostNL\Helper\AddressEnhancer;
+use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Webservices\Api\Customer as CustomerApi;
 
-class AbstractShipmentLabel
+abstract class AbstractShipmentLabel
 {
     protected AddressEnhancer $addressEnhancer;
     protected ManagerInterface $messageManager;
@@ -20,6 +21,8 @@ class AbstractShipmentLabel
         $this->addressEnhancer = $addressEnhancer;
         $this->messageManager = $messageManager;
     }
+
+    abstract public function get(Shipment $postnlShipment, $shipmentNumber);
 
     /**
      * @throws Exception
