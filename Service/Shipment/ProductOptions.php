@@ -57,12 +57,6 @@ class ProductOptions
                     'Option'         => '006',
                 ]
             ],
-            'sunday'  => [
-                [
-                    'Characteristic' => '101',
-                    'Option'         => '008',
-                ]
-            ],
             'idcheck' => [
                 [
                     'Characteristic' => '002',
@@ -73,12 +67,6 @@ class ProductOptions
                 [
                     'Characteristic' => '002',
                     'Option'         => '014'
-                ]
-            ],
-            'today' => [
-                [
-                    'Characteristic' => '118',
-                    'Option'         => '044'
                 ]
             ],
             'eps-1' => [

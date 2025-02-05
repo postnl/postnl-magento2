@@ -35,8 +35,6 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_BE_PRODUCT_OPTION                     = 'tig_postnl/delivery_settings/default_be_option';
     const XPATH_DEFAULT_BE_USE_ALTERNATIVE                    = 'tig_postnl/delivery_settings/use_alternative_be';
     const XPATH_DEFAULT_BE_ALTERNATIVE_MAP                    = 'tig_postnl/delivery_settings/alternative_be_map';
-    const XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION                 = 'tig_postnl/sunday_delivery/default_sunday_option';
-    const XPATH_DEFAULT_TODAY_PRODUCT_OPTION                  = 'tig_postnl/today_delivery/default_today_option';
     const XPATH_DEFAULT_EPS_PRODUCT_OPTION                    = 'tig_postnl/delivery_settings/default_eps_option';
     const XPATH_DEFAULT_EPS_USE_ALTERNATIVE                   = 'tig_postnl/delivery_settings/use_alternative_eps';
     const XPATH_DEFAULT_EPS_ALTERNATIVE_MAP                   = 'tig_postnl/delivery_settings/alternative_eps_map';
@@ -287,22 +285,6 @@ class ProductOptions extends AbstractConfigProvider
             return [];
         }
         return $this->getAlternativeMap(static::XPATH_DEFAULT_PAKJEGEMAK_ALTERNATIVE_MAP);
-    }
-
-    /**
-     * @return string|int
-     */
-    public function getDefaultSundayProductOption()
-    {
-        return $this->getConfigFromXpath(static::XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION);
-    }
-
-    /**
-     * @return string|int
-     */
-    public function getDefaultTodayProductOption()
-    {
-        return $this->getConfigFromXpath(static::XPATH_DEFAULT_TODAY_PRODUCT_OPTION);
     }
 
     /**

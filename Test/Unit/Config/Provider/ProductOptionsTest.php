@@ -159,17 +159,6 @@ class ProductOptionsTest extends AbstractConfigurationTest
     }
 
     /**
-     * @dataProvider sundayOptionsProvider
-     * @param $value
-     */
-    public function testGetDefaultSundayProductOption($value)
-    {
-        $instance = $this->getInstance();
-        $this->setXpath(ProductOptions::XPATH_DEFAULT_SUNDAY_PRODUCT_OPTION, $value);
-        $this->assertEquals($value, $instance->getDefaultSundayProductOption());
-    }
-
-    /**
      * @return array
      */
     public function getDefaultBeDomesticProductOptionProvider()
