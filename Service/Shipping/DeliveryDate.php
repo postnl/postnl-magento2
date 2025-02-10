@@ -20,7 +20,7 @@ class DeliveryDate
     private array $approximateDeliveryTime = [
         PickupCountries::COUNTRY_DE => 3,
         PickupCountries::COUNTRY_FR => 4,
-        PickupCountries::COUNTRY_DK => 4,
+        PickupCountries::COUNTRY_DK => 3,
     ];
     private TimezoneInterface $timezone;
 
