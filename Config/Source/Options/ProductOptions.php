@@ -146,7 +146,7 @@ class ProductOptions extends OptionsAbstract implements OptionSourceInterface
     }
 
     /**
-     * @param SalesAddress|QuoteAddress|false $address
+     * @param SalesAddress|QuoteAddress|array|false $address
      *
      * @return array
      */

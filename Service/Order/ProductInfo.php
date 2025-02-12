@@ -327,6 +327,12 @@ class ProductInfo
             return;
         }
 
+        $globalPickupCountries = $this->shippingOptions->getPakjegemakGlobalCountries();
+        if ($this->shippingOptions->isPakjegemakGlobalActive() && in_array($country, $globalPickupCountries, true)) {
+            $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakGlobalProductOption();
+            return;
+        }
+
         $this->code = $this->productOptionsConfiguration->getDefaultPakjeGemakProductOption();
         $this->validateAlternativeMap(AlternativeDelivery::CONFIG_PAKGEGEMAK);
     }

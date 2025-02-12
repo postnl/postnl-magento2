@@ -100,6 +100,8 @@
                 <default_pakjegemak_be_option>4936</default_pakjegemak_be_option>
                 <default_pakjegemak_be_domestic_option>4880</default_pakjegemak_be_domestic_option>
                 <default_pakjegemak_be_nl_option>4898</default_pakjegemak_be_nl_option>
+                <pakjegemak_global_active>0</pakjegemak_global_active>
+                <default_pakjegemak_global_option>14907</default_pakjegemak_global_option>
             </post_offices>
 
             <extra_at_home>

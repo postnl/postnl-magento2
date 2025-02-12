@@ -138,7 +138,11 @@ class OrderParams
             $paramValue = isset($params[$key]) && !empty($params[$key]) ? $params[$key] : false;
 
             return !$paramValue && true == $value;
-        }, ArrayUtils::ARRAY_FILTER_USE_BOTH);
+        }, ARRAY_FILTER_USE_BOTH);
+
+        if ($type === 'pickup' && $params['country'] !== 'NL' && $params['country'] !== 'BE') {
+            unset($missing['delivery_date']);
+        }
 
         return array_keys($missing);
     }
@@ -262,7 +266,13 @@ class OrderParams
      */
     private function getAcInformation($params)
     {
+        $originalType = null;
         $type = strtolower($params['type']);
+        if ($type === 'pg' && $params['country'] !== 'NL' && $params['country'] !== 'BE') {
+            // Use EPS for code retrieval if it's pickup in other countries
+            $originalType = $type;
+            $type = 'eps';
+        }
 
         if (isset($params['product_code']) && strlen($params['product_code']) > 4) {
             $type .= '-' . substr($params['product_code'], 0, 1);
@@ -271,6 +281,9 @@ class OrderParams
         $acOptions = $this->productOptions->getByType($type);
         if (!$acOptions) {
             return [];
+        }
+        if ($originalType !== null) {
+            $acOptions = $this->productOptions->addAdditionalTypes($originalType, $acOptions);
         }
 
         return [

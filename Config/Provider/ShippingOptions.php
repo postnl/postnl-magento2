@@ -24,6 +24,9 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_PAKJEGEMAK_DEFAULT        = 'tig_postnl/post_offices/pakjegemak_default';
     const XPATH_SHIPPING_OPTION_PAKJEGEMAK_BE_ACTIVE     = 'tig_postnl/post_offices/pakjegemak_be_active';
     const XPATH_SHIPPING_OPTION_SHOW_PACKAGE_MACHINES    = 'tig_postnl/post_offices/show_package_machines';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_ACTIVE = 'tig_postnl/post_offices/pakjegemak_global_active';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_COUNTRIES = 'tig_postnl/post_offices/pakjegemak_global_countries';
+
     const XPATH_SHIPPING_OPTION_EVENING_ACTIVE           = 'tig_postnl/evening_delivery_nl/eveningdelivery_active';
     const XPATH_SHIPPING_OPTION_EVENING_BE_ACTIVE        = 'tig_postnl/evening_delivery_be/eveningdelivery_be_active';
     const XPATH_SHIPPING_OPTION_EVENING_FEE              = 'tig_postnl/evening_delivery_nl/eveningdelivery_fee';
@@ -131,6 +134,17 @@ class ShippingOptions extends AbstractConfigProvider
             return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_BE_ACTIVE);
         }
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE);
+    }
+
+    public function isPakjegemakGlobalActive(): bool
+    {
+        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_ACTIVE);
+    }
+
+    public function getPakjegemakGlobalCountries(): array
+    {
+        $values = (string)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_COUNTRIES);
+        return explode(',', $values);
     }
 
     /**

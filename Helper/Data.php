@@ -156,7 +156,7 @@ class Data extends AbstractHelper
     public function getTomorrowsDate()
     {
         $dateTime = $this->dateTime->date($this->getCurrentDate());
-        return date('Y-m-d ' . $dateTime->format('H:i:s'), strtotime('tomorrow'));
+        return date('d-m-Y', strtotime('tomorrow'));
     }
 
     /**
@@ -183,7 +183,7 @@ class Data extends AbstractHelper
      *
      * @return array
      */
-    public function getAllowedDeliveryOptions($country = 'NL')
+    public function getAllowedDeliveryOptions(string $country = 'NL')
     {
         $showPackageMachines = $this->shippingOptions->isPackageMachineFilterActive();
         $deliveryOptions     = [];
