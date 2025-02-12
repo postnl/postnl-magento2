@@ -27,16 +27,8 @@ define([
                 this.optionLabel = $.mage.__('Evening');
                 break;
 
-            case 'sunday':
-                this.optionLabel = $.mage.__('Sunday');
-                break;
-
             case 'noon':
                 this.optionLabel = $.mage.__('Morning');
-                break;
-
-            case 'today':
-                this.optionLabel = $.mage.__('Fast Delivery');
                 break;
         }
 
@@ -56,14 +48,6 @@ define([
 
             if (option == 'evening') {
                 return this.getEveningFee();
-            }
-
-            if (option == 'sunday') {
-                return window.checkoutConfig.shipping.postnl.sundaydelivery_fee;
-            }
-
-            if (option == 'today') {
-                return window.checkoutConfig.shipping.postnl.todaydelivery_fee;
             }
 
             if (option == 'noon') {

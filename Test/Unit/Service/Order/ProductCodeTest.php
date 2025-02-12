@@ -25,7 +25,6 @@ class ProductCodeTest extends TestCase
     const PRODUCT_OPTION_PAKJEGEMAK = 'pakjegemak_product_option';
     const PRODUCT_OPTION_PAKJEGEMAK_BE = 'pakjegemak_be_product_option';
     const PRODUCT_OPTION_PAKJEGEMAK_BE_DOMESTIC = 'pakjegemak_be_domestic_product_option';
-    const PRODUCT_OPTION_SUNDAY = 'sunday_product_option';
     const PRODUCT_OPTION_LETTERBOX_PACKAGE = '2928';
 
     /**
@@ -57,7 +56,6 @@ class ProductCodeTest extends TestCase
         $this->addProductOptionsMockFunction('getDefaultLetterBoxPackageProductOption', static::PRODUCT_OPTION_LETTERBOX_PACKAGE);
         $this->addProductOptionsMockFunction('getDefaultPakjeGemakBeProductOption', static::PRODUCT_OPTION_PAKJEGEMAK_BE);
         $this->addProductOptionsMockFunction('getDefaultPakjeGemakBeDomesticProductOption', static::PRODUCT_OPTION_PAKJEGEMAK_BE_DOMESTIC);
-        $this->addProductOptionsMockFunction('getDefaultSundayProductOption', static::PRODUCT_OPTION_SUNDAY);
     }
 
     /**
@@ -91,7 +89,6 @@ class ProductCodeTest extends TestCase
             'default' => ['delivery', 'default', 'NL', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
             'evening' => ['delivery', 'evening', 'NL', 'NL', static::PRODUCT_OPTION_EVENING, 'Evening'],
             'extra at home' => ['delivery', 'extra@home', 'NL', 'NL', static::PRODUCT_OPTION_EXTRAATHOME, 'Extra@Home'],
-            'sunday' => ['delivery', 'sunday', 'NL', 'NL', static::PRODUCT_OPTION_SUNDAY, 'Sunday'],
             'default pg' => ['pickup', 'default', 'NL', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
             'pakjegemak' => ['pickup', '', 'NL', 'NL', static::PRODUCT_OPTION_PAKJEGEMAK, 'PG'],
             'letterbox package' => ['delivery', 'letterbox_package', 'NL', 'NL', static::PRODUCT_OPTION_LETTERBOX_PACKAGE, 'Letterbox Package'],

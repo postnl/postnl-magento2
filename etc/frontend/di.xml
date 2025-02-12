@@ -20,10 +20,6 @@
                 <item name="stated_address_only_fee" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\StatedAddressOnlyFee</item>
                 <item name="urls" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\Urls</item>
                 <item name="noon_delivery_fee" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\NoonDeliveryFee</item>
-                <item name="is_sundaydelivery_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsSundayDeliveryActive</item>
-                <item name="sundaydelivery_fee" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\SundayDeliveryFee</item>
-                <item name="is_todaydelivery_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsTodayDeliveryActive</item>
-                <item name="todaydelivery_fee" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\TodayDeliveryFee</item>
                 <item name="is_eveningdelivery_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsEveningDeliveryActive</item>
                 <item name="is_eveningdelivery_be_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsEveningDeliveryBeActive</item>
                 <item name="eveningdelivery_fee" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\EveningDeliveryFee</item>
@@ -52,8 +48,6 @@
             </argument>
             <argument name="optionsFilters" xsi:type="array">
                 <item name="evening" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Options\Evening</item>
-                <item name="sunday" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Options\Sunday</item>
-                <item name="today" xsi:type="object">\TIG\PostNL\Service\Timeframe\Filters\Options\Today</item>
             </argument>
         </arguments>
     </type>
