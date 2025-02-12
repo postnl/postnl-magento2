@@ -75,6 +75,8 @@ interface ShipmentInterface
      */
     public function getProductCode();
 
+    public function getShortProductCode(): ?string;
+
     /**
      * @param string $value
      * @return \TIG\PostNL\Api\Data\ShipmentInterface
@@ -364,14 +366,14 @@ interface ShipmentInterface
     public function getReturnBarcodes();
 
     /**
-     * @param $value
+     * @param int $value
      *
      * @return TIG\PostNL\Api\Data\ShipmentInterface
      */
     public function setIsSmartReturn($value);
 
     /**
-     * @return boolean
+     * @return int
      */
     public function getIsSmartReturn();
 

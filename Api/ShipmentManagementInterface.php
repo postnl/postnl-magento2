@@ -28,12 +28,12 @@ interface ShipmentManagementInterface
      * Generate a label for a PostNL shipment.
      *
      * @param int $shipmentId
-     * @param bool $smartReturns
+     * @param int $returnTypeFlag
      *
-     * @api
      * @return string
+     * @api
      */
-    public function generateLabel($shipmentId, $smartReturns);
+    public function generateLabel($shipmentId, $returnTypeFlag);
 
     /**
      * Create a PostNL shipment

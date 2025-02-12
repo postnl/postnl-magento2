@@ -3,6 +3,7 @@
 namespace TIG\PostNL\Config\Provider;
 
 use TIG\PostNL\Config\Source\General\Country;
+use TIG\PostNL\Config\Source\Settings\ReturnTypes;
 
 /**
  * @codingStandardsIgnoreFile
@@ -21,9 +22,11 @@ class ReturnOptions extends AbstractConfigProvider
     const XPATH_RETURN_HOUSENUMBER_EX       = 'tig_postnl/returns/housenumber_ex';
     const XPATH_RETURN_FREEPOST_NUMBER      = 'tig_postnl/returns/freepost_number';
     const XPATH_RETURN_ZIPCODE              = 'tig_postnl/returns/zipcode';
+    const XPATH_RETURN_ZIPCODE_HOME         = 'tig_postnl/returns/zipcode_home';
     const XPATH_RETURN_CUSTOMER_CODE        = 'tig_postnl/returns/customer_code';
     const XPATH_SMART_RETURN_IS_ACTIVE      = 'tig_postnl/returns/smart_returns_active';
     const XPATH_SMART_RETURN_EMAIL_TEMPLATE = 'tig_postnl/returns/smart_returns_template';
+    const XPATH_EASY_RETURN_SERVICE_ACTIVE  = 'tig_postnl/returns/easy_return_service_active';
 
     /**
      * @return bool
@@ -31,6 +34,11 @@ class ReturnOptions extends AbstractConfigProvider
     public function isReturnActive(): bool
     {
         return (bool)$this->getConfigFromXpath(self::XPATH_RETURN_IS_ACTIVE);
+    }
+
+    public function isEasyReturnServiceActive(): bool
+    {
+        return (bool)$this->getConfigFromXpath(self::XPATH_EASY_RETURN_SERVICE_ACTIVE);
     }
 
     /**
@@ -136,8 +144,26 @@ class ReturnOptions extends AbstractConfigProvider
         return $this->getConfigFromXpath(self::XPATH_RETURN_ZIPCODE);
     }
 
+    public function getZipcodeHome(): string
+    {
+        $value = (string)$this->getConfigFromXpath(self::XPATH_RETURN_ZIPCODE_HOME);
+        // Fallback to pre-configured value before this was introduced.
+        if (!$value) {
+            $value = (string)$this->getZipcode();
+        }
+        return $value;
+    }
+
+    public function getSelectedZipcode(): string
+    {
+        if ($this->getReturnTo() === ReturnTypes::TYPE_HOME_ADDRESS) {
+            return $this->getZipcodeHome();
+        }
+        return $this->getZipcode();
+    }
+
     /**
-     * @return mixed
+     * @return string
      */
     public function getCustomerCode()
     {

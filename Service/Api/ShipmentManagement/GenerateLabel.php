@@ -7,6 +7,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Model\Order\Shipment;
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Service\Handler\BarcodeHandler;
 use TIG\PostNL\Service\Shipment\Labelling\GetLabels;
@@ -34,11 +35,11 @@ class GenerateLabel
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    public function generate(int $shipmentId, $smartReturns = false): bool
+    public function generate(int $shipmentId, $returnTypeFlag = 0): bool
     {
         $postnlShipment = $this->shipmentRepository->getByShipmentId($shipmentId);
         // Check if smart returns could be created for this shipping
-        if ($smartReturns) {
+        if ($returnTypeFlag === ShipmentLabelInterface::RETURN_LABEL_SMART_RETURN) {
             if (!$postnlShipment->getConfirmed() && !$postnlShipment->getMainBarcode()) {
                 throw new LocalizedException(__('Smart Returns are only active after main barcode is generated.'));
             }
@@ -48,8 +49,8 @@ class GenerateLabel
         $shipment = $postnlShipment->getShipment();
         $shippingAddress = $shipment->getShippingAddress();
 
-        $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId(), $smartReturns);
-        $labels = $this->getLabels->get($shipment->getId(), false, true);
+        $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId(), $returnTypeFlag);
+        $labels = $this->getLabels->get($shipment->getId(), false, $returnTypeFlag);
 
         if (empty($labels)) {
             return false;

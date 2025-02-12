@@ -196,13 +196,33 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface
         return $this->setData(static::FIELD_RETURN_LABEL, $value);
     }
 
-    public function isSmartReturnLabel(bool $value): ShipmentLabelInterface
+    public function isSmartReturnLabel(int $value): ShipmentLabelInterface
     {
-        return $this->setData(static::FIELD_SMART_RETURN, $value);
+        return $this->setData(static::FIELD_SMART_RETURN, self::RETURN_LABEL_SMART_RETURN);
     }
 
     public function getSmartReturnLabel(): bool
     {
-        return (bool)$this->getData(static::FIELD_SMART_RETURN);
+        return $this->isSmartReturnLabelFlag();
+    }
+
+    public function setReturnFlag(int $flag): ShipmentLabelInterface
+    {
+        return $this->setData(static::FIELD_SMART_RETURN, $flag);
+    }
+
+    public function getReturnFlag(): int
+    {
+        return (int)$this->getData(static::FIELD_SMART_RETURN);
+    }
+
+    public function isErsLabelFlag(): bool
+    {
+        return $this->getReturnFlag() === self::RETURN_LABEL_ERS;
+    }
+
+    public function isSmartReturnLabelFlag(): bool
+    {
+        return $this->getReturnFlag() === self::RETURN_LABEL_SMART_RETURN;
     }
 }

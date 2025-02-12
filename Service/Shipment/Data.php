@@ -3,6 +3,7 @@
 namespace TIG\PostNL\Service\Shipment;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Config\Provider\ShippingOptions;
@@ -248,7 +249,7 @@ class Data
         }
 
         $smartReturnActive = $this->returnOptions->isSmartReturnActive();
-        if ($smartReturnActive && $shipment->getIsSmartReturn()) {
+        if ($smartReturnActive && $shipment->getIsSmartReturn() === ShipmentLabelInterface::RETURN_LABEL_SMART_RETURN) {
             $shipmentData['ProductOptions']      = $this->getSmartReturnOptions();
             $shipmentData['ProductCodeDelivery'] =
                 $this->returnOptions->getReturnTo() === ReturnTypes::TYPE_FREE_POST ? '2285' : '3285';

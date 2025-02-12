@@ -294,7 +294,7 @@ abstract class GenerateAbstract
             $labelModel->isReturnLabel(true);
         }
         if ($shipment->getIsSmartReturn()) {
-            $labelModel->isSmartReturnLabel(true);
+            $labelModel->setReturnFlag($shipment->getIsSmartReturn());
         }
 
         return $labelModel;
