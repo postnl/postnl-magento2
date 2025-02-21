@@ -215,7 +215,8 @@ class Data
             // Fill out ReturnBarcode with the same data as Barcode in this case
             $shipmentData['ReturnBarcode'] = $shipmentData['Barcode'];
         }
-        if ($returnActive && $this->returnOptions->getReturnLabel() === LabelSettings::LABEL_BOX) {
+        if ($returnActive && ($countryId === 'NL' || $countryId === 'BE')
+            && $this->returnOptions->getReturnLabel() === LabelSettings::LABEL_BOX) {
             $productOptions[] = [
                 'Characteristic' => '152',
                 'Option'         => '028'

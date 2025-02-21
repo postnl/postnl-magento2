@@ -93,10 +93,6 @@ class Shipments extends AbstractShipmentLabel
         if ($postnlShipment->isBoxablePackets() || $postnlShipment->isInternationalPacket()) {
             return false;
         }
-        if ($this->returnOptions->isEasyReturnServiceActive() && ErsCountries::isIncluded($countryId)
-            && $postnlShipment->isEoOption()) {
-            return true;
-        }
         return ($this->returnOptions->isReturnActive() && in_array($countryId, ['NL', 'BE']));
     }
 

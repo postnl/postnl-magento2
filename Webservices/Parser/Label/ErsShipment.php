@@ -2,17 +2,7 @@
 
 namespace TIG\PostNL\Webservices\Parser\Label;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Message\ManagerInterface;
-use Magento\Sales\Model\Order\Address;
-use Magento\Sales\Model\Order\Shipment as MagentoShipment;
-use Magento\Store\Model\ScopeInterface;
-use TIG\PostNL\Config\Provider\AddressConfiguration;
-use TIG\PostNL\Config\Provider\ReturnOptions;
-use TIG\PostNL\Config\Source\Settings\ReturnTypes;
-use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\Shipment;
-use TIG\PostNL\Service\Shipment\Data as ShipmentData;
 use TIG\PostNL\Webservices\Api\Customer as CustomerApi;
 
 class ErsShipment extends ReturnShipment
@@ -34,7 +24,10 @@ class ErsShipment extends ReturnShipment
 
         // Update product code to be sent to the API
         $data['ProductCodeDelivery'] = '4910';
-        unset($data['ProductOptions']);
+        unset(
+            $data['ProductOptions'], $data['DownPartnerID'], $data['DownPartnerLocation'], $data['DownPartnerBarcode'],
+            $data['ReturnBarcode'], $data['CollectionTimeStampEnd'], $data['CollectionTimeStampStart']
+        );
 
         $contact = $data['Contacts']['Contact'];
         $data['Contacts'] = [

@@ -142,6 +142,9 @@ class Prepare
         if ($shipment->getShipmentCountry() === 'BE' && $normalizedShipment === 'daytime' && $label->getReturnLabel()) {
             return 'eps';
         }
+        if ((int)$label->getProductCode() === 4910) {
+            return 'a4normal';
+        }
         return $normalizedShipment;
     }
 }

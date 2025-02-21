@@ -783,7 +783,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
         return $this->compareProductCodeToGroup('extra_at_home_options');
     }
 
-    public function isEoOption(): bool
+    public function isEuOption(): bool
     {
         return $this->compareProductCodeToGroup('eu_options');
     }
