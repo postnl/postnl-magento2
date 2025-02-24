@@ -193,6 +193,9 @@ class BarcodeHandler
         ) {
             return false;
         }
+        if ($shipment->getIsSmartReturn()) {
+            return false;
+        }
 
         return true;
     }

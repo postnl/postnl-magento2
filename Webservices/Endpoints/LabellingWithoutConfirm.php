@@ -96,6 +96,13 @@ class LabellingWithoutConfirm extends AbstractEndpoint
             'Customer'  => $this->customer->get($shipment),
             'Shipments' => $this->getShipments($shipment, $currentShipmentNumber),
         ];
+        if ($isSmartReturn) {
+            $currentAddress = $this->requestParams['Customer']['Address'];
+            // Switch address places
+            $this->requestParams['Customer']['Address'] = $this->requestParams['Shipments']['Shipment'][0]['Addresses']['Address'][0];
+            $this->requestParams['Shipments']['Shipment'][0]['Addresses']['Address'][0] = $currentAddress;
+            unset($this->requestParams['Shipments']['Shipment'][0]['ReturnBarcode']);
+        }
     }
 
     /**

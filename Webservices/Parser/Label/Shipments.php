@@ -54,7 +54,7 @@ class Shipments extends AbstractShipmentLabel
             $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
         }
 
-        if ($this->canReturn($address[0]['Countrycode'], $postnlShipment)) {
+        if ($this->canReturn($address[0]['Countrycode'], $postnlShipment) && !$postnlShipment->getIsSmartReturn()) {
             $address[] = $this->getReturnAddressData();
         }
 
