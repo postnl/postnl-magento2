@@ -117,8 +117,6 @@
 
             <include path="TIG_PostNL::system/postnlsettings/noondelivery.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/eveningdelivery.xml"/>
-            <include path="TIG_PostNL::system/postnlsettings/sundaydelivery.xml"/>
-            <include path="TIG_PostNL::system/postnlsettings/todaydelivery.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/deliverydays.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/postoffices.xml"/>
             <include path="TIG_PostNL::system/postnlsettings/stock.xml"/>

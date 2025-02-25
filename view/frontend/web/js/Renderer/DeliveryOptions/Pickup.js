@@ -57,7 +57,7 @@ define([
                     return;
                 }
 
-                if (address.country !== 'NL' && address.country !== 'BE') {
+                if (this.isPickupEnabled(address) === false) {
                     return;
                 }
 
@@ -155,6 +155,22 @@ define([
 
         setPickupAddresses : function (data) {
             this.pickupAddresses(data);
+        },
+
+        isPickupEnabled: function (address) {
+            if (address.country === 'NL' && window.checkoutConfig.shipping.postnl.pakjegemak_active == '1') {
+                return true;
+            }
+            if (address.country === 'BE' && window.checkoutConfig.shipping.postnl.pakjegemak_be_active == '1') {
+                return true;
+            }
+            if (window.checkoutConfig.shipping.postnl.pakjegemak_global == '1') {
+                const countries = window.checkoutConfig.shipping.postnl.pakjegemak_countries;
+                if (typeof countries === 'object' && countries.indexOf(address.country) > -1) {
+                    return true;
+                }
+            }
+            return false;
         },
 
         /**

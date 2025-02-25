@@ -145,6 +145,36 @@
             </depends>
         </field>
 
+        <field id="pakjegemak_global_active" translate="label" type="select" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Activate international pick-up points</label>
+            <comment><![CDATA[Activate pick-up locations in other countries.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>tig_postnl/post_offices/pakjegemak_global_active</config_path>
+            <depends>
+                <field id="shippingoptions_active">1</field>
+            </depends>
+        </field>
+
+        <field id="pakjegemak_global_countries" translate="label" type="multiselect" sortOrder="310" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Additional location countries</label>
+            <comment><![CDATA[Select countries where pickup points can be selected.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\General\PickupCountries</source_model>
+            <config_path>tig_postnl/post_offices/pakjegemak_global_countries</config_path>
+            <depends>
+                <field id="pakjegemak_global_active">1</field>
+            </depends>
+        </field>
+
+        <field id="default_pakjegemak_global_option" translate="label" type="select" sortOrder="320" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Default shipping option international pick-up points</label>
+            <comment><![CDATA[Select the default product option for international pick-up point delivery.]]></comment>
+            <source_model>TIG\PostNL\Config\Source\Options\ProductOptions::getEuOptions</source_model>
+            <config_path>tig_postnl/post_offices/default_pakjegemak_global_option</config_path>
+            <depends>
+                <field id="pakjegemak_global_active">1</field>
+            </depends>
+        </field>
+
     </group>
 
 </include>

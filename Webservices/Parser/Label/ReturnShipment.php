@@ -17,10 +17,10 @@ use TIG\PostNL\Webservices\Api\Customer as CustomerApi;
 
 class ReturnShipment extends AbstractShipmentLabel
 {
-    private AddressConfiguration $addressConfiguration;
-    private ShipmentData $shipmentData;
-    private ReturnOptions $returnOptions;
-    private ScopeConfigInterface $scopeConfig;
+    protected AddressConfiguration $addressConfiguration;
+    protected ShipmentData $shipmentData;
+    protected ReturnOptions $returnOptions;
+    protected ScopeConfigInterface $scopeConfig;
 
     public function __construct(
         AddressEnhancer $addressEnhancer,
@@ -46,7 +46,6 @@ class ReturnShipment extends AbstractShipmentLabel
      */
     public function get(Shipment $postnlShipment, $shipmentNumber)
     {
-        $postnlShipment->getProductCode();
         $shipment    = $postnlShipment->getShipment();
         $contact   = $this->getStoreContactData($shipment);
         $address[] = $this->getReturnAddressAsReceiver();
@@ -110,9 +109,9 @@ class ReturnShipment extends AbstractShipmentLabel
     {
         $countryCode = $this->addressConfiguration->getCountry();
         $returnType = $this->returnOptions->getReturnTo();
-        $zip = strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode()));
 
         if ($returnType === ReturnTypes::TYPE_FREE_POST && $countryCode === 'NL') {
+            $zip = strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode()));
             $data = [
                 'AddressType' => '08',
                 'City' => $this->returnOptions->getCity(),
@@ -123,6 +122,7 @@ class ReturnShipment extends AbstractShipmentLabel
                 'CompanyName' => $this->returnOptions->getCompany(),
             ];
         } else {
+            $zip = strtoupper(str_replace(' ', '', $this->returnOptions->getZipcodeHome()));
             $data = [
                 'AddressType' => '08',
                 'City' => $this->returnOptions->getCity(),

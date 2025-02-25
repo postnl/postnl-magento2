@@ -37,35 +37,9 @@ class FeeCalculatorTest extends TestCase
                 ],
                 'expected' => 0.0
             ],
-            'Sunday delivery with fee' => [
-                'params' => ['option' => 'Sunday'],
-                'config options' => [
-                    'isSundayDeliveryActive' => true,
-                    'getSundayDeliveryFee' => 3,
-                ],
-                'expected' => 3.0
-            ],
-            'Sunday delivery with fee but inactive' => [
-                'params' => ['option' => 'Sunday'],
-                'config options' => [
-                    'isSundayDeliveryActive' => false,
-                    'getSundayDeliveryFee' => 3,
-                ],
-                'expected' => 0.0
-            ],
-            'Sunday delivery without fee' => [
-                'params' => ['option' => 'Sunday'],
-                'config options' => [
-                    'isSundayDeliveryActive' => true,
-                    'getSundayDeliveryFee' => '',
-                ],
-                'expected' => 0.0
-            ],
             'params are missing' => [
                 'params' => [],
                 'config options' => [
-                    'isSundayDeliveryActive' => true,
-                    'getSundayDeliveryFee' => 3,
                     'isEveningDeliveryActive' => true,
                     'getEveningDeliveryFee' => 3,
                 ],

@@ -6,6 +6,7 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Api\ShipmentBarcodeRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
@@ -50,14 +51,14 @@ class BarcodeHandler
     /**
      * @throws LocalizedException
      */
-    public function prepareShipment(int $magentoShipmentId, string $countryId, bool $smartReturns)
+    public function prepareShipment(int $magentoShipmentId, string $countryId, int $returnTypeFlag)
     {
         $this->countryId = $countryId;
         $shipment = $this->shipmentRepository->getByShipmentId($magentoShipmentId);
         $isReturn = false;
 
-        if ($smartReturns) {
-            $shipment->setIsSmartReturn(true);
+        if ($returnTypeFlag > 0) {
+            $shipment->setIsSmartReturn($returnTypeFlag);
             $this->shipmentRepository->save($shipment);
             $isReturn = true;
         }
@@ -70,7 +71,7 @@ class BarcodeHandler
         $this->storeId = $magentoShipment->getStoreId();
 
         $mainBarcode = $this->generate($shipment, $isReturn);
-        if ($shipment->getIsSmartReturn()) {
+        if ($shipment->getIsSmartReturn() > 0) {
             $shipment->setSmartReturnBarcode($mainBarcode);
         } else {
             $shipment->setMainBarcode($mainBarcode);
@@ -116,14 +117,13 @@ class BarcodeHandler
      */
     public function addReturnBarcodes(ShipmentInterface $shipment): void
     {
-        $isReturnBarcode = true;
         $parcelCount = $shipment->getParcelCount();
 
         for ($count = 1; $count <= $parcelCount; $count++) {
-            $returnBarcode = $this->generate($shipment, $isReturnBarcode);
-            $this->createBarcode($shipment->getId(), $count, $returnBarcode, $isReturnBarcode);
+            $returnBarcode = $this->generate($shipment, true);
+            $this->createBarcode($shipment->getId(), $count, $returnBarcode, true);
 
-            if ($shipment->getIsSmartReturn()) {
+            if ($shipment->getIsSmartReturn() > 0) {
                 $shipment->setSmartReturnBarcode($returnBarcode);
             }
 
@@ -184,7 +184,6 @@ class BarcodeHandler
     public function canAddReturnBarcodes(string $countryId, ShipmentInterface $shipment): bool
     {
         if (
-            !in_array($countryId, ['NL', 'BE']) ||
             !$this->labelParser->canReturn($countryId, $shipment) ||
             $shipment->isExtraAtHome() ||
             $shipment->isBuspakjeShipment() ||
@@ -214,7 +213,7 @@ class BarcodeHandler
             return true;
         }
 
-        if ($isPrepared && $shipment->getIsSmartReturn() && $shipment->getSmartReturnBarcode() === null) {
+        if ($isPrepared && $shipment->getIsSmartReturn() > 0 && $shipment->getSmartReturnBarcode() === null) {
             return true;
         }
 

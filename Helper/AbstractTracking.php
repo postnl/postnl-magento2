@@ -182,7 +182,7 @@ abstract class AbstractTracking extends AbstractHelper
 
         if ($isReturn === true) {
             $params['D'] = $returnCountry;
-            $params['P'] = $this->returnOptions->getZipcode();
+            $params['P'] = $this->returnOptions->getSelectedZipcode();
         }
 
         return $this->webshopConfig->getTrackAndTraceServiceUrl() . http_build_query($params);

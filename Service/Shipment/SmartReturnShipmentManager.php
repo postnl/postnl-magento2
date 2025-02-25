@@ -8,6 +8,7 @@ use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Api\ShipmentTrackRepositoryInterface;
 use Magento\Sales\Model\Order\Shipment\TrackFactory;
 use Magento\Sales\Model\Order\Shipment\Track;
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Api\ShipmentLabelRepositoryInterface;
 use TIG\PostNL\Api\ShipmentRepositoryInterface;
 use TIG\PostNL\Config\Provider\ReturnOptions;
@@ -63,7 +64,7 @@ class SmartReturnShipmentManager
 
         $this->removeOldSmartShippingLabels($postnlShipment->getEntityId());
         $this->removeOldTrackLabels($magentoShipment->getId());
-        $this->shipmentManagement->generateLabel($magentoShipment->getId(), true);
+        $this->shipmentManagement->generateLabel($magentoShipment->getId(), ShipmentLabelInterface::RETURN_LABEL_SMART_RETURN);
         $labels = $this->getLabels->get($magentoShipment->getId(), false);
 
         if (empty($labels)) {
@@ -93,7 +94,7 @@ class SmartReturnShipmentManager
     {
         $labels = $this->shipmentLabelRepository->getByShipmentId($shipmentId);
         foreach ($labels as $label) {
-            if ($label->getSmartReturnLabel()) {
+            if ($label->isSmartReturnLabelFlag()) {
                 $this->shipmentLabelRepository->delete($label);
             }
         }

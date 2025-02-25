@@ -7,6 +7,7 @@ use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Exception;
+use TIG\PostNL\Service\Shipment\ErsCountries;
 
 class Customer
 {
@@ -89,7 +90,7 @@ class Customer
             'Street'      => $this->returnOptions->getStreetname(),
             'HouseNr'     => $this->returnOptions->getHousenumber(),
             'HouseNrExt'  => $this->returnOptions->getHouseNumberEx(),
-            'Zipcode'     => $this->getFormattedReturnZipCode(),
+            'Zipcode'     => $this->getFormattedReturnZipCode($this->returnOptions->getZipcode()),
             'City'        => $this->returnOptions->getCity(),
             'Countrycode' => $this->addressConfiguration->getCountry(),
             'Department'  => '',
@@ -104,7 +105,7 @@ class Customer
             'Countrycode' => $this->addressConfiguration->getCountry(),
             'HouseNr' => $this->returnOptions->getFreepostNumber(),
             'Street' => 'Antwoordnummer',
-            'Zipcode' => $this->getFormattedReturnZipCode(),
+            'Zipcode' => $this->getFormattedReturnZipCode($this->returnOptions->getZipcodeHome()),
             'CompanyName' => $this->returnOptions->getCompany(),
         ];
     }
@@ -114,15 +115,15 @@ class Customer
         $this->storeId = $storeId;
     }
 
-    public function getFormattedReturnZipCode(): string
+    public function getFormattedReturnZipCode($zipcode): string
     {
-        return strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode()));
+        return strtoupper(str_replace(' ', '', (string)$zipcode));
     }
 
     /**
      * @param ShipmentInterface $shipment
      *
-     * @return integer
+     * @return string
      * @throws \TIG\PostNL\Exception
      */
     public function getReturnCustomerCode(ShipmentInterface $shipment)
@@ -130,6 +131,10 @@ class Customer
         $shippingAddress = $shipment->getShippingAddress();
 
         if (in_array($shippingAddress->getCountryId(), ['NL', 'BE'])) {
+            return $this->returnOptions->getCustomerCode();
+        }
+
+        if ($shipment->getShortProductCode() === '4907' && ErsCountries::isIncluded($shippingAddress->getCountryId())) {
             return $this->returnOptions->getCustomerCode();
         }
 

@@ -139,8 +139,14 @@ class Prepare
 
     private function adjustCountryOptions(\TIG\PostNL\Api\Data\ShipmentInterface $shipment, ShipmentLabelInterface $label, string $normalizedShipment)
     {
+        if ((int)$label->getProductCode() === 4907 && $label->getType() === 'pg') {
+            return 'eps';
+        }
         if ($shipment->getShipmentCountry() === 'BE' && $normalizedShipment === 'daytime' && $label->getReturnLabel()) {
             return 'eps';
+        }
+        if ((int)$label->getProductCode() === 4910) {
+            return 'a4normal';
         }
         return $normalizedShipment;
     }
