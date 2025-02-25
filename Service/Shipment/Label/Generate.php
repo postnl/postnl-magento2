@@ -57,9 +57,6 @@ class Generate
 
         foreach ($this->orderLabels($labels) as $label) {
             $labelResult = $this->prepare->label($label);
-            if (is_object($labelResult['label'])) {
-                $labelResult['label']->shipmentType = $labelResult['shipment']->getShipmentType();
-            }
             $preparedLabels[] = $labelResult['label'];
         }
 
