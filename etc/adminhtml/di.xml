@@ -8,6 +8,7 @@
             <argument name="types" xsi:type="array">
                 <item name="eps" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\EPSFactory</item>
                 <item name="domestic" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\DomesticFactory</item>
+                <item name="a4normal" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\A4NormalFactory</item>
                 <item name="gp" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\GlobalPackFactory</item>
                 <item name="boxable_packets" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\EPSFactory</item>
                 <item name="priority_options" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\EPSFactory</item>
