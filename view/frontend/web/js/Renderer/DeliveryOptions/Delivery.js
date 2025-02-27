@@ -328,9 +328,13 @@ define([
                         address.country : '';
                 }
                 // Check if pickup enabled for specific country
+                const countries = window.checkoutConfig.shipping.postnl.pakjegemak_countries;
                 if (
                     (country === 'NL' && window.checkoutConfig.shipping.postnl.pakjegemak_active) ||
-                    (country === 'BE' && window.checkoutConfig.shipping.postnl.pakjegemak_be_active)
+                    (country === 'BE' && window.checkoutConfig.shipping.postnl.pakjegemak_be_active) ||
+                    (window.checkoutConfig.shipping.postnl.pakjegemak_global && typeof countries === 'object' &&
+                            countries.indexOf(country) > -1
+                    )
                 ) {
                     return false;
                 }

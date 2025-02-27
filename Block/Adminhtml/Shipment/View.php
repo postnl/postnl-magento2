@@ -9,6 +9,7 @@ use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Config\Validator\ValidAddress;
 use TIG\PostNL\Model\Shipment as PostNLShipment;
 use TIG\PostNL\Model\ShipmentRepository as PostNLShipmentRepository;
+use TIG\PostNL\Service\Shipment\ErsCountries;
 
 // @codingStandardsIgnoreFile
 class View extends MagentoView
@@ -71,6 +72,9 @@ class View extends MagentoView
         if ($countryId === 'NL' && $this->returnOptions->isSmartReturnActive()) {
             $this->setPostNLSendSmartReturnButton();
         }
+        if (ErsCountries::isIncluded($countryId) && $this->returnOptions->isEasyReturnServiceActive()) {
+            $this->setEasyReturnServiceButton();
+        }
         if ($countryId === 'BE') {
             $this->setPostNLSingleLabelReturnButton();
         }
@@ -79,7 +83,7 @@ class View extends MagentoView
     /**
      * Add the PostNL print label button.
      */
-    private function setPostNLPrintLabelButton()
+    private function setPostNLPrintLabelButton(): void
     {
         $this->buttonList->add(
             'postnl_print',
@@ -94,7 +98,7 @@ class View extends MagentoView
     /**
      * Add the PostNL cancel confirmation button.
      */
-    private function setPostNLCancelConfirmButton()
+    private function setPostNLCancelConfirmButton(): void
     {
         $this->buttonList->add(
             'postnl_cancel_confirm',
@@ -111,7 +115,7 @@ class View extends MagentoView
         );
     }
 
-    private function setPostNLPrintLabelWithoutConfirmButton()
+    private function setPostNLPrintLabelWithoutConfirmButton(): void
     {
         $postNLShipment = $this->getPostNLShipment();
         $mainBarcode    = $postNLShipment->getMainBarcode();
@@ -126,7 +130,7 @@ class View extends MagentoView
         );
     }
 
-    private function setPostNLPrintPackingslipButton()
+    private function setPostNLPrintPackingslipButton(): void
     {
         $this->buttonList->add(
             'postnl_print_packingslip',
@@ -138,7 +142,7 @@ class View extends MagentoView
         );
     }
 
-    private function setPostNLConfirmButton()
+    private function setPostNLConfirmButton(): void
     {
         $this->buttonList->add(
             'postnl_confirm_shipment',
@@ -150,7 +154,7 @@ class View extends MagentoView
         );
     }
 
-    private function setPostNLSendSmartReturnButton()
+    private function setPostNLSendSmartReturnButton(): void
     {
         $this->buttonList->add(
             'postnl_send_smart_return',
@@ -158,6 +162,18 @@ class View extends MagentoView
                 'label' => __('PostNL - Send Smart Return'),
                 'class' => 'save primary',
                 'onclick' => 'setLocation(\'' . $this->getSendSmartReturnUrl() . '\')',
+            ]
+        );
+    }
+
+    private function setEasyReturnServiceButton(): void
+    {
+        $this->buttonList->add(
+            'postnl_send_ers',
+            [
+                'label' => __('PostNL - Easy Return Service'),
+                'class' => 'save primary',
+                'onclick' => 'setLocation(\'' . $this->getSendErsUrl() . '\')',
             ]
         );
     }
@@ -177,7 +193,7 @@ class View extends MagentoView
     /**
      * Set the correct text.
      */
-    private function setPostNLPrintLabelButtonData()
+    private function setPostNLPrintLabelButtonData(): void
     {
         /** @var PostNLShipment $postNLShipment */
         $postNLShipment = $this->getPostNLShipment();
@@ -236,17 +252,19 @@ class View extends MagentoView
         );
     }
 
-    /**
-     * @return string
-     */
-    private function getCancelConfirmationUrl()
+    private function getCancelConfirmationUrl(): string
     {
         return $this->getBothShipmentUrl('CancelConfirmation');
     }
 
-    private function getSendSmartReturnUrl()
+    private function getSendSmartReturnUrl(): string
     {
         return $this->getBothShipmentUrl('GetSmartReturnLabel');
+    }
+
+    private function getSendErsUrl(): string
+    {
+        return $this->getBothShipmentUrl('GetEasyReturnServiceLabel');
     }
 
     private function getBothShipmentUrl(string $urlKey): string

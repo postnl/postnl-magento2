@@ -31,8 +31,6 @@ class ConfigurationData extends AbstractDataInstaller
             'tig_postnl/webshop_track_and_trace/template'               => 'tig_postnl/track_and_trace/template',
             'tig_postnl/webshop_track_and_trace/email_bcc'              => 'tig_postnl/track_and_trace/email_bcc',
             'tig_postnl/shippingoptions/idcheck_active'                 => 'tig_postnl/id_check/idcheck_active',
-            'tig_postnl/shippingoptions/sundaydelivery_active'          => 'tig_postnl/sunday_delivery/sundaydelivery_active',
-            'tig_postnl/shippingoptions/sundaydelivery_fee'             => 'tig_postnl/sunday_delivery/sundaydelivery_fee',
             'tig_postnl/shippingoptions/eveningdelivery_active'         => 'tig_postnl/evening_delivery_nl/eveningdelivery_active',
             'tig_postnl/shippingoptions/eveningdelivery_fee'            => 'tig_postnl/evening_delivery_nl/eveningdelivery_fee',
             'tig_postnl/productoptions/default_evening_option'          => 'tig_postnl/evening_delivery_nl/default_evening_option',

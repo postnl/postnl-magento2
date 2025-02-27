@@ -19,21 +19,13 @@ class ShippingDate
     private $shipAtDate;
 
     /**
-     * @var DateTimeFormatterInterface
-     */
-    private $dateTimeFormatterInterface;
-
-    /**
      * @param TimezoneInterface          $todayDate
      * @param TimezoneInterface          $shipAtDate
-     * @param DateTimeFormatterInterface $dateTimeFormatterInterface
      */
     public function __construct(
         TimezoneInterface $todayDate,
-        TimezoneInterface $shipAtDate,
-        DateTimeFormatterInterface $dateTimeFormatterInterface
+        TimezoneInterface $shipAtDate
     ) {
-        $this->dateTimeFormatterInterface = $dateTimeFormatterInterface;
         $this->todayDate = $todayDate;
         $this->shipAtDate = $shipAtDate;
     }

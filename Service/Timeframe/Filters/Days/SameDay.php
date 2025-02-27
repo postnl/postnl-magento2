@@ -94,14 +94,6 @@ class SameDay implements DaysFilterInterface
             $timeframeDate = $this->postNLhelper->getDate($value->Date);
             $weekday       = $this->postNLhelper->getDayOrWeekNumber($todayDate->format('H:i:s'));
 
-            if ($this->shippingOptions->isTodayDeliveryActive()
-                && $cutoffDate == $timeframeDate
-                && !in_array($weekday, ['6', '7'])
-                && !$this->isPastCutOff->calculateToday()
-            ) {
-                return true;
-            }
-
             return $todayDate->format('Y-m-d') != $timeframeDate;
         });
 

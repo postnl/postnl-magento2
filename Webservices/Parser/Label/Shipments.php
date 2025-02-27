@@ -11,6 +11,7 @@ use TIG\PostNL\Config\Source\Settings\ReturnTypes;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\Shipment;
 use TIG\PostNL\Service\Shipment\Data as ShipmentData;
+use TIG\PostNL\Service\Shipment\ErsCountries;
 use TIG\PostNL\Webservices\Api\Customer as CustomerApi;
 
 class Shipments extends AbstractShipmentLabel
@@ -51,12 +52,15 @@ class Shipments extends AbstractShipmentLabel
             $contact['ContactType'] = CustomerApi::ADDRESS_TYPE_SENDER;
         }
         $address[] = $this->getAddressData($postnlShipment->getShippingAddress(), $addressType);
-        if ($postnlOrder->getIsPakjegemak()) {
-            $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
-        }
+        if (!$postnlShipment->getIsSmartReturn()) {
+            // Don't add additional addresses in case it's a return label
+            if ($postnlOrder->getIsPakjegemak()) {
+                $address[] = $this->getAddressData($postnlShipment->getPakjegemakAddress(), '09');
+            }
 
-        if ($this->canReturn($address[0]['Countrycode'], $postnlShipment)) {
-            $address[] = $this->getReturnAddressData();
+            if ($this->canReturn($address[0]['Countrycode'], $postnlShipment)) {
+                $address[] = $this->getReturnAddressData();
+            }
         }
 
         return $this->shipmentData->get($postnlShipment, $address, $contact, $shipmentNumber);
@@ -103,9 +107,9 @@ class Shipments extends AbstractShipmentLabel
     {
         $countryCode = $this->addressConfiguration->getCountry();
         $returnType = $this->returnOptions->getReturnTo();
-        $zip = strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode()));
 
         if ($returnType === ReturnTypes::TYPE_FREE_POST && $countryCode === 'NL') {
+            $zip = strtoupper(str_replace(' ', '', $this->returnOptions->getZipcode()));
             $data = [
                 'AddressType' => CustomerApi::ADDRESS_TYPE_RETURN,
                 'City' => $this->returnOptions->getCity(),
@@ -116,6 +120,7 @@ class Shipments extends AbstractShipmentLabel
                 'CompanyName' => $this->returnOptions->getCompany(),
             ];
         } else {
+            $zip = strtoupper(str_replace(' ', '', $this->returnOptions->getZipcodeHome()));
             $data = [
                 'AddressType' => CustomerApi::ADDRESS_TYPE_RETURN,
                 'City' => $this->returnOptions->getCity(),

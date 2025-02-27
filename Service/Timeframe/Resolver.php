@@ -38,6 +38,7 @@ class Resolver
     private DeliveryDate $deliveryDate;
     private CanaryIslandToIC $canaryConverter;
     private CacheInterface $cache;
+    private ?string $lastRequestDate = null;
 
     public function __construct(
         Session $checkoutSession,
@@ -148,7 +149,7 @@ class Resolver
     private function getPossibleDeliveryDays(array $address)
     {
         $startDate  = $this->deliveryDate->get($address);
-
+        $this->lastRequestDate = $startDate;
         return $this->getTimeFrames($address, $startDate);
     }
 
@@ -173,7 +174,11 @@ class Resolver
         $content = $this->cache->load($cacheId);
         if ($content) {
             try {
-                return ['timeframes' => \json_decode($content, true, 32, JSON_THROW_ON_ERROR)];
+                $data = \json_decode($content, true, 32, JSON_THROW_ON_ERROR);
+                if (is_array($data) && isset($data['tf'])) {
+                    $this->checkoutSession->setPostNLDeliveryDate($data['date']);
+                    return ['timeframes' => $data['tf']];
+                }
             } catch (\Exception $e) {
                 // retrieve data from api
             }
@@ -185,8 +190,12 @@ class Resolver
                 'timeframes' => [[['fallback' => __('At the first opportunity')]]]
             ];
         }
+        $cache = [
+            'tf' => $timeframes,
+            'date' => $this->lastRequestDate
+        ];
 
-        $this->cache->save(\json_encode($timeframes), $cacheId, ['POSTNL_REQUESTS'], 60 * 5);
+        $this->cache->save(\json_encode($cache), $cacheId, ['POSTNL_REQUESTS'], 60 * 5);
 
         return [
             'timeframes' => $timeframes

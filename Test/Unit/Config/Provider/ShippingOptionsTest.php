@@ -184,47 +184,6 @@ class ShippingOptionsTest extends AbstractConfigurationTest
         $this->assertEquals($value, $result);
     }
 
-    /**
-     * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
-     * @param $value
-     */
-    public function testIsSundayDeliveryActive($value)
-    {
-        $instance = $this->getInstance();
-        $this->setXpath(ShippingOptions::XPATH_SHIPPING_OPTION_SUNDAY_ACTIVE, $value);
-        $this->assertEquals($value, $instance->isSundayDeliveryActive());
-    }
-
-    /**
-     * @dataProvider feeProvider
-     * @param $isSundayActive
-     * @param $expected
-     */
-    public function testGetSundayDeliveryFee($isSundayActive, $expected)
-    {
-        $instance = $this->getInstance();
-
-        $xpaths = [
-            [
-                ShippingOptions::XPATH_SHIPPING_OPTION_SUNDAY_ACTIVE,
-                ScopeInterface::SCOPE_STORE,
-                null
-            ],
-            [
-                ShippingOptions::XPATH_SHIPPING_OPTION_SUNDAY_FEE,
-                ScopeInterface::SCOPE_STORE,
-                null
-            ]
-        ];
-
-        $returns = [
-            $isSundayActive, $expected
-        ];
-
-        $this->setXpathConsecutive($xpaths, $returns);
-        $this->assertEquals($expected, $instance->getSundayDeliveryFee());
-    }
-
     public function testGetDeliveryDelay()
     {
         $value = rand(1, 4);

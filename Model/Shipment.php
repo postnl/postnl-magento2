@@ -421,6 +421,13 @@ class Shipment extends AbstractModel implements ShipmentInterface
         return $this->getData(static::FIELD_PRODUCT_CODE);
     }
 
+    public function getShortProductCode(): string
+    {
+        $productCode = (string)$this->getProductCode();
+        if (strlen($productCode) > 4) $productCode = substr($productCode, 1);
+        return $productCode;
+    }
+
     /**
      * @param string
      *
@@ -776,6 +783,11 @@ class Shipment extends AbstractModel implements ShipmentInterface
         return $this->compareProductCodeToGroup('extra_at_home_options');
     }
 
+    public function isEuOption(): bool
+    {
+        return $this->compareProductCodeToGroup('eu_options');
+    }
+
     /**
      * @return bool
      */
@@ -955,7 +967,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
     }
 
     /**
-     * @param $value
+     * @param int $value
      *
      * @return $this
      */
@@ -965,11 +977,11 @@ class Shipment extends AbstractModel implements ShipmentInterface
     }
 
     /**
-     * @return bool
+     * @return int
      */
     public function getIsSmartReturn()
     {
-        return $this->getData(static::FIELD_IS_SMART_RETURN);
+        return (int)$this->getData(static::FIELD_IS_SMART_RETURN);
     }
 
     /**

@@ -4,7 +4,7 @@ namespace TIG\PostNL\Config\CheckoutConfiguration;
 
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
-class IsTodayDeliveryActive implements CheckoutConfigurationInterface
+class IsPakjegemakGlobalActive implements CheckoutConfigurationInterface
 {
     /**
      * @var ShippingOptions
@@ -12,7 +12,7 @@ class IsTodayDeliveryActive implements CheckoutConfigurationInterface
     private $shippingOptions;
 
     /**
-     * @param ShippingOptions $shippingOptions
+     * @param ShippingOptions      $shippingOptions
      */
     public function __construct(
         ShippingOptions $shippingOptions
@@ -21,10 +21,10 @@ class IsTodayDeliveryActive implements CheckoutConfigurationInterface
     }
 
     /**
-     * @return bool|mixed
+     * @return int
      */
     public function getValue()
     {
-        return $this->shippingOptions->isTodayDeliveryActive();
+        return (int) $this->shippingOptions->isPakjegemakGlobalActive();
     }
 }

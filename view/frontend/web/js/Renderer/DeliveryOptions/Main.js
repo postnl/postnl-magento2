@@ -67,15 +67,18 @@ define([
         }),
 
         canUsePickupLocations: ko.computed(function () {
-            var isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
-            var isActiveBe = window.checkoutConfig.shipping.postnl.pakjegemak_be_active;
-            var pickupOptionsAreAvailable = State.pickupOptionsAreAvailable();
+            const isActive = window.checkoutConfig.shipping.postnl.pakjegemak_active;
+            const isActiveBe = window.checkoutConfig.shipping.postnl.pakjegemak_be_active;
+            const isActiveGlobal = window.checkoutConfig.shipping.postnl.pakjegemak_global;
+            const pickupOptionsAreAvailable = State.pickupOptionsAreAvailable();
+            const countries = window.checkoutConfig.shipping.postnl.pakjegemak_countries;
 
-            var address = AddressFinder();
-            var isNL = (address !== null && address !== false && address.country === 'NL');
-            var isBE = (address !== null && address !== false && address.country === 'BE');
+            const address = AddressFinder();
+            const isNL = (address !== null && address !== false && address.country === 'NL');
+            const isBE = (address !== null && address !== false && address.country === 'BE');
+            const isGlobal = (address !== null && address !== false && countries.indexOf(address.country) > -1);
 
-            return ((isActive === 1 && isNL) || (isActiveBe === 1 && isBE)) && pickupOptionsAreAvailable;
+            return ((isActive === 1 && isNL) || (isActiveBe === 1 && isBE) || (isActiveGlobal === 1 && isGlobal)) && pickupOptionsAreAvailable;
         }),
 
         setDelivery: function () {

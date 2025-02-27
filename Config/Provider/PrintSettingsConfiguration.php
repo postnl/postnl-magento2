@@ -38,8 +38,8 @@ class PrintSettingsConfiguration extends AbstractConfigProvider
         if (!$labelType) {
             $labelType = LabelTypeSettings::TYPE_PDF;
         }
-        // Smart returns should only be in PDFs
-        if ($shipment->getIsSmartReturn()) {
+        // Smart returns, ERS should only be in PDFs
+        if ($shipment->getIsSmartReturn() > 0) {
             $labelType = LabelTypeSettings::TYPE_PDF;
         }
         // Zebra has a different view from other types

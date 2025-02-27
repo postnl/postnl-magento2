@@ -10,6 +10,9 @@ interface ShipmentLabelInterface
 {
     const BARCODE_TYPE_LABEL = 'label';
 
+    public const RETURN_LABEL_SMART_RETURN = 1;
+    public const RETURN_LABEL_ERS = 2;
+
     /**
      * @return int
      */
@@ -101,10 +104,17 @@ interface ShipmentLabelInterface
      * @param boolean $value
      * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
      */
-    public function isSmartReturnLabel(bool $value): self;
+    public function isSmartReturnLabel(int $value): self;
 
     /**
      * @return bool
      */
     public function getSmartReturnLabel(): bool;
+
+    public function setReturnFlag(int $flag): self;
+
+    public function getReturnFlag(): int;
+
+    public function isErsLabelFlag(): bool;
+    public function isSmartReturnLabelFlag(): bool;
 }

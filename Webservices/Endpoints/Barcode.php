@@ -3,9 +3,9 @@
 namespace TIG\PostNL\Webservices\Endpoints;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
-use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Exception as PostNLException;
+use TIG\PostNL\Service\Shipment\Barcode\Range;
 use TIG\PostNL\Service\Shipment\Barcode\Range as BarcodeRange;
 use TIG\PostNL\Webservices\AbstractEndpoint;
 use TIG\PostNL\Webservices\Api\Customer;
@@ -61,18 +61,12 @@ class Barcode extends AbstractEndpoint
     private $returnOptions;
 
     /**
-     * @var AddressConfiguration
-     */
-    private $addressConfiguration;
-
-    /**
      * @param \TIG\PostNL\Webservices\Soap                   $soap
      * @param \TIG\PostNL\Service\Shipment\Barcode\Range     $barcodeRange
      * @param \TIG\PostNL\Webservices\Api\Customer           $customer
      * @param \TIG\PostNL\Webservices\Api\Message            $message
      * @param \TIG\PostNL\Webservices\Parser\Label\Shipments $shipmentData
      * @param ReturnOptions                                  $returnOptions
-     * @param AddressConfiguration                           $addressConfiguration
      */
     public function __construct(
         Soap $soap,
@@ -81,14 +75,12 @@ class Barcode extends AbstractEndpoint
         Message $message,
         ShipmentData $shipmentData,
         ReturnOptions $returnOptions,
-        AddressConfiguration $addressConfiguration
     ) {
         $this->soap                 = $soap;
         $this->barcodeRange         = $barcodeRange;
         $this->customer             = $customer;
         $this->message              = $message;
         $this->returnOptions        = $returnOptions;
-        $this->addressConfiguration = $addressConfiguration;
 
         parent::__construct(
             $shipmentData
@@ -182,6 +174,11 @@ class Barcode extends AbstractEndpoint
     {
         if ($isReturnBarcode) {
             $parameters['Barcode']['Range'] = $this->returnOptions->getCustomerCode();
+            $productCode = $this->productCode;
+            if (strlen($productCode) > 4) $productCode = substr($productCode, 1);
+            if ($productCode === '4907') {
+                $parameters['Barcode']['Serie'] = Range::EU_BARCODE_SERIE_ERS;
+            }
         }
 
         return $parameters;

@@ -3,6 +3,7 @@
 namespace TIG\PostNL\Service\Shipment;
 
 use TIG\PostNL\Api\Data\ShipmentInterface;
+use TIG\PostNL\Api\Data\ShipmentLabelInterface;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Config\Provider\ReturnOptions;
 use TIG\PostNL\Config\Provider\ShippingOptions;
@@ -96,6 +97,7 @@ class Data
     {
         $shipmentData = $this->getDefaultShipmentData($shipment, $address, $contact, $currentShipmentNumber);
         $shipmentData = $this->setMandatoryShipmentData($shipment, $currentShipmentNumber, $shipmentData);
+        $shipmentData = $this->addCustomShipmentData($shipment, $currentShipmentNumber, $shipmentData);
 
         return $shipmentData;
     }
@@ -214,7 +216,8 @@ class Data
             // Fill out ReturnBarcode with the same data as Barcode in this case
             $shipmentData['ReturnBarcode'] = $shipmentData['Barcode'];
         }
-        if ($returnActive && $this->returnOptions->getReturnLabel() === LabelSettings::LABEL_BOX) {
+        if ($returnActive && ($countryId === 'NL' || $countryId === 'BE')
+            && $this->returnOptions->getReturnLabel() === LabelSettings::LABEL_BOX) {
             $productOptions[] = [
                 'Characteristic' => '152',
                 'Option'         => '028'
@@ -248,7 +251,7 @@ class Data
         }
 
         $smartReturnActive = $this->returnOptions->isSmartReturnActive();
-        if ($smartReturnActive && $shipment->getIsSmartReturn()) {
+        if ($smartReturnActive && $shipment->getIsSmartReturn() === ShipmentLabelInterface::RETURN_LABEL_SMART_RETURN) {
             $shipmentData['ProductOptions']      = $this->getSmartReturnOptions();
             $shipmentData['ProductCodeDelivery'] =
                 $this->returnOptions->getReturnTo() === ReturnTypes::TYPE_FREE_POST ? '2285' : '3285';
@@ -357,5 +360,19 @@ class Data
             $shipment->isBoxablePackets() ||
             // And add customers on all non-NL/non-BE countries.
             ($countryId !== null && $countryId !== 'NL' && $countryId !== 'BE');
+    }
+
+    private function addCustomShipmentData(ShipmentInterface $shipment, int $currentShipmentNumber, array $shipmentData)
+    {
+        $postnlOrder  = $shipment->getPostNLOrder();
+        $productCode = $shipment->getProductCode();
+        if (strlen($productCode) > 4) {
+            $productCode = substr($productCode, 1);
+        }
+        if ($shipment->getShipmentType() === 'PG' && $productCode === '4907') {
+            $shipmentData['DownPartnerID'] = $postnlOrder->getPgRetailNetworkId();
+            $shipmentData['DownPartnerLocation'] = $postnlOrder->getPgLocationCode();
+        }
+        return $shipmentData;
     }
 }
