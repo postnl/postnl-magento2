@@ -6,6 +6,7 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\Order\Address;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ReturnOptions;
+use TIG\PostNL\Config\Source\Settings\LabelSettings;
 use TIG\PostNL\Config\Source\Settings\ReturnTypes;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Model\Shipment;
@@ -90,6 +91,12 @@ class Shipments extends AbstractShipmentLabel
             return false;
         }
         return ($this->returnOptions->isReturnActive() && in_array($countryId, ['NL', 'BE']));
+    }
+
+    public function isShipmentAndReturnEnabled(string $countryId): bool
+    {
+        return $countryId === 'NL' && $this->returnOptions->isReturnActive()
+            && $this->returnOptions->getReturnLabel() === LabelSettings::LABEL_RETURN;
     }
 
     private function getReturnAddressData(): array

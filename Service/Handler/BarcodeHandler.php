@@ -193,7 +193,9 @@ class BarcodeHandler
         ) {
             return false;
         }
-
+        if ($this->labelParser->isShipmentAndReturnEnabled($countryId)) {
+            return false;
+        }
         return true;
     }
 
