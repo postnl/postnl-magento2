@@ -40,7 +40,6 @@ class ProductOptionsTest extends TestCase
     public function getProductoptionsProvider()
     {
         return [
-            [['isSunday' => true], ['3087', '3094', '3089', '3096', '3385', '3437', '3438', '3443', '3446', '3449',]],
             [['isEvening' => true],
              ['3087', '3094', '3089', '3096', '3090', '3385', '4941', '3437', '3438', '3443', '3446', '3449',]],
             [['isExtraCover' => true], ['3087', '3094', '3534', '3544', '3443', '3446', '3581', '3584',]],
@@ -134,7 +133,6 @@ class ProductOptionsTest extends TestCase
         $this->assertEquals('Standard shipment', $options['label']);
         $this->assertEquals(false, $options['isExtraCover']);
         $this->assertEquals(false, $options['isEvening']);
-        $this->assertEquals(false, $options['isSunday']);
         $this->assertEquals('NL', $options['countryLimitation']);
         $this->assertEquals('standard_options', $options['group']);
     }

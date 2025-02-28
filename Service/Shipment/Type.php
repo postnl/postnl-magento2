@@ -46,7 +46,7 @@ class Type
             case $postNLShipment->isInternationalPacket():
                 return 'priority_options';
             case $postNLShipment->isGlobalPack():
-                return 'gp';
+                return 'GP';
         }
         return null;
     }

@@ -4,7 +4,7 @@ namespace TIG\PostNL\Config\CheckoutConfiguration;
 
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
-class SundayDeliveryFee implements CheckoutConfigurationInterface
+class PakjegemakGlobalCountries implements CheckoutConfigurationInterface
 {
     /**
      * @var ShippingOptions
@@ -12,7 +12,7 @@ class SundayDeliveryFee implements CheckoutConfigurationInterface
     private $shippingOptions;
 
     /**
-     * @param ShippingOptions $shippingOptions
+     * @param ShippingOptions      $shippingOptions
      */
     public function __construct(
         ShippingOptions $shippingOptions
@@ -20,11 +20,8 @@ class SundayDeliveryFee implements CheckoutConfigurationInterface
         $this->shippingOptions = $shippingOptions;
     }
 
-    /**
-     * @return bool|mixed
-     */
-    public function getValue()
+    public function getValue(): array
     {
-        return $this->shippingOptions->getSundayDeliveryFee();
+        return $this->shippingOptions->getPakjegemakGlobalCountries();
     }
 }

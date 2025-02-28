@@ -24,16 +24,14 @@ class ShippingOptions extends AbstractConfigProvider
     const XPATH_SHIPPING_OPTION_PAKJEGEMAK_DEFAULT        = 'tig_postnl/post_offices/pakjegemak_default';
     const XPATH_SHIPPING_OPTION_PAKJEGEMAK_BE_ACTIVE     = 'tig_postnl/post_offices/pakjegemak_be_active';
     const XPATH_SHIPPING_OPTION_SHOW_PACKAGE_MACHINES    = 'tig_postnl/post_offices/show_package_machines';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_ACTIVE = 'tig_postnl/post_offices/pakjegemak_global_active';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_COUNTRIES = 'tig_postnl/post_offices/pakjegemak_global_countries';
+
     const XPATH_SHIPPING_OPTION_EVENING_ACTIVE           = 'tig_postnl/evening_delivery_nl/eveningdelivery_active';
     const XPATH_SHIPPING_OPTION_EVENING_BE_ACTIVE        = 'tig_postnl/evening_delivery_be/eveningdelivery_be_active';
     const XPATH_SHIPPING_OPTION_EVENING_FEE              = 'tig_postnl/evening_delivery_nl/eveningdelivery_fee';
     const XPATH_SHIPPING_OPTION_EXTRAATHOME_ACTIVE       = 'tig_postnl/extra_at_home/extraathome_active';
     const XPATH_SHIPPING_OPTION_EVENING_BE_FEE           = 'tig_postnl/evening_delivery_be/eveningdelivery_be_fee';
-    const XPATH_SHIPPING_OPTION_SUNDAY_ACTIVE            = 'tig_postnl/sunday_delivery/sundaydelivery_active';
-    const XPATH_SHIPPING_OPTION_SUNDAY_FEE               = 'tig_postnl/sunday_delivery/sundaydelivery_fee';
-    const XPATH_SHIPPING_OPTION_TODAY_ACTIVE             = 'tig_postnl/today_delivery/todaydelivery_active';
-    const XPATH_SHIPPING_OPTION_TODAY_FEE                = 'tig_postnl/today_delivery/todaydelivery_fee';
-    const XPATH_SHIPPING_OPTION_TODAY_CUTOFF             = 'tig_postnl/today_delivery/cutoff_time';
     const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE       = 'tig_postnl/track_and_trace/send_track_and_trace_email';
     const XPATH_SHIPPING_OPTION_DELIVERY_DELAY           = 'tig_postnl/track_and_trace/delivery_delay';
     const XPATH_SHIPPING_OPTION_IDCHECK_ACTIVE           = 'tig_postnl/id_check/idcheck_active';
@@ -138,6 +136,17 @@ class ShippingOptions extends AbstractConfigProvider
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE);
     }
 
+    public function isPakjegemakGlobalActive(): bool
+    {
+        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_ACTIVE);
+    }
+
+    public function getPakjegemakGlobalCountries(): array
+    {
+        $values = (string)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_COUNTRIES);
+        return explode(',', $values);
+    }
+
     /**
      * @param string $country
      * @return mixed
@@ -204,46 +213,6 @@ class ShippingOptions extends AbstractConfigProvider
         return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_IDCHECK_ACTIVE);
     }
 
-    /**
-     * @return mixed
-     */
-    public function isSundayDeliveryActive()
-    {
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_SUNDAY_ACTIVE);
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getSundayDeliveryFee()
-    {
-        if (!$this->isSundayDeliveryActive()) {
-            return '0';
-        }
-
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_SUNDAY_FEE);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function isTodayDeliveryActive()
-    {
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_TODAY_ACTIVE);
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getTodayDeliveryFee()
-    {
-        if (!$this->isTodayDeliveryActive()) {
-            return '0';
-        }
-
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_TODAY_FEE);
-    }
-
     public function getNoonDeliveryFee(): float
     {
         if (!$this->isGuaranteedDeliveryActive()) {
@@ -256,14 +225,6 @@ class ShippingOptions extends AbstractConfigProvider
     public function getNoonDeliveryOption(): int
     {
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_NOON_OPTION);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTodayCutoffTime()
-    {
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_TODAY_CUTOFF);
     }
 
     /**

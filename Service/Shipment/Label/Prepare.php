@@ -86,7 +86,8 @@ class Prepare
         $this->validateTypes();
 
         $shipment = $label->getShipment();
-        $normalizedShipment = strtolower($this->typeConverter->get($shipment));
+        $baseType = $this->typeConverter->get($shipment);
+        $normalizedShipment = strtolower($baseType);
         $normalizedShipment = $this->adjustCountryOptions($shipment, $label, $normalizedShipment);
 
         $instanceFactory = $this->types['domestic'];
@@ -99,6 +100,8 @@ class Prepare
 
         $result = $instance->process($label);
         $instance->cleanup();
+        // Mark type for merged, so it knows how to merge data. Mostly sets GP/everything else as GP is specific.
+        $result->shipmentType = $baseType;
         if ($normalizedShipment === 'a4normal') {
             $result->labelFormat = 'A4';
         }
@@ -142,6 +145,9 @@ class Prepare
 
     private function adjustCountryOptions(\TIG\PostNL\Api\Data\ShipmentInterface $shipment, ShipmentLabelInterface $label, string $normalizedShipment)
     {
+        if ((int)$label->getProductCode() === 4907 && $label->getType() === 'pg') {
+            return 'eps';
+        }
         if ($shipment->getShipmentCountry() === 'BE' && $normalizedShipment === 'daytime' && $label->getReturnLabel()) {
             return 'eps';
         }

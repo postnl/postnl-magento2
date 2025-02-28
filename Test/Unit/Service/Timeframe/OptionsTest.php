@@ -32,7 +32,6 @@ class OptionsTest extends TestCase
     {
         $shippingOptions = $this->getFakeMock(ShippingOptions::class, true);
         $this->mockFunction($shippingOptions, 'isEveningDeliveryActive', $eveningEnabled);
-        $this->mockFunction($shippingOptions, 'isSundayDeliveryActive', $sundayEnabled);
 
         $webshopSettings = $this->getFakeMock(Webshop::class, true);
         $this->mockFunction($webshopSettings, 'getShipmentDays', '0,6');

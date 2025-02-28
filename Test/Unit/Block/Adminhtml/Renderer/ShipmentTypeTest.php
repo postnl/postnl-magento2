@@ -17,7 +17,6 @@ class ShipmentTypeTest extends TestCase
             'Evening' => ['3090', 'Evening', 'Domestic', 'Evening', 'Signature on delivery + Delivery to stated address only'],
             'Evening BE' => ['4941', 'Evening', 'EPS', 'Evening', 'EU Pack Standard evening'],
             'Extra@Home' => ['3790', 'ExtraAtHome', 'Extra@Home', '', 'Extra@Home Drempelservice 1 person delivery NL'],
-            'Sunday' => ['3385', 'Sunday', 'Domestic', 'Sunday', 'Deliver to stated address only'],
             'Pickup Delivery' => ['3533', 'PG', 'Post office', '', 'Post Office + Signature on Delivery'],
             'Pickup Delivery Early' => ['3543', 'PGE', 'Post office', 'Early morning pickup', 'Post Office + Signature on Delivery + Notification'],
             'EPS' => ['4950', 'EPS', 'EPS', '', 'EU Pack Special'],
