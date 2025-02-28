@@ -53,10 +53,10 @@ class ErsShipmentManager
         $this->removeOldShippingLabels($postnlShipment->getEntityId());
 
         /** @var Shipment|ShipmentInterface $shipment */
-        $shipment = $postnlShipment->getShipment();
-        $shippingAddress = $shipment->getShippingAddress();
-
-        $this->barcodeHandler->prepareShipment($shipment->getId(), $shippingAddress->getCountryId(), ShipmentLabelInterface::RETURN_LABEL_ERS);
+        $shippingAddress = $magentoShipment->getShippingAddress();
+        $this->barcodeHandler->prepareShipment($magentoShipment->getId(), $shippingAddress->getCountryId(), ShipmentLabelInterface::RETURN_LABEL_ERS);
+        // Reload object saved above
+        $postnlShipment = $this->shipmentRepository->getByShipmentId($magentoShipment->getId());
         $labels = $this->getLabels->get($postnlShipment, 1);
 
         if (empty($labels)) {

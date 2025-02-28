@@ -29,6 +29,7 @@ class ErsShipment extends ReturnShipment
             $data['ReturnBarcode'], $data['CollectionTimeStampEnd'], $data['CollectionTimeStampStart']
         );
 
+        $data['Barcode'] = $postnlShipment->getSmartReturnBarcode();
         $contact = $data['Contacts']['Contact'];
         $data['Contacts'] = [
             $contact,

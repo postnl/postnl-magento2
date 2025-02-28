@@ -99,6 +99,9 @@ class Prepare
 
         $result = $instance->process($label);
         $instance->cleanup();
+        if ($normalizedShipment === 'a4normal') {
+            $result->labelFormat = 'A4';
+        }
 
         return ['label' => $result, 'shipment' => $shipment];
     }
