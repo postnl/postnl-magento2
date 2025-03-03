@@ -102,6 +102,9 @@ class Prepare
         $instance->cleanup();
         // Mark type for merged, so it knows how to merge data. Mostly sets GP/everything else as GP is specific.
         $result->shipmentType = $baseType;
+        if ($normalizedShipment === 'a4normal') {
+            $result->labelFormat = 'A4';
+        }
 
         return ['label' => $result, 'shipment' => $shipment];
     }

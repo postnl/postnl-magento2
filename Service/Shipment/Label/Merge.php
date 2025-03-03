@@ -101,7 +101,7 @@ class Merge
     private function getGPlabels($labels)
     {
         return array_filter($labels, function ($label) {
-            return $label->shipmentType == 'GP';
+            return $label->shipmentType == 'GP' || (isset($label->labelFormat) && $label->labelFormat === 'A4');
         });
     }
 
@@ -113,7 +113,7 @@ class Merge
     private function getNonGPlabels($labels)
     {
         return array_filter($labels, function ($label) {
-            return $label->shipmentType != 'GP';
+            return $label->shipmentType != 'GP' && empty($label->labelFormat);
         });
     }
 }
