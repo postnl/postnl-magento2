@@ -1,9 +1,9 @@
 ## Verzendmethode instellen
-Onderdeel van de PostNL extensie is de PostNL verzendmethode waarin de verzendkosten bepaald kunnen worden. De basis van de verzendmethode is vergelijkbaar met andere Magento verzendmethodes met daarin de opties om de verzendmethode te activeren, tarieven, verzendlanden en de titel in te stellen.
+Onderdeel van de PostNL extensie is de PostNL verzendmethode waarin de verzendkosten bepaald kunnen worden. De basis van de verzendmethode is vergelijkbaar met andere Magento verzendmethodes met daarin de opties om de verzendmethode te activeren, tarieven, verzendlanden en de titel in te stellen. In de instellingen van de verzendmethoden is het tevens mogelijk een aparte prijs te hanteren voor zendingen die worden opgehaald bij een PostNL afhaalpunt. Gebruik hiervoor de instellingen "Other price for Pickup" en "Price for pickup"
 Voor het instellen van de tarieven zijn er binnen de PostNl verzendmethode drie opties: <em>vast tarief</em>, <em>table rates</em> en de <em>matrix rates</em>.
 ### Vast tarief
 Bij de optie vast tarief kan er één tarief ingesteld worden wat gehanteerd als verzendkosten naar alle landen die geactiveerd staan.
-In de instellingen van de verzendmethoden is het tevens mogelijk een aparte prijs te hanteren voor zendingen die worden opgehaald bij een PostNL afhaalpunt. Gebruik hiervoor de instellingen "Other price for Pickup" en "Price for pickup"
+
 
 ### Table rates
 De table rates verzendmethode komt overeen met de gelijknamige verzendmethode van Magento: [https://docs.magento.com/user-guide/shipping/shipping-table-rate.html](https://docs.magento.com/user-guide/shipping/shipping-table-rate.html).
