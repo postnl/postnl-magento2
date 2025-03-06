@@ -105,7 +105,7 @@ class Customer
             'Countrycode' => $this->addressConfiguration->getCountry(),
             'HouseNr' => $this->returnOptions->getFreepostNumber(),
             'Street' => 'Antwoordnummer',
-            'Zipcode' => $this->getFormattedReturnZipCode($this->returnOptions->getZipcodeHome()),
+            'Zipcode' => $this->getFormattedReturnZipCode($this->returnOptions->getZipcode()),
             'CompanyName' => $this->returnOptions->getCompany(),
         ];
     }
