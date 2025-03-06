@@ -70,7 +70,10 @@ class DeliveryDate
             return null;
         }
         $date = $this->timezone->date();
-        $interval = new \DateInterval('P'.$this->approximateDeliveryTime[$address['country']].'D');
+        $shippingDuration = $this->shippingDuration->get();
+        $shippingDuration += $this->approximateDeliveryTime[$address['country']];
+
+        $interval = new \DateInterval('P'.(int)$shippingDuration.'D');
         $date->add($interval);
         return $date->format('d-m-Y');
     }
