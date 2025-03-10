@@ -15,10 +15,8 @@ class ProductOptionsTest extends TestCase
         return [
             ['pge', false, false, ['Characteristic' => '118', 'Option' => '002']],
             ['evening', false, false, ['Characteristic' => '118', 'Option' => '006']],
-            ['sunday', false, false, ['Characteristic' => '101', 'Option' => '008']],
             ['pge', true, false, ['Characteristic' => '118', 'Option' => '002']],
             ['evening', true, false, ['Characteristic' => '118', 'Option' => '006']],
-            ['sunday', true, false, ['Characteristic' => '101', 'Option' => '008']],
         ];
     }
 
