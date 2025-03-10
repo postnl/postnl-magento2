@@ -236,7 +236,7 @@ class Data
             ];
         }
 
-        if ($shipment->isExtraCover() && $shipment->getProductCode() === '13085') {
+        if ($shipment->isCodeAtDoor()) {
             $productOptions[] = [
                 'Characteristic' => '004',
                 'Option'         => '020'
