@@ -71,6 +71,9 @@ class DeliveryDate
         }
         $date = $this->timezone->date();
         $shippingDuration = $this->shippingDuration->get();
+        if ($shippingDuration > 0) {
+            $shippingDuration --;
+        }
         $shippingDuration += $this->approximateDeliveryTime[$address['country']];
 
         $interval = new \DateInterval('P'.(int)$shippingDuration.'D');
