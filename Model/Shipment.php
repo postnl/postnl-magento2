@@ -729,6 +729,16 @@ class Shipment extends AbstractModel implements ShipmentInterface
         return $this->getData(static::FIELD_DOWNPARTNER_BARCODE);
     }
 
+    public function isOptionFlagSet(string $key): bool
+    {
+        $productCodeOptions = $this->getProductCodeOptions();
+
+        if ($productCodeOptions === null) {
+            return false;
+        }
+        return (bool)($productCodeOptions[$key] ?? false);
+    }
+
     /**
      * Check if this shipment must be sent using Extra Cover.
      *
@@ -736,17 +746,17 @@ class Shipment extends AbstractModel implements ShipmentInterface
      */
     public function isExtraCover()
     {
-        $productCodeOptions = $this->getProductCodeOptions();
+        return $this->isOptionFlagSet('isExtraCover');
+    }
 
-        if ($productCodeOptions === null) {
-            return false;
-        }
-
-        if (!array_key_exists('isExtraCover', $productCodeOptions)) {
-            return false;
-        }
-
-        return $productCodeOptions['isExtraCover'];
+    /**
+     * Check if this shipment contains code at door options.
+     *
+     * @return bool
+     */
+    public function isCodeAtDoor(): bool
+    {
+        return $this->isOptionFlagSet('isCodeAtCode');
     }
 
     protected function compareProductCodeToGroup(string $group): bool

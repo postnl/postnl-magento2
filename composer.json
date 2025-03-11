@@ -12,7 +12,7 @@
     },
     "type": "magento2-module",
     "license": "CC-BY-NC-ND-3.0",
-    "version": "1.18.0",
+    "version": "1.19.0",
     "keywords": ["PostNL", "Official PostNL extension", "Magento 2"],
     "autoload": {
         "files": [

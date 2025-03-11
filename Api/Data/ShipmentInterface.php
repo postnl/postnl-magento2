@@ -290,9 +290,20 @@ interface ShipmentInterface
     public function getDeliveryDateFormatted($format = 'd-m-Y H:i:s');
 
     /**
+     * @param string $key
+     * @return bool
+     */
+    public function isOptionFlagSet(string $key): bool;
+
+    /**
      * @return bool
      */
     public function isExtraCover();
+
+    /**
+     * @return bool
+     */
+    public function isCodeAtDoor(): bool;
 
     /**
      * @return bool
