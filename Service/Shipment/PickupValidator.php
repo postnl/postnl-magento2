@@ -2,6 +2,7 @@
 
 namespace TIG\PostNL\Service\Shipment;
 
+use Magento\Quote\Api\Data\AddressInterface;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 
 class PickupValidator
@@ -29,5 +30,10 @@ class PickupValidator
     {
         $isDefaultPickupEnabled = $this->shippingOptions->isPakjegemakDefault($countryId);
         return $isDefaultPickupEnabled && $this->isPickupEnabledForCountry($countryId);
+    }
+
+    public function isAddressFilled(AddressInterface $address)
+    {
+        return $address->getPostcode() && $address->getStreet() && $address->getCountryId();
     }
 }
