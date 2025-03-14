@@ -262,7 +262,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
     }
 
     /**
-     * @return float|int
+     * @return float
      */
     public function getTotalWeight()
     {
@@ -279,13 +279,6 @@ class Shipment extends AbstractModel implements ShipmentInterface
         if ($this->customs->getWeightUnit() == 'lbs') {
             //convert Kgs to Lb
             $weight = $weight / 2.20462262;
-            $weight = $weight > 1 ? $weight : 1;
-
-            return $weight;
-        }
-
-        if ($weight < 1) {
-            $weight = 1;
         }
 
         return $weight;
