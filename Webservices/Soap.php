@@ -7,6 +7,7 @@ use Magento\Framework\Webapi\Exception as WebapiException;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
 use Laminas\Soap\Client as SoapClient;
+use TIG\PostNL\Service\Module\Version;
 
 class Soap
 {
@@ -44,6 +45,7 @@ class Soap
      * @var AccountConfiguration
      */
     private $accountConfiguration;
+    private Version $versionService;
 
     /**
      * @param AccountConfiguration $accountConfiguration
@@ -59,13 +61,15 @@ class Soap
         DefaultConfiguration $defaultConfiguration,
         ExceptionHandler $exceptionHandler,
         SoapClient $soapClient,
-        Api\Log $log
+        Api\Log $log,
+        Version $versionService
     ) {
         $this->defaultConfiguration = $defaultConfiguration;
         $this->exceptionHandler = $exceptionHandler;
         $this->soapClient = $soapClient;
         $this->log = $log;
         $this->accountConfiguration = $accountConfiguration;
+        $this->versionService = $versionService;
     }
 
     /**
@@ -112,9 +116,15 @@ class Soap
     {
         /** Unable to find an alternative, so ignore the coding standards. */
         // @codingStandardsIgnoreLine
+        $headers = [
+            'apikey:' . $this->getApiKey(),
+            'SourceSystem:66',
+            ... $this->versionService->getCachedVersions()
+        ];
+
         $stream_context = stream_context_create([
             'http' => [
-                'header' => 'apikey:' . $this->getApiKey() . "\r\n" . "SourceSystem:66\r\n"
+                'header' => implode("\r\n", $headers)
             ]
         ]);
 

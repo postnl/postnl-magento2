@@ -8,6 +8,7 @@ use Laminas\Http\Request;
 use Magento\Framework\Exception\LocalizedException;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
+use TIG\PostNL\Service\Module\Version;
 use TIG\PostNL\Webservices\Api\RestLog;
 use TIG\PostNL\Webservices\Endpoints\RestInterface;
 
@@ -33,6 +34,7 @@ class Rest
      */
     private $defaultConfiguration;
     private RestLog $log;
+    private Version $versionService;
 
     /**
      * Rest constructor.
@@ -45,12 +47,14 @@ class Rest
         HttpClient $httpClient,
         AccountConfiguration $accountConfiguration,
         DefaultConfiguration $defaultConfiguration,
-        RestLog $log
+        RestLog $log,
+        Version $versionService
     ) {
         $this->httpClient           = $httpClient;
         $this->accountConfiguration = $accountConfiguration;
         $this->defaultConfiguration = $defaultConfiguration;
         $this->log = $log;
+        $this->versionService = $versionService;
     }
 
     /**
@@ -101,11 +105,13 @@ class Rest
      */
     private function addHeaders()
     {
-        $this->httpClient->setHeaders([
+        $headers = [
             'apikey: ' . $this->getApiKey(),
             'SourceSystem: 66',
-            'Content-Type: application/json'
-        ]);
+            'Content-Type: application/json',
+            ... $this->versionService->getCachedVersions()
+        ];
+        $this->httpClient->setHeaders($headers);
     }
 
     /**
