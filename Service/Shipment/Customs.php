@@ -203,7 +203,6 @@ class Customs
 
         // convert kgs to grams because PostNL only accepts grams
         $weight = $weight * 1000;
-        $weight = (int)$weight;
 
         return $weight;
     }
