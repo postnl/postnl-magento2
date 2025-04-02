@@ -75,6 +75,9 @@ interface ShipmentInterface
      */
     public function getProductCode();
 
+    /**
+     * @return string|null
+     */
     public function getShortProductCode(): ?string;
 
     /**
