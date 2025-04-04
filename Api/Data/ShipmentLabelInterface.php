@@ -101,7 +101,7 @@ interface ShipmentLabelInterface
     public function getReturnLabel();
 
     /**
-     * @param boolean $value
+     * @param int $value
      * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
      */
     public function isSmartReturnLabel(int $value): self;
@@ -111,10 +111,24 @@ interface ShipmentLabelInterface
      */
     public function getSmartReturnLabel(): bool;
 
+    /**
+     * @param int $flag
+     * @return \TIG\PostNL\Api\Data\ShipmentLabelInterface
+     */
     public function setReturnFlag(int $flag): self;
 
+    /**
+     * @return int
+     */
     public function getReturnFlag(): int;
 
+    /**
+     * @return bool
+     */
     public function isErsLabelFlag(): bool;
+
+    /**
+     * @return bool
+     */
     public function isSmartReturnLabelFlag(): bool;
 }

@@ -2,9 +2,6 @@
 
 namespace TIG\PostNL\Api\Data;
 
-// @codingStandardsIgnoreFile
-use TIG\PostNL\Model\Order;
-
 /**
  * Too many public methods for the code inspection.
  */
@@ -75,6 +72,9 @@ interface ShipmentInterface
      */
     public function getProductCode();
 
+    /**
+     * @return string|null
+     */
     public function getShortProductCode(): ?string;
 
     /**
