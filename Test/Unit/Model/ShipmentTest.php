@@ -87,26 +87,24 @@ class ShipmentTest extends TestCase
     public function canChangeParcelCountProvider()
     {
         return [
-            'not confirmed, not domestic' => [false, false, true],
-            'confirmed, not domestic' => [true, false, false],
-            'not confirmed, domestic' => [false, true, true],
-            'confirmed, domestic' => [true, true, false],
+            'not confirmed, not domestic' => [false, 'US', false],
+            'confirmed, not domestic' => [true, 'US', false],
+            'not confirmed, NL' => [false, 'NL', true],
+            'not confirmed, BE' => [false, 'BE', true],
+            'confirmed, NL' => [true, 'NL', false],
+            'confirmed, BE' => [true, 'BE', false],
         ];
     }
 
     /**
      * @dataProvider canChangeParcelCountProvider
      */
-    public function testCanChangeParcelCount($isConfirmed, $isDomesticShipment, $expected)
+    public function testCanChangeParcelCount($isConfirmed, $countryId, $expected)
     {
-        $address = $this->getObject(\Magento\Sales\Model\Order\Address::class);
-        $address->setCountryId($isDomesticShipment ? 'NL' : 'US');
-
         /** @var Shipment $shipment */
         $shipment = $this->getInstance();
         $shipment->setConfirmedAt($isConfirmed ? '2016-11-19 21:13:13' : null);
-
-        $this->setProperty('shippingAddress', $address, $shipment);
+        $shipment->setShipmentCountry($countryId);
 
         $this->assertSame($expected, $shipment->canChangeParcelCount());
     }

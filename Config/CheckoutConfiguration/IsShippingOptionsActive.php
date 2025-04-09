@@ -2,9 +2,7 @@
 
 namespace TIG\PostNL\Config\CheckoutConfiguration;
 
-use Magento\Checkout\Model\Session;
-use Magento\Checkout\Model\Session\Proxy as CheckoutSession;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Config\Provider\ProductOptions;
@@ -37,7 +35,7 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
     /** @var CheckIfQuoteItemsCanBackorder */
     private $quoteItemsCanBackorder;
 
-    /** @var Session */
+    /** @var CheckoutSession */
     private $checkoutSession;
 
     /**

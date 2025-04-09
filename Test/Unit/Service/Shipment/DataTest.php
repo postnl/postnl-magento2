@@ -194,6 +194,7 @@ class DataTest extends TestCase
         $orderMock = $this->getFakeMock(Order::class, true);
         $this->mockFunction($orderMock, 'getDeliveryDate', null);
         $this->mockFunction($this->shipmentMock, 'getPostNLOrder', $orderMock);
+        $this->mockFunction($this->shipmentMock, 'getProductCode', '3085');
 
         $address = $this->getAddress();
         $contact = $this->getContact();
@@ -210,10 +211,12 @@ class DataTest extends TestCase
     private function addAmount($amount)
     {
         $this->mockFunction($this->shipmentMock, 'isExtraCover', !!$amount);
-        $this->mockFunction($this->shipmentMock, 'getExtraCoverAmount', $amount);
+        $this->mockFunction($this->shipmentMock, 'getInsuredTier', 'default');
+        $this->mockFunction($this->shipmentMock, 'getExtraCoverAmount', (float)$amount);
         $orderMock = $this->getFakeMock(Order::class, true);
         $this->mockFunction($orderMock, 'getDeliveryDate', null);
         $this->mockFunction($this->shipmentMock, 'getPostNLOrder', $orderMock);
+        $this->mockFunction($this->shipmentMock, 'getProductCode', '3085');
 
         $address = $this->getAddress();
         $contact = $this->getContact();
@@ -238,6 +241,7 @@ class DataTest extends TestCase
         $this->mockFunction($this->shipmentMock, 'getParcelCount', $count);
         $orderMock = $this->getFakeMock(Order::class, true);
         $this->mockFunction($orderMock, 'getDeliveryDate', null);
+        $this->mockFunction($this->shipmentMock, 'getProductCode', '3085');
         $this->mockFunction($this->shipmentMock, 'getPostNLOrder', $orderMock);
 
         /** @var Data $instance */

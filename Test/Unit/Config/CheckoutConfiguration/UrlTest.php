@@ -30,7 +30,8 @@ class UrlTest extends TestCase
             'locationsurl',
             'saveurl',
             'pakjegemakurl',
-            'postcodecheckurl'
+            'postcodecheckurl',
+            'internationaladdress'
         ]);
 
         $instance = $this->getInstance([
@@ -42,7 +43,8 @@ class UrlTest extends TestCase
             'deliveryoptions_locations'  => 'locationsurl',
             'deliveryoptions_save'       => 'saveurl',
             'pakjegemak_address'         => 'pakjegemakurl',
-            'address_postcode'           => 'postcodecheckurl'
+            'address_postcode'           => 'postcodecheckurl',
+            'international_address'      => 'internationaladdress'
         ];
 
         $this->assertEquals($expected, $instance->getValue());

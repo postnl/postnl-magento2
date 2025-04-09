@@ -236,6 +236,11 @@
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
         </arguments>
     </type>
+    <type name="TIG\PostNL\Config\CheckoutConfiguration\IsShippingOptionsActive">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
 
     <virtualType name="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryGlobalPack" type="TIG\PostNL\Block\Adminhtml\Config\Form\Field\AlternativeDeliveryForCountryMap">
         <arguments>

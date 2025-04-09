@@ -5,6 +5,9 @@ namespace TIG\PostNL\Block\Frontend\Customer\Address;
 use Magento\Customer\Block\Address\Edit as EditBlock;
 use Magento\Framework\View\Element\BlockInterface;
 
+/**
+ * @api
+ */
 class Edit extends EditBlock implements BlockInterface
 {
     /**

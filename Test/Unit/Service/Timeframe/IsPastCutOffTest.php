@@ -41,7 +41,7 @@ class IsPastCutOffTest extends TestCase
 
         $nowDate = new \DateTime('today ' . date('H:' . ($beforeCutOff ? '25' : '35') . ':00'));
         $timezoneInterfaceMock = $this->getMock(TimezoneInterface::class);
-        $this->mockFunction($timezoneInterfaceMock, 'date', $nowDate, ['now', null, false, false]);
+        $this->mockFunction($timezoneInterfaceMock, 'date', $nowDate, ['now', null, true, false]);
 
         /** @var IsPastCutOff $instance */
         $instance = $this->getInstance([

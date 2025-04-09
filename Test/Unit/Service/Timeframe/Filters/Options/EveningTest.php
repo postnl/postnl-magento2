@@ -12,7 +12,7 @@ class EveningTest extends TestCase
     protected $instanceClass = Evening::class;
 
     /**
-     * @dataProvider TIG\PostNL\Test\Fixtures\Timeframes\Options\DataProvider::evening
+     * @dataProvider \TIG\PostNL\Test\Fixtures\Timeframes\Options\DataProvider::evening
      *
      * @param $isEnabled
      * @param $options
@@ -30,6 +30,9 @@ class EveningTest extends TestCase
         $instance = $this->getInstance(['shippingOptions' => $shippingOptions]);
         $result   = $instance->filter($options);
 
+        if ($isEnabled) {
+            $expected[1]->Options->validatedType = 'Evening';
+        }
         $this->assertEquals($expected, $result);
     }
 }

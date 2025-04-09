@@ -57,7 +57,7 @@ class ProductTypeTest extends TestCase
     {
         $productMock = $this->getFakeMock(Product::class)->getMock();
 
-        $options = $this->getInstance()->getAllTypes($productMock);
+        $options = $this->getInstance()->getAllTypes([$productMock]);
 
         $this->assertTrue(in_array(ProductType::PRODUCT_TYPE_REGULAR, $options));
         $this->assertTrue(in_array(ProductType::PRODUCT_TYPE_EXTRA_AT_HOME, $options));

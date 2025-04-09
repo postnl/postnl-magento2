@@ -5,6 +5,9 @@ namespace TIG\PostNL\Block\Adminhtml\Grid\Shipment;
 use Magento\Backend\Block\Template;
 use Magento\Framework\View\Element\BlockInterface;
 
+/**
+ * @api
+ */
 class DownloadPdfAction extends Template implements BlockInterface
 {
     /**

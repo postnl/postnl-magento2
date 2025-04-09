@@ -30,48 +30,16 @@ class Prepare
     private $isValidated = false;
 
     /**
-     * @var DomesticFactory
-     */
-    private $domesticFactory;
-
-    /**
-     * @var EPSFactory
-     */
-    private $epsFactory;
-
-    /**
-     * @var GlobalPackFactory
-     */
-    private $globalPackFactory;
-
-    /**
-     * @var BoxablePacketsFactory
-     */
-    private $boxablePacketsFactory;
-
-    /**
      * @param Type  $typeConverter
-     * @param DomesticFactory $domesticFactory
-     * @param EPSFactory $epsFactory
-     * @param GlobalPackFactory $globalPackFactory
-     * @param BoxablePacketsFactory $boxablePacketsFactory
      * @param array $types
      *
      * @throws PostNLException
      */
     public function __construct(
         Type $typeConverter,
-        DomesticFactory $domesticFactory,
-        EPSFactory $epsFactory,
-        GlobalPackFactory $globalPackFactory,
-        BoxablePacketsFactory $boxablePacketsFactory,
         $types = []
     ) {
         $this->typeConverter = $typeConverter;
-        $this->domesticFactory = $domesticFactory;
-        $this->epsFactory = $epsFactory;
-        $this->globalPackFactory = $globalPackFactory;
-        $this->boxablePacketsFactory = $boxablePacketsFactory;
         $this->types = $types;
     }
 

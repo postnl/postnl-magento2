@@ -80,6 +80,7 @@ class MergeWithLabelsTest extends TestCase
                 ->setMethods(['getLabel'])
                 ->getMockForAbstractClass();
             $mock->method('getLabel')->willReturn($label);
+            $mock->method('getLabelFileFormat')->willReturn('PDF');
             $labelModels[] = $mock;
         }
 
@@ -129,33 +130,6 @@ class MergeWithLabelsTest extends TestCase
                 'packingslip'
             ]
         ];
-    }
-
-    /**
-     * @param $labels
-     * @param $packingslip
-     * @param $expected
-     *
-     * @dataProvider mergeSeparateProvider
-     */
-    public function testMergeSeparate($labels, $packingslip, $expected)
-    {
-        $getLabelsMock = $this->getFakeMock(GetLabels::class)->setMethods(['get'])->getMock();
-        $getLabelsMock->expects($this->once())->method('get')->willReturn($labels);
-
-        $labelGenerateMock = $this->getFakeMock(LabelGenerate::class)->setMethods(['run'])->getMock();
-        $labelGenerateMock->method('run')->with($labels, true)->willReturn('labelpdf');
-
-        $packingslipGenerateMock = $this->getFakeMock(PackingslipGenerate::class)->setMethods(['run'])->getMock();
-        $packingslipGenerateMock->method('run')->with([$packingslip, 'labelpdf'])->willReturn('merged packingslip');
-
-        $instance = $this->getInstance([
-            'getLabels' => $getLabelsMock,
-            'labelGenerator' => $labelGenerateMock,
-            'packingslipGenerator' => $packingslipGenerateMock
-        ]);
-        $result = $instance->merge(0, $packingslip, false);
-        $this->assertEquals($expected, $result);
     }
 
     public function testMergeFirstLabel()

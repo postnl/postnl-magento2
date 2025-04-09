@@ -2,6 +2,7 @@
 
 namespace TIG\PostNL\Test\Unit\Config\CheckoutConfiguration;
 
+use Magento\Quote\Model\Quote;
 use PHPUnit\Framework\MockObject\MockObject as MockObject;
 use TIG\PostNL\Config\CheckoutConfiguration\IsShippingOptionsActive;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
@@ -654,13 +655,20 @@ class IsShippingOptionsActiveTest extends TestCase
         $extraAtHomeGetValueExpects->with(ProductInfo::OPTION_EXTRAATHOME);
         $extraAtHomeGetValueExpects->willReturn($isExtraAtHome);
 
+        $quoteMock = $this->getFakeMock(Quote::class)
+            ->getMock();
+
+        $checkoutSession = $this->getFakeMock(\Magento\Checkout\Model\Session::class)->getMock();
+        $checkoutSession->method('getQuote')->willReturn($quoteMock);
+
         /** @var IsShippingOptionsActive $instance */
         $instance = $this->getInstance([
             'shippingOptions' => $this->shippingOptions,
             'accountConfiguration' => $this->accountConfiguration,
             'quoteItemsAreInStock' => $quoteItemsAreInStock,
             'quoteHasOption' => $quoteHasOption,
-            'quoteItemsCanBackorder' => $quoteItemCanBackorder
+            'quoteItemsCanBackorder' => $quoteItemCanBackorder,
+            'checkoutSession' => $checkoutSession
         ]);
 
         $this->mockShippingOptionsMethod('isShippingoptionsActive', $shippingOptionsActive);

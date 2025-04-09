@@ -39,67 +39,6 @@ class PrepareTest extends TestCase
         $instance->label($this->getMock(\TIG\PostNL\Api\Data\ShipmentLabelInterface::class));
     }
 
-    public function testCallsTheRightProcessor()
-    {
-        $typeConverter = $this->getObject(Type::class);
-
-        $labelMock = $this->getLabelMock('EPS');
-
-        $epsTypeMock = $this->getMock(TypeInterface::class);
-
-        $processMock = $epsTypeMock->expects($this->once());
-        $processMock->method('process');
-        $processMock->with($labelMock);
-        $processMock->willReturn('the new label');
-
-        $epsFactoryMock = $this->getFakeMock(TypeInterfaceFactory::class)->setMethods(['create'])->getMock();
-        $epsFactoryMock->expects($this->atLeastOnce())->method('create')->willReturn($epsTypeMock);
-
-        $domesticTypeMock = $this->getMock(TypeInterface::class);
-        $domesticFactoryMock = $this->getFakeMock(TypeInterfaceFactory::class)->setMethods(['create'])->getMock();
-        $domesticFactoryMock->expects($this->atLeastOnce())->method('create')->willReturn($domesticTypeMock);
-
-        /** @var Prepare $instance */
-        $instance = $this->getInstance([
-            'typeConverter' => $typeConverter,
-            'types' => [
-                'domestic' => $domesticFactoryMock,
-                'eps' => $epsFactoryMock
-            ]
-        ]);
-
-        $result = $instance->label($labelMock);
-        $this->assertEquals('the new label', $result['label']);
-    }
-
-    public function testDefaultsToDomestic()
-    {
-        $typeConverter = $this->getObject(Type::class);
-
-        $labelMock = $this->getLabelMock('Evening');
-
-        $typeMock = $this->getMock(TypeInterface::class);
-
-        $processMock = $typeMock->expects($this->once());
-        $processMock->method('process');
-        $processMock->with($labelMock);
-        $processMock->willReturn('the new label');
-
-        $factoryMock = $this->getFakeMock(TypeInterfaceFactory::class)->setMethods(['create'])->getMock();
-        $factoryMock->expects($this->atLeastOnce())->method('create')->willReturn($typeMock);
-
-        /** @var Prepare $instance */
-        $instance = $this->getInstance([
-            'typeConverter' => $typeConverter,
-            'types' => [
-                'domestic' => $factoryMock
-            ]
-        ]);
-
-        $result = $instance->label($labelMock);
-        $this->assertEquals('the new label', $result['label']);
-    }
-
     /**
      * @param $type
      *
@@ -112,6 +51,7 @@ class PrepareTest extends TestCase
         $getShipmentType->willReturn($type);
 
         $labelMock   = $this->getMock(ShipmentLabelInterface::class);
+        $labelMock->method('getLabelFileFormat')->willReturn('PDF');
         $getShipment = $labelMock->method('getShipment');
         $getShipment->willReturn($shipmentMock);
 

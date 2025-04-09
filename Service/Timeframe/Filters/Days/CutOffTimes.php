@@ -42,6 +42,7 @@ class CutOffTimes implements DaysFilterInterface
      * @param object|array $days
      *
      * @return array
+     * @deprecated possibility
      */
     public function filter($days)
     {
@@ -49,13 +50,10 @@ class CutOffTimes implements DaysFilterInterface
             return $days;
         }
 
-        $firstDayTimeframe                       = $days[0]->Timeframes->TimeframeTimeFrame;
-        $days[0]->Timeframes->TimeframeTimeFrame = $firstDayTimeframe;
-
-        // If no timeframe options remain, the whole day can be removed.
-        if (empty($firstDayTimeframe)) {
-            array_shift($days);
-        }
+        // this block removes "tomorrow" in case $days contains it and we are past cutoff time.
+        // but mostly this functionality should be already handled on the API level - we receive list of days past cutoff time
+        // Previously there was a "today" delivery that was processed here, but as it was removed - this functionality might be removed
+        array_shift($days);
 
         return array_values($days);
     }

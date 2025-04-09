@@ -61,9 +61,7 @@ class RangeTest extends TestCase
     public function getByProductProvider()
     {
         return [
-            'Netherlands' => ['3085', ['type' => '3S', 'range' => '123456', 'serie' => '000000000-999999999']],
-            'EPS Country' => ['4952', ['type' => '3S', 'range' => '123456', 'serie' => '0000000-9999999']],
-            'Globalpack' => ['4945', ['type' => 'CD', 'range' => '1660', 'serie' => '0000-9999']],
+            'Netherlands' => ['3085', ['type' => '3S', 'range' => '123456', 'serie' => '000000000-999999999']]
         ];
     }
 

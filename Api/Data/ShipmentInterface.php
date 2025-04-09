@@ -7,6 +7,7 @@ use TIG\PostNL\Model\Order;
 
 /**
  * Too many public methods for the code inspection.
+ * @api
  */
 interface ShipmentInterface
 {

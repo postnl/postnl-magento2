@@ -12,6 +12,9 @@ use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionSource;
 use TIG\PostNL\Service\Shipment\Multicolli;
 use \TIG\PostNL\Service\Parcel\Shipment\Count as ParcelCount;
 
+/**
+ * @api
+ */
 class Create extends OptionsAbstract
 {
     /**
