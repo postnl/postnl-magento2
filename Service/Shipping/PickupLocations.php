@@ -4,6 +4,7 @@ namespace TIG\PostNL\Service\Shipping;
 
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Exception\LocalizedException;
+use TIG\PostNL\Service\Timeframe\Filters\DaysSkipInterface;
 use TIG\PostNL\Webservices\Endpoints\Locations as LocationsEndpoint;
 
 class PickupLocations
@@ -14,19 +15,35 @@ class PickupLocations
     private LocationsEndpoint $locationsEndpoint;
     private CacheInterface $cache;
 
+    /**
+     * @var DaysSkipInterface[]
+     */
+    private array $daysFilter;
+
     public function __construct(
         DeliveryDate $deliveryDate,
         LocationsEndpoint $locationsEndpoint,
-        CacheInterface $cache
+        CacheInterface $cache,
+        array $daysFilter = []
     ) {
         $this->deliveryDate = $deliveryDate;
         $this->locationsEndpoint = $locationsEndpoint;
         $this->cache = $cache;
+        $this->daysFilter = $daysFilter;
     }
 
     public function getLastDeliveryDate(): ?string
     {
-        return $this->deliveryDateRequest;
+        try {
+            $day = new \DateTime($this->deliveryDateRequest);
+            foreach ($this->daysFilter as $filter) {
+                $day = $filter->skip($day);
+            }
+            return $day->format('d-m-Y');
+        } catch (\Exception $e) {
+            // Just return default date in case of errors
+            return $this->deliveryDateRequest;
+        }
     }
 
     /**

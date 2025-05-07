@@ -54,6 +54,14 @@
         </arguments>
     </type>
 
+    <type name="TIG\PostNL\Service\Shipping\PickupLocations">
+        <arguments>
+            <argument name="daysFilter" xsi:type="array">
+                <item name="dateoff" xsi:type="object">TIG\PostNL\Service\Timeframe\Filters\Days\DateOff</item>
+            </argument>
+        </arguments>
+    </type>
+
     <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
         <plugin name="postnlPostcodecheckGroupPlugin" type="TIG\PostNL\Plugin\Postcodecheck\LayoutProcessor" />
     </type>

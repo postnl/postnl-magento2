@@ -5,8 +5,9 @@ namespace TIG\PostNL\Service\Timeframe\Filters\Days;
 
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
+use TIG\PostNL\Service\Timeframe\Filters\DaysSkipInterface;
 
-class DateOff implements DaysFilterInterface
+class DateOff implements DaysFilterInterface, DaysSkipInterface
 {
     /**
      * @var ShippingOptions
@@ -38,5 +39,24 @@ class DateOff implements DaysFilterInterface
         }
 
         return array_values($days);
+    }
+
+    public function skip(\DateTimeInterface $day): \DateTimeInterface
+    {
+        $dates = $this->shippingOptions->getDeliveryOff();
+        if ($dates) {
+            $interval = new \DateInterval('P1D');
+            $countDates = count($dates);
+            $currentDate = $day->format('d-m-Y');
+            for ($i = 0; $i < $countDates; $i++) {
+                if ($dates[$i] === $currentDate) {
+                    $day->add($interval);
+                    // Start walk from the start, in case any dates are saved first
+                    $i = -1;
+                    $currentDate = $day->format('d-m-Y');
+                }
+            }
+        }
+        return $day;
     }
 }
