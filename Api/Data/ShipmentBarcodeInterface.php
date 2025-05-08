@@ -2,6 +2,9 @@
 
 namespace TIG\PostNL\Api\Data;
 
+/**
+ * @api
+ */
 interface ShipmentBarcodeInterface
 {
     /**

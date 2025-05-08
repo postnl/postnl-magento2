@@ -56,9 +56,10 @@ class DataTest extends TestCase
     public function testGetAllowedDeliveryOptionsHasPakjeGemak()
     {
         $shippingOptionsConfigurationMock = $this->getFakeMock(ShippingOptions::class)->getMock();
-        $isPakjeGemakActiveExpects = $shippingOptionsConfigurationMock->expects($this->once());
+        $isPakjeGemakActiveExpects = $shippingOptionsConfigurationMock->expects($this->exactly(2));
         $isPakjeGemakActiveExpects->method('isPakjegemakActive');
         $isPakjeGemakActiveExpects->willReturn(true);
+        $shippingOptionsConfigurationMock->method('isPackageMachineFilterActive')->willReturn(true);
 
         $instance = $this->getInstance([
             'shippingOptions' => $shippingOptionsConfigurationMock

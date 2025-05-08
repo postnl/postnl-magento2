@@ -802,7 +802,6 @@ abstract class OptionsAbstract
 	    'priority_options'            => 'International Packet',
         'boxable_packets'             => 'International Boxable Packets',
         'only_stated_address_options' => 'Only Stated Address options',
-
     ];
 
 	protected $groupToLabel = [

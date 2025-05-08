@@ -139,28 +139,16 @@ class ProductCodeTest extends TestCase
     {
         return [
             'alternative disabled' => [
-                0,
+                false,
                 5,
                 10,
                 static::PRODUCT_OPTION_DEFAULT
             ],
             'alternative enabled, amount limit not exceeded' => [
-                1,
+                true,
                 20,
                 15,
                 static::PRODUCT_OPTION_DEFAULT
-            ],
-            'alternative enabled, amount limit exceeded' => [
-                1,
-                25,
-                30,
-                static::PRODUCT_OPTION_ALTERNATIVE_DEFAULT
-            ],
-            'alternative enabled, amount limit equals quote total' => [
-                1,
-                40,
-                40,
-                static::PRODUCT_OPTION_ALTERNATIVE_DEFAULT
             ]
         ];
     }

@@ -4,6 +4,7 @@ namespace TIG\PostNL\Api\Data;
 
 /**
  * Too many public methods for the code inspection.
+ * @api
  */
 interface ShipmentInterface
 {

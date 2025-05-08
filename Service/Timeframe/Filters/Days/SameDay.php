@@ -3,7 +3,6 @@
 namespace TIG\PostNL\Service\Timeframe\Filters\Days;
 
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
 use TIG\PostNL\Helper\Data;
@@ -32,11 +31,6 @@ class SameDay implements DaysFilterInterface
     private $currentDate;
 
     /**
-     * @var ShippingOptions
-     */
-    private $shippingOptions;
-
-    /**
      * @var IsPastCutOff
      */
     private $isPastCutOff;
@@ -45,20 +39,17 @@ class SameDay implements DaysFilterInterface
      * @param Data              $helper
      * @param Webshop           $webshopProvider
      * @param TimezoneInterface $currentDate
-     * @param ShippingOptions   $shippingOptions
      * @param IsPastCutOff      $isPastCutOff
      */
     public function __construct(
         Data $helper,
         Webshop $webshopProvider,
         TimezoneInterface $currentDate,
-        ShippingOptions $shippingOptions,
         IsPastCutOff $isPastCutOff
     ) {
         $this->postNLhelper    = $helper;
         $this->webshopProvider = $webshopProvider;
         $this->currentDate     = $currentDate;
-        $this->shippingOptions = $shippingOptions;
         $this->isPastCutOff    = $isPastCutOff;
     }
 
@@ -90,9 +81,7 @@ class SameDay implements DaysFilterInterface
             }
 
             $todayDate     = $this->currentDate->date('today', null, true, false);
-            $cutoffDate    = $this->currentDate->date($checkDay, null, true, false)->format('Y-m-d');
             $timeframeDate = $this->postNLhelper->getDate($value->Date);
-            $weekday       = $this->postNLhelper->getDayOrWeekNumber($todayDate->format('H:i:s'));
 
             return $todayDate->format('Y-m-d') != $timeframeDate;
         });

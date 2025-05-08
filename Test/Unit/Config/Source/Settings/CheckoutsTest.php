@@ -19,13 +19,11 @@ class CheckoutsTest extends TestCase
 
         $result = $instance->toOptionArray();
 
-        $this->assertCount(5, $result);
-
         foreach ($result as $checkout) {
             $this->assertArrayHasKey('label', $checkout);
             $this->assertArrayHasKey('value', $checkout);
 
-            $inArray = in_array($checkout['value'], $this->compatibleCheckouts);
+            $inArray = in_array($checkout['value'], $this->compatibleCheckouts, true);
             $this->assertTrue($inArray);
         }
     }

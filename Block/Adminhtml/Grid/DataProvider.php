@@ -16,6 +16,9 @@ use TIG\PostNL\Config\Source\Settings\InsuredTiers;
 use TIG\PostNL\Service\Filter\DomesticOptions;
 use TIG\PostNL\Service\Options\GuaranteedOptions;
 
+/**
+ * @api
+ */
 class DataProvider extends Template implements BlockInterface
 {
     const XPATH_SHOW_GRID_TOOLBAR = 'tig_postnl/extra_settings_advanced/show_grid_toolbar';

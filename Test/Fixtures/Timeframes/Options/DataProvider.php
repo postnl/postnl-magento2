@@ -20,42 +20,7 @@ class DataProvider
         ];
     }
 
-    public function sunday()
-    {
-        return [
-            'sunday is disabled' => [false, $this->getOptions(), $this->getOptionsForSundayDisabled()],
-            'sunday is enabled'  => [true, $this->getOptions(), $this->getOptions()]
-        ];
-    }
-
     private function getOptions()
-    {
-        return [
-            (object)[
-                'From' => '13:00:00',
-                'Options' => (object)[
-                    'string' => ['Daytime']
-                ],
-                'To' => '15:30:00'
-            ],
-            (object)[
-                'From' => '18:00:00',
-                'Options' => (object)[
-                    'string' => ['Evening']
-                ],
-                'To' => '22:30:00'
-            ],
-            (object)[
-                'From' => '13:00:00',
-                'Options' => (object)[
-                    'string' => ['Sunday']
-                ],
-                'To' => '22:30:00'
-            ]
-        ];
-    }
-
-    private function getOptionsForSundayDisabled()
     {
         return [
             (object)[
@@ -84,13 +49,6 @@ class DataProvider
                     'string' => ['Daytime']
                 ],
                 'To' => '15:30:00'
-            ],
-            (object)[
-                'From' => '13:00:00',
-                'Options' => (object)[
-                    'string' => ['Sunday']
-                ],
-                'To' => '22:30:00'
             ]
         ];
     }

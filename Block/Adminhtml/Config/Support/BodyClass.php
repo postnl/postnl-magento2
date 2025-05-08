@@ -6,6 +6,9 @@ use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\View\Element\BlockInterface;
 
+/**
+ * @api
+ */
 class BodyClass extends Template implements BlockInterface
 {
     /**

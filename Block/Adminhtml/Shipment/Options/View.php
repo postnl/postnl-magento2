@@ -15,6 +15,9 @@ use TIG\PostNL\Block\Adminhtml\Renderer\ShipmentType;
 use TIG\PostNL\Model\ResourceModel\ShipmentBarcode\CollectionFactory as ShipmentBarcodeCollectionFactory;
 use Magento\Sales\Model\Order\Shipment\TrackFactory;
 
+/**
+ * @api
+ */
 class View extends OptionsAbstract
 {
     /**

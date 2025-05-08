@@ -5,6 +5,7 @@ namespace TIG\PostNL\Api\Data;
 // @codingStandardsIgnoreFile
 /**
  * Too many public methods for the code inspection.
+ * @api
  */
 interface ShipmentLabelInterface
 {

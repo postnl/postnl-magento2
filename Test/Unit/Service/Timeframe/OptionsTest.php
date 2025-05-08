@@ -14,10 +14,10 @@ class OptionsTest extends TestCase
     public function returnsTheRightOptionsProvider()
     {
         return [
-            'evening and sunday disabled' => [false, false, ['Daytime']],
-            'evening disabled, sunday enabled' => [false, true, ['Daytime', 'Sunday']],
-            'evening and sunday enabled' => [true, true, ['Daytime', 'Evening', 'Sunday']],
-            'evening enabled, sunday disabled' => [true, false, ['Daytime', 'Evening']],
+            'evening and noon disabled' => [false, false, ['Daytime']],
+            'evening disabled, noon enabled' => [false, true, ['Daytime', 'Noon']],
+            'evening and noon enabled' => [true, true, ['Daytime', 'Evening', 'Noon']],
+            'evening enabled, noon disabled' => [true, false, ['Daytime', 'Evening']],
         ];
     }
 
@@ -28,10 +28,11 @@ class OptionsTest extends TestCase
      * @param $sundayEnabled
      * @param $expected
      */
-    public function testReturnsTheRightOptions($eveningEnabled, $sundayEnabled, $expected)
+    public function testReturnsTheRightOptions($eveningEnabled, $noonEnabled, $expected)
     {
         $shippingOptions = $this->getFakeMock(ShippingOptions::class, true);
         $this->mockFunction($shippingOptions, 'isEveningDeliveryActive', $eveningEnabled);
+        $this->mockFunction($shippingOptions, 'isGuaranteedDeliveryActive', $noonEnabled);
 
         $webshopSettings = $this->getFakeMock(Webshop::class, true);
         $this->mockFunction($webshopSettings, 'getShipmentDays', '0,6');

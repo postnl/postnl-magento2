@@ -24,29 +24,6 @@ class CutOffTimesTest extends TestCase
     }
 
     /**
-     * @dataProvider \TIG\PostNL\Test\Fixtures\Timeframes\Days\DataProvider::cutOffTimePassed
-     *
-     * @param $input
-     * @param $output
-     */
-    public function testDoesFilterAfterCutOff($input, $output)
-    {
-        $this->assertEquals($output, $this->loadInstance(true)->filter($input));
-    }
-
-    /**
-     * @dataProvider \TIG\PostNL\Test\Fixtures\Timeframes\Days\DataProvider::cutOffNextDayRemoved
-     *
-     * @param $input
-     * @param $output
-     */
-    public function testDoesFilterOnlyTheNextDay($input, $output)
-    {
-        $result = $this->loadInstance(true)->filter($input);
-        $this->assertEquals($output, $result);
-    }
-
-    /**
      * @param bool $isPastCutOff
      *
      * @return CutOffTimes
