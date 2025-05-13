@@ -54,7 +54,7 @@
         </arguments>
     </type>
 
-    <type name="TIG\PostNL\Service\Shipping\PickupLocations">
+    <type name="TIG\PostNL\Service\Shipping\DeliveryDate">
         <arguments>
             <argument name="daysFilter" xsi:type="array">
                 <item name="dateoff" xsi:type="object">TIG\PostNL\Service\Timeframe\Filters\Days\DateOff</item>

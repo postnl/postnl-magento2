@@ -9,6 +9,7 @@ use Magento\Framework\Webapi\Exception;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use TIG\PostNL\Config\Source\General\PickupCountries;
 use TIG\PostNL\Service\Quote\ShippingDuration;
+use TIG\PostNL\Service\Timeframe\Filters\DaysSkipInterface;
 use TIG\PostNL\Webservices\Endpoints\DeliveryDate as DeliveryDateEndpoint;
 
 class DeliveryDate
@@ -16,6 +17,11 @@ class DeliveryDate
     private DeliveryDateEndpoint $deliveryEndpoint;
     private Session $checkoutSession;
     private ShippingDuration $shippingDuration;
+
+    /**
+     * @var DaysSkipInterface[]
+     */
+    private array $daysFilter;
 
     private array $approximateDeliveryTime = [
         PickupCountries::COUNTRY_DE => 3,
@@ -28,12 +34,14 @@ class DeliveryDate
         Session $checkoutSession,
         DeliveryDateEndpoint $deliveryDateEndpoint,
         ShippingDuration $shippingDuration,
-        TimezoneInterface $timezone
+        TimezoneInterface $timezone,
+        array $daysFilter = []
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->deliveryEndpoint = $deliveryDateEndpoint;
         $this->shippingDuration = $shippingDuration;
         $this->timezone = $timezone;
+        $this->daysFilter = $daysFilter;
     }
 
     public function getStoreId(): int
@@ -79,6 +87,19 @@ class DeliveryDate
         $interval = new \DateInterval('P'.(int)$shippingDuration.'D');
         $date->add($interval);
         return $date->format('d-m-Y');
+    }
+
+    public function advanceDisabledPickupDate(string $initialDate): string
+    {
+        try {
+            $day = new \DateTime($initialDate);
+            foreach ($this->daysFilter as $filter) {
+                $day = $filter->skip($day);
+            }
+            return $day->format('d-m-Y');
+        } catch (\Exception $e) {
+            return $initialDate;
+        }
     }
 
 }

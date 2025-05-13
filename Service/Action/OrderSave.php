@@ -126,6 +126,10 @@ class OrderSave
             $params['date'] = $this->deliveryDate->get($params['address']);
         }
 
+        if ($params['type'] === 'pickup') {
+            $params['date'] = $this->deliveryDate->advanceDisabledPickupDate($params['date']);
+        }
+
         return $params;
     }
 }
