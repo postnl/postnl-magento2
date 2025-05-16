@@ -141,13 +141,17 @@ abstract class AbstractRepository
     /**
      * @param $field
      * @param $value
+     * @param SortOrder|null $sortOrders
      *
      * @return AbstractModel|null
      */
-    public function getByFieldWithValue($field, $value)
+    public function getByFieldWithValue($field, $value, ?SortOrder $sortOrder = null)
     {
         $searchCriteria = $this->searchCriteriaBuilder->addFilter($field, $value);
         $searchCriteria->setPageSize(1);
+        if ($sortOrder) {
+            $searchCriteria->addSortOrder($sortOrder);
+        }
 
         /** @var \Magento\Framework\Api\SearchResults $list */
         $list = $this->getList($searchCriteria->create());

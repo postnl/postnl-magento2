@@ -8,6 +8,8 @@ namespace TIG\PostNL\Api\Data;
  */
 interface OrderInterface
 {
+    public const ENTITY_ID = 'entity_id';
+
     /**
      * @return int
      */
