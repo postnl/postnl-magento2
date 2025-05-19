@@ -48,7 +48,18 @@ class Version
                 \Magento\Framework\Component\ComponentRegistrar::MODULE,
                 $moduleName
             );
+            if (substr($path, -4) === '/src') {
+                $path = substr($path, 0, -4);
+            }
             $directoryRead = $this->readFactory->create($path);
+            if ($moduleName === 'Hyva_Checkout') {
+                // For some reason Hyva doesn't like to enter version to the composer files, so we need a work-around
+                $fileData = $directoryRead->readFile('CHANGELOG.md');
+                if (preg_match('|\#\#\s*\[([\d\.]+)\]|Uis', $fileData, $matches)) {
+                    // Trying to find tvfhe first block that follow the mask "## [1.2.0]".
+                    return $fileData[1];
+                }
+            }
             $composerJsonData = $directoryRead->readFile('composer.json');
             $data = json_decode($composerJsonData, false, 10, JSON_THROW_ON_ERROR);
 
