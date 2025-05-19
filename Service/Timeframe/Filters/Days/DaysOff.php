@@ -6,8 +6,9 @@ namespace TIG\PostNL\Service\Timeframe\Filters\Days;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Service\Timeframe\Filters\DaysFilterInterface;
 use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Service\Timeframe\Filters\DaysSkipInterface;
 
-class DaysOff implements DaysFilterInterface
+class DaysOff implements DaysFilterInterface, DaysSkipInterface
 {
     private const XPATH_SHIPPING_OPTION_DELIVERY_DAYS_OFF = 'tig_postnl/delivery_days/delivery_days_off';
 
@@ -50,5 +51,19 @@ class DaysOff implements DaysFilterInterface
         }
 
         return array_values($days);
+    }
+
+    public function skip(\DateTimeInterface $day): bool
+    {
+        $updated = false;
+        $daysOff = $this->shippingOptions->getDeliveryOff(self::XPATH_SHIPPING_OPTION_DELIVERY_DAYS_OFF);
+        if ($daysOff) {
+            $interval = new \DateInterval('P1D');
+            while (in_array($day->format('w'), $daysOff)) {
+                $day->add($interval);
+                $updated = true;
+            }
+        }
+        return $updated;
     }
 }

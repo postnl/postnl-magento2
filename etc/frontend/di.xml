@@ -58,6 +58,7 @@
         <arguments>
             <argument name="daysFilter" xsi:type="array">
                 <item name="dateoff" xsi:type="object">TIG\PostNL\Service\Timeframe\Filters\Days\DateOff</item>
+                <item name="daysoff" xsi:type="object">TIG\PostNL\Service\Timeframe\Filters\Days\DaysOff</item>
             </argument>
         </arguments>
     </type>

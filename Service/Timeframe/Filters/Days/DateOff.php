@@ -41,8 +41,9 @@ class DateOff implements DaysFilterInterface, DaysSkipInterface
         return array_values($days);
     }
 
-    public function skip(\DateTimeInterface $day): \DateTimeInterface
+    public function skip(\DateTimeInterface $day): bool
     {
+        $updated = false;
         $dates = $this->shippingOptions->getDeliveryOff();
         if ($dates) {
             $interval = new \DateInterval('P1D');
@@ -54,9 +55,10 @@ class DateOff implements DaysFilterInterface, DaysSkipInterface
                     // Start walk from the start, in case any dates are saved first
                     $i = -1;
                     $currentDate = $day->format('d-m-Y');
+                    $updated = true;
                 }
             }
         }
-        return $day;
+        return $updated;
     }
 }

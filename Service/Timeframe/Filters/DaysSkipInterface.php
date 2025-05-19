@@ -9,7 +9,7 @@ interface DaysSkipInterface
     /**
      * @param DateTimeInterface $day
      *
-     * @return DateTimeInterface
+     * @return bool
      */
-    public function skip(DateTimeInterface $day): DateTimeInterface;
+    public function skip(DateTimeInterface $day): bool;
 }
