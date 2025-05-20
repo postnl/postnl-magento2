@@ -3,6 +3,7 @@
 namespace TIG\PostNL\Model\Carrier;
 
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
+use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use TIG\PostNL\Api\Data\MatrixrateInterface;
@@ -93,12 +94,13 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
     }
 
     /**
+     *
      * @param string $field
      * @param string $value
-     *
+     * @param SortOrder|null $sortOrder
      * @return MatrixrateInterface
      */
-    public function getByFieldWithValue($field, $value)
+    public function getByFieldWithValue($field, $value, ?SortOrder $sortOrder = null)
     {
         $searchCriteria = $this->searchCriteriaBuilder->addFilter($field, $value);
         $searchCriteria->setPageSize(1);
