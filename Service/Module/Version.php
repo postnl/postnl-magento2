@@ -2,6 +2,7 @@
 
 namespace TIG\PostNL\Service\Module;
 
+use Composer\InstalledVersions;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\App\ProductMetadataInterface;
@@ -48,9 +49,15 @@ class Version
                 \Magento\Framework\Component\ComponentRegistrar::MODULE,
                 $moduleName
             );
+            if (substr($path, -4) === '/src') {
+                $path = substr($path, 0, -4);
+            }
             $directoryRead = $this->readFactory->create($path);
             $composerJsonData = $directoryRead->readFile('composer.json');
-            $data = json_decode($composerJsonData, false, 10, JSON_THROW_ON_ERROR);
+            $data = \json_decode($composerJsonData, false, 10, JSON_THROW_ON_ERROR);
+            if (empty($data->version) && isset($data->name)) {
+                return $this->getComposerInstalledVersion($data->name);
+            }
 
             return !empty($data->version) ? $data->version : '';
         } catch (\Exception $e) {
@@ -93,5 +100,10 @@ class Version
             }
         }
         return $headers;
+    }
+
+    private function getComposerInstalledVersion(string $name): string
+    {
+        return InstalledVersions::getVersion($name);
     }
 }
