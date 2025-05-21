@@ -93,8 +93,19 @@ class DeliveryDate
     {
         try {
             $day = new \DateTime($initialDate);
-            foreach ($this->daysFilter as $filter) {
-                $day = $filter->skip($day);
+            $updated = true;
+            $iteration = 0;
+            // Need to repeat days validations in case any day change is affected.
+            while ($updated) {
+                $updated = false;
+                $iteration++;
+                foreach ($this->daysFilter as $filter) {
+                    $updated |= $filter->skip($day);
+                }
+                if ($iteration > 10) {
+                    // In case someone configures days incorrectly - prevent loop
+                    break;
+                }
             }
             return $day->format('d-m-Y');
         } catch (\Exception $e) {
