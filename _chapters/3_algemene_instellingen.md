@@ -45,7 +45,7 @@ Activeer bezorgdagen om klanten de optie te bieden om zelf te kiezen wanneer de 
 
 #### PostNL locaties
 Activeer PostNL Locaties om klanten de mogelijkheid te geven om bestellingen af te halen bij een zelf gekozen PostNL-punt. 
-De PostNL locaties zijn beschikbaar voor Nederland en voor België en kunnen los van elkaar geactiveerd worden. Daarnaast kan er voor beide landen een standaard productoptie ingesteld worden die gebruikt moet worden voor overeenkomstige bestellingen.
+De PostNL locaties zijn beschikbaar voor Nederland, België, Duitsland en Denemarken, en kunnen los van elkaar geactiveerd worden. Daarnaast kan er een standaard productoptie ingesteld worden die gebruikt moet worden voor overeenkomstige bestellingen.
 
 [https://www.postnl.nl/zakelijke-oplossingen/pakket-versturen/bezorgopties/pakket-ophalen-bij-een-postnl-locatie/](https://www.postnl.nl/zakelijke-oplossingen/pakket-versturen/bezorgopties/pakket-ophalen-bij-een-postnl-locatie/)
 
