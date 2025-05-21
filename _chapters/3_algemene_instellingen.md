@@ -24,17 +24,6 @@ Voor avondbezorging kan een alternatieve productoptie ingesteld worden, standaar
 
 ![Avondbezorging]({{ site.baseurl }}/assets/images/3_bezorging_avondbezorging.png "PostNL Avondbezorging")
 
-#### Zondag bezorging
-Activeer zondagbezorging om klanten de optie te bieden om hun bestelling op zondag te ontvangen. Na activatie zal zondagbezorging verschijnen als bezorgdag in de checkout.
-
-Er kan voor zondag bezorging een toeslag ingesteld worden, deze wordt opgeteld bij de verzendkosten. Laat het veld leeg om geen toeslag in rekening te brengen.
-
-Voor zondagbezorging kan een alternatieve productoptie ingesteld worden, standaard staat deze op `Lever alleen aan opgegeven adres`.
-
-[https://www.postnl.nl/zakelijke-oplossingen/pakket-versturen/bezorgopties/zondagbezorging/](https://www.postnl.nl/zakelijke-oplossingen/pakket-versturen/bezorgopties/zondagbezorging/)
-
-![Zondagbezorging]({{ site.baseurl }}/assets/images/3_bezorging_zondagbezorging.png "PostNL Zondagbezorging")
-
 #### Bezorgdagen
 Activeer bezorgdagen om klanten de optie te bieden om zelf te kiezen wanneer de bestelling geleverd wordt. Het maximale aantal bezorgdagen dat kan worden weergegeven in de checkout is 14 dagen.
 
