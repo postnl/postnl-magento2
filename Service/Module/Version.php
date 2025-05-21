@@ -2,6 +2,7 @@
 
 namespace TIG\PostNL\Service\Module;
 
+use Composer\InstalledVersions;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\App\ProductMetadataInterface;
@@ -52,16 +53,11 @@ class Version
                 $path = substr($path, 0, -4);
             }
             $directoryRead = $this->readFactory->create($path);
-            if ($moduleName === 'Hyva_Checkout') {
-                // For some reason Hyva doesn't like to enter version to the composer files, so we need a work-around
-                $fileData = $directoryRead->readFile('CHANGELOG.md');
-                if (preg_match('|\#\#\s*\[([\d\.]+)\]|Uis', $fileData, $matches)) {
-                    // Trying to find tvfhe first block that follow the mask "## [1.2.0]".
-                    return $fileData[1];
-                }
-            }
             $composerJsonData = $directoryRead->readFile('composer.json');
-            $data = json_decode($composerJsonData, false, 10, JSON_THROW_ON_ERROR);
+            $data = \json_decode($composerJsonData, false, 10, JSON_THROW_ON_ERROR);
+            if (empty($data->version) && isset($data->name)) {
+                return $this->getComposerInstalledVersion($data->name);
+            }
 
             return !empty($data->version) ? $data->version : '';
         } catch (\Exception $e) {
@@ -104,5 +100,10 @@ class Version
             }
         }
         return $headers;
+    }
+
+    private function getComposerInstalledVersion(string $name): string
+    {
+        return InstalledVersions::getVersion($name);
     }
 }
