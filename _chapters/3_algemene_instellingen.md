@@ -125,7 +125,7 @@ Binnen de extensie zijn er twee opties om gebruik te maken van brievenbuspakjes:
 Om een pakketje automatisch als brievenbuspakje te markeren zijn een paar punten belangrijk:
 
 - Bij de producten dient het gewicht correct ingesteld te zijn, het maximale gewicht van een brievenbuspakje is 2 kg.
-- Bij de producten moet onder de tab PostNL `Soort` op *Brievenbuspakje* gezet worden en de `Maximale hoeveelheid Brievenbuspakje` moet ingesteld zijn.
+- Bij de producten moet de `Maximale hoeveelheid Brievenbuspakje` ingesteld zijn. Deze kan ingesteld worden voor zowel binnenlandse brievenbuspakjes als ook internationale (brievenbus)pakjes
 
 ![PostNL Brievenbuspakje productinstellingen]({{ site.baseurl }}/assets/images/3_bezorging_brievenbuspakje_productinstellingen.png "PostNL Brievenbuspakje productinstellingen")
 
