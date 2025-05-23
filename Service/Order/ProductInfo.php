@@ -8,6 +8,7 @@ use Magento\Sales\Model\Order\Address as SalesAddress;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
+use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipment\PriorityCountries;
 use TIG\PostNL\Service\Validation\AlternativeDelivery;
@@ -79,6 +80,7 @@ class ProductInfo
     private QuoteInterface $quote;
 
     private AlternativeDelivery $alternativeDelivery;
+    private CanaryIslandToIC $canaryIslandToIC;
 
     /**
      * @param ProductOptionsConfiguration $productOptionsConfiguration
@@ -93,7 +95,8 @@ class ProductInfo
         ProductOptionsFinder $productOptionsFinder,
         CountryShipping $countryShipping,
         QuoteInterface $quote,
-        AlternativeDelivery $alternativeDelivery
+        AlternativeDelivery $alternativeDelivery,
+        CanaryIslandToIC $canaryIslandToIC
     ) {
         $this->productOptionsConfiguration = $productOptionsConfiguration;
         $this->shippingOptions             = $shippingOptions;
@@ -101,6 +104,7 @@ class ProductInfo
         $this->countryShipping             = $countryShipping;
         $this->quote                       = $quote;
         $this->alternativeDelivery = $alternativeDelivery;
+        $this->canaryIslandToIC = $canaryIslandToIC;
     }
 
     /**
@@ -136,6 +140,15 @@ class ProductInfo
 
             return $this->getInfo();
         }
+        // Canary island validation
+        if ($country === 'ES' && $type === strtolower(static::SHIPMENT_TYPE_GP)
+            && $this->canaryIslandToIC->isCanaryIsland($address)
+        ) {
+            $this->setGlobalPackOption($country);
+
+            return $this->getInfo();
+        }
+
         // Disable auto mode
         if ($type === static::SHIPMENT_TYPE_AUTO) {
             $type = '';
