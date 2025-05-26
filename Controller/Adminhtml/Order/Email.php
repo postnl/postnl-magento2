@@ -96,8 +96,6 @@ class Email
                                                 ->addAttachment(
                                                     base64_decode($fileContent),
                                                     'text/pdf',
-                                                    Mime::DISPOSITION_ATTACHMENT,
-                                                    Mime::ENCODING_BASE64,
                                                     $fileName
                                                 )
                                                 ->addTo($toEmail)
