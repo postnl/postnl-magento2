@@ -6,6 +6,7 @@ use Laminas\Mime\Message as MimeMessage;
 use Laminas\Mime\Mime;
 use Laminas\Mime\Part;
 use Magento\Framework\Mail\MessageInterface;
+use Symfony\Component\Mime\Part\TextPart;
 
 class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
 {
@@ -24,7 +25,8 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
 
         $mimeMessage = $this->getMimeMessage($this->message);
 
-        if ($this->parts instanceof Part) {
+        if ($this->parts instanceof Part)
+        {
             $mimeMessage->addPart($this->parts);
             $this->message->setBody($mimeMessage);
         }
@@ -43,10 +45,10 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
      */
     public function addAttachment(
         $body,
-        string $mimeType    = Mime::TYPE_OCTETSTREAM,
+        string $mimeType = Mime::TYPE_OCTETSTREAM,
         string $disposition = Mime::DISPOSITION_ATTACHMENT,
-        string $encoding    = Mime::ENCODING_BASE64,
-        $filename           = null
+        string $encoding = Mime::ENCODING_BASE64,
+        $filename = null
     ) {
         $this->parts = $this->createMimePart($body, $mimeType, $disposition, $encoding, $filename);
         return $this;
@@ -63,17 +65,18 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
      */
     private function createMimePart(
         $content,
-        string $type        = Mime::TYPE_OCTETSTREAM,
+        string $type = Mime::TYPE_OCTETSTREAM,
         string $disposition = Mime::DISPOSITION_ATTACHMENT,
-        string $encoding    = Mime::ENCODING_BASE64,
-        $filename           = null
+        string $encoding = Mime::ENCODING_BASE64,
+        $filename = null
     ) {
         $mimePart = new Part($content);
         $mimePart->setType($type);
         $mimePart->setDisposition($disposition);
         $mimePart->setEncoding($encoding);
 
-        if ($filename) {
+        if ($filename)
+        {
             $mimePart->setFileName($filename);
         }
 
@@ -89,13 +92,24 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
     {
         $body = $message->getBody();
 
-        if ($body instanceof MimeMessage) {
+        if ($body instanceof MimeMessage)
+        {
             return $body;
         }
 
         $mimeMessage = new MimeMessage();
 
-        if ($body) {
+        if ($body instanceof TextPart)
+        {
+            // Convert Symfony TextPart to Laminas Mime Part
+            $mimePart = new Part($body->getBody());
+            $mimePart->setType($body->getMediaType() . '/' . $body->getMediaSubtype());
+            $mimePart->setDisposition(Mime::DISPOSITION_INLINE);
+            $mimePart->setEncoding(Mime::ENCODING_QUOTEDPRINTABLE);
+            $mimeMessage->setParts([$mimePart]);
+        }
+        elseif ($body)
+        {
             $mimePart = $this->createMimePart((string)$body, Mime::TYPE_TEXT, Mime::DISPOSITION_INLINE);
             $mimeMessage->setParts([$mimePart]);
         }
