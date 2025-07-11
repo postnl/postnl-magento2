@@ -6,6 +6,7 @@ use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use TIG\PostNL\Api\Data\MatrixrateInterface;
 use TIG\PostNL\Api\MatrixrateRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;

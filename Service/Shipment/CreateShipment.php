@@ -130,7 +130,7 @@ class CreateShipment
                 $postnlShipment = $this->shipmentRepository->getByShipmentId($item->getId());
 
                 if ($postnlShipment) {
-                    array_push($foundShipment, $item);
+                    $foundShipment[] = $item;
                 }
             }
         );

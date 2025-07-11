@@ -2,7 +2,7 @@
 
 namespace TIG\PostNL\Logging;
 
-use Monolog\DateTimeImmutable;
+use Monolog\JsonSerializableDateTimeImmutable;
 use Monolog\Logger;
 use TIG\PostNL\Config\Provider\LoggingConfiguration;
 
@@ -36,7 +36,7 @@ class Log extends Logger
      *
      * @return bool
      */
-    public function addRecord($level, $message, array $context = [], ?DateTimeImmutable $dateTimeImmutable = null):bool
+    public function addRecord($level, $message, array $context = [], ?JsonSerializableDateTimeImmutable $datetime = null):bool
     {
         if (!$this->logConfig->canLog($level)) {
             return false;
