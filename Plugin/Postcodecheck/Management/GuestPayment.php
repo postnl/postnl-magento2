@@ -43,7 +43,7 @@ class GuestPayment
         $cartId,
         $email,
         PaymentInterface $paymentMethod,
-        AddressInterface $billingAddress = null
+        ?AddressInterface $billingAddress = null
     ) {
         if (!$billingAddress) {
             return [$cartId, $email, $paymentMethod, $billingAddress];

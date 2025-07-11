@@ -52,7 +52,7 @@ class AsyncPlugin extends Grid
         array $joins = [],
         array $columns = [],
         $connectionName = null,
-        NotSyncedDataProviderInterface $notSyncedDataProvider = null
+        ?NotSyncedDataProviderInterface $notSyncedDataProvider = null
     ) {
         parent::__construct(
             $context,

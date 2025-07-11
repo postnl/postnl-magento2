@@ -67,7 +67,7 @@ class ExceptionHandler
      *
      * @throws Api\Exception
      */
-    public function handle(\SoapFault $soapFault, Client $client = null)
+    public function handle(\SoapFault $soapFault, ?Client $client = null)
     {
         $this->soapFault = $soapFault;
         $this->prepareException($client);

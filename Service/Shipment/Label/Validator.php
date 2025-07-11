@@ -58,7 +58,7 @@ class Validator
      *
      * @return bool
      */
-    private function filterInput(ShipmentLabelInterface $model = null)
+    private function filterInput(?ShipmentLabelInterface $model = null)
     {
         if ($model === null) {
             return false;

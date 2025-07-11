@@ -44,8 +44,8 @@ class DeliveryDateOff extends Value
         TypeListInterface    $cacheTypeList,
         SerializerInterface  $serializerInterface,
         Random               $mathRandom,
-        AbstractResource     $resource = null,
-        AbstractDb           $resourceCollection = null,
+        ?AbstractResource     $resource = null,
+        ?AbstractDb           $resourceCollection = null,
         array                $data = []
     ) {
         $this->serializer = $serializerInterface;

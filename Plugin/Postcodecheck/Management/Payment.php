@@ -36,7 +36,7 @@ class Payment
         $subject,
         $cartId,
         PaymentInterface $paymentMethod,
-        AddressInterface $billingAddress = null
+        ?AddressInterface $billingAddress = null
     ) {
         if (!$billingAddress) {
             return [$cartId, $paymentMethod, $billingAddress];

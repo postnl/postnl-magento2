@@ -42,7 +42,7 @@ class AlternativeDelivery
         return $usedCode;
     }
 
-    protected function retrieveAlternativeCodeForCountry(string $configKey, float $quoteTotal, string $countryId = null): ?string
+    protected function retrieveAlternativeCodeForCountry(string $configKey, float $quoteTotal, ?string $countryId = null): ?string
     {
         $deliveryMap = $this->getConfig($configKey);
         if (empty($deliveryMap)) {
@@ -83,7 +83,7 @@ class AlternativeDelivery
         }
     }
 
-    public function getMappedCode(string $configKey, float $quoteTotal, string $country = null): ?string
+    public function getMappedCode(string $configKey, float $quoteTotal, ?string $country = null): ?string
     {
         switch ($configKey) {
             case self::CONFIG_DELIVERY:

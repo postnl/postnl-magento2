@@ -17,11 +17,12 @@ class CustomerData
 
     public function beforeSetAddresses(
         SubjectClass $subject,
-        array $addresses = null
+        ?array $addresses = null
     ) {
         if (!empty($addresses)) {
             $this->customerDataService->setAddressLineExtend();
         }
+        
         return null;
     }
 }

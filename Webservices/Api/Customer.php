@@ -42,7 +42,7 @@ class Customer
     /**
      * @throws Exception
      */
-    public function get(ShipmentInterface $shipment = null, bool $isReturnBarcode = false): array
+    public function get(?ShipmentInterface $shipment = null, bool $isReturnBarcode = false): array
     {
         $customer = [
             'CustomerCode'   => $isReturnBarcode ? $this->getReturnCustomerCode($shipment) :

@@ -54,8 +54,8 @@ class Matrixrate extends Value
         Filesystem $filesystem,
         Data $matrixrateData,
         RequestInterface $request,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct($context, $registry, $config, $cacheTypeList, $resource, $resourceCollection, $data);

@@ -136,8 +136,8 @@ class Shipment extends AbstractModel implements ShipmentInterface
         ProductRepositoryInterface         $productRepository,
         Customs                            $customs,
         SerializerInterface                $serializer,
-        AbstractResource                   $resource = null,
-        AbstractDb                         $resourceCollection = null,
+        ?AbstractResource                  $resource = null,
+        ?AbstractDb                        $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct($context, $registry, $dateTime, $resource, $resourceCollection, $data);
