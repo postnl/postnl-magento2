@@ -74,7 +74,7 @@ class Barcode extends AbstractEndpoint
         Customer $customer,
         Message $message,
         ShipmentData $shipmentData,
-        ReturnOptions $returnOptions,
+        ReturnOptions $returnOptions
     ) {
         $this->soap                 = $soap;
         $this->barcodeRange         = $barcodeRange;

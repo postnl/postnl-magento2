@@ -56,7 +56,7 @@ abstract class AbstractDeliveryOptions extends Action
         OrderRepository $orderRepository,
         Session $checkoutSession,
         QuoteToRateRequest $quoteToRateRequest,
-        ShippingDuration $shippingDuration,
+        ShippingDuration $shippingDuration
     ) {
         $this->encoder            = $encoder;
         $this->orderRepository    = $orderRepository;
