@@ -18,13 +18,13 @@ class InstallMatrixRateTable extends AbstractTableInstaller
         $this->addEntityId();
 
         $this->addInt(Matrixrate::FIELD_WEBSITE_ID, 'Website ID', true, true, 0);
-        $this->addText(Matrixrate::FIELD_DESTINY_COUNTRY_ID, 'Destination country ID ISO/2', 255, false, '');
+        $this->addText(Matrixrate::FIELD_DESTINY_COUNTRY_ID, 'Destination country ID ISO/2', 3, false, '');
         $this->addInt(Matrixrate::FIELD_DESTINY_REGION_ID, 'Destiny Region ID', false, false, '0');
-        $this->addText(Matrixrate::FIELD_DESTINY_ZIP_CODE, 'Destiny ZIP Code', 255, false, '*');
+        $this->addText(Matrixrate::FIELD_DESTINY_ZIP_CODE, 'Destiny ZIP Code', 10, false, '*');
         $this->addDecimal(Matrixrate::FIELD_WEIGHT, 'Minimum Order Weight', '12,4', false, '0.0000');
         $this->addDecimal(Matrixrate::FIELD_SUBTOTAL, 'Minimum Order Amount', '12,4', false, '0.0000');
         $this->addInt(Matrixrate::FIELD_QUANTITY, 'Minimum Quantity', 10, false, 0);
-        $this->addText(Matrixrate::FIELD_PARCEL_TYPE, 'Parcel Type', 255, false, '*');
+        $this->addText(Matrixrate::FIELD_PARCEL_TYPE, 'Parcel Type', 50, false, '*');
         $this->addDecimal(Matrixrate::FIELD_PRICE, 'Price', '12,4', false, '0.0000');
 
         $this->addIndex([
