@@ -32,7 +32,7 @@ class PatchMatrixRateTable implements SchemaPatchInterface
     {
         return [];
     }
-    
+
     public function apply()
     {
         $this->moduleDataSetup->startSetup();
@@ -59,7 +59,7 @@ class PatchMatrixRateTable implements SchemaPatchInterface
                 'nullable' => false,
                 'comment' => 'Destiny ZIP Code',
                 'default' => '*',
-                'length' => 10,
+                'length' => 50,
             ]
         );
 
