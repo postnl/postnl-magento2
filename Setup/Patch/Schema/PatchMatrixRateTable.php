@@ -32,8 +32,7 @@ class PatchMatrixRateTable implements SchemaPatchInterface
     {
         return [];
     }
-
-
+    
     public function apply()
     {
         $this->moduleDataSetup->startSetup();
