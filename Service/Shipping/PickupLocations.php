@@ -57,10 +57,17 @@ class PickupLocations
         if ($availableDelivery = $this->deliveryDate->get($address)) {
             // Reduce requests
             $availableDelivery = $this->deliveryDate->advanceDisabledPickupDate($availableDelivery);
+
+            // check if Sunday delivery:
+            $date = \DateTime::createFromFormat('d-m-Y', $availableDelivery);
+            if ($date->format('N') == 7) {
+                $availableDelivery = $date->modify('+1 day')->format('d-m-Y');
+            }
+
             $this->deliveryDateRequest = $availableDelivery;
             $deliveryDate = $availableDelivery;
         }
-
+        
         $this->locationsEndpoint->changeAPIKeyByStoreId($this->deliveryDate->getStoreId());
         $this->locationsEndpoint->updateParameters($address ,$deliveryDate);
         $response = $this->locationsEndpoint->call();
