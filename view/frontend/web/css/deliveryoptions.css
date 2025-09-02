@@ -41,7 +41,7 @@
   box-sizing: border-box;
 }
 .postnl-delivery-options .btn-group {
-  background: #ED8C00;
+  background: #F56900;
   float: left;
   width: 100%;
   border: 1px solid #D4D9E3;
@@ -58,6 +58,8 @@
   text-align: left;
   padding: 15px;
   min-height: 55px;
+  font-size: 19px;
+  font-weight: 700;
 }
 .postnl-delivery-options button.btn.btn-default > .pickup-date {
   font-size: 10px;
@@ -76,7 +78,7 @@
   background: #F3F4F7;
 }
 .postnl-delivery-options button.btn.btn-default.button-active {
-  background: #ED8C00;
+  background: #F56900;
   color: #fff;
 }
 @media screen and (min-width: 480px) {
@@ -356,7 +358,9 @@
 .postnl-delivery-options .pickup .tig-postnl-pickup-row label .tig-postnl-address-container .tig-postnl-pickup-hours-link {
   display: block;
   margin-top: 10px;
-  color: #ED8C00;
+  color: #F56900;
+  font-weight: 700;
+  font-size: 19px;
 }
 .postnl-delivery-options .pickup .tig-postnl-pickup-row label .tig-postnl-address-container .tig-postnl-pickup-hours-link .hide {
   display: none;
