@@ -156,3 +156,6 @@ Vul hier de retourklantcode in die gekoppeld staat aan het account. Indien er no
 
 #### Activeer Smart Returns
 Geef hier aan of je gebruik wil maken van Smart Returns. Dit betreft een retourproduct waarmee ad hoc een retourbarcode naar de klant wordt opgestuurd per e-mail, welke zij vervolgens bij een PostNL punt kunnen laten scannen om de retourzending te versturen. Het product Smart Returns is altijd te gebruiken, ongeacht welke andere retouropties er gebruikt worden.
+
+#### Activeer Easy Return Service
+Geef hier aan of je gebruik wil maken van Easy Return Service (ERS). Met ERS is het mogelijk om labels af te drukken waarmee klanten in het buitenland zendingen kunnen retourneren. Wanneer er op de knop "PostNL - Easy Return Service" gedrukt wordt in het order detailscherm wordt er een label aangemaakt die afgedrukt en/of opgestuurd kan worden naar de betreffende klant. Zie voor meer informatie over het gebruik van Easy Return service de uitleg op de volgende pagina: https://www.postnl.nl/zakelijk/pakket-versturen/retouren/internationale-retouren/
