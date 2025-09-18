@@ -25,7 +25,7 @@ class IsShippingOptionsActiveTest extends TestCase
      */
     private $accountConfiguration;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
         parent::setUp();
 
