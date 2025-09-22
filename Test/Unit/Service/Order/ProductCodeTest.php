@@ -39,7 +39,7 @@ class ProductCodeTest extends TestCase
 
     public $instanceClass = ProductInfo::class;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
         parent::setUp();
 

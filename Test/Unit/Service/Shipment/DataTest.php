@@ -20,7 +20,7 @@ class DataTest extends TestCase
 
     private $packingslipOptionsMock;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
         parent::setUp();
 

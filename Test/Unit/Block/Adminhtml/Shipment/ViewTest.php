@@ -30,7 +30,7 @@ class ViewTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp() : void
+    protected function setUp() : void
     {
         parent::setUp();
 

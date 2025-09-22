@@ -39,7 +39,7 @@ class SoapTest extends TestCase
      */
     private $log;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
         $this->soapClient = $this->getMock(\Laminas\Soap\Client::class);
         $this->endpointMock = $this->getFakeMock(\TIG\PostNL\Webservices\AbstractEndpoint::class, true);
