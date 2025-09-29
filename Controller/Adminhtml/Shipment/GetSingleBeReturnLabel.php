@@ -32,8 +32,7 @@ class GetSingleBeReturnLabel extends LabelAbstract
         Track                      $track,
         ShipmentRepository         $shipmentRepository,
         SingleBeReturn             $labelRequest,
-        ShipmentRepositoryInterface $postnlShipmentRepository,
-
+        ShipmentRepositoryInterface $postnlShipmentRepository
     ) {
         parent::__construct(
             $context,
