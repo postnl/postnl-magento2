@@ -2,9 +2,6 @@
 
 namespace TIG\PostNL\Config\Provider;
 
-use Monolog\Level;
-use Psr\Log\LogLevel;
-
 class LoggingConfiguration extends AbstractConfigProvider
 {
     const XPATH_LOGGING_TYPE = 'tig_postnl/developer_settings/types';
