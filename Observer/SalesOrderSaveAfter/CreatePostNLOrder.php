@@ -46,7 +46,15 @@ class CreatePostNLOrder implements ObserverInterface
      * @var ItemsToOption
      */
     private $itemsToOption;
+
+    /**
+     * @var Quote
+     */
     private $quoteWrapper;
+    
+    /**
+     * @var Log
+     */
     private $logger;
 
     /**
