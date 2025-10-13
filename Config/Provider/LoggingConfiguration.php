@@ -21,6 +21,10 @@ class LoggingConfiguration extends AbstractConfigProvider
      */
     public function canLog($level)
     {
+        if (class_exists('Monolog\Level') && $level instanceof \Monolog\Level) {
+            $level = $level->value;
+        }
+
         $logTypes = explode(',', (string)$this->getLoggingTypes());
 
         return in_array($level, $logTypes);
