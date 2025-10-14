@@ -26,5 +26,7 @@ Hier kan aangegeven worden of er gebruik gemaakt moet worden van een HS tarief, 
  - Stel bij *Productomschrijving* het attribuut in dat gebruikt moet worden voor de productomschrijving.  
  - Met het *Product sortering attribuut* kan aangegeven worden op basis van welke waarde de producten gesorteerd moeten worden.
  - Bij de *Product sortering richting* kan aangegeven worden of de producten op oplopende of aflopende volgorde worden gesorteerd moeten worden.
+ 
+ Voor het instellen van het HS Tariefnummer is het aan te raden hier een nieuw attribuut voor aan te maken op productniveau en deze per product te configureren. Dit attribuut kun je vervolgens koppelen aan de HS Tariefnummer-instelling wanneer "Gebruik het HS tarief" op "Ja" staat.
 
 ![Wereldwijde verzending douane]({{ site.baseurl }}/assets/images/4_wereldwijd_douane.png "Magento 2 Admin - PostNL Wereldwijd Douane")
