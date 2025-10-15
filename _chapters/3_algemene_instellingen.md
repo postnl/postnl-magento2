@@ -15,7 +15,9 @@ Het is mogelijk om op basis van de orderwaarde regels in te stellen waarmee auto
 De prijs-regels zijn gebaseerd op de productwaarde, en zijn dus niet afhankelijk van eventueel bijkomende kosten zoals verzendkosten. De regels treden in werking vanaf de prijs die genoteerd staat. In het bovenstaande voorbeeld werkt dit als volgt:
 
 Bestellingen tot en met 49 euro krijgen het product wat als standaardproduct staat ingesteld toegewezen
+
 Bestellingen tussen de 50 en 99 euro krijgen "Ontvangstcode aan de deur" toegewezen
+
 Bestellingen vanaf 100 euro krijgen "Verzending met extra dekking" toegewezen
 
 #### Avondbezorging
