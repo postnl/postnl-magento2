@@ -12,6 +12,12 @@ Het is mogelijk om op basis van de orderwaarde regels in te stellen waarmee auto
 
 ![Alternatieve_bezorging]({{ site.baseurl }}/assets/images/03_alternatieve_bezorgopties.png "PostNL Alternatieve Bezorging")
 
+De prijs-regels zijn gebaseerd op de productwaarde, en zijn dus niet afhankelijk van eventueel bijkomende kosten zoals verzendkosten. De regels treden in werking vanaf de prijs die genoteerd staat. In het bovenstaande voorbeeld werkt dit als volgt:
+
+Bestellingen tot en met 49 euro krijgen het product wat als standaardproduct staat ingesteld toegewezen
+Bestellingen tussen de 50 en 99 euro krijgen "Ontvangstcode aan de deur" toegewezen
+Bestellingen vanaf 100 euro krijgen "Verzending met extra dekking" toegewezen
+
 #### Avondbezorging
 Activeer avondbezorging om klanten de optie te bieden om hun pakket 's avonds bezorgd te krijgen. De extensie toont deze optie automatisch voor afleveradressen
 waar avondbezorging beschikbaar is.
