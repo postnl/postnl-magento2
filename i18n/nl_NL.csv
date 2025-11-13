@@ -684,3 +684,28 @@ Percent,Percentage
 "Select countries where pickup points can be selected.","Selecteer landen waarvoor afhaalpunten geselecteerd kunnen worden."
 "Default shipping option international pick-up points","Standaard bezorging internationale afhaalpunten"
 "Select the default product option for international pick-up point delivery.","Selecteer de standaard bezorgoptie voor internationale afhaalpunten."
+"With this functionality your customers can easily and automatically fill in their shipping address via their PostNL account.","Met deze functie kunnen klanten eenvoudig en automatisch hun adresgegevens invullen via hun PostNL account"
+"This functionality is only available for consumers with a Dutch shipping address.","Deze functie is alleen beschikbaar voor ontvangers met een bezorgadres in Nederland"
+"Click the following link to activate the functionality: ","Klik op de volgende link om de functie te activeren: "
+"Complete with PostNL","Vul in met PostNL"
+"Something went wrong, please try again later","Er is iets misgegaan, probeer het later opnieuw"
+"Before Checkout Button","Vóór de betaalknop"
+"After Checkout Button","Na de betaalknop"
+"Before Customer Email","Vóór de e-mail van de klant"
+"Before Customer Details","Vóór de klantgegevens"
+"Before Minicart Buttons","Vóór de minicartknoppen"
+"After Minicart Buttons","Na de minicartknoppen"
+"Fill in the details with PostNL","Vul de gegevens in met PostNL"
+"We'll copy your name and address from your PostNL account. So you don't have to enter them again!","We kopiëren uw naam en adres uit uw PostNL-account. U hoeft ze dus niet opnieuw in te voeren!"
+"An error occurred. Please try again.","Er is een fout opgetreden. Probeer het later opnieuw."
+Loading...,Laden...
+PostNL,PostNL
+"Fill In With settings","Instellingen Invullen Met"
+Settings,Instellingen
+Enabled,Ingeschakeld
+"Client ID","Klant-ID"
+Debug,Debug
+"Cart Settings",Winkelwageninstellingen
+"Display on","Weergeven op"
+"Checkout Settings",Kassa-instellingen
+"Minicart Settings",Minicartinstellingen

@@ -1,0 +1,77 @@
+<?php
+declare (strict_types=1);
+
+/**
+ * @var $block Magento\Framework\View\Element\Template
+ * @var $viewModel \TIG\PostNL\ViewModel\FillIn
+ * @var $escaper Magento\Framework\Escaper
+ */
+
+$viewModel = $block->getViewModel();
+
+$layoutName = $block->getNameInLayout();
+
+$isMinicart = str_contains($layoutName, 'buttons');
+
+$configPosition = $isMinicart
+    ? $viewModel->getMinicartPosition()
+    : $viewModel->getCartPosition();
+
+$isLoggedIn = $viewModel->isLoggedIn();
+
+$shouldRender = false;
+
+$shouldRender = $isMinicart
+    ? $viewModel->canDisplayInMinicart($layoutName)
+    : $viewModel->canDisplayInCart($layoutName);
+?>
+
+<?php if (!$isLoggedIn && $shouldRender): ?>
+    <div class="postnl-flex-wrapper">
+        <div data-bind="scope: 'postnlButton'">
+            <div class="button--postnl-container" data-bind="if: isPostNLVisible">
+                <button id="postnl-login-button" aria-label="<?= __('Complete with PostNL') ?>" type="button"
+                        data-bind="click: onClickPostnlButton, disable: isButtonDisabled">
+                <span id="postnl-login-button__text">
+                    <span id="postnl-login-button__first-text">
+                        <img loading="lazy" id="postnl-logo"
+                             src="<?= $block->getViewFileUrl('TIG_PostNL::images/postnl-logo.png') ?>" alt="PostNL"
+                             width="40" height="40"/>
+                    </span>
+                    <span id="postnl-login-button__second-text"><?= __('Complete with PostNL') ?></span>
+                </span>
+                </button>
+                <div class="tooltip-wrapper">
+                    <p class="heading">
+                        <?= __('Fill in the details with PostNL') ?>
+                        <span class="tooltip-icon">
+                        <img loading="lazy" id="postnl-tooltip-icon"
+                             src="<?= $block->getViewFileUrl('TIG_PostNL::images/tooltip.png') ?>"
+                             alt="<?= __('Fill in the details with PostNL') ?>" width="16" height="16"/>
+                        <span class="tooltip-text">
+                            <?= __("We'll copy your name and address from your PostNL account. So you don't have to enter them again!") ?>
+                        </span>
+                    </span>
+                    </p>
+                </div>
+            </div>
+            <script type="text/x-magento-init">
+                {
+                    "*": {
+                        "Magento_Ui/js/core/app": {
+                            "components": {
+                                "postnlButton": {
+                                    "component": "TIG_PostNL/js/cart/postnl-button",
+                                    "fillInUrl": "<?= $escaper->escapeUrl($viewModel->getFillInUrl()) ?>",
+                                    "minicartPosition": "<?= $viewModel->getMinicartPosition() ?>",
+                                    "defaultCountry": "<?= $viewModel->getDefaultCountry() ?>",
+                                    "shippingCountry": "<?= $viewModel->getShippingCountry() ?>"
+                                }
+                            }
+                        }
+                    }
+                }
+            </script>
+        </div>
+    </div>
+<?php endif; ?>

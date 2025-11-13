@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="fillin" translate="label" type="text" sortOrder="800" showInDefault="1" showInWebsite="1"
+           showInStore="1">
+        <label>Fill In With settings</label>
+        <fieldset_css>tig_postnl-section</fieldset_css>
+        <group id="settings" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Settings</label>
+            <fieldset_css>tig_postnl-sub-section</fieldset_css>
+            <frontend_model>TIG\PostNL\Block\Adminhtml\Config\FillIn\Settings</frontend_model>
+            <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Enabled</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <backend_model>TIG\PostNL\Model\Config\Backend\Enabled</backend_model>
+            </field>
+            <field id="client_id" translate="label" type="obscure" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Client ID</label>
+                <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                <depends>
+                    <field id="enabled">1</field>
+                </depends>
+            </field>
+            <field id="debug" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Debug</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <tooltip>Enable debug logging</tooltip>
+                <depends>
+                    <field id="enabled">1</field>
+                </depends>
+            </field>
+
+            <group id="cart" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Cart Settings</label>
+                <fieldset_css>tig_postnl-section</fieldset_css>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="display" translate="label comment" type="select" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Display on</label>
+                    <source_model>TIG\PostNL\Model\Config\Source\Cart</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <depends>
+                    <field id="enabled">1</field>
+                </depends>
+            </group>
+            <group id="checkout" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Checkout Settings</label>
+                <fieldset_css>tig_postnl-section</fieldset_css>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="display" translate="label comment" type="select" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Display on</label>
+                    <source_model>TIG\PostNL\Model\Config\Source\Checkout</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <depends>
+                    <field id="enabled">1</field>
+                </depends>
+            </group>
+            <group id="minicart" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Minicart Settings</label>
+                <fieldset_css>tig_postnl-section</fieldset_css>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="display" translate="label comment" type="select" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Display on</label>
+                    <source_model>TIG\PostNL\Model\Config\Source\Minicart</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <depends>
+                    <field id="enabled">1</field>
+                </depends>
+            </group>
+        </group>
+
+    </group>
+</include>

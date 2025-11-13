@@ -1,0 +1,19 @@
+<div class="postnl-flex-wrapper">
+    <div class="button--postnl-container" data-bind="visible: isCountryNL">
+        <button type="button"
+                data-bind="click: onClick, css: buttonClass, disable: isDisabled()"
+                id="postnl-login-button"
+                class="fillin-button action primary">
+            <img width="40" height="40" data-bind="attr: { src: postnlLogoUrl }" alt="PostNL" />
+            <!-- ko text: getButtonText() --><!-- /ko -->
+        </button>
+
+        <div class="tooltip-wrapper">
+            <h2 class="heading" data-bind="text: getHeadingText()"></h2>
+            <span class="tooltip-icon" tabindex="0" role="img" aria-describedby="tooltip-text">
+                <img width="16" height="16" data-bind="attr: { src: tooltipUrl }" alt="" aria-hidden="true" />
+                <span class="tooltip-text" id="tooltip-text" data-bind="text: getTooltipText()"></span>
+            </span>
+        </div>
+    </div>
+</div>
