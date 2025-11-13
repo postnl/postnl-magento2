@@ -62,6 +62,20 @@ class FillIn implements ArgumentInterface
         return $layoutName === $configPosition;
     }
 
+
+    /**
+     * Can display for checkout
+     */
+    public function canDisplayInCheckout(string $layoutName): bool
+    {
+        if (!$this->config->isEnabledInCheckout()) {
+            return false;
+        }
+
+        $configPosition = $this->getCheckoutPosition();
+
+        return $layoutName === $configPosition;
+    }
     /**
      * Can display for minicart
      */

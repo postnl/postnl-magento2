@@ -21,15 +21,6 @@ class Config
     public const CONFIG_PATH_ENABLED_IN_MINICART = 'tig_postnl/fillin/settings/minicart/enabled';
     private const CONFIG_PATH_MINICART_DISPLAY = 'tig_postnl/fillin/settings/minicart/display';
 
-    private const CONFIG_PATH_API_KEY = 'tig_postnl/generalconfiguration_extension_status/api_key';
-    private const CONFIG_PATH_API_KEY_TEST = 'tig_postnl/generalconfiguration_extension_status/api_key_test';
-
-    private const CONFIG_PATH_CUSTOMER_NUMBER = 'tig_postnl/generalconfiguration_extension_status/customer_number';
-    private const CONFIG_PATH_CUSTOMER_NUMBER_TEST = 'tig_postnl/generalconfiguration_extension_status/customer_number_test';
-
-    private const CONFIG_PATH_CUSTOMER_CODE = 'tig_postnl/generalconfiguration_extension_status/customer_code';
-    private const CONFIG_PATH_CUSTOMER_CODE_TEST = 'tig_postnl/generalconfiguration_extension_status/customer_code_test';
-
     public const POSTNL_STATE_ATTRIBUTE = 'postnl_state';
     public const POSTNL_VERIFIER_ATTRIBUTE = 'postnl_verifier';
 

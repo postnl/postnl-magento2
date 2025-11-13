@@ -122,6 +122,7 @@ define([
             if (xhr.responseJSON && xhr.responseJSON.message) {
                 errorMessage = xhr.responseJSON.message;
             }
+            console.error('Error:', errorMessage);
         },
 
         /**

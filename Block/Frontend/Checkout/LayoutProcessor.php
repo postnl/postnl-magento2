@@ -45,9 +45,9 @@ class LayoutProcessor implements LayoutProcessorInterface
                 $js['postcode']['value'] = $address->getPostcode();
 
                 $js['postcode-field-group']['children']['field-group']['children']
-                ['housenumber']['value'] = $this->checkoutSession->getData('postnl_nousenumber');
+                ['housenumber']['value'] = $this->checkoutSession->getData('postnl_housenumber');
                 $js['postcode-field-group']['children']['field-group']['children']
-                ['housenumber_addition']['value'] = $this->checkoutSession->getData('postnl_nousenumberaddition');
+                ['housenumber_addition']['value'] = $this->checkoutSession->getData('postnl_housenumberaddition');
             } elseif ($quote->getCustomerIsGuest()) {
                 $js = &$jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']['children']
                 ['shippingAddress']['children'];

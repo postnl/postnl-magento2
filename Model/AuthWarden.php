@@ -133,8 +133,8 @@ class AuthWarden
                 $address->setCity($customerData['primaryAddress']['cityName'] ?? null);
                 $address->setPostcode($customerData['primaryAddress']['postalCode'] ?? null);
 
-                $this->checkoutSession->setData('postnl_nousenumber', $customerData['primaryAddress']['houseNumber']);
-                $this->checkoutSession->setData('postnl_nousenumberaddition', $customerData['primaryAddress']['houseNumberAddition']);
+                $this->checkoutSession->setData('postnl_housenumber', $customerData['primaryAddress']['houseNumber']);
+                $this->checkoutSession->setData('postnl_housenumberaddition', $customerData['primaryAddress']['houseNumberAddition']);
                 $extensionAttributes = $address->getExtensionAttributes();
                 if ($extensionAttributes) {
                     if (method_exists($extensionAttributes, 'setTigHousenumber')) {
