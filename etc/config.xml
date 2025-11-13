@@ -165,6 +165,12 @@
                 <labels_type>1</labels_type>
                 <smart_returns_template>tig_postnl_postnl_settings_returns_template</smart_returns_template>
             </returns>
+
+            <fillin>
+                <settings>
+                    <client_id backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                </settings>
+            </fillin>
         </tig_postnl>
     </default>
 </config>

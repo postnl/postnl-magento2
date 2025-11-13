@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="minicart.addons">
+            <block name="before_buttons"
+                   template="TIG_PostNL::cart/button.phtml"
+                   ifconfig="tig_postnl/fillin/settings/minicart/enabled">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">TIG\PostNL\ViewModel\FillIn</argument>
+                </arguments>
+            </block>
+            <block name="after_buttons"
+                   template="TIG_PostNL::cart/button.phtml"
+                   ifconfig="tig_postnl/fillin/settings/minicart/enabled">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">TIG\PostNL\ViewModel\FillIn</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>
