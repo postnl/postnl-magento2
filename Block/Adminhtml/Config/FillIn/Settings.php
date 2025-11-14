@@ -48,8 +48,8 @@ class Settings extends Fieldset
     {
         $storeUrl = $this->storeManager->getStore()->getBaseUrl();
 
-        return '<a href="https://dil-business-portal.postnl.nl/checkout-prefill?referrer=wcplugin&url=' . $storeUrl
-            . '" target="_blank">https://dil-business-portal.postnl.nl/checkout-prefill?referrer=wcplugin&url='
+        return '<a href="https://dil-business-portal.postnl.nl/checkout-prefill?referrer=magentoplugin&url=' . $storeUrl
+            . '" target="_blank">https://dil-business-portal.postnl.nl/checkout-prefill?referrer=magentoplugin&url='
             . $storeUrl .
             '</a>';
     }

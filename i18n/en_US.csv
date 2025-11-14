@@ -654,7 +654,7 @@ Percent,Percent
 "With this functionality your customers can easily and automatically fill in their shipping address via their PostNL account.","With this functionality your customers can easily and automatically fill in their shipping address via their PostNL account."
 "This functionality is only available for consumers with a Dutch shipping address.","This functionality is only available for consumers with a Dutch shipping address."
 "Click the following link to activate the functionality: ","Click the following link to activate the functionality: "
-"Complete with PostNL","Complete with PostNL"
+"Fill in with PostNL.","Fill in with PostNL."
 "Something went wrong, please try again later","Something went wrong, please try again later"
 "Before Checkout Button","Before Checkout Button"
 "After Checkout Button","After Checkout Button"
@@ -663,11 +663,10 @@ Percent,Percent
 "Before Minicart Buttons","Before Minicart Buttons"
 "After Minicart Buttons","After Minicart Buttons"
 "Fill in the details with PostNL","Fill in the details with PostNL"
-"We'll copy your name and address from your PostNL account. So you don't have to enter them again!","We'll copy your name and address from your PostNL account. So you don't have to enter them again!"
+"Your name and address will be filled in automatically through your PostNL account. This way, you don't have to fill out the form yourself!","Your name and address will be filled in automatically through your PostNL account. This way, you don't have to fill out the form yourself!"
 "An error occurred. Please try again.","An error occurred. Please try again."
 Loading...,Loading...
 PostNL,PostNL
-"Fill In With settings","Fill In With settings"
 Settings,Settings
 Enabled,Enabled
 "Client ID","Client ID"
