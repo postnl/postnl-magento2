@@ -57,7 +57,7 @@ class LayoutProcessor implements LayoutProcessorInterface
                         'displayArea' => 'fillin-button',
                         'config' => [
                             'template' => 'TIG_PostNL/fillin-button',
-                            'buttonText' => __('Complete with PostNL'),
+                            'buttonText' => __('Fill in with PostNL.'),
                             'redirectUrl' => $this->urlBuilder->getUrl('postnl/fillin/index'),
                             'buttonClass' => 'action primary'
                         ]

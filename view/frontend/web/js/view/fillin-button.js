@@ -13,7 +13,7 @@ define([
             template: 'TIG_PostNL/fillin-button',
             postnlLogoUrl: require.toUrl('TIG_PostNL/images/postnl-logo.png'),
             tooltipUrl: require.toUrl('TIG_PostNL/images/tooltip.png'),
-            buttonText: $t('Complete with PostNL'),
+            buttonText: $t('Fill in with PostNL.'),
             headingText: $t('Fill in the details with PostNL'),
             tooltipText: $t('We\'ll copy your name and address from your PostNL account. So you don\'t have to enter them again!'),
             buttonClass: 'action primary',

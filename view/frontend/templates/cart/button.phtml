@@ -30,7 +30,7 @@ $shouldRender = $isMinicart
     <div class="postnl-flex-wrapper">
         <div data-bind="scope: 'postnlButton'">
             <div class="button--postnl-container" data-bind="if: isPostNLVisible">
-                <button id="postnl-login-button" aria-label="<?= __('Complete with PostNL') ?>" type="button"
+                <button id="postnl-login-button" aria-label="<?= __('Fill in with PostNL.') ?>" type="button"
                         data-bind="click: onClickPostnlButton, disable: isButtonDisabled">
                 <span id="postnl-login-button__text">
                     <span id="postnl-login-button__first-text">
@@ -38,7 +38,7 @@ $shouldRender = $isMinicart
                              src="<?= $block->getViewFileUrl('TIG_PostNL::images/postnl-logo.png') ?>" alt="PostNL"
                              width="40" height="40"/>
                     </span>
-                    <span id="postnl-login-button__second-text"><?= __('Complete with PostNL') ?></span>
+                    <span id="postnl-login-button__second-text"><?= __('Fill in with PostNL.') ?></span>
                 </span>
                 </button>
                 <div class="tooltip-wrapper">
@@ -49,7 +49,9 @@ $shouldRender = $isMinicart
                              src="<?= $block->getViewFileUrl('TIG_PostNL::images/tooltip.png') ?>"
                              alt="<?= __('Fill in the details with PostNL') ?>" width="16" height="16"/>
                         <span class="tooltip-text">
-                            <?= __("We'll copy your name and address from your PostNL account. So you don't have to enter them again!") ?>
+                            <?= __(
+                                    "Your name and address will be filled in automatically through your PostNL account. This way, you don't have to fill out the form yourself!"
+                            ) ?>
                         </span>
                     </span>
                     </p>
