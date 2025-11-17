@@ -167,3 +167,13 @@ Geef hier aan of je gebruik wil maken van Smart Returns. Dit betreft een retourp
 
 #### Activeer Easy Return Service
 Geef hier aan of je gebruik wil maken van Easy Return Service (ERS). Met ERS is het mogelijk om labels af te drukken waarmee klanten in het buitenland zendingen kunnen retourneren. Wanneer er op de knop "PostNL - Easy Return Service" gedrukt wordt in het order detailscherm wordt er een label aangemaakt dat afgedrukt en/of opgestuurd kan worden naar de betreffende klant. Zie voor meer informatie over het gebruik van Easy Return service de uitleg op de volgende pagina: [https://www.postnl.nl/zakelijk/pakket-versturen/retouren/internationale-retouren/](https://www.postnl.nl/zakelijk/pakket-versturen/retouren/internationale-retouren/)
+
+## Invullen Met instellingen
+
+Om het afrekenproces te versnellen kun je gebruik maken van Invullen Met PostNL. Deze functie staat klanten toe om automatisch het adresformulier te laten invullen op basis van de adresgegevens van hun account bij PostNL. In de Invullen Met PostNL-instellingen kun je deze functie activeren door op de link te klikken en in het daaropvolgende scherm in te loggen in het business portal. Vervolgens wordt er een Client ID code gegenereerd die in het daarvoor bestemde veld in de configuratie ingevuld moet worden:
+
+![Invullen_instellingen]({{ site.baseurl }}/assets/images/10_Invullen_Met_1.png "Invullen Met instellingen")
+
+Nadat de winkel geregistreerd is voor Invullen Met kun je bepalen op welke plekken de knop getoond moet worden:
+
+![Invullen_instellingen]({{ site.baseurl }}/assets/images/10_Invullen_Met_2.png "Invullen Met instellingen")
