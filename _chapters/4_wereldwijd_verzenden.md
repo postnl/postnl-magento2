@@ -1,12 +1,12 @@
 ## Wereldwijd verzenden
 
-Activeer wereldwijd verzenden voor uw klanten om bestellingen met PostNL te kunnen versturen naar landen `buiten de EU`, hiervoor wordt gebruik gemaakt van het PostNL's *GlobalPack* product.
+Activeer wereldwijd verzenden voor uw klanten om bestellingen met PostNL te kunnen versturen naar landen `buiten de EU`, hiervoor wordt gebruik gemaakt van het PostNL's *Pakketten non-EU* product.
 
-GlobalPack kan geactiveerd worden met de gegevens die ontvangen zijn vanuit PostNL.
+Pakketten non-EU kan geactiveerd worden met de gegevens die ontvangen zijn vanuit PostNL.
 
 [https://www.postnl.nl/versturen/pakket-versturen/pakket-buitenland/](https://www.postnl.nl/versturen/pakket-versturen/pakket-buitenland/)
 
-De instellingen voor wereldwijd verzenden staan onder: *Stores → Configuration → Sales → PostNL*, de instellingen staan onder *Wereldwijd verzenden*. Wereldwijd verzenden kan hier geactiveerd worden en de standaard productoptie voor GlobalPack kan hier ingesteld worden.
+De instellingen voor wereldwijd verzenden staan onder: *Stores → Configuration → Sales → PostNL*, de instellingen staan onder *Wereldwijd verzenden*. Wereldwijd verzenden kan hier geactiveerd worden en de standaard productoptie voor Pakketten non-EU kan hier ingesteld worden.
 
 ![Wereldwijde verzending instellingen]({{ site.baseurl }}/assets/images/4_wereldwijd_verzenden.png "Magento 2 Admin - PostNL Wereldwijd")
 
