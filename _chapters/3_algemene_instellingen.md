@@ -76,10 +76,12 @@ Met PostNL Cargo is het mogelijk om palletzendingen te versturen naar verschille
 ![PostNL Cargo]({{ site.baseurl }}/assets/images/3_bezorging_cargo.png "PostNL Cargo")
 
 #### Pakjes Tracked
+>**Let op:** sommige Pakjes Tracked producten vereisen specifieke contractuele afspraken met PostNL. Kijk voor meer informatie over de internationale verzendproducten op [de informatiepagina](https://www.postnl.nl/zakelijk/pakket-versturen/pakket-buitenland/) of neem contact op met uw PostNL accountmanager
+
+
 Met PostNL Pakjes Tracked kunnen kleine pakketten tot 2 kilo naar het buitenland verstuurd en gevolgd worden. Deze producten kunnen als standaard verzendproduct ingesteld worden binnen de zones België, EU en Wereldwijd, maar kunnen ook automatisch toegewezen worden opvia de PostNL instellingen op productniveau in de catalogus.
 Wanneer er gebruik gemaakt wordt van automatische toewijzing wordt het product toegepast wat in de instellingen van  Internationale Pakjes ingesteld staat als standaardproduct.
 
->**Let op:** sommige Pakjes Tracked producten vereisen specifieke contractuele afspraken met PostNL. Neem contact op met uw PostNL accountmanager voor meer informatie over deze producten.
 
 ![PostNL Pakjes Tracked Productinstellingen]({{ site.baseurl }}/assets/images/3_pakjes_tracked_productinstellingen.png "PostNL Pakjes Tracked Productinstellingen")
 ![PostNL Pakjes Tracked]({{ site.baseurl }}/assets/images/3_bezorging_pakjes_tracked.png "PostNL Pakjes Tracked")
@@ -93,7 +95,7 @@ Bij het bestellingen overzicht zijn deze terug te vinden in de kolom *Zending Ty
 ![PostNL EU en België]({{ site.baseurl }}/assets/images/3_bezorging_eu_belgie.png "PostNL EU en Belgie")
 
 #### Extra@Home
-Met PostNL Extra@Home is gericht op de bezorging van XL-producten ne smart home producten met een installatieservice. 
+Met PostNL Extra@Home is gericht op de bezorging van XL-producten en smart home producten met een installatieservice. 
 Voor de Extra@Home zendingen kan een standaard productoptie ingesteld worden.
 
 Op productniveau kan er ingesteld worden welke producten verzonden moeten worden met de Extra@Home service.
