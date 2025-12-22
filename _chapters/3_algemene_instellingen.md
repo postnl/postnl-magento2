@@ -76,7 +76,7 @@ Met PostNL Cargo is het mogelijk om palletzendingen te versturen naar verschille
 ![PostNL Cargo]({{ site.baseurl }}/assets/images/3_bezorging_cargo.png "PostNL Cargo")
 
 #### Pakjes Tracked
->**Let op:** sommige Pakjes Tracked producten vereisen specifieke contractuele afspraken met PostNL. Kijk voor meer informatie over de internationale verzendproducten op [de informatiepagina](https://www.postnl.nl/zakelijk/pakket-versturen/pakket-buitenland/) of neem contact op met uw PostNL accountmanager
+>**Let op:** sommige Pakjes Tracked producten vereisen specifieke contractuele afspraken met PostNL. Kijk voor meer informatie over de internationale verzendproducten op [de informatiepagina](https://www.postnl.nl/zakelijk/pakket-versturen/pakket-buitenland/pakjes-buitenland/) of neem contact op met uw PostNL accountmanager
 
 
 Met PostNL Pakjes Tracked kunnen kleine pakketten tot 2 kilo naar het buitenland verstuurd en gevolgd worden. Deze producten kunnen als standaard verzendproduct ingesteld worden binnen de zones België, EU en Wereldwijd, maar kunnen ook automatisch toegewezen worden opvia de PostNL instellingen op productniveau in de catalogus.
@@ -87,6 +87,11 @@ Wanneer er gebruik gemaakt wordt van automatische toewijzing wordt het product t
 ![PostNL Pakjes Tracked]({{ site.baseurl }}/assets/images/3_bezorging_pakjes_tracked.png "PostNL Pakjes Tracked")
 
 #### EU en België
+
+>**Let op:** Let op: Pakketten versturen binnen Europa vereist specifieke contractuele afspraken met PostNL. Kijk voor meer informatie over de internationale verzendproducten op [de informatiepagina](
+https://www.postnl.nl/zakelijk/pakket-versturen/pakket-buitenland/) of neem contact op met uw PostNL accountmanager
+
+
 Voor bestellingen naar België en de EU kan standaard een specifieke product optie ingesteld. Om ook de EU business product opties terug te kunnen zien in de dropdown, dient de optie *Gebruik EU business* op "Ja" gezet te worden en daarna dient de configuratie opgeslagen te worden.
 
 De standaard geselecteerde productoptie wordt automatisch als *Zending Type* ingesteld voor de overeenkomstige bestellingen. 
