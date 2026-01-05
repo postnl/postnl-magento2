@@ -1,6 +1,6 @@
 ## Wereldwijd verzenden
 
-Activeer wereldwijd verzenden voor uw klanten om bestellingen met PostNL te kunnen versturen naar landen `buiten de EU`, hiervoor wordt gebruik gemaakt van het PostNL's *Pakketten Non-EU* product.
+Activeer wereldwijd verzenden voor uw klanten om bestellingen met PostNL te kunnen versturen naar landen `buiten de EU`, hiervoor wordt gebruik gemaakt van het *Pakketten Non-EU* product.
 
 Pakketten Non-EU kan geactiveerd worden met de gegevens die ontvangen zijn vanuit PostNL.
 
