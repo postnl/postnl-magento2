@@ -6,7 +6,7 @@ Pakketten Non-EU kan geactiveerd worden met de gegevens die ontvangen zijn vanui
 
 [https://www.postnl.nl/versturen/pakket-versturen/pakket-buitenland/](https://www.postnl.nl/versturen/pakket-versturen/pakket-buitenland/)
 
-De instellingen voor wereldwijd verzenden staan onder: *Stores → Configuration → Sales → PostNL*, de instellingen staan onder *Wereldwijd verzenden*. Wereldwijd verzenden kan hier geactiveerd worden en de standaard productoptie voor Pakketten Non-EU kan hier ingesteld worden.
+De instellingen voor wereldwijd verzenden staan onder: *Stores → Configuration → Sales → PostNL → Wereldwijd verzenden*. Wereldwijd verzenden kan hier geactiveerd worden en de standaard productoptie voor Pakketten Non-EU kan hier ingesteld worden.
 
 ![Wereldwijde verzending instellingen]({{ site.baseurl }}/assets/images/4_wereldwijd_verzenden.png "Magento 2 Admin - PostNL Wereldwijd")
 
