@@ -21,8 +21,6 @@ class PepsConfiguration extends AbstractConfigProvider
                 $type = 'UE';
                 break;
             case '6906':
-                $type = 'RI';
-                break;
             case '6972':
             case '6350':
             default:
