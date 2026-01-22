@@ -38,27 +38,6 @@ Bij de Nederlandse adresvalidatie wordt op basis van de ingevoerde postcode en h
 Binnen de instellingen kan worden aangegeven of het design van de webshop is gebaseerd op het Magento Blank of het Magento Luma thema, om zo de best passende styling te verzorgen.
 ![Instellingen Nederlandse adresvalidatie]({{ site.baseurl }}/assets/images/5_extra_adresvalidatie.png "PostNL Magento 2 adresvalidatie")
 
-#### Internationale adresvalidatie
-De internationale adresvalidatie kan geactiveerd worden door de optie `Internationale Adresvalidatie Inschakelen` op `Ja` te zetten. Om gebruik te kunnen maken van deze service dient uw API-key geldig te zijn voor deze dienst, nadat de configuratie is opgeslagen kan dit eenvoudig gevalideerd worden.
-
-![Internationale adresvalidatie]({{ site.baseurl }}/assets/images/5_extra_internationale_adresvalidatie.png "PostNL Magento 2 adresvalidatie")
-
-Is de API-Key niet geldig voor Internationale Adres Validatie? Stuur een verzoek om uw API-key geldig te maken voor deze dienst naar [DataSolutions@postnl.nl](mailto:DataSolutions@postnl.nl) met de volgende gegevens:
-- Voornaam:
-- Achternaam:
-- Bedrijfsnaam:
-- KvK-nummer:
-- Email adres:
-- PostNL Klantnummer:
-- Opmerking: (geef hier aan dat u de Internationale Adres Validatie wilt gebruiken in Magento 2)
-
-> **Let op:** deze dienst kan extra kosten met zich meebrengen als u veel Internationale adressen valideert.
-
-In de checkout van de webshop zal er onderin een kopje verschijnen met `adres validatie` waarbij wordt aangegeven of het adres correct is of niet. Mocht het adres niet valide zijn, dan worden er suggesties gegeven voor het correcte adres.
-![Internationale adresvalidatie front]({{ site.baseurl }}/assets/images/5_extra_internationale_adresvalidatie_front.png "PostNL Magento 2 adresvalidatie front")
-
-
-
 
 ### Geavanceerde instellingen
 Onder de geavanceerde instellingen kan worden aangegeven welke verzendmethoden gebruikt worden voor PostNL zendingen. De bestellingen die middels deze verzendmethoden worden aangemaakt, worden verwerkt door de PostNL extensie.
