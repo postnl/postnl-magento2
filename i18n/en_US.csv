@@ -354,7 +354,7 @@ Percent,Percent
 "Automatically complete <strong>Dutch addresses</strong> after your customer fills in his postcode and house number.","Automatically complete <strong>Dutch addresses</strong> after your customer fills in his postcode and house number."
 "Use postcode check","Use postcode check"
 "If you use a different address validation service, only leave the one you want to use activated.","If you use a different address validation service, only leave the one you want to use activated."
-"Postcode validation is only available for Magento's core checkout, available in theme's (based on) Luma and Blank. We don't actively support other available checkouts in this extension.","Postcode validation is only available for Magento's core checkout, available in theme's (based on) Luma and Blank. We don't actively support other available checkouts in this extension."
+"Postcode validation is only available for Magento's core checkout, available in theme's (based on) Luma and Blank, and Hyvä. We don't actively support other available checkouts in this extension.","Postcode validation is only available for Magento's core checkout, available in theme's (based on) Luma and Blank, and Hyvä. We don't actively support other available checkouts in this extension."
 "Download labels directly","Download labels directly"
 "Open labels in new browser window","Open labels in new browser window"
 "Addition","Addition"
