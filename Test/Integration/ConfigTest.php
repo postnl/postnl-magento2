@@ -45,6 +45,7 @@ class ConfigTest extends TestCase
             [3543],
             [4952],
             [2928],
+            [2948],
         ];
     }
 

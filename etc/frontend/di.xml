@@ -34,6 +34,7 @@
                 <item name="onestepcheckout_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsOnestepcheckoutActive</item>
                 <item name="is_international_address_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsInternationalAddressActive</item>
                 <item name="is_international_packets_active" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\IsInternationalPacketsActive</item>
+                <item name="default_letterbox_package_product" xsi:type="object">\TIG\PostNL\Config\CheckoutConfiguration\DefaultLetterboxPackageProduct</item>
             </argument>
         </arguments>
     </type>

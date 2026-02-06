@@ -6,6 +6,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Encryption\Encryptor;
 use Magento\Framework\Module\Manager;
 use Magento\Framework\Serialize\Serializer\Json;
+use TIG\PostNL\Config\Source\LetterboxPackage\DefaultProduct;
 
 /**
  * This class contains all configuration options related to the product options.
@@ -47,6 +48,7 @@ class ProductOptions extends AbstractConfigProvider
     const XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS       = 'tig_postnl/delivery_settings/default_delivery_stated_address';
     const XPATH_DEFAULT_DEFAULT_DELIVERY_STATED_ADDRESS_BE    = 'tig_postnl/delivery_settings/default_delivery_stated_address_be';
     const XPATH_DEFAULT_PEPS_BOXABLE_PACKETS                  = 'tig_postnl/peps/default_peps_boxable_packets_option';
+    const XPATH_DEFAULT_LETTERBOX_PACKAGE_PRODUCT             = 'tig_postnl/letterbox_package/default_letterbox_package_product';
 
     private Json $serializer;
 
@@ -336,8 +338,22 @@ class ProductOptions extends AbstractConfigProvider
      */
     public function getDefaultLetterboxPackageProductOption()
     {
+        $default = (string)$this->getConfigFromXpath(static::XPATH_DEFAULT_LETTERBOX_PACKAGE_PRODUCT);
+        if ($default === DefaultProduct::LETTERBOX_PRODUCT_CUSTOMER_CHOICE) {
+            return DefaultProduct::LETTERBOX_PRODUCT_2928;
+        }
+
+        if ($default !== '') {
+            return $default;
+        }
+
         $result = array_column($this->productOptions->getProductOptions(['group' => 'buspakje_options']), 'value');
         return reset($result);
+    }
+
+    public function getDefaultLetterboxPackageProductSetting(): string
+    {
+        return (string)$this->getConfigFromXpath(static::XPATH_DEFAULT_LETTERBOX_PACKAGE_PRODUCT);
     }
 
     /**
