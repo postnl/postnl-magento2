@@ -8,7 +8,11 @@ define([
     'TIG_PostNL/js/Helper/Logger',
     'TIG_PostNL/js/Helper/State',
     'TIG_PostNL/js/Models/TimeFrame',
-    'Magento_Checkout/js/action/set-shipping-information'
+    'Magento_Checkout/js/action/set-shipping-information',
+    'Magento_Checkout/js/action/get-totals',
+    'Magento_Checkout/js/model/shipping-rate-registry',
+    'Magento_Checkout/js/model/shipping-rate-processor/new-address',
+    'Magento_Checkout/js/model/shipping-rate-processor/customer-address'
 ], function (
     Component,
     ko,
@@ -19,7 +23,11 @@ define([
     Logger,
     State,
     TimeFrame,
-    setShippingInformationAction
+    setShippingInformationAction,
+    getTotalsAction,
+    rateRegistry,
+    newAddressProcessor,
+    customerAddressProcessor
 ) {
     'use strict';
 
@@ -145,9 +153,58 @@ define([
                     stated_address_only: +$('#postnl_stated_address_only_checkbox').is(':checked')
                 }
             }).done(function (response) {
+                var isLetterboxSelection = typeof value.letterbox_package !== 'undefined';
+                var updateDeliveryPriceFromTotals = function () {
+                    var totals = quote.totals && quote.totals();
+                    if (!totals) {
+                        return;
+                    }
+                    var shippingAmount = totals.shipping_amount;
+                    if (shippingAmount === undefined && Array.isArray(totals.total_segments)) {
+                        totals.total_segments.some(function (segment) {
+                            if (segment && segment.code === 'shipping') {
+                                shippingAmount = segment.value;
+                                return true;
+                            }
+                            return false;
+                        });
+                    }
+                    if (shippingAmount !== undefined && shippingAmount !== null) {
+                        State.deliveryPrice(shippingAmount);
+                    }
+                };
                 $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
-                if (window.checkoutConfig.shipping.postnl.onestepcheckout_active) {
-                    setShippingInformationAction();
+                var shippingMethod = quote.shippingMethod();
+                if (shippingMethod && shippingMethod.carrier_code === 'tig_postnl') {
+                    var refreshShippingRates = function () {
+                        var address = quote.shippingAddress();
+                        if (!address || typeof address.getType !== 'function') {
+                            return;
+                        }
+                        if (address.getType() === 'customer-address') {
+                            rateRegistry.set(address.getKey(), null);
+                            customerAddressProcessor.getRates(address);
+                            return;
+                        }
+                        rateRegistry.set(address.getCacheKey(), null);
+                        newAddressProcessor.getRates(address);
+                    };
+                    var saveAction = setShippingInformationAction();
+                    if (saveAction && saveAction.done) {
+                        saveAction.done(function () {
+                            getTotalsAction([]);
+                            refreshShippingRates();
+                            if (isLetterboxSelection) {
+                                updateDeliveryPriceFromTotals();
+                            }
+                        });
+                    } else {
+                        getTotalsAction([]);
+                        refreshShippingRates();
+                        if (isLetterboxSelection) {
+                            updateDeliveryPriceFromTotals();
+                        }
+                    }
                 }
             });
         },
@@ -372,7 +429,11 @@ define([
             $.each(deliveryDays, function (deliveryDaysindex, value) {
                 if (Array.isArray(value)) {
                     $.each(value, function (index, value) {
-                        if (value.date === option.date && value.day === option.day && value.from === option.from && value.to === option.to) {
+                        var matchesTimeframe = value.date === option.date && value.day === option.day &&
+                            value.from === option.from && value.to === option.to;
+                        var matchesOption = value.date === undefined && option.date === undefined &&
+                            value.option !== undefined && option.option !== undefined && value.option === option.option;
+                        if (matchesTimeframe || matchesOption) {
                             result = [deliveryDaysindex, index];
                             return false;
                         }

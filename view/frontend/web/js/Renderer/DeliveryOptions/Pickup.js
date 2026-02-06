@@ -7,7 +7,11 @@ define([
     'TIG_PostNL/js/Helper/Logger',
     'TIG_PostNL/js/Helper/State',
     'TIG_PostNL/js/Models/Location',
-    'Magento_Checkout/js/action/set-shipping-information'
+    'Magento_Checkout/js/action/set-shipping-information',
+    'Magento_Checkout/js/action/get-totals',
+    'Magento_Checkout/js/model/shipping-rate-registry',
+    'Magento_Checkout/js/model/shipping-rate-processor/new-address',
+    'Magento_Checkout/js/model/shipping-rate-processor/customer-address'
 ], function (
     Component,
     ko,
@@ -17,7 +21,11 @@ define([
     Logger,
     State,
     Location,
-    setShippingInformationAction
+    setShippingInformationAction,
+    getTotalsAction,
+    rateRegistry,
+    newAddressProcessor,
+    customerAddressProcessor
 ) {
     'use strict';
 
@@ -143,8 +151,31 @@ define([
                     }
                 }).done(function (response) {
                     $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
-                    if (window.checkoutConfig.shipping.postnl.onestepcheckout_active) {
-                        setShippingInformationAction();
+                    var shippingMethod = quote.shippingMethod();
+                    if (shippingMethod && shippingMethod.carrier_code === 'tig_postnl') {
+                        var refreshShippingRates = function () {
+                            var address = quote.shippingAddress();
+                            if (!address || typeof address.getType !== 'function') {
+                                return;
+                            }
+                            if (address.getType() === 'customer-address') {
+                                rateRegistry.set(address.getKey(), null);
+                                customerAddressProcessor.getRates(address);
+                                return;
+                            }
+                            rateRegistry.set(address.getCacheKey(), null);
+                            newAddressProcessor.getRates(address);
+                        };
+                        var saveAction = setShippingInformationAction();
+                        if (saveAction && saveAction.done) {
+                            saveAction.done(function () {
+                                getTotalsAction([]);
+                                refreshShippingRates();
+                            });
+                        } else {
+                            getTotalsAction([]);
+                            refreshShippingRates();
+                        }
                     }
                 });
 
@@ -281,4 +312,3 @@ define([
         },
     });
 });
-

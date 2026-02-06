@@ -524,6 +524,15 @@ abstract class OptionsAbstract
             'countryLimitation'    => 'NL',
             'group'                => 'buspakje_options',
         ],
+        '2948' => [
+            'value'                => '2948',
+            'label'                => 'Letter Box Parcel 48',
+            'isExtraCover'         => false,
+            'isSunday'             => false,
+            'isGuaranteedDelivery' => false,
+            'countryLimitation'    => 'NL',
+            'group'                => 'buspakje_options',
+        ],
         // Extra@Home Options
         '3628' => [
             'value'                => '3628',

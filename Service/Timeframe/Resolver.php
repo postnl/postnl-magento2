@@ -13,6 +13,9 @@ use TIG\PostNL\Service\Shipping\InternationalPacket;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
 use TIG\PostNL\Service\Validation\CountryShipping;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
+use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfig;
+use TIG\PostNL\Config\Source\LetterboxPackage\DefaultProduct;
+use TIG\PostNL\Service\Order\ProductInfo;
 
 class Resolver
 {
@@ -39,6 +42,7 @@ class Resolver
     private CanaryIslandToIC $canaryConverter;
     private CacheInterface $cache;
     private ?string $lastRequestDate = null;
+    private ProductOptionsConfig $productOptions;
 
     public function __construct(
         Session $checkoutSession,
@@ -51,7 +55,8 @@ class Resolver
         CountryShipping $countryShipping,
         DeliveryDate $deliveryDate,
         CanaryIslandToIC $canaryConverter,
-        CacheInterface $cache
+        CacheInterface $cache,
+        ProductOptionsConfig $productOptions
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->letterboxPackage = $letterboxPackage;
@@ -64,6 +69,7 @@ class Resolver
         $this->deliveryDate = $deliveryDate;
         $this->canaryConverter = $canaryConverter;
         $this->cache = $cache;
+        $this->productOptions = $productOptions;
     }
 
     public function processTimeframes(array $address): array
@@ -235,6 +241,23 @@ class Resolver
 
     private function getLetterboxPackageResponse(): array
     {
+        $defaultProduct = $this->productOptions->getDefaultLetterboxPackageProductSetting();
+        if ($defaultProduct === DefaultProduct::LETTERBOX_PRODUCT_CUSTOMER_CHOICE) {
+            return [
+                'letterbox_package' => true,
+                'timeframes'        => [[
+                    [
+                        'letterbox_package' => __('Letterboxparcel Standard (24 hours)'),
+                        'option'            => ProductInfo::OPTION_LETTERBOX_PACKAGE_24,
+                    ],
+                    [
+                        'letterbox_package' => __('Letterboxparcel 48'),
+                        'option'            => ProductInfo::OPTION_LETTERBOX_PACKAGE_48,
+                    ],
+                ]]
+            ];
+        }
+
         return [
             'letterbox_package' => true,
             'timeframes'        => [[[

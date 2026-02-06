@@ -155,6 +155,7 @@
 
             <letterbox_package>
                 <letterbox_package_calculation_mode>manually</letterbox_package_calculation_mode>
+                <default_letterbox_package_product>2928</default_letterbox_package_product>
             </letterbox_package>
 
             <returns>

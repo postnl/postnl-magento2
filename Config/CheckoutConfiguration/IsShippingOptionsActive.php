@@ -15,7 +15,7 @@ use TIG\PostNL\Service\Order\ProductInfo;
 // TODO: See if class can be simplified (less properties)
 class IsShippingOptionsActive implements CheckoutConfigurationInterface
 {
-    const POSTNL_LETTERBOX_PARCEL_CODE = '2928';
+    const POSTNL_LETTERBOX_PARCEL_CODES = ['2928', '2948'];
 
     /** @var ShippingOptions */
     private $shippingOptions;
@@ -76,7 +76,7 @@ class IsShippingOptionsActive implements CheckoutConfigurationInterface
             || $this->accountConfiguration->isModusOff()
             || !$this->hasValidApiSettings()
             || $this->quoteHasOption->get(ProductInfo::OPTION_EXTRAATHOME)
-            || $this->productOptions->getDefaultProductOption() == static::POSTNL_LETTERBOX_PARCEL_CODE
+            || in_array($this->productOptions->getDefaultProductOption(), static::POSTNL_LETTERBOX_PARCEL_CODES, true)
         ) {
             return false;
         }

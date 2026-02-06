@@ -7,6 +7,7 @@ use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Sales\Model\Order\Address as SalesAddress;
 use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfiguration;
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Config\Source\LetterboxPackage\DefaultProduct;
 use TIG\PostNL\Config\Source\Options\ProductOptions as ProductOptionsFinder;
 use TIG\PostNL\Service\Converter\CanaryIslandToIC;
 use TIG\PostNL\Service\Shipment\EpsCountries;
@@ -41,6 +42,8 @@ class ProductInfo
     const OPTION_EXTRAATHOME              = 'extra@home';
 
     const OPTION_LETTERBOX_PACKAGE        = 'letterbox_package';
+    const OPTION_LETTERBOX_PACKAGE_24     = 'letterbox_package_24';
+    const OPTION_LETTERBOX_PACKAGE_48     = 'letterbox_package_48';
 
     const OPTION_INTENATIONAL_PACKET      = 'priority_options';
 
@@ -359,6 +362,16 @@ class ProductInfo
     private function setProductCode($option, $country)
     {
         switch ($option) {
+            case static::OPTION_LETTERBOX_PACKAGE_24:
+                $this->code = DefaultProduct::LETTERBOX_PRODUCT_2928;
+                $this->type = static::SHIPMENT_TYPE_LETTERBOX_PACKAGE;
+
+                break;
+            case static::OPTION_LETTERBOX_PACKAGE_48:
+                $this->code = DefaultProduct::LETTERBOX_PRODUCT_2948;
+                $this->type = static::SHIPMENT_TYPE_LETTERBOX_PACKAGE;
+
+                break;
             case static::OPTION_EVENING:
                 $this->code = $this->productOptionsConfiguration->getDefaultEveningProductOption($country);
                 $this->type = static::SHIPMENT_TYPE_EVENING;
