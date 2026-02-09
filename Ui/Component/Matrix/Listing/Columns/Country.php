@@ -46,8 +46,12 @@ class Country extends Column
                 $countryNameList = [];
 
                 foreach ($itemList as $value) {
-                    $countryInfo       = $this->countryInformationAcquirer->getCountryInfo($value);
-                    $countryNameList[] = $countryInfo->getFullNameLocale();
+                    if ($value) {
+                        $countryInfo       = $this->countryInformationAcquirer->getCountryInfo($value);
+                        $countryNameList[] = $countryInfo->getFullNameLocale();
+                    } else {
+                        $countryNameList[] = '*';
+                    }
                 }
 
                 $item[$fieldName] = implode(', ',$countryNameList);
