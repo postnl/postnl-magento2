@@ -715,3 +715,6 @@ Debug,Debug
 "Display on","Weergeven op"
 "Checkout Settings",Kassa-instellingen
 "Minicart Settings",Minicartinstellingen
+"Select ""Pickup"" tab first on the checkout","Toon tabblad ""Ophalen bij PostNL"" als eerste"
+"Other price for Pickup","Activeer alternatieve verzendkosten voor afhalen bij PostNL"
+"Price for pickup","Verzendkosten voor afhalen bij PostNL"
