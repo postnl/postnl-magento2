@@ -4,7 +4,6 @@ namespace TIG\PostNL\Webservices\Endpoints;
 
 use Magento\Customer\Model\Address\AbstractAddress as Address;
 use TIG\PostNL\Api\Data\OrderInterface as PostNLOrder;
-use TIG\PostNL\Model\Order;
 use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
@@ -117,7 +116,7 @@ class SentDate extends AbstractEndpoint
      * @param PostNLOrder $postNLOrder
      * @return void
      */
-    public function updateParameters($address, $storeId, $postNLOrder)
+    public function updateParameters($address, $storeId, PostNLOrder $postNLOrder)
     {
         $this->soap->updateApiKey($storeId);
 
