@@ -4,6 +4,7 @@ namespace TIG\PostNL\Webservices\Endpoints;
 
 use Magento\Customer\Model\Address\AbstractAddress as Address;
 use TIG\PostNL\Api\Data\OrderInterface as PostNLOrder;
+use TIG\PostNL\Model\Order;
 use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Timeframe\Options;
 use TIG\PostNL\Webservices\AbstractEndpoint;
@@ -111,17 +112,18 @@ class SentDate extends AbstractEndpoint
     }
 
     /**
-     * @param             $address
-     * @param             $storeId
+     * @param \Magento\Sales\Model\Order\Address|\Magento\Quote\Model\Quote\Address|null $address
+     * @param int|string $storeId
      * @param PostNLOrder $postNLOrder
+     * @return void
      */
-    public function updateParameters($address, $storeId, PostNLOrder $postNLOrder)
+    public function updateParameters($address, $storeId, $postNLOrder)
     {
         $this->soap->updateApiKey($storeId);
 
         $this->requestParams = [
             $this->type => [
-                'CountryCode'        => $this->getCountryId($postNLOrder),
+                'CountryCode'        => $this->getCountryId($address),
                 'PostalCode'         => $this->getPostcode($address),
                 'HouseNr'            => '',
                 'HouseNrExt'         => '',
@@ -130,7 +132,7 @@ class SentDate extends AbstractEndpoint
                 'DeliveryDate'       => $this->getDeliveryDate($address, $postNLOrder),
                 'ShippingDuration'   => '1', // Request by PostNL not to use $postNLOrder->getShippingDuration()
                 'AllowSundaySorting' => $this->timeframeOptions->isSundaySortingAllowed(),
-                'Options'            => [$this->getOption($postNLOrder)]
+                'Options'            => [$this->getOption($address, $postNLOrder)]
             ], 'Message'   => $this->message
         ];
     }
@@ -142,9 +144,9 @@ class SentDate extends AbstractEndpoint
      * @param PostNLOrder $postNLOrder
      * @return string
      */
-    private function getOption(PostNLOrder $postNLOrder)
+    private function getOption($address, PostNLOrder $postNLOrder)
     {
-        $availableOptions = $this->timeframeOptions->get($this->getCountryId($postNLOrder));
+        $availableOptions = $this->timeframeOptions->get($this->getCountryId($address));
         $currentType      = $postNLOrder->getType();
 
         if (in_array($currentType, $availableOptions, true)) {
@@ -161,14 +163,12 @@ class SentDate extends AbstractEndpoint
     /**
      * This endpoint is only available for dutch and belgian addresses.
      *
-     * @var PostNLOrder $postNLOrder
+     * @var \Magento\Quote\Model\Quote\Address|\Magento\Sales\Model\Order\Address|null $shippingAddress
      * @return string
      * @see getPostcode
      */
-    private function getCountryId($postNLOrder)
+    private function getCountryId($shippingAddress)
     {
-        $shippingAddress = $postNLOrder->getShippingAddress();
-
         return $shippingAddress && in_array($shippingAddress->getCountryId(), ['NL', 'BE'])
             ? $shippingAddress->getCountryId() : 'NL';
     }
