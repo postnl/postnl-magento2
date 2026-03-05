@@ -37,7 +37,8 @@ define([
             postcode: null,
             country: null,
             street: null,
-            hasAddress:false,
+            hasAddress: false,
+            isLetterBoxPackage: false,
             deliverydays: ko.observableArray([]),
             odd: false,
             currentDeliveryAddress: ko.observable(null)
@@ -50,7 +51,8 @@ define([
                 'country',
                 'street',
                 'hasAddress',
-                'selectedOption'
+                'selectedOption',
+                'isLetterBoxPackage'
             ]);
 
             AddressFinder.subscribe(function (address, oldAddress) {
@@ -242,6 +244,7 @@ define([
 
             // About to receive new delivery days. Deselect the current one.
             this.selectedOption(null);
+            this.isLetterBoxPackage(false);
             const allowToOpenDelivery = this.canSelectFirstDelivery(address.country);
 
             self.getDeliveryDayRequest = $.ajax({
@@ -281,6 +284,7 @@ define([
                     });
                     this.deliverydays(data);
                     this.selectFirstDeliveryOption();
+                    this.isLetterBoxPackage(true);
                     return;
                 }
 
@@ -366,16 +370,23 @@ define([
             return true;
         },
 
-        canUseStatedAddressOnly: ko.computed(function () {
-            var isActive = window.checkoutConfig.shipping.postnl.stated_address_only_active;
-            var isInternationalPacketsActive = window.checkoutConfig.shipping.postnl.is_international_packets_active;
+        canUseStatedAddressOnly: function() {
+            return ko.pureComputed(function () {
+                var isActive = window.checkoutConfig.shipping.postnl.stated_address_only_active;
+                var isInternationalPacketsActive = window.checkoutConfig.shipping.postnl.is_international_packets_active;
 
-            var address = AddressFinder();
-            var isNL = (address !== null && address !== false &&
-                (address.country === 'NL' || (address.country === 'BE' && !isInternationalPacketsActive)));
+                var address = AddressFinder();
+                var isNL = (address !== null && address !== false &&
+                    (address.country === 'NL' || (address.country === 'BE' && !isInternationalPacketsActive)));
 
-            return isActive === 1 && isNL;
-        }),
+                // Hide "Do not deliver to neighbours" when letterbox
+                if (this.isLetterBoxPackage()) {
+                    return false;
+                }
+
+                return isActive === 1 && isNL;
+            }, this);
+        },
 
         canSelectFirstDelivery: function(country) {
             if (State.defaultTab === 'pickup') {
