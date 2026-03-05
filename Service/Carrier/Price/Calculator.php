@@ -2,8 +2,10 @@
 
 namespace TIG\PostNL\Service\Carrier\Price;
 
+use Exception;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Tax\Helper\Data;
@@ -117,7 +119,7 @@ class Calculator
      *
      * @return array|bool
      */
-    private function getRatePrice($rateType, $request, $parcelType)
+    private function getRatePrice(string $rateType, RateRequest $request, $parcelType)
     {
         $quote = null;
         if (!$parcelType) {
@@ -171,8 +173,8 @@ class Calculator
                 if ($parcelType === 'pakjegemak' && $this->getConfigData('is_other_price_for_pickup')) {
                     $price = $this->getConfigData('pickup_price');
                 }
-                if ($this->shouldUseLetterbox24Price($quote) && $this->getConfigData('is_other_price_for_letterbox_24')) {
-                    $price = $this->getConfigData('letterbox_24_price');
+                if ($letterboxPrice = $this->getLetterboxAlternativePrice($quote)) {
+                    $price = $letterboxPrice;
                 }
 
                 return $this->priceResponse($price, $price);
@@ -243,22 +245,47 @@ class Calculator
         );
     }
 
-    private function shouldUseLetterbox24Price($quote): bool
+    private function getLetterboxAlternativePrice(?Quote $quote): ?float
     {
-        if (!$quote) {
-            return false;
+        if(!$quote) {
+            return null;
         }
 
         try {
             $order = $this->currentPostNLOrder->get($quote->getId());
-        } catch (\Exception $exception) {
-            return false;
-        }
-        if (!$order) {
-            return false;
+        } catch (Exception) {
+            return null;
         }
 
-        return $order->getProductCode() === DefaultProduct::LETTERBOX_PRODUCT_2928;
+        if (!$order) {
+            return null;
+        }
+
+        $productCode = (string) $order->getProductCode();
+
+        if (
+            $productCode !== DefaultProduct::LETTERBOX_PRODUCT_2928
+            && $productCode !== DefaultProduct::LETTERBOX_PRODUCT_2948
+        ) {
+            return null;
+        }
+
+        $price = null;
+        if (
+            $productCode === DefaultProduct::LETTERBOX_PRODUCT_2928
+            && $specificPrice = $this->getConfigData('letterbox_24_price')
+        ) {
+            $price = (float) $specificPrice;
+        } elseif (
+            $productCode === DefaultProduct::LETTERBOX_PRODUCT_2948
+            && $specificPrice = $this->getConfigData('letterbox_48_price')
+        ) {
+            $price = (float) $specificPrice;
+        } elseif ($generalPrice = $this->getConfigData('letterbox_price')) {
+            $price = (float) $generalPrice;
+        }
+
+        return $price;
     }
 
     /**
