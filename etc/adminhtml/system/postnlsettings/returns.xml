@@ -9,6 +9,7 @@
 
     <field id="label" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
         <label>Labels</label>
+        <comment><![CDATA[<b>Note:</b> Shipping & Return Label will be discontinued on <span class="colorRed">July 1 2026</span>.]]></comment>
         <source_model>TIG\PostNL\Config\Source\Settings\LabelSettings</source_model>
         <config_path>tig_postnl/returns/label</config_path>
         <depends>

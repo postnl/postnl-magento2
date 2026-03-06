@@ -489,6 +489,7 @@ Percent,Percentage
 "Housenumber ext","Huisnummer toevoeging"
 "Labels","Labels"
 "Shipping & Return label","Heen & Terug "
+"<b>Note:</b> Shipping & Return Label will be discontinued on <span class="colorRed">July 1 2026</span>.","<b>Let op:</b> het product "Heen & Terug" wordt per <span class="colorRed">1 juli 2026</span> beëindigd."
 "In the box","In de doos"
 "Activate return function for all labels","Activeer retourfunctie voor alle verzendlabels"
 "Activate return function on an order-by-order basis","Activeer retourfunctie per label"
