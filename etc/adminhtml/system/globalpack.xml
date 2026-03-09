@@ -51,12 +51,12 @@
             <fieldset_css>tig_postnl-sub-section</fieldset_css>
             <field id="type" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Barcode Type</label>
-                <comment>The current global barcode type as supplied by PostNL. Must consist of 2 letters.</comment>
+                <comment>The current Parcels Non-EU barcode type as supplied by PostNL. Must consist of 2 letters.</comment>
                 <config_path>tig_postnl/globalpack/barcode_type</config_path>
             </field>
             <field id="range" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Barcode Range</label>
-                <comment>Your global barcode range as supplied by PostNL. Must contain 4 digits.</comment>
+                <comment>Your Parcels Non-EU barcode range as supplied by PostNL. Must contain 4 digits.</comment>
                 <config_path>tig_postnl/globalpack/barcode_range</config_path>
             </field>
             <depends>
