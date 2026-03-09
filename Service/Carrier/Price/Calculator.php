@@ -10,6 +10,8 @@ use Magento\Tax\Helper\Data;
 use Magento\Tax\Model\Config;
 use TIG\PostNL\Config\Source\Carrier\RateType;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
+use TIG\PostNL\Service\Order\CurrentPostNLOrder;
+use TIG\PostNL\Config\Source\LetterboxPackage\DefaultProduct;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
 
 // @codingStandardsIgnoreFile
@@ -46,6 +48,11 @@ class Calculator
     private $parcelTypeFinder;
 
     /**
+     * @var CurrentPostNLOrder
+     */
+    private $currentPostNLOrder;
+
+    /**
      * @var Data
      */
     private $taxHelper;
@@ -58,6 +65,7 @@ class Calculator
      * @param Matrixrate           $matrixratePrice
      * @param Tablerate            $tablerateShippingPrice
      * @param ParcelTypeFinder     $parcelTypeFinder
+     * @param CurrentPostNLOrder   $currentPostNLOrder
      * @param Data                 $taxHelper
      */
     public function __construct(
@@ -66,6 +74,7 @@ class Calculator
         Matrixrate           $matrixratePrice,
         Tablerate            $tablerateShippingPrice,
         ParcelTypeFinder     $parcelTypeFinder,
+        CurrentPostNLOrder   $currentPostNLOrder,
         Data                 $taxHelper
     ) {
         $this->scopeConfig            = $scopeConfig;
@@ -73,6 +82,7 @@ class Calculator
         $this->matrixratePrice        = $matrixratePrice;
         $this->tablerateShippingPrice = $tablerateShippingPrice;
         $this->parcelTypeFinder       = $parcelTypeFinder;
+        $this->currentPostNLOrder     = $currentPostNLOrder;
         $this->taxHelper              = $taxHelper;
     }
 
@@ -109,6 +119,7 @@ class Calculator
      */
     private function getRatePrice($rateType, $request, $parcelType)
     {
+        $quote = null;
         if (!$parcelType) {
             $quote        = null;
             $requestItems = $request->getAllItems();
@@ -122,6 +133,13 @@ class Calculator
                 $parcelType = $this->parcelTypeFinder->get($quote);
             } catch (LocalizedException $exception) {
                 $parcelType = ParcelTypeFinder::DEFAULT_TYPE;
+            }
+        }
+        if (!$quote) {
+            $requestItems = $request->getAllItems();
+            if ($requestItems) {
+                $requestItem = reset($requestItems);
+                $quote       = $requestItem->getQuote();
             }
         }
 
@@ -152,6 +170,9 @@ class Calculator
                 $price = $this->getConfigData('price');
                 if ($parcelType === 'pakjegemak' && $this->getConfigData('is_other_price_for_pickup')) {
                     $price = $this->getConfigData('pickup_price');
+                }
+                if ($this->shouldUseLetterbox24Price($quote) && $this->getConfigData('is_other_price_for_letterbox_24')) {
+                    $price = $this->getConfigData('letterbox_24_price');
                 }
 
                 return $this->priceResponse($price, $price);
@@ -220,6 +241,24 @@ class Calculator
             ScopeInterface::SCOPE_STORE,
             $this->store
         );
+    }
+
+    private function shouldUseLetterbox24Price($quote): bool
+    {
+        if (!$quote) {
+            return false;
+        }
+
+        try {
+            $order = $this->currentPostNLOrder->get($quote->getId());
+        } catch (\Exception $exception) {
+            return false;
+        }
+        if (!$order) {
+            return false;
+        }
+
+        return $order->getProductCode() === DefaultProduct::LETTERBOX_PRODUCT_2928;
     }
 
     /**

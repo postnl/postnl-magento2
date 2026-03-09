@@ -18,5 +18,13 @@
             <source_model>TIG\PostNL\Config\Source\LetterboxPackage\CalculationMode</source_model>
             <config_path>tig_postnl/letterbox_package/letterbox_package_calculation_mode</config_path>
         </field>
+        <field id="default_letterbox_package_product" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Default automatic letterboxparcel product</label>
+            <source_model>TIG\PostNL\Config\Source\LetterboxPackage\DefaultProduct</source_model>
+            <config_path>tig_postnl/letterbox_package/default_letterbox_package_product</config_path>
+            <depends>
+                <field id="letterbox_package_calculation_mode">automatic</field>
+            </depends>
+        </field>
     </group>
 </include>
