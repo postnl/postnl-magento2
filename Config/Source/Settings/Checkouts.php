@@ -12,13 +12,10 @@ class Checkouts implements OptionSourceInterface
      */
     public function toOptionArray()
     {
-        // @codingStandardsIgnoreStart
-        $options = [
+        return [
             ['value' => 'default', 'label' => __('Two Step Checkout Luma')],
             ['value' => 'blank', 'label' => __('Two Step Checkout Blank')],
+            ['value' => 'hyva', 'label' => __('Hyvä')],
         ];
-        // @codingStandardsIgnoreEnd
-
-        return $options;
     }
 }
