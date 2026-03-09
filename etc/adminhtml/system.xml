@@ -13,6 +13,7 @@
             <include path="TIG_PostNL::system/support.xml"/>
             <include path="TIG_PostNL::system/general.xml"/>
             <include path="TIG_PostNL::system/postnlsettings.xml"/>
+            <include path="TIG_PostNL::system/fillinsettings.xml"/>
             <include path="TIG_PostNL::system/globalpack.xml" />
             <include path="TIG_PostNL::system/extrasettings.xml"/>
             <include path="TIG_PostNL::system/developersettings.xml"/>

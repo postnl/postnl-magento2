@@ -48,6 +48,8 @@ var config = {
             //Mageplaza Checkout Compatibility
             "Mageplaza_Osc/template/container/address/shipping/address-renderer/default.html" :
                 "TIG_PostNL/template/Compatibility/mageplaza_osc/shipping-address/address-renderer/default.html",
+            'TIG_PostNL/js/view/fillin-button': 'TIG_PostNL/js/view/fillin-button',
+            'TIG_PostNL/js/cart/postnl-button': 'TIG_PostNL/js/cart/postnl-button'
         }
     }
 };

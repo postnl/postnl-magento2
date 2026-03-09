@@ -20,7 +20,7 @@ class ValidAddressTest extends TestCase
      */
     private $instance;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
         parent::setUp();
 

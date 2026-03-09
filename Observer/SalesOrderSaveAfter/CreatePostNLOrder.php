@@ -3,8 +3,10 @@
 namespace TIG\PostNL\Observer\SalesOrderSaveAfter;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Quote\Api\CartRepositoryInterface;
 use TIG\PostNL\Api\Data\OrderInterface;
 use TIG\PostNL\Helper\Data;
+use TIG\PostNL\Logging\Log;
 use TIG\PostNL\Model\OrderRepository;
 use TIG\PostNL\Service\Order\ProductInfo;
 use Magento\Framework\Event\Observer;
@@ -12,7 +14,8 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
 use TIG\PostNL\Model\Order;
 use TIG\PostNL\Service\Parcel\Order\Count as ParcelCount;
-use \TIG\PostNL\Service\Options\ItemsToOption;
+use TIG\PostNL\Service\Options\ItemsToOption;
+use TIG\PostNL\Service\Wrapper\Quote;
 
 class CreatePostNLOrder implements ObserverInterface
 {
@@ -20,6 +23,10 @@ class CreatePostNLOrder implements ObserverInterface
      * @var OrderRepository
      */
     private $orderRepository;
+    /**
+     * @var CartRepositoryInterface
+     */
+    private $quoteRepository;
     /**
      * @var ParcelCount
      */
@@ -41,6 +48,16 @@ class CreatePostNLOrder implements ObserverInterface
     private $itemsToOption;
 
     /**
+     * @var Quote
+     */
+    private $quoteWrapper;
+    
+    /**
+     * @var Log
+     */
+    private $logger;
+
+    /**
      * @param OrderRepository $orderRepository
      * @param ParcelCount     $count
      * @param ItemsToOption   $itemsToOption
@@ -49,16 +66,22 @@ class CreatePostNLOrder implements ObserverInterface
      */
     public function __construct(
         OrderRepository $orderRepository,
+        CartRepositoryInterface $quoteRepository,
         ParcelCount $count,
         ItemsToOption $itemsToOption,
         ProductInfo $productInfo,
-        Data $helper
+        Data $helper,
+        Quote $quoteWrapper,
+        Log $logger
     ) {
         $this->orderRepository = $orderRepository;
         $this->parcelCount     = $count;
         $this->itemsToOption   = $itemsToOption;
         $this->helper          = $helper;
         $this->productInfo     = $productInfo;
+        $this->quoteWrapper    = $quoteWrapper;
+        $this->quoteRepository = $quoteRepository;
+        $this->logger          = $logger;
     }
 
     /**
@@ -152,6 +175,15 @@ class CreatePostNLOrder implements ObserverInterface
          * set because the delivery options are disabled or this is an EPS shipment.
          */
         if (!$postnlOrder->getProductCode()) {
+            if ($magentoOrder->getQuoteId()) {
+                try {
+                    $quote = $this->quoteRepository->get($magentoOrder->getQuoteId());
+                    $this->quoteWrapper->setQuote($quote);
+                } catch (\Exception $e) {
+                    $this->logger->critical(__('Could not find quote %1 for order %2. Error %3', $magentoOrder->getQuoteId(), $magentoOrder->getId(), $e->getMessage()));
+                }
+            }
+
             $option          = $this->itemsToOption->get($magentoOrder->getItems());
             $shippingAddress = $magentoOrder->getShippingAddress();
             $productInfo     = $this->productInfo->get(ProductInfo::SHIPMENT_TYPE_AUTO, $option, $shippingAddress);

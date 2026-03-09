@@ -21,5 +21,23 @@
                 </argument>
             </arguments>
         </referenceBlock>
+        <referenceContainer name="checkout.cart.methods">
+            <block name="cart_before"
+                   template="TIG_PostNL::cart/button.phtml"
+                   before="checkout.cart.methods.onepage.bottom"
+                   ifconfig="tig_postnl/fillin/settings/cart/enabled">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">TIG\PostNL\ViewModel\FillIn</argument>
+                </arguments>
+            </block>
+            <block name="cart_after"
+                   template="TIG_PostNL::cart/button.phtml"
+                   after="checkout.cart.methods.onepage.bottom"
+                   ifconfig="tig_postnl/fillin/settings/cart/enabled">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">TIG\PostNL\ViewModel\FillIn</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
     </body>
 </page>

@@ -684,3 +684,27 @@ Percent,Percentage
 "Select countries where pickup points can be selected.","Selecteer landen waarvoor afhaalpunten geselecteerd kunnen worden."
 "Default shipping option international pick-up points","Standaard bezorging internationale afhaalpunten"
 "Select the default product option for international pick-up point delivery.","Selecteer de standaard bezorgoptie voor internationale afhaalpunten."
+"With this functionality your customers can easily and automatically fill in their shipping address via their PostNL account.","Met deze functie kunnen klanten eenvoudig en automatisch hun adresgegevens invullen via hun PostNL account"
+"This functionality is only available for consumers with a Dutch shipping address.","Deze functie is alleen beschikbaar voor ontvangers met een bezorgadres in Nederland"
+"Click the following link to activate the functionality: ","Klik op de volgende link om de functie te activeren: "
+"Fill in with PostNL.","Invullen met PostNL."
+"Something went wrong, please try again later","Er is iets misgegaan, probeer het later opnieuw"
+"Before Checkout Button","Vóór de betaalknop"
+"After Checkout Button","Na de betaalknop"
+"Before Customer Email","Vóór de e-mail van de klant"
+"Before Customer Details","Vóór de klantgegevens"
+"Before Minicart Buttons","Vóór de minicartknoppen"
+"After Minicart Buttons","Na de minicartknoppen"
+"Fill in the details with PostNL","Vul de gegevens in met PostNL"
+"Your name and address will be filled in automatically through your PostNL account. This way, you don't have to fill out the form yourself!","Je naam en adres worden automatisch ingevuld via je PostNL-account. Zo hoef je het formulier niet zelf in te vullen!"
+"An error occurred. Please try again.","Er is een fout opgetreden. Probeer het later opnieuw."
+Loading...,Laden...
+PostNL,PostNL
+Settings,Instellingen
+Enabled,Ingeschakeld
+"Client ID","Klant-ID"
+Debug,Debug
+"Cart Settings",Winkelwageninstellingen
+"Display on","Weergeven op"
+"Checkout Settings",Kassa-instellingen
+"Minicart Settings",Minicartinstellingen

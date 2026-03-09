@@ -5,6 +5,8 @@ use Magento\Customer\Helper\Address;
 
 class Data
 {
+    private const ADDRESS_MAX_LINES = 3;
+
     protected int $addressLineExtend = 0;
 
     protected Address $addressHelper;
@@ -23,7 +25,7 @@ class Data
     public function canExtendAddressLines(): bool
     {
         $allowedLines = (int)$this->addressHelper->getStreetLines();
-        return $allowedLines === 1;
+        return $allowedLines < self::ADDRESS_MAX_LINES;
     }
 
     public function setAddressLineExtend(): void
@@ -31,6 +33,7 @@ class Data
         if (!$this->canExtendAddressLines()) {
             return;
         }
-        $this->addressLineExtend = 2;
+
+        $this->addressLineExtend = self::ADDRESS_MAX_LINES - (int)$this->addressHelper->getStreetLines();
     }
 }

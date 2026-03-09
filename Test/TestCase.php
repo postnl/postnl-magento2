@@ -35,7 +35,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * Basic setup
      */
-    public function setUp() : void
+    protected function setUp() : void
     {
         ini_set('error_reporting', E_ALL);
         ini_set('display_errors', '1');

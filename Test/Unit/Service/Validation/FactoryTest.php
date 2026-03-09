@@ -14,7 +14,7 @@ class FactoryTest extends TestCase
      */
     public $instance;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
         parent::setUp();
 

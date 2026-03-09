@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="\Magento\Shipping\Block\Adminhtml\View" type="\TIG\PostNL\Block\Adminhtml\Shipment\View" />
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Shipping\Block\Adminhtml\View" type="TIG\PostNL\Block\Adminhtml\Shipment\View"/>
 
     <type name="TIG\PostNL\Service\Shipment\Label\Prepare">
         <arguments>
             <argument name="types" xsi:type="array">
-                <item name="eps" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\EPSFactory</item>
-                <item name="domestic" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\DomesticFactory</item>
-                <item name="a4normal" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\A4NormalFactory</item>
-                <item name="gp" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\GlobalPackFactory</item>
-                <item name="boxable_packets" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\EPSFactory</item>
-                <item name="priority_options" xsi:type="object">\TIG\PostNL\Service\Shipment\Label\Type\EPSFactory</item>
+                <item name="eps" xsi:type="object">TIG\PostNL\Service\Shipment\Label\Type\EPSFactory</item>
+                <item name="domestic" xsi:type="object">TIG\PostNL\Service\Shipment\Label\Type\DomesticFactory</item>
+                <item name="a4normal" xsi:type="object">TIG\PostNL\Service\Shipment\Label\Type\A4NormalFactory</item>
+                <item name="gp" xsi:type="object">TIG\PostNL\Service\Shipment\Label\Type\GlobalPackFactory</item>
+                <item name="boxable_packets" xsi:type="object">TIG\PostNL\Service\Shipment\Label\Type\EPSFactory</item>
+                <item name="priority_options" xsi:type="object">TIG\PostNL\Service\Shipment\Label\Type\EPSFactory</item>
             </argument>
         </arguments>
     </type>
@@ -19,12 +19,19 @@
     <type name="TIG\PostNL\Service\Shipment\Labelling\Handler">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="gp" xsi:type="object">\TIG\PostNL\Service\Shipment\Labelling\Handler\GlobalpackFactory</item>
+                <item name="gp" xsi:type="object">TIG\PostNL\Service\Shipment\Labelling\Handler\GlobalpackFactory</item>
             </argument>
         </arguments>
     </type>
 
-    <type name="\Magento\Ui\Component\MassAction">
-        <plugin name="TIG_PostNL_Remove_MassAction_When_Disabled" type="\TIG\PostNL\Plugin\Admin\Ui\Component\MassAction" />
+    <type name="Magento\Ui\Component\MassAction">
+        <plugin name="TIG_PostNL_Remove_MassAction_When_Disabled"
+                type="TIG\PostNL\Plugin\Admin\Ui\Component\MassAction"/>
+    </type>
+
+    <type name="TIG\PostNL\Block\Adminhtml\Config\FillIn\Settings">
+        <arguments>
+            <argument name="authSession" xsi:type="object">Magento\Backend\Model\Auth\Session\Proxy</argument>
+        </arguments>
     </type>
 </config>
