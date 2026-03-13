@@ -719,3 +719,7 @@ Debug,Debug
 "Select ""Pickup"" tab first on the checkout","Toon tabblad ""Ophalen bij PostNL"" als eerste"
 "Other price for Pickup","Activeer alternatieve verzendkosten voor afhalen bij PostNL"
 "Price for pickup","Verzendkosten voor afhalen bij PostNL"
+"Alternative price for Letterbox (general)","Alternatieve verzendkosten voor brievenbuspakjes (algemeen)"
+"Price for Letterbox 24 hours","Verzendkosten voor brievenbuspakje 24 uur"
+"Leave empty to fall back to general letterbox alternative price.","Laat deze instelling leeg om gebruik te maken van de alternatieve verzendkosten voor brievenbuspakjes (algemeen)"
+"Price for Letterbox 48 hours","Verzendkosten voor brievenbuspakje 48 uur"
