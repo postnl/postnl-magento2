@@ -90,12 +90,41 @@ define([
         },
 
         saveSelectedOption: function (value) {
+            var updateDeliveryPriceFromTotals;
             if (value === null || value === undefined) {
                 return;
             }
+            updateDeliveryPriceFromTotals = function () {
+                var totals = quote.totals && quote.totals();
+                if (!totals) {
+                    return;
+                }
+                // Use the tax-inclusive shipping amount when the store displays prices including tax,
+                // to match the tax-inclusive price returned by the Timeframes endpoint.
+                var useInclTax = !window.checkoutConfig.isDisplayShippingPriceExclTax;
+                var shippingAmount;
+                if (useInclTax && totals.shipping_incl_tax !== undefined) {
+                    shippingAmount = totals.shipping_incl_tax;
+                } else {
+                    shippingAmount = totals.shipping_amount;
+                }
+                if (shippingAmount === undefined && Array.isArray(totals.total_segments)) {
+                    totals.total_segments.some(function (segment) {
+                        if (segment && segment.code === 'shipping') {
+                            shippingAmount = segment.value;
+                            return true;
+                        }
+                        return false;
+                    });
+                }
+                if (shippingAmount !== undefined && shippingAmount !== null) {
+                    State.deliveryPrice(shippingAmount);
+                }
+            };
 
             //We don't need to save a delivery option that's already been saved. Prevents unnecessary ajax calls.
             if (sessionStorage.postnlDeliveryOption !== undefined && sessionStorage.postnlDeliveryOption === JSON.stringify(value)) {
+                updateDeliveryPriceFromTotals();
                 return;
             }
 
@@ -156,25 +185,6 @@ define([
                 }
             }).done(function (response) {
                 var isLetterboxSelection = typeof value.letterbox_package !== 'undefined';
-                var updateDeliveryPriceFromTotals = function () {
-                    var totals = quote.totals && quote.totals();
-                    if (!totals) {
-                        return;
-                    }
-                    var shippingAmount = totals.shipping_amount;
-                    if (shippingAmount === undefined && Array.isArray(totals.total_segments)) {
-                        totals.total_segments.some(function (segment) {
-                            if (segment && segment.code === 'shipping') {
-                                shippingAmount = segment.value;
-                                return true;
-                            }
-                            return false;
-                        });
-                    }
-                    if (shippingAmount !== undefined && shippingAmount !== null) {
-                        State.deliveryPrice(shippingAmount);
-                    }
-                };
                 $(document).trigger('compatible_postnl_deliveryoptions_save_done', {response: response});
                 var shippingMethod = quote.shippingMethod();
                 if (shippingMethod && shippingMethod.carrier_code === 'tig_postnl') {
@@ -194,17 +204,23 @@ define([
                     var saveAction = setShippingInformationAction();
                     if (saveAction && saveAction.done) {
                         saveAction.done(function () {
-                            getTotalsAction([]);
                             refreshShippingRates();
                             if (isLetterboxSelection) {
-                                updateDeliveryPriceFromTotals();
+                                getTotalsAction([]).done(function () {
+                                    updateDeliveryPriceFromTotals();
+                                });
+                            } else {
+                                getTotalsAction([]);
                             }
                         });
                     } else {
-                        getTotalsAction([]);
                         refreshShippingRates();
                         if (isLetterboxSelection) {
-                            updateDeliveryPriceFromTotals();
+                            getTotalsAction([]).done(function () {
+                                updateDeliveryPriceFromTotals();
+                            });
+                        } else {
+                            getTotalsAction([]);
                         }
                     }
                 }
@@ -283,8 +299,14 @@ define([
                         return letterbox_package;
                     });
                     this.deliverydays(data);
-                    this.selectFirstDeliveryOption();
                     this.isLetterBoxPackage(true);
+                    var isCustomerChoice = window.checkoutConfig.shipping.postnl.default_letterbox_package_product === 'customer_choice';
+                    if (isCustomerChoice) {
+                        // Do not auto-select; show no price until the customer picks an option.
+                        State.deliveryPrice(null);
+                    } else {
+                        this.selectFirstDeliveryOption();
+                    }
                     return;
                 }
 

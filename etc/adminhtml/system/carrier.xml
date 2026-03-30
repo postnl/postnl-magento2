@@ -38,27 +38,18 @@
             </field>
             <field id="letterbox_price" translate="label comment" type="text" sortOrder="47" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Alternative price for Letterbox (general)</label>
-                <comment><![CDATA[Leave empty to use regular shipping fees.]]></comment>
+                <comment><![CDATA[Leave empty to use the regular shipping fee (including any table/matrix rate). Enter 0 to set the fee to free.]]></comment>
                 <validate>validate-number validate-zero-or-greater</validate>
-                <depends>
-                    <field id="rate_type">flat</field>
-                </depends>
             </field>
             <field id="letterbox_24_price" translate="label comment" type="text" sortOrder="49" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Price for Letterbox 24 hours</label>
-                <comment><![CDATA[Leave empty to fall back to general letterbox alternative price.]]></comment>
+                <comment><![CDATA[Leave empty to fall back to general letterbox alternative price. Enter 0 to set the fee to free.]]></comment>
                 <validate>validate-number validate-zero-or-greater</validate>
-                <depends>
-                    <field id="rate_type">flat</field>
-                </depends>
             </field>
             <field id="letterbox_48_price" translate="label comment" type="text" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Price for Letterbox 48 hours</label>
-                <comment><![CDATA[Leave empty to fall back to general letterbox alternative price.]]></comment>
+                <comment><![CDATA[Leave empty to fall back to general letterbox alternative price. Enter 0 to set the fee to free.]]></comment>
                 <validate>validate-number validate-zero-or-greater</validate>
-                <depends>
-                    <field id="rate_type">flat</field>
-                </depends>
             </field>
             <field id="rate_type" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Rate Type</label>

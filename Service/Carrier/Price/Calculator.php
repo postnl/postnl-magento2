@@ -156,6 +156,9 @@ class Calculator
                 $ratePrice = $this->matrixratePrice->getRate($request, $parcelType, $this->store);
 
                 if ($ratePrice !== false) {
+                    if (($letterboxPrice = $this->getLetterboxAlternativePrice($quote)) !== null) {
+                        return $this->priceResponse($letterboxPrice, $letterboxPrice);
+                    }
                     return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
                 }
 
@@ -163,6 +166,9 @@ class Calculator
             case RateType::CARRIER_RATE_TYPE_TABLE:
                 $ratePrice = $this->getTableratePrice($request);
                 if ($ratePrice !== false) {
+                    if (($letterboxPrice = $this->getLetterboxAlternativePrice($quote)) !== null) {
+                        return $this->priceResponse($letterboxPrice, $letterboxPrice);
+                    }
                     return $this->priceResponse($ratePrice['price'], $ratePrice['cost']);
                 }
 
@@ -173,7 +179,7 @@ class Calculator
                 if ($parcelType === 'pakjegemak' && $this->getConfigData('is_other_price_for_pickup')) {
                     $price = $this->getConfigData('pickup_price');
                 }
-                if ($letterboxPrice = $this->getLetterboxAlternativePrice($quote)) {
+                if (($letterboxPrice = $this->getLetterboxAlternativePrice($quote)) !== null) {
                     $price = $letterboxPrice;
                 }
 
@@ -271,17 +277,15 @@ class Calculator
         }
 
         $price = null;
-        if (
-            $productCode === DefaultProduct::LETTERBOX_PRODUCT_2928
-            && $specificPrice = $this->getConfigData('letterbox_24_price')
-        ) {
-            $price = (float) $specificPrice;
-        } elseif (
-            $productCode === DefaultProduct::LETTERBOX_PRODUCT_2948
-            && $specificPrice = $this->getConfigData('letterbox_48_price')
-        ) {
-            $price = (float) $specificPrice;
-        } elseif ($generalPrice = $this->getConfigData('letterbox_price')) {
+        $specificPrice24 = $this->getConfigData('letterbox_24_price');
+        $specificPrice48 = $this->getConfigData('letterbox_48_price');
+        $generalPrice    = $this->getConfigData('letterbox_price');
+
+        if ($productCode === DefaultProduct::LETTERBOX_PRODUCT_2928 && $specificPrice24 !== null && $specificPrice24 !== '') {
+            $price = (float) $specificPrice24;
+        } elseif ($productCode === DefaultProduct::LETTERBOX_PRODUCT_2948 && $specificPrice48 !== null && $specificPrice48 !== '') {
+            $price = (float) $specificPrice48;
+        } elseif ($generalPrice !== null && $generalPrice !== '') {
             $price = (float) $generalPrice;
         }
 

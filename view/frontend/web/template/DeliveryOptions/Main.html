@@ -6,12 +6,14 @@
         <button type="button" class="btn btn-default" data-bind="click: setDelivery, css: { 'button-active': shipmentType() == 'delivery' }">
             <span class="label" data-bind="i18n:'Delivery'"></span>
             <div class="data" data-bind="visible: !isLoading()">
+                <!-- ko if: deliveryPrice() != null -->
                 <span data-bind="text: formatPrice(deliveryPrice())"></span>
                 <!-- ko if: shipmentType() == 'delivery' && deliveryFee() -->
                 + <span data-bind="text: formatPrice(deliveryFee())"></span>
                 <!-- /ko -->
                 <!-- ko if: shipmentType() == 'delivery' && statedDeliveryFee() -->
                 + <span data-bind="text: formatPrice(statedDeliveryFee())"></span>
+                <!-- /ko -->
                 <!-- /ko -->
             </div>
         </button>
