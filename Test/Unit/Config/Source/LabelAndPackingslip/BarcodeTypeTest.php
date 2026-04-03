@@ -11,7 +11,7 @@ class BarcodeTypeTest extends TestCase
 
     public function testToOptionArray()
     {
-        $expectedValues = ['code25', 'code39', 'code128', 'royalmail'];
+        $expectedValues = ['I25', 'C39', 'C128', 'RMS4CC'];
         $instance = $this->getInstance();
 
         $result = $instance->toOptionArray();

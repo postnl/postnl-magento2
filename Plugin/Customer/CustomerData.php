@@ -22,7 +22,7 @@ class CustomerData
         if (!empty($addresses)) {
             $this->customerDataService->setAddressLineExtend();
         }
-        
+
         return null;
     }
 }

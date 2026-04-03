@@ -7,11 +7,6 @@ use Magento\Framework\Data\OptionSourceInterface;
 
 class BarcodeType implements OptionSourceInterface
 {
-    /**
-     * These are the only Zend Barcode types
-     * @see \Zend_Barcode_Object_ObjectAbstract
-     * which support full length increment ID's.
-     */
     public function toOptionArray(): array
     {
         return [
