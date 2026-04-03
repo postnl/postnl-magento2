@@ -675,3 +675,5 @@ Debug,Debug
 "Display on","Display on"
 "Checkout Settings","Checkout Settings"
 "Minicart Settings","Minicart Settings"
+"Leave empty to use the regular shipping fee (including any table/matrix rate). Enter 0 to set the fee to free.","Leave empty to use the regular shipping fee (including any table/matrix rate). Enter 0 to set the fee to free."
+"Leave empty to fall back to general letterbox alternative price. Enter 0 to set the fee to free.","Leave empty to fall back to general letterbox alternative price. Enter 0 to set the fee to free."

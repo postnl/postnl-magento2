@@ -715,3 +715,5 @@ Debug,Debug
 "Display on","Weergeven op"
 "Checkout Settings",Kassa-instellingen
 "Minicart Settings",Minicartinstellingen
+"Leave empty to use the regular shipping fee (including any table/matrix rate). Enter 0 to set the fee to free.","Laat dit veld leeg om de reguliere verzendkosten te gebruiken (inclusief eventuele tabel-/matrixtarieven). Voer 0 in om de verzendkosten gratis te maken."
+"Leave empty to fall back to general letterbox alternative price. Enter 0 to set the fee to free.","Laat dit veld leeg om terug te vallen op het algemene tarief voor brievenbusdiensten. Voer 0 in om de kosten gratis te maken."

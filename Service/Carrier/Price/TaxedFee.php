@@ -2,6 +2,7 @@
 
 namespace TIG\PostNL\Service\Carrier\Price;
 
+use Exception;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Tax\Helper\Data as TaxHelper;
 use Magento\Tax\Model\Config as TaxConfig;
@@ -21,11 +22,11 @@ class TaxedFee
     public function get(float $fee): float
     {
         $displayType = $this->taxHelper->getShippingPriceDisplayType();
-        $includeVat = ($displayType === TaxConfig::DISPLAY_TYPE_INCLUDING_TAX || $displayType === TaxConfig::DISPLAY_TYPE_BOTH);
+        $includeVat = $displayType === TaxConfig::DISPLAY_TYPE_INCLUDING_TAX || $displayType === TaxConfig::DISPLAY_TYPE_BOTH;
 
         try {
             $shippingAddress = $this->checkoutSession->getQuote()->getShippingAddress();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $shippingAddress = null;
         }
 
