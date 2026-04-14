@@ -2,12 +2,16 @@
 
 namespace TIG\PostNL\Webservices;
 
+use Laminas\Soap\Client as SoapClient;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Webapi\Exception as WebapiException;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
-use Laminas\Soap\Client as SoapClient;
 use TIG\PostNL\Service\Module\Version;
+use function __;
+use function extension_loaded;
+use function implode;
+use function stream_context_create;
 
 class Soap
 {
@@ -45,14 +49,15 @@ class Soap
      * @var AccountConfiguration
      */
     private $accountConfiguration;
+
     private Version $versionService;
 
     /**
      * @param AccountConfiguration $accountConfiguration
      * @param DefaultConfiguration $defaultConfiguration
-     * @param ExceptionHandler     $exceptionHandler
-     * @param SoapClient           $soapClient
-     * @param Api\Log              $log
+     * @param ExceptionHandler $exceptionHandler
+     * @param SoapClient $soapClient
+     * @param Api\Log $log
      *
      * @throws WebapiException
      */
@@ -109,6 +114,14 @@ class Soap
     }
 
     /**
+     * @param null|int $scopeId
+     */
+    public function updateApiKey($scopeId = null, $websiteScope = false)
+    {
+        $this->apiKey = $this->accountConfiguration->getApiKey($scopeId, $websiteScope);
+    }
+
+    /**
      * @return array
      * @throws \Exception
      */
@@ -118,21 +131,24 @@ class Soap
         // @codingStandardsIgnoreLine
         $headers = [
             'apikey:' . $this->getApiKey(),
+            'newkey:' . $this->getApiKeyHeader(),
             'SourceSystem:66',
             ... $this->versionService->getCachedVersions()
         ];
 
-        $stream_context = stream_context_create([
-            'http' => [
-                'header' => implode("\r\n", $headers)
+        $stream_context = stream_context_create(
+            [
+                'http' => [
+                    'header' => implode("\r\n", $headers)
+                ]
             ]
-        ]);
+        );
 
         return [
-            'location'       => $this->getLocation(),
-            'soap_version'   => SOAP_1_2,
-            'features'       => SOAP_SINGLE_ELEMENT_ARRAYS,
-            'cache_wsdl'     => WSDL_CACHE_BOTH,
+            'location' => $this->getLocation(),
+            'soap_version' => SOAP_1_2,
+            'features' => SOAP_SINGLE_ELEMENT_ARRAYS,
+            'cache_wsdl' => WSDL_CACHE_BOTH,
             'stream_context' => $stream_context,
         ];
     }
@@ -145,7 +161,7 @@ class Soap
         if (!extension_loaded('soap')) {
             // @codeCoverageIgnoreStart
             throw new WebapiException(
-                // @codingStandardsIgnoreLine
+            // @codingStandardsIgnoreLine
                 __('SOAP extension is not loaded.'),
                 0,
                 WebapiException::HTTP_INTERNAL_ERROR
@@ -160,9 +176,8 @@ class Soap
     private function getLocation()
     {
         $base = $this->defaultConfiguration->getModusApiBaseUrl();
-        $locationUrl = $base . $this->location;
 
-        return $locationUrl;
+        return $base . $this->location;
     }
 
     /**
@@ -183,19 +198,16 @@ class Soap
         return $this->apiKey;
     }
 
+    private function getApiKeyHeader(): string
+    {
+        return $this->accountConfiguration->getApiKeyHeader();
+    }
+
     /**
      * @param AbstractEndpoint $endpoint
      */
     private function parseEndpoint(AbstractEndpoint $endpoint)
     {
         $this->location = $endpoint->getLocation();
-    }
-
-    /**
-     * @param null|int $scopeId
-     */
-    public function updateApiKey($scopeId = null, $websiteScope = false)
-    {
-        $this->apiKey = $this->accountConfiguration->getApiKey($scopeId, $websiteScope);
     }
 }

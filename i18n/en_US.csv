@@ -677,10 +677,8 @@ Debug,Debug
 "Display on","Display on"
 "Checkout Settings","Checkout Settings"
 "Minicart Settings","Minicart Settings"
-<<<<<<< HEAD
 "Leave empty to use the regular shipping fee (including any table/matrix rate). Enter 0 to set the fee to free.","Leave empty to use the regular shipping fee (including any table/matrix rate). Enter 0 to set the fee to free."
 "Leave empty to fall back to general letterbox alternative price. Enter 0 to set the fee to free.","Leave empty to fall back to general letterbox alternative price. Enter 0 to set the fee to free."
-=======
 "Select ""Pickup"" tab first on the checkout","Select ""Pickup"" tab first on the checkout"
 "Other price for Pickup","Other price for Pickup"
 "Price for pickup","Price for pickup"
@@ -690,4 +688,5 @@ Debug,Debug
 "Leave empty to fall back to general letterbox alternative price.","Leave empty to fall back to general letterbox alternative price."
 "Leave empty to use regular shipping fees.","Laat deze instelling leeg om gebruik te maken van de reguliere verzendkosten"
 "Price for Letterbox 48 hours","Price for Letterbox 48 hours"
->>>>>>> private/feature/POSTNL-417
+"New Api Key test mode","New Api Key test mode"
+"New Api Key live mode","New Api Key live mode"
