@@ -131,7 +131,7 @@ class Soap
         // @codingStandardsIgnoreLine
         $headers = [
             'apikey:' . $this->getApiKey(),
-            'newkey:' . $this->getApiKeyHeader(),
+            'newkey:' . $this->getNewApiKeyHeader(),
             'SourceSystem:66',
             ... $this->versionService->getCachedVersions()
         ];
@@ -198,9 +198,9 @@ class Soap
         return $this->apiKey;
     }
 
-    private function getApiKeyHeader(): string
+    private function getNewApiKeyHeader(): string
     {
-        return $this->accountConfiguration->getApiKeyHeader();
+        return $this->accountConfiguration->getNewApiKeyHeader();
     }
 
     /**

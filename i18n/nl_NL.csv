@@ -727,3 +727,4 @@ Debug,Debug
 "Price for Letterbox 48 hours","Verzendkosten voor brievenbuspakje 48 uur"
 "New Api Key test mode","Nieuwe API Key testmodus"
 "New Api Key live mode","Nieuwe API Key live-modus"
+"The newly entered API key is invalid. Please check the key and enter it again.","Ingevulde nieuwe API key ongeldig. Controleer de key en vul deze opnieuw in."

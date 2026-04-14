@@ -690,3 +690,4 @@ Debug,Debug
 "Price for Letterbox 48 hours","Price for Letterbox 48 hours"
 "New Api Key test mode","New Api Key test mode"
 "New Api Key live mode","New Api Key live mode"
+"The newly entered API key is invalid. Please check the key and enter it again.","The newly entered API key is invalid. Please check the key and enter it again."

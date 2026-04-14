@@ -101,7 +101,7 @@ class AccountConfiguration extends AbstractConfigProvider
         return $this->crypt->decrypt($value);
     }
 
-    public function getApiKeyHeader($scopeId = null, $websiteScope = false): string
+    public function getNewApiKeyHeader($scopeId = null, $websiteScope = false): string
     {
         $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_NEW_APIKEY, $scopeId, $websiteScope);
         $modusOldXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY, $scopeId, $websiteScope);
@@ -128,6 +128,11 @@ class AccountConfiguration extends AbstractConfigProvider
         }
 
         return '';
+    }
+
+    public function isNewApiKeyUsed(): bool
+    {
+        return $this->getNewApiKeyHeader() === 'Yes';
     }
 
     /**

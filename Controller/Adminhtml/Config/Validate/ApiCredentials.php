@@ -3,20 +3,24 @@
 namespace TIG\PostNL\Controller\Adminhtml\Config\Validate;
 
 use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Json\EncoderInterface;
 use Magento\Framework\Webapi\Exception;
 use Magento\Store\Model\StoreManagerInterface;
 use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Logging\Log;
-use TIG\PostNL\Webservices\Api\Customer;
 use TIG\PostNL\Webservices\Api\Message;
 use TIG\PostNL\Webservices\Endpoints\Barcode;
 use TIG\PostNL\Webservices\Soap;
+use function __;
 
 class ApiCredentials extends Action
 {
-    const POSTNL_TYPE  = '3S';
-    const POSTNL_SERIE = '000000000-999999999';
+    public const POSTNL_TYPE = '3S';
+    public const POSTNL_SERIE = '000000000-999999999';
 
     /**
      * @var EncoderInterface
@@ -32,11 +36,6 @@ class ApiCredentials extends Action
      * @var Message
      */
     private $message;
-
-    /**
-     * @var Customer
-     */
-    private $customer;
 
     /**
      * @var AccountConfiguration
@@ -59,22 +58,20 @@ class ApiCredentials extends Action
     private $logger;
 
     /**
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param EncoderInterface                    $encoder
-     * @param Soap                                $soap
-     * @param Message                             $message
-     * @param Customer                            $customer
-     * @param AccountConfiguration                $accountConfiguration
-     * @param Barcode                             $barcode
-     * @param StoreManagerInterface               $storeManager
-     * @param Log                                 $logger
+     * @param Context $context
+     * @param EncoderInterface $encoder
+     * @param Soap $soap
+     * @param Message $message
+     * @param AccountConfiguration $accountConfiguration
+     * @param Barcode $barcode
+     * @param StoreManagerInterface $storeManager
+     * @param Log $logger
      */
     public function __construct(
-        Action\Context $context,
+        Context $context,
         EncoderInterface $encoder,
         Soap $soap,
         Message $message,
-        Customer $customer,
         AccountConfiguration $accountConfiguration,
         Barcode $barcode,
         StoreManagerInterface $storeManager,
@@ -84,7 +81,6 @@ class ApiCredentials extends Action
         $this->encoder = $encoder;
         $this->soap = $soap;
         $this->message = $message;
-        $this->customer = $customer;
         $this->accountConfiguration = $accountConfiguration;
         $this->barcode = $barcode;
         $this->storeManager = $storeManager;
@@ -92,8 +88,8 @@ class ApiCredentials extends Action
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return ResponseInterface|ResultInterface
+     * @throws NoSuchEntityException
      * @throws \TIG\PostNL\Webservices\Api\Exception
      */
     public function execute()
@@ -101,7 +97,9 @@ class ApiCredentials extends Action
         $result = [
             'error' => true,
             //@codingStandardsIgnoreLine
-            'message' => __('Your API Credentials could not be validated, check your data in the My PostNL environment. Or check the PostNL logs.')
+            'message' => __(
+                'Your API Credentials could not be validated, check your data in the My PostNL environment. Or check the PostNL logs.'
+            )
         ];
 
         $storeId = $this->getRequest()->getParam('storeId');
@@ -115,16 +113,25 @@ class ApiCredentials extends Action
 
         $this->soap->updateApiKey($scopeId, ($websiteId !== ''));
         $customerData = $this->getCustomerData($this->getRequest());
-        $validatedApiCredentials = $this->validateApiCredentials($customerData);
-
-        if ($validatedApiCredentials) {
-            $result['error'] = false;
-            $result['message'] = __('Successfully connected to account.');
+        try {
+            if ($this->validateApiCredentials($customerData)) {
+                $result['error'] = false;
+                $result['message'] = __('Successfully connected to account.');
+            }
+        } catch (\TIG\PostNL\Webservices\Api\Exception $e) {
+            if ($e->getRawMessage() === '[] Unauthorized' && $this->accountConfiguration->isNewApiKeyUsed()) {
+                $result['message'] = __(
+                    'The newly entered API key is invalid. Please check the key and enter it again.'
+                );
+            }
+            $result['error'] = true;
+            $this->logger->error($e->getMessage());
         }
 
+
         $json = $this->encoder->encode($result);
-        $response = $this->getResponse();
-        return $response->representJson($json);
+
+        return $this->getResponse()->representJson($json);
     }
 
     /**
@@ -136,10 +143,10 @@ class ApiCredentials extends Action
     public function validateApiCredentials($customerData)
     {
         $parameters = [
-            'Message'  => $this->message->get(''),
+            'Message' => $this->message->get(''),
             'Customer' => $customerData,
-            'Barcode'  => [
-                'Type'  => self::POSTNL_TYPE,
+            'Barcode' => [
+                'Type' => self::POSTNL_TYPE,
                 'Range' => $customerData['CustomerCode'],
                 'Serie' => self::POSTNL_SERIE,
             ],
@@ -149,6 +156,7 @@ class ApiCredentials extends Action
             return $this->soap->call($this->barcode, 'GenerateBarcode', $parameters);
         } catch (Exception $exception) {
             $this->logger->debug($exception->getMessage());
+
             return false;
         }
     }
@@ -160,16 +168,16 @@ class ApiCredentials extends Action
      */
     public function getCustomerData($request)
     {
-        $modus          = $request->getParam('modus');
-        $customerCode   = $request->getParam('customer_code');
+        $modus = $request->getParam('modus');
+        $customerCode = $request->getParam('customer_code');
         $customerNumber = $request->getParam('customer_number');
 
         if ($modus === '2') {
-            $customerCode   = $request->getParam('test_customer_code');
+            $customerCode = $request->getParam('test_customer_code');
             $customerNumber = $request->getParam('test_customer_number');
         }
 
-        $customerData['CustomerCode']   = $customerCode;
+        $customerData['CustomerCode'] = $customerCode;
         $customerData['CustomerNumber'] = $customerNumber;
 
         return $customerData;
