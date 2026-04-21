@@ -268,12 +268,12 @@ define([
                 url : window.checkoutConfig.shipping.postnl.urls.deliveryoptions_timeframes,
                 data : {address: address}
             }).done(function (data) {
+                var responsePrice = data.price;
                 // If the deliverydays are reloaded, the first one is automatically selected.
                 // Show this by switching to the delivery pane.
                 if (allowToOpenDelivery) State.currentOpenPane('delivery');
 
                 State.deliveryOptionsAreAvailable(true);
-                State.deliveryPrice(data.price);
 
                 var error = false;
                 if (data.error) {
@@ -285,6 +285,7 @@ define([
                     data = ko.utils.arrayMap(data.timeframes, function (fallback) {
                         return fallback;
                     });
+                    State.deliveryPrice(responsePrice);
                     this.deliverydays(data);
 
                     this.selectFirstDeliveryOption();
@@ -305,6 +306,7 @@ define([
                         // Do not auto-select; show no price until the customer picks an option.
                         State.deliveryPrice(null);
                     } else {
+                        State.deliveryPrice(responsePrice);
                         this.selectFirstDeliveryOption();
                     }
                     return;
@@ -314,6 +316,7 @@ define([
                     data  = ko.utils.arrayMap(data.timeframes, function (boxable_packets) {
                         return boxable_packets;
                     });
+                    State.deliveryPrice(responsePrice);
                     this.deliverydays(data);
                     this.selectFirstDeliveryOption();
                     return;
@@ -324,6 +327,7 @@ define([
                     data  = ko.utils.arrayMap(data.timeframes, function (eps) {
                         return eps;
                     });
+                    State.deliveryPrice(responsePrice);
                     this.deliverydays(data);
                     if (allowToOpenDelivery) State.currentOpenPane('delivery');
                     this.selectFirstDeliveryOption();
@@ -335,6 +339,7 @@ define([
                     data  = ko.utils.arrayMap(data.timeframes, function (gp) {
                         return gp;
                     });
+                    State.deliveryPrice(responsePrice);
                     this.deliverydays(data);
                     if (allowToOpenDelivery) State.currentOpenPane('delivery');
                     this.selectFirstDeliveryOption();
@@ -348,6 +353,7 @@ define([
                     });
                 });
 
+                State.deliveryPrice(responsePrice);
                 this.deliverydays(data);
                 this.selectFirstDeliveryOption();
             }.bind(this)).fail(function (data) {
@@ -378,6 +384,10 @@ define([
             }
 
             return priceUtils.formatPrice(fee, quote.getPriceFormat());
+        },
+
+        formatPrice: function (price) {
+            return priceUtils.formatPrice(price, quote.getPriceFormat());
         },
 
         handleStatedAddressOnlyFee: function () {

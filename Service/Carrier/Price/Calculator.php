@@ -99,10 +99,10 @@ class Calculator
     {
         $this->store = $store;
 
-        if ((bool) $request->getFreeShipping() === true
-            || $request->getPackageQty() == $this->getFreeBoxes->get(
-                $request
-            )) {
+        if (
+            (bool) $request->getFreeShipping()
+            || $request->getPackageQty() == $this->getFreeBoxes->get($request)
+        ) {
             return $this->priceResponse('0.00', '0.00');
         }
 
@@ -136,6 +136,24 @@ class Calculator
         }
 
         return $price;
+    }
+
+    /**
+     * Resolve a configured letterbox alternative price (if available) and convert it to the configured
+     * checkout tax display format.
+     */
+    public function getLetterboxAlternativePriceWithTax(RateRequest $request, string $productCode): ?float
+    {
+        $price = $this->resolveLetterboxAlternativePriceByProductCode($productCode);
+
+        if ($price === null) {
+            return null;
+        }
+
+        $includeVat = $this->taxHelper->getShippingPriceDisplayType();
+        $includeVat = ($includeVat === Config::DISPLAY_TYPE_INCLUDING_TAX || $includeVat === Config::DISPLAY_TYPE_BOTH);
+
+        return (float) $this->taxHelper->getShippingPrice($price, $includeVat, $request->getShippingAddress());
     }
 
     /**
@@ -299,7 +317,11 @@ class Calculator
         }
 
         $productCode = (string) $order->getProductCode();
+        return $this->resolveLetterboxAlternativePriceByProductCode($productCode);
+    }
 
+    private function resolveLetterboxAlternativePriceByProductCode(string $productCode): ?float
+    {
         if (
             $productCode !== DefaultProduct::LETTERBOX_PRODUCT_2928
             && $productCode !== DefaultProduct::LETTERBOX_PRODUCT_2948
