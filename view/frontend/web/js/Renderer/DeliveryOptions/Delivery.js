@@ -390,6 +390,14 @@ define([
             return priceUtils.formatPrice(price, quote.getPriceFormat());
         },
 
+        isLetterboxCustomerChoice: function () {
+            return window.checkoutConfig.shipping.postnl.default_letterbox_package_product === 'customer_choice';
+        },
+
+        shouldShowLetterboxFallbackPrice: function (price) {
+            return this.isLetterboxCustomerChoice() && price !== undefined && price !== null;
+        },
+
         handleStatedAddressOnlyFee: function () {
             this.saveSelectedOption(this.selectedOption());
             var statedAddressOnly = +$('#postnl_stated_address_only_checkbox').is(':checked');
