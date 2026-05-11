@@ -11,6 +11,7 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Tax\Helper\Data;
 use Magento\Tax\Model\Config;
 use TIG\PostNL\Config\Source\Carrier\RateType;
+use TIG\PostNL\Config\Source\LetterboxPackage\CalculationMode;
 use TIG\PostNL\Config\Source\LetterboxPackage\DefaultProduct;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Order\CurrentPostNLOrder;
@@ -154,6 +155,26 @@ class Calculator
         $includeVat = ($includeVat === Config::DISPLAY_TYPE_INCLUDING_TAX || $includeVat === Config::DISPLAY_TYPE_BOTH);
 
         return (float) $this->taxHelper->getShippingPrice($price, $includeVat, $request->getShippingAddress());
+    }
+
+    public function getLetterboxPriceForStatedAddress()
+    {
+        $configMode = $this->scopeConfig->getValue(
+            'tig_postnl/letterbox_package/letterbox_package_calculation_mode',
+            ScopeInterface::SCOPE_STORE,
+            $this->store
+        );
+        if ($configMode === CalculationMode::CALCULATION_MODE_AUTOMATIC) {
+            $productCode = $this->scopeConfig->getValue(
+                'tig_postnl/letterbox_package/default_letterbox_package_product',
+                ScopeInterface::SCOPE_STORE,
+                $this->store
+            );
+
+            return $this->resolveLetterboxAlternativePriceByProductCode($productCode);
+        }
+
+        return null;
     }
 
     /**
@@ -317,18 +338,23 @@ class Calculator
         }
 
         $productCode = (string) $order->getProductCode();
-        return $this->resolveLetterboxAlternativePriceByProductCode($productCode);
+
+        if (
+            $productCode === DefaultProduct::LETTERBOX_PRODUCT_2928
+            || $productCode === DefaultProduct::LETTERBOX_PRODUCT_2948
+        ) {
+            return $this->resolveLetterboxAlternativePriceByProductCode($productCode);
+        }
+
+        if ($order->getType() === 'letterbox_package' && $productCode === '3385') {
+            return $this->getLetterboxPriceForStatedAddress();
+        }
+
+        return null;
     }
 
     private function resolveLetterboxAlternativePriceByProductCode(string $productCode): ?float
     {
-        if (
-            $productCode !== DefaultProduct::LETTERBOX_PRODUCT_2928
-            && $productCode !== DefaultProduct::LETTERBOX_PRODUCT_2948
-        ) {
-            return null;
-        }
-
         $specificPrice24 = $this->getConfigData('letterbox_24_price');
         $specificPrice48 = $this->getConfigData('letterbox_48_price');
         $generalPrice = $this->getConfigData('letterbox_price');
