@@ -107,6 +107,7 @@ class Rest
     {
         $headers = [
             'apikey: ' . $this->getApiKey(),
+            'newkey:' . $this->getNewApiKeyHeader(),
             'SourceSystem: 66',
             'Content-Type: application/json',
             ... $this->versionService->getCachedVersions()
@@ -147,6 +148,11 @@ class Rest
         }
 
         return $this->apiKey;
+    }
+
+    private function getNewApiKeyHeader(): string
+    {
+        return $this->accountConfiguration->getNewApiKeyHeader();
     }
 
     /**
