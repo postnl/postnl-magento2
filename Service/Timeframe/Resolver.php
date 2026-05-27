@@ -1,11 +1,16 @@
 <?php
+
 namespace TIG\PostNL\Service\Timeframe;
 
+use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\CacheInterface;
 use TIG\PostNL\Config\CheckoutConfiguration\IsDeliverDaysActive;
+use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfig;
+use TIG\PostNL\Config\Source\LetterboxPackage\DefaultProduct;
 use TIG\PostNL\Helper\AddressEnhancer;
 use TIG\PostNL\Service\Converter\CanaryIslandToIC;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Shipment\EpsCountries;
 use TIG\PostNL\Service\Shipping\BoxablePackets;
 use TIG\PostNL\Service\Shipping\DeliveryDate;
@@ -13,9 +18,12 @@ use TIG\PostNL\Service\Shipping\InternationalPacket;
 use TIG\PostNL\Service\Shipping\LetterboxPackage;
 use TIG\PostNL\Service\Validation\CountryShipping;
 use TIG\PostNL\Webservices\Endpoints\TimeFrame;
-use TIG\PostNL\Config\Provider\ProductOptions as ProductOptionsConfig;
-use TIG\PostNL\Config\Source\LetterboxPackage\DefaultProduct;
-use TIG\PostNL\Service\Order\ProductInfo;
+use function __;
+use function in_array;
+use function is_array;
+use function json_decode;
+use function json_encode;
+use const JSON_THROW_ON_ERROR;
 
 class Resolver
 {
@@ -23,25 +31,37 @@ class Resolver
      * @var array
      */
     protected array $returnErrors = [
-        0 => 'Could not load from soap data',
-        1 => 'No Address data found.',
-        2 => 'Deliverydays options are disabled.',
-        3 => 'Invalid timeframes response, more information can be found in the PostNL log files.',
-        4 => 'Invalid locations response, more information can be found in the PostNL log files.',
+        'Could not load from soap data',
+        'No Address data found.',
+        'Deliverydays options are disabled.',
+        'Invalid timeframes response, more information can be found in the PostNL log files.',
+        'Invalid locations response, more information can be found in the PostNL log files.',
     ];
 
     private Session $checkoutSession;
+
     private LetterboxPackage $letterboxPackage;
+
     private BoxablePackets $boxablePackets;
+
     private InternationalPacket $internationalPacket;
+
     private IsDeliverDaysActive $isDeliveryDaysActive;
+
     private AddressEnhancer $addressEnhancer;
+
     private CountryShipping $countryShipping;
+
     private TimeFrame $timeFrameEndpoint;
+
     private DeliveryDate $deliveryDate;
+
     private CanaryIslandToIC $canaryConverter;
+
     private CacheInterface $cache;
+
     private ?string $lastRequestDate = null;
+
     private ProductOptionsConfig $productOptions;
 
     public function __construct(
@@ -82,8 +102,7 @@ class Resolver
             $address['country'] = $address['country_id'];
         }
 
-        $quote = $this->checkoutSession->getQuote();
-        $cartItems = $quote->getAllItems();
+        $cartItems = $this->checkoutSession->getQuote()->getAllItems();
 
         //Letterbox NL
         if ($address['country'] === 'NL' && $this->letterboxPackage->isLetterboxPackage($cartItems, false)) {
@@ -110,21 +129,34 @@ class Resolver
             return $this->getEpsCountryResponse();
         }
 
-        if (!in_array($address['country'], EpsCountries::ALL, true) && !in_array($address['country'], ['BE', 'NL'], true)) {
+        if (
+            !in_array($address['country'], EpsCountries::ALL, true)
+            && !in_array($address['country'], ['BE', 'NL'], true)
+        ) {
             return $this->getGlobalPackResponse();
         }
 
         if (!$this->isDeliveryDaysActive->getValue()) {
-            return $this->getFallBackResponse(2, );
+            return $this->getFallBackResponse(2);
         }
 
         $this->addressEnhancer->set($address);
 
         try {
             return $this->getValidResponseType();
-        } catch (\Exception $exception) {
-            return $this->getFallBackResponse(3, );
+        } catch (Exception) {
+            return $this->getFallBackResponse(3);
         }
+    }
+
+    public function getFallBackResponse(int $error = 0): array
+    {
+        $errorMessage = $this->returnErrors[$error] ?? '';
+
+        return [
+            'error' => __($errorMessage),
+            'timeframes' => [[['fallback' => __('At the first opportunity')]]]
+        ];
     }
 
     private function isEpsCountry(array $address): bool
@@ -134,12 +166,11 @@ class Resolver
         }
 
         // NL to BE/NL shipments are not EPS shipments
-        if ($this->countryShipping->isShippingNLToEps($address['country'])) {
-            return true;
-        }
-
         // BE to BE shipments is not EPS, but BE to EU is
-        if ($this->countryShipping->isShippingBEToEps($address['country'])) {
+        if (
+            $this->countryShipping->isShippingNLToEps($address['country'])
+            || $this->countryShipping->isShippingBEToEps($address['country'])
+        ) {
             return true;
         }
 
@@ -154,8 +185,9 @@ class Resolver
      */
     private function getPossibleDeliveryDays(array $address)
     {
-        $startDate  = $this->deliveryDate->get($address);
+        $startDate = $this->deliveryDate->get($address);
         $this->lastRequestDate = $startDate;
+
         return $this->getTimeFrames($address, $startDate);
     }
 
@@ -171,7 +203,7 @@ class Resolver
 
         if (isset($address['error'])) {
             return [
-                'error'      => __('%1 : %2', $address['error']['code'], $address['error']['message']),
+                'error' => __('%1 : %2', $address['error']['code'], $address['error']['message']),
                 'timeframes' => [[['fallback' => __('At the first opportunity')]]]
             ];
         }
@@ -180,19 +212,20 @@ class Resolver
         $content = $this->cache->load($cacheId);
         if ($content) {
             try {
-                $data = \json_decode($content, true, 32, JSON_THROW_ON_ERROR);
+                $data = json_decode($content, true, 32, JSON_THROW_ON_ERROR);
                 if (is_array($data) && isset($data['tf'])) {
                     $this->checkoutSession->setPostNLDeliveryDate($data['date']);
+
                     return ['timeframes' => $data['tf']];
                 }
-            } catch (\Exception $e) {
+            } catch (Exception) {
                 // retrieve data from api
             }
         }
         $timeframes = $this->getPossibleDeliveryDays($address);
         if (empty($timeframes)) {
             return [
-                'error'      => __('No timeframes available.'),
+                'error' => __('No timeframes available.'),
                 'timeframes' => [[['fallback' => __('At the first opportunity')]]]
             ];
         }
@@ -201,7 +234,7 @@ class Resolver
             'date' => $this->lastRequestDate
         ];
 
-        $this->cache->save(\json_encode($cache), $cacheId, ['POSTNL_REQUESTS'], 60 * 5);
+        $this->cache->save(json_encode($cache), $cacheId, ['POSTNL_REQUESTS'], 60 * 5);
 
         return [
             'timeframes' => $timeframes
@@ -230,55 +263,54 @@ class Resolver
         return $this->timeFrameEndpoint->call();
     }
 
-    public function getFallBackResponse(int $error = 0): array
-    {
-        $errorMessage = $this->returnErrors[$error] ?? '';
-        return [
-            'error'      => __($errorMessage),
-            'timeframes' => [[['fallback' => __('At the first opportunity')]]]
-        ];
-    }
-
     private function getLetterboxPackageResponse(): array
     {
         $defaultProduct = $this->productOptions->getDefaultLetterboxPackageProductSetting();
         if ($defaultProduct === DefaultProduct::LETTERBOX_PRODUCT_CUSTOMER_CHOICE) {
             return [
                 'letterbox_package' => true,
-                'timeframes'        => [[
+                'timeframes' => [
                     [
-                        'letterbox_package' => __('Letterboxparcel Standard (24 hours)'),
-                        'option'            => ProductInfo::OPTION_LETTERBOX_PACKAGE_24,
-                    ],
-                    [
-                        'letterbox_package' => __('Letterboxparcel 48'),
-                        'option'            => ProductInfo::OPTION_LETTERBOX_PACKAGE_48,
-                    ],
-                ]]
+                        [
+                            'letterbox_package' => __('Letterboxparcel Standard (24 hours)'),
+                            'option' => ProductInfo::OPTION_LETTERBOX_PACKAGE_24,
+                        ],
+                        [
+                            'letterbox_package' => __('Letterboxparcel 48'),
+                            'option' => ProductInfo::OPTION_LETTERBOX_PACKAGE_48,
+                        ],
+                    ]
+                ]
             ];
         }
 
         return [
             'letterbox_package' => true,
-            'timeframes'        => [[[
-                'letterbox_package' => __('Your order is a letterbox package and will be delivered from Tuesday to Saturday.')
-            ]]]
+            'timeframes' => [
+                [
+                    [
+                        'letterbox_package' => __(
+                            'Your order is a letterbox package and will be delivered from Tuesday to Saturday.'
+                        )
+                    ]
+                ]
+            ]
         ];
     }
 
     private function getBoxablePacketResponse(): array
     {
         return [
-            'boxable_packets'   => true,
-            'timeframes'        => [[['boxable_packets' => __('Ship internationally')]]]
+            'boxable_packets' => true,
+            'timeframes' => [[['boxable_packets' => __('Ship internationally')]]]
         ];
     }
 
     private function getInternationalCountryResponse(): array
     {
         return [
-            'boxable_packets'   => true,
-            'timeframes'        => [[['international_packet' => __('Ship internationally')]]]
+            'boxable_packets' => true,
+            'timeframes' => [[['international_packet' => __('Ship internationally')]]]
         ];
     }
 

@@ -15,62 +15,30 @@ use TIG\PostNL\Config\Source\LetterboxPackage\CalculationMode;
 use TIG\PostNL\Config\Source\LetterboxPackage\DefaultProduct;
 use TIG\PostNL\Service\Carrier\ParcelTypeFinder;
 use TIG\PostNL\Service\Order\CurrentPostNLOrder;
+use TIG\PostNL\Service\Order\ProductInfo;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
+use function in_array;
+use function reset;
 
 // @codingStandardsIgnoreFile
 class Calculator
 {
-    /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
+    private ScopeConfigInterface $scopeConfig;
 
-    /**
-     * @var GetFreeBoxes
-     */
-    private $getFreeBoxes;
+    private GetFreeBoxes $getFreeBoxes;
 
-    /**
-     * @var Matrixrate
-     */
-    private $matrixratePrice;
+    private Matrixrate $matrixratePrice;
 
-    /**
-     * @var Tablerate
-     */
-    private $tablerateShippingPrice;
+    private Tablerate $tablerateShippingPrice;
 
-    /**
-     * @var string
-     */
-    private $store;
+    private string $store;
 
-    /**
-     * @var ParcelTypeFinder
-     */
-    private $parcelTypeFinder;
+    private ParcelTypeFinder $parcelTypeFinder;
 
-    /**
-     * @var CurrentPostNLOrder
-     */
-    private $currentPostNLOrder;
+    private CurrentPostNLOrder $currentPostNLOrder;
 
-    /**
-     * @var Data
-     */
-    private $taxHelper;
+    private Data $taxHelper;
 
-    /**
-     * Calculator constructor.
-     *
-     * @param ScopeConfigInterface $scopeConfig
-     * @param GetFreeBoxes $getFreeBoxes
-     * @param Matrixrate $matrixratePrice
-     * @param Tablerate $tablerateShippingPrice
-     * @param ParcelTypeFinder $parcelTypeFinder
-     * @param CurrentPostNLOrder $currentPostNLOrder
-     * @param Data $taxHelper
-     */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         GetFreeBoxes $getFreeBoxes,
@@ -92,11 +60,11 @@ class Calculator
     /**
      * @param RateRequest $request
      * @param null $parcelType
-     * @param             $store
+     * @param null $store
      *
-     * @return array | bool
+     * @return bool|array
      */
-    public function price(RateRequest $request, $parcelType = null, $store = null)
+    public function price(RateRequest $request, $parcelType = null, $store = null): bool|array
     {
         $this->store = $store;
 
@@ -120,20 +88,16 @@ class Calculator
      * Calculate the price including or excluding tax
      *
      * @param RateRequest $request
-     * @param             $parcelType
+     * @param null $parcelType
      *
-     * @return mixed
+     * @return bool|array
      */
-    public function getPriceWithTax(RateRequest $request, $parcelType = null)
+    public function getPriceWithTax(RateRequest $request, $parcelType = null): bool|array
     {
-        $includeVat = $this->taxHelper->getShippingPriceDisplayType();
-        $includeVat = ($includeVat === Config::DISPLAY_TYPE_INCLUDING_TAX || $includeVat === Config::DISPLAY_TYPE_BOTH);
-
         $price = $this->price($request, $parcelType);
-        $shippingAddress = $request->getShippingAddress();
 
         if (isset($price['price'])) {
-            $price['price'] = $this->taxHelper->getShippingPrice($price['price'], $includeVat, $shippingAddress);
+            $price['price'] = $this->applyShippingTax((float) $price['price'], $request);
         }
 
         return $price;
@@ -147,39 +111,56 @@ class Calculator
     {
         $price = $this->resolveLetterboxAlternativePriceByProductCode($productCode);
 
-        if ($price === null) {
-            return null;
+        if ($price !== null) {
+            return $this->applyShippingTax($price, $request);
         }
 
-        $includeVat = $this->taxHelper->getShippingPriceDisplayType();
-        $includeVat = ($includeVat === Config::DISPLAY_TYPE_INCLUDING_TAX || $includeVat === Config::DISPLAY_TYPE_BOTH);
-
-        return (float) $this->taxHelper->getShippingPrice($price, $includeVat, $request->getShippingAddress());
+        return null;
     }
 
-    public function getLetterboxPriceForStatedAddress()
+    public function getLetterboxPriceForStatedAddress(string $orderType): ?float
     {
         $configMode = $this->scopeConfig->getValue(
             'tig_postnl/letterbox_package/letterbox_package_calculation_mode',
             ScopeInterface::SCOPE_STORE,
             $this->store
         );
-        if ($configMode === CalculationMode::CALCULATION_MODE_AUTOMATIC) {
-            $productCode = $this->scopeConfig->getValue(
-                'tig_postnl/letterbox_package/default_letterbox_package_product',
-                ScopeInterface::SCOPE_STORE,
-                $this->store
-            );
 
-            return $this->resolveLetterboxAlternativePriceByProductCode($productCode);
+        if ($configMode !== CalculationMode::CALCULATION_MODE_AUTOMATIC) {
+            return null;
+        }
+
+        $productCode = $this->scopeConfig->getValue(
+            'tig_postnl/letterbox_package/default_letterbox_package_product',
+            ScopeInterface::SCOPE_STORE,
+            $this->store
+        );
+
+        if ($productCode === DefaultProduct::LETTERBOX_PRODUCT_CUSTOMER_CHOICE) {
+            return match ($orderType) {
+                ProductInfo::OPTION_LETTERBOX_PACKAGE_24 => $this->getLetterbox24Price(),
+                ProductInfo::OPTION_LETTERBOX_PACKAGE_48 => $this->getLetterbox48Price(),
+                default => ($p = $this->getConfigData('letterbox_price')) ? (float) $p : null,
+            };
+        }
+
+        return $this->resolveLetterboxAlternativePriceByProductCode((string) $productCode);
+    }
+
+    public function getLetterboxPriceForStatedAddressWithTax(RateRequest $request, string $orderType): ?float
+    {
+        $price = $this->getLetterboxPriceForStatedAddress($orderType);
+
+        if ($price !== null) {
+            return $this->applyShippingTax($price, $request);
         }
 
         return null;
     }
 
     /**
-     * @param $rateType
-     * @param $request
+     * @param string $rateType
+     * @param RateRequest $request
      * @param $parcelType
      *
      * @return array|bool
@@ -188,7 +169,6 @@ class Calculator
     {
         $quote = null;
         if (!$parcelType) {
-            $quote = null;
             $requestItems = $request->getAllItems();
 
             if ($requestItems) {
@@ -198,7 +178,7 @@ class Calculator
 
             try {
                 $parcelType = $this->parcelTypeFinder->get($quote);
-            } catch (LocalizedException $exception) {
+            } catch (LocalizedException) {
                 $parcelType = ParcelTypeFinder::DEFAULT_TYPE;
             }
         }
@@ -208,13 +188,6 @@ class Calculator
                 $requestItem = reset($requestItems);
                 $quote = $requestItem->getQuote();
             }
-        }
-
-        if ((bool) $request->getFreeShipping() === true
-            || $request->getPackageQty() == $this->getFreeBoxes->get(
-                $request
-            )) {
-            $rateType = 'free';
         }
 
         switch ($rateType) {
@@ -346,29 +319,59 @@ class Calculator
             return $this->resolveLetterboxAlternativePriceByProductCode($productCode);
         }
 
-        if ($order->getType() === 'letterbox_package' && $productCode === '3385') {
-            return $this->getLetterboxPriceForStatedAddress();
+        if (
+            in_array(
+                $order->getType(),
+                [
+                    ProductInfo::OPTION_LETTERBOX_PACKAGE,
+                    ProductInfo::OPTION_LETTERBOX_PACKAGE_24,
+                    ProductInfo::OPTION_LETTERBOX_PACKAGE_48
+                ],
+                true
+            )
+            && $productCode === '3385'
+        ) {
+            return $this->getLetterboxPriceForStatedAddress($order->getType());
         }
 
         return null;
     }
 
+    private function applyShippingTax(float $price, RateRequest $request): float
+    {
+        $displayType = $this->taxHelper->getShippingPriceDisplayType();
+        $includeVat = $displayType === Config::DISPLAY_TYPE_INCLUDING_TAX
+            || $displayType === Config::DISPLAY_TYPE_BOTH;
+
+        return (float) $this->taxHelper->getShippingPrice($price, $includeVat, $request->getShippingAddress());
+    }
+
     private function resolveLetterboxAlternativePriceByProductCode(string $productCode): ?float
     {
-        $specificPrice24 = $this->getConfigData('letterbox_24_price');
-        $specificPrice48 = $this->getConfigData('letterbox_48_price');
-        $generalPrice = $this->getConfigData('letterbox_price');
+        return match ($productCode) {
+            DefaultProduct::LETTERBOX_PRODUCT_2928 => $this->getLetterbox24Price(),
+            DefaultProduct::LETTERBOX_PRODUCT_2948 => $this->getLetterbox48Price(),
+            default => ($p = $this->getConfigData('letterbox_price')) ? (float) $p : null,
+        };
+    }
 
-        if ($productCode === DefaultProduct::LETTERBOX_PRODUCT_2928 && $specificPrice24 !== null && $specificPrice24 !== '') {
-            return (float) $specificPrice24;
+    private function getLetterbox24Price(): ?float
+    {
+        $price = $this->getConfigData('letterbox_24_price') ?: $this->getConfigData('letterbox_price');
+
+        if ($price) {
+            return (float) $price;
         }
 
-        if ($productCode === DefaultProduct::LETTERBOX_PRODUCT_2948 && $specificPrice48 !== null && $specificPrice48 !== '') {
-            return (float) $specificPrice48;
-        }
+        return null;
+    }
 
-        if ($generalPrice !== null && $generalPrice !== '') {
-            return (float) $generalPrice;
+    private function getLetterbox48Price(): ?float
+    {
+        $price = $this->getConfigData('letterbox_48_price') ?: $this->getConfigData('letterbox_price');
+
+        if ($price) {
+            return (float) $price;
         }
 
         return null;
