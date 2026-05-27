@@ -31,7 +31,7 @@ class Calculator
 
     private Tablerate $tablerateShippingPrice;
 
-    private string $store;
+    private $store;
 
     private ParcelTypeFinder $parcelTypeFinder;
 

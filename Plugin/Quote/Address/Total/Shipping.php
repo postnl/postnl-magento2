@@ -43,7 +43,7 @@ class Shipping
         Quote $quote,
         ShippingAssignmentInterface $shippingAssignment,
         Quote\Address\Total $total
-    ): self {
+    ) {
         $this->subject = $subject;
         $result = $proceed($quote, $shippingAssignment, $total);
         $shipping = $shippingAssignment->getShipping();
@@ -59,7 +59,7 @@ class Shipping
         return $result;
     }
 
-    private function getRate(string $method, AddressInterface $address): ?self
+    private function getRate(?string $method, AddressInterface $address)
     {
         if ($method !== 'tig_postnl_regular') {
             return null;
