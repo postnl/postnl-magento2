@@ -173,7 +173,7 @@ class LetterboxPackage
      * @param float $orderedQty
      * @param float $totalWeight
      */
-    protected function getTotalWeight($product, float $orderedQty, float &$totalWeight): void
+    protected function getTotalWeight($product, $orderedQty, &$totalWeight): void
     {
         $totalWeight += $product->getWeight() * $orderedQty;
     }
