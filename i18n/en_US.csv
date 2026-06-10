@@ -453,6 +453,7 @@ Percent,Percent
 "Housenumber ext","Housenumber ext"
 "Labels","Labels"
 "Shipping & Return label","Shipping & Return label"
+"<b>Note:</b> Shipping & Return Label will be discontinued on <span class=""colorRed"">July 1 2026</span>.","<b>Note:</b> Shipping & Return Label will be discontinued on <span class=""colorRed"">July 1 2026</span>."
 "In the box","In the box"
 "Activate return function for all labels","Activate return function for all labels"
 "Activate return function on an order-by-order basis","Activate return function on an order-by-order basis"
