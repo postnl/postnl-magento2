@@ -2,6 +2,8 @@
 
 namespace TIG\PostNL\Service\Validation;
 
+use function strtolower;
+
 class ParcelType implements ContractInterface
 {
     /**
@@ -13,39 +15,17 @@ class ParcelType implements ContractInterface
      */
     public function validate($line)
     {
-        $line = strtolower((string)$line);
-        switch ($line) {
-            case '':
-            case '0':
-            case '*':
-                return '*';
+        $line = strtolower((string) $line);
 
-            case 'pakket':
-            case 'regular':
-                return 'regular';
+        return match ($line) {
+            '', '0', '*' => '*',
+            'pakket', 'regular' => 'regular',
+            'extra@home', 'extra @ home', 'extra_@_home', 'extraathome', 'extra_at_home' => 'extra@home',
+            'pakjegemak', 'pakje_gemak', 'pakje gemak', 'postkantoor', 'post office' => 'pakjegemak',
+            'letterbox_package' => 'letterbox_package',
+            'boxable_packets' => 'boxable_packets',
+            default => false,
+        };
 
-            case 'extra@home':
-            case 'extra @ home':
-            case 'extra_@_home':
-            case 'extraathome':
-            case 'extra_at_home':
-                return 'extra@home';
-
-            case 'pakjegemak':
-            case 'pakje_gemak':
-            case 'pakje gemak':
-            case 'PakjeGemak':
-            case 'postkantoor':
-            case 'post office':
-                return 'pakjegemak';
-
-            case 'letterbox_package':
-                return 'letterbox_package';
-
-            case 'boxable_packets':
-                return 'boxable_packets';
-        }
-
-        return false;
     }
 }

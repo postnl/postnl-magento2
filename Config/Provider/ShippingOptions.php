@@ -6,53 +6,56 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Encryption\Encryptor;
 use Magento\Framework\Module\Manager;
 use Magento\Framework\Serialize\SerializerInterface;
+use Throwable;
+use TIG\PostNL\Config\Source\LetterboxPackage\CalculationMode;
 use TIG\PostNL\Config\Source\Options\ProductOptions;
+use function explode;
 
 /**
  * @codingStandardsIgnoreStart
  */
 class ShippingOptions extends AbstractConfigProvider
 {
-    const XPATH_SHIPPING_OPTION_ACITVE                   = 'tig_postnl/delivery_settings/shippingoptions_active';
-    const XPATH_GUARANTEED_DELIVERY_ACTIVE               = 'tig_postnl/delivery_settings/guaranteed_delivery';
-    const XPATH_SHIPPING_OPTION_NOON_FEE                 = 'tig_postnl/delivery_settings/noondelivery_fee';
-    const XPATH_SHIPPING_OPTION_NOON_OPTION              = 'tig_postnl/delivery_settings/default_noon_option';
-    const XPATH_SHIPPING_OPTION_STOCK                    = 'tig_postnl/stock_settings/stockoptions';
-    const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE      = 'tig_postnl/delivery_days/deliverydays_active';
-    const XPATH_SHIPPING_OPTION_MAX_DELIVERYDAYS         = 'tig_postnl/delivery_days/max_deliverydays';
-    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE        = 'tig_postnl/post_offices/pakjegemak_active';
-    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_DEFAULT        = 'tig_postnl/post_offices/pakjegemak_default';
-    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_BE_ACTIVE     = 'tig_postnl/post_offices/pakjegemak_be_active';
-    const XPATH_SHIPPING_OPTION_SHOW_PACKAGE_MACHINES    = 'tig_postnl/post_offices/show_package_machines';
+    const XPATH_SHIPPING_OPTION_ACITVE = 'tig_postnl/delivery_settings/shippingoptions_active';
+    const XPATH_GUARANTEED_DELIVERY_ACTIVE = 'tig_postnl/delivery_settings/guaranteed_delivery';
+    const XPATH_SHIPPING_OPTION_NOON_FEE = 'tig_postnl/delivery_settings/noondelivery_fee';
+    const XPATH_SHIPPING_OPTION_NOON_OPTION = 'tig_postnl/delivery_settings/default_noon_option';
+    const XPATH_SHIPPING_OPTION_STOCK = 'tig_postnl/stock_settings/stockoptions';
+    const XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE = 'tig_postnl/delivery_days/deliverydays_active';
+    const XPATH_SHIPPING_OPTION_MAX_DELIVERYDAYS = 'tig_postnl/delivery_days/max_deliverydays';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE = 'tig_postnl/post_offices/pakjegemak_active';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_DEFAULT = 'tig_postnl/post_offices/pakjegemak_default';
+    const XPATH_SHIPPING_OPTION_PAKJEGEMAK_BE_ACTIVE = 'tig_postnl/post_offices/pakjegemak_be_active';
+    const XPATH_SHIPPING_OPTION_SHOW_PACKAGE_MACHINES = 'tig_postnl/post_offices/show_package_machines';
     const XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_ACTIVE = 'tig_postnl/post_offices/pakjegemak_global_active';
     const XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_COUNTRIES = 'tig_postnl/post_offices/pakjegemak_global_countries';
 
-    const XPATH_SHIPPING_OPTION_EVENING_ACTIVE           = 'tig_postnl/evening_delivery_nl/eveningdelivery_active';
-    const XPATH_SHIPPING_OPTION_EVENING_BE_ACTIVE        = 'tig_postnl/evening_delivery_be/eveningdelivery_be_active';
-    const XPATH_SHIPPING_OPTION_EVENING_FEE              = 'tig_postnl/evening_delivery_nl/eveningdelivery_fee';
-    const XPATH_SHIPPING_OPTION_EXTRAATHOME_ACTIVE       = 'tig_postnl/extra_at_home/extraathome_active';
-    const XPATH_SHIPPING_OPTION_EVENING_BE_FEE           = 'tig_postnl/evening_delivery_be/eveningdelivery_be_fee';
-    const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE       = 'tig_postnl/track_and_trace/send_track_and_trace_email';
-    const XPATH_SHIPPING_OPTION_DELIVERY_DELAY           = 'tig_postnl/track_and_trace/delivery_delay';
-    const XPATH_SHIPPING_OPTION_IDCHECK_ACTIVE           = 'tig_postnl/id_check/idcheck_active';
-    const XPATH_ITEM_OPTIONS_MANAGE_STOCK                = 'cataloginventory/item_options/manage_stock';
-    const XPATH_SHIPPING_OPTION_CARGO_ACTIVE             = 'tig_postnl/cargo/cargo_active';
-    const XPATH_SHIPPING_OPTION_EPS_BUSINESS_ACTIVE      = 'tig_postnl/eps/business_active';
-    const XPATH_SHIPPING_OPTIONS_GLOBALPACK_ACTIVE       = 'tig_postnl/globalpack/enabled';
-    const XPATH_SHIPPING_OPTION_STATED_ADDRESS_ACTIVE    = 'tig_postnl/delivery_settings/stated_address_only_active';
-    const XPATH_SHIPPING_OPTION_STATED_ADDRESS_FEE       = 'tig_postnl/delivery_settings/stated_address_only_fee';
-    const XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_MODE   = 'tig_postnl/letterbox_package/letterbox_package_calculation_mode';
-    const XPATH_SHIPPING_OPTION_BOXABLE_PACKETS_MODE     = 'tig_postnl/peps/peps_boxable_packets_calculation_mode';
-    const XPATH_SHIPPING_OPTION_COUNTRY                  = 'tig_postnl/generalconfiguration_shipping_address/country';
-    const XPATH_SHIPPING_OPTION_INSURED_TIER             = 'tig_postnl/insured_delivery/insured_tier';
-    const XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF        = 'tig_postnl/delivery_days/delivery_date_off';
+    const XPATH_SHIPPING_OPTION_EVENING_ACTIVE = 'tig_postnl/evening_delivery_nl/eveningdelivery_active';
+    const XPATH_SHIPPING_OPTION_EVENING_BE_ACTIVE = 'tig_postnl/evening_delivery_be/eveningdelivery_be_active';
+    const XPATH_SHIPPING_OPTION_EVENING_FEE = 'tig_postnl/evening_delivery_nl/eveningdelivery_fee';
+    const XPATH_SHIPPING_OPTION_EXTRAATHOME_ACTIVE = 'tig_postnl/extra_at_home/extraathome_active';
+    const XPATH_SHIPPING_OPTION_EVENING_BE_FEE = 'tig_postnl/evening_delivery_be/eveningdelivery_be_fee';
+    const XPATH_SHIPPING_OPTION_SEND_TRACKANDTRACE = 'tig_postnl/track_and_trace/send_track_and_trace_email';
+    const XPATH_SHIPPING_OPTION_DELIVERY_DELAY = 'tig_postnl/track_and_trace/delivery_delay';
+    const XPATH_SHIPPING_OPTION_IDCHECK_ACTIVE = 'tig_postnl/id_check/idcheck_active';
+    const XPATH_ITEM_OPTIONS_MANAGE_STOCK = 'cataloginventory/item_options/manage_stock';
+    const XPATH_SHIPPING_OPTION_CARGO_ACTIVE = 'tig_postnl/cargo/cargo_active';
+    const XPATH_SHIPPING_OPTION_EPS_BUSINESS_ACTIVE = 'tig_postnl/eps/business_active';
+    const XPATH_SHIPPING_OPTIONS_GLOBALPACK_ACTIVE = 'tig_postnl/globalpack/enabled';
+    const XPATH_SHIPPING_OPTION_STATED_ADDRESS_ACTIVE = 'tig_postnl/delivery_settings/stated_address_only_active';
+    const XPATH_SHIPPING_OPTION_STATED_ADDRESS_FEE = 'tig_postnl/delivery_settings/stated_address_only_fee';
+    const XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_MODE = 'tig_postnl/letterbox_package/letterbox_package_calculation_mode';
+    const XPATH_SHIPPING_OPTION_BOXABLE_PACKETS_MODE = 'tig_postnl/peps/peps_boxable_packets_calculation_mode';
+    const XPATH_SHIPPING_OPTION_COUNTRY = 'tig_postnl/generalconfiguration_shipping_address/country';
+    const XPATH_SHIPPING_OPTION_INSURED_TIER = 'tig_postnl/insured_delivery/insured_tier';
+    const XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF = 'tig_postnl/delivery_days/delivery_date_off';
 
-    private $defaultMaxDeliverydays = '5';
+    private string $defaultMaxDeliverydays = '5';
 
     /**
      * @var SerializerInterface
      */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     /**
      * @param ScopeConfigInterface $scopeConfig
@@ -72,20 +75,14 @@ class ShippingOptions extends AbstractConfigProvider
         $this->serializer = $serializer;
     }
 
-    /**
-     * @return bool
-     */
-    public function isShippingoptionsActive()
+    public function isShippingoptionsActive(): bool
     {
-        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_ACITVE);
+        return (bool) $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_ACITVE);
     }
 
-    /**
-     * @return bool
-     */
-    public function isGuaranteedDeliveryActive()
+    public function isGuaranteedDeliveryActive(): bool
     {
-        return (bool) $this->getConfigFromXpath( static::XPATH_GUARANTEED_DELIVERY_ACTIVE);
+        return (bool) $this->getConfigFromXpath(static::XPATH_GUARANTEED_DELIVERY_ACTIVE);
     }
 
     /**
@@ -104,12 +101,9 @@ class ShippingOptions extends AbstractConfigProvider
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_STOCK);
     }
 
-    /**
-     * @return bool
-     */
-    public function isDeliverydaysActive()
+    public function isDeliverydaysActive(): bool
     {
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE);
+        return (bool) $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_DELIVERYDAYS_ACTIVE);
     }
 
     /**
@@ -126,29 +120,33 @@ class ShippingOptions extends AbstractConfigProvider
 
     /**
      * @param string $country
+     *
      * @return mixed
      */
-    public function isPakjegemakActive($country = 'NL')
+    public function isPakjegemakActive(string $country = 'NL')
     {
-        if ('BE' === $country){
+        if ($country === 'BE') {
             return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_BE_ACTIVE);
         }
+
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_ACTIVE);
     }
 
     public function isPakjegemakGlobalActive(): bool
     {
-        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_ACTIVE);
+        return (bool) $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_ACTIVE);
     }
 
     public function getPakjegemakGlobalCountries(): array
     {
-        $values = (string)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_COUNTRIES);
+        $values = (string) $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_GLOBAL_COUNTRIES);
+
         return explode(',', $values);
     }
 
     /**
      * @param string $country
+     *
      * @return mixed
      */
     public function isPakjegemakDefault(string $country = 'NL'): bool
@@ -156,61 +154,53 @@ class ShippingOptions extends AbstractConfigProvider
         if (!$this->isPakjegemakActive($country)) {
             return false;
         }
-        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_DEFAULT);
+
+        return (bool) $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_PAKJEGEMAK_DEFAULT);
     }
 
     /**
      * @param string $country
+     *
      * @return mixed
      */
-    public function isEveningDeliveryActive($country = 'NL')
+    public function isEveningDeliveryActive(string $country = 'NL')
     {
-        if ('NL' === $country) {
+        if ($country === 'NL') {
             return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EVENING_ACTIVE);
         }
 
-        if ('BE' === $country){
+        if ($country === 'BE') {
             return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EVENING_BE_ACTIVE);
         }
 
         return false;
     }
 
-    /**
-     * @param string $country
-     * @return bool|mixed
-     */
-    public function getEveningDeliveryFee($country = 'NL')
+    public function getEveningDeliveryFee(string $country = 'NL'): float
     {
         if (!$this->isEveningDeliveryActive($country)) {
-            return '0';
+            return 0.0;
         }
 
-        if ('NL' === $country) {
-            return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EVENING_FEE);
+        if ($country === 'NL') {
+            return (float) $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EVENING_FEE);
         }
 
-        if ('BE' === $country){
-            return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EVENING_BE_FEE);
+        if ($country === 'BE') {
+            return (float) $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EVENING_BE_FEE);
         }
 
-        return 0;
+        return 0.0;
     }
 
-    /**
-     * @return bool
-     */
-    public function isExtraAtHomeActive()
+    public function isExtraAtHomeActive(): bool
     {
-        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EXTRAATHOME_ACTIVE);
+        return (bool) $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_EXTRAATHOME_ACTIVE);
     }
 
-    /**
-     * @return bool
-     */
-    public function isIDCheckActive()
+    public function isIDCheckActive(): bool
     {
-        return (bool)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_IDCHECK_ACTIVE);
+        return (bool) $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_IDCHECK_ACTIVE);
     }
 
     public function getNoonDeliveryFee(): float
@@ -219,42 +209,30 @@ class ShippingOptions extends AbstractConfigProvider
             return 0.0;
         }
 
-        return (float)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_NOON_FEE);
+        return (float) $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_NOON_FEE);
     }
 
     public function getNoonDeliveryOption(): int
     {
-        return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_NOON_OPTION);
+        return (int) $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_NOON_OPTION);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDeliveryDelay()
+    public function getDeliveryDelay(): int
     {
-        return (int)$this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_DELIVERY_DELAY);
+        return (int) $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_DELIVERY_DELAY);
     }
 
-    /**
-     * @return bool
-     */
-    public function getManageStock()
+    public function getManageStock(): bool
     {
-        return (bool)$this->getConfigFromXpath(self::XPATH_ITEM_OPTIONS_MANAGE_STOCK);
+        return (bool) $this->getConfigFromXpath(self::XPATH_ITEM_OPTIONS_MANAGE_STOCK);
     }
 
-    /**
-     * @return bool
-     */
-    public function canUseCargoProducts()
+    public function canUseCargoProducts(): bool
     {
         return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_CARGO_ACTIVE);
     }
 
-    /**
-     * @return bool
-     */
-    public function canUseEpsBusinessProducts()
+    public function canUseEpsBusinessProducts(): bool
     {
         return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_EPS_BUSINESS_ACTIVE);
     }
@@ -262,25 +240,18 @@ class ShippingOptions extends AbstractConfigProvider
     /**
      * @deprecated
      * Validated vs product attribute now, not a config
-     * @return bool
      */
-    public function canUsePriority()
+    public function canUsePriority(): bool
     {
         return true;
     }
 
-    /**
-     * @return bool
-     */
-    public function canUseGlobalPack()
+    public function canUseGlobalPack(): bool
     {
         return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTIONS_GLOBALPACK_ACTIVE);
     }
 
-    /**
-     * @return bool
-     */
-    public function isStatedAddressOnlyActive()
+    public function isStatedAddressOnlyActive(): bool
     {
         return (bool) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_STATED_ADDRESS_ACTIVE);
     }
@@ -293,38 +264,35 @@ class ShippingOptions extends AbstractConfigProvider
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_SHOW_PACKAGE_MACHINES);
     }
 
-    /**
-     * @return float
-     */
-    public function getStatedAddressOnlyFee()
+    public function getStatedAddressOnlyFee(): float
     {
         if (!$this->isStatedAddressOnlyActive()) {
-            return (float)0.0;
+            return 0.0;
         }
 
         return (float) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_STATED_ADDRESS_FEE);
     }
 
+    // Returns true only when calculation mode is set to "automatic". Manual mode returns false,
+    // which disables automatic letterbox detection in LetterboxPackage::isEnabled().
     public function isLetterboxPackageActive(): bool
     {
-        return $this->getLetterBoxPackageCalculationMode()
-            === \TIG\PostNL\Config\Source\LetterboxPackage\CalculationMode::CALCULATION_MODE_AUTOMATIC;
+        return $this->getLetterBoxPackageCalculationMode() === CalculationMode::CALCULATION_MODE_AUTOMATIC;
     }
 
     public function getLetterBoxPackageCalculationMode($storeId = null): string
     {
-        return (string)$this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_MODE, $storeId);
+        return (string) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_LETTERBOX_PACKAGE_MODE, $storeId);
     }
 
     public function isBoxablePacketsActive(): bool
     {
-        return $this->getBoxablePacketsCalculationMode()
-            === \TIG\PostNL\Config\Source\LetterboxPackage\CalculationMode::CALCULATION_MODE_AUTOMATIC;
+        return $this->getBoxablePacketsCalculationMode() === CalculationMode::CALCULATION_MODE_AUTOMATIC;
     }
 
     public function getBoxablePacketsCalculationMode($storeId = null): string
     {
-        return (string)$this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_BOXABLE_PACKETS_MODE, $storeId);
+        return (string) $this->getConfigFromXpath(static::XPATH_SHIPPING_OPTION_BOXABLE_PACKETS_MODE, $storeId);
     }
 
     /**
@@ -343,17 +311,15 @@ class ShippingOptions extends AbstractConfigProvider
         return $this->getConfigFromXpath(self::XPATH_SHIPPING_OPTION_INSURED_TIER);
     }
 
-    /**
-     * @param string $configPath
-     * @return array
-     */
     public function getDeliveryOff(string $configPath = self::XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF): array
     {
         try {
-            return $configPath === self::XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF
-                ? $this->serializer->unserialize((string)$this->getConfigFromXpath($configPath))
-                : explode(',', (string)$this->getConfigFromXpath($configPath));
-        } catch (\Throwable $e) {
+            if ($configPath === self::XPATH_SHIPPING_OPTION_DELIVERY_DATE_OFF) {
+                return $this->serializer->unserialize((string) $this->getConfigFromXpath($configPath));
+            }
+
+            return explode(',', (string) $this->getConfigFromXpath($configPath));
+        } catch (Throwable) {
             return [];
         }
     }

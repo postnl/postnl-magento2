@@ -3,28 +3,21 @@
 namespace TIG\PostNL\Config\CheckoutConfiguration;
 
 use TIG\PostNL\Config\Provider\ShippingOptions;
+use TIG\PostNL\Service\Carrier\Price\TaxedFee;
 
 class EveningDeliveryFee implements CheckoutConfigurationInterface
 {
-    /**
-     * @var ShippingOptions
-     */
-    private $shippingOptions;
+    private ShippingOptions $shippingOptions;
+    private TaxedFee $taxedFee;
 
-    /**
-     * @param ShippingOptions $shippingOptions
-     */
-    public function __construct(
-        ShippingOptions $shippingOptions
-    ) {
+    public function __construct(ShippingOptions $shippingOptions, TaxedFee $taxedFee)
+    {
         $this->shippingOptions = $shippingOptions;
+        $this->taxedFee        = $taxedFee;
     }
 
-    /**
-     * @return bool|mixed
-     */
     public function getValue()
     {
-        return $this->shippingOptions->getEveningDeliveryFee();
+        return $this->taxedFee->get((float) $this->shippingOptions->getEveningDeliveryFee());
     }
 }

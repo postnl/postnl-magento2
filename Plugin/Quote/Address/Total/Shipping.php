@@ -8,26 +8,25 @@ use Magento\Quote\Api\Data\ShippingAssignmentInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\Total\Shipping as TotalShipping;
 use TIG\PostNL\Service\Order\CurrentPostNLOrder;
+use function array_filter;
+use function array_shift;
 
 class Shipping
 {
     /**
      * @var PriceCurrencyInterface
      */
-    private $priceCurrency;
+    private PriceCurrencyInterface $priceCurrency;
 
     /**
      * @var CurrentPostNLOrder
      */
-    private $currentPostNLOrder;
+    private CurrentPostNLOrder $currentPostNLOrder;
+
+    private ?TotalShipping $subject;
 
     /**
-     * @var TotalShipping
-     */
-    private $subject;
-
-    /**
-     * @param CurrentPostNLOrder     $currentPostNLOrder
+     * @param CurrentPostNLOrder $currentPostNLOrder
      * @param PriceCurrencyInterface $priceCurrency
      */
     public function __construct(
@@ -38,15 +37,6 @@ class Shipping
         $this->priceCurrency = $priceCurrency;
     }
 
-    /**
-     * @param TotalShipping               $subject
-     * @param callable                    $proceed
-     * @param Quote                       $quote
-     * @param ShippingAssignmentInterface $shippingAssignment
-     * @param Quote\Address\Total         $total
-     *
-     * @return $this
-     */
     public function aroundCollect(
         TotalShipping $subject,
         callable $proceed,
@@ -55,33 +45,30 @@ class Shipping
         Quote\Address\Total $total
     ) {
         $this->subject = $subject;
-        $result        = $proceed($quote, $shippingAssignment, $total);
-        $shipping      = $shippingAssignment->getShipping();
-        $address       = $shipping->getAddress();
-        $rate          = $this->getRate($shipping->getMethod(), $address);
+        $result = $proceed($quote, $shippingAssignment, $total);
+        $shipping = $shippingAssignment->getShipping();
+        $address = $shipping->getAddress();
+        $rate = $this->getRate($shipping->getMethod(), $address);
 
         if (!$rate) {
             return $result;
         }
 
         $this->processTotal($quote, $total, $rate, $address);
+
+        return $result;
     }
 
-    /**
-     * @param                  $method
-     * @param AddressInterface $address
-     *
-     * @return $this
-     */
-    private function getRate($method, $address)
+    private function getRate(?string $method, AddressInterface $address)
     {
-        if ($method != 'tig_postnl_regular') {
+        if ($method !== 'tig_postnl_regular') {
             return null;
         }
 
-        $rate = array_filter($address->getAllShippingRates(), function (Quote\Address\Rate $rate) use ($method) {
-            return $rate->getCode() == $method;
-        });
+        $rate = array_filter(
+            $address->getAllShippingRates(),
+            static fn(Quote\Address\Rate $rate) => $rate->getCode() == $method
+        );
 
         if (!$rate) {
             return null;
@@ -91,15 +78,15 @@ class Shipping
     }
 
     /**
-     * @param Quote               $quote
+     * @param Quote $quote
      * @param Quote\Address\Total $total
      * @param                     $rate
-     * @param AddressInterface    $address
+     * @param AddressInterface $address
      */
-    private function processTotal(Quote $quote, Quote\Address\Total $total, $rate, $address)
+    private function processTotal(Quote $quote, Quote\Address\Total $total, $rate, AddressInterface $address): void
     {
-        $fee         = $this->getFee($quote);
-        $store       = $quote->getStore();
+        $fee = $this->getFee($quote);
+        $store = $quote->getStore();
         $amountPrice = $this->priceCurrency->convert(
             $rate->getPrice() + $fee,
             $store
@@ -115,9 +102,10 @@ class Shipping
 
     /**
      * @param Quote $quote
+     *
      * @return float
      */
-    private function getFee($quote)
+    private function getFee(Quote $quote): float|int
     {
         $order = $this->currentPostNLOrder->get($quote->getId());
 

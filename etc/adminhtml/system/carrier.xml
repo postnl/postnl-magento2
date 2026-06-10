@@ -36,22 +36,22 @@
                     <field id="is_other_price_for_pickup">1</field>
                 </depends>
             </field>
-            <field id="is_other_price_for_letterbox_24" translate="label" type="select" sortOrder="46" showInDefault="1" showInWebsite="1" showInStore="0">
-                <label>Other price for Letterboxparcel 24 hours</label>
-                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                <depends>
-                    <field id="rate_type">flat</field>
-                </depends>
-            </field>
-            <field id="letterbox_24_price" translate="label" type="text" sortOrder="47" showInDefault="1" showInWebsite="1" showInStore="0">
-                <label>Price for Letterboxparcel 24 hours</label>
+            <field id="letterbox_price" translate="label comment" type="text" sortOrder="47" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Alternative price for Letterbox (general)</label>
+                <comment><![CDATA[Leave empty to use the regular shipping fee (including any table/matrix rate). Enter 0 to set the fee to free.]]></comment>
                 <validate>validate-number validate-zero-or-greater</validate>
-                <depends>
-                    <field id="rate_type">flat</field>
-                    <field id="is_other_price_for_letterbox_24">1</field>
-                </depends>
             </field>
-            <field id="rate_type" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+            <field id="letterbox_24_price" translate="label comment" type="text" sortOrder="49" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Price for Letterbox 24 hours</label>
+                <comment><![CDATA[Leave empty to fall back to general letterbox alternative price. Enter 0 to set the fee to free.]]></comment>
+                <validate>validate-number validate-zero-or-greater</validate>
+            </field>
+            <field id="letterbox_48_price" translate="label comment" type="text" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Price for Letterbox 48 hours</label>
+                <comment><![CDATA[Leave empty to fall back to general letterbox alternative price. Enter 0 to set the fee to free.]]></comment>
+                <validate>validate-number validate-zero-or-greater</validate>
+            </field>
+            <field id="rate_type" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Rate Type</label>
                 <source_model>TIG\PostNL\Config\Source\Carrier\RateType</source_model>
             </field>

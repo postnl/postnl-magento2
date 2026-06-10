@@ -58,6 +58,11 @@
 
                         <div class="tig-postnl-delivery-fallback">
                             <span data-bind="text: letterbox_package"></span>
+                            <!-- ko if: $parents[1].shouldShowLetterboxFallbackPrice(price) -->
+                            <span class="tig-postnl-delivery-fee-container">
+                                (<span class="tig-postnl-delivery-fee" data-bind="text: $parents[1].formatPrice(price)"></span>)
+                            </span>
+                            <!-- /ko -->
                         </div>
                     </label>
                 </li>
