@@ -2,13 +2,13 @@
     "name": "tig/postnl-magento2",
     "description": "TIG Magento 2 PostNL extension",
     "require": {
-        "php": "~7.4|~8.1|~8.2|~8.3",
+        "php": "~8.1|~8.2|~8.3|~8.4",
         "ext-json": "*",
         "ext-soap": "*",
         "magento/framework": "~102.0|~103.0",
         "setasign/fpdf": "^1.8.2",
         "setasign/fpdi": "^2.3.2",
-        "laminas/laminas-barcode" : "~2.5|~2.8"
+        "tecnickcom/tc-lib-barcode": "^2.4"
     },
     "type": "magento2-module",
     "license": "CC-BY-NC-ND-3.0",

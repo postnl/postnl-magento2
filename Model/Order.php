@@ -82,8 +82,8 @@ class Order extends AbstractModel implements OrderInterface
         Context $context,
         Registry $registry,
         DateTime $dateTime,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     )
     {

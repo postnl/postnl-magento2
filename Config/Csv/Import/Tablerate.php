@@ -51,8 +51,8 @@ class Tablerate extends Value
         TablerateFactory $tablerateFactory,
         StoreManagerInterface $storeManager,
         Csv $csv,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         $this->tablerateFactory = $tablerateFactory;

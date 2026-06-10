@@ -207,7 +207,7 @@ class Webshop extends AbstractConfigProvider
      *
      * @return bool
      */
-    public function isExpiredLabelCleanupEnabled(int $storeId = null): bool
+    public function isExpiredLabelCleanupEnabled(?int $storeId = null): bool
     {
         return (bool)$this->getConfigFromXpath(self::XPATH_CLEAR_OLD_SHIPMENT_LABELS, $storeId);
     }

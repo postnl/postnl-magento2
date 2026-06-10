@@ -44,8 +44,8 @@ class ShipmentLabel extends MagentoModel implements ShipmentLabelInterface
         Context                     $context,
         Registry                    $registry,
         ShipmentRepositoryInterface $shipmentRepository,
-        AbstractResource            $resource = null,
-        AbstractDb                  $resourceCollection = null,
+        ?AbstractResource           $resource = null,
+        ?AbstractDb                 $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);

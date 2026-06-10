@@ -2,23 +2,42 @@
 
 namespace TIG\PostNL\Service\Shipment\Packingslip\Items;
 
+use Com\Tecnick\Barcode\Barcode as TecnickBarcode;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Io\File as IoFile;
+use Magento\Sales\Api\Data\ShipmentInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\PdfParser\PdfParserException;
 use setasign\Fpdi\PdfParser\StreamReader;
 use setasign\Fpdi\PdfReader\PdfReaderException;
 use TIG\PostNL\Config\Provider\PackingslipBarcode;
-use Magento\Sales\Api\Data\ShipmentInterface;
 use TIG\PostNL\Config\Source\LabelAndPackingslip\BarcodeValue;
-use \Magento\Sales\Api\OrderRepositoryInterface;
 use TIG\PostNL\Logging\Log;
-use Laminas\Barcode\Barcode as LaminasBarcode;
+use function hexdec;
+use function imagecolorallocate;
+use function imagecopy;
+use function imagecreate;
+use function imagedestroy;
+use function imagefontheight;
+use function imagefontwidth;
+use function imagejpeg;
+use function imagestring;
+use function imagesx;
+use function imagesy;
+use function microtime;
+use function sha1;
+use function strlen;
+use function substr;
+use function time;
+use const DIRECTORY_SEPARATOR;
 
 class Barcode implements ItemsInterface
 {
-    const TMP_BARCODE_PATH = 'PostNL' . DIRECTORY_SEPARATOR . 'tempbarcode';
-    const TMP_BARCODE_FILE = 'TIG_PostNL_temp.jpeg';
+    public const TMP_BARCODE_PATH = 'PostNL' . DIRECTORY_SEPARATOR . 'tempbarcode';
+    public const TMP_BARCODE_FILE = 'TIG_PostNL_temp.jpeg';
+
+    private const BARCODE_FONT = 3;
 
     /**
      * @var DirectoryList
@@ -66,11 +85,11 @@ class Barcode implements ItemsInterface
     private $logger;
 
     /**
-     * @param DirectoryList            $directoryList
-     * @param IoFile                   $ioFile
-     * @param PackingslipBarcode       $packingslipBarcode
+     * @param DirectoryList $directoryList
+     * @param IoFile $ioFile
+     * @param PackingslipBarcode $packingslipBarcode
      * @param OrderRepositoryInterface $orderRepository
-     * @param Log                      $logger
+     * @param Log $logger
      */
     public function __construct(
         DirectoryList $directoryList,
@@ -103,27 +122,33 @@ class Barcode implements ItemsInterface
         $pdf = $this->loadPdfAndAddBarcode($packingSlip);
 
         $this->cleanup();
+
         return $pdf->Output('S');
     }
 
     /**
      * @return Fpdi
      */
-    private function loadPdfAndAddBarcode($packingSlip){
+    private function loadPdfAndAddBarcode($packingSlip): Fpdi
+    {
         // @codingStandardsIgnoreLine
         $pdf = new Fpdi();
         try {
             $stream = StreamReader::createByString($packingSlip);
             $pageCount = $pdf->setSourceFile($stream);
         } catch (PdfReaderException $readerException) {
-            $this->logger->error('[Service\Shipment\PackingSlip\Items\Barcode] Error while loading sourcefile: ' . $readerException->getMessage());
+            $this->logger->error(
+                '[Service\Shipment\PackingSlip\Items\Barcode] Error while loading sourcefile: ' . $readerException->getMessage(
+                )
+            );
+
             return $pdf;
         }
 
-        for($pageIndex = 0; $pageIndex < $pageCount; $pageIndex++) {
+        for ($pageIndex = 0; $pageIndex < $pageCount; $pageIndex++) {
             try {
                 $templateId = $pdf->importPage($pageIndex + 1);
-                $pageSize   = $pdf->getTemplateSize($templateId);
+                $pageSize = $pdf->getTemplateSize($templateId);
 
                 if ($pageSize['width'] > $pageSize['height']) {
                     $pdf->AddPage('L', $pageSize);
@@ -135,9 +160,13 @@ class Barcode implements ItemsInterface
                 $this->addBarcodeToPage($pdf, $pageSize);
 
             } catch (PdfParserException $fpdiException) {
-                $this->logger->error('[Service\Shipment\PackingSlip\Items\Barcode] PdfParserException: ' . $fpdiException->getMessage());
+                $this->logger->error(
+                    '[Service\Shipment\PackingSlip\Items\Barcode] PdfParserException: ' . $fpdiException->getMessage()
+                );
             } catch (PdfReaderException $readerException) {
-                $this->logger->error('[Service\Shipment\PackingSlip\Items\Barcode] ReaderException: ' . $readerException->getMessage());
+                $this->logger->error(
+                    '[Service\Shipment\PackingSlip\Items\Barcode] ReaderException: ' . $readerException->getMessage()
+                );
             }
         }
 
@@ -149,7 +178,8 @@ class Barcode implements ItemsInterface
      *
      * @return float
      */
-    private function zendPdfUnitsToMM($units) {
+    private function zendPdfUnitsToMM($units): float
+    {
         return ($units / 72) * 25.4;
     }
 
@@ -169,29 +199,52 @@ class Barcode implements ItemsInterface
         $h = $this->zendPdfUnitsToMM($position[3]) - $this->zendPdfUnitsToMM($position[1]);
 
         // @codingStandardsIgnoreLine
-        $pdf->Image($this->fileName, $x,$y, $w, $h);
+        $pdf->Image($this->fileName, $x, $y, $w, $h);
     }
 
     /**
-     * Creates the barcode as an temporary image.
+     * Creates the barcode as a temporary image.
      */
-    private function createBarcode()
+    private function createBarcode(): void
     {
-        $barcodeOptions = [
-            'text'            => $this->barcodeValue,
-            'factor'          => '1',
-            'drawText'        => $this->barcodeSettings->includeNumber($this->storeId),
-            'backgroundColor' => $this->barcodeSettings->getBackgroundColor($this->storeId),
-            'foreColor'       => $this->barcodeSettings->getFontColor($this->storeId),
-        ];
-
         $type = $this->barcodeSettings->getType($this->storeId);
-        // @codingStandardsIgnoreLine
-        $imageResource = LaminasBarcode::draw($type, 'image', $barcodeOptions, []);
-        // @codingStandardsIgnoreLine
-        imagejpeg($imageResource, $this->fileName, 100);
-        // @codingStandardsIgnoreLine
-        imagedestroy($imageResource);
+        $foreHex = $this->barcodeSettings->getFontColor($this->storeId);
+        $bgHex = $this->barcodeSettings->getBackgroundColor($this->storeId);
+        $showText = $this->barcodeSettings->includeNumber($this->storeId);
+
+        $gdBars = (new TecnickBarcode())
+            ->getBarcodeObj($type, $this->barcodeValue, -1, -20, $foreHex, [0, -5, 0, -5])
+            ->setBackgroundColor($bgHex)
+            ->getGd();
+
+        $barsW = imagesx($gdBars);
+        $barsH = imagesy($gdBars);
+
+        if ($showText) {
+            $textH = imagefontheight(self::BARCODE_FONT);
+            $canvas = imagecreate($barsW, $barsH + $textH);
+            imagecopy($canvas, $gdBars, 0, 0, 0, 0, $barsW, $barsH);
+            imagedestroy($gdBars);
+
+            [$r, $g, $b] = $this->hexToRgb($foreHex);
+            $fg = imagecolorallocate($canvas, $r, $g, $b);
+            $textX = (int) (($barsW - (imagefontwidth(self::BARCODE_FONT) * strlen($this->barcodeValue))) / 2) + 1;
+            imagestring($canvas, self::BARCODE_FONT, $textX, $barsH, $this->barcodeValue, $fg);
+        } else {
+            $canvas = $gdBars;
+        }
+
+        imagejpeg($canvas, $this->fileName, 100);
+        imagedestroy($canvas);
+    }
+
+    private function hexToRgb(string $hex): array
+    {
+        return [
+            hexdec(substr($hex, 1, 2)),
+            hexdec(substr($hex, 3, 2)),
+            hexdec(substr($hex, 5, 2)),
+        ];
     }
 
     /**
@@ -211,7 +264,7 @@ class Barcode implements ItemsInterface
     private function getBarcodeValue($shipment)
     {
         $this->barcodeValue = $shipment->getIncrementId();
-        $valueType          = $this->barcodeSettings->getValue($this->storeId);
+        $valueType = $this->barcodeSettings->getValue($this->storeId);
 
         if ($valueType == BarcodeValue::REFEENCE_TYPE_ORDER_ID) {
             $order = $this->orderRepository->get($shipment->getOrderId());
@@ -224,8 +277,8 @@ class Barcode implements ItemsInterface
         $pathFile = $this->directoryList->getPath('var') . DIRECTORY_SEPARATOR . static::TMP_BARCODE_PATH;
         $this->ioFile->checkAndCreateFolder($pathFile);
 
-        $tempFileName     = sha1(microtime()) . '-' . time() . '-' . static::TMP_BARCODE_FILE;
-        $this->fileName   = $pathFile . DIRECTORY_SEPARATOR . $tempFileName;
+        $tempFileName = sha1(microtime()) . '-' . time() . '-' . static::TMP_BARCODE_FILE;
+        $this->fileName = $pathFile . DIRECTORY_SEPARATOR . $tempFileName;
         $this->fileList[] = $this->fileName;
     }
 }

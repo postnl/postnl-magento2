@@ -55,7 +55,16 @@ class PackingslipBarcode extends AbstractConfigProvider
      */
     public function getType($storeId = null)
     {
-        return $this->getConfigFromXpath(static::XPATH_BARCODE_TYPE, $storeId);
+        $value = $this->getConfigFromXpath(static::XPATH_BARCODE_TYPE, $storeId);
+        // temporary mapping for backwards compatibility
+        $mapping = [
+            'code25' => 'I25',
+            'code39' => 'C39',
+            'code128' => 'C128',
+            'royalmail' => 'RMS4CC'
+        ];
+
+        return $mapping[$value] ?? $value;
     }
 
     /**

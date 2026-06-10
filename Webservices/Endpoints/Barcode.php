@@ -96,7 +96,7 @@ class Barcode extends AbstractEndpoint
      * @throws \Magento\Framework\Webapi\Exception
      * @throws \TIG\PostNL\Webservices\Api\Exception
      */
-    public function call(ShipmentInterface $shipment = null, bool $isReturnBarcode = false)
+    public function call(?ShipmentInterface $shipment = null, bool $isReturnBarcode = false)
     {
         $this->validateRequiredValues();
 
