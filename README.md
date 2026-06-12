@@ -16,5 +16,5 @@ Manual => https://postnl.github.io/postnl-magento2/
 For questions related to your PostNL account and PostNL delivery options and products, please contact with PostNL or your PostNL accountmanager.
 
 For questions about installing and configuring the extension please consult the relevant documentation or contact our technical support. 
-- **Email:** [digitaleklantsupport@postnl.nl](mailto:digitaleklantsupport@postnl.nl)
+- **Webform:** (https://developer.postnl.nl/support/form/)
 
