@@ -51,7 +51,7 @@ class Grids extends Command
      * Configuration for bin/magento action
      */
     // @codingStandardsIgnoreLine
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName(static::POSTNLCLI_COMMAND);
         $this->setDescription(static::POSTNLCLI_COMMENT);
@@ -64,7 +64,7 @@ class Grids extends Command
      * @return int
      */
     // @codingStandardsIgnoreLine
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $output->writeln('<info>Synchronization started.</info>');
