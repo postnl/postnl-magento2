@@ -2,7 +2,6 @@
 
 namespace TIG\PostNL\Controller\Adminhtml\Order;
 
-use Laminas\Mime\Mime;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
