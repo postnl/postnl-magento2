@@ -54,9 +54,9 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
      */
     private function createMimePart(
         $content,
-        string $type        = \Laminas\Mime\Mime::TYPE_OCTETSTREAM,
-        string $disposition = \Laminas\Mime\Mime::DISPOSITION_ATTACHMENT,
-        string $encoding    = \Laminas\Mime\Mime::ENCODING_BASE64,
+        string $type        = 'application/octet-stream',
+        string $disposition = 'attachment',
+        string $encoding    = 'base64',
         $filename           = null
     ) {
         $mimePart = new \Laminas\Mime\Part($content);
@@ -100,8 +100,8 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
                 if ($body) {
                     $mimePart = $this->createMimePart(
                         (string)$body,
-                        \Laminas\Mime\Mime::TYPE_TEXT,
-                        \Laminas\Mime\Mime::DISPOSITION_INLINE
+                        'text/plain',
+                        'inline'
                     );
                     $mimeMessage->setParts([$mimePart]);
                 }
