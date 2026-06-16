@@ -2,15 +2,15 @@
 
 namespace TIG\PostNL\Console\Sync;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use TIG\PostNL\Model\ShipmentRepository;
-use TIG\PostNL\Model\Shipment as PostNLShipment;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Magento\Framework\Console\Cli;
 use Magento\Setup\Module\Di\App\Task\OperationException;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use TIG\PostNL\Model\Shipment as PostNLShipment;
+use TIG\PostNL\Model\ShipmentRepository;
 
 // @codingStandardsIgnoreFile
 class Grids extends Command
@@ -18,59 +18,31 @@ class Grids extends Command
     const POSTNLCLI_COMMAND = 'postnl:sync:grids';
     const POSTNLCLI_COMMENT = 'Synchronizes the order- and shipment grid columns';
 
-    /**
-     * @var ShipmentRepository
-     */
-    private $shipmentRepository;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
-
-    /**
-     * ConfirmStatus constructor.
-     *
-     * @param ShipmentRepository    $shipmentRepository
-     * @param SearchCriteriaBuilder $criteriaBuilder
-     * @param null                  $name
-     */
-    public function __construct
-    (
-        ShipmentRepository $shipmentRepository,
-        SearchCriteriaBuilder $criteriaBuilder,
-        $name = null
+    public function __construct(
+        private readonly ShipmentRepository $shipmentRepository,
+        private readonly SearchCriteriaBuilder $searchCriteriaBuilder,
+        ?string $name = null
     ) {
-        $this->shipmentRepository    = $shipmentRepository;
-        $this->searchCriteriaBuilder = $criteriaBuilder;
-
         parent::__construct($name);
     }
 
     /**
      * Configuration for bin/magento action
      */
-    // @codingStandardsIgnoreLine
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName(static::POSTNLCLI_COMMAND);
         $this->setDescription(static::POSTNLCLI_COMMENT);
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return int
-     */
-    // @codingStandardsIgnoreLine
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $output->writeln('<info>Synchronization started.</info>');
             $this->startSync($output);
         } catch (OperationException $exception) {
             $output->writeln('<error>' . $exception->getMessage() . '</error>');
+
             return Cli::RETURN_FAILURE;
         }
 
@@ -88,14 +60,13 @@ class Grids extends Command
      * sales_shipment_grid
      *
      * Because we update the postnl shipment, all Observer classes for grid refresing will be triggerd automaticly.
-     *
-     * @param OutputInterface $output
      */
     private function startSync(OutputInterface $output)
     {
         $shipments = $this->getShipmentsToSync();
         if (!$shipments) {
             $output->writeln('<comment>Nothing to synchronize</comment>');
+
             return;
         }
 
@@ -119,10 +90,7 @@ class Grids extends Command
         $output->writeln('');
     }
 
-    /**
-     * @param PostNLShipment $shipment
-     */
-    private function updateShipment(PostNLShipment $shipment)
+    private function updateShipment(PostNLShipment $shipment): void
     {
         $shipment->setConfirmed(true);
         $this->shipmentRepository->save($shipment);
@@ -136,8 +104,7 @@ class Grids extends Command
     {
         $searchCriteria = $this->searchCriteriaBuilder->addFilter('confirmed', 0)
             ->addFilter('confirmed_at', true, 'notnull');
-        $shipments = $this->shipmentRepository->getList($searchCriteria->create());
 
-        return $shipments->getItems();
+        return $this->shipmentRepository->getList($searchCriteria->create())->getItems();
     }
 }

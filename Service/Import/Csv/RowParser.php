@@ -2,40 +2,31 @@
 
 namespace TIG\PostNL\Service\Import\Csv;
 
+use Magento\Directory\Model\Country;
 use Magento\Directory\Model\CountryFactory;
+use Magento\Directory\Model\Region;
 use Magento\Directory\Model\RegionFactory;
 use Magento\Framework\Exception\LocalizedException;
-
 use TIG\PostNL\Exception as PostnlException;
+use function __;
+use function array_key_exists;
+use function count;
+use function is_numeric;
+use function sprintf;
+use function trim;
 
 class RowParser
 {
-    const COLUMN_COUNTRY = 0;
-    const COLUMN_REGION = 1;
-    const COLUMN_ZIP = 2;
-    const COLUMN_CONDITION_VALUE = 3;
-    const COLUMN_PRICE = 4;
+    public const COLUMN_COUNTRY = 0;
+    public const COLUMN_REGION = 1;
+    public const COLUMN_ZIP = 2;
+    public const COLUMN_CONDITION_VALUE = 3;
+    public const COLUMN_PRICE = 4;
 
-    /**
-     * @var CountryFactory
-     */
-    private $countryFactory;
-
-    /**
-     * @var RegionFactory
-     */
-    private $regionFactory;
-
-    /**
-     * @param CountryFactory $countryFactory
-     * @param RegionFactory  $regionFactory
-     */
     public function __construct(
-        CountryFactory $countryFactory,
-        RegionFactory $regionFactory
+        private readonly CountryFactory $countryFactory,
+        private readonly RegionFactory $regionFactory
     ) {
-        $this->countryFactory = $countryFactory;
-        $this->regionFactory = $regionFactory;
     }
 
     /**
@@ -45,12 +36,11 @@ class RowParser
      * @param $conditionName
      * @param $conditionFullName
      *
-     * @return array
      * @throws LocalizedException
      */
-    public function parseRow($rowData, $rowCount, $websiteId, $conditionName, $conditionFullName)
+    public function parseRow($rowData, $rowCount, $websiteId, $conditionName, $conditionFullName): array
     {
-        if (count($rowData) < 5) { // @codingStandardsIgnoreLine
+        if (count($rowData) < 5) {
             throw new PostnlException(
                 __('Invalid PostNL Table Rates File Format in Row #%1', $rowCount),
                 'POSTNL-0247'
@@ -77,15 +67,15 @@ class RowParser
      * @return string
      * @throws LocalizedException
      */
-    private function getCountryId($rowData, $rowCount)
+    private function getCountryId($rowData, $rowCount): string
     {
         $countryId = '0';
         $countryCode = $this->getColumnValue(self::COLUMN_COUNTRY, $rowData, $rowCount);
 
-        if ($countryCode != '*' && $countryCode != '') {
-            /** @var \Magento\Directory\Model\Country $country */
-            $country   = $this->countryFactory->create();
-            $country   = $country->loadByCode($countryCode);
+        if ($countryCode !== '*' && $countryCode !== '') {
+            /** @var Country $country */
+            $country = $this->countryFactory->create();
+            $country = $country->loadByCode($countryCode);
             $countryId = $country->getId();
         }
 
@@ -100,15 +90,15 @@ class RowParser
      * @return string
      * @throws LocalizedException
      */
-    private function getRegionId($rowData, $countryId, $rowCount)
+    private function getRegionId($rowData, $countryId, $rowCount): string
     {
         $regionId = '0';
         $regionCode = $this->getColumnValue(self::COLUMN_REGION, $rowData, $rowCount);
 
-        if ($regionCode != '*' && $regionCode != '' && $countryId != '0') {
-            /** @var \Magento\Directory\Model\Region $region */
-            $region   = $this->regionFactory->create();
-            $region   = $region->loadByCode($regionCode, $countryId);
+        if ($regionCode !== '*' && $regionCode !== '' && $countryId != '0') {
+            /** @var Region $region */
+            $region = $this->regionFactory->create();
+            $region = $region->loadByCode($regionCode, $countryId);
             $regionId = $region->getId();
         }
 
@@ -122,7 +112,7 @@ class RowParser
      * @return string
      * @throws LocalizedException
      */
-    private function getZipCode($rowData, $rowCount)
+    private function getZipCode($rowData, $rowCount): string
     {
         $zipCode = $this->getColumnValue(self::COLUMN_ZIP, $rowData, $rowCount);
 
@@ -141,7 +131,7 @@ class RowParser
      * @return bool|float
      * @throws LocalizedException
      */
-    private function getConditionValue($rowData, $rowCount, $conditionFullName)
+    private function getConditionValue($rowData, $rowCount, $conditionFullName): float|bool
     {
         $conditionValue = $this->getColumnValue(self::COLUMN_CONDITION_VALUE, $rowData, $rowCount);
         $formattedConditionValue = $this->parseToDecimal($conditionValue);
@@ -162,7 +152,7 @@ class RowParser
      * @return bool|float|string
      * @throws LocalizedException
      */
-    private function getPrice($rowData, $rowCount)
+    private function getPrice($rowData, $rowCount): float|bool
     {
         $price = $this->getColumnValue(self::COLUMN_PRICE, $rowData, $rowCount);
         $formatedPrice = $this->parseToDecimal($price);
@@ -183,9 +173,9 @@ class RowParser
      * @return string
      * @throws LocalizedException
      */
-    private function getColumnValue($column, $row, $rowCount)
+    private function getColumnValue($column, $row, $rowCount): string
     {
-        if (!array_key_exists($column, $row)) { // @codingStandardsIgnoreLine
+        if (!array_key_exists($column, $row)) {
             $message = __('Invalid PostNL Table Rates File Format in Row #%1', $rowCount);
             throw new PostnlException($message, 'POSTNL-0247');
         }
@@ -198,12 +188,12 @@ class RowParser
      *
      * @return bool|float
      */
-    private function parseToDecimal($value)
+    private function parseToDecimal($value): float|bool
     {
         $result = false;
 
         if (is_numeric($value) && $value >= 0) {
-            $result = (double)sprintf('%.4F', $value);
+            $result = (float) sprintf('%.4F', $value);
         }
 
         return $result;
