@@ -130,7 +130,7 @@ Nadat de nieuwe template is opgeslagen zal deze ook geselecteerd kunnen worden b
 #### Brievenbuspakje
 
 Binnen de extensie zijn er twee opties om gebruik te maken van brievenbuspakjes: 
-- **Automatisch:** De extensie bepaalt automatisch of een bestelling als brievenbuspakje wordt verzonden op basis van de productconfiguratie. Met de instelling *Standaard verzendmethode automatische brievenbuspakjes* kun je instellen of 24-uurs-variant of de 48-uursvariant moet worden toegewezen, of dat de keuze hiervoor aan de ontvanger wordt gelaten. In de instellingen van de Delivery Methods kun je alternatieve prijzen hanteren voor automatisch toegewezen brievenbuspakjes (zie [hoofdstuk 9](https://postnl.github.io/postnl-magento2/#alternatieve-verzendkosten)
+- **Automatisch:** De extensie bepaalt automatisch of een bestelling als brievenbuspakje wordt verzonden op basis van de productconfiguratie. Met de instelling *Standaard verzendmethode automatische brievenbuspakjes* kun je instellen of 24-uurs-variant of de 48-uursvariant moet worden toegewezen, of dat de keuze hiervoor aan de ontvanger wordt gelaten. In de instellingen van de Delivery Methods kun je alternatieve prijzen hanteren voor automatisch toegewezen brievenbuspakjes (zie [hoofdstuk 9](https://postnl.github.io/postnl-magento2/#alternatieve-verzendkosten))
 - **Handmatig:** U bepaalt in de backend handmatig of een bestelling als brievenbuspakje wordt verzonden.
 
 ![PostNL Brievenbuspakje]({{ site.baseurl }}/assets/images/3_bezorging_brievenbuspakje.png "PostNL Brievenbuspakje")
