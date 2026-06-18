@@ -75,3 +75,13 @@ Vervolgens vult u de gegevens in:
 Bij `Land` kunt u meerdere landen selecteren. Na het opslaan zal elk land een eigen regel
 krijgen. Mocht u een regel willen wijzigen dan zult u eerst de regel moeten verwijderen en
 dan weer opnieuw moeten toevoegen.
+
+### Alternatieve verzendkosten
+Het is mogelijk om alternatieve verzendkosten in te stellen voor Afhalen bij PostNL en Brievenbuspakjes. Hiermee kun je ervoor zorgen dat de verzendkosten die worden doorberekend aan de ontvanger (en getoond in de check-out) beter aansluiten bij je eigen verzendkosten. Gebruik hiervoor de volgende instellingen:
+
+- **Activeer alternatieve verzendkosten voor Afhalen bij PostNL:** Zet deze op "Ja" wanneer je een aparte prijs wil hanteren voor bestellingen die naar een afhaalpunt gestuurd worden.
+- **Verzendkosten voor afhalen bij PostNL:** Vul hier het bedrag in wat je als verzendkosten wil hanteren voor verzending naar een afhaalpunt
+- **Alternatieve verzendkosten voor brievenbuspakjes (algemeen):** Vul hier het bedrag in wat je wil hanteren voor zendingen die door middel van de automatische berekening het product Brievenbuspakje toegewezen krijgen. Wat je hier invult geldt vervolgens voor beide varianten van het Brievenbuspakje. Als je geen gebruik wil maken van één prijs die voor beide varianten tegelijk geldt laat je dit veld leeg. Wanneer je het product Brievenbuspakje altijd gratis wil verzenden zet je deze op 0.
+- **Verzendkosten voor brievenbuspakje 24 uur:** Vul hier het bedrag in wat je wil hanteren voor zendingen die door middel van de automatische berekening de 24-uurs-variant van het product Brievenbuspakje toegewezen krijgen. Wanneer je hier niets invult wordt er teruggevallen op invulling van **Alternatieve verzendkosten voor brievenbuspakjes (algemeen)**. Wanneer je deze variant van het product Brievenbuspakje altijd gratis wil verzenden zet je deze op 0.
+- **Verzendkosten voor brievenbuspakje 48 uur:** ul hier het bedrag in wat je wil hanteren voor zendingen die door middel van de automatische berekening de 48-uurs-variant van het product Brievenbuspakje toegewezen krijgen. Wanneer je hier niets invult wordt er teruggevallen op invulling van **Alternatieve verzendkosten voor brievenbuspakjes (algemeen)**. Wanneer je deze variant van het product Brievenbuspakje altijd gratis wil verzenden zet je deze op 0.
+![Alternatieve verzendkosten]({{ site.baseurl }}/assets/images/8_alternatieve_verzendkosten.png "Alternatieve verzendkosten")
