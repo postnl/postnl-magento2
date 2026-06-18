@@ -128,11 +128,9 @@ Nadat de nieuwe template is opgeslagen zal deze ook geselecteerd kunnen worden b
 ![PostNL Track and Trace template selectie]({{ site.baseurl }}/assets/images/3_bezorging_track_trace_template_selectie.png "PostNL Track and Trace template selectie")
 
 #### Brievenbuspakje
-Activeer brievenbuspakje om de optie te hebben om kleine artikelen te versturen in een brievenbuspakje die eenvoudig door de brievenbus past
-[https://www.postnl.nl/zakelijke-oplossingen/pakket-versturen/verzendopties/brievenbuspakje/](https://www.postnl.nl/zakelijke-oplossingen/pakket-versturen/verzendopties/brievenbuspakje/)
 
 Binnen de extensie zijn er twee opties om gebruik te maken van brievenbuspakjes: 
-- **Automatisch:** De extensie bepaalt automatisch of een bestelling als brievenbuspakje wordt verzonden.
+- **Automatisch:** De extensie bepaalt automatisch of een bestelling als brievenbuspakje wordt verzonden op basis van de productconfiguratie. Met de instelling *Standaard verzendmethode automatische brievenbuspakjes* kun je instellen of 24-uurs-variant of de 48-uursvariant moet worden toegewezen, of dat de keuze hiervoor aan de ontvanger wordt gelaten. In de instellingen van de Delivery Methods kun je alternatieve prijzen hanteren voor automatisch toegewezen brievenbuspakjes (zie [hoofdstuk 9](https://postnl.github.io/postnl-magento2/#verzendmethode-instellen)
 - **Handmatig:** U bepaalt in de backend handmatig of een bestelling als brievenbuspakje wordt verzonden.
 
 ![PostNL Brievenbuspakje]({{ site.baseurl }}/assets/images/3_bezorging_brievenbuspakje.png "PostNL Brievenbuspakje")
@@ -149,8 +147,8 @@ Om een pakketje automatisch als brievenbuspakje te markeren zijn een paar punten
 **Handmatig**
 
 Bij de handmatige optie kan een bestelling op twee plaatsen aangemerkt worden als brievenbuspakje:
-- **Bestellingen overzicht:** In het bestellingen overzicht kunt u van één of meerdere bestellingen de verzendoptie wijzigen. Selecteer de bestellingen waarvan u de verzendoptie wil wijzigen, selecteer in de PostNL actiebalk ‘Verander productcode’ en selecteer vervolgens de bezorgoptie *Brievenbuspakje Extra*.
-- **Per bestelling:** Open hiervoor vanuit het bestellingen overzicht een bestelling en klik op de optie om de bestelling te versturen. Onderaan de pagina kan er vervolgens bij de Verzending opties een *PostNL Bezorgoptie* geselecteerd worden. Kies in dit geval voor *Brievenbuspakje Extra*.
+- **Bestellingen overzicht:** In het bestellingen overzicht kunt u van één of meerdere bestellingen de verzendoptie wijzigen. Selecteer de bestellingen waarvan u de verzendoptie wil wijzigen, selecteer in de PostNL actiebalk ‘Verander productcode’ en selecteer vervolgens de bezorgoptie *Brievenbuspakje Extra of Brievenbuspakje 48*.
+- **Per bestelling:** Open hiervoor vanuit het bestellingen overzicht een bestelling en klik op de optie om de bestelling te versturen. Onderaan de pagina kan er vervolgens bij de Verzending opties een *PostNL Bezorgoptie* geselecteerd worden. Kies in dit geval voor *Brievenbuspakje Extra*  of *Brievenbuspakje 48*.
   ![PostNL Brievenbuspakje verzenden]({{ site.baseurl }}/assets/images/3_bezorging_brievenbuspakje_verzenden.png "PostNL Brievenbuspakje verzenden")
 
 
