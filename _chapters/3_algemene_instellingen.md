@@ -147,8 +147,8 @@ Om een pakketje automatisch als brievenbuspakje te markeren zijn een paar punten
 **Handmatig**
 
 Bij de handmatige optie kan een bestelling op twee plaatsen aangemerkt worden als brievenbuspakje:
-- **Bestellingen overzicht:** In het bestellingen overzicht kunt u van één of meerdere bestellingen de verzendoptie wijzigen. Selecteer de bestellingen waarvan u de verzendoptie wil wijzigen, selecteer in de PostNL actiebalk ‘Verander productcode’ en selecteer vervolgens de bezorgoptie *Brievenbuspakje Extra of Brievenbuspakje 48*.
-- **Per bestelling:** Open hiervoor vanuit het bestellingen overzicht een bestelling en klik op de optie om de bestelling te versturen. Onderaan de pagina kan er vervolgens bij de Verzending opties een *PostNL Bezorgoptie* geselecteerd worden. Kies in dit geval voor *Brievenbuspakje Extra*  of *Brievenbuspakje 48*.
+- **Bestellingen overzicht:** In het bestellingen overzicht kunt u van één of meerdere bestellingen de verzendoptie wijzigen. Selecteer de bestellingen waarvan u de verzendoptie wil wijzigen, selecteer in de PostNL actiebalk ‘Verander productcode’ en selecteer vervolgens de bezorgoptie *Brievenbuspakje Extra* of *Brievenbuspakje 48*.
+- **Per bestelling:** Open hiervoor vanuit het bestellingen overzicht een bestelling en klik op de optie om de bestelling te versturen. Onderaan de pagina kan er vervolgens bij de Verzending opties een *PostNL Bezorgoptie* geselecteerd worden. Kies in dit geval voor *Brievenbuspakje Extra* of *Brievenbuspakje 48*.
   ![PostNL Brievenbuspakje verzenden]({{ site.baseurl }}/assets/images/3_bezorging_brievenbuspakje_verzenden.png "PostNL Brievenbuspakje verzenden")
 
 
