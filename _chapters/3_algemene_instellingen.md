@@ -2,7 +2,7 @@
 Nadat de PostNL extensie is geïnstalleerd is deze in de backend van de Magento webshop terug te vinden onder *Winkels → Configuratie → Sales → PostNL*.
 
 ### Verzendinstellingen
-De *overkomstduur* is het aantal dagen dat de bestelling nodig heeft om bezorgd te worden nadat deze is geplaatst. In combinatie met de ingestelde *cut-off tijden* en de *verzenddagen* bepaald de extensie wanneer de klant de bestelling kan verwachten.
+De *overkomstduur* is het aantal dagen dat de bestelling nodig heeft om bezorgd te worden nadat deze is geplaatst. In combinatie met de ingestelde *cut-off tijden* en de *verzenddagen* bepaalt de extensie wanneer de klant de bestelling kan verwachten.
 ![Verzend instellingen]({{ site.baseurl }}/assets/images/3_verzend_instellingen.png "Magento 2 Admin - PostNL Verzenden")
 
 ### Bezorg instellingen
