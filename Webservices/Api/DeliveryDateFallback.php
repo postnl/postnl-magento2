@@ -2,31 +2,31 @@
 
 namespace TIG\PostNL\Webservices\Api;
 
+use TIG\PostNL\Service\Timeframe\IsPastCutOff;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use TIG\PostNL\Config\Provider\Webshop;
-use TIG\PostNL\Service\Timeframe\IsPastCutOff;
-use function date;
-use function explode;
-use function in_array;
-use function strtotime;
+use TIG\PostNL\Helper\Data;
 
 class DeliveryDateFallback
 {
-    private IsPastCutOff $isPastCutOff;
+    private $isPastCutOff;
 
-    private TimezoneInterface $timeZone;
+    private $timeZone;
 
-    private Webshop $webshop;
+    private $webshop;
 
+    private $helper;
 
     public function __construct(
         IsPastCutOff $isPastCutOff,
         TimezoneInterface $timezone,
-        Webshop $webshop
+        Webshop $webshop,
+        Data $data
     ) {
         $this->isPastCutOff = $isPastCutOff;
         $this->timeZone = $timezone;
         $this->webshop = $webshop;
+        $this->helper = $data;
     }
 
     /**
@@ -35,41 +35,26 @@ class DeliveryDateFallback
     public function get()
     {
         $shippingDays = explode(',', $this->webshop->getShipmentDays());
-        $nextDay = '+1 day';
+        $nextDay      = '+1 day';
         if ($this->isPastCutOff->calculate()) {
             $nextDay = '+2 day';
         }
 
         $date = $this->getDate($nextDay);
-        $shippingDaysCount = count($shippingDays);
-        while (
-            !in_array(
-                $this->normaliseToConfigDayNumber(date('N', strtotime($date))),
-                $shippingDays
-            )
-            && $shippingDaysCount
-        ) {
+        while (!in_array(date('N', strtotime($date)), $shippingDays) && count($shippingDays)) {
             $date = $this->getDate($date . '+1 day');
         }
 
         return $this->getDate($date);
     }
 
-    public function getDate(string $day): string
-    {
-        return $this->timeZone->date(strtotime($day))->format('d-m-Y');
-    }
-
     /**
-     * Convert date('N') output (1=Mon … 7=Sun) to the day-number format stored in
-     * the shipment-days configuration, where Sunday is represented as '0'.
+     * @param $day
+     * @return string
      */
-    private function normaliseToConfigDayNumber(string $isoWeekday): string
+    public function getDate($day)
     {
-        if ($isoWeekday === '7') {
-            return '0';
-        }
-
-        return $isoWeekday;
+        $date = $this->timeZone->date(strtotime($day));
+        return $date->format('d-m-Y');
     }
 }
