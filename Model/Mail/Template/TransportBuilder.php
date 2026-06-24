@@ -3,6 +3,7 @@
 namespace TIG\PostNL\Model\Mail\Template;
 
 use Magento\Framework\Mail\MessageInterface;
+use function class_exists;
 
 class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
 {
@@ -54,9 +55,9 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
      */
     private function createMimePart(
         $content,
-        string $type        = \Laminas\Mime\Mime::TYPE_OCTETSTREAM,
-        string $disposition = \Laminas\Mime\Mime::DISPOSITION_ATTACHMENT,
-        string $encoding    = \Laminas\Mime\Mime::ENCODING_BASE64,
+        string $type        = 'application/octet-stream',
+        string $disposition = 'attachment',
+        string $encoding    = 'base64',
         $filename           = null
     ) {
         $mimePart = new \Laminas\Mime\Part($content);
@@ -99,15 +100,21 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
 
                 if ($body) {
                     $mimePart = $this->createMimePart(
-                        (string)$body,
-                        \Laminas\Mime\Mime::TYPE_TEXT,
-                        \Laminas\Mime\Mime::DISPOSITION_INLINE
+                        (string) $body,
+                        'text/plain',
+                        'inline'
                     );
                     $mimeMessage->setParts([$mimePart]);
                 }
             }
             foreach ($this->parts as $partData) {
-                $part = $this->createMimePart($partData['body'], $partData['mime'], 'attachment', 'base64', $partData['name']);
+                $part = $this->createMimePart(
+                    $partData['body'],
+                    $partData['mime'],
+                    'attachment',
+                    'base64',
+                    $partData['name']
+                );
                 $mimeMessage->addPart($part);
             }
             $this->message->setBody($mimeMessage);
