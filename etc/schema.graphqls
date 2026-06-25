@@ -1,0 +1,46 @@
+
+type Query {
+    postnlTimeframes (
+        cart_id: String! @doc(description: "Query by cart_id."),
+        address: PostNlAddressInput @doc(description: "Query by address."),
+    ) : PostnlTimeframesOutput @resolver( class: "TIG\\PostNL\\Model\\Resolver\\PostnlTimeframes") @doc(description: "Query by Get the timeframes for the postnl shipping methods.")
+}
+
+type Mutation {
+    setPostnlShippingInformation (
+        input: PostnlShippingInformationInput! @doc(description: "Mutation to set the postnl shipping information.")
+    ) : Cart @resolver( class: "TIG\\PostNL\\Model\\Resolver\\SetPostnlShippingInformation") @doc(description: "Query by Get the timeframes for the postnl shipping methods.")
+}
+
+input PostnlShippingInformationInput @doc(description: "Input for the postnl shipping information.") {
+    cart_id: String! @doc(description: "The cart ID for which the shipping information is being set.")
+    type: String! @doc(description: "The type of postnl delivery, either delivery or pickup.")
+    option: String!
+    date: String @doc(description: "The date of the delivery or pickup option.")
+    from: String @doc(description: "The start time of the delivery or pickup option.")
+    to: String @doc(description: "The end time of the delivery or pickup option.")
+    name: String @doc(description: "The name of the person receiving the delivery or pickup.")
+    pickup_location_id: String @doc(description: "The location code for the pickup point, if applicable.")
+    stated_address_only: Boolean @doc(description: "Should delivery only be done at the stated address.")
+}
+
+input PostNlAddressInput @doc(description: "address details needed for postnl") {
+    street: [String!]! @doc(description: "An array containing the street for the billing or shipping address.")
+    postcode: String! @doc(description: "The ZIP or postal code of the billing or shipping address.")
+    housenumber: String @doc(description: "The house number of the billing or shipping address.")
+    country: String! @doc(description: "The country code and label for the billing or shipping address.")
+}
+
+type PostnlTimeframesOutput {
+    timeframes: [PostnlTimeframes] @doc(description: "The result of the timeframes request.")
+}
+
+type PostnlTimeframes {
+    day: String @doc(description: "The day of the timeframe.")
+    from: String @doc(description: "The start time of the timeframe.")
+    from_friendly: String @doc(description: "The start time of the timeframe in a human-readable format.")
+    to: String @doc(description: "The end time of the timeframe.")
+    to_friendly: String @doc(description: "The end time of the timeframe in a human-readable format.")
+    option: String @doc(description: "The option of the timeframe.")
+    date: String @doc(description: "The date of the timeframe.")
+}
