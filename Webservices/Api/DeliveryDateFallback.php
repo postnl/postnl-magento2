@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace TIG\PostNL\Webservices\Api;
 
@@ -12,21 +13,39 @@ use function strtotime;
 
 class DeliveryDateFallback
 {
-    private IsPastCutOff $isPastCutOff;
-
-    private TimezoneInterface $timeZone;
-
-    private Webshop $webshop;
-
-
     public function __construct(
-        IsPastCutOff $isPastCutOff,
-        TimezoneInterface $timezone,
-        Webshop $webshop,
+        private readonly IsPastCutOff $isPastCutOff,
+        private readonly TimezoneInterface $timeZone,
+        private readonly Webshop $webshop,
     ) {
-        $this->isPastCutOff = $isPastCutOff;
-        $this->timeZone = $timezone;
-        $this->webshop = $webshop;
+    }
+
+    /**
+     * First valid shipping day from today (or tomorrow if today is past cutoff / not a shipping day).
+     * Used to set ship_at on the PostNL order/shipment when the PostNL API is unavailable.
+     */
+    public function getShipAtDate(): string
+    {
+        $shippingDays = explode(',', $this->webshop->getShipmentDays());
+        $today = $this->timeZone->date();
+        $todayDayNumber = $this->normaliseToConfigDayNumber($today->format('N'));
+
+        // Today is a valid shipping day and we haven't missed the cutoff: ship today.
+        if (in_array($todayDayNumber, $shippingDays) && !$this->isPastCutOff->calculate()) {
+            return $today->format('d-m-Y');
+        }
+
+        $date = $this->getDate('+1 day');
+        $i = 0;
+        while (
+            !in_array($this->normaliseToConfigDayNumber(date('N', strtotime($date))), $shippingDays)
+            && $i < 7
+        ) {
+            $date = $this->getDate($date . '+1 day');
+            $i++;
+        }
+
+        return $this->getDate($date);
     }
 
     /**
@@ -41,15 +60,16 @@ class DeliveryDateFallback
         }
 
         $date = $this->getDate($nextDay);
-        $shippingDaysCount = count($shippingDays);
+        $i = 0;
         while (
             !in_array(
                 $this->normaliseToConfigDayNumber(date('N', strtotime($date))),
                 $shippingDays
             )
-            && $shippingDaysCount
+            && $i < 7
         ) {
             $date = $this->getDate($date . '+1 day');
+            $i++;
         }
 
         return $this->getDate($date);
