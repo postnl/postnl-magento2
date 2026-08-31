@@ -117,6 +117,12 @@ class ApiCredentials extends Action
             if ($this->validateApiCredentials($customerData)) {
                 $result['error'] = false;
                 $result['message'] = __('Successfully connected to account.');
+
+                $newApiKey = $this->accountConfiguration->getNewApiKeyHeader($scopeId, $websiteId ? true : false);
+                if ($newApiKey === AccountConfiguration::API_KEY_SAME) {
+                    $result['message'] = __('You have entered your current API key in the New API key field. Please enter your new API key instead.');
+                }
+
             }
         } catch (\TIG\PostNL\Webservices\Api\Exception $e) {
             if ($e->getRawMessage() === '[] Unauthorized' && $this->accountConfiguration->isNewApiKeyUsed()) {

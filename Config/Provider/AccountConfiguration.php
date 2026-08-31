@@ -4,6 +4,7 @@ namespace TIG\PostNL\Config\Provider;
 
 class AccountConfiguration extends AbstractConfigProvider
 {
+    const API_KEY_SAME = 'Same';
     const XPATH_GENERAL_STATUS_MODUS = 'tig_postnl/generalconfiguration_extension_status/modus';
 
     /** Paths to the live settings */
@@ -117,7 +118,7 @@ class AccountConfiguration extends AbstractConfigProvider
         $oldValue = $this->crypt->decrypt($oldValue);
 
         if ($newValue === $oldValue) {
-            return 'Same';
+            return self::API_KEY_SAME;
         }
 
         if ($newValue) {

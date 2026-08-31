@@ -41,6 +41,7 @@
                 <comment><![CDATA[Enter your PostNL API key. If you haven't got an API key, please contact PostNL support.]]></comment>
                 <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 <config_path>tig_postnl/generalconfiguration_extension_status/api_key</config_path>
+                <frontend_model>TIG\PostNL\Block\Adminhtml\Config\General\ApiKey</frontend_model>
                 <depends>
                     <field id="modus">1</field>
                 </depends>
