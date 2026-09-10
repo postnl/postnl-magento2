@@ -42,9 +42,9 @@ Via het orderoverzicht is het mogelijk om het aantal colli te wijzigen. Dit kan 
 
 ### Printpositie selecteren
 Via het orderoverzicht is het mogelijk om de printpositie te selecteren voor printen op A4 papier. Selecteer hiervoor uit de PostNL toolbar de optie <em>Kies printer startpositie</em> en stel de gewenste startpositie in. Wanneer je nu één of meerdere zendingen selecteert uit het overzicht en hier de labels voor print, zal het eerste label op de opgegeven plek staan. Hierna zullen de labels in de volgende volgorde worden afgedrukt:
-rechtsonder
-linksonder
-rechtsboven
+rechtsonder > 
+linksonder > 
+rechtsboven > 
 linksboven.
 
 ![Zendingen aanmaken printpositie selecteren]({{ site.baseurl }}/assets/images/7_zending_aanmaken_wijzigen_printpositie.png "PostNL Magento 2 zendingen aanmaken printpositie selecteren")
