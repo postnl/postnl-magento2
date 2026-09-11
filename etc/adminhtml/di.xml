@@ -34,4 +34,12 @@
             <argument name="authSession" xsi:type="object">Magento\Backend\Model\Auth\Session\Proxy</argument>
         </arguments>
     </type>
+
+    <type name="Magento\Framework\Notification\MessageList">
+        <arguments>
+            <argument name="messages" xsi:type="array">
+                <item name="postnl_new_api_key_notification" xsi:type="string">TIG\PostNL\Model\Notification\NewApiKeyNotification</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
