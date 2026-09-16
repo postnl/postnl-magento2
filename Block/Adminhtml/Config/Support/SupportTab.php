@@ -9,7 +9,7 @@ use TIG\PostNL\Config\Provider\PostNLConfiguration;
 
 class SupportTab extends Template implements RendererInterface
 {
-    const POSTNL_VERSION = '1.26';
+    const POSTNL_VERSION = '1.27';
 
     const XPATH_SUPPORTED_MAGENTO_VERSION = 'tig_postnl/supported_magento_version';
 
