@@ -131,6 +131,40 @@ class AccountConfiguration extends AbstractConfigProvider
         return '';
     }
 
+    public function checkApiKeys($scopeId = null, $websiteScope = false): string
+    {
+        $modusXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_NEW_APIKEY, $scopeId, $websiteScope);
+        $modusOldXpath = $this->getModusXpath(self::XPATH_GENERAL_STATUS_APIKEY, $scopeId, $websiteScope);
+
+        if ($websiteScope) {
+            $newValue = $this->getWebsiteConfigFromXpath($modusXpath, $scopeId);
+            $oldValue = $this->getWebsiteConfigFromXpath($modusOldXpath, $scopeId);
+        } else {
+            $newValue = $this->getConfigFromXpath($modusXpath, $scopeId);
+            $oldValue = $this->getConfigFromXpath($modusOldXpath, $scopeId);
+        }
+        $newValue = $this->crypt->decrypt($newValue);
+        $oldValue = $this->crypt->decrypt($oldValue);
+
+        if ($newValue === $oldValue) {
+            if ($newValue === '') {
+                return 'Empty';
+            }
+
+            return 'Same';
+        }
+
+        if ($newValue) {
+            return 'New';
+        }
+        if ($oldValue) {
+            return 'Old';
+        }
+
+        return '';
+    }
+
+
     public function isNewApiKeyUsed(): bool
     {
         return $this->getNewApiKeyHeader() === 'Yes';

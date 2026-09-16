@@ -38,7 +38,7 @@
     <type name="Magento\Framework\Notification\MessageList">
         <arguments>
             <argument name="messages" xsi:type="array">
-                <item name="postnl_new_api_key_notification" xsi:type="string">TIG\PostNL\Model\Notification\NewApiKeyNotification</item>
+                <item name="postnl" xsi:type="string">TIG\PostNL\Model\System\Message\NotificationAboutApiKey</item>
             </argument>
         </arguments>
     </type>
