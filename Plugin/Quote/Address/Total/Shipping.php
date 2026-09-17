@@ -113,6 +113,6 @@ class Shipping
             return 0;
         }
 
-        return $order->getFee();
+        return (float)($order->getFee() ?? 0);
     }
 }
