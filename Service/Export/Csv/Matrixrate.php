@@ -111,6 +111,6 @@ class Matrixrate
      */
     private function output($line)
     {
-        fputcsv($this->output, $line);
+        fputcsv($this->output, $line, ',', '"', '\\');
     }
 }
