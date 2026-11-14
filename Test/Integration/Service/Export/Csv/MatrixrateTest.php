@@ -73,7 +73,7 @@ class MatrixrateTest extends TestCase
         $lines  = explode(PHP_EOL, $result);
         array_shift($lines);
         foreach ($lines as $line) {
-            $data = str_getcsv($line);
+            $data = str_getcsv($line, ',', '"', '\\');
 
             $region = $data[1];
             if ($region == '*') {
@@ -92,7 +92,7 @@ class MatrixrateTest extends TestCase
         $lines  = explode(PHP_EOL, $result);
         array_shift($lines);
         foreach ($lines as $line) {
-            $data = str_getcsv($line);
+            $data = str_getcsv($line, ',', '"', '\\');
 
             $countries = $data[0];
             if ($countries == '*') {
