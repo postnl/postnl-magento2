@@ -24,14 +24,23 @@
     },
     "require-dev": {
         "object-calisthenics/phpcs-calisthenics-rules": "^3.7",
-        "magento/magento-coding-standard": "*",
+        "magento/magento-coding-standard": "^41",
         "satooshi/php-coveralls": "^1.0",
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^9.0",
+        "phpstan/phpstan": "^2.1",
+        "bitexpert/phpstan-magento": "^0.44",
+        "phpstan/extension-installer": "^1.4"
     },
     "repositories": {
         "magento": {
             "type": "composer",
             "url": "https://repo.magento.com/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
         }
     }
 }
