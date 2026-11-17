@@ -87,7 +87,6 @@ class LabelAndPackingslipOptionsTest extends AbstractConfigurationTest
     public function testGetCustomReferenceParsed($customReference, $orderId, $shipmentId, $frontendName, $expected)
     {
         $storeWrapperMock = $this->getMockBuilder(StoreInterface::class)
-            ->onlyMethods(['getStore'])
             ->getMock();
         $store = $this->getMock(\Magento\Store\Model\Store::class);
         $store->method('getFrontendName')->willReturn($frontendName);

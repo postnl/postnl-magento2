@@ -17,7 +17,6 @@ class DownloadPdfActionTest extends TestCase
 
         $urlBuilderMock = $this->getMockBuilder(UrlInterface::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getUrl'])
             ->getMock();
         $urlBuilderMock->method('getUrl')->willReturn($urlResultMock);
 

@@ -3,8 +3,6 @@
 <ruleset name="TIG_PostNL">
     <description>TIG PostNL Coding Standard</description>
 
-    <config name="installed_paths" value="vendor/squizlabs/php_codesniffer/CodeSniffer/Standards,vendor/magento/magento-coding-standard,vendor/object-calisthenics/phpcs-calisthenics-rules/src/"/>
-
     <rule ref="PSR2"/>
     <rule ref="ObjectCalisthenics"/>
     <rule ref="Magento2"/>

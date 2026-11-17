@@ -38,7 +38,6 @@ class DomesticTest extends TestCase
     public function testRotateReturnProduct($productCode, $isReturnLabel, $expected)
     {
         $labelMock = $this->getFakeMock(ShipmentLabelInterface::class)
-            ->onlyMethods(['getProductCode', 'getReturnLabel'])
             ->getMock();
         $labelMock->expects($this->once())->method('getProductCode')->willReturn($productCode);
         $labelMock->method('getReturnLabel')->willReturn($isReturnLabel);

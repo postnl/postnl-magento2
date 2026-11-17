@@ -129,9 +129,7 @@ class FileParserTest extends TestCase
 
         $readInterfaceMock = $this->getFakeMock(ReadInterface::class)->getMock();
 
-        $readInterfaceMock->expects($this->atLeastOnce())->method('readCsv')->will(
-            new ConsecutiveCalls($csvRows)
-        );
+        $readInterfaceMock->expects($this->atLeastOnce())->method('readCsv')->willReturnOnConsecutiveCalls(...$csvRows);
 
         $instance = $this->getInstance(['rowParser' => $rowParser, 'parserErrors' => $parserErrors]);
         $result = $instance->getRows($readInterfaceMock, rand(0, 10), 'conditionName', 'fullConditionName');

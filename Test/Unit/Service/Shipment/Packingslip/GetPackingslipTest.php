@@ -25,7 +25,6 @@ class GetPackingslipTest extends TestCase
     public function testGetWillReturnPdf()
     {
         $shipmentRepoMock = $this->getFakeMock(ShipmentRepositoryInterface::class)
-            ->onlyMethods(['getByShipmentId'])
             ->getMock();
         $shipment = $this->getMock(\TIG\PostNL\Model\Shipment::class);
         $salesShipment = $this->getMock(\Magento\Sales\Model\Order\Shipment::class);

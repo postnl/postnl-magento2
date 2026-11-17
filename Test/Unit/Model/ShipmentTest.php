@@ -71,7 +71,7 @@ class ShipmentTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('setConfirmedAtProvider')]
     public function testSetConfirmedAt($value, $dispatchCalls)
     {
-        $eventManagerMock = $this->getFakeMock(ManagerInterface::class)->onlyMethods(['dispatch'])->getMock();
+        $eventManagerMock = $this->getFakeMock(ManagerInterface::class)->getMock();
 
         $contextMock = $this->getFakeMock(Context::class)->onlyMethods(['getEventDispatcher'])->getMock();
         $contextMock->expects($this->once())->method('getEventDispatcher')->willReturn($eventManagerMock);

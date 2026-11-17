@@ -64,7 +64,6 @@ class EPSTest extends TestCase
     public function testRotateReturnProduct($productCode, $isReturnLabel, $expected)
     {
         $labelMock = $this->getFakeMock(ShipmentLabelInterface::class)
-            ->onlyMethods(['getProductCode', 'getReturnLabel'])
             ->getMock();
         $labelMock->expects($this->once())->method('getProductCode')->willReturn($productCode);
         $labelMock->method('getReturnLabel')->willReturn($isReturnLabel);
@@ -107,7 +106,6 @@ class EPSTest extends TestCase
     public function testShouldRotate($productCode, $isReturnLabel, $expected)
     {
         $labelMock = $this->getFakeMock(ShipmentLabelInterface::class)
-            ->onlyMethods(['getProductCode', 'getReturnLabel'])
             ->getMock();
         $labelMock->method('getProductCode')->willReturn($productCode);
         $labelMock->method('getReturnLabel')->willReturn($isReturnLabel);

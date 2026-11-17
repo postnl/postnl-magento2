@@ -78,7 +78,6 @@ class MergeWithLabelsTest extends TestCase
 
         foreach ($labels as $label) {
             $mock = $this->getFakeMock(ShipmentLabelInterface::class)
-                ->onlyMethods(['getLabel'])
                 ->getMock();
             $mock->method('getLabel')->willReturn($label);
             $mock->method('getLabelFileFormat')->willReturn('PDF');
