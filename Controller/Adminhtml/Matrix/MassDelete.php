@@ -29,7 +29,7 @@ class MassDelete extends Action
     private $filter;
 
     /** @var CollectionFactory  */
-    private $matrixrateFactory;
+    private $matrixrateCollectionFactory;
 
     /**
      * @param Context           $context
@@ -37,7 +37,7 @@ class MassDelete extends Action
      * @param Registry          $registry
      * @param Filter            $filter
      * @param Matrixrate        $matrixrateCollection
-     * @param CollectionFactory $matrixrateFactory
+     * @param CollectionFactory $matrixrateCollectionFactory
      */
     public function __construct(
         Context           $context,
@@ -45,7 +45,7 @@ class MassDelete extends Action
         Registry          $registry,
         Filter            $filter,
         Matrixrate        $matrixrateCollection,
-        CollectionFactory $matrixrateFactory,
+        CollectionFactory $matrixrateCollectionFactory,
         MatrixrateRepositoryInterface $matrixrateRepository
     ) {
         $this->matrixrateRepository = $matrixrateRepository;
@@ -54,7 +54,7 @@ class MassDelete extends Action
         $this->_coreRegistry        = $registry;
         $this->matrixrateCollection = $matrixrateCollection;
         $this->filter               = $filter;
-        $this->matrixrateFactory    = $matrixrateFactory;
+        $this->matrixrateCollectionFactory    = $matrixrateCollectionFactory;
         parent::__construct($context);
     }
 
@@ -64,7 +64,7 @@ class MassDelete extends Action
      */
     public function execute()
     {
-        $collection = $this->filter->getCollection($this->matrixrateFactory->create());
+        $collection = $this->filter->getCollection($this->matrixrateCollectionFactory->create());
         $count      = 0;
 
         foreach ($collection as $child) {

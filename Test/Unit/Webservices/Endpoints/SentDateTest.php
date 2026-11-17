@@ -98,7 +98,6 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
     private function deliveryDateFallbackMock()
     {
         $fallbackMock = $this->getFakeMock(DeliveryDateFallback::class)->getMock();
-        $getFallback  = $fallbackMock;
         $getFallback = $fallbackMock->method('get');
         $getFallback->willReturn('19-11-2016');
 

@@ -12,9 +12,9 @@ use TIG\PostNL\Model\ShipmentRepository;
 //@codingStandardsIgnoreFile
 class CreateShipment
 {
-    private \Magento\Sales\Api\ShipmentRepositoryInterface $salesShipmentRepository;
+    private \Magento\Sales\Model\ResourceModel\Order\Shipment $salesShipmentResource;
 
-    private \Magento\Sales\Api\OrderRepositoryInterface $salesOrderRepository;
+    private \Magento\Sales\Model\ResourceModel\Order $salesOrderResource;
 
     /**
      * @var InventorySource
@@ -62,11 +62,11 @@ class CreateShipment
         ShipmentRepository $shipmentRepository,
         Data $postnlHelper,
         InventorySource $inventorySource,
-        \Magento\Sales\Api\ShipmentRepositoryInterface $salesShipmentRepository,
-        \Magento\Sales\Api\OrderRepositoryInterface $salesOrderRepository
+        \Magento\Sales\Model\ResourceModel\Order\Shipment $salesShipmentResource,
+        \Magento\Sales\Model\ResourceModel\Order $salesOrderResource
     ) {
-        $this->salesShipmentRepository = $salesShipmentRepository;
-        $this->salesOrderRepository = $salesOrderRepository;
+        $this->salesShipmentResource = $salesShipmentResource;
+        $this->salesOrderResource = $salesOrderResource;
 
         $this->convertOrder       = $convertOrder;
         $this->shipmentRepository = $shipmentRepository;
@@ -220,8 +220,8 @@ class CreateShipment
         $order->setStatus('processing');
 
         try {
-            $this->salesShipmentRepository->save($this->shipment);
-            $this->salesOrderRepository->save($order);
+            $this->salesShipmentResource->save($this->shipment);
+            $this->salesOrderResource->save($order);
         } catch (\Exception $exception) {
             $message = $this->handleExceptionForPossibleSoapErrors($exception);
             $localizedErrorMessage = __($message)->render();

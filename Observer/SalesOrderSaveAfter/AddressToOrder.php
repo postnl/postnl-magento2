@@ -14,7 +14,7 @@ use TIG\PostNL\Model\OrderRepository;
 
 class AddressToOrder implements ObserverInterface
 {
-    private \Magento\Sales\Api\OrderAddressRepositoryInterface $addressRepository;
+    private \Magento\Sales\Model\ResourceModel\Order\Address $addressResource;
 
     /**
      * @var ToOrderAddress
@@ -54,9 +54,9 @@ class AddressToOrder implements ObserverInterface
         AddressFactory $addressFactory,
         OrderRepository $orderRepository,
         CartRepositoryInterface $quoteRepository,
-        \Magento\Sales\Api\OrderAddressRepositoryInterface $addressRepository
+        \Magento\Sales\Model\ResourceModel\Order\Address $addressResource
     ) {
-        $this->addressRepository = $addressRepository;
+        $this->addressResource = $addressResource;
 
         $this->quoteAddressToOrderAddress = $toOrderAddress;
         $this->pickupAddressHelper = $pickupAddress;
@@ -214,7 +214,7 @@ class AddressToOrder implements ObserverInterface
         $pgAddress->setEmail($order->getCustomerEmail());
         $pgAddress->setTelephone($orderPgAddress->getTelephone());
         $pgAddress->setAddressType('shipping');
-        $this->addressRepository->save($pgAddress);
+        $this->addressResource->save($pgAddress);
 
         return $pgAddress;
     }

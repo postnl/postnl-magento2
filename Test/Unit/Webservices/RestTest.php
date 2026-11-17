@@ -89,7 +89,7 @@ class RestTest extends TestCase
 
         $apiKey = '123243235235';
 
-        $accountApiKey = $this->accountConfiguration->method('getApiKey')->willReturn($apiKey);
+        $this->accountConfiguration->method('getApiKey')->willReturn($apiKey);
 
         $zendClientHeaders = $this->httpClient->expects($this->once());
         $zendClientHeaders->method('setHeaders')->with(['apikey: ' .$apiKey, 'newkey:', 'SourceSystem: 66', 'Content-Type: application/json']);

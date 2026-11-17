@@ -117,7 +117,7 @@ class GetFreeBoxesTest extends TestCase
     {
         $productMock = $this->getFakeMock(Product::class)->getMock();
 
-        $abstractItemMock = $this->getFakeMock(\TIG\PostNL\Test\Unit\Support\AbstractQuoteItem::class)->onlyMethods([
+        $abstractItemMock = $this->getFakeMock(\TIG\PostNL\Test\Unit\Support\QuoteItem::class)->onlyMethods([
             'getProduct',
             'getFreeShipping',
             'getQty',

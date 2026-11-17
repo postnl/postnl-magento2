@@ -7,6 +7,8 @@ use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHe
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
+    private $previousObjectManager;
+
     /**
      * @var null|string
      */
@@ -41,12 +43,21 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         ini_set('display_errors', '1');
         ini_set('display_startup_errors', '1');
 
+        $instanceProperty = new \ReflectionProperty(\Magento\Framework\App\ObjectManager::class, '_instance');
+        $this->previousObjectManager = $instanceProperty->getValue();
         $this->objectManager = new ObjectManagerHelper($this);
         $globalObjectManager = $this->createStub(\Magento\Framework\ObjectManagerInterface::class);
         $globalObjectManager->method('get')->willReturnCallback(function ($class) {
             return $this->createStub($class);
         });
         \Magento\Framework\App\ObjectManager::setInstance($globalObjectManager);
+    }
+
+    protected function tearDown(): void
+    {
+        $instanceProperty = new \ReflectionProperty(\Magento\Framework\App\ObjectManager::class, '_instance');
+        $instanceProperty->setValue(null, $this->previousObjectManager);
+        parent::tearDown();
     }
 
     /**

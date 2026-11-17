@@ -45,7 +45,7 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
     }
 
     /**
-     * @param $content
+     * @param \Laminas\Mime\Part $mimePart
      * @param string $type
      * @param string $disposition
      * @param string $encoding
@@ -53,17 +53,13 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
      *
      * @return \Laminas\Mime\Part
      */
-    private function createMimePart(
-        $content,
+    private function configureMimePart(
+        $mimePart,
         string $type        = 'application/octet-stream',
         string $disposition = 'attachment',
         string $encoding    = 'base64',
         $filename           = null
     ) {
-        if (!class_exists('Laminas\\Mime\\Part')) {
-            throw new \LogicException('The Laminas MIME component is unavailable.');
-        }
-        $mimePart = new \Laminas\Mime\Part($content);
         $mimePart->setType($type);
         $mimePart->setDisposition($disposition);
         $mimePart->setEncoding($encoding);
@@ -95,15 +91,15 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
         }
 
         // Magento 2.4.8- support - laminas messages
-        if (class_exists('Laminas\Mime\Message')) {
+        if (class_exists('Laminas\Mime\Message') && class_exists('Laminas\Mime\Part')) {
             $mimeMessage = $message->getBody();
             if (!$mimeMessage instanceof \Laminas\Mime\Message) {
                 $body = $mimeMessage;
                 $mimeMessage = new \Laminas\Mime\Message();
 
                 if ($body) {
-                    $mimePart = $this->createMimePart(
-                        (string) $body,
+                    $mimePart = $this->configureMimePart(
+                        new \Laminas\Mime\Part((string) $body),
                         'text/plain',
                         'inline'
                     );
@@ -111,8 +107,8 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
                 }
             }
             foreach ($this->parts as $partData) {
-                $part = $this->createMimePart(
-                    $partData['body'],
+                $part = $this->configureMimePart(
+                    new \Laminas\Mime\Part($partData['body']),
                     $partData['mime'],
                     'attachment',
                     'base64',

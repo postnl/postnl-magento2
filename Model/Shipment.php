@@ -55,9 +55,9 @@ class Shipment extends AbstractModel implements ShipmentInterface
 
     private \Magento\Sales\Model\ResourceModel\Order\Address\CollectionFactory $addressCollectionFactory;
 
-    private \Magento\Sales\Api\OrderAddressRepositoryInterface $addressRepository;
+    private \Magento\Sales\Model\ResourceModel\Order\Address $addressResource;
 
-    private \TIG\PostNL\Api\OrderRepositoryInterface $postnlOrderRepository;
+    private \TIG\PostNL\Model\ResourceModel\Order $postnlOrderResource;
 
     /**
      * @var string
@@ -143,15 +143,15 @@ class Shipment extends AbstractModel implements ShipmentInterface
         Customs                            $customs,
         SerializerInterface                $serializer,
         \Magento\Sales\Model\ResourceModel\Order\Address\CollectionFactory $addressCollectionFactory,
-        \Magento\Sales\Api\OrderAddressRepositoryInterface $addressRepository,
-        \TIG\PostNL\Api\OrderRepositoryInterface $postnlOrderRepository,
+        \Magento\Sales\Model\ResourceModel\Order\Address $addressResource,
+        \TIG\PostNL\Model\ResourceModel\Order $postnlOrderResource,
         ?AbstractResource                  $resource = null,
         ?AbstractDb                        $resourceCollection = null,
         array $data = []
     ) {
         $this->addressCollectionFactory = $addressCollectionFactory;
-        $this->addressRepository = $addressRepository;
-        $this->postnlOrderRepository = $postnlOrderRepository;
+        $this->addressResource = $addressResource;
+        $this->postnlOrderResource = $postnlOrderResource;
 
         parent::__construct($context, $registry, $dateTime, $resource, $resourceCollection, $data);
 
@@ -255,13 +255,10 @@ class Shipment extends AbstractModel implements ShipmentInterface
         $postNLOrder      = $this->getPostNLOrder();
         $pgOrderAddressId = $postNLOrder->getPgOrderAddressId();
 
-        try {
-            $PgOrderAddress = $this->addressRepository->get($pgOrderAddressId);
-        } catch (\Magento\Framework\Exception\NoSuchEntityException $exception) {
-            $PgOrderAddress = $this->addressFactory->create();
-        }
+        $pgOrderAddress = $this->addressFactory->create();
+        $this->addressResource->load($pgOrderAddress, $pgOrderAddressId);
 
-        return $PgOrderAddress;
+        return $pgOrderAddress;
     }
 
     /**
@@ -269,10 +266,8 @@ class Shipment extends AbstractModel implements ShipmentInterface
      */
     public function getPostNLOrder()
     {
-        $postNLOrder = $this->postnlOrderRepository->getByOrderId($this->getOrderId());
-        if (!$postNLOrder) {
-            $postNLOrder = $this->orderFactory->create();
-        }
+        $postNLOrder = $this->orderFactory->create();
+        $this->postnlOrderResource->load($postNLOrder, $this->getOrderId(), 'order_id');
 
         return $postNLOrder;
     }

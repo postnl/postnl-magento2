@@ -10,7 +10,7 @@ class PickupAddress
 {
     const PG_ADDRESS_TYPE = 'pakjegemak';
 
-    private \Magento\Quote\Api\CartRepositoryInterface $quoteRepository;
+    private \Magento\Quote\Model\ResourceModel\Quote $quoteResource;
 
     private \Magento\Quote\Model\ResourceModel\Quote\Address $addressResource;
 
@@ -38,11 +38,11 @@ class PickupAddress
     public function __construct(
         Session $checkoutSession,
         AddressFactory $addressFactory,
-        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
+        \Magento\Quote\Model\ResourceModel\Quote $quoteResource,
         \Magento\Quote\Model\ResourceModel\Quote\Address $addressResource,
         \Magento\Quote\Model\ResourceModel\Quote\Address\CollectionFactory $addressCollectionFactory
     ) {
-        $this->quoteRepository = $quoteRepository;
+        $this->quoteResource = $quoteResource;
         $this->addressResource = $addressResource;
         $this->addressCollectionFactory = $addressCollectionFactory;
 
@@ -72,7 +72,7 @@ class PickupAddress
 
         $this->pickupAddress = $this->create($address, $quote);
         $quote->addAddress($this->pickupAddress);
-        $this->quoteRepository->save($quote);
+        $this->quoteResource->save($quote);
     }
 
     /**
@@ -91,7 +91,7 @@ class PickupAddress
             $quote->removeAddress($foundAddress->getId());
         }
 
-        $this->quoteRepository->save($quote);
+        $this->quoteResource->save($quote);
     }
 
     /**
