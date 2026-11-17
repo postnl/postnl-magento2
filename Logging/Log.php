@@ -3,20 +3,26 @@
 namespace TIG\PostNL\Logging;
 
 use Monolog\Logger;
+use Psr\Log\AbstractLogger;
 use TIG\PostNL\Config\Provider\LoggingConfiguration;
 
-class Log extends Logger
+class Log extends AbstractLogger
 {
-    /**
-     * @var LoggingConfiguration
-     */
-    private $logConfig;
+    private LoggingConfiguration $logConfig;
+
+    private string $name;
+
+    private array $handlers;
+
+    private array $processors;
+
+    private ?Logger $logger = null;
 
     /**
      * @param string $name
+     * @param LoggingConfiguration $loggingConfiguration
      * @param array $handlers
      * @param array $processors
-     * @param LoggingConfiguration $loggingConfiguration
      */
     public function __construct(
         string $name,
@@ -24,16 +30,28 @@ class Log extends Logger
         array $handlers = [],
         array $processors = []
     ) {
+        $this->name = $name;
         $this->logConfig = $loggingConfiguration;
-        parent::__construct($name, $handlers, $processors);
+        $this->handlers = $handlers;
+        $this->processors = $processors;
     }
 
     /**
-     * @param int $level
-     * @param string $message
+     * @param mixed $level
+     * @param string|\Stringable $message
      * @param array $context
-     * @param null $datetime
-     *
+     * @return void
+     */
+    public function log($level, $message, array $context = []): void
+    {
+        $this->addRecord(Logger::toMonologLevel($level), $message, $context);
+    }
+
+    /**
+     * @param mixed $level
+     * @param string|\Stringable $message
+     * @param array $context
+     * @param \DateTimeImmutable|null $datetime
      * @return bool
      */
     public function addRecord($level, $message, array $context = [], $datetime = null): bool
@@ -42,6 +60,10 @@ class Log extends Logger
             return false;
         }
 
-        return parent::addRecord($level, $message, $context);
+        if ($this->logger === null) {
+            $this->logger = new Logger($this->name, $this->handlers, $this->processors);
+        }
+
+        return $this->logger->addRecord($level, (string)$message, $context);
     }
 }

@@ -10,7 +10,7 @@ class ExceptionHandlerTest extends TestCase
 {
     protected $instanceClass = ExceptionHandler::class;
 
-    public function hasCifExceptionProvider()
+    public static function hasCifExceptionProvider()
     {
         return [
             ['random error', false],
@@ -24,6 +24,7 @@ class ExceptionHandlerTest extends TestCase
      *
      * @dataProvider hasCifExceptionProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('hasCifExceptionProvider')]
     public function testHasCifException($message, $expected)
     {
         $soapFault = new \SoapFault('test', $message);
@@ -34,9 +35,9 @@ class ExceptionHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasValidErrorsOnlyProvider()
+    public static function hasValidErrorsOnlyProvider()
     {
-        return [
+        return array_map('array_values', [
             'contains a valid error' => [
                 'errors' => [
                     ['message' => 'error message', 'number' => ExceptionHandler::SHIPMENT_NOT_FOUND_ERROR_NUMBER],
@@ -66,7 +67,7 @@ class ExceptionHandlerTest extends TestCase
                 'xml' => '',
                 'expected' => false
             ],
-        ];
+        ]);
     }
 
     /**
@@ -76,6 +77,7 @@ class ExceptionHandlerTest extends TestCase
      * @param $xml
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('hasValidErrorsOnlyProvider')]
     public function testHasValidErrorsOnly($errors, $xml, $expected)
     {
         $instance = $this->getInstance();
@@ -90,6 +92,7 @@ class ExceptionHandlerTest extends TestCase
     /**
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'randomWordsProvider')]
     public function testAddCifErrorsToException($error)
     {
         $exception = $this->getFakeMock(PostNLException::class)->getMock();

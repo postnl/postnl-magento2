@@ -11,7 +11,7 @@ class CanaryIslandToICTest extends TestCase
     public $instanceClass = CanaryIslandToIC::class;
 
 
-    public function differentConvertCountriesProvider()
+    public static function differentConvertCountriesProvider()
     {
         // Country, Postcode, Expected country
         return [
@@ -21,7 +21,7 @@ class CanaryIslandToICTest extends TestCase
         ];
     }
 
-    public function differentCheckCountriesProvider()
+    public static function differentCheckCountriesProvider()
     {
         // Country, Postcode, Expected country
         return [
@@ -41,6 +41,7 @@ class CanaryIslandToICTest extends TestCase
      *
      * @throws \Exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('differentConvertCountriesProvider')]
     public function testConverter($country, $postcode, $expected)
     {
         $address = $this->getObject(Address::class);
@@ -61,6 +62,7 @@ class CanaryIslandToICTest extends TestCase
      *
      * @throws \Exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('differentCheckCountriesProvider')]
     public function testIsCanaryIsland($country, $postcode, $expected)
     {
         $address = $this->getObject(Address::class);

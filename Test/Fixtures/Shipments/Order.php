@@ -63,4 +63,4 @@ $order->setStoreId($storeId);
 $order->addItem($orderItem);
 $order->setPayment($payment);
 
-$order->save();
+$objectManager->get(\Magento\Sales\Api\OrderRepositoryInterface::class)->save($order);

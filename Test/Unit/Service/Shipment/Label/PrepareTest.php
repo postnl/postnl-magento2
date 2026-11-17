@@ -22,10 +22,10 @@ class PrepareTest extends TestCase
         $typeConverter = $this->getObject(Type::class);
 
         $validType = $this->getMock(TypeInterface::class);
-        $validFactory = $this->getFakeMock(TypeInterfaceFactory::class)->setMethods(['create'])->getMock();
+        $validFactory = $this->getFakeMock(TypeInterfaceFactory::class)->onlyMethods(['create'])->getMock();
         $validFactory->expects($this->atLeastOnce())->method('create')->willReturn($validType);
 
-        $invalidFactory = $this->getFakeMock(TypeInterfaceFactory::class)->setMethods(['create'])->getMock();
+        $invalidFactory = $this->getFakeMock(TypeInterfaceFactory::class)->onlyMethods(['create'])->getMock();
         $invalidFactory->expects($this->atLeastOnce())->method('create')->willReturn('randomstring');
 
         $instance = $this->getInstance([

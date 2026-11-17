@@ -25,7 +25,7 @@ class ValidAddressTest extends TestCase
         parent::setUp();
 
         $addressMock = $this->getFakeMock(AddressConfiguration::class);
-        $addressMock->setMethods(['getAddressInfo']);
+        $addressMock->onlyMethods(['getAddressInfo']);
         $this->addressMock = $addressMock->getMock();
     }
 
@@ -36,7 +36,7 @@ class ValidAddressTest extends TestCase
         return parent::getInstance($args);
     }
 
-    public function hasValidNameProvider()
+    public static function hasValidNameProvider()
     {
         return [
             'no_data' => [
@@ -72,6 +72,7 @@ class ValidAddressTest extends TestCase
      *
      * @dataProvider hasValidNameProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('hasValidNameProvider')]
     public function testHasValidName($data, $expected)
     {
         $this->setAddressInfo($data);
@@ -88,7 +89,7 @@ class ValidAddressTest extends TestCase
         $getAddressInfoExpects->willReturn($data);
     }
 
-    public function checkProvider()
+    public static function checkProvider()
     {
         return [
             'no data' => [
@@ -181,6 +182,7 @@ class ValidAddressTest extends TestCase
     /**
      * @dataProvider checkProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('checkProvider')]
     public function testCheck($data, $expected)
     {
         $this->setAddressInfo($data);

@@ -34,7 +34,7 @@ class MassPrintShippingLabelTest extends TestCase
     /**
      * @return array
      */
-    public function setTracksProvider()
+    public static function setTracksProvider()
     {
         return [
             'no tracking' => [
@@ -58,12 +58,13 @@ class MassPrintShippingLabelTest extends TestCase
      *
      * @dataProvider setTracksProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('setTracksProvider')]
     public function testSetTracks($trackCodes, $tracksetCalled)
     {
-        $shipmentMock = $this->getFakeMock(Shipment::class)->setMethods(['getTracks'])->getMock();
+        $shipmentMock = $this->getFakeMock(Shipment::class)->onlyMethods(['getTracks'])->getMock();
         $shipmentMock->expects($this->once())->method('getTracks')->willReturn($trackCodes);
 
-        $trackMock = $this->getFakeMock(Track::class)->setMethods(['set'])->getMock();
+        $trackMock = $this->getFakeMock(Track::class)->onlyMethods(['set'])->getMock();
         $trackMock->expects($this->exactly($tracksetCalled))->method('set')->with($shipmentMock);
 
         $instance = $this->getInstance(['track' => $trackMock]);

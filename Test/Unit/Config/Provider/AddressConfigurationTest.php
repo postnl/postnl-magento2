@@ -12,7 +12,7 @@ class AddressConfigurationTest extends AbstractConfigurationTest
     /**
      * @return array
      */
-    public function countryProvider()
+    public static function countryProvider()
     {
         return [
             'NL' => [Country::COUNTRY_NL],
@@ -25,6 +25,7 @@ class AddressConfigurationTest extends AbstractConfigurationTest
      *
      * @param $country
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('countryProvider')]
     public function testShouldReturnCountry($country)
     {
         $instance = $this->getInstance();

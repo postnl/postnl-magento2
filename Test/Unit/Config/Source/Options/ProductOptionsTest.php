@@ -23,7 +23,7 @@ class ProductOptionsTest extends TestCase
     /**
      * @return array
      */
-    public function getProductoptionsProvider()
+    public static function getProductoptionsProvider()
     {
         return [
             [['isEvening' => true],
@@ -41,6 +41,7 @@ class ProductOptionsTest extends TestCase
      * @throws \Exception
      * @dataProvider getProductoptionsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getProductoptionsProvider')]
     public function testGetProductoptions($filter, $expected)
     {
         $instance = $this->getInstance();
@@ -76,7 +77,7 @@ class ProductOptionsTest extends TestCase
     /**
      * @return array
      */
-    public function getLabelProvider()
+    public static function getLabelProvider()
     {
         return [
             ['3085', 'Daytime', ['label' => 'Domestic', 'type' => '', 'comment' => 'Standard shipment']],
@@ -96,6 +97,7 @@ class ProductOptionsTest extends TestCase
      * @throws \Exception
      * @dataProvider getLabelProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getLabelProvider')]
     public function testLabel($code, $type, $expected)
     {
         $instance = $this->getInstance();

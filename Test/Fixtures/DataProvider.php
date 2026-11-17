@@ -7,7 +7,7 @@ class DataProvider
     /**
      * @return \Generator
      */
-    public function randomWordsProvider()
+    public static function randomWordsProvider()
     {
         for ($i = 0; $i <= 3; $i++) {
             yield [uniqid()];
@@ -17,7 +17,7 @@ class DataProvider
     /**
      * @return array
      */
-    public function enabledAndDisabled()
+    public static function enabledAndDisabled()
     {
         return [
             [true],
@@ -28,7 +28,7 @@ class DataProvider
     /**
      * @return string
      */
-    public function liveStagingProvider()
+    public static function liveStagingProvider()
     {
         return [
             ['0', 'off'],
@@ -40,7 +40,7 @@ class DataProvider
     /**
      * @return array
      */
-    public function pdfLabelPaths()
+    public static function pdfLabelPaths()
     {
         return [
             [
@@ -60,7 +60,7 @@ class DataProvider
     /**
      * @return array
      */
-    public function pdfLabelFiles()
+    public static function pdfLabelFiles()
     {
         return [
             [

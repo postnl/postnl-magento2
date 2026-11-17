@@ -8,7 +8,6 @@ use TIG\PostNL\Service\Import\ParseErrors;
 use TIG\PostNL\Service\Import\Csv\FileParser;
 use TIG\PostNL\Service\Import\Csv\RowParser;
 use TIG\PostNL\Test\TestCase;
-use \PHPUnit\Framework\MockObject\Stub\ConsecutiveCalls;
 
 class FileParserTest extends TestCase
 {
@@ -17,7 +16,7 @@ class FileParserTest extends TestCase
     /**
      * @return array
      */
-    public function hasErrorsProvider()
+    public static function hasErrorsProvider()
     {
         return [
             'no_errors' => [
@@ -37,6 +36,7 @@ class FileParserTest extends TestCase
      *
      * @dataProvider hasErrorsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('hasErrorsProvider')]
     public function testHasErrors($errors, $expected)
     {
         /** @var ParseErrors $parserError */
@@ -80,7 +80,7 @@ class FileParserTest extends TestCase
     /**
      * @return array
      */
-    public function getRowsProvider()
+    public static function getRowsProvider()
     {
         return [
             'valid_data' => [
@@ -120,6 +120,7 @@ class FileParserTest extends TestCase
      *
      * @dataProvider getRowsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getRowsProvider')]
     public function testGetRows($csvRows, $expectedErrors, $expectedValidRows)
     {
         $rowParser = $this->getObject(RowParser::class);
@@ -151,7 +152,7 @@ class FileParserTest extends TestCase
     /**
      * @return array
      */
-    public function parseRowProvider()
+    public static function parseRowProvider()
     {
         return [
             'valid_row' => [
@@ -174,6 +175,7 @@ class FileParserTest extends TestCase
      *
      * @dataProvider parseRowProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('parseRowProvider')]
     public function testParseRow($csvRow, $expectedHasError, $expectedResultCount)
     {
         $rowParser = $this->getObject(RowParser::class);
@@ -193,7 +195,7 @@ class FileParserTest extends TestCase
     /**
      * @return array
      */
-    public function validateHeadersProvider()
+    public static function validateHeadersProvider()
     {
         return [
             'valid_headers' => [
@@ -217,6 +219,7 @@ class FileParserTest extends TestCase
      *
      * @dataProvider validateHeadersProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('validateHeadersProvider')]
     public function testValidateHeaders($csvHeaders, $expectedException)
     {
         $parserErrors = $this->getObject(ParseErrors::class);
@@ -238,7 +241,7 @@ class FileParserTest extends TestCase
     /**
      * @return array
      */
-    public function validateDuplicatesProvider()
+    public static function validateDuplicatesProvider()
     {
         return [
             'first_row_data' => [
@@ -290,6 +293,7 @@ class FileParserTest extends TestCase
      *
      * @dataProvider validateDuplicatesProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('validateDuplicatesProvider')]
     public function testValidateDuplicates($newData, $validatedData, $rowCount, $expected)
     {
         $instance = $this->getInstance();

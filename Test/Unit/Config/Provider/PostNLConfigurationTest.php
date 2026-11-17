@@ -13,6 +13,7 @@ class PostNLConfigurationTest extends AbstractConfigurationTest
      *
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'randomWordsProvider')]
     public function testGetStability($value)
     {
         $instance = $this->getInstance();
@@ -25,6 +26,7 @@ class PostNLConfigurationTest extends AbstractConfigurationTest
      *
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'randomWordsProvider')]
     public function testGetSupportedMagentoVersions($value)
     {
         $instance = $this->getInstance();

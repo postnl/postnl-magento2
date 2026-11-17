@@ -5,7 +5,6 @@ namespace TIG\PostNL\Test\Unit\Config\CheckoutConfiguration;
 use TIG\PostNL\Test\TestCase;
 use TIG\PostNL\Config\CheckoutConfiguration\Urls;
 use Magento\Framework\UrlInterface;
-use \PHPUnit\Framework\MockObject\Stub\ConsecutiveCalls;
 
 class UrlTest extends TestCase
 {
@@ -15,24 +14,23 @@ class UrlTest extends TestCase
     public function testGetValue()
     {
         $urlBuilder = $this->getMock(UrlInterface::class);
-        $builderExpects = $urlBuilder->expects($this->any());
-        $builderExpects->method('getUrl');
-        $builderExpects->withConsecutive(...[
+
+        $builderExpects = $urlBuilder->method('getUrl');
+        $builderExpects->willReturnCallback($this->consecutiveCalls([
             ['postnl/deliveryoptions/timeframes'],
             ['postnl/deliveryoptions/locations'],
             ['postnl/deliveryoptions/save'],
             ['postnl/pakjegemak/address'],
             ['postnl/address/postcode'],
-        ]);
-
-        $builderExpects->willReturnOnConsecutiveCalls(...[
+            ['postnl/international/address'],
+        ], [
             'timeframesurl',
             'locationsurl',
             'saveurl',
             'pakjegemakurl',
             'postcodecheckurl',
             'internationaladdress'
-        ]);
+        ]));
 
         $instance = $this->getInstance([
             'urlBuilder' => $urlBuilder

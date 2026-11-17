@@ -13,7 +13,7 @@ class RowParserTest extends TestCase
     /**
      * @return array
      */
-    public function parseRowProvider()
+    public static function parseRowProvider()
     {
         return [
             'valid_data ' => [
@@ -42,6 +42,7 @@ class RowParserTest extends TestCase
      *
      * @dataProvider parseRowProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('parseRowProvider')]
     public function testParseRow($rowData, $rowCount, $websiteId, $conditionName, $expectedException)
     {
         $instance = $this->getInstance();
@@ -70,7 +71,7 @@ class RowParserTest extends TestCase
     /**
      * @return array
      */
-    public function getCountryIdProvider()
+    public static function getCountryIdProvider()
     {
         return [
             'wildcard_country' => [
@@ -95,6 +96,7 @@ class RowParserTest extends TestCase
      *
      * @dataProvider getCountryIdProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getCountryIdProvider')]
     public function testGetCountryId($rowData, $rowCount, $expected)
     {
         $instance = $this->getInstance();
@@ -111,7 +113,7 @@ class RowParserTest extends TestCase
     /**
      * @return array
      */
-    public function getRegionIdProvider()
+    public static function getRegionIdProvider()
     {
         return [
             'wildcard_by_region' => [
@@ -145,6 +147,7 @@ class RowParserTest extends TestCase
      *
      * @dataProvider getRegionIdProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getRegionIdProvider')]
     public function testGetRegionId($rowData, $countryId, $rowCount, $expected)
     {
         $instance = $this->getInstance();
@@ -161,7 +164,7 @@ class RowParserTest extends TestCase
     /**
      * @return array
      */
-    public function getZipCodeProvider()
+    public static function getZipCodeProvider()
     {
         return [
             'valid_zipcode' => [
@@ -191,6 +194,7 @@ class RowParserTest extends TestCase
      *
      * @dataProvider getZipCodeProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getZipCodeProvider')]
     public function testGetZipCode($rowData, $rowCount, $expected)
     {
         $instance = $this->getInstance();
@@ -207,7 +211,7 @@ class RowParserTest extends TestCase
     /**
      * @return array
      */
-    public function getConditionValueProvider()
+    public static function getConditionValueProvider()
     {
         return [
             'valid_condition_value' => [
@@ -241,6 +245,7 @@ class RowParserTest extends TestCase
      *
      * @dataProvider getConditionValueProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getConditionValueProvider')]
     public function testGetConditionValue($rowData, $rowCount, $conditionFullName, $expected)
     {
         $instance = $this->getInstance();
@@ -258,7 +263,7 @@ class RowParserTest extends TestCase
     /**
      * @return array
      */
-    public function getPriceProvider()
+    public static function getPriceProvider()
     {
         return [
             'valid_price' => [
@@ -288,6 +293,7 @@ class RowParserTest extends TestCase
      *
      * @dataProvider getPriceProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getPriceProvider')]
     public function testGetPrice($rowData, $rowCount, $expected)
     {
         $instance = $this->getInstance();

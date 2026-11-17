@@ -53,6 +53,12 @@ class Shipment extends AbstractModel implements ShipmentInterface
     const FIELD_INSURED_TIER            = 'insured_tier';
     const FIELD_RETURN_STATUS           = 'return_status';
 
+    private \Magento\Sales\Model\ResourceModel\Order\Address\CollectionFactory $addressCollectionFactory;
+
+    private \Magento\Sales\Api\OrderAddressRepositoryInterface $addressRepository;
+
+    private \TIG\PostNL\Api\OrderRepositoryInterface $postnlOrderRepository;
+
     /**
      * @var string
      */
@@ -136,10 +142,17 @@ class Shipment extends AbstractModel implements ShipmentInterface
         ProductRepositoryInterface         $productRepository,
         Customs                            $customs,
         SerializerInterface                $serializer,
+        \Magento\Sales\Model\ResourceModel\Order\Address\CollectionFactory $addressCollectionFactory,
+        \Magento\Sales\Api\OrderAddressRepositoryInterface $addressRepository,
+        \TIG\PostNL\Api\OrderRepositoryInterface $postnlOrderRepository,
         ?AbstractResource                  $resource = null,
         ?AbstractDb                        $resourceCollection = null,
         array $data = []
     ) {
+        $this->addressCollectionFactory = $addressCollectionFactory;
+        $this->addressRepository = $addressRepository;
+        $this->postnlOrderRepository = $postnlOrderRepository;
+
         parent::__construct($context, $registry, $dateTime, $resource, $resourceCollection, $data);
 
         $this->orderShipmentRepository = $orderShipmentRepository;
@@ -222,9 +235,7 @@ class Shipment extends AbstractModel implements ShipmentInterface
      */
     private function filterShippingAddress($ignoreAddressIds, $ignoreStreet)
     {
-        $addressModel = $this->addressFactory->create();
-        /** @var \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection $addressCollection */
-        $addressCollection = $addressModel->getCollection();
+        $addressCollection = $this->addressCollectionFactory->create();
 
         $addressCollection->addFieldToFilter('entity_id', ['nin' => $ignoreAddressIds]);
         $addressCollection->addFieldToFilter('parent_id', ['eq' => $this->getOrderId()]);
@@ -244,8 +255,11 @@ class Shipment extends AbstractModel implements ShipmentInterface
         $postNLOrder      = $this->getPostNLOrder();
         $pgOrderAddressId = $postNLOrder->getPgOrderAddressId();
 
-        $PgOrderAddress = $this->addressFactory->create();
-        $PgOrderAddress->load($pgOrderAddressId);
+        try {
+            $PgOrderAddress = $this->addressRepository->get($pgOrderAddressId);
+        } catch (\Magento\Framework\Exception\NoSuchEntityException $exception) {
+            $PgOrderAddress = $this->addressFactory->create();
+        }
 
         return $PgOrderAddress;
     }
@@ -255,8 +269,10 @@ class Shipment extends AbstractModel implements ShipmentInterface
      */
     public function getPostNLOrder()
     {
-        $postNLOrder = $this->orderFactory->create();
-        $postNLOrder->load($this->getOrderId(), 'order_id');
+        $postNLOrder = $this->postnlOrderRepository->getByOrderId($this->getOrderId());
+        if (!$postNLOrder) {
+            $postNLOrder = $this->orderFactory->create();
+        }
 
         return $postNLOrder;
     }

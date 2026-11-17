@@ -10,9 +10,9 @@ class FeeCalculatorTest extends TestCase
 {
     public $instanceClass = FeeCalculator::class;
 
-    public function feeCalculationProvider()
+    public static function feeCalculationProvider()
     {
-        return [
+        return array_map('array_values', [
             'Evening delivery with fee' => [
                 'params' => ['option' => 'Evening'],
                 'config options' => [
@@ -45,12 +45,13 @@ class FeeCalculatorTest extends TestCase
                 ],
                 'expected' => 0.0
             ],
-        ];
+        ]);
     }
 
     /**
      * @dataProvider feeCalculationProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('feeCalculationProvider')]
     public function testFeeCalculation($params, $configOptions, $expected)
     {
         $configMock = $this->getFakeMock(ShippingOptions::class)->getMock();
@@ -70,7 +71,7 @@ class FeeCalculatorTest extends TestCase
     {
         foreach ($configOptions as $method => $value) {
             $expected = $instance->method($method);
-            $expected->willReturn($value);
+            $expected->willReturn($method === 'getEveningDeliveryFee' ? (float)$value : $value);
         }
     }
 }

@@ -18,24 +18,24 @@ class PrintPackingslipTest extends TestCase
 
     public function testGetPackingslip()
     {
-        $addressMock = $this->getFakeMock(Address::class)->setMethods(['getCountryId'])->getMock();
+        $addressMock = $this->getFakeMock(Address::class)->onlyMethods(['getCountryId'])->getMock();
         $addressMock->expects($this->once())->method('getCountryId')->willReturn('NL');
 
-        $shipmentMock = $this->getFakeMock(Shipment::class)->setMethods(['getId', 'getShippingAddress', 'getTracks'])->getMock();
+        $shipmentMock = $this->getFakeMock(Shipment::class)->onlyMethods(['getId', 'getShippingAddress', 'getTracks'])->getMock();
         $shipmentMock->expects($this->exactly(2))->method('getId')->willReturn(1);
         $shipmentMock->expects($this->once())->method('getShippingAddress')->willReturn($addressMock);
         $shipmentMock->expects($this->once())->method('getTracks')->willReturn(['some track code']);
 
-        $shipmentRepoMock = $this->getFakeMock(ShipmentRepository::class)->setMethods(['get'])->getMock();
+        $shipmentRepoMock = $this->getFakeMock(ShipmentRepository::class)->onlyMethods(['get'])->getMock();
         $shipmentRepoMock->expects($this->once())->method('get')->with(1)->willReturn($shipmentMock);
 
-        $requestMock = $this->getFakeMock(RequestInterface::class)->getMockForAbstractClass();
+        $requestMock = $this->getFakeMock(RequestInterface::class)->getMock();
         $requestMock->expects($this->once())->method('getParam')->with('shipment_id')->willReturn(1);
 
-        $barcodeHandlerMock = $this->getFakeMock(BarcodeHandler::class)->setMethods(['prepareShipment'])->getMock();
+        $barcodeHandlerMock = $this->getFakeMock(BarcodeHandler::class)->onlyMethods(['prepareShipment'])->getMock();
         $barcodeHandlerMock->expects($this->once())->method('prepareShipment')->with(1, 'NL');
 
-        $contextMock = $this->getFakeMock(Context::class)->setMethods(['getRequest'])->getMock();
+        $contextMock = $this->getFakeMock(Context::class)->onlyMethods(['getRequest'])->getMock();
         $contextMock->expects($this->atLeastOnce())->method('getRequest')->willReturn($requestMock);
 
         $instance = $this->getInstance([
@@ -48,15 +48,15 @@ class PrintPackingslipTest extends TestCase
 
     public function testGetShipment()
     {
-        $requestMock = $this->getFakeMock(RequestInterface::class)->getMockForAbstractClass();
+        $requestMock = $this->getFakeMock(RequestInterface::class)->getMock();
         $requestMock->expects($this->once())->method('getParam')->with('shipment_id')->willReturn(1);
 
-        $contextMock = $this->getFakeMock(Context::class)->setMethods(['getRequest'])->getMock();
+        $contextMock = $this->getFakeMock(Context::class)->onlyMethods(['getRequest'])->getMock();
         $contextMock->expects($this->atLeastOnce())->method('getRequest')->willReturn($requestMock);
 
         $shipmentMock = $this->getFakeMock(Shipment::class, true);
 
-        $shipmentRepoMock = $this->getFakeMock(ShipmentRepository::class)->setMethods(['get'])->getMock();
+        $shipmentRepoMock = $this->getFakeMock(ShipmentRepository::class)->onlyMethods(['get'])->getMock();
         $shipmentRepoMock->expects($this->once())->method('get')->with(1)->willReturn($shipmentMock);
 
         $instance = $this->getInstance(['context' => $contextMock, 'shipmentRepository' => $shipmentRepoMock]);
@@ -69,7 +69,7 @@ class PrintPackingslipTest extends TestCase
     /**
      * @return array
      */
-    public function setTracksProvider()
+    public static function setTracksProvider()
     {
         return [
             'no tracking' => [
@@ -93,12 +93,13 @@ class PrintPackingslipTest extends TestCase
      *
      * @dataProvider setTracksProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('setTracksProvider')]
     public function testSetTracks($trackCodes, $tracksetCalled)
     {
-        $shipmentMock = $this->getFakeMock(Shipment::class)->setMethods(['getTracks'])->getMock();
+        $shipmentMock = $this->getFakeMock(Shipment::class)->onlyMethods(['getTracks'])->getMock();
         $shipmentMock->expects($this->once())->method('getTracks')->willReturn($trackCodes);
 
-        $trackMock = $this->getFakeMock(Track::class)->setMethods(['set'])->getMock();
+        $trackMock = $this->getFakeMock(Track::class)->onlyMethods(['set'])->getMock();
         $trackMock->expects($this->exactly($tracksetCalled))->method('set')->with($shipmentMock);
 
         $instance = $this->getInstance(['track' => $trackMock]);

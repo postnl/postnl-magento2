@@ -12,9 +12,9 @@ class OrderParamsTest extends TestCase
 {
     protected $instanceClass = OrderParams::class;
 
-    public function getValidParams()
+    public static function getValidParams()
     {
-        return [
+        return array_map('array_values', [
             'Netherlands' => [[
                 'type'     => 'delivery',
                 'option'   => 'daytime',
@@ -36,7 +36,7 @@ class OrderParamsTest extends TestCase
               'address'  => ['postcode' => '38712', 'country' => 'ES']],
               'GP'
             ]
-        ];
+        ]);
     }
 
     /**
@@ -46,6 +46,7 @@ class OrderParamsTest extends TestCase
      * @dataProvider getValidParams
      * @throws \Exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getValidParams')]
     public function testGet($option, $expectedType)
     {
         $productMock = [

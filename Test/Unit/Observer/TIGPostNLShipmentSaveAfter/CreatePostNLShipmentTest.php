@@ -15,7 +15,7 @@ class CreatePostNLShipmentTest extends TestCase
     /**
      * @return array
      */
-    public function getOrderProvider()
+    public static function getOrderProvider()
     {
         return [
             'no order and no shipment id' => [
@@ -48,15 +48,16 @@ class CreatePostNLShipmentTest extends TestCase
      *
      * @dataProvider getOrderProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getOrderProvider')]
     public function testGetOrder($orderId, $shipmentId, $expectedCalls)
     {
         $invokedAtMost = new InvokedAtMostCount(1);
 
-        $orderMock = $this->getFakeMock(Order::class)->setMethods(['getOrderId'])->getMock();
+        $orderMock = $this->getFakeMock(Order::class)->onlyMethods(['getOrderId'])->getMock();
         $orderMock->expects($invokedAtMost)->method('getOrderId')->willReturn($orderId);
 
         $orderRepositoryMock = $this->getFakeMock(OrderRepository::class)
-            ->setMethods(['getByFieldWithValue'])
+            ->onlyMethods(['getByFieldWithValue'])
             ->getMock();
         $orderRepositoryMock->expects($this->exactly($expectedCalls))
             ->method('getByFieldWithValue')

@@ -24,7 +24,7 @@ class SupportTabTest extends TestCase
         $this->assertEquals('9.9.9', $result);
     }
 
-    public function getStabilityProvider()
+    public static function getStabilityProvider()
     {
         return [
             'null' => [null, ''],
@@ -40,6 +40,7 @@ class SupportTabTest extends TestCase
      *
      * @dataProvider getStabilityProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getStabilityProvider')]
     public function testGetStability($input, $expected)
     {
         $configuration = $this->getConfiguration('getStability', $input);
@@ -63,7 +64,7 @@ class SupportTabTest extends TestCase
     private function getConfiguration($method, $return)
     {
         $configuration = $this->getFakeMock(PostNLConfiguration::class);
-        $configuration->setMethods([$method]);
+        $configuration->onlyMethods([$method]);
         $configuration = $configuration->getMock();
 
         $expects = $configuration->expects($this->once());

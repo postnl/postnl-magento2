@@ -10,7 +10,7 @@ class CheckoutsTest extends TestCase
     protected $instanceClass = Checkouts::class;
 
     private $compatibleCheckouts = [
-        'default', 'blank', 'mageplaza', 'danslo', 'amasty'
+        'default', 'blank', 'hyva'
     ];
 
     public function testToOptionArray()

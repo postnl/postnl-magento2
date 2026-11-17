@@ -69,6 +69,7 @@ class Rest
         $this->addHeaders();
         $this->addParameters($endpoint);
 
+        $responseBody = null;
         try {
             $responseBody = $this->httpClient->send();
             $response = $responseBody->getBody();
@@ -78,7 +79,9 @@ class Rest
                 'error'  => __('Address API exception : %1', $exception->getCode())
             ];
         } finally {
-            $this->log->request($endpoint, $responseBody);
+            if ($responseBody !== null) {
+                $this->log->request($endpoint, $responseBody);
+            }
         }
 
         return $response;

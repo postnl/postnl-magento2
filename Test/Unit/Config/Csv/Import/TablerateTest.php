@@ -17,13 +17,13 @@ class TablerateTest extends TestCase
     public function testAfterSave()
     {
         $tablerateMock = $this->getFakeMock(TablerateResource::class);
-        $tablerateMock->setMethods(['getConditionName', 'uploadAndImport']);
+        $tablerateMock->onlyMethods(['getConditionName', 'uploadAndImport']);
         $tablerateMock = $tablerateMock->getMock();
 
         $tablerateMock->expects($this->once())->method('getConditionName');
         $tablerateMock->expects($this->once())->method('uploadAndImport');
 
-        $tablerateFactoryMock = $this->getFakeMock(TablerateFactory::class)->setMethods(['create'])->getMock();
+        $tablerateFactoryMock = $this->getFakeMock(TablerateFactory::class)->onlyMethods(['create'])->getMock();
         $tablerateFactoryMock->expects($this->once())->method('create')->willReturn($tablerateMock);
 
         $instance = $this->getInstance(['tablerateFactory' => $tablerateFactoryMock]);
@@ -35,7 +35,7 @@ class TablerateTest extends TestCase
     /**
      * @return array
      */
-    public function getCsvDataProvider()
+    public static function getCsvDataProvider()
     {
         return [
             'no_file_uploaded' => [
@@ -62,6 +62,7 @@ class TablerateTest extends TestCase
      *
      * @dataProvider getCsvDataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getCsvDataProvider')]
     public function testGetCsvData($file, $data)
     {
         $expectedCallCount = (int)(null !== $file);
@@ -75,7 +76,7 @@ class TablerateTest extends TestCase
         $storeManagerMock = $this->getFakeMock(StoreManagerInterface::class)->getMock();
         $storeManagerMock->expects($this->exactly($expectedCallCount))->method('getWebsite')->willReturn($websiteMock);
 
-        $csv = $this->getFakeMock(Csv::class)->setMethods(['getData'])->getMock();
+        $csv = $this->getFakeMock(Csv::class)->onlyMethods(['getData'])->getMock();
         $csv->expects($this->exactly($expectedCallCount))->method('getData')->willReturn($data);
 
         $instance = $this->getInstance(['storeManager' => $storeManagerMock, 'csv' => $csv]);

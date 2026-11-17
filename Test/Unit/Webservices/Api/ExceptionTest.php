@@ -7,9 +7,9 @@ use TIG\PostNL\Webservices\Api\Exception as PostNLException;
 
 class ExceptionTest extends TestCase
 {
-    public function getMessageProvider()
+    public static function getMessageProvider()
     {
-        return [
+        return array_map('array_values', [
             'empty_xml' => [
                 'requestXml' => null,
                 'responseXml' => null,
@@ -72,7 +72,7 @@ class ExceptionTest extends TestCase
 <<<< Response XML >>>>
 <?xml version="1.0"?><test></test>',
             ],
-        ];
+        ]);
     }
 
     /**
@@ -83,6 +83,7 @@ class ExceptionTest extends TestCase
      *
      * @dataProvider getMessageProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getMessageProvider')]
     public function testGetMessage($requestXml, $responseXml, $errors, $message, $expected)
     {
         $exception = new PostNLException($message);

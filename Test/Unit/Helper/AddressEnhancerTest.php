@@ -9,7 +9,7 @@ class AddressEnhancerTest extends TestCase
 {
     protected $instanceClass = AddressEnhancer::class;
 
-    public function addressProvider()
+    public static function addressProvider()
     {
         return [
             'regular address' => [
@@ -93,6 +93,7 @@ class AddressEnhancerTest extends TestCase
      *
      * @dataProvider addressProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('addressProvider')]
     public function testGet($street, $expected)
     {
         $instance = $this->getInstance();

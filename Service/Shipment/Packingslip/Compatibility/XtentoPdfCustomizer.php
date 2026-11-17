@@ -54,7 +54,7 @@ class XtentoPdfCustomizer
         $order = $this->orderRepository->get($orderId);
 
         $xtentoDataHelper = $this->dataHelper->create();
-        $template = $xtentoDataHelper->getDefaultTemplate($order, TemplateType::TYPE_SHIPMENT);
+        $template = $xtentoDataHelper->getDefaultTemplate($order, constant(TemplateType::class . '::TYPE_SHIPMENT'));
         $templateId = $template->getId();
 
         $generatePdfHelper = $this->pdfGenerator->create();
@@ -70,7 +70,7 @@ class XtentoPdfCustomizer
     {
         $xtentoDataHelper = $this->dataHelper->create();
 
-        if ($xtentoDataHelper->isEnabled(Data::ENABLE_SHIPMENT)) {
+        if ($xtentoDataHelper->isEnabled(constant(Data::class . '::ENABLE_SHIPMENT'))) {
             return true;
         }
 

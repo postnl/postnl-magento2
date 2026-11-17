@@ -9,7 +9,7 @@ class RateRequestPluginTest extends TestCase
 {
     public $instanceClass = RateRequestPlugin::class;
 
-    public function dataProvider()
+    public static function dataProvider()
     {
         return [
             'TIG PostNL Limit Carrier' => [
@@ -32,6 +32,7 @@ class RateRequestPluginTest extends TestCase
      *
      * @dataProvider dataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProvider')]
     public function testBeforeSetData($key, $value, $expected)
     {
         $instance = $this->getInstance();

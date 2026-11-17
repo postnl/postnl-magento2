@@ -60,6 +60,9 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
         string $encoding    = 'base64',
         $filename           = null
     ) {
+        if (!class_exists('Laminas\\Mime\\Part')) {
+            throw new \LogicException('The Laminas MIME component is unavailable.');
+        }
         $mimePart = new \Laminas\Mime\Part($content);
         $mimePart->setType($type);
         $mimePart->setDisposition($disposition);

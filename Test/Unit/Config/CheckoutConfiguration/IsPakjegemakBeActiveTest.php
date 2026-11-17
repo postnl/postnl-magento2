@@ -10,7 +10,7 @@ class IsPakjegemakBeActiveTest extends TestCase
 {
     public $instanceClass = IsPakjegemakBeActive::class;
 
-    public function getValueProvider()
+    public static function getValueProvider()
     {
         return [
             'is active' => [true],
@@ -25,6 +25,7 @@ class IsPakjegemakBeActiveTest extends TestCase
      *
      * @throws \Exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getValueProvider')]
     public function testGetValue($expected)
     {
         $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();

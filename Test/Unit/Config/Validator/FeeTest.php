@@ -9,7 +9,7 @@ class FeeTest extends TestCase
 {
     public $instanceClass = Fee::class;
 
-    public function theConfigInputIsProcessedOkProvider()
+    public static function theConfigInputIsProcessedOkProvider()
     {
         return [
             ['2,5', '2.5'],
@@ -24,6 +24,7 @@ class FeeTest extends TestCase
      * @param $input
      * @param $output
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('theConfigInputIsProcessedOkProvider')]
     public function testTheConfigInputIsProcessedOk($input, $output)
     {
         /** @var Fee $instance */

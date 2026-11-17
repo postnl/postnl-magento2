@@ -55,7 +55,7 @@ class DataTest extends TestCase
      * @param $filePath
      * @param $expected
      *
-     * @return Filesystem\File\ReadInterface
+     * @return void
      */
     public function testImportCsvFiles($filePath, $expected)
     {

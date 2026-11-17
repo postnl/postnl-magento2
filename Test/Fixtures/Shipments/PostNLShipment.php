@@ -16,6 +16,6 @@ $postnlShipment->setOrderId($shipment->getOrderId());
 $postnlShipment->setProductCode('3085');
 $postnlShipment->setShipmentType('DayTime');
 
-$postnlShipment->save();
+$objectManager->get(\TIG\PostNL\Api\ShipmentRepositoryInterface::class)->save($postnlShipment);
 
 return $postnlShipment;

@@ -42,6 +42,11 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         ini_set('display_startup_errors', '1');
 
         $this->objectManager = new ObjectManagerHelper($this);
+        $globalObjectManager = $this->createStub(\Magento\Framework\ObjectManagerInterface::class);
+        $globalObjectManager->method('get')->willReturnCallback(function ($class) {
+            return $this->createStub($class);
+        });
+        \Magento\Framework\App\ObjectManager::setInstance($globalObjectManager);
     }
 
     /**
@@ -53,7 +58,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected function getMethod($method, $instance)
     {
         $method = new \ReflectionMethod($instance, $method);
-        $method->setAccessible(true);
 
         return $method;
     }
@@ -107,7 +111,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $reflection = new \ReflectionObject($instance);
         $property = $reflection->getProperty($property);
-        $property->setAccessible(true);
         return $property->getValue($instance);
     }
 
@@ -126,7 +129,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $reflection = new \ReflectionObject($instance);
         $property = $reflection->getProperty($property);
-        $property->setAccessible(true);
         $property->setValue($instance, $value);
 
         return $property;
@@ -221,7 +223,25 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return \PHPUnit\Framework\MockObject\MockObject
      */
-    protected function getMock($className){
+    protected function getMock($className)
+    {
         return $this->getFakeMock($className, true);
     }
+
+    /**
+     * @param array $arguments
+     * @param array $returns
+     * @return \Closure
+     */
+    protected function consecutiveCalls(array $arguments, array $returns = [])
+    {
+        $index = 0;
+        return function (...$actual) use ($arguments, $returns, &$index) {
+            $this->assertArrayHasKey($index, $arguments);
+            $expected = $arguments[$index];
+            $this->assertEquals($expected, array_slice($actual, 0, count($expected)));
+            return $returns[$index++] ?? null;
+        };
+    }
+
 }

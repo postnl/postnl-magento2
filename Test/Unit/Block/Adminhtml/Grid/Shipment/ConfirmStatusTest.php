@@ -9,7 +9,7 @@ class ConfirmStatusTest extends TestCase
 {
     protected $instanceClass = ConfirmStatus::class;
 
-    public function getIsConfirmedProvider()
+    public static function getIsConfirmedProvider()
     {
         return [
             'exists_but_not_confirmed' => [null, false],
@@ -23,6 +23,7 @@ class ConfirmStatusTest extends TestCase
      *
      * @dataProvider getIsConfirmedProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getIsConfirmedProvider')]
     public function testGetCellContents($confirmedAt, $expected)
     {
         $item = ['tig_postnl_confirmed_at' => $confirmedAt];

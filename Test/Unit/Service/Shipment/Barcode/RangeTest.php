@@ -58,7 +58,7 @@ class RangeTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function getByProductProvider()
+    public static function getByProductProvider()
     {
         return [
             'Netherlands' => ['3085', ['type' => '3S', 'range' => '123456', 'serie' => '000000000-999999999']]
@@ -71,6 +71,7 @@ class RangeTest extends TestCase
      * @param $productCode
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getByProductProvider')]
     public function testGetByProductCode($productCode, $expected)
     {
         /** @var Range $instance */
@@ -93,7 +94,7 @@ class RangeTest extends TestCase
         $this->mockFunction($defaultConfigurationMock, 'getBarcodeRange', '1660');
 
         $optionsConfigurationMock = $this->getFakeMock(ProductOptions::class);
-        $optionsConfigurationMock->setMethods(null);
+        $optionsConfigurationMock->onlyMethods([]);
 
         $instance = parent::getInstance($args + [
             'accountConfiguration' => $accountConfigurationMock,

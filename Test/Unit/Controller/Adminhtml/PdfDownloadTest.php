@@ -14,7 +14,7 @@ class PdfDownloadTest extends TestCase
     /**
      * @return array
      */
-    public function generateLabelProvider()
+    public static function generateLabelProvider()
     {
         return [
             'type is shippinglabel' => [
@@ -38,12 +38,13 @@ class PdfDownloadTest extends TestCase
      *
      * @dataProvider generateLabelProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateLabelProvider')]
     public function testGenerateLabel($filetype, $expected)
     {
-        $labelGenerateMock = $this->getFakeMock(LabelGenerate::class)->setMethods(['run'])->getMock();
+        $labelGenerateMock = $this->getFakeMock(LabelGenerate::class)->onlyMethods(['run'])->getMock();
         $labelGenerateMock->method('run')->willReturn('label generator');
 
-        $packingslipGenerateMock = $this->getFakeMock(PackingslipGenerate::class)->setMethods(['run'])->getMock();
+        $packingslipGenerateMock = $this->getFakeMock(PackingslipGenerate::class)->onlyMethods(['run'])->getMock();
         $packingslipGenerateMock->method('run')->willReturn('packingslip generator');
 
         $instance = $this->getInstance([

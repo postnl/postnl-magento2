@@ -86,7 +86,7 @@ class WebshopTest extends AbstractConfigurationTest
         $this->assertTrue(is_array($result));
     }
 
-    public function cutoffTimeForDayProvider()
+    public static function cutoffTimeForDayProvider()
     {
         return [
             'CutoffTime for sundays, day number 7' => [
@@ -111,6 +111,7 @@ class WebshopTest extends AbstractConfigurationTest
      *
      * @dataProvider cutoffTimeForDayProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('cutoffTimeForDayProvider')]
     public function testGetCutOffTimeForDay($day, $xpath, $cutoffTime)
     {
         $instance = $this->getInstance();

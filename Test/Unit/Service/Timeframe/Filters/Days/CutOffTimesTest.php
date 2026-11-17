@@ -18,6 +18,7 @@ class CutOffTimesTest extends TestCase
      * @param $input
      * @param $output
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\Timeframes\Days\DataProvider::class, 'noFiltering')]
     public function testDoesNotFilterWhenBeforeCutOff($input, $output)
     {
         $this->assertEquals($output, $this->loadInstance(false)->filter($input));

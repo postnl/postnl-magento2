@@ -63,9 +63,9 @@ class ViewTest extends TestCase
     {
         $urlBuilderMock = $this->getFakeMock(UrlInterface::class, true);
         $requestMock = $this->getFakeMock(RequestInterface::class, true);
-        $authorizationMock = $this->getFakeMock(AuthorizationInterface::class)->getMockForAbstractClass();
+        $authorizationMock = $this->getFakeMock(AuthorizationInterface::class)->getMock();
 
-        $buttonListMock = $this->getFakeMock(ButtonList::class)->setMethods(['add'])->getMock();
+        $buttonListMock = $this->getFakeMock(ButtonList::class)->onlyMethods(['add'])->getMock();
         $buttonListMock->expects($this->atLeastOnce())->method('add');
 
         $this->contextMock->method('getUrlBuilder')->willReturn($urlBuilderMock);
@@ -80,7 +80,7 @@ class ViewTest extends TestCase
     private function prepareRegistryMock()
     {
         $orderMock = $this->getFakeMock(Order::class, true);
-        $shipmentMock = $this->getFakeMock(Shipment::class)->setMethods(['getOrder', 'getId'])->getMock();
+        $shipmentMock = $this->getFakeMock(Shipment::class)->onlyMethods(['getOrder', 'getId'])->getMock();
         $shipmentMock->method('getOrder')->willReturn($orderMock);
         $shipmentMock->method('getId')->willReturn(1);
 

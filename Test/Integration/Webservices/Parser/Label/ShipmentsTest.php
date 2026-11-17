@@ -71,7 +71,7 @@ class ShipmentsTest extends TestCase
 
         $shippingAddress = $shipment->getShippingAddress();
         $shippingAddress->setStreet('street 69 A');
-        $shippingAddress->save();
+        $this->getObject(\Magento\Sales\Api\OrderAddressRepositoryInterface::class)->save($shippingAddress);
 
         $factory = $this->getObject(\TIG\PostNL\Model\ShipmentFactory::class);
 
@@ -80,7 +80,7 @@ class ShipmentsTest extends TestCase
         $postNLShipment->setOrderId($shipment->getOrderId());
         $postNLShipment->setShipmentId($shipment->getId());
         $postNLShipment->setShipmentType('Daytime');
-        $postNLShipment->save();
+        $this->getObject(\TIG\PostNL\Api\ShipmentRepositoryInterface::class)->save($postNLShipment);
 
         return $postNLShipment;
     }

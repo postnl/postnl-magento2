@@ -52,5 +52,7 @@ class AddShippingLabelFileFormat implements SchemaPatchInterface
         );
 
         $this->moduleDataSetup->endSetup();
+
+        return $this;
     }
 }

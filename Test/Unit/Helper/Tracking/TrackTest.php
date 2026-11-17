@@ -24,7 +24,7 @@ class TrackTest extends TestCase
         $searchCriteriaMock = $this->getFakeMock(SearchCriteria::class)->getMock();
 
         $searchCriteriaBuilderMock = $this->getFakeMock(SearchCriteriaBuilder::class)
-            ->setMethods(['create', 'addFilter'])
+            ->onlyMethods(['create', 'addFilter'])
             ->getMock();
         $searchCriteriaBuilderMock->expects($this->once())->method('create')->willReturn($searchCriteriaMock);
         $searchCriteriaBuilderMock->expects($this->once())->method('addFilter')->willReturnSelf();
@@ -32,10 +32,11 @@ class TrackTest extends TestCase
         $postnlShipmentMock = $this->getFakeMock(Shipment::class)->getMock();
 
         $shipmentRepositoryMock = $this->getFakeMock(ShipmentRepository::class)
-            ->setMethods(['getList', 'getItems'])
+            ->onlyMethods(['getList'])
             ->getMock();
-        $shipmentRepositoryMock->expects($this->once())->method('getList')->willReturnSelf();
-        $shipmentRepositoryMock->expects($this->once())->method('getItems')->willReturn([$postnlShipmentMock]);
+        $results = $this->getMock(\Magento\Framework\Api\SearchResultsInterface::class);
+        $results->method('getItems')->willReturn([$postnlShipmentMock]);
+        $shipmentRepositoryMock->expects($this->once())->method('getList')->willReturn($results);
 
         $shipmentMock = $this->getFakeMock(MagentoShipment::class)->getMock();
 
@@ -46,7 +47,7 @@ class TrackTest extends TestCase
         $instance->send($shipmentMock);
     }
 
-    public function generatesTheCorrectTTUrlProvider()
+    public static function generatesTheCorrectTTUrlProvider()
     {
         return [
             ['NL', 'D=NL&P=1234AB&T=C&L=NL'],
@@ -60,6 +61,7 @@ class TrackTest extends TestCase
      *
      * @dataProvider generatesTheCorrectTTUrlProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generatesTheCorrectTTUrlProvider')]
     public function testGeneratesTheCorrectTTUrl($country, $expected)
     {
         $type = 'C';
@@ -73,8 +75,8 @@ class TrackTest extends TestCase
         $address->setPostcode('1234AB');
 
         $storeMock = $this->getFakeMock(Store::class, true);
-        $expectsCode = $storeMock->expects($this->any());
-        $expectsCode->method('getCode');
+
+        $expectsCode = $storeMock->method('getCode');
         $expectsCode->willReturn('default');
 
         $orderMock = $this->getFakeMock(Order::class, true);

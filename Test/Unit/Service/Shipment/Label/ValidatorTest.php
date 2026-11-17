@@ -10,32 +10,32 @@ class ValidatorTest extends TestCase
 {
     public $instanceClass = Validator::class;
 
-    public function validateProvider()
+    public static function validateProvider()
     {
-        return [
+        return array_map('array_values', [
             [
                 'input' => [
-                    $this->getLabelMock([]),
-                    $this->getLabelMock('asdf1'),
-                    $this->getLabelMock([]),
-                    $this->getLabelMock('asdf2'),
+                    [],
+                    'asdf1',
+                    [],
+                    'asdf2',
                 ],
-                'output length' => 2
+                'expected' => 2
             ],
             [
                 'input' => [
-                    $this->getLabelMock([]),
-                    $this->getLabelMock('Invalid response'),
+                    [],
+                    'Invalid response',
                 ],
-                'output length' => 0
+                'expected' => 0
             ],
             [
                 'input' => [
                     null,
                 ],
-                'output length' => 0
+                'expected' => 0
             ],
-        ];
+        ]);
     }
 
     /**
@@ -44,8 +44,12 @@ class ValidatorTest extends TestCase
      * @param $input
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('validateProvider')]
     public function testValidate($input, $expected)
     {
+        $input = array_map(function ($label) {
+            return $label === null ? null : $this->getLabelMock($label);
+        }, $input);
         /** @var Validator $instance */
         $instance = $this->getInstance();
         $result = $instance->validate($input);

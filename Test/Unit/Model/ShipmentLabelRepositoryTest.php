@@ -19,57 +19,39 @@ class ShipmentLabelRepositoryTest extends TestCase
 
     public function testSave()
     {
-        $shipmentLabelFactoryMock = $this->getFakeMock(\TIG\PostNL\Model\ShipmentLabel::class);
-        $shipmentLabelFactoryMock->setMethods(['getIdentities', 'save']);
-        $shipmentLabelFactoryMock = $shipmentLabelFactoryMock->getMock();
+        $model = $this->getMock(\TIG\PostNL\Model\ShipmentLabel::class);
+        $resource = $this->getMock(\TIG\PostNL\Model\ResourceModel\ShipmentLabel::class);
+        $resource->expects($this->once())->method('save')->with($model);
 
-        $saveExpects = $shipmentLabelFactoryMock->expects($this->once());
-        $saveExpects->method('save');
+        $instance = $this->getInstance(['entityResource' => $resource]);
+        $result = $instance->save($model);
 
-        $instance = $this->getInstance();
-        $result = $instance->save($shipmentLabelFactoryMock);
-
-        $this->assertEquals($shipmentLabelFactoryMock, $result);
+        $this->assertSame($model, $result);
     }
 
-    public function testgetById()
+    public function testGetById()
     {
-        $id = rand(1000, 2000);
+        $id = 42;
+        $model = $this->getMock(\TIG\PostNL\Model\ShipmentLabel::class);
+        $model->method('getId')->willReturn($id);
+        $factory = $this->getMock(\TIG\PostNL\Model\ShipmentLabelFactory::class);
+        $factory->expects($this->once())->method('create')->willReturn($model);
+        $resource = $this->getMock(\TIG\PostNL\Model\ResourceModel\ShipmentLabel::class);
+        $resource->expects($this->once())->method('load')->with($model, $id);
 
-        $shipmentLabelFactoryMock = $this->getFakeMock('\TIG\PostNL\Model\ShipmentLabelFactory');
-        $shipmentLabelFactoryMock->setMethods(['create', 'load', 'getId']);
-        $shipmentLabelFactoryMock = $shipmentLabelFactoryMock->getMock();
+        $instance = $this->getInstance(['objectFactory' => $factory, 'entityResource' => $resource]);
 
-        $createExpects = $shipmentLabelFactoryMock->expects($this->once());
-        $createExpects->method('create');
-        $createExpects->willReturnSelf();
-
-        $loadExpects = $shipmentLabelFactoryMock->expects($this->once());
-        $loadExpects->method('load');
-        $loadExpects->willReturnSelf();
-
-        $getIdExpects = $shipmentLabelFactoryMock->expects($this->once());
-        $getIdExpects->method('getId');
-        $getIdExpects->willReturn($id);
-
-        $instance = $this->getInstance(['objectFactory' => $shipmentLabelFactoryMock]);
-        $result = $instance->getById($id);
-
-        $this->assertInstanceOf('\TIG\PostNL\Model\ShipmentLabelFactory', $result);
-        $this->assertEquals($shipmentLabelFactoryMock, $result);
+        $this->assertSame($model, $instance->getById($id));
     }
 
     public function testDelete()
     {
-        $shipmentLabelFactoryMock = $this->getFakeMock(\TIG\PostNL\Model\ShipmentLabel::class);
-        $shipmentLabelFactoryMock->setMethods(['getIdentities', 'delete']);
-        $shipmentLabelFactoryMock = $shipmentLabelFactoryMock->getMock();
+        $model = $this->getMock(\TIG\PostNL\Model\ShipmentLabel::class);
+        $resource = $this->getMock(\TIG\PostNL\Model\ResourceModel\ShipmentLabel::class);
+        $resource->expects($this->once())->method('delete')->with($model);
 
-        $saveExpects = $shipmentLabelFactoryMock->expects($this->once());
-        $saveExpects->method('delete');
-
-        $instance = $this->getInstance();
-        $result = $instance->delete($shipmentLabelFactoryMock);
+        $instance = $this->getInstance(['entityResource' => $resource]);
+        $result = $instance->delete($model);
 
         $this->assertTrue($result);
     }

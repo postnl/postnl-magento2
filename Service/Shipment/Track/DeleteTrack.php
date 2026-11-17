@@ -13,6 +13,8 @@ use Magento\Sales\Model\Order\Shipment;
 
 class DeleteTrack extends ShipmentServiceAbstract
 {
+    private \Magento\Sales\Model\ResourceModel\Order\Shipment\Track $trackResource;
+
     /**
      * @var Track
      */
@@ -30,8 +32,11 @@ class DeleteTrack extends ShipmentServiceAbstract
         Log $log,
         PostNLShipmentRepository $postNLShipmentRepository,
         ShipmentRepository $shipmentRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        \Magento\Sales\Model\ResourceModel\Order\Shipment\Track $trackResource
     ) {
+        $this->trackResource = $trackResource;
+
         parent::__construct(
             $log,
             $postNLShipmentRepository,
@@ -50,13 +55,14 @@ class DeleteTrack extends ShipmentServiceAbstract
     public function delete($trackId)
     {
         /** @var Track $track */
-        $track = $this->track->load($trackId);
+        $track = $this->track;
+        $this->trackResource->load($track, $trackId);
         if (!$track->getId()) {
             $this->logger->alert('Can\'t initialize track for deletion', [$trackId]);
         }
 
         try {
-            $track->delete();
+            $this->trackResource->delete($track);
         } catch (PostNLException $exception) {
             $this->logger->alert('Can\'t delete tracking number', $exception->getLogMessage());
         }

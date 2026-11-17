@@ -10,7 +10,7 @@ class CutoffTimesTest extends TestCase
 {
     protected $instanceClass = CutoffTimes::class;
 
-    public function getProvider()
+    public static function getProvider()
     {
         return [
             'Sunday and Monday closed' => [
@@ -105,6 +105,7 @@ class CutoffTimesTest extends TestCase
      *
      * @dataProvider getProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getProvider')]
     public function testGet($shipmentDays, $cutoffTime, $expects)
     {
         $webshopConfigMock = $this->getFakeMock(Webshop::class)->getMock();

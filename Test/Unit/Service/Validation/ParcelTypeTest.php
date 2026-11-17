@@ -6,7 +6,7 @@ class ParcelTypeTest extends Contract
 {
     public $instanceClass = \TIG\PostNL\Service\Validation\ParcelType::class;
 
-    public function shouldAllowDifferentVariationsOfTheParcelTypeProvider()
+    public static function shouldAllowDifferentVariationsOfTheParcelTypeProvider()
     {
         return [
             'regular'                               => ['regular', 'regular'],
@@ -31,6 +31,7 @@ class ParcelTypeTest extends Contract
      * @param $parcelType
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('shouldAllowDifferentVariationsOfTheParcelTypeProvider')]
     public function testShouldAllowDifferentVariationsOfTheParcelType($parcelType, $expected)
     {
         $this->assertEquals($expected, $this->getInstance()->validate($parcelType));
@@ -41,7 +42,7 @@ class ParcelTypeTest extends Contract
         $this->assertFalse($this->getInstance()->validate('invalid'));
     }
 
-    public function emptyParcelTypeShouldDefaultToStar()
+    public static function emptyParcelTypeShouldDefaultToStar()
     {
         return [
             [''],
@@ -53,6 +54,7 @@ class ParcelTypeTest extends Contract
     /**
      * @dataProvider emptyParcelTypeShouldDefaultToStar
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('emptyParcelTypeShouldDefaultToStar')]
     public function testEmptyParcelTypeShouldDefaultToStar($value)
     {
         $this->assertSame('*', $this->getInstance()->validate($value));

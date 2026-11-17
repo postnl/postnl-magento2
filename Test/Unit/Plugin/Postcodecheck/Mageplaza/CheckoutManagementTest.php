@@ -51,15 +51,15 @@ class CheckoutManagementTest extends TestCase
     private function getAddressMock($street)
     {
         $addressMock = $this->getFakeMock(AddressInterface::class)->getMock();
-        $addressExpects = $addressMock->expects($this->any());
-        $addressExpects->method('getStreet')->willReturn('Kabelweg');
-        $addressExpects2 = $addressMock->expects($this->any());
-        $addressExpects2->method('setStreet')->with($street);
+
+        $addressExpects = $addressMock->method('getStreet')->willReturn('Kabelweg');
+
+        $addressExpects2 = $addressMock->method('setStreet')->with($street);
 
         $shippingAddressMock = $this->getFakeMock(ShippingInformationInterface::class)->getMock();
-        $shippingAddressMockExpects = $shippingAddressMock->expects($this->any())->method('getShippingAddress');
+        $shippingAddressMockExpects = $shippingAddressMock->method('getShippingAddress');
         $shippingAddressMockExpects->willReturn($addressMock);
-        $shippingAddressMockExpects2 = $shippingAddressMock->expects($this->any())->method('setShippingAddress');
+        $shippingAddressMockExpects2 = $shippingAddressMock->method('setShippingAddress');
 
         return $shippingAddressMock;
     }

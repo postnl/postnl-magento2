@@ -12,6 +12,10 @@ use TIG\PostNL\Model\ShipmentRepository;
 //@codingStandardsIgnoreFile
 class CreateShipment
 {
+    private \Magento\Sales\Api\ShipmentRepositoryInterface $salesShipmentRepository;
+
+    private \Magento\Sales\Api\OrderRepositoryInterface $salesOrderRepository;
+
     /**
      * @var InventorySource
      */
@@ -57,8 +61,13 @@ class CreateShipment
         ConvertOrder $convertOrder,
         ShipmentRepository $shipmentRepository,
         Data $postnlHelper,
-        InventorySource $inventorySource
+        InventorySource $inventorySource,
+        \Magento\Sales\Api\ShipmentRepositoryInterface $salesShipmentRepository,
+        \Magento\Sales\Api\OrderRepositoryInterface $salesOrderRepository
     ) {
+        $this->salesShipmentRepository = $salesShipmentRepository;
+        $this->salesOrderRepository = $salesOrderRepository;
+
         $this->convertOrder       = $convertOrder;
         $this->shipmentRepository = $shipmentRepository;
         $this->postNLHelper       = $postnlHelper;
@@ -211,8 +220,8 @@ class CreateShipment
         $order->setStatus('processing');
 
         try {
-            $this->shipment->save();
-            $order->save();
+            $this->salesShipmentRepository->save($this->shipment);
+            $this->salesOrderRepository->save($order);
         } catch (\Exception $exception) {
             $message = $this->handleExceptionForPossibleSoapErrors($exception);
             $localizedErrorMessage = __($message)->render();

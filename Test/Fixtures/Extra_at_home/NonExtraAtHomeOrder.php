@@ -78,4 +78,4 @@ $order->addItem($orderItem);
 $order->setPayment($payment);
 
 // Save Order
-$order->save();
+$objectManager->get(\Magento\Sales\Api\OrderRepositoryInterface::class)->save($order);

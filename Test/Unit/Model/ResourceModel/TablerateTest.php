@@ -19,7 +19,7 @@ class TablerateTest extends TestCase
     /**
      * @return array
      */
-    public function getConditionNameProvider()
+    public static function getConditionNameProvider()
     {
         return [
             'fromDataObject' => [
@@ -45,6 +45,7 @@ class TablerateTest extends TestCase
      *
      * @dataProvider getConditionNameProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getConditionNameProvider')]
     public function testGetConditionName($dataValue, $configValue, $inherit, $expects)
     {
         $dataObject = $this->getObject(DataObject::class);
@@ -62,7 +63,7 @@ class TablerateTest extends TestCase
         ]);
 
         $scopeConfigMock = $this->getMockBuilder(ScopeConfigInterface::class);
-        $scopeConfigMock->setMethods(['getValue', 'isSetFlag']);
+        $scopeConfigMock->onlyMethods(['getValue', 'isSetFlag']);
         $scopeConfigMock = $scopeConfigMock->getMock();
 
         $getValueExpects = $scopeConfigMock->expects($this->exactly((int)$inherit));
@@ -96,12 +97,12 @@ class TablerateTest extends TestCase
         $connectionMock->expects($this->once())->method('delete');
         $connectionMock->expects($this->once())->method('commit');
 
-        $resourceMock = $this->getFakeMock(ResourceConnection::class)->setMethods(['getConnection', 'getTableName']);
+        $resourceMock = $this->getFakeMock(ResourceConnection::class)->onlyMethods(['getConnection', 'getTableName']);
         $resourceMock = $resourceMock->getMock();
         $resourceMock->expects($this->once())->method('getConnection')->willReturn($connectionMock);
         $resourceMock->expects($this->once())->method('getTableName');
 
-        $context = $this->getFakeMock(Context::class)->setMethods(['getResources'])->getMock();
+        $context = $this->getFakeMock(Context::class)->onlyMethods(['getResources'])->getMock();
         $context->expects($this->once())->method('getResources')->willReturn($resourceMock);
 
         $websiteMock = $this->getFakeMock(WebsiteInterface::class)->getMock();
@@ -119,7 +120,7 @@ class TablerateTest extends TestCase
     /**
      * @return array
      */
-    public function importDataProvider()
+    public static function importDataProvider()
     {
         return [
             'succesfull' => [
@@ -141,6 +142,7 @@ class TablerateTest extends TestCase
      *
      * @dataProvider importDataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('importDataProvider')]
     public function testImportData($exceptionType, $exceptionMessage)
     {
         $connectionMock = $this->getFakeMock(AdapterInterface::class)->getMock();
@@ -153,12 +155,12 @@ class TablerateTest extends TestCase
             $expectsInsertArray->willThrowException(new $exceptionType(''));
         }
 
-        $resourceMock = $this->getFakeMock(ResourceConnection::class)->setMethods(['getConnection', 'getTableName']);
+        $resourceMock = $this->getFakeMock(ResourceConnection::class)->onlyMethods(['getConnection', 'getTableName']);
         $resourceMock = $resourceMock->getMock();
         $resourceMock->expects($this->exactly(2))->method('getConnection')->willReturn($connectionMock);
         $resourceMock->expects($this->once())->method('getTableName');
 
-        $context = $this->getFakeMock(Context::class)->setMethods(['getResources'])->getMock();
+        $context = $this->getFakeMock(Context::class)->onlyMethods(['getResources'])->getMock();
         $context->expects($this->once())->method('getResources')->willReturn($resourceMock);
 
         $instance = $this->getInstance(['context' => $context]);

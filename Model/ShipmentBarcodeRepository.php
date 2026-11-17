@@ -17,6 +17,8 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 
 class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
 {
+    private \TIG\PostNL\Model\ResourceModel\ShipmentBarcode $entityResource;
+
     /**
      * @var ShipmentBarcodeFactory
      */
@@ -47,8 +49,11 @@ class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
         ShipmentBarcodeFactory $objectFactory,
         CollectionFactory $collectionFactory,
         SearchResults $searchResults,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        \TIG\PostNL\Model\ResourceModel\ShipmentBarcode $entityResource
     ) {
+        $this->entityResource = $entityResource;
+
         $this->shipmentBarcodeFactory = $objectFactory;
         $this->collectionFactory      = $collectionFactory;
         $this->searchResults          = $searchResults;
@@ -64,7 +69,7 @@ class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
     public function save(ShipmentBarcodeInterface $shipmentBarcode)
     {
         try {
-            $shipmentBarcode->save();
+            $this->entityResource->save($shipmentBarcode);
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
             throw new CouldNotSaveException(__($exception->getMessage()));
@@ -82,7 +87,7 @@ class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
     public function getById($identifier)
     {
         $object = $this->shipmentBarcodeFactory->create();
-        $object->load($identifier);
+        $this->entityResource->load($object, $identifier);
 
         if (!$object->getId()) {
             // @codingStandardsIgnoreLine
@@ -101,7 +106,7 @@ class ShipmentBarcodeRepository implements ShipmentBarcodeRepositoryInterface
     public function delete(ShipmentBarcodeInterface $shipmentBarcode)
     {
         try {
-            $shipmentBarcode->delete();
+            $this->entityResource->delete($shipmentBarcode);
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
             throw new CouldNotDeleteException(__($exception->getMessage()));

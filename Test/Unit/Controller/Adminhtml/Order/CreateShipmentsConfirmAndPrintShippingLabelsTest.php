@@ -16,7 +16,7 @@ class CreateShipmentsConfirmAndPrintShippingLabelsTest extends TestCase
     /**
      * @return array
      */
-    public function setTracksProvider()
+    public static function setTracksProvider()
     {
         return [
             'no tracking' => [
@@ -40,19 +40,20 @@ class CreateShipmentsConfirmAndPrintShippingLabelsTest extends TestCase
      *
      * @dataProvider setTracksProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('setTracksProvider')]
     public function testSetTracks($trackCodes, $tracksetCalled)
     {
-        $shipmentMock = $this->getFakeMock(Shipment::class)->setMethods(['getTracks'])->getMock();
+        $shipmentMock = $this->getFakeMock(Shipment::class)->onlyMethods(['getTracks'])->getMock();
         $shipmentMock->expects($this->once())->method('getTracks')->willReturn($trackCodes);
 
-        $trackMock = $this->getFakeMock(Track::class)->setMethods(['set'])->getMock();
+        $trackMock = $this->getFakeMock(Track::class)->onlyMethods(['set'])->getMock();
         $trackMock->expects($this->exactly($tracksetCalled))->method('set')->with($shipmentMock);
 
         $instance = $this->getInstance(['track' => $trackMock]);
         $this->invokeArgs('setTracks', [$shipmentMock], $instance);
     }
 
-    public function handleErrorsProvider()
+    public static function handleErrorsProvider()
     {
         return [
             'no errors' => [
@@ -100,17 +101,18 @@ class CreateShipmentsConfirmAndPrintShippingLabelsTest extends TestCase
      *
      * @dataProvider handleErrorsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('handleErrorsProvider')]
     public function testHandleErrors($instanceErrors, $shipmentErrors, $errorsAdded)
     {
         $createShipmentMock = $this->getMockBuilder(CreateShipment::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getErrors'])
+            ->onlyMethods(['getErrors'])
             ->getMock();
         $createShipmentMock->expects($this->once())->method('getErrors')->willReturn($shipmentErrors);
 
         $messageManagerMock = $this->getMockBuilder(ManagerInterface::class)
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
         $messageManagerMock->expects($this->exactly($errorsAdded))->method('addErrorMessage');
 
         $instance = $this->getInstance(['createShipment' => $createShipmentMock]);
