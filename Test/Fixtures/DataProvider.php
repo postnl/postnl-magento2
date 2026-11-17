@@ -44,13 +44,13 @@ class DataProvider
     {
         return [
             [
-                'separate_pdfs' => [
+                [
                     __DIR__ . DIRECTORY_SEPARATOR . 'shippinglabel-1.pdf',
                     __DIR__ . DIRECTORY_SEPARATOR . 'shippinglabel-2.pdf'
                 ]
             ],
             [
-                'separate_pdfs' => [
+                [
                     __DIR__ . DIRECTORY_SEPARATOR . 'shippinglabel-1.pdf'
                 ]
             ],
@@ -64,13 +64,13 @@ class DataProvider
     {
         return [
             [
-                'separate_pdfs' => [
+                [
                     base64_encode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'shippinglabel-1.pdf')),
                     base64_encode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'shippinglabel-2.pdf'))
                 ]
             ],
             [
-                'separate_pdfs' => [
+                [
                     base64_encode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'shippinglabel-1.pdf'))
                 ]
             ],

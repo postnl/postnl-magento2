@@ -15,7 +15,7 @@ class TablerateTest extends TestCase
 
     public function testGetTableratePrice()
     {
-        $productMock = $this->getFakeMock(\TIG\PostNL\Test\Unit\Support\QuoteItem::class)->getMock();
+        $productMock = $this->getFakeMock(\Magento\Catalog\Model\Product::class)->getMock();
 
         $itemMock = $this->getFakeMock(Item::class)->onlyMethods(['getProduct'])->getMock();
         $itemMock->method('getProduct')->willReturn($productMock);
@@ -93,8 +93,8 @@ class TablerateTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('getVirtualItemRowTotalProvider')]
     public function testGetVirtualItemRowTotal($isVirtual, $baseRowTotal, $childIsVirtual, $childBaseRowTotal, $expected)
     {
-        $productChildMock = $this->getFakeMock(\TIG\PostNL\Test\Unit\Support\QuoteItem::class)
-            ->onlyMethods(['isVirtual', 'getQuote', 'getAddress', 'getOptionByCode'])
+        $productChildMock = $this->getFakeMock(\Magento\Catalog\Model\Product::class)
+            ->onlyMethods(['isVirtual'])
             ->getMock();
         $isVirtualExpects = $productChildMock->expects((null !== $childBaseRowTotal) ? $this->once() : $this->never());
         $isVirtualExpects->method('isVirtual')->willReturn($childIsVirtual);
@@ -106,8 +106,8 @@ class TablerateTest extends TestCase
         $childGetProduct->method('getProduct')->willReturn($productChildMock);
         $itemChildMock->method('getBaseRowTotal')->willReturn($childBaseRowTotal);
 
-        $productMock = $this->getFakeMock(\TIG\PostNL\Test\Unit\Support\QuoteItem::class)
-            ->onlyMethods(['isVirtual', 'getQuote', 'getAddress', 'getOptionByCode'])
+        $productMock = $this->getFakeMock(\Magento\Catalog\Model\Product::class)
+            ->onlyMethods(['isVirtual'])
             ->getMock();
         $productMock->expects($this->once())->method('isVirtual')->willReturn($isVirtual);
 

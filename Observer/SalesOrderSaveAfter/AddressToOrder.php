@@ -102,12 +102,7 @@ class AddressToOrder implements ObserverInterface
         }
 
         if ($quotePgAddress->getId() && $this->shouldAdd($order, $postnlOrder)) {
-            $quote = $this->quoteRepository->get($order->getQuoteId());
-            $quotePgAddress->setQuote($quote);
-
-            /** @var Order\Address $orderPgAddress */
-            $orderPgAddress = $this->quoteAddressToOrderAddress->convert($quotePgAddress);
-            $pgAddress      = $this->createOrderAddress($orderPgAddress, $order);
+            $pgAddress = $this->convertQuoteAddress($quotePgAddress, $order);
             $order->addAddress($pgAddress);
         }
 
@@ -115,6 +110,14 @@ class AddressToOrder implements ObserverInterface
             $postnlOrder->setData('pg_order_address_id', $pgAddress->getId());
             $this->orderRepository->save($postnlOrder);
         }
+    }
+
+    private function convertQuoteAddress($quotePgAddress, $order)
+    {
+        $quote = $this->quoteRepository->get($order->getQuoteId());
+        $quotePgAddress->setQuote($quote);
+        $orderPgAddress = $this->quoteAddressToOrderAddress->convert($quotePgAddress);
+        return $this->createOrderAddress($orderPgAddress, $order);
     }
 
     /**
@@ -125,15 +128,7 @@ class AddressToOrder implements ObserverInterface
      */
     private function shouldAdd($order, $postnlOrder)
     {
-        if (!$this->isPostNLShipment($order)) {
-            return false;
-        }
-
-        if ($this->addressAlreadyAdded($order, $postnlOrder)) {
-            return false;
-        }
-
-        return true;
+        return $this->isPostNLShipment($order) && !$this->addressAlreadyAdded($order, $postnlOrder);
     }
 
     /**
@@ -148,11 +143,7 @@ class AddressToOrder implements ObserverInterface
             return false;
         }
 
-        if ($order->getAddressById($postnlOrder->getPgOrderAddressId())) {
-            return true;
-        }
-
-        return false;
+        return (bool) $order->getAddressById($postnlOrder->getPgOrderAddressId());
     }
 
     /**

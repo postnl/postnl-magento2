@@ -48,7 +48,7 @@ class FactoryTest extends TestCase
 
     public function testResetIsNotCalledWhenItDoesNotExists()
     {
-        $validatorInstance = $this->getMock(\TIG\PostNL\Test\Unit\Support\ResettableValidator::class);
+        $validatorInstance = $this->getMock(Validation\ContractInterface::class);
         $validatorInstance->expects($this->never())->method($this->anything());
 
         /** @var Validation\Factory $instance */

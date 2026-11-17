@@ -99,6 +99,7 @@ class LabelAndPackingslipOptionsTest extends AbstractConfigurationTest
         $orderMock->expects($this->once())->method('getIncrementId')->willReturn($orderId);
 
         $shipmentMock = $this->getMockBuilder(ShipmentInterface::class)
+            ->disableOriginalConstructor()
             ->onlyMethods(['getOrder', 'getIncrementId'])
             ->getMock();
         $shipmentMock->expects($this->once())->method('getOrder')->willReturn($orderMock);

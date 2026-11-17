@@ -69,6 +69,11 @@ class Rest
         $this->addHeaders();
         $this->addParameters($endpoint);
 
+        return $this->sendRequest($endpoint);
+    }
+
+    private function sendRequest(RestInterface $endpoint)
+    {
         $responseBody = null;
         try {
             $responseBody = $this->httpClient->send();
@@ -93,7 +98,7 @@ class Rest
         if (is_string($result)) {
             try {
                 $result = \json_decode($result, true, 50, JSON_THROW_ON_ERROR);
-            } catch (\JsonException $e) {
+            } catch (\JsonException $exception) {
                 $result = [
                     'status' => 'error',
                     'error'  => __('Unable to extract API response.')
