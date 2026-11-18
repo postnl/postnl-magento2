@@ -5,7 +5,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use Magento\Store\Model\ScopeInterface;
 
-class ShippingOptionsTest extends AbstractConfigurationTest
+class ShippingOptionsTest extends AbstractConfiguration
 {
     protected $instanceClass = ShippingOptions::class;
 
@@ -13,6 +13,7 @@ class ShippingOptionsTest extends AbstractConfigurationTest
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'enabledAndDisabled')]
     public function testIsShippingoptionsActive($value)
     {
         $instance = $this->getInstance();
@@ -20,7 +21,7 @@ class ShippingOptionsTest extends AbstractConfigurationTest
         $this->assertEquals($value, $instance->isShippingoptionsActive());
     }
 
-    public function stockOptions()
+    public static function stockOptions()
     {
         return [
             ['backordered'],
@@ -32,6 +33,7 @@ class ShippingOptionsTest extends AbstractConfigurationTest
      * @dataProvider stockOptions
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('stockOptions')]
     public function testGetShippingStockoptions($value)
     {
         $instance = $this->getInstance();
@@ -43,6 +45,7 @@ class ShippingOptionsTest extends AbstractConfigurationTest
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'enabledAndDisabled')]
     public function testIsDeliverydaysActive($value)
     {
         $instance = $this->getInstance();
@@ -50,7 +53,7 @@ class ShippingOptionsTest extends AbstractConfigurationTest
         $this->assertEquals($value, $instance->isDeliverydaysActive());
     }
 
-    public function deliverydaysProvider()
+    public static function deliverydaysProvider()
     {
         return [
             'deliverydays not active' => [false, '5'],
@@ -63,6 +66,7 @@ class ShippingOptionsTest extends AbstractConfigurationTest
      * @param $deliveryDaysActive
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('deliverydaysProvider')]
     public function testGetMaxAmountOfDeliverydays($deliveryDaysActive, $expected)
     {
         $instance = $this->getInstance();
@@ -93,6 +97,7 @@ class ShippingOptionsTest extends AbstractConfigurationTest
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'enabledAndDisabled')]
     public function testIsPakjegemakActive($value)
     {
         $instance = $this->getInstance();
@@ -100,7 +105,7 @@ class ShippingOptionsTest extends AbstractConfigurationTest
         $this->assertEquals($value, $instance->isPakjegemakActive());
     }
 
-    public function feeProvider()
+    public static function feeProvider()
     {
         $values = [
             '1',
@@ -119,6 +124,7 @@ class ShippingOptionsTest extends AbstractConfigurationTest
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'enabledAndDisabled')]
     public function testIsEveningDeliveryActive($value)
     {
         $instance = $this->getInstance();
@@ -131,6 +137,7 @@ class ShippingOptionsTest extends AbstractConfigurationTest
      * @param $isEveningActive
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('feeProvider')]
     public function testGetEveningDeliveryFee($isEveningActive, $expected)
     {
         $instance = $this->getInstance();
@@ -161,6 +168,7 @@ class ShippingOptionsTest extends AbstractConfigurationTest
      *
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'enabledAndDisabled')]
     public function testIsExtraAtHomeActive($value)
     {
         $instance = $this->getInstance();
@@ -175,6 +183,7 @@ class ShippingOptionsTest extends AbstractConfigurationTest
      *
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'enabledAndDisabled')]
     public function testIsIDCheckActive($value)
     {
         $instance = $this->getInstance();
@@ -208,6 +217,7 @@ class ShippingOptionsTest extends AbstractConfigurationTest
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
      * @param $shippingActive
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'enabledAndDisabled')]
     public function testIsGuaranteedDeliveryActive($value)
     {
         $instance = $this->getInstance();

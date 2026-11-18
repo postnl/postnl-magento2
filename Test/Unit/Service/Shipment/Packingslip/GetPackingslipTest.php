@@ -25,16 +25,17 @@ class GetPackingslipTest extends TestCase
     public function testGetWillReturnPdf()
     {
         $shipmentRepoMock = $this->getFakeMock(ShipmentRepositoryInterface::class)
-            ->setMethods(['getByShipmentId', 'getShipment'])
-            ->getMockForAbstractClass();
-        $shipmentRepoMock->expects($this->once())->method('getByShipmentId')->willReturnSelf();
-        $shipmentRepoMock->expects($this->once())->method('getShipment')->willReturnSelf();
+            ->getMock();
+        $shipment = $this->getMock(\TIG\PostNL\Model\Shipment::class);
+        $salesShipment = $this->getMock(\Magento\Sales\Model\Order\Shipment::class);
+        $shipment->method('getShipment')->willReturn($salesShipment);
+        $shipmentRepoMock->expects($this->once())->method('getByShipmentId')->willReturn($shipment);
 
-        $pdfShipmentMock = $this->getFakeMock(PdfShipment::class)->disableOriginalConstructor()->setMethods(['create'])->getMock();
-        $pdfShipmentMock->expects($this->once())->method('create')->with($shipmentRepoMock)->willReturn('packingslip pdf');
+        $pdfShipmentMock = $this->getFakeMock(PdfShipment::class)->disableOriginalConstructor()->onlyMethods(['create'])->getMock();
+        $pdfShipmentMock->expects($this->once())->method('create')->with($salesShipment)->willReturn('packingslip pdf');
 
-        $barcodeMergeMock = $this->getFakeMock(Barcode::class)->disableOriginalConstructor()->setMethods(['add'])->getMock();
-        $barcodeMergeMock->expects($this->once())->method('add')->with('packingslip pdf', $shipmentRepoMock)->willReturn('packingslip pdf with barcode');
+        $barcodeMergeMock = $this->getFakeMock(Barcode::class)->disableOriginalConstructor()->onlyMethods(['add'])->getMock();
+        $barcodeMergeMock->expects($this->once())->method('add')->with('packingslip pdf', $salesShipment)->willReturn('packingslip pdf with barcode');
 
         $instance = $this->getInstance([
             'shipmentRepository' => $shipmentRepoMock,
@@ -48,7 +49,7 @@ class GetPackingslipTest extends TestCase
     /**
      * @return array
      */
-    public function mergeWithLabelsProvider()
+    public static function mergeWithLabelsProvider()
     {
         return [
             'merge together' => [
@@ -72,15 +73,16 @@ class GetPackingslipTest extends TestCase
      *
      * @dataProvider mergeWithLabelsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('mergeWithLabelsProvider')]
     public function testMergeWithLabels($showLabelOption, $expected)
     {
         $labelPackinslipOptionsMock = $this->getFakeMock(LabelAndPackingslipOptions::class)
-            ->setMethods(['getShowLabel'])
+            ->onlyMethods(['getShowLabel'])
             ->getMock();
         $labelPackinslipOptionsMock->expects($this->once())->method('getShowLabel')->willReturn($showLabelOption);
 
         $mergeWithLabelsMock = $this->getFakeMock(MergeWithLabels::class)
-            ->setMethods(['merge'])
+            ->onlyMethods(['merge'])
             ->getMock();
         $mergeWithLabelsMock->method('merge')->willReturn($expected);
 

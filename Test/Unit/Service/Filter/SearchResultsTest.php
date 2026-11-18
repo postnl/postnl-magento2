@@ -17,40 +17,14 @@ class SearchResultsTest extends TestCase
 
     public function testGetSearchResults()
     {
-        $searchResults = $this->getSearchResults();
+        $criteria = $this->getSearchCriteria();
+        $results = $this->getMock(\Magento\Framework\Api\SearchResultsInterface::class);
+        $results->expects($this->once())->method('setSearchCriteria')->with($criteria);
+        $factory = $this->getMock(SearchResultsInterfaceFactory::class);
+        $factory->expects($this->once())->method('create')->willReturn($results);
+        $instance = $this->getInstance(['searchResultsFactory' => $factory]);
 
-        $instance = $this->getInstance([
-            'searchResultsFactory'  => $searchResults
-        ]);
-
-        $result = $this->invokeArgs('getSearchResults', [$this->getSearchCriteria()], $instance);
-
-        $this->assertEquals($searchResults, $result);
-    }
-
-    /**
-     * @param null $searchCriteria
-     *
-     * @return \PHPUnit\Framework\MockObject\MockBuilder|\PHPUnit\Framework\MockObject\MockObject
-     */
-    private function getSearchResults($searchCriteria = null)
-    {
-        $searchResults = $this->getFakeMock(SearchResultsInterfaceFactory::class);
-        $searchResults->setMethods(['create','setSearchCriteria', 'setTotalCount', 'setItems', 'getTotalCount', 'getItems']);
-        $searchResults = $searchResults->getMock();
-
-        $expectsCreate = $searchResults->expects($this->once());
-        $expectsCreate->method('create');
-        $expectsCreate->willReturnSelf();
-
-        $searchCriteria = $searchCriteria == null ? $this->getSearchCriteria() : $searchCriteria;
-
-        $expectsSetSearchCriteria = $searchResults->expects($this->once());
-        $expectsSetSearchCriteria->method('setSearchCriteria');
-        $expectsSetSearchCriteria->with($searchCriteria);
-        $expectsSetSearchCriteria->willReturnSelf();
-
-        return $searchResults;
+        $this->assertSame($results, $this->invokeArgs('getSearchResults', [$criteria], $instance));
     }
 
     /**

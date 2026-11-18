@@ -13,7 +13,7 @@ class AccountSettingsTest extends TestCase
     /**
      * @return array
      */
-    public function fieldProvider()
+    public static function fieldProvider()
     {
         return [
             'inactive' => [
@@ -36,6 +36,7 @@ class AccountSettingsTest extends TestCase
      * @param $configValue
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('fieldProvider')]
     public function testGetModusClass($configValue, $expected)
     {
         $modusMock = $this->getFakeMock(AccountConfiguration::class, true);

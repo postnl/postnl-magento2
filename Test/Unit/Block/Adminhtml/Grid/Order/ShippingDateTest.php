@@ -18,11 +18,11 @@ class ShippingDateTest extends TestCase
     public function getInstance(array $args = [])
     {
         if (!isset($args['context'])) {
-            $contextMock = $this->getMockForAbstractClass(ContextInterface::class, [], '', false, true, true, []);
+            $contextMock = $this->getMock(ContextInterface::class);
             $processor   = $this->getMockBuilder('Magento\Framework\View\Element\UiComponent\Processor')
                 ->disableOriginalConstructor()
                 ->getMock();
-            $contextMock->expects($this->any())->method('getProcessor')->willReturn($processor);
+            $contextMock->method('getProcessor')->willReturn($processor);
 
             $args['context'] = $contextMock;
         }
@@ -59,7 +59,7 @@ class ShippingDateTest extends TestCase
         $this->invoke('prepareData', $instance);
     }
 
-    public function getCellContentsProvider()
+    public static function getCellContentsProvider()
     {
         return [
             [1, 'model 1', 'model 1<br>'],
@@ -75,11 +75,12 @@ class ShippingDateTest extends TestCase
      *
      * @dataProvider getCellContentsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getCellContentsProvider')]
     public function testGetCellContents($itemId, $input, $expected)
     {
         $shippingDateRenderer = $this
             ->getFakeMock(\TIG\PostNL\Block\Adminhtml\Renderer\ShippingDate::class)
-            ->setMethods(['render'])
+            ->onlyMethods(['render'])
             ->getMock();
 
         $renderMethod = $shippingDateRenderer->method('render');
@@ -124,7 +125,7 @@ class ShippingDateTest extends TestCase
 
     private function getModelMock($orderId)
     {
-        $shipment = $this->getFakeMock(\TIG\PostNL\Model\Shipment::class)->setMethods(['getOrderId'])->getMock();
+        $shipment = $this->getFakeMock(\TIG\PostNL\Model\Shipment::class)->onlyMethods(['getOrderId'])->getMock();
 
         $getOrderIdExpects = $shipment->expects($this->once());
         $getOrderIdExpects->method('getOrderId');

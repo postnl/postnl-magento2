@@ -19,11 +19,11 @@ class ShippingDateTest extends TestCase
     public function getInstance(array $args = [])
     {
         if (!isset($args['context'])) {
-            $contextMock = $this->getMockForAbstractClass(ContextInterface::class, [], '', false, true, true, []);
+            $contextMock = $this->getMock(ContextInterface::class);
             $processor   = $this->getMockBuilder('Magento\Framework\View\Element\UiComponent\Processor')
                 ->disableOriginalConstructor()
                 ->getMock();
-            $contextMock->expects($this->any())->method('getProcessor')->willReturn($processor);
+            $contextMock->method('getProcessor')->willReturn($processor);
 
             $args['context'] = $contextMock;
         }

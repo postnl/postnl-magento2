@@ -5,14 +5,14 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Source\General\Country;
 
-class AddressConfigurationTest extends AbstractConfigurationTest
+class AddressConfigurationTest extends AbstractConfiguration
 {
     public $instanceClass = AddressConfiguration::class;
 
     /**
      * @return array
      */
-    public function countryProvider()
+    public static function countryProvider()
     {
         return [
             'NL' => [Country::COUNTRY_NL],
@@ -25,6 +25,7 @@ class AddressConfigurationTest extends AbstractConfigurationTest
      *
      * @param $country
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('countryProvider')]
     public function testShouldReturnCountry($country)
     {
         $instance = $this->getInstance();
@@ -35,6 +36,9 @@ class AddressConfigurationTest extends AbstractConfigurationTest
 
     public function testGetAddressInfoContainsCountry()
     {
-        $this->assertArrayHasKey('country', $this->getInstance()->getAddressInfo());
+        $instance = $this->getInstance();
+        $this->scopeConfigMock->expects($this->atLeastOnce())->method('getValue');
+
+        $this->assertArrayHasKey('country', $instance->getAddressInfo());
     }
 }

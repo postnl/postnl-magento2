@@ -4,11 +4,11 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\Provider\ProductOptions;
 
-class ProductOptionsTest extends AbstractConfigurationTest
+class ProductOptionsTest extends AbstractConfiguration
 {
     protected $instanceClass = ProductOptions::class;
 
-    public function defaultProductOptionsProvider()
+    public static function defaultProductOptionsProvider()
     {
         return [
             'Standard shipment' => ['3085'],
@@ -20,6 +20,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
      * @dataProvider defaultProductOptionsProvider
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('defaultProductOptionsProvider')]
     public function testGetDefaultProductOption($value)
     {
         $instance = $this->getInstance();
@@ -30,7 +31,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
     /**
      * @return array
      */
-    public function getUseAlternativeDefaultProvider()
+    public static function getUseAlternativeDefaultProvider()
     {
         return [
             'use alternative default option' => [1],
@@ -43,6 +44,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
      *
      * @dataProvider getUseAlternativeDefaultProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getUseAlternativeDefaultProvider')]
     public function testGetUseAlternativeDefault($value)
     {
         $instance = $this->getInstance();
@@ -50,7 +52,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
         $this->assertEquals($value, $instance->getUseAlternativeDefault());
     }
 
-    public function EveningOptionsProvider()
+    public static function EveningOptionsProvider()
     {
         return [
             'Delivery to stated address only' => ['3385'],
@@ -62,6 +64,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
      * @dataProvider EveningOptionsProvider
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('EveningOptionsProvider')]
     public function testGetDefaultEveningProductOption($value)
     {
         $instance = $this->getInstance();
@@ -72,7 +75,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
     /**
      * @return array
      */
-    public function getDefaultExtraAtHomeProductOptionProvider()
+    public static function getDefaultExtraAtHomeProductOptionProvider()
     {
         return [
             'Extra@Home Top service 2 person delivery NL'     => ['3628'],
@@ -91,6 +94,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
      *
      * @dataProvider getDefaultExtraAtHomeProductOptionProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getDefaultExtraAtHomeProductOptionProvider')]
     public function testGetDefaultExtraAtHomeProductOption($value)
     {
         $instance = $this->getInstance();
@@ -100,7 +104,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
         $this->assertEquals($value, $result);
     }
 
-    public function pakjegemakOptionsProvider()
+    public static function pakjegemakOptionsProvider()
     {
         return [
             'Post Office + extra cover' => ['3534'],
@@ -122,6 +126,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
      * @dataProvider pakjegemakOptionsProvider
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('pakjegemakOptionsProvider')]
     public function testGetDefaultPakjeGemakProductOption($value)
     {
         $instance = $this->getInstance();
@@ -132,9 +137,9 @@ class ProductOptionsTest extends AbstractConfigurationTest
     public function testGetDefaultLetterBoxPackageProductOption()
     {
         $value                    = '2928';
-        $optionsConfigurationMock = $this->getFakeMock(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
-        $optionsConfigurationMock->setMethods(null);
-        $instance = $this->getInstance(['productOptions' => $optionsConfigurationMock->getMock()]);
+        $optionsConfiguration = $this->getObject(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
+        $instance = $this->getInstance(['productOptions' => $optionsConfiguration]);
+        $this->setXpath(ProductOptions::XPATH_DEFAULT_LETTERBOX_PACKAGE_PRODUCT, '');
         $this->assertEquals($value, $instance->getDefaultLetterboxPackageProductOption());
     }
 
@@ -142,6 +147,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
      * @dataProvider pakjegemakOptionsProvider
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('pakjegemakOptionsProvider')]
     public function testGetDefaultPakjegemakBeProductOption($value)
     {
         $instance = $this->getInstance();
@@ -161,7 +167,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
     /**
      * @return array
      */
-    public function getDefaultBeDomesticProductOptionProvider()
+    public static function getDefaultBeDomesticProductOptionProvider()
     {
         return [
             'BE Standard, stated address only' => ['4960'],
@@ -177,6 +183,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
      *
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getDefaultBeDomesticProductOptionProvider')]
     public function testGetDefaultBeDomesticProductOption($value) {
         $instance = $this->getInstance();
         $this->setXpath(ProductOptions::XPATH_DEFAULT_BE_DOMESTIC_OPTION, $value);
@@ -186,7 +193,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
     /**
      * @return array
      */
-    public function getDefaultPakjeGemakBeDomesticProductOptionProvider()
+    public static function getDefaultPakjeGemakBeDomesticProductOptionProvider()
     {
         return [
             'BE Post Offce + Extra Cover' => ['4878'],
@@ -199,6 +206,7 @@ class ProductOptionsTest extends AbstractConfigurationTest
      *
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getDefaultPakjeGemakBeDomesticProductOptionProvider')]
     public function testGetDefaultPakjeGemakBeDomesticProductOption($value) {
         $instance = $this->getInstance();
         $this->setXpath(ProductOptions::XPATH_DEFAULT_PAKJEGEMAK_BE_DOMESTIC_PRODUCT_OPTION, $value);

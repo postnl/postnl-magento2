@@ -9,7 +9,7 @@ class TypeTest extends TestCase
 {
     public $instanceClass = Type::class;
 
-    public function returnsTheRightTypeProvider()
+    public static function returnsTheRightTypeProvider()
     {
         return [
             ['PG', 'NL', 'PG'],
@@ -32,6 +32,7 @@ class TypeTest extends TestCase
      *
      * @throws \Exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('returnsTheRightTypeProvider')]
     public function testReturnsTheRightType($type, $countryId, $expected)
     {
         $shipmentMock = $this->getFakeMock(\Magento\Sales\Model\Order\Shipment::class, true);
@@ -39,8 +40,7 @@ class TypeTest extends TestCase
         $address = $this->getObject(\Magento\Sales\Model\Order\Address::class);
         $address->setCountryId($countryId);
 
-        $shippingAdddressExpects = $shipmentMock->expects($this->any());
-        $shippingAdddressExpects->method('getShippingAddress');
+        $shippingAdddressExpects = $shipmentMock->method('getShippingAddress');
         $shippingAdddressExpects->willReturn($address);
 
         $shipmentInterfaceMock = $this->getMock(\TIG\PostNL\Api\Data\ShipmentInterface::class);

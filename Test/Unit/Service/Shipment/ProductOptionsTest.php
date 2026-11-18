@@ -10,7 +10,7 @@ class ProductOptionsTest extends TestCase
 {
     public $instanceClass = ProductOptions::class;
 
-    public function returnsTheCorrectDataProvider()
+    public static function returnsTheCorrectDataProvider()
     {
         return [
             ['pge', false, [0 => ['Characteristic' => '118', 'Option' => '002']]],
@@ -28,6 +28,7 @@ class ProductOptionsTest extends TestCase
      *
      * @throws \Exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('returnsTheCorrectDataProvider')]
     public function testReturnsTheCorrectData($type, $isIdCheck, $expected)
     {
         /** @var ShipmentInterface|\PHPUnit\Framework\MockObject\MockObject$shipmentMock */

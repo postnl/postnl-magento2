@@ -9,7 +9,7 @@ class PostcodecheckHandlerTest extends TestCase
 {
     protected $instanceClass = PostcodecheckHandler::class;
 
-    public function requestDataProvider()
+    public static function requestDataProvider()
     {
         return [
             'Correct Request data' => [
@@ -28,6 +28,7 @@ class PostcodecheckHandlerTest extends TestCase
      * @param $data
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('requestDataProvider')]
     public function testConvertRequest($data, $expected)
     {
         $instance = $this->getInstance();
@@ -35,7 +36,7 @@ class PostcodecheckHandlerTest extends TestCase
         $this->assertSame($expected, $instance->convertRequest($data));
     }
 
-    public function responseDataProvider()
+    public static function responseDataProvider()
     {
         return [
             'Correct Response Data' => [
@@ -74,6 +75,7 @@ class PostcodecheckHandlerTest extends TestCase
      * @param $data
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('responseDataProvider')]
     public function testConvertResponse($data, $expected)
     {
         $instance = $this->getInstance();

@@ -88,14 +88,14 @@ class RestTest extends TestCase
         $zendClientUri->method('setUri')->with($uri.'v1/postalcode/');
 
         $apiKey = '123243235235';
-        $accountApiKey = $this->accountConfiguration->expects($this->any());
-        $accountApiKey->method('getApiKey')->willReturn($apiKey);
+
+        $this->accountConfiguration->method('getApiKey')->willReturn($apiKey);
 
         $zendClientHeaders = $this->httpClient->expects($this->once());
-        $zendClientHeaders->method('setHeaders')->with(['apikey: ' .$apiKey, 'SourceSystem: 66', 'Content-Type: application/json']);
+        $zendClientHeaders->method('setHeaders')->with(['apikey: ' .$apiKey, 'newkey:', 'SourceSystem: 66', 'Content-Type: application/json']);
 
         $requestData = ['postcode' => '1014BA', 'housenumber' => '37'];
-        $this->endpoint->expects($this->any())->method('getRequestData')->willReturn($requestData);
+        $this->endpoint->method('getRequestData')->willReturn($requestData);
 
         $endpointMethod = $this->endpoint->expects($this->exactly(3));
         $endpointMethod->method('getMethod')->willReturn(\Laminas\Http\Request::METHOD_GET);
@@ -115,4 +115,19 @@ class RestTest extends TestCase
 
         $this->getInstance()->getRequest($this->endpoint);
     }
+
+    public function testTransportFailureReturnsErrorWithoutLoggingMissingResponse()
+    {
+        $this->accountConfiguration->method('getApiKey')->willReturn('test-key');
+        $this->httpClient->method('send')->willThrowException(
+            new \Laminas\Http\Client\Exception\RuntimeException('Connection failed')
+        );
+        $log = $this->getMock(\TIG\PostNL\Webservices\Api\RestLog::class);
+        $log->expects($this->never())->method('request');
+
+        $result = $this->getInstance(['log' => $log])->getRequest($this->endpoint);
+
+        $this->assertSame('error', $result['status']);
+    }
+
 }

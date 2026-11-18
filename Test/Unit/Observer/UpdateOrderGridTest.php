@@ -27,7 +27,6 @@ class UpdateOrderGridTest extends TestCase
             'orderRepositoryInterface' => $orderRepository,
         ]);
 
-
         /** @var Observer $observer */
         $observer = $this->getObject(Observer::class);
         $observer->setData('data_object', $shipment);

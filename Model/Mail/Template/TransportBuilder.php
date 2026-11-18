@@ -45,7 +45,7 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
     }
 
     /**
-     * @param $content
+     * @param \Laminas\Mime\Part $mimePart
      * @param string $type
      * @param string $disposition
      * @param string $encoding
@@ -53,14 +53,13 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
      *
      * @return \Laminas\Mime\Part
      */
-    private function createMimePart(
-        $content,
+    private function configureMimePart(
+        $mimePart,
         string $type        = 'application/octet-stream',
         string $disposition = 'attachment',
         string $encoding    = 'base64',
         $filename           = null
     ) {
-        $mimePart = new \Laminas\Mime\Part($content);
         $mimePart->setType($type);
         $mimePart->setDisposition($disposition);
         $mimePart->setEncoding($encoding);
@@ -77,48 +76,55 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
      */
     private function attachFile(MessageInterface $message): void
     {
-        // Magento 2.4.8+ support - using Symfony classes, laminas removed as deprecated
         if (method_exists($message, 'getSymfonyMessage')) {
-            /** @var \Symfony\Component\Mime\Message $symfonyMessage */
-            $symfonyMessage = $message->getSymfonyMessage();
-            $part = $symfonyMessage->getBody();
-            $attachments = [];
-            foreach ($this->parts as $partData) {
-                $attachments[] = new \Symfony\Component\Mime\Part\DataPart($partData['body'], $partData['name'], $partData['mime']);
-            }
-            $part = new \Symfony\Component\Mime\Part\Multipart\MixedPart($part, ...$attachments);
-            $symfonyMessage->setBody($part);
+            $this->attachSymfonyFiles($message->getSymfonyMessage());
             return;
         }
 
-        // Magento 2.4.8- support - laminas messages
-        if (class_exists('Laminas\Mime\Message')) {
-            $mimeMessage = $message->getBody();
-            if (!$mimeMessage instanceof \Laminas\Mime\Message) {
-                $body = $mimeMessage;
-                $mimeMessage = new \Laminas\Mime\Message();
+        if (class_exists('Laminas\Mime\Message') && class_exists('Laminas\Mime\Part')) {
+            $this->attachLaminasFiles($message, 'Laminas\Mime\Message', 'Laminas\Mime\Part');
+        }
+    }
 
-                if ($body) {
-                    $mimePart = $this->createMimePart(
-                        (string) $body,
-                        'text/plain',
-                        'inline'
-                    );
-                    $mimeMessage->setParts([$mimePart]);
-                }
-            }
-            foreach ($this->parts as $partData) {
-                $part = $this->createMimePart(
-                    $partData['body'],
-                    $partData['mime'],
-                    'attachment',
-                    'base64',
-                    $partData['name']
-                );
-                $mimeMessage->addPart($part);
-            }
-            $this->message->setBody($mimeMessage);
+    private function attachSymfonyFiles(\Symfony\Component\Mime\Message $symfonyMessage): void
+    {
+        $part = $symfonyMessage->getBody();
+        $attachments = [];
+        foreach ($this->parts as $partData) {
+            $attachments[] = new \Symfony\Component\Mime\Part\DataPart($partData['body'], $partData['name'], $partData['mime']);
+        }
+        $part = new \Symfony\Component\Mime\Part\Multipart\MixedPart($part, ...$attachments);
+        $symfonyMessage->setBody($part);
+    }
+
+    private function attachLaminasFiles(MessageInterface $message, string $messageClass, string $partClass): void
+    {
+        $mimeMessage = $this->getLaminasBody($message, $messageClass, $partClass);
+        foreach ($this->parts as $partData) {
+            $part = $this->configureMimePart(
+                new $partClass($partData['body']),
+                $partData['mime'],
+                'attachment',
+                'base64',
+                $partData['name']
+            );
+            $mimeMessage->addPart($part);
+        }
+        $this->message->setBody($mimeMessage);
+    }
+
+    private function getLaminasBody(MessageInterface $message, string $messageClass, string $partClass)
+    {
+        $body = $message->getBody();
+        if ($body instanceof $messageClass) {
+            return $body;
         }
 
+        $mimeMessage = new $messageClass();
+        if ($body) {
+            $mimePart = $this->configureMimePart(new $partClass((string) $body), 'text/plain', 'inline');
+            $mimeMessage->setParts([$mimePart]);
+        }
+        return $mimeMessage;
     }
 }

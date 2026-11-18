@@ -37,7 +37,19 @@ class PatchMatrixRateTable implements SchemaPatchInterface
     {
         $this->moduleDataSetup->startSetup();
 
-        $this->moduleDataSetup->getConnection()->changeColumn(
+        $this->changeDestinationCountry();
+        $this->changeDestinationZipCode();
+        $this->changeParcelType();
+
+        $this->moduleDataSetup->endSetup();
+
+        return $this;
+    }
+
+    private function changeDestinationCountry(): void
+    {
+        $connection = $this->moduleDataSetup->getConnection();
+        $connection->changeColumn(
             $this->moduleDataSetup->getTable(self::TABLE_NAME),
             Matrixrate::FIELD_DESTINY_COUNTRY_ID,
             Matrixrate::FIELD_DESTINY_COUNTRY_ID,
@@ -49,8 +61,12 @@ class PatchMatrixRateTable implements SchemaPatchInterface
                 'length' => 4,
             ]
         );
+    }
 
-        $this->moduleDataSetup->getConnection()->changeColumn(
+    private function changeDestinationZipCode(): void
+    {
+        $connection = $this->moduleDataSetup->getConnection();
+        $connection->changeColumn(
             $this->moduleDataSetup->getTable(self::TABLE_NAME),
             Matrixrate::FIELD_DESTINY_ZIP_CODE,
             Matrixrate::FIELD_DESTINY_ZIP_CODE,
@@ -62,8 +78,12 @@ class PatchMatrixRateTable implements SchemaPatchInterface
                 'length' => 50,
             ]
         );
+    }
 
-        $this->moduleDataSetup->getConnection()->changeColumn(
+    private function changeParcelType(): void
+    {
+        $connection = $this->moduleDataSetup->getConnection();
+        $connection->changeColumn(
             $this->moduleDataSetup->getTable(self::TABLE_NAME),
             Matrixrate::FIELD_PARCEL_TYPE,
             Matrixrate::FIELD_PARCEL_TYPE,
@@ -75,7 +95,5 @@ class PatchMatrixRateTable implements SchemaPatchInterface
                 'length' => 50,
             ]
         );
-
-        $this->moduleDataSetup->endSetup();
     }
 }

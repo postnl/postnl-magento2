@@ -31,6 +31,6 @@ $shipmentItem->setQty($orderItem->getQtyToShip());
 $shipment->addItem($shipmentItem);
 $shipment->setShipmentStatus(Shipment::STATUS_NEW);
 
-$shipment->save();
+$objectManager->get(\Magento\Sales\Api\ShipmentRepositoryInterface::class)->save($shipment);
 
 return $shipment;

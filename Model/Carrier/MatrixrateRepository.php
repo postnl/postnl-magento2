@@ -17,6 +17,8 @@ use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\CollectionFactory;
 
 class MatrixrateRepository extends AbstractRepository implements MatrixrateRepositoryInterface
 {
+    private \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate $entityResource;
+
     /**
      * @var MatrixrateFactory
      */
@@ -34,8 +36,11 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         MatrixrateFactory $matrixrateFactory,
-        CollectionFactory $collectionFactory
+        CollectionFactory $collectionFactory,
+        \TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate $entityResource
     ) {
+        $this->entityResource = $entityResource;
+
         parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
 
         $this->matrixrateFactory = $matrixrateFactory;
@@ -53,7 +58,7 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
     public function save(MatrixrateInterface $matrixrate)
     {
         try {
-            $matrixrate->save();
+            $this->entityResource->save($matrixrate);
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
             throw new CouldNotSaveException(__($exception->getMessage()));
@@ -73,7 +78,7 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
     public function delete(MatrixrateInterface $matrixrate)
     {
         try {
-            $matrixrate->delete();
+            $this->entityResource->delete($matrixrate);
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
             throw new CouldNotDeleteException(__($exception->getMessage()));
@@ -141,7 +146,7 @@ class MatrixrateRepository extends AbstractRepository implements MatrixrateRepos
     public function getById($identifier)
     {
         $matrixRate = $this->matrixrateFactory->create();
-        $matrixRate->load($identifier);
+        $this->entityResource->load($matrixRate, $identifier);
 
         if (!$matrixRate->getId()) {
             // @codingStandardsIgnoreLine

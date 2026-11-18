@@ -25,7 +25,7 @@ class CreateShipmentTest extends TestCase
     /**
      * @return array
      */
-    public function isValidOrderProvider()
+    public static function isValidOrderProvider()
     {
         return [
             'has shipments' => [
@@ -63,24 +63,25 @@ class CreateShipmentTest extends TestCase
      *
      * @dataProvider isValidOrderProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('isValidOrderProvider')]
     public function testIsValidOrder($size, $canShip, $shippingMethod, $expected)
     {
         $collectionMock = $this->getMockBuilder(Collection::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getSize'])
+            ->onlyMethods(['getSize'])
             ->getMock();
         $collectionMock->expects($this->once())->method('getSize')->willReturn($size);
 
         $mockHelper = $this->getMockBuilder(Helper::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isPostNLOrder'])
+            ->onlyMethods(['isPostNLOrder'])
             ->getMock();
         $isPostNLShipment = $shippingMethod == 'tig_postnl_regular';
-        $mockHelper->expects($this->any())->method('isPostNLOrder')->willReturn($isPostNLShipment);
+        $mockHelper->method('isPostNLOrder')->willReturn($isPostNLShipment);
 
         $orderMock = $this->getMockBuilder(Order::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getShipmentsCollection', 'canShip', 'getShippingMethod'])
+            ->onlyMethods(['getShipmentsCollection', 'canShip', 'getShippingMethod'])
             ->getMock();
         $orderMock->expects($this->once())->method('getShipmentsCollection')->willReturn($collectionMock);
         $orderMock->method('canShip')->willReturn($canShip);
@@ -98,7 +99,7 @@ class CreateShipmentTest extends TestCase
     /**
      * @return array
      */
-    public function orderHasShipmentProvider()
+    public static function orderHasShipmentProvider()
     {
         return [
             'no shipment' => [0, false],
@@ -113,17 +114,18 @@ class CreateShipmentTest extends TestCase
      *
      * @dataProvider orderHasShipmentProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('orderHasShipmentProvider')]
     public function testOrderHasShipment($size, $expected)
     {
         $collectionMock = $this->getMockBuilder(Collection::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getSize'])
+            ->onlyMethods(['getSize'])
             ->getMock();
         $collectionMock->expects($this->once())->method('getSize')->willReturn($size);
 
         $orderMock = $this->getMockBuilder(Order::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getShipmentsCollection'])
+            ->onlyMethods(['getShipmentsCollection'])
             ->getMock();
         $orderMock->expects($this->once())->method('getShipmentsCollection')->willReturn($collectionMock);
 
@@ -137,7 +139,7 @@ class CreateShipmentTest extends TestCase
     /**
      * @return array
      */
-    public function handleExceptionForPossibleSoapErrorsProvider()
+    public static function handleExceptionForPossibleSoapErrorsProvider()
     {
         return [
             'no errors, no message' => [
@@ -180,12 +182,13 @@ class CreateShipmentTest extends TestCase
      *
      * @dataProvider handleExceptionForPossibleSoapErrorsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('handleExceptionForPossibleSoapErrorsProvider')]
     public function testHandleExceptionForPossibleSoapErrors($errors, $message, $expected)
     {
-        $exceptionMockBuilder = $this->getMockBuilder(\Exception::class)->setConstructorArgs([(string)$message]);
+        $exceptionMockBuilder = $this->getMockBuilder($errors === null ? \Exception::class : \TIG\PostNL\Test\Unit\Support\ExceptionWithErrors::class)->setConstructorArgs([(string)$message]);
 
         if (null !== $errors) {
-            $exceptionMockBuilder->setMethods(['getErrors']);
+            $exceptionMockBuilder->onlyMethods(['getErrors']);
         }
 
         $exceptionMock = $exceptionMockBuilder->getMock();

@@ -15,7 +15,7 @@ class CheckIfQuoteHasOptionTest extends TestCase
     /**
      * @return array
      */
-    public function getDataProvider()
+    public static function getDataProvider()
     {
         return [
             'Extra@Home with quote' => [ProductInfo::OPTION_EXTRAATHOME, true, true],
@@ -30,11 +30,12 @@ class CheckIfQuoteHasOptionTest extends TestCase
      *
      * @dataProvider getDataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getDataProvider')]
     public function testGet($productCode, $hasQuote, $expected)
     {
         $quoteMock = false;
         if ($hasQuote) {
-            $quoteMock = $this->getMock('\Magento\Quote\Model\Quote', [], [], '', false);
+            $quoteMock = $this->getMock('\Magento\Quote\Model\Quote');
         }
 
         $checkoutSession = $this->getFakeMock(CheckoutSession::class)->getMock();
@@ -43,7 +44,7 @@ class CheckIfQuoteHasOptionTest extends TestCase
 
         $itemsToOptions = $this->getFakeMock(ItemsToOption::class)->getMock();
         if ($quoteMock) {
-            $quoteItemMock = $this->getMock('\Magento\Quote\Model\Quote\Item', [], [], '', false);
+            $quoteItemMock = $this->getMock('\Magento\Quote\Model\Quote\Item');
             $quoteMockExcpects = $quoteMock->method('getAllItems');
             $quoteMockExcpects->willReturn($quoteItemMock);
 

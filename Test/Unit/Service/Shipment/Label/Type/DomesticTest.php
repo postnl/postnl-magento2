@@ -15,7 +15,7 @@ class DomesticTest extends TestCase
     /**
      * @return array
      */
-    public function rotateReturnProductProvider()
+    public static function rotateReturnProductProvider()
     {
         return [
             'ProductCode should rotate, is return label' => [4946, true, true],
@@ -34,11 +34,11 @@ class DomesticTest extends TestCase
      *
      * @dataProvider rotateReturnProductProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('rotateReturnProductProvider')]
     public function testRotateReturnProduct($productCode, $isReturnLabel, $expected)
     {
         $labelMock = $this->getFakeMock(ShipmentLabelInterface::class)
-            ->setMethods(['getProductCode', 'getReturnLabel'])
-            ->getMockForAbstractClass();
+            ->getMock();
         $labelMock->expects($this->once())->method('getProductCode')->willReturn($productCode);
         $labelMock->method('getReturnLabel')->willReturn($isReturnLabel);
 

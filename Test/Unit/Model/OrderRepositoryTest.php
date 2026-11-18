@@ -18,17 +18,14 @@ class OrderRepositoryTest extends TestCase
 
     public function testSave()
     {
-        $orderInterface = $this->getFakeMock(Order::class);
-        $orderInterface->setMethods(['getIdentities', 'save']);
-        $orderInterface = $orderInterface->getMock();
+        $model = $this->getMock(\TIG\PostNL\Model\Order::class);
+        $resource = $this->getMock(\TIG\PostNL\Model\ResourceModel\Order::class);
+        $resource->expects($this->once())->method('save')->with($model);
 
-        $saveExpects = $orderInterface->expects($this->once());
-        $saveExpects->method('save');
+        $instance = $this->getInstance(['entityResource' => $resource]);
+        $result = $instance->save($model);
 
-        $instance = $this->getInstance();
-        $result   = $instance->save($orderInterface);
-
-        $this->assertEquals($orderInterface, $result);
+        $this->assertSame($model, $result);
     }
 
     public function testCreate()
@@ -52,72 +49,23 @@ class OrderRepositoryTest extends TestCase
 
     public function testGetById()
     {
-        $orderId = rand(10, 100);
-        $orderFactoryMock = $this->getOrderFactoryMock();
+        $id = 42;
+        $model = $this->getMock(\TIG\PostNL\Model\Order::class);
+        $model->method('getId')->willReturn($id);
+        $factory = $this->getMock(\TIG\PostNL\Model\OrderFactory::class);
+        $factory->expects($this->once())->method('create')->willReturn($model);
+        $resource = $this->getMock(\TIG\PostNL\Model\ResourceModel\Order::class);
+        $resource->expects($this->once())->method('load')->with($model, $id);
 
-        $createExpects = $orderFactoryMock->expects($this->once());
-        $createExpects->method('create');
-        $createExpects->willReturnSelf();
+        $instance = $this->getInstance(['orderFactory' => $factory, 'entityResource' => $resource]);
 
-        $loadExpects = $orderFactoryMock->expects($this->once());
-        $loadExpects->method('load');
-        $loadExpects->willReturnSelf();
-
-        $getIdExpects = $orderFactoryMock->expects($this->once());
-        $getIdExpects->method('getId');
-        $getIdExpects->willReturn($orderId);
-
-        $instance = $this->getInstance(['orderFactory' => $orderFactoryMock]);
-        $result   = $instance->getById($orderId);
-
-        $this->assertEquals($orderFactoryMock, $result);
-    }
-
-    /**
-     * @param bool $isFieldWithValue
-     *
-     * @return array
-     */
-    private function getList($isFieldWithValue = false)
-    {
-        $searchCriteria = $this->getMock(SearchCriteria::class, [], [], '', false);
-
-        $orderCollection = $this->getMockForAbstractClass(
-            AbstractCollection::class,
-            [],
-            '',
-            false
-        );
-
-        $orderCollectionFactory = $this->getFakeMock(CollectionFactory::class)->setMethods(['create'])->getMock();
-        $orderCollectionFactory->expects($this->once())->method('create')->willReturn($orderCollection);
-
-        $searchResultFactory = $this->getFakeMock(SearchResultsInterfaceFactory::class)
-            ->setMethods(['getTotalCount', 'getItems'])
-            ->getMock();
-
-        if ($isFieldWithValue) {
-            $searchResultFactory->expects($this->once())->method('getTotalCount')->willReturn(1);
-            $searchResultFactory->expects($this->once())->method('getItems')->willReturn([$searchResultFactory]);
-        }
-
-        $searchResult = $this->getFakeMock(SearchResults::class)
-            ->setMethods(['getCollectionItems'])
-            ->getMock();
-        $searchResult->expects($this->once())->method('getCollectionItems')->willReturn($searchResultFactory);
-
-        return [
-            'searchResultFactory' => $searchResultFactory,
-            'searchResult'        => $searchResult,
-            'searchCriteria'      => $searchCriteria,
-            'collectionFactory'   => $orderCollectionFactory,
-        ];
+        $this->assertSame($model, $instance->getById($id));
     }
 
     private function getOrderFactoryMock()
     {
         $orderFactoryMock = $this->getFakeMock(OrderFactory::class);
-        $orderFactoryMock->setMethods(['create', 'load', 'getId']);
+        $orderFactoryMock->onlyMethods(['create']);
         $orderFactoryMock = $orderFactoryMock->getMock();
 
         return $orderFactoryMock;

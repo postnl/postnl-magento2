@@ -23,7 +23,7 @@ class ProductTypeTest extends TestCase
 
     public function testTheOptionListContainsExtraAtHome()
     {
-        $shippingOptionsMock = $this->getFakeMock(\TIG\PostNL\Config\Provider\ShippingOptions::class, true);
+        $shippingOptionsMock = $this->createStub(\TIG\PostNL\Config\Provider\ShippingOptions::class);
         $isExtraAtHomeActive = $shippingOptionsMock->method('isExtraAtHomeActive');
         $isExtraAtHomeActive->willReturn(true);
 
@@ -39,7 +39,7 @@ class ProductTypeTest extends TestCase
 
     public function testExtraAtHomeIsNotAvailableWhenNotEnabled()
     {
-        $shippingOptionsMock = $this->getFakeMock(\TIG\PostNL\Config\Provider\ShippingOptions::class, true);
+        $shippingOptionsMock = $this->createStub(\TIG\PostNL\Config\Provider\ShippingOptions::class);
         $isExtraAtHomeActive = $shippingOptionsMock->method('isExtraAtHomeActive');
         $isExtraAtHomeActive->willReturn(false);
 
@@ -55,7 +55,7 @@ class ProductTypeTest extends TestCase
 
     public function testHasTheCorrectTypes()
     {
-        $productMock = $this->getFakeMock(Product::class)->getMock();
+        $productMock = $this->createStub(Product::class);
 
         $options = $this->getInstance()->getAllTypes([$productMock]);
 

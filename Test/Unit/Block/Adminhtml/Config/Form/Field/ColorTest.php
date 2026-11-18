@@ -12,8 +12,8 @@ class ColorTest extends TestCase
 
     public function testGetElementHtml()
     {
-        $elementMock = $this->getFakeMock(AbstractElement::class)->setMethods(['getElementHtml', 'getData', 'getHtmlId'])
-            ->getMockForAbstractClass();
+        $elementMock = $this->getFakeMock(AbstractElement::class)->onlyMethods(['getElementHtml', 'getData', 'getHtmlId'])
+            ->getMock();
         $elementMock->expects($this->once())->method('getElementHtml')->willReturn('<html></html>');
         $elementMock->expects($this->once())->method('getData')->willReturn('#FFFFFF');
         $elementMock->expects($this->once())->method('getHtmlId')->willReturn('background-color');

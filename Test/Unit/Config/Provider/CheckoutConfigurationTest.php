@@ -10,9 +10,9 @@ class CheckoutConfigurationTest extends TestCase
 {
     public $instanceClass = CheckoutConfiguration::class;
 
-    public function getConfigProvider()
+    public static function getConfigProvider()
     {
-        return [
+        return array_map('array_values', [
             [
                 'input' => [
                     'key1' => 'test1',
@@ -44,7 +44,7 @@ class CheckoutConfigurationTest extends TestCase
                     ]
                 ]
             ],
-        ];
+        ]);
     }
 
     /**
@@ -53,6 +53,7 @@ class CheckoutConfigurationTest extends TestCase
      *
      * @dataProvider getConfigProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getConfigProvider')]
     public function testGetConfig($shippingConfigurationInput, $expected)
     {
         $shippingConfiguration = [];

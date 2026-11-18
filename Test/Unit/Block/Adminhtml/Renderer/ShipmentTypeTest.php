@@ -10,7 +10,7 @@ class ShipmentTypeTest extends TestCase
 {
     public $instanceClass = ShipmentType::class;
 
-    public function returnsTheCorrectResultProvider()
+    public static function returnsTheCorrectResultProvider()
     {
         return [
             'Daytime' => ['3085', 'Daytime', 'Domestic', '', 'Standard shipment'],
@@ -33,6 +33,7 @@ class ShipmentTypeTest extends TestCase
      *
      * @dataProvider returnsTheCorrectResultProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('returnsTheCorrectResultProvider')]
     public function testReturnsTheCorrectResult($productCode, $shipmentType, $expectedLabel, $expectedType, $expectedComment)
     {
         $optionsMock = $this->getFakeMock(ProductOptions::class)->getMock();

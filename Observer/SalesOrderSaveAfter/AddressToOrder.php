@@ -14,6 +14,8 @@ use TIG\PostNL\Model\OrderRepository;
 
 class AddressToOrder implements ObserverInterface
 {
+    private \Magento\Sales\Model\ResourceModel\Order\Address $addressResource;
+
     /**
      * @var ToOrderAddress
      */
@@ -51,8 +53,11 @@ class AddressToOrder implements ObserverInterface
         PickupAddress $pickupAddress,
         AddressFactory $addressFactory,
         OrderRepository $orderRepository,
-        CartRepositoryInterface $quoteRepository
+        CartRepositoryInterface $quoteRepository,
+        \Magento\Sales\Model\ResourceModel\Order\Address $addressResource
     ) {
+        $this->addressResource = $addressResource;
+
         $this->quoteAddressToOrderAddress = $toOrderAddress;
         $this->pickupAddressHelper = $pickupAddress;
         $this->addressFactory = $addressFactory;
@@ -97,12 +102,7 @@ class AddressToOrder implements ObserverInterface
         }
 
         if ($quotePgAddress->getId() && $this->shouldAdd($order, $postnlOrder)) {
-            $quote = $this->quoteRepository->get($order->getQuoteId());
-            $quotePgAddress->setQuote($quote);
-
-            /** @var Order\Address $orderPgAddress */
-            $orderPgAddress = $this->quoteAddressToOrderAddress->convert($quotePgAddress);
-            $pgAddress      = $this->createOrderAddress($orderPgAddress, $order);
+            $pgAddress = $this->convertQuoteAddress($quotePgAddress, $order);
             $order->addAddress($pgAddress);
         }
 
@@ -110,6 +110,14 @@ class AddressToOrder implements ObserverInterface
             $postnlOrder->setData('pg_order_address_id', $pgAddress->getId());
             $this->orderRepository->save($postnlOrder);
         }
+    }
+
+    private function convertQuoteAddress($quotePgAddress, $order)
+    {
+        $quote = $this->quoteRepository->get($order->getQuoteId());
+        $quotePgAddress->setQuote($quote);
+        $orderPgAddress = $this->quoteAddressToOrderAddress->convert($quotePgAddress);
+        return $this->createOrderAddress($orderPgAddress, $order);
     }
 
     /**
@@ -120,15 +128,7 @@ class AddressToOrder implements ObserverInterface
      */
     private function shouldAdd($order, $postnlOrder)
     {
-        if (!$this->isPostNLShipment($order)) {
-            return false;
-        }
-
-        if ($this->addressAlreadyAdded($order, $postnlOrder)) {
-            return false;
-        }
-
-        return true;
+        return $this->isPostNLShipment($order) && !$this->addressAlreadyAdded($order, $postnlOrder);
     }
 
     /**
@@ -143,11 +143,7 @@ class AddressToOrder implements ObserverInterface
             return false;
         }
 
-        if ($order->getAddressById($postnlOrder->getPgOrderAddressId())) {
-            return true;
-        }
-
-        return false;
+        return (bool) $order->getAddressById($postnlOrder->getPgOrderAddressId());
     }
 
     /**
@@ -209,7 +205,7 @@ class AddressToOrder implements ObserverInterface
         $pgAddress->setEmail($order->getCustomerEmail());
         $pgAddress->setTelephone($orderPgAddress->getTelephone());
         $pgAddress->setAddressType('shipping');
-        $pgAddress->save();
+        $this->addressResource->save($pgAddress);
 
         return $pgAddress;
     }

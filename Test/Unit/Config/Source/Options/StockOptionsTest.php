@@ -8,7 +8,7 @@ class StockOptionsTest extends \TIG\PostNL\Test\TestCase
 {
     public $instanceClass = StockOptions::class;
 
-    public function returnsTheCorrectOptionsProvider()
+    public static function returnsTheCorrectOptionsProvider()
     {
         return [
             ['value' => 'in_stock'],
@@ -19,6 +19,7 @@ class StockOptionsTest extends \TIG\PostNL\Test\TestCase
     /**
      * @dataProvider returnsTheCorrectOptionsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('returnsTheCorrectOptionsProvider')]
     public function testReturnsTheCorrectOptions($value)
     {
         /** @var StockOptions $instance */

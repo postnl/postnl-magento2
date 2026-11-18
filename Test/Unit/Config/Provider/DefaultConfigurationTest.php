@@ -6,13 +6,14 @@ use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
 use TIG\PostNL\Test\Fixtures\DataProvider;
 
-class DefaultConfigurationTest extends AbstractConfigurationTest
+class DefaultConfigurationTest extends AbstractConfiguration
 {
     protected $instanceClass = DefaultConfiguration::class;
 
     /**
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'randomWordsProvider')]
     public function testGetApiBaseUrl($value)
     {
         $instance = $this->getInstance();
@@ -23,6 +24,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
     /**
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'randomWordsProvider')]
     public function testGetTestApiBaseUrl($value)
     {
         $instance = $this->getInstance();
@@ -33,6 +35,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
     /**
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'randomWordsProvider')]
     public function testGetBarcodeGlobalType($value)
     {
         $instance = $this->getInstance();
@@ -43,6 +46,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
     /**
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'randomWordsProvider')]
     public function testGetBarcodeGlobalRange($value)
     {
         $instance = $this->getInstance();
@@ -53,6 +57,7 @@ class DefaultConfigurationTest extends AbstractConfigurationTest
     /**
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::liveStagingProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'liveStagingProvider')]
     public function testGetModusApiBaseUrl($value, $modus)
     {
         $accountConfigurationMock = $this->getFakeMock(AccountConfiguration::class)->getMock();

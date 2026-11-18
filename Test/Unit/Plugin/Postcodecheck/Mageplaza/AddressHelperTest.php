@@ -11,7 +11,7 @@ class AddressHelperTest extends TestCase
 {
     protected $instanceClass = AddressHelper::class;
 
-    public function pluginProvider()
+    public static function pluginProvider()
     {
         return [
             'modus off is false' => [
@@ -34,6 +34,7 @@ class AddressHelperTest extends TestCase
      *
      * @dataProvider pluginProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('pluginProvider')]
     public function testAfterGetAddressFieldPosition($fields, $moduleOff, $expected)
     {
         $accountConfigurationMock = $this->getFakeMock(AccountConfiguration::class)->getMock();
@@ -42,8 +43,8 @@ class AddressHelperTest extends TestCase
         $expectedConfig->willReturn($moduleOff);
 
         $webshopConfigMock = $this->getFakeMock(Webshop::class)->getMock();
-        $expectedWebshopConfig = $webshopConfigMock->expects($this->any());
-        $expectedWebshopConfig->method('getIsAddressCheckEnabled');
+
+        $expectedWebshopConfig = $webshopConfigMock->method('getIsAddressCheckEnabled');
         $expectedWebshopConfig->willReturn(true);
 
         $instance = $this->getInstance([

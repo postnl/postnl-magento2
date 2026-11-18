@@ -4,45 +4,45 @@ namespace TIG\PostNL\Test\Fixtures\Timeframes\Days;
 
 class DataProvider
 {
-    public function sameday()
+    public static function sameday()
     {
         return [
             'has sameday'     => [
                 '09-03-2017',
-                $this->getDaysForSameDay(),
-                $this->getDaysForIsSameDayTrue(),
+                self::getDaysForSameDay(),
+                self::getDaysForIsSameDayTrue(),
             ],
             'has not sameday' => [
                 '08-03-2017',
-                $this->getDaysForSameDay(),
-                $this->getDaysForSameDay(),
+                self::getDaysForSameDay(),
+                self::getDaysForSameDay(),
             ]
         ];
     }
 
-    public function noFiltering()
+    public static function noFiltering()
     {
         return [
             [
-                $this->getDaysForTwoWeeks(),
-                $this->getDaysForTwoWeeks(),
+                self::getDaysForTwoWeeks(),
+                self::getDaysForTwoWeeks(),
             ],
         ];
     }
 
-    public function shipmentDays()
+    public static function shipmentDays()
     {
         return [
             'Wednesday is not a shippingday' => [
                 '1,2,4,5,6,7',
-                $this->getDaysForTwoWeeks(),
+                self::getDaysForTwoWeeks(),
                 '1',
-                $this->getDaysForTwoWeeksWednesdayDisabled()
+                self::getDaysForTwoWeeksWednesdayDisabled()
             ],
         ];
     }
 
-    private function getDaysForSameDay()
+    private static function getDaysForSameDay()
     {
         return [
             (object)[
@@ -90,7 +90,7 @@ class DataProvider
         ];
     }
 
-    private function getDaysForIsSameDayTrue()
+    private static function getDaysForIsSameDayTrue()
     {
         return [
             (object)[
@@ -117,7 +117,7 @@ class DataProvider
         ];
     }
 
-    private function getDaysForTwoWeeks()
+    private static function getDaysForTwoWeeks()
     {
         return [
             (object)[ // Saturday
@@ -340,7 +340,7 @@ class DataProvider
         ];
     }
 
-    private function getDaysForTwoWeeksWednesdayDisabled()
+    private static function getDaysForTwoWeeksWednesdayDisabled()
     {
         return [
             (object)[ // Saturday
@@ -528,9 +528,9 @@ class DataProvider
         ];
     }
 
-    private function getDaysForTwoWeeksCutOffRemoved()
+    private static function getDaysForTwoWeeksCutOffRemoved()
     {
-        $shipmentDays = $this->getDaysForTwoWeeks();
+        $shipmentDays = self::getDaysForTwoWeeks();
         unset($shipmentDays[0]);
 
         return array_values($shipmentDays);

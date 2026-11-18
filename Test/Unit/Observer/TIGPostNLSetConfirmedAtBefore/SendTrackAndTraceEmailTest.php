@@ -17,10 +17,10 @@ class SendTrackAndTraceEmailTest extends TestCase
     {
         $shipmentMock = $this->getFakeMock(Shipment::class, true);
 
-        $postnlShipmentMock = $this->getFakeMock(PostNLShipment::class)->setMethods(['getShipment'])->getMock();
+        $postnlShipmentMock = $this->getFakeMock(PostNLShipment::class)->onlyMethods(['getShipment'])->getMock();
         $postnlShipmentMock->expects($this->once())->method('getShipment')->willReturn($shipmentMock);
 
-        $trackMock = $this->getFakeMock(Track::class)->setMethods(['send'])->getMock();
+        $trackMock = $this->getFakeMock(Track::class)->onlyMethods(['send'])->getMock();
         $trackMock->expects($this->once())->method('send')->with($shipmentMock);
 
         /** @var Observer $observer */

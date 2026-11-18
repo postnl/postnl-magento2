@@ -9,10 +9,13 @@ use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Ui\Component\MassAction\Filter;
 use TIG\PostNL\Model\Carrier\Matrixrate;
-use TIG\PostNL\Model\Carrier\MatrixrateFactory;
+use TIG\PostNL\Model\Carrier\ResourceModel\Matrixrate\CollectionFactory;
+use TIG\PostNL\Api\MatrixrateRepositoryInterface;
 
 class MassDelete extends Action
 {
+    private MatrixrateRepositoryInterface $matrixrateRepository;
+
     /** @var Registry|null  */
     protected $_coreRegistry = null;
 
@@ -25,8 +28,8 @@ class MassDelete extends Action
     /** @var Filter */
     private $filter;
 
-    /** @var MatrixrateFactory  */
-    private $matrixrateFactory;
+    /** @var CollectionFactory  */
+    private $matrixrateCollectionFactory;
 
     /**
      * @param Context           $context
@@ -34,7 +37,7 @@ class MassDelete extends Action
      * @param Registry          $registry
      * @param Filter            $filter
      * @param Matrixrate        $matrixrateCollection
-     * @param MatrixrateFactory $matrixrateFactory
+     * @param CollectionFactory $matrixrateCollectionFactory
      */
     public function __construct(
         Context           $context,
@@ -42,13 +45,16 @@ class MassDelete extends Action
         Registry          $registry,
         Filter            $filter,
         Matrixrate        $matrixrateCollection,
-        MatrixrateFactory $matrixrateFactory
+        CollectionFactory $matrixrateCollectionFactory,
+        MatrixrateRepositoryInterface $matrixrateRepository
     ) {
+        $this->matrixrateRepository = $matrixrateRepository;
+
         $this->resultPageFactory    = $resultPageFactory;
         $this->_coreRegistry        = $registry;
         $this->matrixrateCollection = $matrixrateCollection;
         $this->filter               = $filter;
-        $this->matrixrateFactory    = $matrixrateFactory;
+        $this->matrixrateCollectionFactory    = $matrixrateCollectionFactory;
         parent::__construct($context);
     }
 
@@ -58,11 +64,11 @@ class MassDelete extends Action
      */
     public function execute()
     {
-        $collection = $this->filter->getCollection($this->matrixrateFactory->create()->getCollection());
+        $collection = $this->filter->getCollection($this->matrixrateCollectionFactory->create());
         $count      = 0;
 
         foreach ($collection as $child) {
-            $child->delete();
+            $this->matrixrateRepository->delete($child);
             $count++;
         }
 

@@ -14,7 +14,7 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
 {
     public $instanceClass = SentDate::class;
 
-    public function theParametersAreSetCorrectlyProvider()
+    public static function theParametersAreSetCorrectlyProvider()
     {
         /**
          * Today = 18-11-2016
@@ -48,6 +48,7 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
      *
      * @throws \Exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('theParametersAreSetCorrectlyProvider')]
     public function testTheParametersAreSetCorrectly($input, $expected)
     {
         /** @var Address $address */
@@ -84,8 +85,8 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
     private function optionsMock()
     {
         $optionsMock     = $this->getFakeMock(\TIG\PostNL\Service\Timeframe\Options::class)->getMock();
-        $optionsExpected = $optionsMock->expects($this->any());
-        $optionsExpected->method('get');
+
+        $optionsExpected = $optionsMock->method('get');
         $optionsExpected->willReturn(['Daytime']);
 
         return $optionsMock;
@@ -97,12 +98,10 @@ class SentDateTest extends \TIG\PostNL\Test\TestCase
     private function deliveryDateFallbackMock()
     {
         $fallbackMock = $this->getFakeMock(DeliveryDateFallback::class)->getMock();
-        $getFallback  = $fallbackMock->expects($this->any());
-        $getFallback->method('get');
+        $getFallback = $fallbackMock->method('get');
         $getFallback->willReturn('19-11-2016');
 
-        $getFallback2 = $fallbackMock->expects($this->any());
-        $getFallback2->method('getDate');
+        $getFallback2 = $fallbackMock->method('getDate');
         $getFallback2->willReturn('19-11-2016');
 
         return $fallbackMock;

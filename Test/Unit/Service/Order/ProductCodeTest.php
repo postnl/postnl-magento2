@@ -2,7 +2,7 @@
 
 namespace TIG\PostNL\Test\Unit\Service\Order;
 
-use Magento\Quote\Model\Quote;
+use TIG\PostNL\Test\Unit\Support\Quote;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Provider\ProductOptions;
 use TIG\PostNL\Service\Order\ProductInfo;
@@ -44,7 +44,7 @@ class ProductCodeTest extends TestCase
         parent::setUp();
 
         $this->productOptionsMock = $this->getFakeMock(ProductOptions::class)->getMock();
-        $this->quoteInterfaceMock = $this->getFakeMock(QuoteInterface::class)->getMockForAbstractClass();
+        $this->quoteInterfaceMock = $this->getFakeMock(QuoteInterface::class)->getMock();
 
         $this->addProductOptionsMockFunction('getDefaultProductOption', static::PRODUCT_OPTION_DEFAULT);
         $this->addProductOptionsMockFunction('getDefaultBeProductOption', static::PRODUCT_OPTION_BE_DEFAULT);
@@ -77,7 +77,7 @@ class ProductCodeTest extends TestCase
     /**
      * @return array
      */
-    public function getShippingOptionProvider()
+    public static function getShippingOptionProvider()
     {
         return [
             'default options' => ['', '', 'NL', 'NL', static::PRODUCT_OPTION_DEFAULT, 'Daytime'],
@@ -108,6 +108,7 @@ class ProductCodeTest extends TestCase
      * @throws \Exception
      * @dataProvider getShippingOptionProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getShippingOptionProvider')]
     public function testGetShippingOption($type, $option, $country, $senderCountry, $expectedCode, $expectedType)
     {
         $productOptionsFinder = $this->getObject(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
@@ -135,7 +136,7 @@ class ProductCodeTest extends TestCase
     /**
      * @return array
      */
-    public function getDefaultProductOptionProvider()
+    public static function getDefaultProductOptionProvider()
     {
         return [
             'alternative disabled' => [
@@ -161,9 +162,10 @@ class ProductCodeTest extends TestCase
      *
      * @dataProvider getDefaultProductOptionProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getDefaultProductOptionProvider')]
     public function testGetDefaultProductOption($useAlternative, $alternativeMinAmount, $quoteTotal, $expected)
     {
-        $quoteMock = $this->getFakeMock(Quote::class)->setMethods(['getBaseGrandTotal'])->getMock();
+        $quoteMock = $this->getFakeMock(Quote::class)->onlyMethods(['getBaseGrandTotal'])->getMock();
         $quoteMock->expects($this->once())->method('getBaseGrandTotal')->willReturn($quoteTotal);
 
         $this->quoteInterfaceMock->method('getQuote')->willReturn($quoteMock);

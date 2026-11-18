@@ -4,7 +4,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\Provider\LoggingConfiguration;
 
-class LoggingConfigurationTest extends AbstractConfigurationTest
+class LoggingConfigurationTest extends AbstractConfiguration
 {
     protected $instanceClass = LoggingConfiguration::class;
 
@@ -15,7 +15,7 @@ class LoggingConfigurationTest extends AbstractConfigurationTest
         $this->assertEquals($value, $instance->getLoggingTypes());
     }
 
-    public function canLogProvider()
+    public static function canLogProvider()
     {
         return [
             'can log' => [100, '100,200,300', true],
@@ -29,6 +29,7 @@ class LoggingConfigurationTest extends AbstractConfigurationTest
      * @param $value
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('canLogProvider')]
     public function testCanLog($level, $value, $expected)
     {
         $instance = $this->getInstance();

@@ -10,7 +10,7 @@ class IsEveningDeliveryBeActiveTest extends TestCase
 {
     public $instanceClass = IsEveningDeliveryBeActive::class;
 
-    public function getValueProvider()
+    public static function getValueProvider()
     {
         return [
             'is active' => [true],
@@ -23,6 +23,7 @@ class IsEveningDeliveryBeActiveTest extends TestCase
      *
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getValueProvider')]
     public function testGetValue($expected)
     {
         $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();

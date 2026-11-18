@@ -39,7 +39,8 @@ class AddShippingLabelFileFormat implements SchemaPatchInterface
     {
         $this->moduleDataSetup->startSetup();
 
-        $this->moduleDataSetup->getConnection()->addColumn(
+        $connection = $this->moduleDataSetup->getConnection();
+        $connection->addColumn(
             $this->moduleDataSetup->getTable(self::TABLE_NAME),
             'label_file_type',
             [
@@ -52,5 +53,7 @@ class AddShippingLabelFileFormat implements SchemaPatchInterface
         );
 
         $this->moduleDataSetup->endSetup();
+
+        return $this;
     }
 }

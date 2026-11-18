@@ -12,7 +12,7 @@ class ShipmentTest extends TestCase
 {
     public $instanceClass = Shipment::class;
 
-    public function isExtraCoverProvider()
+    public static function isExtraCoverProvider()
     {
         return [
             [3085, false],
@@ -26,6 +26,7 @@ class ShipmentTest extends TestCase
      *
      * @dataProvider isExtraCoverProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('isExtraCoverProvider')]
     public function testIsExtraCover($productCode, $expected)
     {
         $functionResponse = [
@@ -47,7 +48,7 @@ class ShipmentTest extends TestCase
     /**
      * @return array
      */
-    public function setConfirmedAtProvider()
+    public static function setConfirmedAtProvider()
     {
         return [
             'null value' => [
@@ -67,11 +68,12 @@ class ShipmentTest extends TestCase
      *
      * @dataProvider setConfirmedAtProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('setConfirmedAtProvider')]
     public function testSetConfirmedAt($value, $dispatchCalls)
     {
-        $eventManagerMock = $this->getFakeMock(ManagerInterface::class)->setMethods(['dispatch'])->getMock();
+        $eventManagerMock = $this->getFakeMock(ManagerInterface::class)->getMock();
 
-        $contextMock = $this->getFakeMock(Context::class)->setMethods(['getEventDispatcher'])->getMock();
+        $contextMock = $this->getFakeMock(Context::class)->onlyMethods(['getEventDispatcher'])->getMock();
         $contextMock->expects($this->once())->method('getEventDispatcher')->willReturn($eventManagerMock);
 
         $instance = $this->getInstance(['context' => $contextMock]);
@@ -84,7 +86,7 @@ class ShipmentTest extends TestCase
         $this->assertInstanceOf(Shipment::class, $result);
     }
 
-    public function canChangeParcelCountProvider()
+    public static function canChangeParcelCountProvider()
     {
         return [
             'not confirmed, not domestic' => [false, 'US', false],
@@ -99,6 +101,7 @@ class ShipmentTest extends TestCase
     /**
      * @dataProvider canChangeParcelCountProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('canChangeParcelCountProvider')]
     public function testCanChangeParcelCount($isConfirmed, $countryId, $expected)
     {
         /** @var Shipment $shipment */

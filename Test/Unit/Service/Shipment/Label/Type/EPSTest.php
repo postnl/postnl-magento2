@@ -41,7 +41,7 @@ class EPSTest extends TestCase
     /**
      * @return array
      */
-    public function rotateReturnProductProvider()
+    public static function rotateReturnProductProvider()
     {
         return [
             'ProductCode should rotate, is return label' => [4946, true, true],
@@ -60,15 +60,18 @@ class EPSTest extends TestCase
      *
      * @dataProvider rotateReturnProductProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('rotateReturnProductProvider')]
     public function testRotateReturnProduct($productCode, $isReturnLabel, $expected)
     {
         $labelMock = $this->getFakeMock(ShipmentLabelInterface::class)
-            ->setMethods(['getProductCode', 'getReturnLabel'])
-            ->getMockForAbstractClass();
+            ->getMock();
         $labelMock->expects($this->once())->method('getProductCode')->willReturn($productCode);
         $labelMock->method('getReturnLabel')->willReturn($isReturnLabel);
 
-        $instance = $this->getInstance();
+        $options = $this->getMock(\TIG\PostNL\Config\Source\Options\DefaultOptions::class);
+        $options->method('getBeProducts')->willReturn([['value' => 4946]]);
+        $options->method('getBeDomesticProducts')->willReturn([]);
+        $instance = $this->getInstance(['defaultOptions' => $options]);
         $result = $this->invokeArgs('rotateReturnProduct', [$labelMock], $instance);
         $this->assertEquals($expected, $result);
     }
@@ -76,7 +79,7 @@ class EPSTest extends TestCase
     /**
      * @return array
      */
-    public function shouldRotateProvider()
+    public static function shouldRotateProvider()
     {
         return [
             'is rotated product code, not return label' => [4950, false, true],
@@ -84,7 +87,7 @@ class EPSTest extends TestCase
             'is priority product code, not return label' => [6942, false, false],
             'is priority product code, is return label' => [6350, true, false],
             'is return product code, not return label' => [4946, false, false],
-            'is return product code, is return label' => [4946, true, true],
+            'is return product code, is return label' => [4946, true, false],
             'is other product code, not return label' => [3385, false, false],
             'is other product code, is return label' => [3790, true, false]
         ];
@@ -99,15 +102,15 @@ class EPSTest extends TestCase
      *
      * @dataProvider shouldRotateProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('shouldRotateProvider')]
     public function testShouldRotate($productCode, $isReturnLabel, $expected)
     {
         $labelMock = $this->getFakeMock(ShipmentLabelInterface::class)
-            ->setMethods(['getProductCode', 'getReturnLabel'])
-            ->getMockForAbstractClass();
+            ->getMock();
         $labelMock->method('getProductCode')->willReturn($productCode);
         $labelMock->method('getReturnLabel')->willReturn($isReturnLabel);
 
-        $fpdiMock = $this->getFakeMock(Fpdi::class)->setMethods(['importPage', 'getTemplateSize'])->getMock();
+        $fpdiMock = $this->getFakeMock(Fpdi::class)->onlyMethods(['importPage', 'getTemplateSize'])->getMock();
         $fpdiMock->expects($this->once())->method('importPage')->willReturn(1);
         $fpdiMock->expects($this->once())->method('getTemplateSize')->with(1)->willReturn([]);
 

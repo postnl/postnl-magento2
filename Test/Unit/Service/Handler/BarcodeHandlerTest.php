@@ -14,7 +14,7 @@ class BarcodeHandlerTest extends TestCase
     /**
      * @return array
      */
-    public function generateBarcodeProvider()
+    public static function generateBarcodeProvider()
     {
         return [
             [
@@ -30,6 +30,7 @@ class BarcodeHandlerTest extends TestCase
      *
      * @dataProvider generateBarcodeProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('generateBarcodeProvider')]
     public function testGenerate($callReturnValue, $expected)
     {
         $barcodeMock = $this->getBarcodeMock($callReturnValue);
@@ -80,7 +81,7 @@ class BarcodeHandlerTest extends TestCase
     protected function getBarcodeMock($callReturnValue)
     {
         $barcodeMock = $this->getFakeMock('TIG\PostNL\Webservices\Endpoints\Barcode');
-        $barcodeMock->setMethods(['call', 'updateApiKey']);
+        $barcodeMock->onlyMethods(['call', 'updateApiKey']);
         $barcodeMock = $barcodeMock->getMock();
 
         $callExpects = $barcodeMock->expects($this->once());

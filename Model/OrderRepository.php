@@ -26,6 +26,8 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
 
     private SortOrderBuilder $sortOrderBuilder;
 
+    private \TIG\PostNL\Model\ResourceModel\Order $entityResource;
+
     /**
      * OrderRepository constructor.
      *
@@ -43,8 +45,11 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         CollectionFactory $collectionFactory,
         QuoteInterface $quote,
         FilterBuilder $filterBuilder,
-        SortOrderBuilder $sortOrderBuilder
+        SortOrderBuilder $sortOrderBuilder,
+        \TIG\PostNL\Model\ResourceModel\Order $entityResource
     ) {
+        $this->entityResource = $entityResource;
+
         $this->quoteWrapper      = $quote;
         $this->orderFactory      = $orderFactory;
         $this->collectionFactory = $collectionFactory;
@@ -63,7 +68,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     public function save(OrderInterface $order)
     {
         try {
-            $order->save();
+            $this->entityResource->save($order);
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
             throw new CouldNotSaveException(__($exception->getMessage()));
@@ -81,7 +86,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     public function getById($identifier)
     {
         $order = $this->orderFactory->create();
-        $order->load($identifier);
+        $this->entityResource->load($order, $identifier);
 
         if (!$order->getId()) {
             // @codingStandardsIgnoreLine
@@ -120,7 +125,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     public function delete(OrderInterface $order)
     {
         try {
-            $order->delete();
+            $this->entityResource->delete($order);
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
             throw new CouldNotDeleteException(__($exception->getMessage()));

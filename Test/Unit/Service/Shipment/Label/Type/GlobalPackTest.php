@@ -9,7 +9,7 @@ class GlobalPackTest extends TestCase
 {
     /** @var GlobalPack $instanceClass */
     public $instanceClass = GlobalPack::class;
-    
+
     /**
      * @throws \Exception
      */
@@ -19,7 +19,7 @@ class GlobalPackTest extends TestCase
         $instance = $this->getInstance();
         $result   = $instance->isExcludedCountry("US");
         $expected = true;
-        
+
         $this->assertEquals($expected, $result);
     }
 }

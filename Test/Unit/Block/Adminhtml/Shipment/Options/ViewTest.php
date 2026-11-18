@@ -9,7 +9,7 @@ class ViewTest extends TestCase
 {
     public $instanceClass = \TIG\PostNL\Block\Adminhtml\Shipment\Options\View::class;
 
-    public function canChangeParcelCountProvider()
+    public static function canChangeParcelCountProvider()
     {
         return [
             [true],
@@ -20,6 +20,7 @@ class ViewTest extends TestCase
     /**
      * @dataProvider canChangeParcelCountProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('canChangeParcelCountProvider')]
     public function testCanChangeParcelCount($canChange)
     {
         /** @var ShipmentInterface $shipment */

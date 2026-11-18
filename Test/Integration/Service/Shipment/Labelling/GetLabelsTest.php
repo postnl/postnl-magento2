@@ -92,7 +92,7 @@ class GetLabelsTest extends TestCase
         $postNLShipment = $factory->create();
         $postNLShipment->setOrderId($shipment->getOrderId());
         $postNLShipment->setShipmentId($shipment->getId());
-        $postNLShipment->save();
+        $this->getObject(\TIG\PostNL\Api\ShipmentRepositoryInterface::class)->save($postNLShipment);
 
         return $postNLShipment;
     }

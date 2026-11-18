@@ -27,7 +27,7 @@ class MergeWithLabelsTest extends TestCase
     /**
      * @return array
      */
-    public function mergeTogetherProvider()
+    public static function mergeTogetherProvider()
     {
         return [
             'no labels' => [
@@ -71,34 +71,34 @@ class MergeWithLabelsTest extends TestCase
      *
      * @dataProvider mergeTogetherProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('mergeTogetherProvider')]
     public function testMergeTogether($labels, $packingslip, $yPosition, $expected)
     {
         $labelModels = [];
 
         foreach ($labels as $label) {
             $mock = $this->getFakeMock(ShipmentLabelInterface::class)
-                ->setMethods(['getLabel'])
-                ->getMockForAbstractClass();
+                ->getMock();
             $mock->method('getLabel')->willReturn($label);
             $mock->method('getLabelFileFormat')->willReturn('PDF');
             $labelModels[] = $mock;
         }
 
-        $getLabelsMock = $this->getFakeMock(GetLabels::class)->setMethods(['get'])->getMock();
+        $getLabelsMock = $this->getFakeMock(GetLabels::class)->onlyMethods(['get'])->getMock();
         $getLabelsMock->expects($this->once())->method('get')->willReturn($labelModels);
 
-        $labelGenerateMock = $this->getFakeMock(LabelGenerate::class)->setMethods(['run'])->getMock();
+        $labelGenerateMock = $this->getFakeMock(LabelGenerate::class)->onlyMethods(['run'])->getMock();
         $labelGenerateMock->method('run')->willReturn('labelpdf');
 
-        $packingslipGenerateMock = $this->getFakeMock(PackingslipGenerate::class)->setMethods(['run'])->getMock();
+        $packingslipGenerateMock = $this->getFakeMock(PackingslipGenerate::class)->onlyMethods(['run'])->getMock();
         $packingslipGenerateMock->method('run')->willReturn('merged packingslip');
 
         $fpdiMock = $this->getFakeMock(Fpdi::class)
-            ->setMethods(['Output', 'addSinglePage', 'addMultiplePages', 'Rotate'])
+            ->onlyMethods(['Output', 'addSinglePage', 'addMultiplePages', 'Rotate'])
             ->getMock();
         $fpdiMock->method('Output')->willReturn('merged first label with packingslip');
 
-        $fpdiFactoryMock = $this->getFakeMock(FpdiFactory::class)->setMethods(['create', 'saveFile', 'cleanupFiles'])->getMock();
+        $fpdiFactoryMock = $this->getFakeMock(FpdiFactory::class)->onlyMethods(['create', 'saveFile', 'cleanupFiles'])->getMock();
         $fpdiFactoryMock->method('create')->willReturn($fpdiMock);
 
         $instance = $this->getInstance([
@@ -135,21 +135,23 @@ class MergeWithLabelsTest extends TestCase
     public function testMergeFirstLabel()
     {
         $fpdiMock = $this->getFakeMock(Fpdi::class)
-            ->setMethods(['addMultiplePages', 'addSinglePage', 'Rotate', 'pixelsToPoints', 'Output'])
+            ->onlyMethods(['addMultiplePages', 'addSinglePage', 'Rotate', 'pixelsToPoints', 'Output'])
             ->getMock();
         $fpdiMock->expects($this->once())->method('addMultiplePages')->with('packingslipfile', 0, 0);
         $fpdiMock->expects($this->once())->method('addSinglePage')->with('labelfile');
-        $fpdiMock->expects($this->exactly(2))->method('Rotate')->withConsecutive([90], [0]);
-        $fpdiMock->expects($this->exactly(3))->method('pixelsToPoints')->withConsecutive([-1037], [413], [538]);
+        $fpdiMock->expects($this->exactly(2))->method('Rotate')->willReturnCallback($this->consecutiveCalls([[90], [0]]));
+        $fpdiMock->expects($this->exactly(3))->method('pixelsToPoints')->willReturnCallback($this->consecutiveCalls([[-1037], [413], [538]], [0, 0, 0]));
         $fpdiMock->expects($this->once())->method('Output')->with('s')->willReturn('merged label');
 
-        $fpdiFactoryMock = $this->getFakeMock(FpdiFactory::class)->setMethods(['create', 'saveFile', 'cleanupFiles'])->getMock();
+        $fpdiFactoryMock = $this->getFakeMock(FpdiFactory::class)->onlyMethods(['create', 'saveFile', 'cleanupFiles'])->getMock();
         $fpdiFactoryMock->expects($this->once())->method('create')->willReturn($fpdiMock);
         $fpdiFactoryMock->expects($this->once())->method('cleanupFiles');
         $fpdiFactoryMock->expects($this->exactly(2))
             ->method('saveFile')
-            ->withConsecutive(['packingslip'], ['label'])
-            ->willReturnOnConsecutiveCalls('packingslipfile', 'labelfile');
+            ->willReturnCallback($this->consecutiveCalls(
+                [['packingslip'], ['label']],
+                ['packingslipfile', 'labelfile']
+            ));
 
         $instance = $this->getInstance(['fpdiFactory' => $fpdiFactoryMock]);
         $result = $this->invokeArgs('mergeFirstLabel', ['label', 'packingslip'], $instance);

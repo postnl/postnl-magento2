@@ -3,8 +3,8 @@
 namespace TIG\PostNL\Unit\Service\Shipping;
 
 use Magento\Catalog\Model\Product;
-use Magento\Quote\Model\Quote\Address\RateRequest;
-use Magento\Quote\Model\Quote\Item;
+use TIG\PostNL\Test\Unit\Support\RateRequest;
+use TIG\PostNL\Test\Unit\Support\QuoteItem as Item;
 use TIG\PostNL\Service\Shipping\GetFreeBoxes;
 use TIG\PostNL\Test\TestCase;
 
@@ -15,7 +15,7 @@ class GetFreeBoxesTest extends TestCase
     /**
      * @return array
      */
-    public function getProvider()
+    public static function getProvider()
     {
         return [
             'no_items' => [
@@ -48,25 +48,26 @@ class GetFreeBoxesTest extends TestCase
      *
      * @dataProvider getProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getProvider')]
     public function testGet($freeShipping, $qty, $expects)
     {
         $productMock = $this->getFakeMock(Product::class)->getMock();
 
-        $quoteItemMock = $this->getFakeMock(Item::class)->setMethods(['getProduct', 'getQty', 'getFreeShipping']);
+        $quoteItemMock = $this->getFakeMock(Item::class)->onlyMethods(['getProduct', 'getQty', 'getFreeShipping']);
         $quoteItemMock = $quoteItemMock->getMock();
 
         $getProductExpects = $quoteItemMock->expects(($freeShipping && $qty) ? $this->once() : $this->never());
         $getProductExpects->method('getProduct')->willReturn($productMock);
         $freeShippingExpects = $quoteItemMock->expects(($freeShipping && $qty) ? $this->atLeastOnce() : $this->never());
         $freeShippingExpects->method('getFreeShipping')->willReturn($freeShipping);
-        $quoteItemMock->expects($this->any())->method('getQty')->willReturn($qty);
+        $quoteItemMock->method('getQty')->willReturn($qty);
 
         $rateRequestItems = [];
         if (null !== $freeShipping && null !== $qty) {
             $rateRequestItems = [$quoteItemMock];
         }
 
-        $rateRequestMock = $this->getMockBuilder(RateRequest::class)->setMethods(['getAllItems'])->getMock();
+        $rateRequestMock = $this->getMockBuilder(RateRequest::class)->onlyMethods(['getAllItems'])->getMock();
         $rateRequestMock->expects($this->once())->method('getAllItems')->willReturn($rateRequestItems);
 
         $instance = $this->getInstance();
@@ -78,7 +79,7 @@ class GetFreeBoxesTest extends TestCase
     /**
      * @return array
      */
-    public function getFreeBoxesCountFromChildrenProvider()
+    public static function getFreeBoxesCountFromChildrenProvider()
     {
         return [
             'no_items' => [
@@ -111,11 +112,12 @@ class GetFreeBoxesTest extends TestCase
      *
      * @dataProvider getFreeBoxesCountFromChildrenProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getFreeBoxesCountFromChildrenProvider')]
     public function testGetFreeBoxesCountFromChildren($freeShipping, $qty, $expects)
     {
         $productMock = $this->getFakeMock(Product::class)->getMock();
 
-        $abstractItemMock = $this->getFakeMock(Item\AbstractItem::class)->setMethods([
+        $abstractItemMock = $this->getFakeMock(\TIG\PostNL\Test\Unit\Support\QuoteItem::class)->onlyMethods([
             'getProduct',
             'getFreeShipping',
             'getQty',
@@ -127,7 +129,7 @@ class GetFreeBoxesTest extends TestCase
         $getProductExpects->method('getProduct')->willReturn($productMock);
         $getFreeShipping = $abstractItemMock->expects(($freeShipping && $qty) ? $this->atLeastOnce() : $this->never());
         $getFreeShipping->method('getFreeShipping')->willReturn($freeShipping);
-        $abstractItemMock->expects($this->any())->method('getQty')->willReturn($qty);
+        $abstractItemMock->method('getQty')->willReturn($qty);
 
         /** @var Item $quoteItem */
         $quoteItem = $this->getObject(Item::class);

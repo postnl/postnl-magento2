@@ -80,7 +80,7 @@ $quote->setCustomerIsGuest(true)
 $quote->getPayment()->setMethod('checkmo');
 $quote->setIsMultiShipping('1');
 $quote->collectTotals();
-$quote->save();
+Bootstrap::getObjectManager()->get(\Magento\Quote\Api\CartRepositoryInterface::class)->save($quote);
 
 /** @var \Magento\Quote\Model\QuoteIdMask $quoteIdMask */
 $quoteIdMask = Bootstrap::getObjectManager()
@@ -88,4 +88,4 @@ $quoteIdMask = Bootstrap::getObjectManager()
     ->create();
 $quoteIdMask->setQuoteId($quote->getId());
 $quoteIdMask->setDataChanges(true);
-$quoteIdMask->save();
+Bootstrap::getObjectManager()->get(\Magento\Quote\Model\ResourceModel\Quote\QuoteIdMask::class)->save($quoteIdMask);

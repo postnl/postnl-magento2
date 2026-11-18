@@ -12,7 +12,7 @@ class DataTest extends TestCase
 {
     protected $instanceClass = Helper::class;
 
-    public function isPostNLOrderProvider()
+    public static function isPostNLOrderProvider()
     {
         return [
             ['tig_postnl_regular', true],
@@ -26,6 +26,7 @@ class DataTest extends TestCase
      *
      * @dataProvider isPostNLOrderProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('isPostNLOrderProvider')]
     public function testIsPostNLOrder($shippingMethod, $expected)
     {
         /** @var Order $order */
@@ -69,7 +70,7 @@ class DataTest extends TestCase
         $this->assertContains('PG', $result);
     }
 
-    public function formatXmlProvider()
+    public static function formatXmlProvider()
     {
         return [
             ['<root><node>value</node></root>', '<?xml version="1.0"?>
@@ -86,6 +87,7 @@ class DataTest extends TestCase
      *
      * @dataProvider formatXmlProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('formatXmlProvider')]
     public function testFormatXml($xml, $expected)
     {
         $result = $this->invokeArgs('formatXml', [$xml]);

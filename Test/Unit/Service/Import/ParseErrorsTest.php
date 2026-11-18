@@ -12,7 +12,7 @@ class ParseErrorsTest extends TestCase
     /**
      * @return array
      */
-    public function errorsProvider()
+    public static function errorsProvider()
     {
         return [
             'no_errors' => [
@@ -40,6 +40,7 @@ class ParseErrorsTest extends TestCase
      *
      * @dataProvider errorsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('errorsProvider')]
     public function testGetErrorCount($errors, $expected)
     {
         $instance = $this->getInstance();
@@ -58,6 +59,7 @@ class ParseErrorsTest extends TestCase
      *
      * @dataProvider errorsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('errorsProvider')]
     public function testGetErrors($errors, $expected)
     {
         $instance = $this->getInstance();
@@ -77,6 +79,7 @@ class ParseErrorsTest extends TestCase
      *
      * @dataProvider errorsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('errorsProvider')]
     public function testResetErrors($errors, $expected)
     {
         $instance = $this->getInstance();

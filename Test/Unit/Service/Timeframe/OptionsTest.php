@@ -11,7 +11,7 @@ class OptionsTest extends TestCase
 {
     public $instanceClass = Options::class;
 
-    public function returnsTheRightOptionsProvider()
+    public static function returnsTheRightOptionsProvider()
     {
         return [
             'evening and noon disabled' => [false, false, ['Daytime']],
@@ -28,6 +28,7 @@ class OptionsTest extends TestCase
      * @param $sundayEnabled
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('returnsTheRightOptionsProvider')]
     public function testReturnsTheRightOptions($eveningEnabled, $noonEnabled, $expected)
     {
         $shippingOptions = $this->getFakeMock(ShippingOptions::class, true);

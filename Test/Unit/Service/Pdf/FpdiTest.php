@@ -12,7 +12,7 @@ class FpdiTest extends TestCase
     /**
      * @return array
      */
-    public function pixelsToPointsProvider()
+    public static function pixelsToPointsProvider()
     {
         return [
             'no pixels' => [0, 0],
@@ -29,6 +29,7 @@ class FpdiTest extends TestCase
      *
      * @dataProvider pixelsToPointsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('pixelsToPointsProvider')]
     public function testPixelsToPoints($pixels, $expected)
     {
         $instance = $this->getInstance();

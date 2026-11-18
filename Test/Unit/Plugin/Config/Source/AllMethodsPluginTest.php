@@ -10,7 +10,7 @@ class AllMethodsPluginTest extends TestCase
 {
     public $instanceClass = AllMethodsPlugin::class;
 
-    public function dataProvider()
+    public static function dataProvider()
     {
         $given = [
             'flatrate' => [
@@ -54,9 +54,9 @@ class AllMethodsPluginTest extends TestCase
             ]
         ];
 
-        return [
+        return array_map('array_values', [
             'Set tig_postnl_tig_postnl to tig_postnl_regular' => [$given, $expected]
-        ];
+        ]);
     }
 
     /**
@@ -65,6 +65,7 @@ class AllMethodsPluginTest extends TestCase
      *
      * @dataProvider dataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProvider')]
     public function testAfterToOptionArray($given, $expected)
     {
         $interceptor = $this->getFakeMock(Interceptor::class, true);

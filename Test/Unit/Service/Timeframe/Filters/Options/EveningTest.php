@@ -20,6 +20,7 @@ class EveningTest extends TestCase
      *
      * @throws Exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\Timeframes\Options\DataProvider::class, 'evening')]
     public function testFilter($isEnabled, $options, $expected)
     {
         $shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
@@ -27,7 +28,9 @@ class EveningTest extends TestCase
         $expects->method('isEveningDeliveryActive');
         $expects->willReturn($isEnabled);
 
-        $instance = $this->getInstance(['shippingOptions' => $shippingOptions]);
+        $scopeConfig = $this->getMock(\Magento\Framework\App\Config\ScopeConfigInterface::class);
+        $scopeConfig->method('getValue')->willReturn('NL');
+        $instance = $this->getInstance(['shippingOptions' => $shippingOptions, 'scopeConfig' => $scopeConfig]);
         $result   = $instance->filter($options);
 
         if ($isEnabled) {

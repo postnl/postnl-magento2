@@ -16,7 +16,7 @@ class CsvTest extends TestCase
     /**
      * @return array
      */
-    public function getDataProvider()
+    public static function getDataProvider()
     {
         return [
             'no_records' => [
@@ -42,18 +42,19 @@ class CsvTest extends TestCase
      *
      * @dataProvider getDataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getDataProvider')]
     public function testGetData($records)
     {
         $fileReadInterface = $this->getMockBuilder(FileReadInterface::class)->getMock();
 
         $dirReadInterface = $this->getMockBuilder(DirectoryReadInterface::class)->getMock();
-        $dirReadInterface->expects($this->any())->method('openFile')->willReturn($fileReadInterface);
+        $dirReadInterface->method('openFile')->willReturn($fileReadInterface);
 
-        $filesystemMock = $this->getFakeMock(Filesystem::class)->setMethods(['getDirectoryRead'])->getMock();
-        $filesystemMock->expects($this->any())->method('getDirectoryRead')->willReturn($dirReadInterface);
+        $filesystemMock = $this->getFakeMock(Filesystem::class)->onlyMethods(['getDirectoryRead'])->getMock();
+        $filesystemMock->method('getDirectoryRead')->willReturn($dirReadInterface);
 
         $fileParserMock = $this->getFakeMock(Csv\FileParser::class)
-            ->setMethods(['getRows', 'getColumns', 'hasErrors'])
+            ->onlyMethods(['getRows', 'getColumns', 'hasErrors'])
             ->getMock();
         $fileParserMock->expects($this->once())->method('getColumns');
         $fileParserMock->expects($this->once())->method('getRows')->willReturn($records);
@@ -73,7 +74,7 @@ class CsvTest extends TestCase
     /**
      * @return array
      */
-    public function checkImportErrorsProvider()
+    public static function checkImportErrorsProvider()
     {
         return [
             'no_errors' => [
@@ -100,9 +101,10 @@ class CsvTest extends TestCase
      *
      * @dataProvider checkImportErrorsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('checkImportErrorsProvider')]
     public function testCheckImportErrors($hasErrors, $errorMessages)
     {
-        $fileParserMock = $this->getFakeMock(Csv\FileParser::class)->setMethods(['hasErrors', 'getErrors'])->getMock();
+        $fileParserMock = $this->getFakeMock(Csv\FileParser::class)->onlyMethods(['hasErrors', 'getErrors'])->getMock();
         $fileParserMock->expects($this->once())->method('hasErrors')->willReturn($hasErrors);
         $fileParserMock->expects($this->exactly((int)$hasErrors))->method('getErrors')->willReturn($errorMessages);
 

@@ -15,6 +15,8 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 
 class ShipmentRepository implements ShipmentRepositoryInterface
 {
+    private \TIG\PostNL\Model\ResourceModel\Shipment $entityResource;
+
     /**
      * @var ShipmentFactory
      */
@@ -45,8 +47,11 @@ class ShipmentRepository implements ShipmentRepositoryInterface
         ShipmentFactory $shipmentFactory,
         CollectionFactory $collectionFactory,
         SearchResults $searchResults,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        \TIG\PostNL\Model\ResourceModel\Shipment $entityResource
     ) {
+        $this->entityResource = $entityResource;
+
         $this->shipmentFactory       = $shipmentFactory;
         $this->collectionFactory     = $collectionFactory;
         $this->searchResults         = $searchResults;
@@ -62,7 +67,7 @@ class ShipmentRepository implements ShipmentRepositoryInterface
     public function save(ShipmentInterface $shipment)
     {
         try {
-            $shipment->save();
+            $this->entityResource->save($shipment);
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
             throw new CouldNotSaveException(__($exception->getMessage()));
@@ -80,7 +85,7 @@ class ShipmentRepository implements ShipmentRepositoryInterface
     public function getById($identifier)
     {
         $shipment = $this->shipmentFactory->create();
-        $shipment->load($identifier);
+        $this->entityResource->load($shipment, $identifier);
 
         if (!$shipment->getId()) {
             // @codingStandardsIgnoreLine
@@ -99,7 +104,7 @@ class ShipmentRepository implements ShipmentRepositoryInterface
     public function delete(ShipmentInterface $shipment)
     {
         try {
-            $shipment->delete();
+            $this->entityResource->delete($shipment);
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
             throw new CouldNotDeleteException(__($exception->getMessage()));

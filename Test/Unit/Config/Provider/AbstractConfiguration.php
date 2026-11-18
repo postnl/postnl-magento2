@@ -12,9 +12,8 @@ use TIG\PostNL\Config\Provider\Globalpack;
 use TIG\PostNL\Config\Provider\LoggingConfiguration;
 use TIG\PostNL\Config\Provider\Webshop;
 use TIG\PostNL\Test\TestCase;
-use \PHPUnit\Framework\MockObject\Stub\ConsecutiveCalls;
 
-abstract class AbstractConfigurationTest extends TestCase
+abstract class AbstractConfiguration extends TestCase
 {
     /**
      * @var ScopeConfigInterface|\PHPUnit\Framework\MockObject\MockObject
@@ -70,9 +69,7 @@ abstract class AbstractConfigurationTest extends TestCase
     {
         $this->assertEquals(count($xpaths), count($returns), "setXPath needs returns and paths to be of equal length");
 
-        $getValueExpects = $this->scopeConfigMock->expects($this->any());
-        $getValueExpects->method('getValue');
-        $getValueExpects->withConsecutive(...$xpaths);
-        $getValueExpects->willReturnOnConsecutiveCalls(...$returns);
+        $getValueExpects = $this->scopeConfigMock->expects($this->atLeastOnce())->method('getValue');
+        $getValueExpects->willReturnCallback($this->consecutiveCalls($xpaths, $returns));
     }
 }

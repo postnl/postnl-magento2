@@ -10,6 +10,12 @@ class PickupAddress
 {
     const PG_ADDRESS_TYPE = 'pakjegemak';
 
+    private \Magento\Quote\Model\ResourceModel\Quote $quoteResource;
+
+    private \Magento\Quote\Model\ResourceModel\Quote\Address $addressResource;
+
+    private \Magento\Quote\Model\ResourceModel\Quote\Address\CollectionFactory $addressCollectionFactory;
+
     /**
      * @var bool|AddressInterface
      */
@@ -31,8 +37,15 @@ class PickupAddress
      */
     public function __construct(
         Session $checkoutSession,
-        AddressFactory $addressFactory
+        AddressFactory $addressFactory,
+        \Magento\Quote\Model\ResourceModel\Quote $quoteResource,
+        \Magento\Quote\Model\ResourceModel\Quote\Address $addressResource,
+        \Magento\Quote\Model\ResourceModel\Quote\Address\CollectionFactory $addressCollectionFactory
     ) {
+        $this->quoteResource = $quoteResource;
+        $this->addressResource = $addressResource;
+        $this->addressCollectionFactory = $addressCollectionFactory;
+
         $this->checkoutSession = $checkoutSession;
         $this->addressFactory = $addressFactory;
     }
@@ -59,7 +72,7 @@ class PickupAddress
 
         $this->pickupAddress = $this->create($address, $quote);
         $quote->addAddress($this->pickupAddress);
-        $quote->save();
+        $this->quoteResource->save($quote);
     }
 
     /**
@@ -78,7 +91,7 @@ class PickupAddress
             $quote->removeAddress($foundAddress->getId());
         }
 
-        $quote->save();
+        $this->quoteResource->save($quote);
     }
 
     /**
@@ -88,9 +101,7 @@ class PickupAddress
      */
     public function getPakjeGemakAddressInQuote($quoteId)
     {
-        $quoteAddress = $this->addressFactory->create();
-
-        $collection = $quoteAddress->getCollection();
+        $collection = $this->addressCollectionFactory->create();
         $collection->addFieldToFilter('quote_id', $quoteId);
         $collection->addFieldToFilter('address_type', self::PG_ADDRESS_TYPE);
         // @codingStandardsIgnoreLine
@@ -118,7 +129,7 @@ class PickupAddress
         $address->setLastname($pgData['customer']['lastname']);
         $telephone = $pgData['customer']['telephone'] ?? '';
         $address->setTelephone($telephone);
-        $address->save();
+        $this->addressResource->save($address);
 
         return $address;
     }

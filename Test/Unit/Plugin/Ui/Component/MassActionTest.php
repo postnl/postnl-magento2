@@ -26,11 +26,11 @@ class MassActionTest extends TestCase
          * Copied from \Magento\Ui\Test\Unit\Component\MassActionTest::setUp();
          */
         $this->contextMock = $this->getMockBuilder('Magento\Framework\View\Element\UiComponent\ContextInterface')
-            ->getMockForAbstractClass();
+            ->getMock();
         $processor = $this->getMockBuilder('Magento\Framework\View\Element\UiComponent\Processor')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->contextMock->expects($this->any())->method('getProcessor')->willReturn($processor);
+        $this->contextMock->method('getProcessor')->willReturn($processor);
     }
 
     public function testRemovesPostNLOptionsWhenDisabled()

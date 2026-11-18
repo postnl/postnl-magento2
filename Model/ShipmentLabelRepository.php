@@ -16,6 +16,8 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 
 class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
 {
+    private \TIG\PostNL\Model\ResourceModel\ShipmentLabel $entityResource;
+
     /**
      * @var ShipmentLabelFactory
      */
@@ -46,8 +48,11 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
         ShipmentLabelFactory $objectFactory,
         CollectionFactory $collectionFactory,
         SearchResults $searchResults,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        \TIG\PostNL\Model\ResourceModel\ShipmentLabel $entityResource
     ) {
+        $this->entityResource = $entityResource;
+
         $this->shipmentLabelFactory  = $objectFactory;
         $this->collectionFactory     = $collectionFactory;
         $this->searchResults         = $searchResults;
@@ -63,7 +68,7 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
     public function save(ShipmentLabelInterface $shipmentLabel)
     {
         try {
-            $shipmentLabel->save();
+            $this->entityResource->save($shipmentLabel);
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
             throw new CouldNotSaveException(__($exception->getMessage()));
@@ -81,7 +86,7 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
     public function getById($identifier)
     {
         $object = $this->shipmentLabelFactory->create();
-        $object->load($identifier);
+        $this->entityResource->load($object, $identifier);
 
         if (!$object->getId()) {
             // @codingStandardsIgnoreLine
@@ -100,7 +105,7 @@ class ShipmentLabelRepository implements ShipmentLabelRepositoryInterface
     public function delete(ShipmentLabelInterface $shipmentLabel)
     {
         try {
-            $shipmentLabel->delete();
+            $this->entityResource->delete($shipmentLabel);
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
             throw new CouldNotDeleteException(__($exception->getMessage()));

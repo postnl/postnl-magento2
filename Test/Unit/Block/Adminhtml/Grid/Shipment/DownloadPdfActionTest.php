@@ -42,7 +42,7 @@ class DownloadPdfActionTest extends TestCase
 
     private function prepareContextMock()
     {
-        $urlBuilderMock = $this->getFakeMock(UrlInterface::class)->getMockForAbstractClass();
+        $urlBuilderMock = $this->getFakeMock(UrlInterface::class)->getMock();
         $this->contextMock->expects($this->atLeastOnce())->method('getUrlBuilder')->willReturn($urlBuilderMock);
     }
 

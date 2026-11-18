@@ -46,6 +46,7 @@ if (class_exists(GetSourceItemsDataBySku::class)):
             GetSourceItemsDataBySku $sourceItemsDataBySku
         ) {
             $this->objectManager = $objectManager;
+            $this->subject = $sourceItemsDataBySku;
         }
 
         /**

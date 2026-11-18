@@ -4,7 +4,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\Provider\Globalpack;
 
-class GlobalpackTest extends AbstractConfigurationTest
+class GlobalpackTest extends AbstractConfiguration
 {
     protected $instanceClass = Globalpack::class;
 
@@ -12,6 +12,7 @@ class GlobalpackTest extends AbstractConfigurationTest
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
      * @param $value
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'enabledAndDisabled')]
     public function testIsGlobalpackEnabled($value)
     {
         $instance = $this->getInstance();
@@ -55,7 +56,7 @@ class GlobalpackTest extends AbstractConfigurationTest
     }
 
 
-    public function customsProvider()
+    public static function customsProvider()
     {
         return [
             'use HS Tariff' =>
@@ -84,6 +85,7 @@ class GlobalpackTest extends AbstractConfigurationTest
      * @param $value
      * @param $hsCheck
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('customsProvider')]
     public function testCustomsInfo($method, $xpath, $value, $hsCheck = null)
     {
         $instance = $this->getInstance();

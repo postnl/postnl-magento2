@@ -10,7 +10,7 @@ class IsPostcodecheckActiveTest extends TestCase
 {
     protected $instanceClass = IsPostcodecheckActive::class;
 
-    public function getValueProvider()
+    public static function getValueProvider()
     {
         return [
             'is active' => [true],
@@ -23,6 +23,7 @@ class IsPostcodecheckActiveTest extends TestCase
      *
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getValueProvider')]
     public function testGetValue($expected)
     {
         $webshopConfig = $this->getFakeMock(Webshop::class)->getMock();

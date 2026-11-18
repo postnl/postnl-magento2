@@ -16,6 +16,7 @@ class GenerateTest extends TestCase
      *
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::pdfLabelFiles
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'pdfLabelFiles')]
     public function testRun($pdfFiles)
     {
         $decodedPdfFiles = [];
@@ -34,6 +35,7 @@ class GenerateTest extends TestCase
      *
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::pdfLabelFiles
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'pdfLabelFiles')]
     public function testAddLabelToPdf($pdfFiles)
     {
         $instance = $this->getInstance();

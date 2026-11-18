@@ -29,8 +29,8 @@ class FactoryTest extends TestCase
 
     public function testResetCallsTheResetMethodOfTheValidorIfAvailable()
     {
-        $validatorInstance = $this->getFakeMock(\TIG\PostNL\Service\Validation\ContractInterface::class);
-        $validatorInstance->setMethods(['validate', 'resetData']);
+        $validatorInstance = $this->getFakeMock(\TIG\PostNL\Test\Unit\Support\ResettableValidator::class);
+        $validatorInstance->onlyMethods(['validate', 'resetData']);
         $validatorInstance = $validatorInstance->getMock();
 
         $reset = $validatorInstance->expects($this->once());
@@ -48,7 +48,7 @@ class FactoryTest extends TestCase
 
     public function testResetIsNotCalledWhenItDoesNotExists()
     {
-        $validatorInstance = $this->getMock(\TIG\PostNL\Service\Validation\ContractInterface::class);
+        $validatorInstance = $this->getMock(Validation\ContractInterface::class);
         $validatorInstance->expects($this->never())->method($this->anything());
 
         /** @var Validation\Factory $instance */

@@ -4,23 +4,23 @@ namespace TIG\PostNL\Test\Fixtures\Timeframes\Options;
 
 class DataProvider
 {
-    public function allOptions()
+    public static function allOptions()
     {
         return [
-            'when all options are enabled'  => [true, $this->getOptions(), $this->getOptions()],
-            'when all options are disabled' => [false, $this->getOptions(), $this->getOptionsWhenAllAreDisabled()]
+            'when all options are enabled'  => [true, self::getOptions(), self::getOptions()],
+            'when all options are disabled' => [false, self::getOptions(), self::getOptionsWhenAllAreDisabled()]
         ];
     }
 
-    public function evening()
+    public static function evening()
     {
         return [
-            'evening is disabled' => [false, $this->getOptions(), $this->getOptionsForEveningDisabled()],
-            'evening is enabled'  => [true, $this->getOptions(), $this->getOptions()]
+            'evening is disabled' => [false, self::getOptions(), self::getOptionsForEveningDisabled()],
+            'evening is enabled'  => [true, self::getOptions(), self::getOptions()]
         ];
     }
 
-    private function getOptions()
+    private static function getOptions()
     {
         return [
             (object)[
@@ -40,7 +40,7 @@ class DataProvider
         ];
     }
 
-    private function getOptionsForEveningDisabled()
+    private static function getOptionsForEveningDisabled()
     {
         return [
             (object)[
@@ -53,7 +53,7 @@ class DataProvider
         ];
     }
 
-    private function getOptionsWhenAllAreDisabled()
+    private static function getOptionsWhenAllAreDisabled()
     {
         return [
             (object)[

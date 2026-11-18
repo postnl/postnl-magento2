@@ -10,7 +10,7 @@ class MulticolliTest extends TestCase
 {
     public $instanceClass = Multicolli::class;
 
-    public function ifTheRightCountryIsAllowedToUseMulticolliProvider()
+    public static function ifTheRightCountryIsAllowedToUseMulticolliProvider()
     {
         return [
             'nl => nl' => ['NL', 'NL', true],
@@ -31,6 +31,7 @@ class MulticolliTest extends TestCase
      * @param $to
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('ifTheRightCountryIsAllowedToUseMulticolliProvider')]
     public function testIfTheRightCountryIsAllowedToUseMulticolli($from, $to, $expected)
     {
         $configMock = $this->getFakeMock(AddressConfiguration::class, true);

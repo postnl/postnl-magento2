@@ -11,7 +11,7 @@ class ShippingDateTest extends TestCase
 {
     protected $instanceClass = ShippingDate::class;
 
-    public function formatShippingDateProvider()
+    public static function formatShippingDateProvider()
     {
         return [
             ['19 november 2016', 'Today'],
@@ -29,6 +29,7 @@ class ShippingDateTest extends TestCase
      *
      * @dataProvider formatShippingDateProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('formatShippingDateProvider')]
     public function testFormatShippingDate($shippingDate, $expected)
     {
         $todayDate = new \DateTime('19 november 2016');
@@ -50,7 +51,7 @@ class ShippingDateTest extends TestCase
         }
         $this->assertEquals($expected, $result);
     }
-    public function getShipAtProvider()
+    public static function getShipAtProvider()
     {
         return [
             [true, '2016-11-19'],
@@ -66,11 +67,12 @@ class ShippingDateTest extends TestCase
      *
      * @dataProvider getShipAtProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getShipAtProvider')]
     public function testGetShipAt($useObject, $shipAt)
     {
         $input = $shipAt;
         if ($useObject) {
-            $shipment = $this->getFakeMock(\TIG\PostNL\Model\Shipment::class)->setMethods(['getShipAt'])->getMock();
+            $shipment = $this->getFakeMock(\TIG\PostNL\Model\Shipment::class)->onlyMethods(['getShipAt'])->getMock();
 
             $shipAtExpects = $shipment->expects($this->once());
             $shipAtExpects->method('getShipAt');

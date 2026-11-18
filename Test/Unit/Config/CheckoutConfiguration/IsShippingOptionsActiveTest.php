@@ -30,12 +30,13 @@ class IsShippingOptionsActiveTest extends TestCase
         parent::setUp();
 
         $this->shippingOptions = $this->getFakeMock(ShippingOptions::class)->getMock();
+        $this->shippingOptions->method('getManageStock')->willReturn(true);
         $this->accountConfiguration = $this->getFakeMock(AccountConfiguration::class)->getMock();
     }
 
-    public function getValueProvider()
+    public static function getValueProvider()
     {
-        return [
+        return array_map('array_values', [
             'shippingOptionsActive = 0 | hasValidApiSettings = 0 | stockOptions = 0 | productsInStock = 0 | productsExtraAtHome = 0 | canBackorder = 0 | ' =>
                 ['shippingOptionsActive' => false,
                  'hasValidApiSettings'   => false,
@@ -612,7 +613,7 @@ class IsShippingOptionsActiveTest extends TestCase
                  'canBackorder'          => true,
                  'expected'              => false
                 ]
-        ];
+        ]);
     }
 
     /**
@@ -626,6 +627,7 @@ class IsShippingOptionsActiveTest extends TestCase
      *
      * @dataProvider getValueProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getValueProvider')]
     public function testGetValue(
         $shippingOptionsActive,
         $hasValidApiSettings,
@@ -679,9 +681,9 @@ class IsShippingOptionsActiveTest extends TestCase
         $this->assertEquals($expected, $instance->getValue());
     }
 
-    public function hasEnteredApiDataProvider()
+    public static function hasEnteredApiDataProvider()
     {
-        return [
+        return array_map('array_values', [
             'without customer code customer number and api key' => [
                 'customerCode' => null,
                 'customerNumber' => null,
@@ -706,7 +708,7 @@ class IsShippingOptionsActiveTest extends TestCase
                 'apiKey' => '12345',
                 'expected' => true,
             ],
-        ];
+        ]);
     }
 
     /**
@@ -717,6 +719,7 @@ class IsShippingOptionsActiveTest extends TestCase
      *
      * @dataProvider hasEnteredApiDataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('hasEnteredApiDataProvider')]
     public function testHasEnteredApiDataProvider($customerCode, $customerNumber, $apiKey, $expected)
     {
         /** @var IsShippingOptionsActive $instance */

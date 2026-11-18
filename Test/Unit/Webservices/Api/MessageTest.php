@@ -32,7 +32,7 @@ class MessageTest extends TestCase
         ], $result);
     }
 
-    public function getExtraProvider()
+    public static function getExtraProvider()
     {
         return [
             [['extraTest' => 'test']],
@@ -45,6 +45,7 @@ class MessageTest extends TestCase
      *
      * @param $arrayMustContain
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getExtraProvider')]
     public function testGetExtra($arrayMustContain)
     {
         $instance = $this->getInstance();

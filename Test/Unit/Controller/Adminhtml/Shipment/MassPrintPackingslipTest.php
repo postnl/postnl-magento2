@@ -16,7 +16,7 @@ class MassPrintPackingslipTest extends TestCase
     /**
      * @return array
      */
-    public function setTracksProvider()
+    public static function setTracksProvider()
     {
         return [
             'no tracking' => [
@@ -40,12 +40,13 @@ class MassPrintPackingslipTest extends TestCase
      *
      * @dataProvider setTracksProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('setTracksProvider')]
     public function testSetTracks($trackCodes, $tracksetCalled)
     {
-        $shipmentMock = $this->getFakeMock(Shipment::class)->setMethods(['getTracks'])->getMock();
+        $shipmentMock = $this->getFakeMock(Shipment::class)->onlyMethods(['getTracks'])->getMock();
         $shipmentMock->expects($this->once())->method('getTracks')->willReturn($trackCodes);
 
-        $trackMock = $this->getFakeMock(Track::class)->setMethods(['set'])->getMock();
+        $trackMock = $this->getFakeMock(Track::class)->onlyMethods(['set'])->getMock();
         $trackMock->expects($this->exactly($tracksetCalled))->method('set')->with($shipmentMock);
 
         $instance = $this->getInstance(['track' => $trackMock]);
@@ -60,11 +61,11 @@ class MassPrintPackingslipTest extends TestCase
      */
     private function getShipmentMock($id, $country)
     {
-        $addressMock = $this->getFakeMock(Address::class)->setMethods(['getCountryId'])->getMock();
+        $addressMock = $this->getFakeMock(Address::class)->onlyMethods(['getCountryId'])->getMock();
         $addressMock->expects($this->once())->method('getCountryId')->willReturn($country);
 
         $shipmentMock = $this->getFakeMock(Shipment::class)
-            ->setMethods(['getId', 'getShippingAddress', 'getTracks'])
+            ->onlyMethods(['getId', 'getShippingAddress', 'getTracks'])
             ->getMock();
         $shipmentMock->expects($this->exactly(2))->method('getId')->willReturn($id);
         $shipmentMock->expects($this->atLeastOnce())->method('getShippingAddress')->willReturn($addressMock);
@@ -77,7 +78,7 @@ class MassPrintPackingslipTest extends TestCase
     {
         $shipmentMock = $this->getShipmentMock(1, 'NL');
 
-        $barcodeHandlerMock = $this->getFakeMock(BarcodeHandler::class)->setMethods(['prepareShipment'])->getMock();
+        $barcodeHandlerMock = $this->getFakeMock(BarcodeHandler::class)->onlyMethods(['prepareShipment'])->getMock();
         $barcodeHandlerMock->expects($this->exactly(1))->method('prepareShipment')->with(1, 'NL');
 
         $instance = $this->getInstance(['barcodeHandler' => $barcodeHandlerMock]);

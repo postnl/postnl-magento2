@@ -5,8 +5,6 @@ namespace TIG\PostNL\Service\Shipment\Packingslip\Compatibility;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use TIG\PostNL\Service\Shipment\Packingslip\Factory;
-use Xtento\PdfCustomizer\Helper\Data;
-use Xtento\PdfCustomizer\Model\Source\TemplateType;
 
 class XtentoPdfCustomizer
 {
@@ -54,7 +52,10 @@ class XtentoPdfCustomizer
         $order = $this->orderRepository->get($orderId);
 
         $xtentoDataHelper = $this->dataHelper->create();
-        $template = $xtentoDataHelper->getDefaultTemplate($order, TemplateType::TYPE_SHIPMENT);
+        $template = $xtentoDataHelper->getDefaultTemplate(
+            $order,
+            constant('Xtento\PdfCustomizer\Model\Source\TemplateType::TYPE_SHIPMENT')
+        );
         $templateId = $template->getId();
 
         $generatePdfHelper = $this->pdfGenerator->create();
@@ -70,7 +71,7 @@ class XtentoPdfCustomizer
     {
         $xtentoDataHelper = $this->dataHelper->create();
 
-        if ($xtentoDataHelper->isEnabled(Data::ENABLE_SHIPMENT)) {
+        if ($xtentoDataHelper->isEnabled(constant('Xtento\PdfCustomizer\Helper\Data::ENABLE_SHIPMENT'))) {
             return true;
         }
 

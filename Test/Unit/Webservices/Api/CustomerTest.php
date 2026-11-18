@@ -10,7 +10,7 @@ class CustomerTest extends TestCase
 {
     protected $instanceClass = Customer::class;
 
-    public function getProvider()
+    public static function getProvider()
     {
         return [
             ['a', 'b', ['CustomerCode' => 'a', 'CustomerNumber' => 'b']],
@@ -25,6 +25,7 @@ class CustomerTest extends TestCase
      *
      * @dataProvider getProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getProvider')]
     public function testGet($customerCode, $customerNumber, $expected)
     {
         $accountConfigurationMock = $this->getFakeMock(AccountConfiguration::class)->getMock();

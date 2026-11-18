@@ -4,7 +4,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\Provider\Webshop;
 
-class WebshopTest extends AbstractConfigurationTest
+class WebshopTest extends AbstractConfiguration
 {
     protected $instanceClass = Webshop::class;
 
@@ -86,7 +86,7 @@ class WebshopTest extends AbstractConfigurationTest
         $this->assertTrue(is_array($result));
     }
 
-    public function cutoffTimeForDayProvider()
+    public static function cutoffTimeForDayProvider()
     {
         return [
             'CutoffTime for sundays, day number 7' => [
@@ -111,6 +111,7 @@ class WebshopTest extends AbstractConfigurationTest
      *
      * @dataProvider cutoffTimeForDayProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('cutoffTimeForDayProvider')]
     public function testGetCutOffTimeForDay($day, $xpath, $cutoffTime)
     {
         $instance = $this->getInstance();

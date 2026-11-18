@@ -4,7 +4,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\Provider\PackingslipBarcode;
 
-class PackingslipBarcodeTest extends AbstractConfigurationTest
+class PackingslipBarcodeTest extends AbstractConfiguration
 {
     protected $instanceClass = PackingslipBarcode::class;
 
@@ -13,6 +13,7 @@ class PackingslipBarcodeTest extends AbstractConfigurationTest
      *
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'enabledAndDisabled')]
     public function testIsEnabled($value)
     {
         $instance = $this->getInstance();
@@ -26,6 +27,7 @@ class PackingslipBarcodeTest extends AbstractConfigurationTest
      *
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'randomWordsProvider')]
     public function testGetValue($value)
     {
         $instance = $this->getInstance();
@@ -34,7 +36,7 @@ class PackingslipBarcodeTest extends AbstractConfigurationTest
         $this->assertEquals($value, $instance->getValue());
     }
 
-    public function positionDataProvider()
+    public static function positionDataProvider()
     {
         return [
             'correct config parsed' => ['250,250,250,250', [250,250,250,250]],
@@ -48,6 +50,7 @@ class PackingslipBarcodeTest extends AbstractConfigurationTest
      *
      * @dataProvider positionDataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('positionDataProvider')]
     public function testGetPosition($value, $expected)
     {
         $instance = $this->getInstance();
@@ -61,6 +64,7 @@ class PackingslipBarcodeTest extends AbstractConfigurationTest
      *
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::randomWordsProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'randomWordsProvider')]
     public function testGetType($value)
     {
         $instance = $this->getInstance();
@@ -69,7 +73,7 @@ class PackingslipBarcodeTest extends AbstractConfigurationTest
         $this->assertEquals($value, $instance->getType());
     }
 
-    public function colorProvider()
+    public static function colorProvider()
     {
         return [
             ['#cecece', '#CECECE']
@@ -82,6 +86,7 @@ class PackingslipBarcodeTest extends AbstractConfigurationTest
      *
      * @dataProvider colorProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('colorProvider')]
     public function testGetBackgroundColor($value, $expected)
     {
         $instance = $this->getInstance();
@@ -96,6 +101,7 @@ class PackingslipBarcodeTest extends AbstractConfigurationTest
      *
      * @dataProvider colorProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('colorProvider')]
     public function testGetFontColor($value, $expected)
     {
         $instance = $this->getInstance();
@@ -109,6 +115,7 @@ class PackingslipBarcodeTest extends AbstractConfigurationTest
      *
      * @dataProvider \TIG\PostNL\Test\Fixtures\DataProvider::enabledAndDisabled
      */
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\TIG\PostNL\Test\Fixtures\DataProvider::class, 'enabledAndDisabled')]
     public function testIncludeNumber($value)
     {
         $instance = $this->getInstance();
