@@ -4,7 +4,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\Provider\PackingslipBarcode;
 
-class PackingslipBarcodeTest extends AbstractConfigurationTest
+class PackingslipBarcodeTest extends AbstractConfiguration
 {
     protected $instanceClass = PackingslipBarcode::class;
 

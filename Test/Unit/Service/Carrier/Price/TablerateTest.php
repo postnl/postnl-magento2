@@ -15,10 +15,10 @@ class TablerateTest extends TestCase
 
     public function testGetTableratePrice()
     {
-        $productMock = $this->getFakeMock(\Magento\Catalog\Model\Product::class)->getMock();
+        $productMock = $this->createStub(\Magento\Catalog\Model\Product::class);
 
         $itemMock = $this->getFakeMock(Item::class)->onlyMethods(['getProduct'])->getMock();
-        $itemMock->method('getProduct')->willReturn($productMock);
+        $itemMock->expects($this->atLeastOnce())->method('getProduct')->willReturn($productMock);
 
         $rateRequestMock = $this->getMockBuilder(RateRequest::class)->onlyMethods(['getAllItems'])->getMock();
         $rateRequestMock->expects($this->atLeastOnce())->method('getAllItems')->willReturn([$itemMock]);

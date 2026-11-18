@@ -4,7 +4,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\Provider\Globalpack;
 
-class GlobalpackTest extends AbstractConfigurationTest
+class GlobalpackTest extends AbstractConfiguration
 {
     protected $instanceClass = Globalpack::class;
 

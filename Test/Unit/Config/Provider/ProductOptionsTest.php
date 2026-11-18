@@ -4,7 +4,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\Provider\ProductOptions;
 
-class ProductOptionsTest extends AbstractConfigurationTest
+class ProductOptionsTest extends AbstractConfiguration
 {
     protected $instanceClass = ProductOptions::class;
 
@@ -137,9 +137,9 @@ class ProductOptionsTest extends AbstractConfigurationTest
     public function testGetDefaultLetterBoxPackageProductOption()
     {
         $value                    = '2928';
-        $optionsConfigurationMock = $this->getFakeMock(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
-        $optionsConfigurationMock->onlyMethods([]);
-        $instance = $this->getInstance(['productOptions' => $optionsConfigurationMock->getMock()]);
+        $optionsConfiguration = $this->getObject(\TIG\PostNL\Config\Source\Options\ProductOptions::class);
+        $instance = $this->getInstance(['productOptions' => $optionsConfiguration]);
+        $this->setXpath(ProductOptions::XPATH_DEFAULT_LETTERBOX_PACKAGE_PRODUCT, '');
         $this->assertEquals($value, $instance->getDefaultLetterboxPackageProductOption());
     }
 

@@ -4,7 +4,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\Provider\LoggingConfiguration;
 
-class LoggingConfigurationTest extends AbstractConfigurationTest
+class LoggingConfigurationTest extends AbstractConfiguration
 {
     protected $instanceClass = LoggingConfiguration::class;
 

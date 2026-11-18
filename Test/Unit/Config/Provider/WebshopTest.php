@@ -4,7 +4,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 
 use TIG\PostNL\Config\Provider\Webshop;
 
-class WebshopTest extends AbstractConfigurationTest
+class WebshopTest extends AbstractConfiguration
 {
     protected $instanceClass = Webshop::class;
 

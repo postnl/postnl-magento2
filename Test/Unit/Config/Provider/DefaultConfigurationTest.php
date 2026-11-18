@@ -6,7 +6,7 @@ use TIG\PostNL\Config\Provider\AccountConfiguration;
 use TIG\PostNL\Config\Provider\DefaultConfiguration;
 use TIG\PostNL\Test\Fixtures\DataProvider;
 
-class DefaultConfigurationTest extends AbstractConfigurationTest
+class DefaultConfigurationTest extends AbstractConfiguration
 {
     protected $instanceClass = DefaultConfiguration::class;
 

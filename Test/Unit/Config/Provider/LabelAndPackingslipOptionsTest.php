@@ -7,7 +7,7 @@ use Magento\Sales\Model\Order;
 use TIG\PostNL\Config\Provider\LabelAndPackingslipOptions;
 use TIG\PostNL\Service\Wrapper\StoreInterface;
 
-class LabelAndPackingslipOptionsTest extends AbstractConfigurationTest
+class LabelAndPackingslipOptionsTest extends AbstractConfiguration
 {
     protected $instanceClass = LabelAndPackingslipOptions::class;
 
@@ -88,7 +88,7 @@ class LabelAndPackingslipOptionsTest extends AbstractConfigurationTest
     {
         $storeWrapperMock = $this->getMockBuilder(StoreInterface::class)
             ->getMock();
-        $store = $this->getMock(\Magento\Store\Model\Store::class);
+        $store = $this->createStub(\Magento\Store\Model\Store::class);
         $store->method('getFrontendName')->willReturn($frontendName);
         $storeWrapperMock->expects($this->once())->method('getStore')->willReturn($store);
 

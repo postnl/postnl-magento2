@@ -5,7 +5,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 use TIG\PostNL\Config\Provider\ShippingOptions;
 use Magento\Store\Model\ScopeInterface;
 
-class ShippingOptionsTest extends AbstractConfigurationTest
+class ShippingOptionsTest extends AbstractConfiguration
 {
     protected $instanceClass = ShippingOptions::class;
 

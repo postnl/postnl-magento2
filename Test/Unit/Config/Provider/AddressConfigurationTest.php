@@ -5,7 +5,7 @@ namespace TIG\PostNL\Test\Unit\Config\Provider;
 use TIG\PostNL\Config\Provider\AddressConfiguration;
 use TIG\PostNL\Config\Source\General\Country;
 
-class AddressConfigurationTest extends AbstractConfigurationTest
+class AddressConfigurationTest extends AbstractConfiguration
 {
     public $instanceClass = AddressConfiguration::class;
 
@@ -36,6 +36,9 @@ class AddressConfigurationTest extends AbstractConfigurationTest
 
     public function testGetAddressInfoContainsCountry()
     {
-        $this->assertArrayHasKey('country', $this->getInstance()->getAddressInfo());
+        $instance = $this->getInstance();
+        $this->scopeConfigMock->expects($this->atLeastOnce())->method('getValue');
+
+        $this->assertArrayHasKey('country', $instance->getAddressInfo());
     }
 }

@@ -3,7 +3,7 @@
 namespace TIG\PostNL\Test;
 
 use Magento\Framework\Filesystem;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
+use TIG\PostNL\Test\Unit\Support\ObjectManager as ObjectManagerHelper;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
