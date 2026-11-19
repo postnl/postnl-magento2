@@ -36,25 +36,38 @@ class ShippingAddress
      */
     public function afterGetShippingAddress($subject, $result)
     {
-        if (!$subject->getId()) {
+        if (!$subject->getId() || !$this->isPostNLShipment($subject)) {
             return $result;
         }
 
         $postnlOrder = $this->orderRepository->getByOrderId($subject->getId());
-        if (!$postnlOrder || !$this->isPostNLShipment($subject)) {
+        if (!$postnlOrder || !$postnlOrder->getPgOrderAddressId()) {
             return $result;
         }
 
-        if (!$postnlOrder->getPgOrderAddressId()) {
-            return $result;
-        }
-
-        $pgAddres = $subject->getAddressById($postnlOrder->getPgOrderAddressId());
+        $pgAddres = $this->getAddressById($subject, $postnlOrder->getPgOrderAddressId());
         if (!$pgAddres) {
             return $result;
         }
 
         return $pgAddres;
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order $order
+     * @param int|string                 $addressId
+     *
+     * @return \Magento\Sales\Model\Order\Address|false
+     */
+    private function getAddressById($order, $addressId)
+    {
+        foreach ($order->getAddresses() as $address) {
+            if ($address->getId() == $addressId) {
+                return $address;
+            }
+        }
+
+        return $order->getAddressById($addressId);
     }
 
     /**
