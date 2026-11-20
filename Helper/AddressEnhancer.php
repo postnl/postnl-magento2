@@ -38,6 +38,10 @@ class AddressEnhancer
      */
     public function set($address)
     {
+        if (isset($address['street']) && !is_array($address['street'])) {
+            $address['street'] = [$address['street']];
+        }
+
         $this->address = $address;
 
         if ((isset($this->address['country']) && $this->address['country'] !== 'NL') ||
