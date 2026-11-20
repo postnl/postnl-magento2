@@ -153,7 +153,7 @@ class Mail extends AbstractTracking
             'billingAddress'  => $billingAddress,
             'dateAndTime'     => $this->postNLHelperData->getDate(),
             'url'             => $url,
-            'logo_url'        => $this->getLogoUrl(),
+            'postnl_logo_url' => $this->getLogoUrl(),
             'address_type'    => $this->getAddressType($shipment),
             'name'            => $shippingAddress->getFirstname() . ' ' .
                 $shippingAddress->getMiddlename() . ' ' .
