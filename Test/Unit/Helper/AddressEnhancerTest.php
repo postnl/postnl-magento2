@@ -107,4 +107,20 @@ class AddressEnhancerTest extends TestCase
         $this->assertEquals($expected['housenumber'], $result['housenumber']);
         $this->assertEquals($expected['housenumberExtension'], $result['housenumberExtension']);
     }
+
+    public function testSetWrapsStringStreetInArray()
+    {
+        $instance = $this->getInstance();
+        $instance->set([
+            'postcode' => '1014AB',
+            'country'  => 'NL',
+            'street'   => 'Kabelweg 37B'
+        ]);
+
+        $result = $instance->get();
+
+        $this->assertSame(['Kabelweg'], $result['street']);
+        $this->assertSame('37', $result['housenumber']);
+        $this->assertSame('B', $result['housenumberExtension']);
+    }
 }
